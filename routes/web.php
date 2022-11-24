@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\KantorController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,3 +28,13 @@ Route::get('data_master', function() {
 Route::get('data_table', function() {
     return view('data_table');
 });
+
+Route::resource('/kantor', KantorController::class);
+Route::resource('/divisi', App\Http\Controllers\DivisiController::class);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
