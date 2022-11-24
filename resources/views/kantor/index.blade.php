@@ -12,7 +12,7 @@
       <button class="btn btn-primary">tambah kantor</button>
     </a>
     <div class="table-responsive overflow-hidden">
-      <table class="table">
+      <table class="table" id="table">
         <thead class=" text-primary">
           <th>
               Id Kantor
@@ -55,4 +55,12 @@
       </table>
     </div>
   </div>
+@endsection
+
+@section('custom_script')
+  <script>
+    $(document).ready( function () {
+      $('#table').DataTable();
+    });
+  </script>
 @endsection

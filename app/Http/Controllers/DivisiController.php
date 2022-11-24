@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\DivisiModel;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class DivisiController extends Controller
 {
@@ -15,9 +19,9 @@ class DivisiController extends Controller
     public function index()
     {
         //
-        $data = DivisiModel::select()->paginate(5);
+        $data = DivisiModel::select()->get();
 
-        return view('divisi.index', $data);
+        return view('divisi.index', ['data' => $data]);
     }
 
     /**
@@ -27,7 +31,7 @@ class DivisiController extends Controller
      */
     public function create()
     {
-        //
+        return view('divisi.add');
     }
 
     /**
@@ -38,7 +42,31 @@ class DivisiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_divisi' => 'required'
+        ],[
+            'required' => 'Data harus diisi.'
+        ]);
+
+        try{
+            DB::table('divisi')
+                ->insert([
+                    'nama_divisi' => $request->get('nama_divisi'),
+                    'id_kantor' => 1,
+                    'created_at' => now()
+                ]);
+
+            Alert::success('Berhasil', 'Berhasil menambah data');
+            return redirect()->route('divisi.index');
+        }catch(Exception $e){
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('divisi.index');
+        }catch(QueryException $e){
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('divisi.index');
+        }
     }
 
     /**
@@ -60,7 +88,10 @@ class DivisiController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = DivisiModel::where('id', $id)
+            ->first();
+
+        return view('divisi.edit', ['data' => $data]);
     }
 
     /**
@@ -72,7 +103,31 @@ class DivisiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nama_divisi' => 'required'
+        ], [
+            'required' => 'Data harus diisi.'
+        ]);
+
+        try{
+            DB::table('divisi')
+                ->where('id' ,$id)
+                ->update([
+                    'nama_divisi' => $request->get('nama_divisi'),
+                    'updated_at' => now()
+                ]);
+
+            Alert::success('Berhasil', 'Berhasil mengupdate divisi.');
+            return redirect()->route('divisi.index');
+        }catch(Exception $e){
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', ''.$e);
+            return redirect()->route('divisi.index');
+        }catch(QueryException $e){
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', ''.$e);
+            return redirect()->route('divisi.index');
+        }
     }
 
     /**
@@ -83,6 +138,21 @@ class DivisiController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            DB::table('divisi')
+            ->where('id', $id)
+            ->delete();
+
+            Alert::success('Berhasil', 'Berhasil menghapus divisi.');
+            return redirect()->route('divisi.index');
+        } catch(Exception $e){
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', ''.$e);
+            return redirect()->route('divisi.index');
+        } catch(QueryException $e){
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', ''.$e);
+            return redirect()->route('divisi.index');
+        }
     }
 }

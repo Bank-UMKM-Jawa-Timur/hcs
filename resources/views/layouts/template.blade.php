@@ -19,6 +19,7 @@ Coded by www.creative-tim.com
   <meta charset="utf-8" />
   <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('style/assets/img/apple-icon.png') }}">
   <link rel="icon" type="image/png" href="{{ asset('style/assets/img/logo.png') }}">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
     Bio Interface | BANK UMKM JATIM
@@ -170,6 +171,7 @@ Coded by www.creative-tim.com
   <script src="{{ asset('style/assets/js/core/popper.min.js') }}"></script>
   <script src="{{ asset('style/assets/js/core/bootstrap.min.js') }}"></script>
   <script src="{{ asset('style/assets/js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
+  <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
   <!--  Google Maps Plugin    -->
   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
   <!-- Chart JS -->
@@ -182,6 +184,7 @@ Coded by www.creative-tim.com
   <script src="{{ asset('style/assets/demo/demo.js') }}"></script>
   <!-- Jam Realtime -->
   <script src="{{ asset('style/assets/js/jam.js') }}"></script>
+  @yield('custom_script')
   <script>
     $(document).ready(function() {
       // Javascript method's body can be found in assets/assets-for-demo/js/demo.js

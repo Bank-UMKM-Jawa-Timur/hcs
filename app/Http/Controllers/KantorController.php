@@ -22,8 +22,8 @@ class KantorController extends Controller
         $data = KantorModel::select(
             'id',
             'nama_kantor'
-        )->paginate(5);
-        return view('kantor.index', $data);
+        )->get();
+        return view('kantor.index', ['data' => $data]);
     }
 
     /**
