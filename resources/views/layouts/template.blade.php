@@ -181,7 +181,7 @@ Coded by www.creative-tim.com
   <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
   <script src="{{ asset('style/assets/demo/demo.js') }}"></script>
   <!-- Jam Realtime -->
-  <script src="{{ asset('style/assets/js/jam.js') }}"></script>
+  <script src="{{ asset('style/assets/js/jam.js') }}" async></script>
   <script>
     $(document).ready(function() {
       // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
