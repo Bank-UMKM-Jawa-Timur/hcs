@@ -31,6 +31,7 @@ Coded by www.creative-tim.com
   <link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />
   <link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />
   <link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />
+  <link rel="stylesheet" href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 </head>
 
 <body class="">
@@ -182,12 +183,14 @@ Coded by www.creative-tim.com
   <script src="{{ asset('style/assets/demo/demo.js') }}"></script>
   <!-- Jam Realtime -->
   <script src="{{ asset('style/assets/js/jam.js') }}" async></script>
+  <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
   <script>
     $(document).ready(function() {
       // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
       demo.initChartsPages();
     });
   </script>
+  @yield('custom_script')
 </body>
 
 </html>
