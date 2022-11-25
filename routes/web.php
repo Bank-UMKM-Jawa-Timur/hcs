@@ -31,7 +31,24 @@ Route::get('data_table', function() {
     return view('data_table');
 });
 
+Route::get('mutasi', function() {
+    return view('mutasi/index');
+}); 
+
+Route::get('mutasi/add', function() {
+    return view('mutasi/add');
+}); 
+
+Route::get('data_karyawan', function() {
+    return view('karyawan/index');
+});
+
+Route::get('data_karyawan/add', function() {
+    return view('karyawan/add');
+});
+
 Route::resource('/kantor', KantorController::class);
+
 Route::resource('/divisi', App\Http\Controllers\DivisiController::class);
 Route::resource('/sub_divisi', App\Http\Controllers\SubdivisiController::class);
 Auth::routes();
