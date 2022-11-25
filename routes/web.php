@@ -33,6 +33,7 @@ Route::get('data_table', function() {
 
 Route::resource('/kantor', KantorController::class);
 Route::resource('/divisi', App\Http\Controllers\DivisiController::class);
+Route::resource('/sub_divisi', App\Http\Controllers\SubdivisiController::class);
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
