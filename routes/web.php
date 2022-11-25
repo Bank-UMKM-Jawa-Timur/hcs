@@ -51,6 +51,9 @@ Route::resource('/kantor', KantorController::class);
 
 Route::resource('/divisi', App\Http\Controllers\DivisiController::class);
 Route::resource('/sub_divisi', App\Http\Controllers\SubdivisiController::class);
+Route::resource('/jabatan', App\Http\Controllers\JabatanController::class);
+Route::resource('/cabang', \App\Http\Controllers\KantorCabangController::class);
+Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
