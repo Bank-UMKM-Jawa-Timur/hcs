@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_subdivisi')->nullable();
             $table->unsignedBigInteger('id_cabang')->nullable();
             $table->string('kd_panggol');
-            $table->unsignedBigInteger('id_is');
+            $table->unsignedBigInteger('id_is')->nullable();
             $table->string('kd_agama');
             $table->string('tmp_lahir');
             $table->date('tgl_lahir');

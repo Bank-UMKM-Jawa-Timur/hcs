@@ -20,12 +20,13 @@ class SubdivisiController extends Controller
     {
         $data = DB::table('mst_sub_divisi')
             ->select(
-                'sub_divisi.id',
-                'divisi.nama_divisi',
-                'sub_divisi.nama_subdivisi',
-                'sub_divisi.id_divisi'
+                'mst_divisi.kd_divisi',
+                'mst_sub_divisi.id',
+                'mst_divisi.nama_divisi',
+                'mst_sub_divisi.nama_subdivisi',
+                'mst_sub_divisi.kd_divisi'
             )
-            ->join('divisi', 'divisi.id', '=', 'sub_divisi.id_divisi')
+            ->join('mst_divisi', 'mst_divisi.kd_divisi', '=', 'mst_sub_divisi.kd_divisi')
             ->get();
 
             // dd($data);
@@ -68,7 +69,7 @@ class SubdivisiController extends Controller
 
             DB::table('mst_sub_divisi')
                 ->insert([
-                    'id_divisi' => $request->get('divisi'),
+                    'kd_divisi' => $request->get('divisi'),
                     'nama_subdivisi' => $request->get('nama_subdivisi'),
                     'created_at' => now()
                 ]);
@@ -104,14 +105,14 @@ class SubdivisiController extends Controller
     public function edit($id)
     {
         $data = DB::table('mst_sub_divisi')
-            ->where('sub_divisi.id', $id)
+            ->where('mst_sub_divisi.id', $id)
             ->select(
-                'sub_divisi.id',
-                'divisi.nama_divisi',
-                'sub_divisi.nama_subdivisi',
-                'sub_divisi.id_divisi'
+                'mst_sub_divisi.id',
+                'mst_divisi.nama_divisi',
+                'mst_sub_divisi.nama_subdivisi',
+                'mst_sub_divisi.kd_divisi'
             )
-            ->join('divisi', 'divisi.id', '=', 'sub_divisi.id_divisi')
+            ->join('mst_divisi', 'mst_divisi.kd_divisi', '=', 'mst_sub_divisi.kd_divisi')
             ->first();
             
         $divisi = DivisiModel::get();
@@ -139,7 +140,7 @@ class SubdivisiController extends Controller
             DB::table('mst_sub_divisi')
                 ->where('id', $id)
                 ->update([
-                    'id_divisi' => $request->get('divisi'),
+                    'kd_divisi' => $request->get('divisi'),
                     'nama_subdivisi' => $request->get('nama_subdivisi'),
                     'updated_at' => now()
                 ]);

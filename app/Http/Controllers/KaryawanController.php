@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\ImportKaryawan;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class KaryawanController extends Controller
 {
@@ -20,6 +23,19 @@ class KaryawanController extends Controller
             ->get();
 
         return view('karyawan.index', ['data' => $data]);
+    }
+
+    public function import()
+    {
+        return view('karyawan.import');
+    }
+
+    public function upload_karyawan(Request $request)
+    {
+        Excel::import(new ImportKaryawan, $request->file('upload_csv'));
+        
+        Alert::success('Berhasil', 'Berhasil mengimport data excel');
+        return redirect()->route('karyawan.index');
     }
 
     /**

@@ -13,6 +13,9 @@
                 <a href="{{ route('karyawan.create') }}">
                   <button class="btn btn-primary">tambah karyawan</button>
                 </a>
+                <a href="{{ route('import') }}">
+                  <button class="btn btn-primary">import karyawan</button>
+                </a>
                 <div class="table-responsive overflow-hidden">
                     <table class="table" id="table">
                       <thead class=" text-primary">
@@ -42,13 +45,13 @@
                                 </td>
                                 <td>
                                   <div class="row">
-                                    <a href="{{ route('karyawan.edit', $item->id) }}">
+                                    <a href="{{ route('karyawan.edit', $item->nip) }}">
                                       <button class="btn btn-warning">
                                         Edit
                                       </button>
                                     </a>
                                     
-                                    {{-- <form action="{{ route('karyawan.destroy', $item->id) }}" method="POST">
+                                    {{-- <form action="{{ route('karyawan.destroy', $item->nip) }}" method="POST">
                                       @csrf
                                       @method('DELETE')
                                   

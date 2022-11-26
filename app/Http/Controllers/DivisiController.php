@@ -51,6 +51,7 @@ class DivisiController extends Controller
         try{
             DB::table('mst_divisi')
                 ->insert([
+                    'kd_divisi' => $request->get('kd_divisi'),
                     'nama_divisi' => $request->get('nama_divisi'),
                     'id_kantor' => 1,
                     'created_at' => now()
@@ -88,7 +89,7 @@ class DivisiController extends Controller
      */
     public function edit($id)
     {
-        $data = DivisiModel::where('id', $id)
+        $data = DivisiModel::where('kd_divisi', $id)
             ->first();
 
         return view('divisi.edit', ['data' => $data]);
@@ -111,8 +112,9 @@ class DivisiController extends Controller
 
         try{
             DB::table('mst_divisi')
-                ->where('id' ,$id)
+                ->where('kd_divisi' ,$id)
                 ->update([
+                    'kd_divisi' => $request->get('kode_divisi'),
                     'nama_divisi' => $request->get('nama_divisi'),
                     'updated_at' => now()
                 ]);

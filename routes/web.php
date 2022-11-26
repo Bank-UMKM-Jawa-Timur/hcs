@@ -47,13 +47,8 @@ Route::get('mutasi/add', function() {
     return view('mutasi/add');
 }); 
 
-<<<<<<< HEAD
 Route::get('demosi', function () {
     return view('demosi/index');
-=======
-Route::get('data_karyawan', function() {
-    return view('karyawan.index');
->>>>>>> 45c008a63f7eeea73c4094faffa51b1021c408e0
 });
 
 Route::get('demosi/add', function() {
@@ -77,6 +72,9 @@ Route::resource('/cabang', \App\Http\Controllers\KantorCabangController::class);
 Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
 Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
 Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
+
+Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');
+Route::post('/upload-karyawan', [\App\Http\Controllers\KaryawanController::class, 'upload_karyawan'])->name('upload_karyawan');
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

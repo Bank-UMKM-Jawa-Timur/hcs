@@ -19,7 +19,7 @@
                             <select name="divisi" id="" class="form-control">
                                 <option value="-">--- Pilih Divisi ---</option>
                                 @foreach ($divisi as $item)
-                                    <option value="{{ $item['id'] }}" {{ ($item['id'] == $data->id_divisi) ? 'selected' : '' }}>{{ $item['nama_divisi'] }}</option>
+                                    <option value="{{ $item['kd_divisi'] }}" {{ ($item['kd_divisi'] == $data->kd_divisi) ? 'selected' : '' }}>{{ $item['nama_divisi'] }}</option>
                                 @endforeach
                             </select>
                         </div>

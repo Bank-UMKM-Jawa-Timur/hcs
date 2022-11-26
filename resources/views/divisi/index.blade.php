@@ -17,7 +17,10 @@
             <table class="table" id="table">
               <thead class=" text-primary">
                 <th>
-                    Id Divisi
+                  No
+                </th>
+                <th>
+                    Kode Divisi
                 </th>
                 <th>
                     Nama Divisi
@@ -26,24 +29,30 @@
                     Aksi
                 </th>
               </thead>
+              @php
+                  $i = 1;
+              @endphp
               <tbody>
                 @foreach ($data as $item)
                     <tr>
                         <td>
-                            {{ $item['id'] }}
+                          {{ $i++ }}
+                        </td>
+                        <td>
+                            {{ $item['kd_divisi'] }}
                         </td>
                         <td>
                             {{ $item['nama_divisi'] }}
                         </td>
                         <td>
                           <div class="row">
-                            <a href="{{ route('divisi.edit', $item['id']) }}">
+                            <a href="{{ route('divisi.edit', $item['kd_divisi']) }}">
                               <button class="btn btn-warning">
                                   Edit
                               </button>
                             </a>
 
-                            {{-- <form action="{{ route('divisi.destroy', $item['id']) }}" method="POST">
+                            {{-- <form action="{{ route('divisi.destroy', $item['kd_divisi']) }}" method="POST">
                               @csrf
                               @method('DELETE')
                           
