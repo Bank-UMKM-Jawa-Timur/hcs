@@ -18,7 +18,7 @@ class SubdivisiController extends Controller
      */
     public function index()
     {
-        $data = DB::table('sub_divisi')
+        $data = DB::table('mst_sub_divisi')
             ->select(
                 'sub_divisi.id',
                 'divisi.nama_divisi',
@@ -66,7 +66,7 @@ class SubdivisiController extends Controller
                 return redirect()->route('sub_divisi.index');
             }
 
-            DB::table('sub_divisi')
+            DB::table('mst_sub_divisi')
                 ->insert([
                     'id_divisi' => $request->get('divisi'),
                     'nama_subdivisi' => $request->get('nama_subdivisi'),
@@ -103,7 +103,7 @@ class SubdivisiController extends Controller
      */
     public function edit($id)
     {
-        $data = DB::table('sub_divisi')
+        $data = DB::table('mst_sub_divisi')
             ->where('sub_divisi.id', $id)
             ->select(
                 'sub_divisi.id',
@@ -136,7 +136,7 @@ class SubdivisiController extends Controller
         ]);
 
         try{
-            DB::table('sub_divisi')
+            DB::table('mst_sub_divisi')
                 ->where('id', $id)
                 ->update([
                     'id_divisi' => $request->get('divisi'),
@@ -164,7 +164,7 @@ class SubdivisiController extends Controller
     public function destroy($id)
     {
         try{
-            DB::table('sub_divisi')
+            DB::table('mst_sub_divisi')
                 ->where('id', $id)
                 ->delete();
     

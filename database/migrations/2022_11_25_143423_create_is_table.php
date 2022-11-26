@@ -13,17 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cabang', function (Blueprint $table) {
+        Schema::create('is', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_cabang');
-            $table->string('alamat_cabang');
-            $table->unsignedBigInteger('id_kantor');
+            $table->enum('enum', ['Istri', 'Suami']);
+            $table->string('is_nama');
+            $table->string('is_tgl_lahir');
+            $table->string('is_alamat');
+            $table->string('is_pekerjaan');
+            $table->integer('is_jml_anak');
             $table->timestamps();
-
-            $table->foreign('id_kantor')
-                ->references('id')
-                ->on('kantor')
-                ->onUpdate('cascade');
         });
     }
 
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cabang');
+        Schema::dropIfExists('is');
     }
 };

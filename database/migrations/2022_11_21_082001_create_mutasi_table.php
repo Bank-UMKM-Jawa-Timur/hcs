@@ -29,32 +29,32 @@ return new class extends Migration
 
             $table->foreign('nip')
                 ->references('nip')
-                ->on('karyawan')
+                ->on('mst_karyawan')
                 ->onUpdate('cascade');
 
             $table->foreign('id_jabatan_lama')
                 ->references('id')
-                ->on('jabatan')
+                ->on('mst_jabatan')
                 ->onUpdate('cascade');
 
             $table->foreign('id_jabatan_baru')
                 ->references('id')
-                ->on('jabatan')
+                ->on('mst_jabatan')
                 ->onUpdate('cascade');
 
             $table->foreign('id_subdiv_lama')
                 ->references('id')
-                ->on('sub_divisi')
+                ->on('mst_sub_divisi')
                 ->onUpdate('cascade');
 
             $table->foreign('id_cabang_baru')
                 ->references('id')
-                ->on('cabang')
+                ->on('mst_cabang')
                 ->onUpdate('cascade');
 
             $table->foreign('id_cabang_lama')
                 ->references('id')
-                ->on('cabang')
+                ->on('mst_cabang')
                 ->onUpdate('cascade');
         });
     }

@@ -25,17 +25,17 @@ return new class extends Migration
 
             $table->foreign('nip')
                 ->references('nip')
-                ->on('karyawan')
+                ->on('mst_karyawan')
                 ->onUpdate('cascade');
 
             $table->foreign('id_pangkat_lama')
                 ->references('id')
-                ->on('pangkat_golongan')
+                ->on('mst_pangkat_golongan')
                 ->onUpdate('cascade');
                 
             $table->foreign('id_pangkat_baru')
                 ->references('id')
-                ->on('pangkat_golongan')
+                ->on('mst_pangkat_golongan')
                 ->onUpdate('cascade');
         });
     }

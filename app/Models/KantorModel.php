@@ -9,5 +9,5 @@ class KantorModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'Kantor';
+    protected $table = 'mst_kantor';
 }

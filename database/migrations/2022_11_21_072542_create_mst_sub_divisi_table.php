@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('divisi', function (Blueprint $table) {
+        Schema::create('mst_sub_divisi', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_divisi');
-            $table->unsignedBigInteger('id_kantor');
+            $table->string('nama_subdivisi');
+            $table->unsignedBigInteger('kd_divisi', 15);
             $table->timestamps();
 
-            $table->foreign('id_kantor')
-                ->references('id')
-                ->on('kantor')
+            $table->foreign('kd_divisi')
+                ->references('kd_divisi')
+                ->on('mst_divisi')
                 ->onUpdate('cascade');
         });
     }
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('divisi');
+        Schema::dropIfExists('sub_divisi');
     }
 };

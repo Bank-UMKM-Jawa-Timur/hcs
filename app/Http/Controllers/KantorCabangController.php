@@ -17,7 +17,7 @@ class KantorCabangController extends Controller
      */
     public function index()
     {
-        $data = DB::table('cabang')
+        $data = DB::table('mst_cabang')
             ->get();
 
         return view('cabang.index', ['data' => $data]);
@@ -42,7 +42,7 @@ class KantorCabangController extends Controller
     public function store(Request $request)
     {
         try{
-            DB::table('cabang')
+            DB::table('mst_cabang')
                 ->insert([
                     'nama_cabang' => $request->get('nama_cabang'),
                     'alamat_cabang' => $request->get('alamat_cabang'),
@@ -80,7 +80,7 @@ class KantorCabangController extends Controller
      */
     public function edit($id)
     {
-        $data = DB::table('cabang')
+        $data = DB::table('mst_cabang')
             ->where('id', $id)
             ->first();
 
@@ -97,7 +97,7 @@ class KantorCabangController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            DB::table('cabang')
+            DB::table('mst_cabang')
                 ->where('id', $id)
                 ->update([
                     'nama_cabang' => $request->get('nama_cabang'),
@@ -126,7 +126,7 @@ class KantorCabangController extends Controller
     public function destroy($id)
     {
         try{
-            DB::table('cabang')
+            DB::table('mst_cabang')
                 ->where('id', $id)
                 ->delete();
 

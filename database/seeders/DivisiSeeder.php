@@ -15,43 +15,43 @@ class DivisiSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('divisi')
+        DB::table('mst_divisi')
             ->insert([
                 'nama_divisi' => 'Risiko & Penyelamatan Kredit',
                 'id_kantor' => 1,
                 'created_at' => now()
             ]);
-        DB::table('divisi')
+        DB::table('mst_divisi')
             ->insert([
                 'nama_divisi' => 'Pemasaran',
                 'id_kantor' => 1,
                 'created_at' => now()
             ]);
-        DB::table('divisi')
+        DB::table('mst_divisi')
             ->insert([
                 'nama_divisi' => 'Umum',
                 'id_kantor' => 1,
                 'created_at' => now()
             ]);
-        DB::table('divisi')
+        DB::table('mst_divisi')
             ->insert([
                 'nama_divisi' => 'Teknologi Informasi & Akuntansi',
                 'id_kantor' => 1,
                 'created_at' => now()
             ]);
-        DB::table('divisi')
+        DB::table('mst_divisi')
             ->insert([
                 'nama_divisi' => 'Kepatuhan',
                 'id_kantor' => 1,
                 'created_at' => now()
             ]);
-        DB::table('divisi')
+        DB::table('mst_divisi')
             ->insert([
                 'nama_divisi' => 'Pengawas Intern',
                 'id_kantor' => 1,
                 'created_at' => now()
             ]);
-        DB::table('divisi')
+        DB::table('mst_divisi')
             ->insert([
                 'nama_divisi' => 'Perencanaan & Kinerja',
                 'id_kantor' => 1,

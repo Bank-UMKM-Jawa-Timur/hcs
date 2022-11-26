@@ -16,12 +16,12 @@ class KantorSeeder extends Seeder
     public function run()
     {
         //
-        DB::table('kantor')->insert([
+        DB::table('mst_kantor')->insert([
             'nama_kantor' => 'Kantor Pusat',
             'created_at' => now()
         ]);
 
-        DB::table('kantor')->insert([
+        DB::table('mst_kantor')->insert([
             'nama_kantor' => 'Kantor Cabang',
             'created_at' => now()
         ]);

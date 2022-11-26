@@ -13,11 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pangkat_golongan', function (Blueprint $table) {
+        Schema::create('mst_cabang', function (Blueprint $table) {
             $table->id();
-            $table->string('pangkat');
-            $table->string('golongan');
+            $table->string('nama_cabang');
+            $table->string('alamat_cabang');
+            $table->unsignedBigInteger('id_kantor');
             $table->timestamps();
+
+            $table->foreign('id_kantor')
+                ->references('id')
+                ->on('mst_kantor')
+                ->onUpdate('cascade');
         });
     }
 
@@ -28,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pangkat_golongan');
+        Schema::dropIfExists('cabang');
     }
 };

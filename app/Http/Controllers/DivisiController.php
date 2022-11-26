@@ -49,7 +49,7 @@ class DivisiController extends Controller
         ]);
 
         try{
-            DB::table('divisi')
+            DB::table('mst_divisi')
                 ->insert([
                     'nama_divisi' => $request->get('nama_divisi'),
                     'id_kantor' => 1,
@@ -110,7 +110,7 @@ class DivisiController extends Controller
         ]);
 
         try{
-            DB::table('divisi')
+            DB::table('mst_divisi')
                 ->where('id' ,$id)
                 ->update([
                     'nama_divisi' => $request->get('nama_divisi'),
@@ -139,7 +139,7 @@ class DivisiController extends Controller
     public function destroy($id)
     {
         try{
-            DB::table('divisi')
+            DB::table('mst_divisi')
             ->where('id', $id)
             ->delete();
 

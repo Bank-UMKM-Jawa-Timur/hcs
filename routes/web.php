@@ -37,6 +37,8 @@ Route::resource('/sub_divisi', App\Http\Controllers\SubdivisiController::class);
 Route::resource('/jabatan', App\Http\Controllers\JabatanController::class);
 Route::resource('/cabang', \App\Http\Controllers\KantorCabangController::class);
 Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
+Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
+Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

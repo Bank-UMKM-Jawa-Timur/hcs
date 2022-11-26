@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class PangkatGolonganController extends Controller
+class TunjanganController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,10 +17,10 @@ class PangkatGolonganController extends Controller
      */
     public function index()
     {
-        $data = DB::table('mst_pangkat_golongan')
+        $data = DB::table('mst_tunjangan')
             ->get();
 
-        return view('pangkat_golongan.index', ['data' => $data]);
+        return view('tunjangan.index', ['data' => $data]);
     }
 
     /**
@@ -30,7 +30,7 @@ class PangkatGolonganController extends Controller
      */
     public function create()
     {
-        return view('pangkat_golongan.add');
+        return view('tunjangan.add');
     }
 
     /**
@@ -42,21 +42,20 @@ class PangkatGolonganController extends Controller
     public function store(Request $request)
     {
         try{
-            DB::table('mst_pangkat_golongan')
+            DB::table('mst_tunjangan')
                 ->insert([
-                    'pangkat' => $request->get('pangkat'),
-                    'golongan' => $request->get('golongan'),
+                    'nama_tunjangan' => $request->get('nama_tunjangan'),
                     'created_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil menambah pangkat dan golongan.');
-            return redirect()->route('pangkat_golongan.index');
+            Alert::success('Berhasil', 'Berhasil menambah tunjangan.');
+            return redirect()->route('tunjangan.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
-            return redirect()->route('pangkat_golongan.index')->withStatus($e->getMessage());
+            return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
-            return redirect()->route('pangkat_golongan.index')->withStatus($e->getMessage());
+            return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         }
     }
 
@@ -79,11 +78,11 @@ class PangkatGolonganController extends Controller
      */
     public function edit($id)
     {
-        $data = DB::table('mst_pangkat_golongan')
+        $data = DB::table('mst_tunjangan')
             ->where('id', $id)
             ->first();
 
-        return view('pangkat_golongan.edit', ['data' => $data]);
+        return view('tunjangan.edit', ['data' => $data]);
     }
 
     /**
@@ -96,22 +95,21 @@ class PangkatGolonganController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            DB::table('mst_pangkat_golongan')
+            DB::table('mst_tunjangan')
                 ->where('id', $id)
                 ->update([
-                    'pangkat' => $request->get('pangkat'),
-                    'golongan' => $request->get('golongan'),
+                    'nama_tunjangan' => $request->get('nama_tunjangan'),
                     'updated_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil mengupdate pangkat dan golongan.');
-            return redirect()->route('pangkat_golongan.index');
+            Alert::success('Berhasil', 'Berhasil mengupdate tunjangan.');
+            return redirect()->route('tunjangan.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
-            return redirect()->route('pangkat_golongan.index')->withStatus($e->getMessage());
+            return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
-            return redirect()->route('pangkat_golongan.index')->withStatus($e->getMessage());
+            return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         }
     }
 
@@ -123,20 +121,19 @@ class PangkatGolonganController extends Controller
      */
     public function destroy($id)
     {
-        
         try{
-            DB::table('mst_pangkat_golongan')
+            DB::table('mst_tunjangan')
                 ->where('id', $id)
                 ->delete();
 
-            Alert::success('Berhasil', 'Berhasil menghapus pangkat dan golongan.');
-            return redirect()->route('pangkat_golongan.index');
+            Alert::success('Berhasil', 'Berhasil menghapus tunjangan.');
+            return redirect()->route('tunjangan.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
-            return redirect()->route('pangkat_golongan.index')->withStatus($e->getMessage());
+            return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
-            return redirect()->route('pangkat_golongan.index')->withStatus($e->getMessage());
+            return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         }
     }
 }

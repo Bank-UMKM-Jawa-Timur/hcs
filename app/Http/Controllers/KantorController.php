@@ -51,7 +51,7 @@ class KantorController extends Controller
         ]);
 
         try{
-            DB::table('kantor')
+            DB::table('mst_kantor')
                 ->insert([
                     'nama_kantor' => $request->get('nama_kantor'),
                     'created_at' => now()
@@ -110,7 +110,7 @@ class KantorController extends Controller
         ]);
 
         try{
-            DB::table('kantor')
+            DB::table('mst_kantor')
                 ->where('id', $id)
                 ->update([
                     'nama_kantor' => $request->get('nama_kantor'),
@@ -137,7 +137,7 @@ class KantorController extends Controller
     public function destroy($id)
     {
         try{
-            DB::table('kantor')
+            DB::table('mst_kantor')
                 ->where('id', $id)
                 ->delete();
     

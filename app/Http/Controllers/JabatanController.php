@@ -17,7 +17,7 @@ class JabatanController extends Controller
      */
     public function index()
     {
-        $data = DB::table('jabatan')
+        $data = DB::table('mst_jabatan')
             ->get();
         return view('jabatan.index', ['data' => $data]);
     }
@@ -41,7 +41,7 @@ class JabatanController extends Controller
     public function store(Request $request)
     {
         try{
-            DB::table('jabatan')
+            DB::table('mst_jabatan')
                 ->insert([
                     'nama_jabatan' => $request->get('nama_jabatan'),
                     'created_at' => now()
@@ -77,7 +77,7 @@ class JabatanController extends Controller
      */
     public function edit($id)
     {
-        $data = DB::table('jabatan')
+        $data = DB::table('mst_jabatan')
             ->where('id', $id)
             ->first();
 
@@ -94,7 +94,7 @@ class JabatanController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            DB::table('jabatan')
+            DB::table('mst_jabatan')
                 ->where('id', $id)
                 ->update([
                     'nama_jabatan' => $request->get('nama_jabatan'),
@@ -121,7 +121,7 @@ class JabatanController extends Controller
     public function destroy($id)
     {
         try{
-            DB::table('jabatan')
+            DB::table('mst_jabatan')
                 ->where('id', $id)
                 ->delete();
 
