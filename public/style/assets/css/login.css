@@ -1,5 +1,5 @@
 .brand-wrapper {
-    margin-bottom: 19px;
+    margin-bottom: 10px;
 }
 
 .brand-wrapper .logo {
@@ -24,12 +24,20 @@
 }
 
 .login-card .card-body {
-    padding: 55px 30px 75px 30px;
+    padding: 20px 15px 35px 15px;
     margin: 0;
 }
 
 .custom-checkbox {
     margin-bottom: 20px;
+}
+
+.all-card {
+    max-width: 750px;
+}
+
+.formulir {
+    min-width: 330px;
 }
 
 @media (max-width: 422px) {

@@ -18,7 +18,7 @@
 </head>
 <body>
   <main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
-    <div class="container">
+    <div class="container all-card">
       <div class="card login-card">
         <div class="row no-gutters">
           <div class="col-md-5">
