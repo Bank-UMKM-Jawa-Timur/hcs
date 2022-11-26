@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('mst_karyawan', function (Blueprint $table) {
             $table->string('nip', 25)->primary();
             $table->string('nama_karyawan');
-            $table->unsignedBigInteger('id_pangkat');
+            $table->unsignedBigInteger('id_jabatan');
             $table->string('ket_jabatan');
             $table->unsignedBigInteger('id_subdivisi')->nullable();
             $table->unsignedBigInteger('id_cabang')->nullable();
@@ -40,17 +40,35 @@ return new class extends Migration
             $table->date('tanggal_pengangkat');
             $table->timestamps();
 
-            $table->foreign('id_pangkat')
+            $table->foreign('id_jabatan')
                 ->references('id')
+                ->on('mst_jabatan')
+                ->onUpdate('cascade');
+
+            $table->foreign('kd_panggol')
+                ->references('golongan')
                 ->on('mst_pangkat_golongan')
                 ->onUpdate('cascade');
 
             $table->foreign('id_subdivisi')
                 ->references('id')
-                ->on('mst_subdivisi')
+                ->on('mst_sub_divisi')
                 ->onUpdate('cascade');
 
-            // $table->foreign('id_cabang')
+            $table->foreign('id_cabang')
+                ->references('id')
+                ->on('mst_cabang')
+                ->onUpdate('cascade');
+
+            $table->foreign('id_is')
+                ->references('id')
+                ->on('is')
+                ->onUpdate('cascade');
+
+            $table->foreign('kd_agama')
+                ->references('kd_agama')
+                ->on('mst_agama')
+                ->onUpdate('cascade');
         });
     }
 

@@ -16,18 +16,18 @@ return new class extends Migration
         Schema::create('tunjangan_karyawan', function (Blueprint $table) {
             $table->id();
             $table->string('nip', 25);
-            $table->unsignedBigInteger('id_tanggungan');
+            $table->unsignedBigInteger('id_tunjangan');
             $table->integer('nominal');
             $table->timestamps();
 
-            $table->foreign('id_tanggungan')
+            $table->foreign('id_tunjangan')
                 ->references('id')
-                ->on('tanggungan')
+                ->on('mst_tunjangan')
                 ->onUpdate('cascade');
 
             $table->foreign('nip')
                 ->references('nip')
-                ->on('karyawan')
+                ->on('mst_karyawan')
                 ->onUpdate('cascade');
         });
     }

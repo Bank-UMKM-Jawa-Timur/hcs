@@ -40,7 +40,7 @@ Route::get('mutasi/add', function() {
 }); 
 
 Route::get('data_karyawan', function() {
-    return view('karyawan/index');
+    return view('karyawan.index');
 });
 
 Route::get('data_karyawan/add', function() {

@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('demosi_promosi_pangkat', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_pangkat_lama');
-            $table->unsignedBigInteger('id_pangkat_baru');
+            $table->string('golongan_lama', 15);
+            $table->string('golongan_baru', 15);
             $table->string('nip', 16);
             $table->date('tanggal_pengesahan');
             $table->string('bukti_sk');
@@ -28,13 +28,13 @@ return new class extends Migration
                 ->on('mst_karyawan')
                 ->onUpdate('cascade');
 
-            $table->foreign('id_pangkat_lama')
-                ->references('id')
+            $table->foreign('golongan_lama')
+                ->references('golongan')
                 ->on('mst_pangkat_golongan')
                 ->onUpdate('cascade');
                 
-            $table->foreign('id_pangkat_baru')
-                ->references('id')
+            $table->foreign('golongan_baru')
+                ->references('golongan')
                 ->on('mst_pangkat_golongan')
                 ->onUpdate('cascade');
         });
