@@ -47,8 +47,13 @@ Route::get('mutasi/add', function() {
     return view('mutasi/add');
 }); 
 
+<<<<<<< HEAD
 Route::get('demosi', function () {
     return view('demosi/index');
+=======
+Route::get('data_karyawan', function() {
+    return view('karyawan.index');
+>>>>>>> 45c008a63f7eeea73c4094faffa51b1021c408e0
 });
 
 Route::get('demosi/add', function() {

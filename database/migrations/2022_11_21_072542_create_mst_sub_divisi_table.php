@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('mst_sub_divisi', function (Blueprint $table) {
             $table->id();
             $table->string('nama_subdivisi');
-            $table->unsignedBigInteger('kd_divisi', 15);
+            $table->string('kd_divisi', 15);
             $table->timestamps();
 
             $table->foreign('kd_divisi')
