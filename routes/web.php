@@ -31,6 +31,14 @@ Route::get('data_table', function() {
     return view('data_table');
 });
 
+Route::get('data_karyawan', function() {
+    return view('karyawan/index');
+});
+
+Route::get('data_karyawan/add', function() {
+    return view('karyawan/add');
+});
+
 Route::get('mutasi', function() {
     return view('mutasi/index');
 }); 
@@ -39,12 +47,20 @@ Route::get('mutasi/add', function() {
     return view('mutasi/add');
 }); 
 
-Route::get('data_karyawan', function() {
-    return view('karyawan/index');
+Route::get('demosi', function () {
+    return view('demosi/index');
 });
 
-Route::get('data_karyawan/add', function() {
-    return view('karyawan/add');
+Route::get('demosi/add', function() {
+    return view('demosi/add');
+});
+
+Route::get('promosi', function () {
+    return view('promosi/index');
+});
+
+Route::get('promosi/add', function () {
+    return view('promosi/add');
 });
 
 Route::resource('/kantor', KantorController::class);

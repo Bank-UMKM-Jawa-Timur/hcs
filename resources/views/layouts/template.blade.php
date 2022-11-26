@@ -25,7 +25,9 @@ Coded by www.creative-tim.com
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
   <!-- CSS Files -->
   <link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />
@@ -34,7 +36,7 @@ Coded by www.creative-tim.com
   <link rel="stylesheet" href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 </head>
 
-<body class="">
+<body>
   <div class="wrapper">
     <div class="sidebar" data-color="white" data-active-color="danger">
       <div class="m-sm-2 logo">
@@ -61,23 +63,31 @@ Coded by www.creative-tim.com
                 </a>
             </li>
              <li class="dropdown">
-                    <a href="" data-toggle="dropdown" aria-expanded="false">
-                        <i class="nc-icon nc-badge"></i>
-                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Karyawan </p>
-                        <p></p>
-                    </a>
-                <div class="dropdown-menu dropdown-menu-right">
+                <a href="" data-toggle="dropdown" aria-expanded="false">
+                    <i class="nc-icon nc-badge"></i>
+                    <p class="dropdown-toggle" id="navbarDropdownMenuLink">Karyawan </p>
+                    <p></p>
+                </a>
+                <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                     <a class="dropdown-item" href="#">Data Karyawan</a>
                     <a class="dropdown-item" href="#">Mutasi</a>
                     <a class="dropdown-item" href="#">Demosi</a>
                     <a class="dropdown-item" href="#">Promosi</a>
                 </div>
             </li>
-            <li>
-                <a href="/data_master">
+            <li class="dropdown">
+                <a href="" data-toggle="dropdown" aria-expanded="false">
                     <i class="nc-icon nc-briefcase-24"></i>
-                    <p>Master Data</p>
+                    <p class="dropdown-toggle" id="navbarDropdownMenuLink">Master Data </p>
+                    <p></p>
                 </a>
+                <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                    <a class="dropdown-item" href="#">Kantor Cabang</a>
+                    <a class="dropdown-item" href="#">Divisi</a>
+                    <a class="dropdown-item" href="#">Sub Divisi</a>
+                    <a class="dropdown-item" href="#">Jabatan</a>
+                    <a class="dropdown-item" href="#">Pangkat & Golongan</a>
+                </div>
             </li>
             <li>
                 <a href="/data_table">
@@ -123,12 +133,12 @@ Coded by www.creative-tim.com
               </ul>
             <ul class="card m-sm-1 navbar-nav">
               <li class="nav-item btn-rotate dropdown">
-                  <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <a class="nav nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Halo, Jatim</p>
                     <p></p>
                   </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                <div class="dropdown-menu dropdown-primary dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                   <a class="dropdown-item" href="#">Action</a>
                   <a class="dropdown-item" href="#">Another action</a>
                   <a class="dropdown-item" href="#">Logout</a>
