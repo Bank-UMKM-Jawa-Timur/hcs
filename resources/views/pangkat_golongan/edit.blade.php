@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col">
                 <div class="container">
-                    <form action="{{ route('pangkat_golongan.update', $data->id) }}" class="form-group" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('pangkat_golongan.update', $data->golongan) }}" class="form-group" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row">

@@ -18,7 +18,7 @@
                             <select name="divisi" id="" class="form-control">
                                 <option value="-">--- Pilih Divisi ---</option>
                                 @foreach ($divisi as $item)
-                                    <option value="{{ $item['id'] }}">{{ $item['nama_divisi'] }}</option>
+                                    <option value="{{ $item['kd_divisi'] }}">{{ $item['nama_divisi'] }}</option>
                                 @endforeach
                             </select>
                         </div>

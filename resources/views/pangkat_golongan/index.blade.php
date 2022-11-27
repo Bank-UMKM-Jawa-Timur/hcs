@@ -46,13 +46,13 @@
                                 </td>
                                 <td>
                                   <div class="row">
-                                    <a href="{{ route('pangkat_golongan.edit', $item->id) }}">
+                                    <a href="{{ route('pangkat_golongan.edit', $item->golongan) }}">
                                       <button class="btn btn-warning">
                                         Edit
                                       </button>
                                     </a>
                                     
-                                    {{-- <form action="{{ route('pangkat_golongan.destroy', $item->id) }}" method="POST">
+                                    {{-- <form action="{{ route('pangkat_golongan.destroy', $item->golongan) }}" method="POST">
                                       @csrf
                                       @method('DELETE')
                                   

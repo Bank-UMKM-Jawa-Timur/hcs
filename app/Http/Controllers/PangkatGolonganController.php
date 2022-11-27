@@ -10,6 +10,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class PangkatGolonganController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -80,7 +84,7 @@ class PangkatGolonganController extends Controller
     public function edit($id)
     {
         $data = DB::table('mst_pangkat_golongan')
-            ->where('id', $id)
+            ->where('golongan', $id)
             ->first();
 
         return view('pangkat_golongan.edit', ['data' => $data]);
@@ -97,7 +101,7 @@ class PangkatGolonganController extends Controller
     {
         try{
             DB::table('mst_pangkat_golongan')
-                ->where('id', $id)
+                ->where('golongan', $id)
                 ->update([
                     'pangkat' => $request->get('pangkat'),
                     'golongan' => $request->get('golongan'),
@@ -126,7 +130,7 @@ class PangkatGolonganController extends Controller
         
         try{
             DB::table('mst_pangkat_golongan')
-                ->where('id', $id)
+                ->where('golongan', $id)
                 ->delete();
 
             Alert::success('Berhasil', 'Berhasil menghapus pangkat dan golongan.');

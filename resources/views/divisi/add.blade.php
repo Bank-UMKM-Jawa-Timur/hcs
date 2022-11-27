@@ -10,6 +10,9 @@
             <div class="col">
                 <form action="{{ route('divisi.store') }}" method="POST" enctype="multipart/form-data" name="divisi" class="form-group">
                     @csrf
+                    <label for="kode_divisi">Kode Divisi</label>
+                    <input type="text" class="form-control" name="kode_divisi" id="kode_divisi">
+
                     <label for="nama_divisi">Nama Divisi</label>
                     <input type="text" class="form-control" name="nama_divisi" id="nama_divisi">
                     <button class="btn btn-info">submit</button>
