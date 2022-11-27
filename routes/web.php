@@ -76,13 +76,19 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
     Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
     Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
+    Route::resource('/mutasi', \App\Http\Controllers\MutasiController::class);
     
+    // Routing Import excel karyawan
     Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');
     Route::post('/upload-karyawan', [\App\Http\Controllers\KaryawanController::class, 'upload_karyawan'])->name('upload_karyawan');
 
+    // Get komponen untuk CRUD master karyawan
     Route::get('getdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_divisi']);
     Route::get('getcabang', [\App\Http\Controllers\KaryawanController::class, 'get_cabang']);
     Route::get('getsubdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_subdivisi']);
+
+    // Get komponen untuk mutasi
+    Route::get('getdatakaryawan', [\App\Http\Controllers\MutasiController::class, 'getdatakaryawan']);
 });
 Auth::routes();
 
