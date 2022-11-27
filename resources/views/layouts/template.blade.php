@@ -89,11 +89,17 @@ Coded by www.creative-tim.com
                     <a class="dropdown-item" href="{{ route('pangkat_golongan.index') }}">Pangkat & Golongan</a>
                 </div>
             </li>
-            <li>
-                <a href="/data_table">
-                <i class="nc-icon nc-paper"></i>
-                <p>Laporan</p>
+            <li class="dropdown">
+                <a href="" data-toggle="dropdown" aria-expanded="false">
+                  <i class="nc-icon nc-paper"></i>
+                  <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan </p>
+                  <p></p>
                 </a>
+                <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                    <a class="dropdown-item" href="#">Laporan Mutasi</a>
+                    <a class="dropdown-item" href="#">Laporan Demosi</a>
+                    <a class="dropdown-item" href="#">Laporan Promosi</a>
+                </div>
             </li>
             <li class="active-pro">
                 <a href="">
