@@ -34,19 +34,34 @@
                 <div class="container">
                   <div class="row justify-content-center align-items-center">
                     <div class="formulir col-6 col-md-7 col-6">
-                      <form class="" action="#">
-                        <div class="form-group">
-                          <label for="email" class="sr-only">Email</label>
-                          <input type="email" name="email" id="email" class="form-control" placeholder="Enter Your Email">
+                      <form class="form-group" method="POST" action="{{ route('login') }}">
+                        @csrf
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group">
+                              <label for="email" class="col-md-4 col-form-label text-md-end">Email</label>
+                              <input autofocus placeholder="Masukkan email" id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                              @error('email')
+                                  <span class="invalid-feedback" role="alert">
+                                      <strong>{{ $message }}</strong>
+                                  </span>
+                              @enderror
+                            </div>
+                            <div class="form-group">
+                              <label for="password" class="col-md-4 col-form-label text-md-end">Password</label>
+                              <input id="password" placeholder="Masukkan password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                              @error('password')
+                                  <span class="invalid-feedback" role="alert">
+                                      <strong>{{ $message }}</strong>
+                                  </span>
+                              @enderror
+                            </div>
+                            <div class="custom-checkbox col-6">
+                              <input type="checkbox" class="custom-control-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                              <label class="custom-control-label" for="remember">Remember me</label>
+                            </div>              
+                          </div>
                         </div>
-                        <div class="form-group">
-                          <label for="password" class="sr-only">Password</label>
-                          <input type="password" name="password" id="password" class="form-control" placeholder="Enter Your Password">
-                        </div>
-                        <div class="custom-checkbox col-6">
-                          <input type="checkbox" class="custom-control-input" id="customCheck1">
-                          <label class="custom-control-label" for="customCheck1">Remember me</label>
-                        </div>              
                         <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login">
                     </form>
                     </div>

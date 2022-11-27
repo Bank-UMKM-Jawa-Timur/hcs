@@ -135,13 +135,21 @@ Coded by www.creative-tim.com
               <li class="nav-item btn-rotate dropdown">
                   <a class="nav nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="nc-icon nc-single-02"></i>
-                    <p>Halo, Jatim</p>
-                    <p></p>
+                    @if (session('status'))
+                      <p>Halo, {{ session('status') }}</p>
+                      <p></p>
+                    @endif
                   </a>
                 <div class="dropdown-menu dropdown-primary dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Logout</a>
+                  <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); 
+                    document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                  </a>
+                  
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                      @csrf
+                  </form>
+
                 </div>
               </li>
             </ul>

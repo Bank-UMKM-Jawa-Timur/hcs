@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
+Route::get('/login_page', function () {
     return view('login');
 });
 
@@ -63,18 +63,23 @@ Route::get('promosi/add', function () {
     return view('promosi/add');
 });
 
-Route::resource('/kantor', KantorController::class);
+Route::get('/', function(){
+    return view('data_table');
+});
 
-Route::resource('/divisi', App\Http\Controllers\DivisiController::class);
-Route::resource('/sub_divisi', App\Http\Controllers\SubdivisiController::class);
-Route::resource('/jabatan', App\Http\Controllers\JabatanController::class);
-Route::resource('/cabang', \App\Http\Controllers\KantorCabangController::class);
-Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
-Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
-Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
-
-Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');
-Route::post('/upload-karyawan', [\App\Http\Controllers\KaryawanController::class, 'upload_karyawan'])->name('upload_karyawan');
+Route::group(['middleware' => 'auth'], function(){
+    Route::resource('/kantor', KantorController::class);
+    Route::resource('/divisi', App\Http\Controllers\DivisiController::class);
+    Route::resource('/sub_divisi', App\Http\Controllers\SubdivisiController::class);
+    Route::resource('/jabatan', App\Http\Controllers\JabatanController::class);
+    Route::resource('/cabang', \App\Http\Controllers\KantorCabangController::class);
+    Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
+    Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
+    Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
+    
+    Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');
+    Route::post('/upload-karyawan', [\App\Http\Controllers\KaryawanController::class, 'upload_karyawan'])->name('upload_karyawan');
+});
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
