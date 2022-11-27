@@ -23,8 +23,8 @@ class AgamaSeeder extends Seeder
             ]);
         DB::table('mst_agama')
             ->insert([
-                'kd_agama' => 'Kristed',
-                'agama' => 'Kristed',
+                'kd_agama' => 'Kristen',
+                'agama' => 'Kristen',
                 'created_at' => now()
             ]);
         DB::table('mst_agama')

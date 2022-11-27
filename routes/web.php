@@ -79,6 +79,10 @@ Route::group(['middleware' => 'auth'], function(){
     
     Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');
     Route::post('/upload-karyawan', [\App\Http\Controllers\KaryawanController::class, 'upload_karyawan'])->name('upload_karyawan');
+
+    Route::get('getdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_divisi']);
+    Route::get('getcabang', [\App\Http\Controllers\KaryawanController::class, 'get_cabang']);
+    Route::get('getsubdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_subdivisi']);
 });
 Auth::routes();
 
