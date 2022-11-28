@@ -573,6 +573,7 @@ fieldset[disabled] .navbar .navbar-nav>a.btn.active {
 .btn-primary {
   background-color: #51cbce;
   color: #FFFFFF;
+  border-radius: 15px;
 }
 
 .btn-primary:hover,
@@ -735,6 +736,7 @@ fieldset[disabled] .btn-success.active {
 .btn-info {
   background-color: #51bcda;
   color: #FFFFFF;
+  border-radius: 15px;
 }
 
 .btn-info:hover,
@@ -816,6 +818,7 @@ fieldset[disabled] .btn-info.active {
 .btn-warning {
   background-color: #fbc658;
   color: #FFFFFF;
+  border-radius: 15px;
 }
 
 .btn-warning:hover,
@@ -3290,9 +3293,13 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
 .dropdown-menu .dropdown-item:first-child {
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .dropdown-menu .dropdown-item:last-child {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 }
@@ -3312,6 +3319,10 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
 .dropdown-menu .dropdown-item:hover,
 .dropdown-menu .dropdown-item:focus {
   background-color: #66615B;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .dropdown-menu.dropdown-primary .dropdown-item:hover,

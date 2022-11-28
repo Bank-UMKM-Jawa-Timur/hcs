@@ -3,14 +3,15 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <p class="card-title"><a href="/">Dashboard </a> > <a href="/jabatan">Jabatan </a> > Tambah</p>
+            <h5 class="card-title">Data Jabatan</h5>
+            <p class="card-title"><a href="/">Dashboard </a> > <a href="/jabatan">Jabatan </a></p>
         </div>
     </div>
 
     <div class="card-body">
         <div class="col">
             <div class="row">
-                <a href="{{ route('jabatan.create') }}">
+                <a class="mb-3" href="{{ route('jabatan.create') }}">
                   <button class="btn btn-primary">tambah jabatan</button>
                 </a>
                 <div class="table-responsive overflow-hidden">

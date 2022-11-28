@@ -3,14 +3,15 @@
     <div class="card">
         <div class="card-header">
             <div class="card-header">
-                <p class="card-title"><a href="/">Dashboard</a> / <a href="/">Karyawan</a> / Demosi </p>
+                <h5 class="card-title">Data Demosi</h5>
+                <p class="card-title"><a href="/">Dashboard</a> > <a href="/">Demosi</a> </p>
             </div>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col">
-                    <a href="{{ route('demosi.create') }}">
-                        <button  class="btn btn-primary">Tambah</button>
+            <div class="col">
+                <div class="row">
+                    <a class="mb-3" href="{{ route('demosi.create') }}">
+                        <button  class="btn btn-primary">Tambah Demosi</button>
                     </a>
                     <div class="table">
                         <table class="table" id="table">

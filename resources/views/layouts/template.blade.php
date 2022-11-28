@@ -62,7 +62,7 @@ Coded by www.creative-tim.com
                     <p>Navigation</p>
                 </a>
             </li>
-             <li class="dropdown">
+            <li class="dropdown">
                 <a href="" data-toggle="dropdown" aria-expanded="false">
                     <i class="nc-icon nc-badge"></i>
                     <p class="dropdown-toggle" id="navbarDropdownMenuLink">Karyawan </p>
@@ -105,7 +105,7 @@ Coded by www.creative-tim.com
             </li>
             <li class="active-pro">
                 <a href="">
-                <p class="text-center">BANK BPR JATIM</p>
+                <p class="text-center">BANK UMKM JATIM</p>
                 </a>
             </li>
         </ul>
@@ -143,10 +143,10 @@ Coded by www.creative-tim.com
               <li class="nav-item btn-rotate dropdown">
                   <a class="nav nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="nc-icon nc-single-02"></i>
-                    @if (session('status'))
-                      <p>Halo, {{ session('status') }}</p>
+                    {{-- @if (session('status')) --}}
+                      <p>Halo, {{ auth()->user()->name }}</p>
                       <p></p>
-                    @endif
+                    {{-- @endif --}}
                   </a>
                 <div class="dropdown-menu dropdown-primary dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                   <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); 
@@ -184,7 +184,7 @@ Coded by www.creative-tim.com
               <span class="copyright">
                 © <script>
                   document.write(new Date().getFullYear())
-                </script>, made with <i class="fa fa-heart heart"></i> by 3-Founder
+                </script>
               </span>
             </div>
           </div>

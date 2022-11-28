@@ -4,6 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
+                <h5 class="card-title">Tambah Kantor</h5>
                 <p class="card-title"><a href="/">Dashboard </a> > <a href="/kantor">Kantor </a> > Tambah</p>
             </div>
         </div>

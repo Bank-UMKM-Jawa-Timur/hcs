@@ -4,7 +4,8 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <p class="card-title"><a href="/">Dashboard </a> > <a href="/pangkat_golongan">Pangkat dan Golongan </a> > Edit</p>
+                <h5 class="card-title">Edit Pangkat Dan Golongan</h5>
+                <p class="card-title"><a href="/">Dashboard </a> > <a href="/pangkat_golongan">Pangkat Dan Golongan </a> > Edit</p>
             </div>
         </div>
     </div>

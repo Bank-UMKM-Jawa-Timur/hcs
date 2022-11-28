@@ -3,6 +3,7 @@
 @section('content') 
     <div class="card-header">
         <div class="card-header">
+            <h5 class="card-title">Edit Kantor</h5>
             <p class="card-title"><a href="/">Dashboard </a> > <a href="/kantor">Kantor </a> > Edit {{ $dataKantor['nama_kantor'] }}</p>
         </div>
     </div>

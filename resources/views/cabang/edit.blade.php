@@ -2,7 +2,8 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <p class="card-title"><a href="/">Dashboard </a> - <a href="/divisi">Cabang </a> - Edit</p>
+            <h5 class="card-title">Edit Data Karyawan</h5>
+            <p class="card-title"><a href="/">Dashboard </a> > <a href="/cabang">Kantor Cabang </a> > Edit</p>
         </div>
     </div>
     <div class="card-body">

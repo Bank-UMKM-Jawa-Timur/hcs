@@ -3,17 +3,18 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <p class="card-title"><a href="/">Dashboard </a> > <a href="/karyawan">Karyawan </a> > Tambah</p>
+            <h5 class="card-title">Data Karyawan</h5>
+            <p class="card-title"><a href="/">Dashboard </a> > <a href="/karyawan">Karyawan </a></p>
         </div>
     </div>
 
     <div class="card-body">
         <div class="col">
             <div class="row">
-                <a href="{{ route('karyawan.create') }}">
+                <a class="mb-3" href="{{ route('karyawan.create') }}">
                   <button class="btn btn-primary">tambah karyawan</button>
                 </a>
-                <a href="{{ route('import') }}">
+                <a class="ml-3" href="{{ route('import') }}">
                   <button class="btn btn-primary">import karyawan</button>
                 </a>
                 <div class="table-responsive overflow-scroll">

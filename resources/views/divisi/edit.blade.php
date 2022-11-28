@@ -3,7 +3,8 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <p class="card-title"><a href="/">Dashboard </a> - <a href="/divisi">Divisi </a> - Edit</p>
+            <h5 class="card-title">Edit Divisi</h5>
+            <p class="card-title"><a href="/">Dashboard </a> > <a href="/divisi">Divisi </a> > Edit</p>
         </div>
     </div>
     <div class="card-body">
