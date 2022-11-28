@@ -20,7 +20,7 @@ class ImportKaryawan implements ToModel, WithHeadingRow
             'nama_karyawan' => $row['nama_karyawan'],
             'nik' => $row['nik'],
             'ket_jabatan' => $row['ket_jabatan'], 
-            'kd_subdiv' => $row['kd_subdiv'],
+            'kd_subdivisi' => $row['kd_subdiv'],
             'id_cabang' => $row['id_cabang'],
             'kd_jabatan' => $row['kd_jabatan'],
             'kd_panggol' => $row['kd_pangkat_golongan'],

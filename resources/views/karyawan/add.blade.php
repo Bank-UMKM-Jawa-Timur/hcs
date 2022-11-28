@@ -60,7 +60,7 @@
                                     </select>
                                 </div>
                             </div> 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Jenis Kelamin</label>
                                     <select name="jk" id="" class="form-control">
@@ -70,7 +70,7 @@
                                     </select>
                                 </div>
                             </div> 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Status pernikahan</label>
                                     <select name="status pernikahan" id="status" class="form-control">
@@ -79,17 +79,6 @@
                                         <option value="Belum Kawin">Belum Kawin</option>
                                         <option value="Janda">Janda</option>
                                         <option value="Duda">Duda</option>
-                                    </select>
-                                </div>
-                            </div> 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="">Pasangan</label>
-                                    <select name="is" id="" class="form-control">
-                                        <option value="">--- Pilih ---</option>
-                                        @foreach ($is as $item)
-                                            <option value="{{ $item->id }}">{{ $item->is_nama }}</option>
-                                        @endforeach
                                     </select>
                                 </div>
                             </div> 
@@ -218,6 +207,53 @@
                         </div>   
                     </div>
                 </div>
+
+                <div class="card p-2 ml-3 mr-3 shadow" id="data_is">
+                    <div class="card-header" id="headingThree">
+                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Data Suami / Istri</a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                        <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="is">Pasangan</label>
+                                    <select name="is" id="is" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        <option value="Suami">Suami</option>
+                                        <option value="Istri">Istri</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="is_nama">Nama</label>
+                                    <input type="text" name="is_nama" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="is_tgl_lahir">Tanggal Lahir</label>
+                                    <input type="date" name="is_tgl_lahir" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="is_alamat">Alamat</label>
+                                <textarea name="is_alamat" class="form-control"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="is_pekerjaan">Pekerjaan</label>
+                                <input type="text" class="form-control" name="is_pekerjaan" >
+                            </div>
+                            <div class="col-md-6">
+                                <label for="is_jumlah_anak">Jumlah Anak</label>
+                                <input type="number" class="form-control" name="is_jml_anak">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="row m-3 justify-content-end">
@@ -231,6 +267,8 @@
     <script>
         let kantor = $('#kantor_row');
         let status = $('#status');
+
+        $('#data_is').hide();
 
         $('#kantor').change(function(){
             var kantor_id = $(this).val();
@@ -306,5 +344,15 @@
                 })
             }
         });
+
+        $('#status').change(function(){
+            var stat = $(this).val();
+
+            if(stat == 'Kawin'){
+                $('#data_is').show();
+            } else{
+                $('#data_is').hide();
+            }
+        })
     </script>
 @endsection

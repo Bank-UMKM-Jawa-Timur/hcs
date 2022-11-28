@@ -79,12 +79,19 @@ class KaryawanController extends Controller
         return response()->json($data);
     }
 
-    public function get_is()
+    public function get_is(Request $request)
     {
         $data = DB::table('is')
-            ->get();
+            ->join('mst_karyawan', 'mst_karyawan.id_is', '=', 'is.id')
+            ->select('is.*')
+            ->where('nip', $request->nip)
+            ->orderBy('id', 'desc')
+            ->first();
+        if(!isset($data)){
+            $data = null;
+        }
 
-        return response()->json(['data' => $data]);
+        return response()->json($data);
     }
 
     /**
@@ -120,17 +127,29 @@ class KaryawanController extends Controller
     public function store(Request $request)
     {
         try{
+            // dd($request);
+            if($request->get('status_pernikahan') == 'Kawin'){
+                DB::table('is')
+                    ->insert([
+                        'enum' => $request->get('is'),
+                        'is_nama' => $request->get('is_nama'),
+                        'is_tgl_lahir' => $request->get('is_tgl_lahir'),
+                        'is_alamat' => $request->get('is_alamat'),
+                        'is_pekerjaan' => $request->get('is_pekerjaan'),
+                        'is_jml_anak' => $request->get('is_jml_anak'),
+                        'created_at' => now()
+                    ]);
+            }
             DB::table('mst_karyawan')
                 ->insert([
                     'nip' => $request->get('nip'),
                     'nama_karyawan' => $request->get('nama'),
                     'nik' => $request->get('nik'),
                     'ket_jabatan' => $request->get('ket_jabatan'), 
-                    'id_subdivisi' => $request->get('sub_divisi'),
+                    'kd_subdivisi' => $request->get('sub_divisi'),
                     'id_cabang' => $request->get('cabang'),
                     'kd_jabatan' => $request->get('jabatan'),
                     'kd_panggol' => $request->get('panggol'),
-                    'id_is' => $request->get('is'),
                     'kd_agama' => $request->get('agama'),
                     'tmp_lahir' => $request->get('tmp_lahir'),
                     'tgl_lahir' => $request->get('tgl_lahir'),
@@ -149,8 +168,21 @@ class KaryawanController extends Controller
                     'created_at' => now(),
                 ]);
 
-                Alert::success('Berhasil', 'Berhasil menambah karyawan.');
-                return redirect()->route('karyawan.index');
+            if($request->get('status_pernikahan') == 'Kawin'){
+                $id_is = DB::table('is')
+                    ->select('id')
+                    ->orderBy('id', 'DESC')
+                    ->first();
+
+                DB::table('mst_karyawan')
+                    ->where('nip', $request->get('nip'))
+                    ->update([
+                        'id_is' => $id_is->id
+                    ]);
+            }
+
+            Alert::success('Berhasil', 'Berhasil menambah karyawan.');
+            return redirect()->route('karyawan.index');
         } catch(Exception $e){
             DB::rollBack();
             Alert::error('Tejadi kesalahan', ''.$e);
@@ -213,13 +245,63 @@ class KaryawanController extends Controller
     public function update(Request $request, $id)
     {
         try{
+            // dd($request);
+            $id_is = $request->get('id_is');
+            if($request->get('status_pernikahan') == 'Kawin'){
+                $id_is = $request->get('id_is');
+                if($request->get('id_is') == null){
+                    DB::table('is')
+                    ->insert([
+                        'enum' => $request->get('is'),
+                        'is_nama' => $request->get('is_nama'),
+                        'is_tgl_lahir' => $request->get('is_tgl_lahir'),
+                        'is_alamat' => $request->get('is_alamat'),
+                        'is_pekerjaan' => $request->get('is_pekerjaan'),
+                        'is_jml_anak' => $request->get('is_jml_anak'),
+                        'created_at' => now()
+                    ]);
+
+                    $idis = DB::table('is')
+                        ->select('id')
+                        ->orderBy('id', 'desc')
+                        ->first();
+                        
+                    DB::table('mst_karyawan')
+                        ->where('nip', $request->get('nip'))
+                        ->update([
+                            'id_is' => $idis->id
+                        ]);
+                } else{
+                    DB::table('is')
+                        ->where('id', $id_is)
+                        ->update([
+                            'enum' => $request->get('is'),
+                            'is_nama' => $request->get('is_nama'),
+                            'is_tgl_lahir' => $request->get('is_tgl_lahir'),
+                            'is_alamat' => $request->get('is_alamat'),
+                            'is_pekerjaan' => $request->get('is_pekerjaan'),
+                            'is_jml_anak' => $request->get('is_jml_anak'),
+                            'updated_at' => now()
+                        ]);
+                }
+            } else{
+                DB::table('mst_karyawan')
+                    ->where('nip', $request->get('nip'))
+                    ->update([
+                        'id_is' => null
+                    ]);
+                DB::table('is')
+                    ->where('id', $request->get('id_is'))
+                    ->delete();
+
+            }
+
             DB::table('mst_karyawan')
-                ->where('nip', $request->get('nip'))
+                ->where('nip', $id)
                 ->update([
                     'nip' => $request->get('nip'),
                     'nama_karyawan' => $request->get('nama'),
                     'nik' => $request->get('nik'),
-                    'id_is' => $request->get('is'),
                     'kd_agama' => $request->get('agama'),
                     'tmp_lahir' => $request->get('tmp_lahir'),
                     'tgl_lahir' => $request->get('tgl_lahir'),

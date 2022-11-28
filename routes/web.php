@@ -3,6 +3,7 @@
 use App\Http\Controllers\DemosiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\TunjanganKaryawanController;
 use Illuminate\Support\Facades\Auth;
@@ -101,6 +102,8 @@ Route::group(['middleware' => 'auth'], function(){
 
     // Get data untuk tunjangan karyawan
     Route::get('getdatatunjangan', [TunjanganKaryawanController::class, 'getdatatunjangan']);
+
+    Route::get('getis', [KaryawanController::class, 'get_is']);
 });
 Auth::routes();
 
