@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <p class="card-title"><a href="/">Dashboard </a> / <a href="/karyawan">Karyawan </a> / Import</p>
+            <p class="card-title"><a href="/">Dashboard </a> > <a href="/karyawan">Karyawan </a> > Import</p>
         </div>
     </div>
 
@@ -17,11 +17,12 @@
                 <form action="{{ route('upload_karyawan') }}" enctype="multipart/form-data" method="POST" class="form-group">
                     @csrf
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="container">
                             <label for="">Data CSV</label>
-                            <label for="csv" class="form-control" ></label>
-                            <input type="file" name="upload_csv" class="form-control" accept="">
-        
+                            <div class="custom-file col-md-12">
+                                <input type="file" class="custom-file-input" id="validatedCustomFile">
+                                <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
+                            </div>  
                         </div>
                         <div class="container">
                             <button class="btn btn-info">Import</button>
@@ -31,4 +32,11 @@
             </div>
         </div>
     </div>
+    <script>
+        document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+            var name = document.getElementById("validatedCustomFile").files[0].name;
+            var nextSibling = e.target.nextElementSibling
+            nextSibling.innerText = name
+        });
+    </script>
 @endsection

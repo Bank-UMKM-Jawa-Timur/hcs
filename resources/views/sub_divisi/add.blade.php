@@ -3,7 +3,8 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <p class="card-title"><a href="/">Dashboard </a> - <a href="{{ route('sub_divisi.index') }}">Sub Divisi</a> - Tambah </p>
+            <h5 class="card-title">Tambah Sub Divisi</h5>
+            <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('sub_divisi.index') }}">Sub Divisi</a> > Tambah </p>
         </div>
     </div>
     

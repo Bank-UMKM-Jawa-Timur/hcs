@@ -4,14 +4,15 @@
 <div class="card">
     <div class="card-header">
       <div class="card-header">
-        <p class="card-title"><a href="/">Dashboard </a> - <a href="/divisi">Divisi </a> - Data Master</p>
+        <h5 class="card-title">Data Divisi</h5>
+        <p class="card-title"><a href="/">Dashboard </a> > <a href="/divisi">Divisi </a></p>
       </div>
     </div>
     <div class="card-body">
-      <div class="row">
-        <div class="col">
-          <a href="{{ route('divisi.create') }}">
-            <button class="btn btn-primary">tambah</button>
+      <div class="col">
+        <div class="row">
+          <a class="mb-3" href="{{ route('divisi.create') }}">
+            <button class="btn btn-primary">Tambah Divisi</button>
           </a>
           <div class="table-responsive overflow-hidden">
             <table class="table" id="table">
