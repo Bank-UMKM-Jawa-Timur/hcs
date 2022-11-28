@@ -56,7 +56,7 @@ class DivisiController extends Controller
         try{
             DB::table('mst_divisi')
                 ->insert([
-                    'kd_divisi' => $request->get('kd_divisi'),
+                    'kd_divisi' => $request->get('kode_divisi'),
                     'nama_divisi' => $request->get('nama_divisi'),
                     'id_kantor' => 1,
                     'created_at' => now()

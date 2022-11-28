@@ -23,6 +23,10 @@
                             </select>
                         </div>
                         <div class="col-lg-6">
+                            <label for="nama_subdivisi">Kode Sub Divisi</label>
+                            <input type="text" class="form-control" name="kd_subdiv">
+                        </div>
+                        <div class="col-lg-6">
                             <label for="nama_subdivisi">Nama Sub Divisi</label>
                             <input type="text" class="form-control" name="nama_subdivisi">
                         </div>

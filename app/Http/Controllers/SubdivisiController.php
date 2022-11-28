@@ -25,7 +25,7 @@ class SubdivisiController extends Controller
         $data = DB::table('mst_sub_divisi')
             ->select(
                 'mst_divisi.kd_divisi',
-                'mst_sub_divisi.id',
+                'mst_sub_divisi.kd_subdiv',
                 'mst_divisi.nama_divisi',
                 'mst_sub_divisi.nama_subdivisi',
                 'mst_sub_divisi.kd_divisi'
@@ -74,6 +74,7 @@ class SubdivisiController extends Controller
             DB::table('mst_sub_divisi')
                 ->insert([
                     'kd_divisi' => $request->get('divisi'),
+                    'kd_subdiv' => $request->get('kd_subdiv'),
                     'nama_subdivisi' => $request->get('nama_subdivisi'),
                     'created_at' => now()
                 ]);
@@ -109,9 +110,9 @@ class SubdivisiController extends Controller
     public function edit($id)
     {
         $data = DB::table('mst_sub_divisi')
-            ->where('mst_sub_divisi.id', $id)
+            ->where('mst_sub_divisi.kd_subdiv', $id)
             ->select(
-                'mst_sub_divisi.id',
+                'mst_sub_divisi.kd_subdiv',
                 'mst_divisi.nama_divisi',
                 'mst_sub_divisi.nama_subdivisi',
                 'mst_sub_divisi.kd_divisi'
@@ -142,9 +143,10 @@ class SubdivisiController extends Controller
 
         try{
             DB::table('mst_sub_divisi')
-                ->where('id', $id)
+                ->where('kd_subdiv', $id)
                 ->update([
                     'kd_divisi' => $request->get('divisi'),
+                    'kd_subdiv' => $request->get('kd_subdiv'),
                     'nama_subdivisi' => $request->get('nama_subdivisi'),
                     'updated_at' => now()
                 ]);

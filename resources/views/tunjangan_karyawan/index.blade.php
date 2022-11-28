@@ -1,28 +1,33 @@
 @extends('layouts.template')
+
 @section('content')
     <div class="card-header">
-        <div class="card-header">
-            <p class="card-title"><a href="/">Dashboard </a> - Sub Divisi
-        </div>
+        <div class="card-header"></div>
     </div>
 
     <div class="card-body">
         <div class="row">
             <div class="col">
-                <a href="{{ route('sub_divisi.create') }}">
-                    <button class="btn btn-primary">tambah sub divisi</button>
+                <a href="{{ route('tunjangan_karyawan.create') }}">
+                    <button class="btn btn-primary">tambah tunjangan</button>
                 </a>
-                <div class="table-responsive overflow-hidden">
+                <div class="table-responsive">
                     <table class="table" id="table">
                       <thead class=" text-primary">
                         <th>
                             no
                         </th>
                         <th>
-                            Kode Divisi
+                            NIP
                         </th>
                         <th>
-                            Nama Sub Divisi
+                            Nama Karyawan
+                        </th>
+                        <th>
+                            Nama Tunjangan
+                        </th>
+                        <th>
+                          Nominal
                         </th>
                         <th>
                             Aksi
@@ -41,14 +46,20 @@
                                     @endphp
                                 </td>
                                 <td>
-                                    {{ $item->kd_divisi }}
+                                    {{ $item->nip }}
                                 </td>
                                 <td>
-                                    {{ $item->nama_subdivisi }}
+                                    {{ $item->nama_karyawan }}
+                                </td>
+                                <td>
+                                    {{ $item->nama_tunjangan }}
+                                </td>
+                                <td>
+                                    {{ $item->nominal }}
                                 </td>
                                 <td>
                                   <div class="row">
-                                    <a href="{{ route('sub_divisi.edit', $item->kd_subdiv) }}">
+                                    <a href="{{ route('tunjangan_karyawan.edit', $item->id) }}">
                                       <button class="btn btn-warning">
                                         Edit
                                       </button>

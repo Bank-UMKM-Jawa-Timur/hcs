@@ -103,7 +103,7 @@
                         <select name="jabatan" id="" class="form-control">
                             <option value="">--- Pilih ---</option>
                             @foreach ($jabatan as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama_jabatan }}</option>
+                                <option value="{{ $item->kd_jabatan }}">{{ $item->nama_jabatan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -255,7 +255,7 @@
                                         $('#sub_divisi').empty();
                                         $.each(res, function(i, item){
                                             $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
-                                            $('#sub_divisi').append('<option value="'+item.id+'">'+item.nama_subdivisi+'</option>')
+                                            $('#sub_divisi').append('<option value="'+item.kd_subdiv+'">'+item.nama_subdivisi+'</option>')
                                         })
                                     }
                                 })

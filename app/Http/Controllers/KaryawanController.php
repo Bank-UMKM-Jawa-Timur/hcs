@@ -32,7 +32,7 @@ class KaryawanController extends Controller
                 'mst_pangkat_golongan.golongan',
                 'mst_pangkat_golongan.pangkat'
             )
-            ->join('mst_jabatan', 'mst_jabatan.id', '=', 'mst_karyawan.id_jabatan')
+            ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
             ->join('mst_pangkat_golongan', 'mst_karyawan.kd_panggol', '=', 'mst_pangkat_golongan.golongan')
             ->get();
             // dd($data);
@@ -128,7 +128,7 @@ class KaryawanController extends Controller
                     'ket_jabatan' => $request->get('ket_jabatan'), 
                     'id_subdivisi' => $request->get('sub_divisi'),
                     'id_cabang' => $request->get('cabang'),
-                    'id_jabatan' => $request->get('jabatan'),
+                    'kd_jabatan' => $request->get('jabatan'),
                     'kd_panggol' => $request->get('panggol'),
                     'id_is' => $request->get('is'),
                     'kd_agama' => $request->get('agama'),

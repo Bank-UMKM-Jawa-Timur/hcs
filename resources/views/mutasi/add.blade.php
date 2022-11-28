@@ -15,16 +15,17 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="">Karyawan</label>
-                        <select name="nip" class="form-control" id="karyawan">
-                            <option value="">--- Pilih Karyawan ---</option>
-                            @foreach ($data as $item)
-                                <option value="{{ $item->nip }}">{{ $item->nama_karyawan }}</option>
-                            @endforeach
-                        </select>
+                        <label for="">NIP</label>
+                        <input type="text" name="nip" id="karyawan" class="form-control">
                     </div>
                 </div>    
-                <div class="col-md-6" id="kantor_lama">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="nama_karyawan">Nama Karyawan</label>
+                        <input type="text" name="nama" id="nama_karyawan" disabled class="form-control">
+                    </div>
+                </div>
+                <div class="" id="kantor_lama">
 
                 </div>
                 <div class="col-md-6">
@@ -33,23 +34,12 @@
                         <input type="text" class="form-control" disabled name="" id="jabatan_lama">
                         <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
                     </div>
-                </div>    
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="">Jabatan Baru</label>
-                        <select name="id_jabatan_baru" id="" class="form-control">
-                            <option value="">--- Pilih jabatan baru ---</option>
-                            @foreach ($data_jabatan as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama_jabatan }}</option>
-                            @endforeach
-                        </select>
-                    </div>  
                 </div>
             </div>
             <hr>
             <div class="row align-content-center justify-content-center">
                 <div class="col-lg-12">
-                    <h6>Kantor Baru</h6>
+                    <h6>Pembaruan Data</h6>
                 </div>
                 
                 <div class="col-md-4">
@@ -67,6 +57,23 @@
                 </div>
                 <div class="col-md-4"  id="kantor_row2">
                     
+                </div>  
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">Jabatan Baru</label>
+                        <select name="id_jabatan_baru" id="" class="form-control">
+                            <option value="">--- Pilih jabatan baru ---</option>
+                            @foreach ($data_jabatan as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama_jabatan }}</option>
+                            @endforeach
+                        </select>
+                    </div>  
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">Keterangan Jabatan</label>
+                        <input type="text" class="form-control" id="ket_jabatan" name="ket_jabatan">
+                    </div>
                 </div>
             </div>
             <hr>
@@ -112,6 +119,7 @@
             url: "/getdatakaryawan?nip="+nip,
             datatype: "json",
             success: function(res){
+                $('#kantor_lama').addClass('col-md-6')
                 if(res.id_cabang != null){
                     $('#kantor_lama').append(`
                             <div class="form-group">
@@ -132,6 +140,11 @@
 
                 $('#jabatan_lama').val(res.nama_jabatan)
                 $('#id_jabatan_lama').val(res.id_jabatan)
+                $("#nama_karyawan").val(res.nama_karyawan)
+                $('#ket_jabatan').val(res.ket_jabatan)
+            },
+            error: function(){
+                $('#kantor_lama').removeClass('col-md-6')
             }
            }) 
         });

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class TunjanganKaryawanController extends Controller
 {
@@ -21,18 +22,28 @@ class TunjanganKaryawanController extends Controller
     public function index()
     {
         $data = DB::table('tunjangan_karyawan')
-            ->join('tunjangan', 'tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-            ->join('karyawan', 'karyawan.nip', '=', 'tunjangan_karyawan.nip')
+            ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+            ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
             ->select(
                 'tunjangan_karyawan.id',
-                'karyawan.nip',
-                'karyawan.nama_karyawan',
-                'tunjungan.nama_tunjangan',
-                'tunjangan.nominal',
+                'mst_karyawan.nip',
+                'mst_karyawan.nama_karyawan',
+                'mst_tunjangan.nama_tunjangan',
+                'tunjangan_karyawan.nominal',
             )
             ->get();
 
         return view('tunjangan_karyawan.index', ['data' => $data]);
+    }
+
+    public function getdatatunjangan(Request $request)
+    {
+        $data = DB::table('mst_karyawan')
+            ->where('nip', $request->nip)
+            ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
+            ->first();
+
+        return response()->json($data);
     }
 
     /**
@@ -42,7 +53,10 @@ class TunjanganKaryawanController extends Controller
      */
     public function create()
     {
-        return view('tunjangan_karyawan.add');
+        $data = DB::table('mst_tunjangan')
+            ->get();
+
+        return view('tunjangan_karyawan.add', ['data' => $data]);
     }
 
     /**
@@ -54,11 +68,23 @@ class TunjanganKaryawanController extends Controller
     public function store(Request $request)
     {
         try{
+            DB::table('tunjangan_karyawan')
+                ->insert([
+                    'nip' => $request->get('nip'),
+                    'id_tunjangan' => $request->get('tunjangan'),
+                    'nominal' => $request->get('nominal')
+                ]);
 
+                Alert::success('Berhasil', 'Berhasil menambahkan tunjangan karyawan.');
+                return redirect()->route('tunjangan_karyawan.index');
         } catch(Exception $e){
-
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('tunjangan_karyawan.index');
         } catch(QueryException $e){
-
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('tunjangan_karyawan.index');
         }
     }
 
@@ -83,11 +109,12 @@ class TunjanganKaryawanController extends Controller
     {
         $data = DB::table('tunjangan_karyawan')
             ->where('id', $id)
-            ->join('tunjangan', 'tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-            ->join('karyawan', 'karyawan.nip', '=', 'tunjangan_karyawan.nip')
+            ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
             ->first();
+        $data_tunjangan = DB::table('mst_tunjangan')
+            ->get();
 
-        return view('tunjangan_karyawan.edit', ['data' => $data]);
+        return view('tunjangan_karyawan.edit', ['data' => $data, 'data_tunjangan' => $data_tunjangan]);
     }
 
     /**
@@ -100,11 +127,25 @@ class TunjanganKaryawanController extends Controller
     public function update(Request $request, $id)
     {
         try{
+            DB::table('tunjangan_karyawan')
+                ->where('id', $id)
+                ->update([
+                    'nip' => $request->get('nip'),
+                    'id_tunjangan' => $request->get('tunjangan'),
+                    'nominal' => $request->get('nominal'),
+                    'updated_at' => now()
+                ]);
 
+                Alert::success('Berhasil', 'Berhasil mengupdate tunjangan karyawan.');
+                return redirect()->route('tunjangan_karyawan.index');
         } catch(Exception $e){
-
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('tunjangan_karyawan.index');
         } catch(QueryException $e){
-            
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('tunjangan_karyawan.index');
         }
     }
 

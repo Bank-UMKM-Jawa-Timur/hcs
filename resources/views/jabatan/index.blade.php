@@ -40,7 +40,7 @@
                                 </td>
                                 <td>
                                   <div class="row">
-                                    <a href="{{ route('jabatan.edit', $item->id) }}">
+                                    <a href="{{ route('jabatan.edit', $item->kd_jabatan) }}">
                                       <button class="btn btn-warning">
                                         Edit
                                       </button>

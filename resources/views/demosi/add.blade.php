@@ -3,7 +3,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Demosi Karyawan</h5>
-            <p class="card-title"><a href="/">Dashboard</a> / <a href="/">Karyawan</a> / <a href="/demosi">Demosi</a> / Tambah</p>
+            <p class="card-title"><a href="/">Dashboard</a> / <a href="/">Karyawan</a> / <a href="/demosi">demosi</a> / Tambah</p>
         </div>
     </div>
     <div class="card-body">
@@ -12,43 +12,37 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="">Karyawan</label>
-                        <select name="nip" class="form-control" id="karyawan">
-                            <option value="">--- Pilih Karyawan ---</option>
-                            @foreach ($data as $item)
-                                <option value="{{ $item->nip }}">{{ $item->nama_karyawan }}</option>
-                            @endforeach
-                        </select>
+                        <label for="">NIP</label>
+                        <input type="text" name="nip" id="karyawan" class="form-control">
                     </div>
                 </div>    
-                <div class="col-md-2">
+                <div class="col-md-6">
                     <div class="form-group">
-                        <label for="">Golongan Lama</label>
-                        <input type="text" disabled class="form-control" name="" id="golongan_lama_show">
-                        <input type="hidden" name="golongan_lama" id="golongan_lama">
+                        <label for="nama_karyawan">Nama Karyawan</label>
+                        <input type="text" name="nama" id="nama_karyawan" disabled class="form-control">
                     </div>
-                </div>    
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="">Pangkat Lama</label>
-                        <input type="text" disabled class="form-control" name="" id="pangkat_lama_show">
-                        <input type="hidden" name="pangkat_lama" id="pangkat_lama">
-                    </div>  
                 </div>
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="">Jabatan Lama</label>
+                        <input type="text" disabled class="form-control" name="" id="jabatan_show">
+                        <input type="hidden" name="jabatan_lama" id="jabatan_lama">
+                    </div>
+                </div>    
             </div>
             <hr>
             <div class="row align-content-center justify-content-center">
                 <div class="col-lg-12">
-                    <h6>Pangkat dan Golongan Baru</h6>
+                    <h6>Jabatan Baru</h6>
                 </div>
 
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="">Pangkat dan Golongan</label>
-                        <select name="golongan_baru" id="" class="form-control">
+                        <label for="">Jabatan</label>
+                        <select name="jabatan_baru" id="" class="form-control">
                             <option value="">--- Pilih ---</option>
-                            @foreach ($data_panggol as $item)
-                                <option value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
+                            @foreach ($jabatan as $item)
+                                <option value="{{ $item->kd_jabatan }}">{{ $item->nama_jabatan }}</option>
                             @endforeach
                         </select>
                     </div>  
@@ -71,6 +65,12 @@
                         <input type="text" class="form-control" name="bukti_sk" id="inputGroupFile01">
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="">Keterangan Jabatan</label>
+                        <textarea name="ket_jabatan" class="form-control" id="ket_jabatan"></textarea>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="update ml-auto mr-auto">
@@ -84,20 +84,15 @@
 @section('custom_script')
     <script>
         $('#karyawan').change(function(e){
-            $('#golongan_lama_show').empty()
-            $('#golongan_lama').empty()
-            $('#pangkat_lama_show').empty()
-            $('#pangkat_lama').empty()
             var nip = $(this).val();
            $.ajax({
             type: "GET",
-            url: "/getgolongan?nip="+nip,
+            url: "/getdatatunjangan?nip="+nip,
             datatype: "json",
             success: function(res){
-                $('#golongan_lama_show').val(res.golongan)
-                $('#golongan_lama').val(res.golongan)
-                $('#pangkat_lama_show').val(res.pangkat)
-                $('#pangkat_lama').val(res.pangkat)
+                $("#nama_karyawan").val(res.nama_karyawan)
+                $("#jabatan_lama").val(res.kd_jabatan)
+                $("#jabatan_show").val(res.nama_jabatan)
             }
            }) 
         });

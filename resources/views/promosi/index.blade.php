@@ -47,10 +47,10 @@
                                             {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
                                         </td>
                                         <td>
-                                            {{ $item->golongan_lama }} - {{ $item->pangkat_lama }}
+                                            {{ $item->jabatan_lama }}
                                         </td>
                                         <td>
-                                            {{ $item->golongan_baru }} - {{ $item->pangkat_baru }}
+                                            {{ $item->jabatan_baru }}
                                         </td>
                                         <td>
                                             {{ $item->bukti_sk }}

@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('mutasi', function (Blueprint $table) {
             $table->id();
             $table->string('nip', 16);
-            $table->unsignedBigInteger('id_jabatan_lama')->nullable();
-            $table->unsignedBigInteger('id_jabatan_baru')->nullable();
-            $table->unsignedBigInteger('id_subdiv_lama')->nullable();
-            $table->unsignedBigInteger('id_subdiv_baru')->nullable();
+            $table->string('kd_jabatan_lama', 15)->nullable();
+            $table->string('kd_jabatan_baru', 15)->nullable();
+            $table->string('kd_subdiv_lama', 15)->nullable();
+            $table->string('kd_subdiv_baru', 15)->nullable();
             $table->unsignedBigInteger('id_cabang_lama')->nullable();
             $table->unsignedBigInteger('id_cabang_baru')->nullable();
             $table->date('tanggal_pengesahan');
@@ -32,20 +32,25 @@ return new class extends Migration
                 ->on('mst_karyawan')
                 ->onUpdate('cascade');
 
-            $table->foreign('id_jabatan_lama')
-                ->references('id')
+            $table->foreign('kd_jabatan_lama')
+                ->references('kd_jabatan')
                 ->on('mst_jabatan')
                 ->onUpdate('cascade');
 
-            $table->foreign('id_jabatan_baru')
-                ->references('id')
+            $table->foreign('kd_jabatan_baru')
+                ->references('kd_jabatan')
                 ->on('mst_jabatan')
                 ->onUpdate('cascade');
 
-            $table->foreign('id_subdiv_lama')
-                ->references('id')
+            $table->foreign('kd_subdiv_lama')
+                ->references('kd_subdiv')
                 ->on('mst_sub_divisi')
                 ->onUpdate('cascade');
+
+            $table->foreign('kd_subdiv_baru')
+            ->references('kd_subdiv')
+            ->on('mst_sub_divisi')
+            ->onUpdate('cascade');
 
             $table->foreign('id_cabang_baru')
                 ->references('id')

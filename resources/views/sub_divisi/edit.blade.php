@@ -10,7 +10,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col">
-                <form action="{{ route('sub_divisi.update', $data->id) }}" method="POST" enctype="multipart/form-data" class="form-group">
+                <form action="{{ route('sub_divisi.update', $data->kd_subdiv) }}" method="POST" enctype="multipart/form-data" class="form-group">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -22,6 +22,10 @@
                                     <option value="{{ $item['kd_divisi'] }}" {{ ($item['kd_divisi'] == $data->kd_divisi) ? 'selected' : '' }}>{{ $item['nama_divisi'] }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="nama_subdivisi">Kode Sub Divisi</label>
+                            <input type="text" class="form-control" name="kd_subdiv" value="{{ $data->kd_subdiv }}">
                         </div>
                         <div class="col-lg-6">
                             <label for="nama_subdivisi">Nama Sub Divisi</label>

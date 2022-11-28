@@ -47,6 +47,7 @@ class JabatanController extends Controller
         try{
             DB::table('mst_jabatan')
                 ->insert([
+                    'kd_jabatan' => $request->get('kd_jabatan'),
                     'nama_jabatan' => $request->get('nama_jabatan'),
                     'created_at' => now()
                 ]);
@@ -82,7 +83,7 @@ class JabatanController extends Controller
     public function edit($id)
     {
         $data = DB::table('mst_jabatan')
-            ->where('id', $id)
+            ->where('kd_jabatan', $id)
             ->first();
 
         return view('jabatan.edit', ['data' => $data]);
@@ -99,8 +100,9 @@ class JabatanController extends Controller
     {
         try{
             DB::table('mst_jabatan')
-                ->where('id', $id)
+                ->where('kd_jabatan', $id)
                 ->update([
+                    'kd_jabatan' => $request->get('kd_jabatan'),
                     'nama_jabatan' => $request->get('nama_jabatan'),
                     'updated_at' => now()
                 ]);

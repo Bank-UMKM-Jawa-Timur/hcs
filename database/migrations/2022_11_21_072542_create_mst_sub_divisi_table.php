@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('mst_sub_divisi', function (Blueprint $table) {
-            $table->id();
+            $table->string('kd_subdiv', 15)->primary();
             $table->string('nama_subdivisi');
             $table->string('kd_divisi', 15);
             $table->timestamps();

@@ -14,9 +14,19 @@
                 <div class="container">
                     <form action="{{ route('jabatan.store') }}" class="form-group" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <label for="nama_kantot">Nama Jabatan</label>
-                        <input type="text" name="nama_jabatan" id="nama_jabatan" class="form-control">
-                        <button class="btn btn-info" value="submit" type="submit">Submit</button>
+                        <div class="row m-0">
+                            <div class="col-md-6">
+                                <label for="nama_kantot">Kode Jabatan</label>
+                                <input type="text" name="kd_jabatan" id="kd_jabatan" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nama_kantot">Nama Jabatan</label>
+                                <input type="text" name="nama_jabatan" id="nama_jabatan" class="form-control">
+                            </div>
+                            <div class="row m-0">
+                                <button class="btn btn-info" value="submit" type="submit">Submit</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

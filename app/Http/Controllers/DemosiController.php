@@ -28,10 +28,10 @@ class DemosiController extends Controller
     public function index()
     {
         $data = DB::table('demosi_promosi_pangkat')
-            ->where('keterangan', 'Demosi Pangkat')
-            ->select('golongan_lama', 'golongan_baru', 'demosi_promosi_pangkat.id', 'mst_karyawan.nip', 'tanggal_pengesahan', 'bukti_sk', 'mst_karyawan.nama_karyawan', 'pg_lama.pangkat as pangkat_lama', 'pg_lama.golongan as golongan_lama', 'pg_baru.pangkat as pangkat_baru', 'pg_baru.golongan as golongan_baru')
-            ->join('mst_pangkat_golongan as pg_lama', 'pg_lama.golongan', '=', 'demosi_promosi_pangkat.golongan_lama')
-            ->join('mst_pangkat_golongan as pg_baru', 'pg_baru.golongan', '=', 'demosi_promosi_pangkat.golongan_baru')
+            ->where('keterangan', 'Demosi Jabatan')
+            ->select('kd_jabatan_lama', 'kd_jabatan_baru', 'demosi_promosi_pangkat.id', 'mst_karyawan.nip', 'tanggal_pengesahan', 'bukti_sk', 'mst_karyawan.nama_karyawan', 'pg_lama.nama_jabatan as jabatan_lama', 'pg_baru.nama_jabatan as jabatan_baru')
+            ->join('mst_jabatan as pg_lama', 'pg_lama.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
+            ->join('mst_jabatan as pg_baru', 'pg_baru.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
             ->join('mst_karyawan', 'demosi_promosi_pangkat.nip', '=', 'mst_karyawan.nip')
             ->get();
 
@@ -50,10 +50,10 @@ class DemosiController extends Controller
         $data = DB::table('mst_karyawan')
             ->select('nip', 'nama_karyawan', 'kd_panggol')
             ->get();
-        $data_panggol = DB::table('mst_pangkat_golongan')
+        $data_panggol = DB::table('mst_jabatan')
             ->get();
 
-        return view('demosi.add', ['data' => $data, 'data_panggol' => $data_panggol]);
+        return view('demosi.add', ['data' => $data, 'jabatan' => $data_panggol]);
     }
 
     /**
@@ -67,18 +67,19 @@ class DemosiController extends Controller
         try{
             DB::table('demosi_promosi_pangkat')
                 ->insert([
-                    'golongan_lama' => $request->get('golongan_lama'),
-                    'golongan_baru' => $request->get('golongan_baru'),
+                    'kd_jabatan_lama' => $request->get('jabatan_lama'),
+                    'kd_jabatan_baru' => $request->get('jabatan_baru'),
                     'nip' => $request->get('nip'),
                     'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
                     'bukti_sk' => $request->get('bukti_sk'),
-                    'keterangan' => 'Demosi Pangkat',
+                    'keterangan' => 'Demosi Jabatan',
                 ]);
 
             DB::table('mst_karyawan')
                 ->where('nip', $request->nip)
                 ->update([
-                    'kd_panggol' => $request->get('golongan_baru'),
+                    'kd_jabatan' => $request->get('jabatan_baru'),
+                    'ket_jabatan' => $request->get('ket_jabatan'),
                     'updated_at' => now()
                 ]);
 
