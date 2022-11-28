@@ -10,20 +10,20 @@
         <div class="card-body">
             <div class="col">
                 <div class="row">
-                    <a class="mb-3" href="/demosi/add">
+                    <a class="mb-3" href="{{ route('demosi.create') }}">
                         <button  class="btn btn-primary">Tambah Demosi</button>
                     </a>
-                    <div class="table-responsive overflow-hidden">
+                    <div class="table">
                         <table class="table" id="table">
                             <thead class="text-primary">
                                 <th>
-                                    Id Demosi
+                                    NIP
                                 </th>
                                 <th>
                                     Nama Karyawan
                                 </th>
                                 <th>
-                                    Tanggal Mutasi
+                                    Tanggal Demosi
                                 </th>
                                 <th>
                                     Jabatan Lama
@@ -34,12 +34,31 @@
                                 <th>
                                     Bukti SK
                                 </th>
-                                <th>
-                                    Aksi
-                                </th>
                             </thead>
                             <tbody>
+                                @foreach ($data as $item)
+                                    <tr>
+                                        <td>
+                                            {{ $item->nip }}
+                                        </td>
+                                        <td>
+                                            {{ $item->nama_karyawan }}
+                                        </td>
+                                        <td>
+                                            {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
+                                        </td>
+                                        <td>
+                                            {{ $item->golongan_lama }} - {{ $item->pangkat_lama }}
+                                        </td>
+                                        <td>
+                                            {{ $item->golongan_baru }} - {{ $item->pangkat_baru }}
+                                        </td>
+                                        <td>
+                                            {{ $item->bukti_sk }}
+                                        </td>
 
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

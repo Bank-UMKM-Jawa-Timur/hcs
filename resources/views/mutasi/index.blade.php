@@ -9,9 +9,9 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col">
-                <a href="/mutasi/add">
+        <div class="col">
+            <div class="row">
+                <a class="mb-3" href="{{ route('mutasi.create') }}">
                     <button  class="btn btn-primary">Tambah Mutasi</button>
                 </a>
                 <div class="table-responsive overflow-hidden">
@@ -27,20 +27,32 @@
                                 Tanggal Mutasi
                             </th>
                             <th>
-                                Jabatan Lama
-                            </th>
-                            <th>
-                                Jabatan Baru
-                            </th>
-                            <th>
                                 Bukti SK
                             </th>
                             <th>
-                                Aksi
+                                Keterangan
                             </th>
                         </thead>
                         <tbody>
-
+                            @foreach ($data as $item)
+                                <tr>
+                                    <td>
+                                        {{ $item->id }}
+                                    </td>
+                                    <td>
+                                        {{ $item->nama_karyawan }}
+                                    </td>
+                                    <td>
+                                        {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
+                                    </td>
+                                    <td>
+                                        {{ $item->bukti_sk }}
+                                    </td>
+                                    <td>
+                                        {{ $item->keterangan }}
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

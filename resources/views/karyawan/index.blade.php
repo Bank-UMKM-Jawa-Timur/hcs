@@ -17,7 +17,7 @@
                 <a class="ml-3" href="{{ route('import') }}">
                   <button class="btn btn-primary">import karyawan</button>
                 </a>
-                <div class="table-responsive overflow-hidden">
+                <div class="table-responsive overflow-scroll">
                     <table class="table" id="table">
                       <thead class=" text-primary">
                         <th>
@@ -26,6 +26,15 @@
                         <th>NIP</th>
                         <th>
                             Nama karyawan
+                        </th>
+                        <th>
+                          Jabatan
+                        </th>
+                        <th>
+                          Pangkat
+                        </th>
+                        <th>
+                          Status Karyawan
                         </th>
                         <th>
                             Aksi
@@ -42,7 +51,16 @@
                                 </td>
                                 <td>{{ $item->nip }}</td>
                                 <td>
-                                    {{ $item->nama_karyawan }}
+                                  {{ $item->nama_karyawan }}
+                                </td>
+                                <td>
+                                  {{ $item->nama_jabatan }}
+                                </td>
+                                <td>
+                                  {{ $item->golongan }} - {{ $item->pangkat }}
+                                </td>
+                                <td>
+                                  {{ $item->status_karyawan }}
                                 </td>
                                 <td>
                                   <div class="row">

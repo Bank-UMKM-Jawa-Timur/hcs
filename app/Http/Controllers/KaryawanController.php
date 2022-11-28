@@ -24,7 +24,18 @@ class KaryawanController extends Controller
     public function index()
     {
         $data = DB::table('mst_karyawan')
+            ->select(
+                'mst_karyawan.nip',
+                'mst_karyawan.nama_karyawan',
+                'mst_karyawan.status_karyawan',
+                'mst_jabatan.nama_jabatan',
+                'mst_pangkat_golongan.golongan',
+                'mst_pangkat_golongan.pangkat'
+            )
+            ->join('mst_jabatan', 'mst_jabatan.id', '=', 'mst_karyawan.id_jabatan')
+            ->join('mst_pangkat_golongan', 'mst_karyawan.kd_panggol', '=', 'mst_pangkat_golongan.golongan')
             ->get();
+            // dd($data);
 
         return view('karyawan.index', ['data' => $data]);
     }

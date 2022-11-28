@@ -70,9 +70,9 @@ Coded by www.creative-tim.com
                 </a>
                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('karyawan.index') }}">Data Karyawan</a>
-                    <a class="dropdown-item" href="#">Mutasi</a>
-                    <a class="dropdown-item" href="#">Demosi</a>
-                    <a class="dropdown-item" href="#">Promosi</a>
+                    <a class="dropdown-item" href="{{ route('mutasi.index') }}">Mutasi</a>
+                    <a class="dropdown-item" href="{{ route('demosi.index') }}">Demosi</a>
+                    <a class="dropdown-item" href="{{ route('promosi.index') }}">Promosi</a>
                 </div>
             </li>
             <li class="dropdown">
