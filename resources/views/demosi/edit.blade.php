@@ -6,8 +6,9 @@
             <p class="card-title"><a href="/">Dashboard</a> > <a href="/demosi">Demosi</a> > Edit</p>
         </div>
     </div>
+
     <div class="card-body">
-        <form action="" method="POST" enctype="multipart/form-data" name="divis" class="form-group">
+        <form action="" method="POST" enctype="multipart/form-data" name="" class="form-group">
             @csrf
             <div class="row">
                 <div class="col-md-4">
@@ -95,10 +96,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="update ml-auto mr-auto">
-                <button type="submit" class="btn btn-success">Tambah Demosi</button>
-                </div>
+                <button type="submit" class="btn btn-info">Update</button>
             </div>
         </form>
     </div>

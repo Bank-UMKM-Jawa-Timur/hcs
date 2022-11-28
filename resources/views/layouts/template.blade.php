@@ -193,6 +193,7 @@ Coded by www.creative-tim.com
     </div>
   </div>
   <!--   Core JS Files   -->
+  <script src="resources/js/dselect.js"></script>
   <script src="{{ asset('style/assets/js/core/jquery.min.js') }}"></script>
   <script src="{{ asset('style/assets/js/core/popper.min.js') }}"></script>
   <script src="{{ asset('style/assets/js/core/bootstrap.min.js') }}"></script>

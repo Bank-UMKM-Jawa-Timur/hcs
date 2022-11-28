@@ -3,7 +3,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Edit Data Karyawan</h5>
-            <p class="card-title"><a href="/">Dashboard</a> > <a href="/">Karyawan</a> > <a href="/data_karyawan">Data Karyawan</a> > Tambah</p>
+            <p class="card-title"><a href="/">Dashboard</a> > <a href="/data_karyawan">Karyawan</a> > Edit</p>
         </div>
     </div>
     <div class="card-body">
@@ -209,8 +209,9 @@
                     </div>
                 </div>
             </div>  
+
             <div class="row m-3">
-                <button type="submit" class="btn btn-success">edit</button>
+                <button type="submit" class="btn btn-info">Update</button>
             </div>
         </form>
     </div>

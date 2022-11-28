@@ -8,11 +8,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
     Bio Interface | BANK UMKM JATIM
-  </title>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+  </title>  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css"/>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
+  
   <link rel="stylesheet" href="{{ asset('style/assets/css/login.css.map') }}"/>
   <link rel="stylesheet" href="{{ asset('style/assets/css/login.css') }}"/>
 </head>

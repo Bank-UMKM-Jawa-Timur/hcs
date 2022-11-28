@@ -33,7 +33,7 @@
                             <input type="text" class="form-control" name="nama_subdivisi" value="{{ $data->nama_subdivisi }}">
                         </div>
                     </div>
-                    <button class="btn btn-info" type="submit" value="submit">edit</button>
+                    <button class="btn btn-info" type="submit" value="submit">Update</button>
                 </form>
             </div>
         </div>

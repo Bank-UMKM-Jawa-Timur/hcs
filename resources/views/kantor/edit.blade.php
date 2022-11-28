@@ -17,7 +17,7 @@
                     <input type="text" name="nama_kantor" id="nama_kantor" class="form-control" value="{{ $dataKantor['nama_kantor'] }}">
                     <input type="hidden" name="id" value="{{ $dataKantor['id'] }}">
 
-                    <button class="btn btn-info" type="submit">edit</button>
+                    <button class="btn btn-info" type="submit">Update</button>
                 </form>
             </div>
         </div>

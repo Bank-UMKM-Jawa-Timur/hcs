@@ -18,7 +18,7 @@
 
                     <label for="nama_divisi">Nama Divisi</label>
                     <input type="text" class="form-control" name="nama_divisi" id="nama_divisi" value="{{ $data['nama_divisi'] }}">
-                    <button class="btn btn-info" type="submit" value="submit">edit</button>
+                    <button class="btn btn-info" type="submit" value="submit">Update</button>
                 </form>
             </div>
         </div>

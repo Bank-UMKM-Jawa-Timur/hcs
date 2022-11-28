@@ -16,7 +16,7 @@
 
                     <label for="nama_divisi">Nama Divisi</label>
                     <input type="text" class="form-control" name="nama_divisi" id="nama_divisi">
-                    <button class="btn btn-info">submit</button>
+                    <button class="btn btn-info">Simpan</button>
                 </form>
             </div>
         </div>

@@ -17,7 +17,7 @@
                         @csrf
                         <label for="nama_kantot">Nama Kantor</label>
                         <input type="text" name="nama_kantor" id="nama_kantor" class="form-control">
-                        <button class="btn btn-info" value="submit" type="submit">Submit</button>
+                        <button class="btn btn-info" value="submit" type="submit">Simpan</button>
                     </form>
                 </div>
             </div>

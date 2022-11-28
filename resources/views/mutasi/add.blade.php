@@ -6,6 +6,7 @@
             <p class="card-title"><a href="/">Dashboard</a> > <a href="/mutasi">Mutasi</a> > Tambah</p>
         </div>
     </div>
+
     <div class="card-body">
         <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data" name="divisi" class="form-group">
             @csrf
@@ -102,7 +103,7 @@
             </div>
             <div class="row">
                 <div class="update ml-auto mr-auto">
-                <button type="submit" class="btn btn-success">Tambah Mutasi</button>
+                <button type="submit" class="btn btn-success">Simpan</button>
                 </div>
             </div>
         </form>

@@ -2,10 +2,11 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Data Karyawan</h5>
+            <h5 class="card-title">Tambah Data Karyawan</h5>
             <p class="card-title"><a href="/">Dashboard</a> > <a href="/karyawan">Karyawan</a> > Tambah</p>
         </div>
     </div>
+
     <div class="card-body">
         <form action="{{ route('karyawan.store') }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
             @csrf
@@ -256,8 +257,8 @@
                 </div>
             </div>
 
-            <div class="row m-3 justify-content-end">
-                <button type="submit" class="btn btn-info">Tambah</button>
+            <div class="row m-3">
+                <button type="submit" class="btn btn-info">Simpan</button>
             </div>
         </form>
     </div>

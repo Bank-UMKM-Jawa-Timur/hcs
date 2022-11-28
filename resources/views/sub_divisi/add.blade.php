@@ -32,7 +32,7 @@
                             <input type="text" class="form-control" name="nama_subdivisi">
                         </div>
                     </div>
-                    <button class="btn btn-info" type="submit" value="submit">tambah</button>
+                    <button class="btn btn-info" type="submit" value="submit">Simpan</button>
                 </form>
             </div>
         </div>
