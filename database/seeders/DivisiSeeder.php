@@ -24,7 +24,7 @@ class DivisiSeeder extends Seeder
             ]);
         DB::table('mst_divisi')
             ->insert([
-                'kd_divisi' => 'PSN',
+                'kd_divisi' => 'PMS',
                 'nama_divisi' => 'Pemasaran',
                 'id_kantor' => 1,
                 'created_at' => now()
