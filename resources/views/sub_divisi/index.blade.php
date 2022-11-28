@@ -20,7 +20,7 @@
                             no
                         </th>
                         <th>
-                            Kode Divisi
+                            Kode Sub Divisi
                         </th>
                         <th>
                             Nama Sub Divisi
@@ -42,7 +42,7 @@
                                     @endphp
                                 </td>
                                 <td>
-                                    {{ $item->kd_divisi }}
+                                    {{ $item->kd_subdiv }}
                                 </td>
                                 <td>
                                     {{ $item->nama_subdivisi }}
