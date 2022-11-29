@@ -24,7 +24,7 @@ class DivisiSeeder extends Seeder
             ]);
         DB::table('mst_divisi')
             ->insert([
-                'kd_divisi' => 'PSN',
+                'kd_divisi' => 'PMS',
                 'nama_divisi' => 'Pemasaran',
                 'id_kantor' => 1,
                 'created_at' => now()
@@ -62,6 +62,20 @@ class DivisiSeeder extends Seeder
                 'kd_divisi' => 'PK',
                 'nama_divisi' => 'Perencanaan & Kinerja',
                 'id_kantor' => 1,
+                'created_at' => now()
+            ]);
+        DB::table('mst_divisi')
+            ->insert([
+                'kd_divisi' => 'GMK',
+                'nama_divisi' => 'Group Marketing & Kelembagaan',
+                'id_kantor'=> 1,
+                'created_at' => now()
+            ]);
+        DB::table('mst_divisi')
+            ->insert([
+                'kd_divisi' => 'CSR',
+                'nama_divisi' => 'Corporate Secretary',
+                'id_kantor'=> 1,
                 'created_at' => now()
             ]);
     }
