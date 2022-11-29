@@ -190,6 +190,7 @@
                                         <option value="">--- Pilih ---</option>
                                         <option value="Tetap">Tetap</option>
                                         <option value="IKJP">IKJP</option>
+                                        <option value="Kontrak Perpanjangan">Kontrak Perpanjangan</option>
                                     </select>
                                 </div>
                             </div>

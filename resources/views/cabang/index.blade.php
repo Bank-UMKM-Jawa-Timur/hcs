@@ -46,7 +46,7 @@
                                     </td>
                                     <td>
                                       <div class="row">
-                                        <a href="{{ route('cabang.edit', $item->id) }}">
+                                        <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
                                           <button class="btn btn-warning">
                                             Edit
                                           </button>

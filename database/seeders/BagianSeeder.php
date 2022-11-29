@@ -242,9 +242,9 @@ class BagianSeeder extends Seeder
         // Bagian ke mst_kantor
         DB::table('mst_bagian')
         ->insert([
-            'kd_bagian' => 'B-KMKIW',
+            'kd_bagian' => 'B-KRW',
             'kd_entitas' => 2,
-            'nama_bagian' => 'Kredit Modal Kerja & Investasi Wilayah',
+            'nama_bagian' => 'Kredit Wilayah',
             'created_at' => now()
         ]);
         DB::table('mst_bagian')
@@ -259,6 +259,13 @@ class BagianSeeder extends Seeder
             'kd_bagian' => 'B-KTS',
             'kd_entitas' => 2,
             'nama_bagian' => 'Kredit Support',
+            'created_at' => now()
+        ]);
+        DB::table('mst_bagian')
+        ->insert([
+            'kd_bagian' => 'B-KRD',
+            'kd_entitas' => 2,
+            'nama_bagian' => 'Kredit',
             'created_at' => now()
         ]);
         DB::table('mst_bagian')
@@ -294,6 +301,34 @@ class BagianSeeder extends Seeder
             'kd_bagian' => 'B-UMAK',
             'kd_entitas' => 2,
             'nama_bagian' => 'Umum & Akuntansi',
+            'created_at' => now()
+        ]);
+        DB::table('mst_bagian')
+        ->insert([
+            'kd_bagian' => 'B-PJM',
+            'kd_entitas' => 2,
+            'nama_bagian' => 'Penjaga Malam',
+            'created_at' => now()
+        ]);
+        DB::table('mst_bagian')
+        ->insert([
+            'kd_bagian' => 'B-PRB',
+            'kd_entitas' => 2,
+            'nama_bagian' => 'Pramubakti',
+            'created_at' => now()
+        ]);
+        DB::table('mst_bagian')
+        ->insert([
+            'kd_bagian' => 'B-PMD',
+            'kd_entitas' => 2,
+            'nama_bagian' => 'Pengemudi',
+            'created_at' => now()
+        ]);
+        DB::table('mst_bagian')
+        ->insert([
+            'kd_bagian' => 'B-STPM',
+            'kd_entitas' => 2,
+            'nama_bagian' => 'Satpam',
             'created_at' => now()
         ]);
     }
