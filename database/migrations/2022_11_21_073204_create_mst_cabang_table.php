@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('mst_cabang', function (Blueprint $table) {
-            $table->id();
+            $table->string('kd_cabang', 15);
             $table->string('nama_cabang');
             $table->string('alamat_cabang');
             $table->unsignedBigInteger('id_kantor');

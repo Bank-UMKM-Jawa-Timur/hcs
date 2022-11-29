@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('kd_jabatan_baru', 15)->nullable();
             $table->string('kd_subdiv_lama', 15)->nullable();
             $table->string('kd_subdiv_baru', 15)->nullable();
-            $table->unsignedBigInteger('id_cabang_lama')->nullable();
-            $table->unsignedBigInteger('id_cabang_baru')->nullable();
+            $table->string('id_cabang_lama', 15)->nullable();
+            $table->string('id_cabang_baru', 15)->nullable();
             $table->date('tanggal_pengesahan');
             $table->string('bukti_sk');
             $table->string('keterangan');
@@ -52,13 +52,13 @@ return new class extends Migration
             ->on('mst_sub_divisi')
             ->onUpdate('cascade');
 
-            $table->foreign('id_cabang_baru')
-                ->references('id')
+            $table->foreign('kd_cabang_baru')
+                ->references('kd_cabang')
                 ->on('mst_cabang')
                 ->onUpdate('cascade');
 
-            $table->foreign('id_cabang_lama')
-                ->references('id')
+            $table->foreign('kd_cabang_lama')
+                ->references('kd_cabang')
                 ->on('mst_cabang')
                 ->onUpdate('cascade');
         });

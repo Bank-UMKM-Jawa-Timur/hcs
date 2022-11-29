@@ -440,12 +440,14 @@
         })
 
         $("#submit").on('click', function(){
+            $.each()
             $.ajax({
                 type: "POST",
                 url: {{ route('tunjangan_karyawan.store') }},
                 datatype: 'json',
                 data: {
-                    
+                    nip: $('#nip').val(),
+                    id_tunjangan: $("#tunja")
                 }
             })
         })
