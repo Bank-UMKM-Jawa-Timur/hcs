@@ -71,7 +71,7 @@ class DivisiSeeder extends Seeder
                 'id_kantor'=> 1,
                 'created_at' => now()
             ]);
-        DB::table('mst_sub_divisi')
+        DB::table('mst_divisi')
             ->insert([
                 'kd_divisi' => 'CSR',
                 'nama_divisi' => 'Corporate Secretary',
