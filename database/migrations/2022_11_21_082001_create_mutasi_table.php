@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('kd_jabatan_baru', 15)->nullable();
             $table->string('kd_subdiv_lama', 15)->nullable();
             $table->string('kd_subdiv_baru', 15)->nullable();
-            $table->string('id_cabang_lama', 15)->nullable();
-            $table->string('id_cabang_baru', 15)->nullable();
+            $table->string('kd_cabang_lama', 15)->nullable();
+            $table->string('kd_cabang_baru', 15)->nullable();
             $table->date('tanggal_pengesahan');
             $table->string('bukti_sk');
             $table->string('keterangan');

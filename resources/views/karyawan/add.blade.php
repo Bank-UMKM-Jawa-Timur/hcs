@@ -268,7 +268,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is">Tunjangan</label>
-                                    <select name="tunjangan" id="tunjangan" class="form-control">
+                                    <select name="tunjangan" id="tunjangan[]" class="form-control">
                                         <option value="">--- Pilih ---</option>
                                         @foreach ($tunjangan as $item)
                                             <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
