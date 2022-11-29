@@ -19,8 +19,7 @@ return new class extends Migration
             $table->string('kd_bagian', 15);
             $table->string('kd_jabatan', 15);
             $table->string('ket_jabatan');
-            $table->string('kd_subdivisi', 15)->nullable();
-            $table->string('kd_cabang', 15)->nullable();
+            $table->string('kd_entitas', 15)->nullable();
             $table->string('kd_panggol');
             $table->unsignedBigInteger('id_is')->nullable();
             $table->string('kd_agama');
@@ -49,16 +48,6 @@ return new class extends Migration
             $table->foreign('kd_panggol')
                 ->references('golongan')
                 ->on('mst_pangkat_golongan')
-                ->onUpdate('cascade');
-
-            $table->foreign('kd_subdivisi')
-                ->references('kd_subdiv')
-                ->on('mst_sub_divisi')
-                ->onUpdate('cascade');
-
-            $table->foreign('kd_cabang')
-                ->references('kd_cabang')
-                ->on('mst_cabang')
                 ->onUpdate('cascade');
 
             $table->foreign('id_is')

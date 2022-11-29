@@ -208,6 +208,48 @@
                         </div>
                     </div>
                 </div>
+                <div class="card p-2 ml-3 mr-3 shadow">
+                    <div class="card-header" id="headingFour">
+                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">Data Tunjangan</a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                        @foreach ($data->tunjangan as $tj)
+                            <div class="row m-0 pb-3 col-md-12" id="row_tunjangan">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="is">Tunjangan</label>
+                                        <select name="tunjangan[]" id="tunjangan" class="form-control">
+                                            <option value="">--- Pilih ---</option>
+                                            @foreach ($tunjangan as $item)
+                                                <option value="{{ $item->id }}" {{ ($item->id == $tj->id_tunjangan) ? 'selected' : '' }}>{{ $item->nama_tunjangan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="id_tk[]" id="id_tk" value="{{ $tj->id }}">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="is_nama">Nominal</label>
+                                        <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control" value="{{ $tj->nominal }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-info" type="button" id="btn-add">
+                                        +
+                                    </button>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-info" type="button" id="btn-delete">
+                                        -
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>  
 
             <div class="row m-3">
@@ -221,7 +263,9 @@
     <script>
         let status = $("#status");
         var nip = $("#nip").val()
+        var x = {{ $data->count_tj }};
         cekStatus();
+        console.log(x);
 
         function cekStatus(){
             if(status.val() == "Kawin"){
@@ -255,6 +299,66 @@
                 $('#data_is').show();
             } else{
                 $('#data_is').hide();
+            }
+        })
+
+        $('#collapseFour').on('click', "#btn-add", function(){
+            $('#collapseFour').append(`
+            <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is">Tunjangan</label>
+                                    <select name="tunjangan[]" id="tunjangan" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        @foreach ($tunjangan as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is_nama">Nominal</label>
+                                    <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    +
+                                </button>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    -
+                                </button>
+                            </div>
+                        </div>
+            `);
+            x++
+        });
+
+        $('#collapseFour').on('click', "#btn-delete", function(){
+            var row = $(this).closest('.row')
+            var value = row.children('#id_tk').val()
+            console.log(value);
+            if(x > 1){
+                if(value != null){
+                    $.ajax({
+                        type: "GET",
+                        url: "/deleteEditTunjangan?id_tk="+value,
+                        datatype: "json",
+                        success: function(res){
+                            if(res == "sukses"){
+                                row.remove()
+                                x--;
+                            }
+                        }
+                    })
+                } else{
+                    $(this).closest('.row').remove()
+                    x--;
+                }
             }
         })
     </script>

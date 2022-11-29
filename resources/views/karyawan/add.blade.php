@@ -116,6 +116,17 @@
                         <div class="row m-0 pb-3 col-md-12" id="#kantor_row">
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <label for="">Jabatan</label>
+                                    <select name="jabatan" id="jabatan" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        @foreach ($jabatan as $item)
+                                            <option value="{{ $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="col-md-4">
+                                <div class="form-group">
                                     <label for="kantor">Kantor</label>
                                     <select name="kantor" id="kantor" class="form-control">
                                         <option value="">--- Pilih Kantor ---</option>
@@ -127,7 +138,10 @@
                             <div class="col-md-4" id="kantor_row1">
             
                             </div>
-                            <div class="col-md-4"  id="kantor_row2">
+                            <div class="col-md-6"  id="kantor_row2">
+                                
+                            </div>
+                            <div class="col-md-6"  id="kantor_row3">
                                 
                             </div>
         
@@ -141,18 +155,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div> 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Jabatan</label>
-                                    <select name="jabatan" id="" class="form-control">
-                                        <option value="">--- Pilih ---</option>
-                                        @foreach ($jabatan as $item)
-                                            <option value="{{ $item->kd_jabatan }}">{{ $item->nama_jabatan }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> 
+                            </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Keterangan Jabatan</label>
@@ -256,7 +259,7 @@
                     </div>
                 </div>
 
-                <div class="card p-2 ml-3 mr-3 shadow" id="data_is">
+                <div class="card p-2 ml-3 mr-3 shadow">
                     <div class="card-header" id="headingFour">
                         <h6 class="ml-3" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
                             <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">Data Tunjangan</a>
@@ -268,7 +271,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is">Tunjangan</label>
-                                    <select name="tunjangan" id="tunjangan[]" class="form-control">
+                                    <select name="tunjangan[]" id="tunjangan" class="form-control">
                                         <option value="">--- Pilih ---</option>
                                         @foreach ($tunjangan as $item)
                                             <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
@@ -279,7 +282,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="number" name="nominal_tunjangan" class="form-control">
+                                    <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1">
@@ -308,12 +311,11 @@
     <script>
         let kantor = $('#kantor_row');
         let status = $('#status');
+        $('#kantor').attr("disabled", "disabled");
         var x =1;
 
-        $('#data_is').hide();
-
-        $('#kantor').change(function(){
-            var kantor_id = $(this).val();
+        function kantorChange(){
+            var kantor_id = $("#kantor").val();
 
             if(kantor_id == 1){
                 $.ajax({
@@ -336,8 +338,8 @@
 
                         $("#kantor_row2").append(`
                                 <div class="form-group">
-                                    <label for="sub_divisi">Sub divisi</label>
-                                    <select name="sub_divisi" id="sub_divisi" class="form-control">
+                                    <label for="subdiv">Sub divisi</label>
+                                    <select name="subdiv" id="sub_divisi" class="form-control">
                                         <option value="">--- Pilih sub divisi ---</option>
                                     </select>
                                 </div>`
@@ -351,11 +353,35 @@
                                     type: "GET",
                                     url: "/getsubdivisi?divisiID="+divisi,
                                     datatype: "JSON",
-                                    success: function(res){
+                                    success: function(res1){
                                         $('#sub_divisi').empty();
-                                        $.each(res, function(i, item){
-                                            $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
+                                        $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
+                                        $.each(res1, function(i, item){
                                             $('#sub_divisi').append('<option value="'+item.kd_subdiv+'">'+item.nama_subdivisi+'</option>')
+                                        });
+
+                                        $("#kantor_row3").append(`
+                                                <div class="form-group">
+                                                    <label for="bagian">Bagian</label>
+                                                    <select name="bagian" id="bagian" class="form-control">
+                                                        <option value="">--- Pilih bagian ---</option>
+                                                    </select>
+                                                </div>`
+                                        );
+
+                                        $("#sub_divisi").change(function(){
+                                            $.ajax({
+                                                type: "GET",
+                                                url: "/getbagian?kd_entitas="+$(this).val(),
+                                                datatype: "JSON",
+                                                success: function(res2){
+                                                    $('#bagian').empty();
+                                                    $('#bagian').append('<option value="">--- Pilih Bagian ---</option>')
+                                                    $.each(res2, function(i, item){
+                                                        $('#bagian').append('<option value="'+item.kd_bagian+'">'+item.nama_bagian+'</option>')
+                                                    });
+                                                }
+                                            })
                                         })
                                     }
                                 })
@@ -385,6 +411,33 @@
                     }
                 })
             }
+        }
+
+        $("#jabatan").change(function(){
+            var value = $(this).val();
+            $("#kantor_row2").show();
+            if(value == "PIMDIV"){
+                $("#kantor").val("1")
+                kantorChange();
+                $('#kantor').attr("disabled", "disabled");
+                $("#kantor_row2").hide();
+            } else if(value == "PSD"){
+                $("#kantor").val("1")
+                kantorChange();
+                $('#kantor').attr("disabled", "disabled");
+            } else if(value == "PC"){
+                $("#kantor").val("2")
+                kantorChange();
+                $('#kantor').attr("disabled", "disabled");
+            } else {
+                $('#kantor').removeAttr("disabled")
+            }
+        })
+
+        $('#data_is').hide();
+
+        $('#kantor').change(function(){
+            kantorChange();
         });
 
         $('#status').change(function(){
@@ -403,7 +456,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is">Tunjangan</label>
-                                    <select name="tunjangan" id="tunjangan" class="form-control">
+                                    <select name="tunjangan[]" id="tunjangan" class="form-control">
                                         <option value="">--- Pilih ---</option>
                                         @foreach ($tunjangan as $item)
                                             <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
@@ -414,7 +467,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="number" name="nominal_tunjangan" class="form-control">
+                                    <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1">
@@ -440,14 +493,14 @@
         })
 
         $("#submit").on('click', function(){
-            $.each()
             $.ajax({
                 type: "POST",
-                url: {{ route('tunjangan_karyawan.store') }},
+                url: "{{ route('postTunjangan') }}",
                 datatype: 'json',
                 data: {
                     nip: $('#nip').val(),
-                    id_tunjangan: $("#tunja")
+                    id_tunjangan: $("#tunjangan").val(),
+                    nominal: $("#nominal").val()
                 }
             })
         })

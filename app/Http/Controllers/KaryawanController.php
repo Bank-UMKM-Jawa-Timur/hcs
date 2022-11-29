@@ -94,6 +94,48 @@ class KaryawanController extends Controller
         return response()->json($data);
     }
 
+    public function deleteEditTunjangan(Request $request)
+    {
+        $id = $request->id_tk;
+
+        DB::table('tunjangan_karyawan')
+            ->where('id', $id)
+            ->delete();
+
+            return response()->json("sukses");
+    }
+
+    public function get_bagian(Request $request)
+    {
+        $data1 = DB::table('mst_divisi')
+            ->where('kd_divisi', $request->kd_entitas)
+            ->first();
+        $data2 = DB::table('mst_sub_divisi')
+            ->where('kd_subdiv', $request->kd_entitas)
+            ->first();
+        $data3 = DB::table('mst_cabang')
+            ->where('kd_cabang', $request->kd_entitas)
+            ->first();
+        if(isset($data1)){
+            $data = DB::table('mst_bagian, mst.divisi')
+            ->join('mst_divisi', 'mst_divisi.kd_divisi', '=', 'mst_bagian.kd_bagian')
+                ->join('mst_kantor', 'mst_kantor.id', '=', 'mst_divisi.id_kantor')
+                ->get();
+        }else if(isset($data2)){
+            $data = DB::table('mst_bagian')
+                ->join('mst_sub_divisi', 'mst_sub_divisi.kd_subdiv', '=', 'mst_bagian.kd_entitas')
+                ->join('mst_divisi', 'mst_divisi.kd_divisi', '=', 'mst_sub_divisi.kd_divisi')
+                ->join('mst_kantor', 'mst_kantor.id', '=', 'mst_divisi.id_kantor')
+                ->get();
+        }else if(isset($data3)){
+            $data = DB::table('mst_bagian, mst.cabang')
+                ->join('mst_kantor', 'mst_kantor.id', '=', 'mst_divisi.id_kantor')
+                ->get();
+        }
+
+        return response()->json($data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -111,13 +153,16 @@ class KaryawanController extends Controller
             ->get();
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
+        $data_jabatan =  DB::table('mst_jabatan')
+            ->get();
 
         return view('karyawan.add', [
             'panggol' => $data_panggol, 
             'is' => $data_is,
             'jabatan' => $data_jabatan,
             'agama' => $data_agama,
-            'tunjangan' => $data_tunjangan
+            'tunjangan' => $data_tunjangan,
+            'jabatan' => $data_jabatan
         ]);
     }
 
@@ -143,14 +188,21 @@ class KaryawanController extends Controller
                         'created_at' => now()
                     ]);
             }
+            if(!empty($request->get('subdiv'))){
+                $entitas = $request->get('subdiv');
+            } else if(!empty($request->get('cabang'))){
+                $entitas = $request->get('cabang');
+            } else{
+                $entitas = $request->get('divisi');
+            }
             DB::table('mst_karyawan')
                 ->insert([
                     'nip' => $request->get('nip'),
                     'nama_karyawan' => $request->get('nama'),
                     'nik' => $request->get('nik'),
                     'ket_jabatan' => $request->get('ket_jabatan'), 
-                    'kd_subdivisi' => $request->get('sub_divisi'),
-                    'id_cabang' => $request->get('cabang'),
+                    'kd_entitas' => $entitas,
+                    'kd_bagian' => $request->get('bagian'),
                     'kd_jabatan' => $request->get('jabatan'),
                     'kd_panggol' => $request->get('panggol'),
                     'kd_agama' => $request->get('agama'),
@@ -181,6 +233,16 @@ class KaryawanController extends Controller
                     ->where('nip', $request->get('nip'))
                     ->update([
                         'id_is' => $id_is->id
+                    ]);
+            }
+
+            for($i = 0; $i < count($request->get('tunjangan')); $i++){
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $request->get('nip'),
+                        'id_tunjangan' => $request->get('tunjangan')[$i],
+                        'nominal' => $request->get('nominal_tunjangan')[$i],
+                        'created_at' => now()
                     ]);
             }
 
@@ -220,6 +282,14 @@ class KaryawanController extends Controller
             ->where('nip', $id)
             ->first();
 
+        $data->tunjangan = DB::table('tunjangan_karyawan')
+            ->where('nip', $id)
+            ->select('tunjangan_karyawan.*')
+            ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+            ->get();
+        $data->count_tj = DB::table('tunjangan_karyawan')
+            ->where('nip', $id)
+            ->count('*');
         $data_is = DB::table('is')
             ->get();
         $data_panggol = DB::table('mst_pangkat_golongan')
@@ -228,13 +298,16 @@ class KaryawanController extends Controller
             ->get();
         $data_agama = DB::table('mst_agama')
             ->get();
+        $data_tunjangan = DB::table('mst_tunjangan')
+            ->get();
 
         return view('karyawan.edit', [
             'data' => $data,
             'panggol' => $data_panggol, 
             'is' => $data_is,
             'jabatan' => $data_jabatan,
-            'agama' => $data_agama
+            'agama' => $data_agama,
+            'tunjangan' => $data_tunjangan
         ]);
     }
 
@@ -322,6 +395,27 @@ class KaryawanController extends Controller
                     'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
                     'created_at' => now(),
                 ]);
+
+                for($i = 0; $i < count($request->get('tunjangan')); $i++){
+                    if($request->get('id_tk')[$i] == null){
+                        DB::table('tunjangan_karyawan')
+                            ->insert([
+                                'nip' => $request->get('nip'),
+                                'id_tunjangan' => $request->get('tunjangan')[$i],
+                                'nominal' => $request->get('nominal_tunjangan')[$i],
+                                'created_at' => now()
+                            ]);
+                    } else{
+                        DB::table('tunjangan_karyawan')
+                            ->where('id', $request->get('id_tk')[$i])
+                            ->update([
+                                'nip' => $request->get('nip'),
+                                'id_tunjangan' => $request->get('tunjangan')[$i],
+                                'nominal' => $request->get('nominal_tunjangan')[$i],
+                                'updated_at' => now()
+                            ]);
+                    }
+                }
 
                 Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
                 return redirect()->route('karyawan.index');

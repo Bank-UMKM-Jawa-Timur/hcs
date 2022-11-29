@@ -95,6 +95,8 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('getdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_divisi']);
     Route::get('getcabang', [\App\Http\Controllers\KaryawanController::class, 'get_cabang']);
     Route::get('getsubdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_subdivisi']);
+    Route::get('getbagian', [KaryawanController::class, 'getbagian']);
+    Route::get('deleteEditTunjangan', [KaryawanController::class, 'deleteEditTunjangan'])->name('deleteEditTunjangan');
 
     // Get komponen untuk mutasi
     Route::get('getdatakaryawan', [\App\Http\Controllers\MutasiController::class, 'getdatakaryawan']);
@@ -107,7 +109,7 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('getis', [KaryawanController::class, 'get_is']);
 
-    Route::get('/getbagian', [BagianController::class, 'getJabatanBagian']);
+    Route::get('/getbagian', [KaryawanController::class, 'get_bagian']);
 });
 Auth::routes();
 
