@@ -101,10 +101,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="update ml-auto mr-auto">
-                <button type="submit" class="btn btn-success">Simpan</button>
-                </div>
+                <button type="submit" class="btn btn-info">Simpan</button>
             </div>
         </form>
     </div>
@@ -121,12 +118,12 @@
             datatype: "json",
             success: function(res){
                 $('#kantor_lama').addClass('col-md-6')
-                if(res.id_cabang != null){
+                if(res.kd_cabang!= null){
                     $('#kantor_lama').append(`
                             <div class="form-group">
                                 <label for="">Cabang Lama</label>
                                 <input type="text" class="form-control" name="" value="${res.nama_cabang}" id="" disabled>
-                                <input type="hidden" name="id_kantor_lama" value="${res.id_cabang}">
+                                <input type="hidden" name="id_kantor_lama" value="${res.kd_cabang}">
                             </div>
                     `);
                 }else if(res.id_subdivisi != null){

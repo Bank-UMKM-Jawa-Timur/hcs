@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('mst_jabatan', function (Blueprint $table) {
             $table->string('kd_jabatan', 15)->primary();
             $table->string('nama_jabatan');
+            $table->enum('status_jabatan', ['Definitif', 'Penjabat', 'Penjabat Sementara']);
             $table->timestamps();
         });
     }

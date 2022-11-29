@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('jkn');
             $table->integer('gj_pokok');
             $table->integer('gj_penyesuaian');
-            $table->enum('status_karyawan', ['Tetap', 'IKJP']);
+            $table->enum('status_karyawan', ['Tetap', 'IKJP', 'Kontrak Perpanjangan']);
             $table->string('skangkat');
             $table->date('tanggal_pengangkat');
             $table->timestamps();

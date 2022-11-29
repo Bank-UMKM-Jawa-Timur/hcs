@@ -15,17 +15,17 @@ class MutasiController extends Controller
         $data = DB::table('mst_karyawan')
             ->where('nip', $request->nip)
             ->first();
-        if($data->id_cabang != null){
+        if($data->kd_cabang != null){
             $data_kantor = DB::table('mst_karyawan')
                 ->where('nip', $request->nip)
-                ->join('mst_cabang', 'mst_cabang.id', '=', 'mst_karyawan.id_cabang')
-                ->join('mst_jabatan', 'mst_jabatan.id', '=', 'mst_karyawan.id_jabatan')
+                ->join('mst_cabang', 'mst_cabang.kd_cabang', '=', 'mst_karyawan.kd_cabang')
+                ->join('mst_jabatan', 'mst_jabatan.id', '=', 'mst_karyawan.kd_jabatan')
                 ->first();
         } else if($data->id_subdivisi != null){
             $data_kantor = DB::table('mst_karyawan')
                 ->where('nip', $request->nip)
                 ->join('mst_sub_divisi', 'mst_sub_divisi.id', '=', 'mst_karyawan.id_subdivisi')
-                ->join('mst_jabatan', 'mst_jabatan.id', '=', 'mst_karyawan.id_jabatan')
+                ->join('mst_jabatan', 'mst_jabatan.id', '=', 'mst_karyawan.kd_jabatan')
                 ->first();
         }
 
@@ -40,7 +40,7 @@ class MutasiController extends Controller
     {
         $data = DB::table('mutasi')
             ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'mutasi.nip')
-            ->join('mst_cabang', 'mst_cabang.id', '=', 'mutasi.id_cabang_baru')
+            ->join('mst_cabang', 'mst_cabang.kd_cabang', '=', 'mutasi.kd_cabang_baru')
             ->get();
 
             // dd($data)
@@ -56,7 +56,7 @@ class MutasiController extends Controller
     public function create()
     {
         $data = DB::table('mst_karyawan')
-            ->select('nip', 'nama_karyawan', 'id_jabatan')
+            ->select('nip', 'nama_karyawan', 'kd_jabatan')
             ->get();
         $data_jabatan = DB::table('mst_jabatan')
             ->get();
@@ -73,14 +73,14 @@ class MutasiController extends Controller
     public function store(Request $request)
     {
         try{
-            if($request->get('id_jabatan_baru' == null)){
+            if($request->get('kd_jabatan_baru' == null)){
                 DB::table('mutasi')
                 ->insert([
                     'nip' => $request->get('nip'),
                     'id_subdiv_lama' => $request->get('id_subdiv_lama'),
                     'id_subdiv_baru' => $request->get('id_subdiv_baru'),
-                    'id_cabang_lama' => $request->get('id_cabang_lama'),
-                    'id_cabang_baru' => $request->get('id_cabang_baru'),
+                    'kd_cabang_lama' => $request->get('kd_cabang_lama'),
+                    'kd_cabang_baru' => $request->get('kd_cabang_baru'),
                     'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
                     'bukti_sk' => $request->get('bukti_sk'),
                     'keterangan' => $request->get('keterangan'),
@@ -90,8 +90,8 @@ class MutasiController extends Controller
                 DB::table('mst_karyawan')
                     ->where('nip', $request->get('nip'))
                     ->update([
-                        'id_jabatan' => $request->get('id_jabatan_baru'),
-                        'id_cabang' => $request->get('id_cabang_baru'),
+                        'kd_jabatan' => $request->get('kd_jabatan_baru'),
+                        'kd_cabang' => $request->get('kd_cabang_baru'),
                         'id_subdivisi' => $request->get('id_subdiv_baru'),
                         'updated_at' => now()
                     ]);
@@ -99,10 +99,10 @@ class MutasiController extends Controller
                 DB::table('mutasi')
                 ->insert([
                     'nip' => $request->get('nip'),
-                    'id_jabatan_lama' => $request->get('id_jabatan_lama'),
-                    'id_jabatan_baru' => $request->get('id_jabatan_baru'),
-                    'id_cabang_lama' => $request->get('id_cabang_lama'),
-                    'id_cabang_baru' => $request->get('id_cabang_baru'),
+                    'kd_jabatan_lama' => $request->get('kd_jabatan_lama'),
+                    'kd_jabatan_baru' => $request->get('kd_jabatan_baru'),
+                    'kd_cabang_lama' => $request->get('kd_cabang_lama'),
+                    'kd_cabang_baru' => $request->get('kd_cabang_baru'),
                     'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
                     'bukti_sk' => $request->get('bukti_sk'),
                     'keterangan' => $request->get('keterangan'),
@@ -112,17 +112,17 @@ class MutasiController extends Controller
                 DB::table('mst_karyawan')
                     ->where('nip', $request->get('nip'))
                     ->update([
-                        'id_jabatan' => $request->get('id_jabatan_baru'),
-                        'id_cabang' => $request->get('id_cabang_baru'),
+                        'kd_jabatan' => $request->get('kd_jabatan_baru'),
+                        'kd_cabang' => $request->get('kd_cabang_baru'),
                         'id_subdivisi' => $request->get('id_subdiv_baru'),
                         'updated_at' => now()
                     ]);
-            } else if($request->get('id_cabang_baru') == null){
+            } else if($request->get('kd_cabang_baru') == null){
                 DB::table('mutasi')
                 ->insert([
                     'nip' => $request->get('nip'),
-                    'id_cabang_lama' => $request->get('id_cabang_lama'),
-                    'id_cabang_baru' => $request->get('id_cabang_baru'),
+                    'kd_cabang_lama' => $request->get('kd_cabang_lama'),
+                    'kd_cabang_baru' => $request->get('kd_cabang_baru'),
                     'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
                     'bukti_sk' => $request->get('bukti_sk'),
                     'keterangan' => $request->get('keterangan'),
@@ -132,8 +132,8 @@ class MutasiController extends Controller
                 DB::table('mst_karyawan')
                     ->where('nip', $request->get('nip'))
                     ->update([
-                        'id_jabatan' => $request->get('id_jabatan_baru'),
-                        'id_cabang' => $request->get('id_cabang_baru'),
+                        'kd_jabatan' => $request->get('kd_jabatan_baru'),
+                        'kd_cabang' => $request->get('kd_cabang_baru'),
                         'id_subdivisi' => $request->get('id_subdiv_baru'),
                         'updated_at' => now()
                     ]);
@@ -141,12 +141,12 @@ class MutasiController extends Controller
                 DB::table('mutasi')
                     ->insert([
                         'nip' => $request->get('nip'),
-                        'id_jabatan_lama' => $request->get('id_jabatan_lama'),
-                        'id_jabatan_baru' => $request->get('id_jabatan_baru'),
+                        'kd_jabatan_lama' => $request->get('kd_jabatan_lama'),
+                        'kd_jabatan_baru' => $request->get('kd_jabatan_baru'),
                         'id_subdiv_lama' => $request->get('id_subdiv_lama'),
                         'id_subdiv_baru' => $request->get('id_subdiv_baru'),
-                        'id_cabang_lama' => $request->get('id_cabang_lama'),
-                        'id_cabang_baru' => $request->get('id_cabang_baru'),
+                        'kd_cabang_lama' => $request->get('kd_cabang_lama'),
+                        'kd_cabang_baru' => $request->get('kd_cabang_baru'),
                         'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
                         'bukti_sk' => $request->get('bukti_sk'),
                         'keterangan' => $request->get('keterangan'),
@@ -156,8 +156,8 @@ class MutasiController extends Controller
                 DB::table('mst_karyawan')
                     ->where('nip', $request->get('nip'))
                     ->update([
-                        'id_jabatan' => $request->get('id_jabatan_baru'),
-                        'id_cabang' => $request->get('id_cabang_baru'),
+                        'kd_jabatan' => $request->get('kd_jabatan_baru'),
+                        'kd_cabang' => $request->get('kd_cabang_baru'),
                         'id_subdivisi' => $request->get('id_subdiv_baru'),
                         'updated_at' => now()
                     ]);
