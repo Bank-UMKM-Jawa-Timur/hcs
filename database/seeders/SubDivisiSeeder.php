@@ -141,18 +141,5 @@ class SubDivisiSeeder extends Seeder
             'kd_divisi' => 'PK',
             'created_at' => now()
         ]);
-        // Sub Divisi Tanpa Divisi
-        DB::table('mst_sub_divisi')
-        ->insert([
-            'kd_subdiv' => 'GMK',
-            'nama_subdivisi' => 'Group Marketing & Kelembagaan',
-            'created_at' => now()
-        ]);
-        DB::table('mst_sub_divisi')
-        ->insert([
-            'kd_subdiv' => 'CSR',
-            'nama_subdivisi' => 'Corporate Secretary',
-            'created_at' => now()
-        ]);
     }
 }
