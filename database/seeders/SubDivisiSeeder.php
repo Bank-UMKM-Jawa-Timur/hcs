@@ -24,7 +24,7 @@ class SubDivisiSeeder extends Seeder
         ]);
         DB::table('mst_sub_divisi')
         ->insert([
-            'kd_subdiv' => 'GPKB',
+            'kd_subdiv' => 'PKB',
             'nama_subdivisi' => 'Group Penyelamatan Kredit Bermasalah',
             'kd_divisi' => 'RPK',
             'created_at' => now()
@@ -59,7 +59,7 @@ class SubDivisiSeeder extends Seeder
         ]);
         DB::table('mst_sub_divisi')
         ->insert([
-            'kd_subdiv' => 'GPKKR',
+            'kd_subdiv' => 'KKR',
             'nama_subdivisi' => 'Group Penyelamatan Kredit Kualitas Rendah',
             'kd_divisi' => 'PMS',
             'created_at' => now()
@@ -101,8 +101,8 @@ class SubDivisiSeeder extends Seeder
         ]);
         DB::table('mst_sub_divisi')
         ->insert([
-            'kd_subdiv' => 'KAPK',
-            'nama_subdivisi' => 'Kepatuhan & APU-PPTAkuntansi',
+            'kd_subdiv' => 'KAP',
+            'nama_subdivisi' => 'Kepatuhan & APU-PPT',
             'kd_divisi' => 'KPH',
             'created_at' => now()
         ]);
