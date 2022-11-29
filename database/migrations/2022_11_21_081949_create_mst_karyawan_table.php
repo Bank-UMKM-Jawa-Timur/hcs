@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('mst_karyawan', function (Blueprint $table) {
             $table->string('nip', 25)->primary();
             $table->string('nama_karyawan');
+            $table->string('kd_bagian', 15);
             $table->string('kd_jabatan', 15);
             $table->string('ket_jabatan');
             $table->string('kd_subdivisi', 15)->nullable();

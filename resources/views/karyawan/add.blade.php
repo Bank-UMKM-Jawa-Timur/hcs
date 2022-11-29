@@ -255,10 +255,50 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="card p-2 ml-3 mr-3 shadow" id="data_is">
+                    <div class="card-header" id="headingFour">
+                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">Data Tunjangan</a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                        <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is">Tunjangan</label>
+                                    <select name="tunjangan" id="tunjangan" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        @foreach ($tunjangan as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is_nama">Nominal</label>
+                                    <input type="number" name="nominal_tunjangan" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    +
+                                </button>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    -
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="row m-3">
-                <button type="submit" class="btn btn-info">Simpan</button>
+                <button type="submit" id="submit" class="btn btn-info">Simpan</button>
             </div>
         </form>
     </div>
@@ -268,6 +308,7 @@
     <script>
         let kantor = $('#kantor_row');
         let status = $('#status');
+        var x =1;
 
         $('#data_is').hide();
 
@@ -354,6 +395,59 @@
             } else{
                 $('#data_is').hide();
             }
+        })
+
+        $('#collapseFour').on('click', "#btn-add", function(){
+            $('#collapseFour').append(`
+            <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is">Tunjangan</label>
+                                    <select name="tunjangan" id="tunjangan" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        @foreach ($tunjangan as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is_nama">Nominal</label>
+                                    <input type="number" name="nominal_tunjangan" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    +
+                                </button>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    -
+                                </button>
+                            </div>
+                        </div>
+            `);
+            x++
+        });
+
+        $('#collapseFour').on('click', "#btn-delete", function(){
+            if(x > 1){
+                $(this).closest('.row').remove()
+                x--;
+            }
+        })
+
+        $("#submit").on('click', function(){
+            $.ajax({
+                type: "POST",
+                url: {{ route('tunjangan_karyawan.store') }},
+                datatype: 'json',
+                data: {
+                    
+                }
+            })
         })
     </script>
 @endsection

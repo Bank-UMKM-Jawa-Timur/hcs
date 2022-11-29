@@ -89,6 +89,7 @@ Coded by www.creative-tim.com
                     <a class="dropdown-item" href="{{ route('jabatan.index') }}">Jabatan</a>
                     <a class="dropdown-item" href="{{ route('pangkat_golongan.index') }}">Pangkat & Golongan</a>
                     <a class="dropdown-item" href="{{ route('tunjangan.index') }}">Tunjangan</a>
+                    <a class="dropdown-item" href="{{ route('bagian.index') }}">Bagian</a>
                 </div>
             </li>
             <li class="dropdown">

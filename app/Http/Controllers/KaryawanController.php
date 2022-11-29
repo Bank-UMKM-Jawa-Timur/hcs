@@ -109,12 +109,15 @@ class KaryawanController extends Controller
             ->get();
         $data_agama = DB::table('mst_agama')
             ->get();
+        $data_tunjangan = DB::table('mst_tunjangan')
+            ->get();
 
         return view('karyawan.add', [
             'panggol' => $data_panggol, 
             'is' => $data_is,
             'jabatan' => $data_jabatan,
-            'agama' => $data_agama
+            'agama' => $data_agama,
+            'tunjangan' => $data_tunjangan
         ]);
     }
 
