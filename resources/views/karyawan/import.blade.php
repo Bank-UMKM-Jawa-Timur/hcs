@@ -20,7 +20,7 @@
                         <div class="container">
                             <label for="">Data CSV</label>
                             <div class="custom-file col-md-12">
-                                <input type="file" class="custom-file-input" id="validatedCustomFile">
+                                <input type="file" name="upload_csv" class="custom-file-input" id="validatedCustomFile">
                                 <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
                             </div>  
                         </div>
