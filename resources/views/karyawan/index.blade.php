@@ -24,16 +24,13 @@
                             </th>
                             <th>NIP</th>
                             <th>
+                              NIK
+                            </th>
+                            <th>
                                 Nama karyawan
                             </th>
                             <th>
                               Jabatan
-                            </th>
-                            <th>
-                              Pangkat
-                            </th>
-                            <th>
-                              Status Karyawan
                             </th>
                             <th>
                                 Aksi
@@ -44,22 +41,58 @@
                           @endphp
                           <tbody>
                             @foreach ($data as $item)
+                              @php
+                                $jabatan = null;
+                                $data1 = DB::table('mst_divisi')
+                                    ->where('kd_divisi', $item->kd_entitas)
+                                    ->first();
+                                $data2 = DB::table('mst_sub_divisi')
+                                    ->where('kd_subdiv', $item->kd_entitas)
+                                    ->first();
+                                $data3 = DB::table('mst_cabang')
+                                    ->where('kd_cabang', $item->kd_entitas)
+                                    ->first();
+
+                                if (isset($data1)) {
+                                  $jabatan = $data1->nama_divisi;
+                                } else if (isset($data2)) {
+                                  $jabatan = $data2->nama_subdivisi;
+                                } else if (isset($data3)) {
+                                  $jabatan = $data3->nama_cabang;
+                                }
+                              @endphp
                                 <tr>
                                     <td>
                                         {{ $no++ }}
                                     </td>
                                     <td>{{ $item->nip }}</td>
+                                    <td>{{ $item->nik }}</td>
                                     <td>
                                       {{ $item->nama_karyawan }}
                                     </td>
                                     <td>
-                                      {{ $item->nama_jabatan }}
-                                    </td>
-                                    <td>
-                                      {{ $item->golongan }} - {{ $item->pangkat }}
-                                    </td>
-                                    <td>
-                                      {{ $item->status_karyawan }}
+                                      @php
+                                          $st_jabatan = DB::table('mst_jabatan')
+                                            ->where('kd_jabatan', $item->kd_jabatan)
+                                            ->first();
+
+                                          $bagian = null;
+                                          if ($item->kd_bagian != null) {
+                                            $bagian = DB::table('mst_bagian')
+                                              ->where('kd_bagian', $item->kd_bagian)
+                                              ->first();
+
+                                            $bagian = " Bagian ".$bagian->nama_bagian;
+                                          }
+                                      @endphp
+
+                                      @if ($st_jabatan == "Pejabat")
+                                          PJ.{{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
+                                      @elseif($st_jabatan == "Pejabat Sementara")
+                                          PS.{{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
+                                      @else
+                                      {{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
+                                      @endif
                                     </td>
                                     <td>
                                       <div class="row">

@@ -26,11 +26,14 @@ class KaryawanController extends Controller
         $data = DB::table('mst_karyawan')
             ->select(
                 'mst_karyawan.nip',
+                'mst_karyawan.nik',
                 'mst_karyawan.nama_karyawan',
-                'mst_karyawan.status_karyawan',
+                'mst_karyawan.kd_entitas',
+                'mst_karyawan.kd_jabatan',
+                'mst_karyawan.kd_bagian',
                 'mst_jabatan.nama_jabatan',
-                'mst_pangkat_golongan.golongan',
-                'mst_pangkat_golongan.pangkat'
+                'mst_jabatan.status_jabatan',
+                'mst_pangkat_golongan.pangkat',
             )
             ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
             ->join('mst_pangkat_golongan', 'mst_karyawan.kd_panggol', '=', 'mst_pangkat_golongan.golongan')
