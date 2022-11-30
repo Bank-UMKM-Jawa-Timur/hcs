@@ -11,6 +11,9 @@
             <div class="col">
                 <form action="{{ route('cabang.store') }}" method="POST" enctype="multipart/form-data" name="cabang" class="form-group">
                     @csrf
+                    <label for="kode_cabang">Kode Kantor Cabang</label>
+                    <input type="text" class="form-control" name="kode_cabang" id="kode_cabang">
+
                     <label for="nama_cabang">Nama Kantor Cabang</label>
                     <input type="text" class="form-control" name="nama_cabang" id="nama_cabang">
 

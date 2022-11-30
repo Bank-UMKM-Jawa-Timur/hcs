@@ -48,6 +48,7 @@ class KantorCabangController extends Controller
         try{
             DB::table('mst_cabang')
                 ->insert([
+                    'kd_cabang' => $request->get('kode_cabang'),
                     'nama_cabang' => $request->get('nama_cabang'),
                     'alamat_cabang' => $request->get('alamat_cabang'),
                     'id_kantor' => 2,
@@ -85,7 +86,7 @@ class KantorCabangController extends Controller
     public function edit($id)
     {
         $data = DB::table('mst_cabang')
-            ->where('id', $id)
+            ->where('kd_cabang', $id)
             ->first();
 
         return view('cabang.edit', ['data' => $data]);
@@ -102,7 +103,7 @@ class KantorCabangController extends Controller
     {
         try{
             DB::table('mst_cabang')
-                ->where('id', $id)
+                ->where('kd_cabang', $id)
                 ->update([
                     'nama_cabang' => $request->get('nama_cabang'),
                     'alamat_cabang' => $request->get('alamat_cabang'),
@@ -110,7 +111,7 @@ class KantorCabangController extends Controller
                     'updated_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil menambah cabang.');
+            Alert::success('Berhasil', 'Berhasil mengupdate kantor cabang.');
             return redirect()->route('cabang.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
@@ -131,10 +132,10 @@ class KantorCabangController extends Controller
     {
         try{
             DB::table('mst_cabang')
-                ->where('id', $id)
+                ->where('kd_cabang', $id)
                 ->delete();
 
-            Alert::success('Berhasil', 'Berhasil menambah kantor cabang.');
+            Alert::success('Berhasil', 'Berhasil menghapus kantor cabang.');
             return redirect()->route('cabang.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
