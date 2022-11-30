@@ -108,7 +108,7 @@
                 <div class="card p-2 ml-3 mr-3 shadow">
                     <div class="card-header" id="headingTwo">
                         <h6 class="ml-3" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            <a class="text-decoration-none" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Data Status Karyawan</a>
+                            <a class="text-decoration-none" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Data Karyawan</a>
                         </h6>
                     </div>
 
@@ -145,7 +145,7 @@
                                 
                             </div>
         
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Pangkat Dan Golongan</label>
                                     <select name="panggol" id="" class="form-control">
@@ -153,6 +153,17 @@
                                         @foreach ($panggol as $item)
                                             <option value="{{ $item->golongan }}">{{ $item->pangkat }}</option>
                                         @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Status Jabatan</label>
+                                    <select name="status_jabatan" id="" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        <option value="Definitif">Definitif</option>
+                                        <option value="Penjabat Sementara">Penjabat Sementara</option>
+                                        <option value="Penjabat">Penjabat</option>
                                     </select>
                                 </div>
                             </div>
