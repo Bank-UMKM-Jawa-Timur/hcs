@@ -3,7 +3,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Tambah Bagian</h5>
-            <p class="card-title"><a href="/">Dashboard </a> > <a href="/bagian">Bagian </a> > Tambah</p>
+            <p class="card-title"><a href="/">Dashboard </a> > <a href="/bagian">Bagian </a> > Edit</p>
         </div>
     </div>
     <div class="card-body">
@@ -40,7 +40,7 @@
                                 <input type="text" name="kd_bagian" id="kode_bagian" class="form-control" value="{{ $data->kd_bagian }}">
                             </div>
                         </div>
-                        <button class="btn btn-info">Simpan</button>
+                        <button class="btn btn-info">Update</button>
                     </div>
 
                 </form>

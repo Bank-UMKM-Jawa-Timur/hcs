@@ -79,7 +79,7 @@ class SubdivisiController extends Controller
                     'created_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil menambahkan sub divisi.');
+            Alert::success('Berhasil', 'Berhasil menambah sub divisi.');
             return redirect()->route('sub_divisi.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
@@ -151,7 +151,7 @@ class SubdivisiController extends Controller
                     'updated_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil mengupdate data.');
+            Alert::success('Berhasil', 'Berhasil mengupdate sub divisi.');
             return redirect()->route('sub_divisi.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);

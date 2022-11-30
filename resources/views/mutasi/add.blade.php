@@ -65,7 +65,7 @@
                         <select name="id_jabatan_baru" id="" class="form-control">
                             <option value="">--- Pilih jabatan baru ---</option>
                             @foreach ($data_jabatan as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama_jabatan }}</option>
+                                <option value="{{ $item->kd_jabatan }}">{{ $item->nama_jabatan }}</option>
                             @endforeach
                         </select>
                     </div>  
