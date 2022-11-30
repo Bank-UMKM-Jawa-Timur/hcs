@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('mst_tunjangan', function (Blueprint $table) {
             $table->id();
             $table->string('nama_tunjangan');
+            $table->enum('status', ['1', '2']);
             $table->timestamps();
         });
     }
