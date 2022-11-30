@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->enum('enum', ['Istri', 'Suami']);
             $table->string('is_nama');
-            $table->string('is_tgl_lahir');
+            $table->date('is_tgl_lahir');
             $table->string('is_alamat');
             $table->string('is_pekerjaan');
             $table->integer('is_jml_anak');

@@ -56,7 +56,7 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
                 DB::table('is')->insert([
                     'enum' => $row['pasangan'],
                     'is_nama' => $row['nama_pasangan'],
-                    'is_tgl_lahir' => $row['tgl_lahir_pasangan'],
+                    'is_tgl_lahir' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_lahir_pasangan']),
                     'is_alamat' => $row['alamat_pasangan'],
                     'is_pekerjaan' => $row['pekerjaan_pasangan'],
                     'is_jml_anak' => $row['jumlah_anak'],

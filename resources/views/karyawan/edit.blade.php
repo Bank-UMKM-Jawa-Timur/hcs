@@ -216,6 +216,38 @@
                     </div>
 
                     <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                        @if (count($data->tunjangan) < 1)
+                        <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is">Tunjangan</label>
+                                    <select name="tunjangan[]" id="tunjangan" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        @foreach ($tunjangan as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is_nama">Nominal</label>
+                                    <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    +
+                                </button>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    -
+                                </button>
+                            </div>
+                        </div>
+                        @endif
                         @foreach ($data->tunjangan as $tj)
                             <div class="row m-0 pb-3 col-md-12" id="row_tunjangan">
                                 <div class="col-md-5">
