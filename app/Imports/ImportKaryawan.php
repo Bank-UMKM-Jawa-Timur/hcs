@@ -98,6 +98,16 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
                     'tanggal_pengangkat' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tanggal_pengangkat']),
                     'created_at' => now(),
                 ]);
+
+            if($row['id_tunjangan'] != null){
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $row['nip'],
+                        'id_tunjangan' => $row['id_tunjangan'],
+                        'nominal' => $row['nominal'],
+                        'created_at' => now()
+                    ]);
+            }
         }   
     }
 }

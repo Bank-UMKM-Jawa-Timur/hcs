@@ -61,7 +61,11 @@ class KaryawanController extends Controller
         $data = DB::table('mst_cabang')
             ->get();
 
-        return response()->json($data);
+        $data_bagian = DB::table('mst_bagian')
+            ->where('kd_entitas', 2)
+            ->get();
+
+        return response()->json([$data, $data_bagian]);
     }
 
     public function get_divisi()
@@ -110,32 +114,10 @@ class KaryawanController extends Controller
 
     public function get_bagian(Request $request)
     {
-        $data1 = DB::table('mst_divisi')
-            ->where('kd_divisi', $request->kd_entitas)
-            ->first();
-        $data2 = DB::table('mst_sub_divisi')
-            ->where('kd_subdiv', $request->kd_entitas)
-            ->first();
-        $data3 = DB::table('mst_cabang')
-            ->where('kd_cabang', $request->kd_entitas)
-            ->first();
-        if(isset($data1)){
-            $data = DB::table('mst_bagian, mst.divisi')
-            ->join('mst_divisi', 'mst_divisi.kd_divisi', '=', 'mst_bagian.kd_bagian')
-                ->join('mst_kantor', 'mst_kantor.id', '=', 'mst_divisi.id_kantor')
-                ->get();
-        }else if(isset($data2)){
-            $data = DB::table('mst_bagian')
-                ->join('mst_sub_divisi', 'mst_sub_divisi.kd_subdiv', '=', 'mst_bagian.kd_entitas')
-                ->join('mst_divisi', 'mst_divisi.kd_divisi', '=', 'mst_sub_divisi.kd_divisi')
-                ->join('mst_kantor', 'mst_kantor.id', '=', 'mst_divisi.id_kantor')
-                ->get();
-        }else if(isset($data3)){
-            $data = DB::table('mst_bagian, mst.cabang')
-                ->join('mst_kantor', 'mst_kantor.id', '=', 'mst_divisi.id_kantor')
-                ->get();
-        }
-
+        $data = DB::table('mst_bagian')
+            ->where('kd_entitas', $request->kd_entitas)
+            ->get();
+            
         return response()->json($data);
     }
 
@@ -191,9 +173,10 @@ class KaryawanController extends Controller
                         'created_at' => now()
                     ]);
             }
-            if(!empty($request->get('subdiv'))){
+            $entitas = null;
+            if($request->get('subdiv') != null){
                 $entitas = $request->get('subdiv');
-            } else if(!empty($request->get('cabang'))){
+            } else if($request->get('cabang') != null){
                 $entitas = $request->get('cabang');
             } else{
                 $entitas = $request->get('divisi');

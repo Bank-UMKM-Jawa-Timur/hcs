@@ -145,7 +145,7 @@
                                 
                             </div>
         
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Pangkat Dan Golongan</label>
                                     <select name="panggol" id="" class="form-control">
@@ -361,6 +361,8 @@
                                             $('#sub_divisi').append('<option value="'+item.kd_subdiv+'">'+item.nama_subdivisi+'</option>')
                                         });
 
+                                        $("#kantor_row3").empty();
+
                                         $("#kantor_row3").append(`
                                                 <div class="form-group">
                                                     <label for="bagian">Bagian</label>
@@ -406,8 +408,21 @@
                                     </select>
                                 </div>`
                         );
-                        $.each(res, function(i, item){
-                            $('#cabang').append('<option value="'+item.id+'">'+item.nama_cabang+'</option>')
+                        $("#kantor_row2").append(`
+                            <div class="form-group">
+                                <label for="bagian">Bagian</label>
+                                <select name="bagian" id="bagian" class="form-control">
+                                    <option value="">--- Pilih bagian ---</option>
+                                </select>
+                            </div>  
+                        `)
+
+                        $("#kantor_row3").hide()
+                        $.each(res[0], function(i, item){
+                            $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
+                        })
+                        $.each(res[1], function(i, item){
+                            $('#bagian').append('<option value="'+item.kd_bagian+'">'+item.nama_bagian+'</option>')
                         })
                     }
                 })
@@ -421,16 +436,27 @@
                 $("#kantor").val("1")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
+                $("kantor_row2").removeClass("col-md-6")
                 $("#kantor_row2").hide();
+                $("#kantor_row3").hide()
             } else if(value == "PSD"){
                 $("#kantor").val("1")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
-            } else if(value == "PC"){
+            } else if(value == "PC" || value == "PBP"){
                 $("#kantor").val("2")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
-            } else {
+                $("#kantor_row2").hide();
+            } else if(value == "PBO"){
+                kantorChange();
+                $('#kantor').removeAttr("disabled")
+                $("kantor_row2").removeClass("col-md-6")
+                $("#kantor_row2").hide();
+                $("#kantor_row3").hide()
+            } else if(value == ""){
+                kantorChange();
+            }else {
                 $('#kantor').removeAttr("disabled")
             }
         })
@@ -491,19 +517,6 @@
                 $(this).closest('.row').remove()
                 x--;
             }
-        })
-
-        $("#submit").on('click', function(){
-            $.ajax({
-                type: "POST",
-                url: "{{ route('postTunjangan') }}",
-                datatype: 'json',
-                data: {
-                    nip: $('#nip').val(),
-                    id_tunjangan: $("#tunjangan").val(),
-                    nominal: $("#nominal").val()
-                }
-            })
         })
     </script>
 @endsection
