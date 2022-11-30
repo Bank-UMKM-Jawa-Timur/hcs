@@ -32,7 +32,7 @@ class KaryawanController extends Controller
                 'mst_karyawan.kd_jabatan',
                 'mst_karyawan.kd_bagian',
                 'mst_jabatan.nama_jabatan',
-                'mst_jabatan.status_jabatan',
+                'mst_karyawan.status_jabatan',
                 'mst_pangkat_golongan.pangkat',
             )
             ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
@@ -221,6 +221,7 @@ class KaryawanController extends Controller
                     'gj_pokok' => $request->get('gj_pokok'),
                     'gj_penyesuaian' => $request->get('gj_penyesuaian'),
                     'status_karyawan' => $request->get('status_karyawan'),
+                    'status_jabatan' => $request->get('status_jabatan'),
                     'skangkat' => $request->get('skangkat'),
                     'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
                     'created_at' => now(),
@@ -394,6 +395,7 @@ class KaryawanController extends Controller
                     'gj_pokok' => $request->get('gj_pokok'),
                     'gj_penyesuaian' => $request->get('gj_penyesuaian'),
                     'status_karyawan' => $request->get('status_karyawan'),
+                    'status_jabatan' => $request->get('status_jabatan'),
                     'skangkat' => $request->get('skangkat'),
                     'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
                     'created_at' => now(),
