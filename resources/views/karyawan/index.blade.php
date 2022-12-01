@@ -61,7 +61,7 @@
                                 } else if (isset($data2)) {
                                   $jabatan = 'Pusat';
                                 } else if (isset($data3)) {
-                                  $jabatan = 'Cabang';
+                                  $jabatan = $data3->kd_cabang;
                                 }
                               @endphp
                                 <tr>
