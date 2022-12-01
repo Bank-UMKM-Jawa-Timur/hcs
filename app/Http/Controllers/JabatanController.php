@@ -44,7 +44,7 @@ class JabatanController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
+        // dd($request);
         try{
             DB::table('mst_jabatan')
                 ->insert([

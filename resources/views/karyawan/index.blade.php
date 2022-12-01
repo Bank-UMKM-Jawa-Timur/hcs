@@ -36,9 +36,6 @@
                               Jabatan
                             </th>
                             <th>
-                              Bagian
-                            </th>
-                            <th>
                                 Aksi
                             </th>
                           </thead>
@@ -60,11 +57,11 @@
                                     ->first();
 
                                 if (isset($data1)) {
-                                  $jabatan = $data1->nama_divisi;
+                                  $jabatan = 'Pusat';
                                 } else if (isset($data2)) {
-                                  $jabatan = $data2->nama_subdivisi;
+                                  $jabatan = 'Pusat';
                                 } else if (isset($data3)) {
-                                  $jabatan = $data3->nama_cabang;
+                                  $jabatan = $data3->kd_cabang;
                                 }
                               @endphp
                                 <tr>
@@ -77,13 +74,7 @@
                                       {{ $item->nama_karyawan }}
                                     </td>
                                     <td>
-                                      @php
-                                          $kantor = 'Pusat';
-                                          if ($item->kd_bagian == null) {
-                                            $kantor = 'Cabang';
-                                          }
-                                      @endphp
-                                      {{ $kantor }}
+                                      {{ $jabatan }}
                                     </td>
                                     <td>
                                       @php
@@ -91,23 +82,11 @@
                                           if($item->ket_jabatan != null){
                                             $ket = ' ('.$item->ket_jabatan.')';
                                           }
-                                      @endphp
-
-                                      @if ($item->status_jabatan == "Penjabat")
-                                          Pj.{{ $item->nama_jabatan }} 
-                                      @elseif($item->status_jabatan == "Penjabat Sementara")
-                                          Pjs.{{ $item->nama_jabatan  }} 
-                                      @else
-                                      {{ $item->nama_jabatan }} 
-                                      @endif
-                                    </td>
-                                    <td>
-                                      @php
                                           $st_jabatan = DB::table('mst_jabatan')
                                             ->where('kd_jabatan', $item->kd_jabatan)
                                             ->first();
 
-                                          $bagian = '-';
+                                          $bagian = '';
                                           if ($item->kd_bagian != null) {
                                             $bagian = DB::table('mst_bagian')
                                               ->where('kd_bagian', $item->kd_bagian)
@@ -116,7 +95,14 @@
                                             $bagian = $bagian->nama_bagian;
                                           }
                                       @endphp
-                                      {{ $bagian.$ket }}
+
+                                      @if ($item->status_jabatan == "Penjabat")
+                                          Pj.{{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
+                                      @elseif($item->status_jabatan == "Penjabat Sementara")
+                                          Pjs.{{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
+                                      @else
+                                      {{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
+                                      @endif
                                     </td>
                                     <td>
                                       <div class="row">
