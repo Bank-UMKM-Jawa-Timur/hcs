@@ -36,9 +36,6 @@
                               Jabatan
                             </th>
                             <th>
-                              Bagian
-                            </th>
-                            <th>
                                 Aksi
                             </th>
                           </thead>
@@ -85,23 +82,11 @@
                                           if($item->ket_jabatan != null){
                                             $ket = ' ('.$item->ket_jabatan.')';
                                           }
-                                      @endphp
-
-                                      @if ($item->status_jabatan == "Penjabat")
-                                          Pj.{{ $item->nama_jabatan }} 
-                                      @elseif($item->status_jabatan == "Penjabat Sementara")
-                                          Pjs.{{ $item->nama_jabatan  }} 
-                                      @else
-                                      {{ $item->nama_jabatan }} 
-                                      @endif
-                                    </td>
-                                    <td>
-                                      @php
                                           $st_jabatan = DB::table('mst_jabatan')
                                             ->where('kd_jabatan', $item->kd_jabatan)
                                             ->first();
 
-                                          $bagian = '-';
+                                          $bagian = '';
                                           if ($item->kd_bagian != null) {
                                             $bagian = DB::table('mst_bagian')
                                               ->where('kd_bagian', $item->kd_bagian)
@@ -110,7 +95,14 @@
                                             $bagian = $bagian->nama_bagian;
                                           }
                                       @endphp
-                                      {{ $bagian.$ket }}
+
+                                      @if ($item->status_jabatan == "Penjabat")
+                                          Pj.{{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
+                                      @elseif($item->status_jabatan == "Penjabat Sementara")
+                                          Pjs.{{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
+                                      @else
+                                      {{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
+                                      @endif
                                     </td>
                                     <td>
                                       <div class="row">
