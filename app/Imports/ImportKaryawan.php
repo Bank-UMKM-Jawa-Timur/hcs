@@ -100,12 +100,129 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
                     'created_at' => now(),
                 ]);
 
-            if($row['id_tunjangan'] != null){
+            if($row['tunjangan_keluarga'] != null){
+                $id_tunjangan = DB::table('mst_tunjangan')
+                    ->where('nama_tunjangan', 'Keluarga')
+                    ->select('id')
+                    ->first();
+
                 DB::table('tunjangan_karyawan')
                     ->insert([
                         'nip' => $row['nip'],
-                        'id_tunjangan' => $row['id_tunjangan'],
-                        'nominal' => $row['nominal'],
+                        'id_tunjangan' => $id_tunjangan->id,
+                        'nominal' => $row['tunjangan_keluarga'],
+                        'created_at' => now()
+                    ]);
+            } 
+            if($row['tunjangan_telepon_air_listrik'] != null){
+                $id_tunjangan = DB::table('mst_tunjangan')
+                    ->where('nama_tunjangan', 'Telpon, Air dan Listrik')
+                    ->select('id')
+                    ->first();
+
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $row['nip'],
+                        'id_tunjangan' => $id_tunjangan->id,
+                        'nominal' => $row['tunjangan_telepon_air_listrik'],
+                        'created_at' => now()
+                    ]);
+            } 
+            if($row['tunjangan_jabatan'] != null){
+                $id_tunjangan = DB::table('mst_tunjangan')
+                    ->where('nama_tunjangan', 'Jabatan')
+                    ->select('id')
+                    ->first();
+
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $row['nip'],
+                        'id_tunjangan' => $id_tunjangan->id,
+                        'nominal' => $row['tunjangan_jabatan'],
+                        'created_at' => now()
+                    ]);
+            }
+            if($row['tunjangan_teller'] != null){
+                $id_tunjangan = DB::table('mst_tunjangan')
+                    ->where('nama_tunjangan', 'Teller')
+                    ->select('id')
+                    ->first();
+
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $row['nip'],
+                        'id_tunjangan' => $id_tunjangan->id,
+                        'nominal' => $row['tunjangan_teller'],
+                        'created_at' => now()
+                    ]);
+            } 
+            if($row['tunjangan_perumahan'] != null){
+                $id_tunjangan = DB::table('mst_tunjangan')
+                    ->where('nama_tunjangan', 'Perumahan')
+                    ->select('id')
+                    ->first();
+
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $row['nip'],
+                        'id_tunjangan' => $id_tunjangan->id,
+                        'nominal' => $row['tunjangan_perumahan'],
+                        'created_at' => now()
+                    ]);
+            } 
+            if($row['tunjangan_kemahalan'] != null){
+                $id_tunjangan = DB::table('mst_tunjangan')
+                    ->where('nama_tunjangan', 'Kemahalan')
+                    ->select('id')
+                    ->first();
+
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $row['nip'],
+                        'id_tunjangan' => $id_tunjangan->id,
+                        'nominal' => $row['tunjangan_kemahalan'],
+                        'created_at' => now()
+                    ]);
+            } 
+            if($row['tunjangan_pelaksana'] != null){
+                $id_tunjangan = DB::table('mst_tunjangan')
+                    ->where('nama_tunjangan', 'Pelaksana')
+                    ->select('id')
+                    ->first();
+
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $row['nip'],
+                        'id_tunjangan' => $id_tunjangan->id,
+                        'nominal' => $row['tunjangan_pelaksana'],
+                        'created_at' => now()
+                    ]);
+            }
+            if($row['tunjangan_kesejahteraan'] != null){
+                $id_tunjangan = DB::table('mst_tunjangan')
+                    ->where('nama_tunjangan', 'Kesejahteraan')
+                    ->select('id')
+                    ->first();
+
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $row['nip'],
+                        'id_tunjangan' => $id_tunjangan->id,
+                        'nominal' => $row['tunjangan_kesejahteraan'],
+                        'created_at' => now()
+                    ]);
+            }
+            if($row['tunjangan_dpp'] != null){
+                $id_tunjangan = DB::table('mst_tunjangan')
+                    ->where('nama_tunjangan', 'DPP')
+                    ->select('id')
+                    ->first();
+
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $row['nip'],
+                        'id_tunjangan' => $id_tunjangan->id,
+                        'nominal' => $row['tunjangan_dpp'],
                         'created_at' => now()
                     ]);
             }

@@ -51,7 +51,7 @@
 
 @section('custom_script')
     <script>
-        let idKantor = "{{ $data->kd_subdiv }}"
+        var idKantor = {{ $data->kd_entitas }}
         console.log(idKantor);
         function getKantor(){
             var kantor_id = $('#kantor').val();

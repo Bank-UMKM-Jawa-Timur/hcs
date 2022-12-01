@@ -87,9 +87,9 @@
                                       @endphp
 
                                       @if ($item->status_jabatan == "Penjabat")
-                                          PJ.{{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
+                                          Pj.{{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
                                       @elseif($item->status_jabatan == "Penjabat Sementara")
-                                          PS.{{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
+                                          Pjs.{{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
                                       @else
                                       {{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
                                       @endif

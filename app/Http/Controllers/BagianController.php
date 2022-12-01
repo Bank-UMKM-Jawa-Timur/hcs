@@ -103,7 +103,7 @@ class BagianController extends Controller
             ->where('kd_subdiv', $data->kd_entitas)
             ->first();
         $data3 = DB::table('mst_cabang')
-            ->where('id', $data->kd_entitas)
+            ->where('kd_cabang', $data->kd_entitas)
             ->first();
         if(isset($data1)){
             $data = DB::table('mst_bagian, mst.divisi')
@@ -125,7 +125,7 @@ class BagianController extends Controller
             ->get();
         $data->divisi = DB::table('mst_divisi')
             ->get();
-        // dd($data);
+        dd($data);
         return view('bagian.edit', ['data' => $data]);
     }
 

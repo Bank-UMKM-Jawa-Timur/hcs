@@ -46,7 +46,11 @@
                                         {{ $item->nama_bagian }}
                                     </td>
                                     <td>
-                                        {{ $item->kd_entitas }}
+                                        @if ($item->kd_entitas == "2")
+                                          Cabang
+                                        @else
+                                          Pusat
+                                        @endif
                                     </td>
                                     <td>
                                       <div class="row">
