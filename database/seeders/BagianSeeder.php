@@ -73,7 +73,7 @@ class BagianSeeder extends Seeder
         ]);
         DB::table('mst_bagian')
         ->insert([
-            'kd_bagian' => 'B-UM',
+            'kd_bagian' => 'B-UMM',
             'kd_entitas' => 'UMUM',
             'nama_bagian' => 'Umum',
             'created_at' => now()
@@ -237,6 +237,27 @@ class BagianSeeder extends Seeder
             'kd_bagian' => 'B-PPK',
             'kd_entitas' => 'PPK',
             'nama_bagian' => 'Pengembangan Produk & Kebijakan',
+            'created_at' => now()
+        ]);
+        DB::table('mst_bagian')
+        ->insert([
+            'kd_bagian' => 'B-PI',
+            'kd_entitas' => 'PI',
+            'nama_bagian' => 'Pengawasan Intern',
+            'created_at' => now()
+        ]);
+        DB::table('mst_bagian')
+        ->insert([
+            'kd_bagian' => 'B-PIC',
+            'kd_entitas' => 'PI',
+            'nama_bagian' => 'Pengawasan Intern Cabang',
+            'created_at' => now()
+        ]);
+        DB::table('mst_bagian')
+        ->insert([
+            'kd_bagian' => 'B-TK',
+            'kd_entitas' => 'UMUM',
+            'nama_bagian' => 'Teknisi',
             'created_at' => now()
         ]);
         // Bagian ke mst_kantor

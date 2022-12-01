@@ -22,7 +22,7 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
         // dd($rows);
         foreach($rows as $row){
             $id_is = null;
-            // dd($row);
+            dd($row);
             if($row['status_pernikahan'] == 'Kawin' && $row['pasangan'] != null){
                 DB::table('is')->insert([
                     'enum' => $row['pasangan'],
