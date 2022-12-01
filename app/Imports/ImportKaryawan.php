@@ -22,7 +22,7 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
         // dd($rows);
         foreach($rows as $row){
             $id_is = null;
-            // dd($row);
+            dd($row);
             if($row['status_pernikahan'] == 'Kawin' && $row['pasangan'] != null){
                 DB::table('is')->insert([
                     'enum' => $row['pasangan'],
@@ -68,7 +68,7 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
                     'id_is' => $id_is,
                     'kd_agama' => $row['agama'],
                     'tmp_lahir' => $row['tmp_lahir'],
-                    'tgl_lahir' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_lahir']),
+                    'tgl_lahir' => ($row['tgl_lahir'] != null) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_lahir']) : null,
                     'kewarganegaraan' => $row['kewarganegaraan'],
                     'jk' => $jk,
                     'status' => $status_pernikahan,
@@ -80,7 +80,7 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
                     'gj_penyesuaian' => $row['gj_penyesuaian'],
                     'status_karyawan' => $row['status_karyawan'],
                     'skangkat' => $row['skangkat'],
-                    'tanggal_pengangkat' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tanggal_pengangkat']),
+                    'tanggal_pengangkat' => ($row['tanggal_pengangkat'] != null) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tanggal_pengangkat']) : null,
                     'created_at' => now(),
                 ]);
 

@@ -30,7 +30,13 @@
                                 Nama karyawan
                             </th>
                             <th>
+                              Kantor
+                            </th>
+                            <th>
                               Jabatan
+                            </th>
+                            <th>
+                              Bagian
                             </th>
                             <th>
                                 Aksi
@@ -72,27 +78,45 @@
                                     </td>
                                     <td>
                                       @php
+                                          $kantor = 'Pusat';
+                                          if ($item->kd_bagian == null) {
+                                            $kantor = 'Cabang';
+                                          }
+                                      @endphp
+                                      {{ $kantor }}
+                                    </td>
+                                    <td>
+                                      @php
+                                          $ket = null;
+                                          if($item->ket_jabatan != null){
+                                            $ket = ' ('.$item->ket_jabatan.')';
+                                          }
+                                      @endphp
+
+                                      @if ($item->status_jabatan == "Penjabat")
+                                          Pj.{{ $item->nama_jabatan }} 
+                                      @elseif($item->status_jabatan == "Penjabat Sementara")
+                                          Pjs.{{ $item->nama_jabatan  }} 
+                                      @else
+                                      {{ $item->nama_jabatan }} 
+                                      @endif
+                                    </td>
+                                    <td>
+                                      @php
                                           $st_jabatan = DB::table('mst_jabatan')
                                             ->where('kd_jabatan', $item->kd_jabatan)
                                             ->first();
 
-                                          $bagian = null;
+                                          $bagian = '-';
                                           if ($item->kd_bagian != null) {
                                             $bagian = DB::table('mst_bagian')
                                               ->where('kd_bagian', $item->kd_bagian)
                                               ->first();
 
-                                            $bagian = " Bagian ".$bagian->nama_bagian;
+                                            $bagian = $bagian->nama_bagian;
                                           }
                                       @endphp
-
-                                      @if ($item->status_jabatan == "Penjabat")
-                                          Pj.{{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
-                                      @elseif($item->status_jabatan == "Penjabat Sementara")
-                                          Pjs.{{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
-                                      @else
-                                      {{ $item->nama_jabatan." - ".$jabatan.$bagian }} 
-                                      @endif
+                                      {{ $bagian.$ket }}
                                     </td>
                                     <td>
                                       <div class="row">

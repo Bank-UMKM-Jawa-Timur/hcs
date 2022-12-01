@@ -31,6 +31,7 @@ class KaryawanController extends Controller
                 'mst_karyawan.kd_entitas',
                 'mst_karyawan.kd_jabatan',
                 'mst_karyawan.kd_bagian',
+                'mst_karyawan.ket_jabatan',
                 'mst_karyawan.status_karyawan',
                 'mst_jabatan.nama_jabatan',
                 'mst_karyawan.status_jabatan',
