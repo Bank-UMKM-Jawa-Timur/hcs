@@ -45,7 +45,8 @@
                           <tbody>
                             @foreach ($data as $item)
                               @php
-                                $jabatan = null;
+                                $jabatan = 'Pusat';
+                                $kd_ent = null;
                                 $data1 = DB::table('mst_divisi')
                                     ->where('kd_divisi', $item->kd_entitas)
                                     ->first();
@@ -62,6 +63,8 @@
                                   $jabatan = 'Pusat';
                                 } else if (isset($data3)) {
                                   $jabatan = $data3->kd_cabang;
+                                } else if ($item->kd_bagian) {
+                                  $jabatan = 'Pusat';
                                 }
                               @endphp
                                 <tr>
@@ -88,11 +91,14 @@
 
                                           $bagian = '';
                                           if ($item->kd_bagian != null) {
-                                            $bagian = DB::table('mst_bagian')
+                                            $bagian1 = DB::table('mst_bagian')
+                                              ->select('nama_bagian')
                                               ->where('kd_bagian', $item->kd_bagian)
                                               ->first();
 
-                                            $bagian = $bagian->nama_bagian;
+                                              if (isset($bagian1)) {
+                                                $bagian = $bagian1->nama_bagian;
+                                              }
                                           }
                                       @endphp
 
