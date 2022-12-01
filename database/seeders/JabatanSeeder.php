@@ -63,5 +63,11 @@ class JabatanSeeder extends Seeder
             'nama_jabatan' => 'Non Staf',
             'created_at' => now()
         ]);
+        DB::table('mst_jabatan')
+        ->insert([
+            'kd_jabatan' => 'IKJP',
+            'nama_jabatan' => 'IKJP',
+            'created_at' => now()
+        ]);
     }
 }

@@ -87,7 +87,11 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Kewarganegaraan</label>
-                                    <input type="text" name="kewarganegaraan" id="" class="form-control" value="{{ $data->kewarganegaraan }}">
+                                    <select name="kewarganegaraan" id="" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        <option value="WNI" {{ ($data->kewarganegaraan == 'WNI' ) ? 'selected' : ''}}>WNI</option>
+                                        <option value="WNA" {{ ($data->kewarganegaraan == 'WNA' ) ? 'selected' : ''}}>WNA</option>
+                                    </select>
                                 </div>
                             </div> 
                             <div class="col-md-12">
