@@ -66,7 +66,7 @@ class SubDivisiSeeder extends Seeder
         ]);
         DB::table('mst_sub_divisi')
         ->insert([
-            'kd_subdiv' => 'UMUM',
+            'kd_subdiv' => 'UM',
             'nama_subdivisi' => 'Umum',
             'kd_divisi' => 'UMUM',
             'created_at' => now()
@@ -81,7 +81,7 @@ class SubDivisiSeeder extends Seeder
         DB::table('mst_sub_divisi')
         ->insert([
             'kd_subdiv' => 'PK',
-            'nama_subdivisi' => 'Pengembagan Karir',
+            'nama_subdivisi' => 'Pengembangan Karir',
             'kd_divisi' => 'UMUM',
             'created_at' => now()
         ]);

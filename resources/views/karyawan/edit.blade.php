@@ -117,6 +117,65 @@
                     </div>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                         <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Jabatan</label>
+                                    <select name="jabatan" id="jabatan" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        @foreach ($jabatan as $item)
+                                            <option value="{{ $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="kantor">Kantor</label>
+                                    <select name="kantor" id="kantor" class="form-control">
+                                        <option value="">--- Pilih Kantor ---</option>
+                                        <option value="1">Kantor Pusat</option>
+                                        <option value="2">Kantor Cabang</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4" id="kantor_row1">
+            
+                            </div>
+                            <div class="col-md-6"  id="kantor_row2">
+                                
+                            </div>
+                            <div class="col-md-6"  id="kantor_row3">
+                                
+                            </div>
+        
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Pangkat Dan Golongan</label>
+                                    <select name="panggol" id="" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        @foreach ($panggol as $item)
+                                            <option value="{{ $item->golongan }}">{{ $item->pangkat }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Status Jabatan</label>
+                                    <select name="status_jabatan" id="" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        <option value="Definitif">Definitif</option>
+                                        <option value="Penjabat Sementara">Penjabat Sementara</option>
+                                        <option value="Penjabat">Penjabat</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Keterangan Jabatan</label>
+                                    <input type="text" class="form-control" name="key_jabatan" value="{{ $data->ket_jabatan }}">
+                                </div>
+                            </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">KPJ</label>
@@ -148,6 +207,7 @@
                                         <option value="">--- Pilih ---</option>
                                         <option value="Tetap" {{ ($data->status_karyawan == 'Tetap') ? 'selected' : ''}}>Tetap</option>
                                         <option value="IKJP" {{ ($data->status_karyawan == 'IKJP') ? 'selected' : ''}}>IKJP</option>
+                                        <option value="Kontrak Perpanjangan" {{ ($data->status_karyawan == 'Kontrak Perpanjangan') ? 'selected' : ''}}>Kontrak Perpanjangan</option>
                                     </select>
                                 </div>
                             </div>
