@@ -99,5 +99,11 @@ class TunjanganSeeder extends Seeder
             'status' => '2',
             'created_at' => now()
         ]);
+        DB::table('mst_tunjangan')
+        ->insert([
+            'nama_tunjangan' => 'DPP',
+            'status' => '2',
+            'created_at' => now()
+        ]);
     }
 }
