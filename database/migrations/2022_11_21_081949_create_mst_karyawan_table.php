@@ -28,16 +28,11 @@ return new class extends Migration
             $table->enum('kewarganegaraan', ['WNA', 'WNI'])->nullable();
             $table->string('nik', 16);
             $table->enum('jk', ['Laki-laki', 'Perempuan']);
-            $table->enum('status', ['Kawin', 'Belum Kawin', 'Janda', 'Duda']);
+            $table->enum('status', ['Kawin', 'Belum Kawin', 'Janda', 'Duda', 'Tidak Diketahui']);
             $table->string('alamat_ktp')->nullable();
             $table->string('alamat_sek')->nullable();
             $table->string('kpj')->nullable();
             $table->string('jkn')->nullable();
-            $table->enum('status', ['Kawin', 'Belum Kawin', 'Janda', 'Duda', 'Tidak Di Ketahui']);
-            $table->string('alamat_ktp');
-            $table->string('alamat_sek');
-            $table->string('kpj');
-            $table->string('jkn');
             $table->integer('gj_pokok');
             $table->integer('gj_penyesuaian');
             $table->enum('status_karyawan', ['Tetap', 'IKJP', 'Kontrak Perpanjangan']);
