@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('is', function (Blueprint $table) {
             $table->id();
             $table->enum('enum', ['Istri', 'Suami']);
-            $table->string('is_nama');
-            $table->date('is_tgl_lahir');
-            $table->string('is_alamat');
-            $table->string('is_pekerjaan');
-            $table->integer('is_jml_anak');
+            $table->string('is_nama')->nullable();
+            $table->date('is_tgl_lahir')->nullable();
+            $table->string('is_alamat')->nullable();
+            $table->string('is_pekerjaan')->nullable();
+            $table->integer('is_jml_anak')->nullable();
             $table->timestamps();
         });
     }

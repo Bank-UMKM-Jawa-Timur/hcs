@@ -16,47 +16,18 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
-    public function model()
-    {
-        // return new KaryawanModel([
-        //     'nip' => $row['nip'],
-        //     'nama_karyawan' => $row['nama_karyawan'],
-        //     'nik' => $row['nik'],
-        //     'ket_jabatan' => $row['ket_jabatan'], 
-        //     'kd_subdivisi' => $row['kd_subdiv'],
-        //     'id_cabang' => $row['id_cabang'],
-        //     'kd_jabatan' => $row['kd_jabatan'],
-        //     'kd_panggol' => $row['kd_pangkat_golongan'],
-        //     'id_is' => $row['id_is'],
-        //     'kd_agama' => $row['agama'],
-        //     'tmp_lahir' => $row['tmp_lahir'],
-        //     'tgl_lahir' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_lahir']),
-        //     'kewarganegaraan' => $row['kewarganegaraan'],
-        //     'jk' => $row['jenis_kelamin'],
-        //     'status' => $row['status_pernikahan'],
-        //     'alamat_ktp' => $row['alamat_ktp'],
-        //     'alamat_sek' => $row['alamat_sekarang'],
-        //     'kpj' => $row['kpj'],
-        //     'jkn' => $row['jkn'],
-        //     'gj_pokok' => $row['gj_pokok'],
-        //     'gj_penyesuaian' => $row['gj_penyesuaian'],
-        //     'status_karyawan' => $row['status_karyawan'],
-        //     'skangkat' => $row['skangkat'],
-        //     'tanggal_pengangkat' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tanggal_pengangkat']),
-        //     'created_at' => now(),
-        // ]);
-    }
 
     public function collection(Collection $rows)
     {
+        // dd($rows);
         foreach($rows as $row){
             $id_is = null;
-
-            if($row['status_pernikahan'] == 'Kawin'){
+            // dd($row);
+            if($row['status_pernikahan'] == 'Kawin' && $row['pasangan'] != null){
                 DB::table('is')->insert([
                     'enum' => $row['pasangan'],
                     'is_nama' => $row['nama_pasangan'],
-                    'is_tgl_lahir' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_lahir_pasangan']),
+                    'is_tgl_lahir' => ($row['tgl_lahir_pasangan'] != null) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_lahir_pasangan']) : null,
                     'is_alamat' => $row['alamat_pasangan'],
                     'is_pekerjaan' => $row['pekerjaan_pasangan'],
                     'is_jml_anak' => $row['jumlah_anak'],
@@ -70,6 +41,19 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
                 $id_is = $id_is->id;
             }
 
+            $jk = null;
+
+            if($row['jenis_kelamin'] == 'L'){
+                $jk = 'Laki-laki';
+            } else if($row['jenis_kelamin'] == 'P'){
+                $jk = 'Perempuan';
+            }
+            
+            $status_pernikahan = $row['status_pernikahan'];
+            if($status_pernikahan == null || $status_pernikahan == ''){
+                $status_pernikahan = 'Tidak Diketahui';
+            }
+            // dd($row);
             DB::table('mst_karyawan')
                 ->insert([
                     'nip' => $row['nip'],
@@ -86,8 +70,8 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
                     'tmp_lahir' => $row['tmp_lahir'],
                     'tgl_lahir' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_lahir']),
                     'kewarganegaraan' => $row['kewarganegaraan'],
-                    'jk' => $row['jenis_kelamin'],
-                    'status' => $row['status_pernikahan'],
+                    'jk' => $jk,
+                    'status' => $status_pernikahan,
                     'alamat_ktp' => $row['alamat_ktp'],
                     'alamat_sek' => $row['alamat_sekarang'],
                     'kpj' => $row['kpj'],

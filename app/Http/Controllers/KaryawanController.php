@@ -34,10 +34,8 @@ class KaryawanController extends Controller
                 'mst_karyawan.status_karyawan',
                 'mst_jabatan.nama_jabatan',
                 'mst_karyawan.status_jabatan',
-                'mst_pangkat_golongan.pangkat',
             )
             ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
-            ->join('mst_pangkat_golongan', 'mst_karyawan.kd_panggol', '=', 'mst_pangkat_golongan.golongan')
             ->get();
             // dd($data);
 
