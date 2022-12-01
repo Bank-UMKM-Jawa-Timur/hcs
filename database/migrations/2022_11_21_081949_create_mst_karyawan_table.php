@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('kewarganegaraan');
             $table->string('nik', 16);
             $table->enum('jk', ['Laki-laki', 'Perempuan']);
-            $table->enum('status', ['Kawin', 'Belum Kawin', 'Janda', 'Duda']);
+            $table->enum('status', ['Kawin', 'Belum Kawin', 'Janda', 'Duda', 'Tidak Di Ketahui']);
             $table->string('alamat_ktp');
             $table->string('alamat_sek');
             $table->string('kpj');
