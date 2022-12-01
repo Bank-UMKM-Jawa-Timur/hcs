@@ -10,15 +10,17 @@
     <div class="card-body">
         <div class="row">
             <div class="col">
-                <a href="{{ asset('template_import.xlsx') }}" download>
-                    <button class="btn btn-primary">Download Template Excel</button>
-                </a>
+                <div class="container">
+                    <a href="{{ asset('template_import.xlsx') }}" download>
+                        <button class="btn btn-primary">Download Template Excel</button>
+                    </a>
+                </div>
 
                 <form action="{{ route('upload_karyawan') }}" enctype="multipart/form-data" method="POST" class="form-group">
                     @csrf
                     <div class="row">
                         <div class="container">
-                            <label for="">Data CSV</label>
+                            <label for="">Data Excel</label>
                             <div class="custom-file col-md-12">
                                 <input type="file" name="upload_csv" class="custom-file-input" id="validatedCustomFile">
                                 <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>

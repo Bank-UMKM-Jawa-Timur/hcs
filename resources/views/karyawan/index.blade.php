@@ -60,11 +60,11 @@
                                     ->first();
 
                                 if (isset($data1)) {
-                                  $jabatan = $data1->nama_divisi;
+                                  $jabatan = 'Pusat';
                                 } else if (isset($data2)) {
-                                  $jabatan = $data2->nama_subdivisi;
+                                  $jabatan = 'Pusat';
                                 } else if (isset($data3)) {
-                                  $jabatan = $data3->nama_cabang;
+                                  $jabatan = 'Cabang';
                                 }
                               @endphp
                                 <tr>
@@ -77,13 +77,7 @@
                                       {{ $item->nama_karyawan }}
                                     </td>
                                     <td>
-                                      @php
-                                          $kantor = 'Pusat';
-                                          if ($item->kd_bagian == null) {
-                                            $kantor = 'Cabang';
-                                          }
-                                      @endphp
-                                      {{ $kantor }}
+                                      {{ $jabatan }}
                                     </td>
                                     <td>
                                       @php
