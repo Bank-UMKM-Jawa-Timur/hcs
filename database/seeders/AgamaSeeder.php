@@ -17,37 +17,37 @@ class AgamaSeeder extends Seeder
     {
         DB::table('mst_agama')
             ->insert([
-                'kd_agama' => 'ISLM',
+                'kd_agama' => 'I',
                 'agama' => 'Islam',
                 'created_at' => now()
             ]);
         DB::table('mst_agama')
             ->insert([
-                'kd_agama' => 'KRSTN',
+                'kd_agama' => 'K',
                 'agama' => 'Kristen',
                 'created_at' => now()
             ]);
         DB::table('mst_agama')
             ->insert([
-                'kd_agama' => 'KAHLK',
+                'kd_agama' => 'KT',
                 'agama' => 'Katholik',
                 'created_at' => now()
             ]);
         DB::table('mst_agama')
             ->insert([
-                'kd_agama' => 'HNDU',
+                'kd_agama' => 'H',
                 'agama' => 'Hindu',
                 'created_at' => now()
             ]);
         DB::table('mst_agama')
             ->insert([
-                'kd_agama' => 'BUDH',
+                'kd_agama' => 'B',
                 'agama' => 'Buddha',
                 'created_at' => now()
             ]);
         DB::table('mst_agama')
             ->insert([
-                'kd_agama' => 'KHC',
+                'kd_agama' => 'KH',
                 'agama' => 'Kong Hu Cu',
                 'created_at' => now()
             ]);

@@ -86,7 +86,11 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Kewarganegaraan</label>
-                                    <input type="text" name="kewarganegaraan" id="" class="form-control">
+                                    <select name="kewarganegaraan" id="" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        <option value="WNI">WNI</option>
+                                        <option value="WNA">WNA</option>
+                                    </select>
                                 </div>
                             </div> 
                             <div class="col-md-12">
@@ -170,7 +174,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Keterangan Jabatan</label>
-                                    <textarea name="ket_jabatan" class="form-control"></textarea>
+                                    <input type="text" class="form-control" name="key_jabatan">
                                 </div>
                             </div>
                             <div class="col-md-12">

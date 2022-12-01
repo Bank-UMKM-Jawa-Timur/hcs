@@ -331,5 +331,12 @@ class BagianSeeder extends Seeder
             'nama_bagian' => 'Satpam',
             'created_at' => now()
         ]);
+        DB::table('mst_bagian')
+        ->insert([
+            'kd_bagian' => 'B-PGW',
+            'kd_entitas' => 2,
+            'nama_bagian' => 'Pegawai',
+            'created_at' => now()
+        ]);
     }
 }
