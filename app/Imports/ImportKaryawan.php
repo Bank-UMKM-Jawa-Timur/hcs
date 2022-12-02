@@ -64,7 +64,7 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
                     'kd_jabatan' => $row['kd_jabatan'],
                     'status_jabatan' => $row['status_jabatan'],
                     'kd_bagian' => $row['kd_bagian'],
-                    'kd_panggol' => $row['kd_pangkat_golongan'],
+                    'kd_panggol' => ($row['kd_pangkat_golongan'] != '') ? $row['kd_pangkat_golongan'] : null,
                     'id_is' => $id_is,
                     'kd_agama' => $row['agama'],
                     'tmp_lahir' => $row['tmp_lahir'],
