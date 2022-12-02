@@ -5,12 +5,19 @@ namespace App\Imports;
 use App\Models\KaryawanModel;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Throwable;
 
-class ImportKaryawan implements ToCollection, WithHeadingRow
+class ImportKaryawan implements ToCollection, WithHeadingRow, SkipsOnError, WithValidation, SkipsEmptyRows
 {
+    use Importable, SkipsErrors;
     /**
     * @param array $row
     *
@@ -22,7 +29,7 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
         // dd($rows);
         foreach($rows as $row){
             $id_is = null;
-            dd($row);
+            // dd($row);
             if($row['status_pernikahan'] == 'Kawin' && $row['pasangan'] != null){
                 DB::table('is')->insert([
                     'enum' => $row['pasangan'],
@@ -211,5 +218,17 @@ class ImportKaryawan implements ToCollection, WithHeadingRow
                     ]);
             }
         }   
+    }
+
+    public function onError(Throwable $error)
+    {    
+    }
+
+    public function rules() : array 
+    {
+       return[
+        'nip' => 'unique:mst_karyawan,nip',
+        'nama_karyawan' => 'required'
+       ];
     }
 }

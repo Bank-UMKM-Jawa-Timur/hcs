@@ -50,10 +50,13 @@ class KaryawanController extends Controller
 
     public function upload_karyawan(Request $request)
     {
-        Excel::import(new ImportKaryawan, $request->file('upload_csv'));
-        
+        $file = $request->file('upload_csv');
+        $import = new ImportKaryawan;   
+        $import = $import->import($file);
+
         Alert::success('Berhasil', 'Berhasil mengimport data excel');
         return redirect()->route('karyawan.index');
+        // dd($import->errors());
     }
 
     public function get_cabang()

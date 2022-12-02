@@ -9,7 +9,7 @@
 
     <div class="card-body">
         <div class="row">
-            <div class="col">
+            <div class="col-md-12">
                 <div class="container">
                     <a href="{{ asset('template_import.xlsx') }}" download>
                         <button class="btn btn-primary">Download Template Excel</button>
@@ -31,6 +31,25 @@
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="col-md-12 justify-content-center">
+                
+                
+                @if ($errors->any())
+                    <div class="table-responsive justify-content-center container">
+                        <table class="table">
+                            <tbody>
+                                @foreach ($errors->all() as $item)
+                                <tr class="justify-content-center">
+                                    <td>
+                                        {{ $item }}
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
