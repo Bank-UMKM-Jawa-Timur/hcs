@@ -18,12 +18,18 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <label for="pangkat">Pangkat</label>
-                            <input type="text" name="pangkat" id="pangkat" class="form-control" value="{{ $data->pangkat }}">
+                            <input type="text" name="pangkat" id="pangkat" class="@error('pangkat') is-invalid @enderror form-control" value="{{ old('pangkat', $data->pangkat) }}">
+                            @error('pangkat')
+                                <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         
                         <div class="col-lg-6">
                             <label for="Golongan">Golongan</label>
-                            <input type="text" name="golongan" id="golongan" class="form-control" value="{{ $data->golongan }}">
+                            <input type="text" name="golongan" id="golongan" class="@error('golongan') is-invalid @enderror form-control" value="{{ old('golongan', $data->golongan) }}">
+                            @error('golongan')
+                                <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <button class="btn btn-info" value="submit" type="submit">Update</button>

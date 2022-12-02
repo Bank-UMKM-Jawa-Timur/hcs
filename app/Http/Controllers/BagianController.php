@@ -44,6 +44,17 @@ class BagianController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'kantor' => 'required|not_in:-',
+            'kd_bagian' => 'required',
+            'nama_bagian' => 'required'
+        ], [
+            'kantor.required' => 'Data harus diisi.',
+            'kantor.not_in' => 'Data harus diisi.',
+            'kd_bagian.required' => 'Data harus diisi.',
+            'nama.required' => 'Data harus diisi.'
+        ]);
+
         try{
             if($request->get('kd_subdiv') != null){
                 $kd_entitas = $request->get('kd_subdiv');
@@ -61,15 +72,15 @@ class BagianController extends Controller
                     'created_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil melakukan bagian.');
+            Alert::success('Berhasil', 'Berhasil Menambah Bagian.');
             return redirect()->route('bagian.index');
             } catch(Exception $e){
                 DB::rollBack();
-                Alert::error('Terjadi Kesalahan', $e->getMessage());
+                Alert::error('Terjadi Kesalahan', ''.$e->getMessage());
                 return redirect()->route('bagian.index');
             } catch(QueryException $e){
                 DB::rollBack();
-                Alert::error('Terjadi Kesalahan', $e->getMessage());
+                Alert::error('Terjadi Kesalahan', 'Gagal Menambah Bagian.'.$e->getMessage());
                 return redirect()->route('bagian.index');
         }
     }

@@ -15,7 +15,11 @@
                 <form action="{{ route('tunjangan.store') }}" class="form-group" method="POST" enctype="multipart/form-data">
                     @csrf
                     <label for="nama_kantot">Nama Tunjangan</label>
-                    <input type="text" name="nama_tunjangan" id="nama_tunjangan" class="form-control">
+                    <input type="text" name="nama_tunjangan" id="nama_tunjangan" class="@error('nama_tunjangan') is-invalid @enderror form-control" value="{{ old('nama_tunjangan') }}">
+                    @error('nama_tunjangan')
+                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
+
                     <button class="btn btn-info" value="submit" type="submit">Simpan</button>
                 </form>
             </div>

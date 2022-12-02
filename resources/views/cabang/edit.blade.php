@@ -13,13 +13,23 @@
                     @csrf
                     @method('PUT')
                     <label for="kode_cabang">Kode Kantor Cabang</label>
-                    <input type="text" class="form-control" value="{{ $data->kd_cabang }}" name="kode_cabang" id="kode_cabang" disabled>
+                    <input type="text" class="@error('kode_cabang') is_invalid @enderror form-control" value="{{ old('kode_cabang', $data->kd_cabang) }}" name="kode_cabang" id="kode_cabang">
+                    @error('kode_cabang')
+                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
 
                     <label for="nama_cabang">Nama Kantor Cabang</label>
-                    <input type="text" class="form-control" value="{{ $data->nama_cabang }}" name="nama_cabang" id="nama_cabang">
-
+                    <input type="text" class="@error('nama_cabang') is_invalid @enderror form-control" value="{{ old('nama_cabang', $data->nama_cabang) }}" name="nama_cabang" id="nama_cabang">
+                    @error('nama_cabang')
+                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
+                    
                     <label for="alamat_cabang">Alamat Kantor Cabang</label>
-                    <textarea name="alamat_cabang" id="alamat_cabang" class="form-control">{{ $data->alamat_cabang }}</textarea>
+                    <textarea name="alamat_cabang" id="alamat_cabang" class="@error('alamat_cabang') is_invalid @enderror form-control">{{ old('alamat_cabang', $data->alamat_cabang ) }}</textarea>
+                    @error('alamat_cabang')
+                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
+
                     <button class="btn btn-info">Update</button>
                 </form>
             </div>

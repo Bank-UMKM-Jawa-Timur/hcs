@@ -16,7 +16,11 @@
                     @csrf
                     @method('PUT')
                     <label for="nama_kantot">Nama tunjangan</label>
-                    <input type="text" name="nama_tunjangan" id="nama_tunjangan" class="form-control" value="{{ $data->nama_tunjangan }}">
+                    <input type="text" name="nama_tunjangan" id="nama_tunjangan" class="@error('nama_tunjangan') is-invalid @enderror form-control" value="{{ old('nama_tunjangan', $data->nama_tunjangan) }}">
+                    @error('nama_tunjangan')
+                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
+
                     <button class="btn btn-info" value="submit" type="submit">Update</button>
                 </form>
             </div>

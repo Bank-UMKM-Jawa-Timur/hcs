@@ -73,7 +73,7 @@ Coded by www.creative-tim.com
                     <a class="dropdown-item" href="{{ route('mutasi.index') }}">Mutasi</a>
                     <a class="dropdown-item" href="{{ route('demosi.index') }}">Demosi</a>
                     <a class="dropdown-item" href="{{ route('promosi.index') }}">Promosi</a>
-                    <a class="dropdown-item" href="{{ route('tunjangan_karyawan.index') }}">Tunjangan Karyawan</a>
+                    {{-- <a class="dropdown-item" href="{{ route('tunjangan_karyawan.index') }}">Tunjangan Karyawan</a> --}}
                 </div>
             </li>
             <li class="dropdown">
