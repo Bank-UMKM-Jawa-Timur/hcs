@@ -59,10 +59,14 @@ class SubdivisiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'divisi' => 'required',
+            'divisi' => 'required|not_in:-',
+            'kd_subdiv' => 'required',
             'nama_subdivisi' => 'required'
         ], [
-            'required' => 'Data harus diisi.'
+            'divisi.required' => 'Data harus diisi.',
+            'divisi.not_in' => 'Data harus diisi.',
+            'kd_subdiv.required' => 'Data harus diisi.',
+            'nama_subdivisi.required' => 'Data harus diisi.'
         ]);
 
         try{
@@ -79,13 +83,13 @@ class SubdivisiController extends Controller
                     'created_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil menambah sub divisi.');
+            Alert::success('Berhasil', 'Berhasil Menambah Sub Divisi.');
             return redirect()->route('sub_divisi.index');
         } catch(Exception $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Kode Sub Divisi Telah Digunakan');
             return redirect()->route('sub_divisi.index')->withStatus($e->getMessage());   
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Menambahkan Sub Divisi');
             return redirect()->route('sub_divisi.index')->withStatus($e->getMessage());   
         }
     }
@@ -135,10 +139,14 @@ class SubdivisiController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'divisi' => 'required',
+            'divisi' => 'required|not_in:-',
+            'kd_subdiv' => 'required',
             'nama_subdivisi' => 'required'
         ], [
-            'required' => 'Data harus diisi.'
+            'divisi.required' => 'Data harus diisi.',
+            'divisi.not_in' => 'Data harus diisi.',
+            'kd_subdiv.required' => 'Data harus diisi.',
+            'nama_subdivisi.required' => 'Data harus diisi.'
         ]);
 
         try{
@@ -151,13 +159,13 @@ class SubdivisiController extends Controller
                     'updated_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil mengupdate sub divisi.');
+            Alert::success('Berhasil', 'Berhasil Mengupdate Sub Divisi.');
             return redirect()->route('sub_divisi.index');
         } catch(Exception $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Kode Sub Divisi Telah Digunakan.'.$e);
             return redirect()->route('sub_divisi.index')->withStatus($e->getMessage());   
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Mengupdate Sub Divisi'.$e);
             return redirect()->route('sub_divisi.index')->withStatus($e->getMessage());   
         }
     }

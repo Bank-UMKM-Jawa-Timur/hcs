@@ -45,6 +45,14 @@ class KantorCabangController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'kode_cabang' => 'required',
+            'nama_cabang' => 'required',
+            'alamat_cabang' => 'required'
+        ], [
+            'required' => 'Data harus diisi.'
+        ]);
+
         try{
             DB::table('mst_cabang')
                 ->insert([
@@ -55,13 +63,13 @@ class KantorCabangController extends Controller
                     'created_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil menambah kantor cabang.');
+            Alert::success('Berhasil', 'Berhasil Menambah Kantor Cabang.');
             return redirect()->route('cabang.index');
         } catch(Exception $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Kode Cabang Telah Digunakan.');
             return redirect()->route('cabang.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Menambah Kantor Cabang.');
             return redirect()->route('cabang.index')->withStatus($e->getMessage());
         }
     }
@@ -101,6 +109,14 @@ class KantorCabangController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'kode_cabang' => 'required',
+            'nama_cabang' => 'required',
+            'alamat_cabang' => 'required'
+        ], [
+            'required' => 'Data harus diisi.'
+        ]);
+
         try{
             DB::table('mst_cabang')
                 ->where('kd_cabang', $id)
@@ -111,13 +127,13 @@ class KantorCabangController extends Controller
                     'updated_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil mengupdate kantor cabang.');
+            Alert::success('Berhasil', 'Berhasil Mengupdate Kantor Cabang.');
             return redirect()->route('cabang.index');
         } catch(Exception $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Kode Cabang Telah Digunakan.');
             return redirect()->route('cabang.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Mengupdate Kantor Cabang');
             return redirect()->route('cabang.index')->withStatus($e->getMessage());
         }
     }
@@ -135,7 +151,7 @@ class KantorCabangController extends Controller
                 ->where('kd_cabang', $id)
                 ->delete();
 
-            Alert::success('Berhasil', 'Berhasil menghapus kantor cabang.');
+            Alert::success('Berhasil', 'Berhasil Menghapus Kantor Cabang.');
             return redirect()->route('cabang.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);

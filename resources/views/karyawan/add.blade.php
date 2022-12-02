@@ -78,6 +78,8 @@
                                         <option value="">--- Pilih ---</option>
                                         <option value="Kawin">Kawin</option>
                                         <option value="Belum Kawin">Belum Kawin</option>
+                                        <option value="Cerai">Cerai</option>
+                                        <option value="Cerai Mati">Cerai Mati</option>
                                         <option value="Janda">Janda</option>
                                         <option value="Duda">Duda</option>
                                     </select>

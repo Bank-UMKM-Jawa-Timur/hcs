@@ -45,6 +45,13 @@ class JabatanController extends Controller
     public function store(Request $request)
     {
         // dd($request);
+        $request->validate([
+            'kd_jabatan' => 'required',
+            'nama_jabatan' => 'required'
+        ], [
+            'required' => 'Data harus diisi.'
+        ]);
+
         try{
             DB::table('mst_jabatan')
                 ->insert([
@@ -53,13 +60,13 @@ class JabatanController extends Controller
                     'created_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil menambah jabatan.');
+            Alert::success('Berhasil', 'Berhasil Menambah Jabatan.');
             return redirect()->route('jabatan.index');
         } catch(Exception $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Kode Jabatan Telah Digunakan.');
             return redirect()->route('kantor.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Menambah Jabatan.');
             return redirect()->route('kantor.index')->withStatus($e->getMessage());
         }
     }
@@ -99,6 +106,13 @@ class JabatanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'kd_jabatan' => 'required',
+            'nama_jabatan' => 'required'
+        ], [
+            'required' => 'Data harus diisi.'
+        ]);
+
         try{
             DB::table('mst_jabatan')
                 ->where('kd_jabatan', $id)
@@ -108,13 +122,13 @@ class JabatanController extends Controller
                     'updated_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil mengupdate jabatan.');
+            Alert::success('Berhasil', 'Berhasil Mengupdate Jabatan.');
             return redirect()->route('jabatan.index');
         } catch(Exception $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Kode Jabatan Telah Digunakan.');
             return redirect()->route('kantor.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Mengupdate Jabatan.');
             return redirect()->route('kantor.index')->withStatus($e->getMessage());
         }
     }
@@ -132,7 +146,7 @@ class JabatanController extends Controller
                 ->where('id', $id)
                 ->delete();
 
-            Alert::success('Berhasil', 'Berhasil menghapus jabatan.');
+            Alert::success('Berhasil', 'Berhasil Menghapus Jabatan.');
             return redirect()->route('jabatan.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);

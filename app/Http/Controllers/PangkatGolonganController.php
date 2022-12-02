@@ -45,6 +45,13 @@ class PangkatGolonganController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'pangkat' => 'required',
+            'golongan' => 'required'
+        ], [
+            'required' => 'Data harus diisi.'
+        ]);
+
         try{
             DB::table('mst_pangkat_golongan')
                 ->insert([
@@ -53,13 +60,13 @@ class PangkatGolonganController extends Controller
                     'created_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil menambah pangkat dan golongan.');
+            Alert::success('Berhasil', 'Berhasil Menambah Pangkat dan Golongan.');
             return redirect()->route('pangkat_golongan.index');
         } catch(Exception $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Golongan Telah Digunakan');
             return redirect()->route('pangkat_golongan.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Menambah Pangkat dan Golongan.');
             return redirect()->route('pangkat_golongan.index')->withStatus($e->getMessage());
         }
     }
@@ -99,6 +106,13 @@ class PangkatGolonganController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'pangkat' => 'required',
+            'golongan' => 'required'
+        ], [
+            'required' => 'Data harus diisi.'
+        ]);
+
         try{
             DB::table('mst_pangkat_golongan')
                 ->where('golongan', $id)
@@ -108,13 +122,13 @@ class PangkatGolonganController extends Controller
                     'updated_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil mengupdate pangkat dan golongan.');
+            Alert::success('Berhasil', 'Berhasil Mengupdate Pangkat dan Golongan.');
             return redirect()->route('pangkat_golongan.index');
         } catch(Exception $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Golongan Telah Digunakan.');
             return redirect()->route('pangkat_golongan.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Mengupdate Pangkat dan Golongan.');
             return redirect()->route('pangkat_golongan.index')->withStatus($e->getMessage());
         }
     }

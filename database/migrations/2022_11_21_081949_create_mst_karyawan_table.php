@@ -28,7 +28,7 @@ return new class extends Migration
             $table->enum('kewarganegaraan', ['WNA', 'WNI'])->nullable();
             $table->string('nik', 16);
             $table->enum('jk', ['Laki-laki', 'Perempuan']);
-            $table->enum('status', ['Kawin', 'Belum Kawin', 'Janda', 'Duda', 'Tidak Diketahui']);
+            $table->enum('status', ['Kawin', 'Belum Kawin', 'Cerai', 'Cerai Mati', 'Janda', 'Duda', 'Tidak Diketahui']);
             $table->string('alamat_ktp')->nullable();
             $table->string('alamat_sek')->nullable();
             $table->string('kpj')->nullable();

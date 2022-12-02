@@ -45,6 +45,12 @@ class TunjanganController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nama_tunjangan' => 'required'
+        ], [
+            'required' => 'Data harus isi.'
+        ]);
+
         try{
             DB::table('mst_tunjangan')
                 ->insert([
@@ -52,13 +58,13 @@ class TunjanganController extends Controller
                     'created_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil menambah tunjangan.');
+            Alert::success('Berhasil', 'Berhasil Menambah Tunjangan.');
             return redirect()->route('tunjangan.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
             return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Menambah Tunjangan.');
             return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         }
     }
@@ -98,6 +104,12 @@ class TunjanganController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nama_tunjangan' => 'required'
+        ], [
+            'required' => 'Data harus isi.'
+        ]);
+
         try{
             DB::table('mst_tunjangan')
                 ->where('id', $id)
@@ -106,13 +118,13 @@ class TunjanganController extends Controller
                     'updated_at' => now()
                 ]);
 
-            Alert::success('Berhasil', 'Berhasil mengupdate tunjangan.');
+            Alert::success('Berhasil', 'Berhasil Mengupdate Tunjangan.');
             return redirect()->route('tunjangan.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
             return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Mengupdate Tunjangan');
             return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         }
     }
@@ -130,13 +142,13 @@ class TunjanganController extends Controller
                 ->where('id', $id)
                 ->delete();
 
-            Alert::success('Berhasil', 'Berhasil menghapus tunjangan.');
+            Alert::success('Berhasil', 'Berhasil Menghapus Tunjangan.');
             return redirect()->route('tunjangan.index');
         } catch(Exception $e){
             Alert::error('Terjadi Kesalahan', ''.$e);
             return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
-            Alert::error('Terjadi Kesalahan', ''.$e);
+            Alert::error('Terjadi Kesalahan', 'Gagal Menghapus Tunjangan');
             return redirect()->route('tunjangan.index')->withStatus($e->getMessage());
         }
     }

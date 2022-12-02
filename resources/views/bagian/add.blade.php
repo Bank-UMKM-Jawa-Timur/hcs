@@ -15,11 +15,14 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kantor">Nama Kantor</label>
-                                <select name="kantor" class="form-control" id="kantor">
-                                    <option value="">-- Pilih ---</option>
-                                    <option value="1">Kantor Pusat</option>
-                                    <option value="2">Kantor Cabang</option>
+                                <select name="kantor" class="@error('kantor') is-invalid @enderror form-control" id="kantor">
+                                    <option {{ old('kantor') == "-" ? 'selected' : '' }} value="-">-- Pilih ---</option>
+                                    <option {{ old('kantor') == 1 ? 'selected' : '' }} value="1">Kantor Pusat</option>
+                                    <option {{ old('kantor') == 2 ? 'selected' : '' }} value="2">Kantor Cabang</option>
                                 </select>
+                                @error('kantor')
+                                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="col" id="kantor_row1">
@@ -30,15 +33,21 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_cabang">Nama Bagian</label>
-                                <input type="text" class="form-control" name="nama_bagian" id="nama_bagian">
+                                <label for="nama_bagian">Nama Bagian</label>
+                                <input type="text" class="@error('nama_bagian') is-invalid @enderror form-control" name="nama_bagian" id="nama_bagian">
                             </div>
+                            @error('nama_bagian')
+                                <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="kode_bagian">Kode Bagian</label>
-                                <input type="text" name="kd_bagian" id="kode_bagian" class="form-control">
+                                <label for="kd_bagian">Kode Bagian</label>
+                                <input type="text" name="kd_bagian" id="kd_bagian" class="@error('kd_bagian') is-invalid @enderror form-control">
                             </div>
+                            @error('kd_bagian')
+                                <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <button class="btn btn-info">Simpan</button>
                     </div>
@@ -112,14 +121,14 @@
                         $("#kantor_row2").empty();
                         $("#kantor_row1").append(`
                                 <div class="form-group">
-                                    <label for="Cabang">Cabang</label>
-                                    <select name="cabang" id="cabang" class="form-control">
+                                    <label for="kd_cabang">Cabang</label>
+                                    <select name="kd_cabang" id="cabang" class="form-control">
                                         <option value="">--- Pilih Cabang ---</option>
                                     </select>
                                 </div>`
                         );
-                        $.each(res, function(i, item){
-                            $('#cabang').append('<option value="'+item.id+'">'+item.nama_cabang+'</option>')
+                        $.each(res[0], function(i, item){
+                            $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
                         })
                     }
                 })
