@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\DemosiController;
+use App\Http\Controllers\JaminanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
 use App\Http\Controllers\KaryawanController;
@@ -86,6 +87,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/promosi', PromosiController::class);
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
+    Route::resource('/laporan_jaminan', JaminanController::class);
     
     // Routing Import excel karyawan
     Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');
@@ -110,6 +112,8 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('getis', [KaryawanController::class, 'get_is']);
 
     Route::get('/getbagian', [KaryawanController::class, 'get_bagian']);
+
+    Route::post('/laporan_jaminan', [JaminanController::class, 'filter'])->name('filter-laporan');
 });
 Auth::routes();
 
