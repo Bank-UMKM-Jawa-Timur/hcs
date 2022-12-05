@@ -257,7 +257,42 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = DB::table('mst_karyawan')
+        ->where('nip', $id)
+        ->join('mst_agama', 'mst_agama.kd_agama', '=', 'mst_karyawan.kd_agama')
+        ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
+        ->join('mst_bagian', 'mst_bagian.kd_bagian', '=', 'mst_karyawan.kd_bagian')
+        ->join('mst_cabang', 'mst_cabang.kd_cabang', '=', 'mst_karyawan.kd_entitas')
+        // ->join('is', 'is.id', '=', 'mst_karyawan.id_is')
+        ->first();
+
+        $data->tunjangan = DB::table('tunjangan_karyawan')
+            ->where('nip', $id)
+            ->select('tunjangan_karyawan.*')
+            ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id')
+            ->get();
+        $data->count_tj = DB::table('tunjangan_karyawan')
+            ->where('nip', $id)
+            ->count('*');
+        $data_is = DB::table('is')
+            ->get();
+        $data_panggol = DB::table('mst_pangkat_golongan')
+            ->get();
+        $data_jabatan = DB::table('mst_jabatan')
+            ->get();
+        $data_agama = DB::table('mst_agama')
+            ->get();
+        $data_tunjangan = DB::table('mst_tunjangan')
+            ->get();
+
+        return view('karyawan.detail', [
+            'data' => $data,
+            'panggol' => $data_panggol, 
+            'is' => $data_is,
+            'jabatan' => $data_jabatan,
+            'agama' => $data_agama,
+            'tunjangan' => $data_tunjangan
+        ]);
     }
 
     /**

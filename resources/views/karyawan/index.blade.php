@@ -112,9 +112,9 @@
                                     </td>
                                     <td>
                                       <div class="row">
-                                        <a href="{{ route('karyawan.edit', $item->nip) }}">
-                                          <button class="btn btn-warning">
-                                            Edit
+                                        <a href="{{ route('karyawan.show', $item->nip) }}">
+                                          <button class="btn btn-outline-info btn-sm">
+                                            Detail
                                           </button>
                                         </a>
                                         
