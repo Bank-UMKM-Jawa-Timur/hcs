@@ -17,7 +17,10 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="">NIP</label>
-                        <input type="text" name="nip" id="karyawan" class="form-control">
+                        <input type="text" name="nip" id="karyawan" class="@error('nip') is-invalid @enderror form-control" value="{{ old('nip') }}">
+                        @error('nip')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>    
                 <div class="col-md-6">
@@ -46,11 +49,14 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="kantor">Kantor</label>
-                        <select name="kantor" id="kantor" class="form-control">
-                            <option value="">--- Pilih Kantor ---</option>
-                            <option value="1">Kantor Pusat</option>
-                            <option value="2">Kantor Cabang</option>
+                        <select name="kantor" id="kantor" class="@error('kantor') @enderror form-control">
+                            <option {{ old('kantor') == '-' ? 'selected' : '' }} value="-">--- Pilih Kantor ---</option>
+                            <option {{ old('kantor') == '1' ? 'selected' : '' }} value="1">Kantor Pusat</option>
+                            <option {{ old('kantor') == '2' ? 'selected' : '' }} value="2">Kantor Cabang</option>
                         </select>
+                        @error('kantor')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-md-4" id="kantor_row1">
@@ -62,18 +68,24 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="">Jabatan Baru</label>
-                        <select name="id_jabatan_baru" id="" class="form-control">
-                            <option value="">--- Pilih jabatan baru ---</option>
+                        <select name="id_jabatan_baru" id="" class="@error('id_jabatan_baru') @enderror form-control">
+                            <option value="-">--- Pilih jabatan baru ---</option>
                             @foreach ($data_jabatan as $item)
-                                <option value="{{ $item->kd_jabatan }}">{{ $item->nama_jabatan }}</option>
+                                <option {{ old('id_jabatan_baru') == $item->kd_jabatan ? 'selected' : '-' }} value="{{ $item->kd_jabatan }}">{{ $item->nama_jabatan }}</option>
                             @endforeach
                         </select>
+                        @error('id_jabatan_baru')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>  
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="">Keterangan Jabatan</label>
-                        <input type="text" class="form-control" id="ket_jabatan" name="ket_jabatan">
+                        <input type="text" class="@error('ket_jabatan') @enderror form-control" id="ket_jabatan" name="ket_jabatan" value="{{ old('ket_jabatan') }}">
+                        @error('ket_jabatan')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -85,19 +97,28 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="">Tanggal Pengesahan</label>
-                        <input type="date" class="form-control" name="tanggal_pengesahan" id="">
+                        <input type="date" class="@error('tanggal_pengesahan') @enderror form-control" name="tanggal_pengesahan" id="" value="{{ old('tanggal_pengesahan') }}">
+                        @error('tanggal_pengesahan')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>    
                 <div class= "col-md-4">
                     <div class="form-group">
                         <label for="">Surat Keputusan</label>
-                        <input type="text" class="form-control" name="bukti_sk" id="inputGroupFile01">
+                        <input type="text" class="@error('bukti_sk') @enderror form-control" name="bukti_sk" id="inputGroupFile01" value="{{ old('bukti_sk') }}">
+                        @error('bukti_sk')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class= "col-md-4">
                     <div class="form-floating form-group">
                         <label for="">Keterangan</label>
-                        <textarea class="form-control" name="keterangan" placeholder="Keterangan" id="floatingTextarea"></textarea>
+                        <textarea class="@error('keterangan') @enderror form-control" name="keterangan" placeholder="Keterangan" id="floatingTextarea">{{ old('keterangan') }}</textarea>
+                        @error('keterangan')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -189,8 +210,7 @@
                                     success: function(res){
                                         $('#sub_divisi').empty();
                                         $.each(res, function(i, item){
-                                            $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
-                                            $('#sub_divisi').append('<option value="'+item.id+'">'+item.nama_subdivisi+'</option>')
+                                            $('#sub_divisi').append('<option value="'+item.kd_subdiv+'">'+item.nama_subdivisi+'</option>')
                                         })
                                     }
                                 })
@@ -214,8 +234,8 @@
                                     </select>
                                 </div>`
                         );
-                        $.each(res, function(i, item){
-                            $('#cabang').append('<option value="'+item.id+'">'+item.nama_cabang+'</option>')
+                        $.each(res[0], function(i, item){
+                            $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
                         })
                     }
                 })

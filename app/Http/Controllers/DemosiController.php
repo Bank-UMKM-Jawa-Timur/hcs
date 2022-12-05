@@ -64,6 +64,20 @@ class DemosiController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nip' => 'required|alpha_num',
+            'jabatan_baru' => 'required|not_in:-',
+            'tanggal_pengesahan' => 'required',
+            'bukti_sk' => 'required',
+        ], [
+            'nip.required' => 'Data harus diisi.',
+            'nip.alpha_num' => 'NIP berupa alfa numerik.',
+            'jabatan_baru.required' => 'Data harus diisi.',
+            'jabatan_baru.not_in' => 'Data harus diisi',
+            'tanggal_pengesahan.required' => 'Data harus diisi.',
+            'bukti_sk.required' => 'Data harus diisi.',
+        ]);
+
         try{
             DB::table('demosi_promosi_pangkat')
                 ->insert([
@@ -73,6 +87,7 @@ class DemosiController extends Controller
                     'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
                     'bukti_sk' => $request->get('bukti_sk'),
                     'keterangan' => 'Demosi Jabatan',
+                    'created_at' => now()
                 ]);
 
             DB::table('mst_karyawan')
@@ -91,7 +106,7 @@ class DemosiController extends Controller
             return redirect()->route('demosi.index');
         } catch(QueryException $e){
             DB::rollBack();
-            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            Alert::error('Terjadi Kesalahan', 'Gagal melakukan demosi pangkat.'.$e->getMessage());
             return redirect()->route('demosi.index');
         }
     }
