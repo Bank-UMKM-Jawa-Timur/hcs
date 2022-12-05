@@ -69,6 +69,10 @@ use Illuminate\Support\Facades\Auth;
 //     return view('promosi/add');
 // });
 
+// Route::get('karyawan/detail', function() {
+//     return view('karyawan/detail');
+// });
+
 Route::get('/', function(){
     return redirect()->route('login');
 });
