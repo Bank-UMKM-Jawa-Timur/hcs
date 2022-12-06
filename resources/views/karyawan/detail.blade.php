@@ -42,7 +42,11 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Agama</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->agama }}">
+                    @if (isset($agama))
+                        <input type="text" disabled class="form-control" value="{{ $agama->agama }}">                        
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
@@ -72,7 +76,11 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Alamat Sekarang</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->alamat_sek }}">
+                    @if (isset($data->alamat_sek) != null)
+                        <input type="text" disabled class="form-control" value="{{ $data->alamat_sek }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <hr>
@@ -114,13 +122,21 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">SK Pengangkatan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->skangkat}}">
+                    @if (isset($data->skangkat) != null)
+                        <input type="text" disabled class="form-control" value="{{ $data->skangkat}}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Tanggal Pengangkatan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->tanggal_pengangkat}}">
+                    @if (isset($data->tanggal_pengangkat) != null)
+                        <input type="text" disabled class="form-control" value="{{ date('d F Y', strtotime($data->tanggal_pengangkat)) }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <hr>
@@ -132,62 +148,102 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Kartu Peserta Jamsostek (KPJ)</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->kpj }}">
+                    @if (isset($data->kpj) != null)
+                        <input type="text" disabled class="form-control" value="{{ $data->kpj }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Jaminan Kesehatan Nasional (JKN)</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->jkn }}">
+                    @if (isset($data->jkn) != null)
+                        <input type="text" disabled class="form-control" value="{{ $data->jkn }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Gaji Pokok</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->gj_pokok }}">
+                    @if (isset($data->gj_pokok) != null)
+                        <input type="text" disabled class="form-control" value="{{ $data->gj_pokok }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Gaji Penyesuaian</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->gj_penyesuaian }}">
+                    @if (isset($data->gj_penyesuaian) != null)
+                        <input type="text" disabled class="form-control" value="{{ $data->gj_penyesuaian }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <br>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Status Pasangan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control">
+                    @if (isset($suis))
+                        <input type="text" disabled class="form-control" value="{{ $suis->enum }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Nama</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control">
+                    @if (isset($suis))
+                        <input type="text" disabled class="form-control" value="{{ $suis->is_nama }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Tanggal Lahir</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control">
+                    @if (isset($suis))
+                        <input type="text" disabled class="form-control" value="{{ $suis->is_tgl_lahir }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Alamat</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control">
+                    @if (isset($suis))
+                        <input type="text" disabled class="form-control" value="{{ $suis->is_alamat }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Pekerjaan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control">
+                    @if (isset($suis))
+                        <input type="text" disabled class="form-control" value="{{ $suis->is_pekerjaan }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Jumlah Anak</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control">
+                    @if (isset($suis))
+                        <input type="text" disabled class="form-control" value="{{ $suis->is_jml_anak }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-3">

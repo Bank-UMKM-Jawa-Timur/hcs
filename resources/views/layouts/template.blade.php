@@ -33,6 +33,7 @@ Coded by www.creative-tim.com
   <link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />
   <link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />
   <link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />
+  <link href="{{ asset('style/assets/css/datatables.min.css') }}" rel="stylesheet" />
   <link rel="stylesheet" href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 </head>
 
@@ -211,6 +212,8 @@ Coded by www.creative-tim.com
   <script src="{{ asset('style/assets/demo/demo.js') }}"></script>
   <!-- Jam Realtime -->
   <script src="{{ asset('style/assets/js/jam.js') }}" async></script>
+  <script src="{{ asset('style/assets/js/Datatables.js') }}"></script>
+  <script src="{{ asset('style/assets/js/ReorderWithResize.js') }}"></script>
   <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
   <script>
     $(document).ready(function() {

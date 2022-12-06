@@ -13,8 +13,8 @@
                     <a class="mb-3" href="{{ route('jabatan.create') }}">
                       <button class="btn btn-primary">tambah jabatan</button>
                     </a>
-                    <div class="table-responsive overflow-hidden">
-                        <table class="table" id="table">
+                    <div class="table-responsive overflow-hidden content-center">
+                      <table class="table whitespace-nowrap" id="table" style="width: 100%">
                           <thead class=" text-primary">
                             <th>
                                 No
@@ -39,7 +39,7 @@
                                         {{ $item->nama_jabatan }}
                                     </td>
                                     <td>
-                                      <div class="row">
+                                      {{-- <div class="row"> --}}
                                         <a href="{{ route('jabatan.edit', $item->kd_jabatan) }}">
                                           <button class="btn btn-warning">
                                             Edit
@@ -52,7 +52,7 @@
                                       
                                           <button type="submit" class="btn btn-danger btn-block">Delete</button>
                                         </form> --}}
-                                      </div>
+                                      {{-- </div> --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -66,8 +66,14 @@
 
 @section('custom_script')
   <script>
-    $(document).ready( function () {
-      $('#table').DataTable();
+    $(document).ready(function() {
+        var table = $('#table').DataTable({
+            'autoWidth': false,
+            'dom': 'Rlfrtip',
+            'colReorder': {
+                'allowReorder': false
+            }
+        });
     });
   </script>
 @endsection 
