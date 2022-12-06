@@ -130,20 +130,46 @@ class JaminanController extends Controller
         $karyawan = DB::table('mst_karyawan')
             ->get();
 
+        // If Kategori yang dipilih keseluruhan
         if($request->kategori == 1){
             $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
             $cbg = array();
             foreach($cabang as $item){
                 array_push($cbg, $item->kd_cabang);
             }
+            // Get Data untuk kantor pusat
+            $karyawan_pusat = DB::table('mst_karyawan')
+                ->whereNotIn('kd_entitas', $cbg)
+                ->orWhere('kd_entitas', null)
+                ->get();
+
+            $jp1_pusat = array();
+            $jp2_pusat = array();
+            $total_gaji_pusat = array();
+            foreach($karyawan_pusat as $i){
+                $data_gaji = DB::table('tunjangan_karyawan')
+                    ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
+                    ->where('nip', $i->nip)
+                    ->where('mst_tunjangan.status', 1)
+                    ->sum('tunjangan_karyawan.nominal');
+                    
+                array_push($total_gaji_pusat, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok : 0 + $i->gj_pokok));
+            }
+            foreach($total_gaji_pusat as $i){
+                array_push($jp1_pusat, round((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
+                array_push($jp2_pusat, round((($i >  9077600) ?  9077600 * 0.02 : $i * 0.02)));
+            }
+
+            // dd(array_sum($total_gaji_pusat));
 
             $data_pusat = DB::table('tunjangan_karyawan')
                 ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
                 ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
                 ->where('mst_tunjangan.status', 1)
                 ->whereNotIn('kd_entitas', $cbg)
-                ->sum('nominal');
+                ->get();
 
+            // Get Data keseluruhan cabang
             $data_cabang = DB::table('tunjangan_karyawan')
                 ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
                 ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
@@ -152,14 +178,19 @@ class JaminanController extends Controller
                 ->selectRaw('kd_entitas, sum(nominal) as nominal')
                 ->groupBy('mst_karyawan.kd_entitas')
                 ->get();
-                // dd($data_cabang);
+            
             return view('jaminan.index', [
                 'status' => 1,
+                'jp1_pusat' => $jp1_pusat,
+                'jp2_pusat' => $jp2_pusat,
+                'total_gaji_pusat' => array_sum($total_gaji_pusat),
                 'data_pusat' => $data_pusat,
                 'data_cabang' => $data_cabang
             ]);
         }
 
+        // Get data per kantor/cabang 
+        // if kantor = pusat
         if($kantor == 'Pusat'){
             $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
             $cbg = array();
@@ -195,19 +226,25 @@ class JaminanController extends Controller
                     ->where('nip', $i->nip)
                     ->where('mst_tunjangan.status', 1)
                     ->sum('tunjangan_karyawan.nominal');
-                // dd($i->nama_karyawan. ' '.$data_gaji.' '.  $i->gj_pokok);
+                    
                 array_push($total_gaji, ($data_gaji + $i->gj_pokok));
             }
         }
-        // dd($karyawan);
+        
         $jkk = array();
         $jht = array();
         $jkm = array();
+        $jp1 = array();
+        $jp2 = array();
 
         foreach($total_gaji as $item){
             $perhitungan_jkk = 0.0024 * $item;
             $perhitungan_jht = 0.057 * $item;
             $perhitungan_jkm = 0.003 * $item;
+            $perhitungan_jp1 = ($item >  9077600) ?  9077600 * 0.001 : $item * 0.001;
+            $perhitungan_jp2 = ($item >  9077600) ?  9077600 * 0.002 : $item * 0.002;
+            array_push($jp1, $perhitungan_jp1);
+            array_push($jp2, $perhitungan_jp2);
             array_push($jkk, $perhitungan_jkk);
             array_push($jht, $perhitungan_jht);
             array_push($jkm, $perhitungan_jkm);
@@ -218,7 +255,9 @@ class JaminanController extends Controller
             'karyawan' => $karyawan,
             'jkk' => $jkk,
             'jht' => $jht,
-            'jkm' => $jkm
+            'jkm' => $jkm,
+            'jp1' => $jp1,
+            'jp2' => $jp2
         ]);
     }
 
