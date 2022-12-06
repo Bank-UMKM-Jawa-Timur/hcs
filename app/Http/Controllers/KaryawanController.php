@@ -257,14 +257,28 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
+        $data_agama = null;
+        $data_suis = null;
+
+
         $data = DB::table('mst_karyawan')
         ->where('nip', $id)
-        ->join('mst_agama', 'mst_agama.kd_agama', '=', 'mst_karyawan.kd_agama')
         ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
         ->join('mst_bagian', 'mst_bagian.kd_bagian', '=', 'mst_karyawan.kd_bagian')
         ->join('mst_cabang', 'mst_cabang.kd_cabang', '=', 'mst_karyawan.kd_entitas')
-        // ->join('is', 'is.id', '=', 'mst_karyawan.id_is')
         ->first();
+
+        if($data->kd_agama != null) {
+            $data_agama = DB::table('mst_agama')
+                ->where('kd_agama', $data->kd_agama)
+                ->first();
+        }
+
+        if($data->id_is != null) {
+            $data_suis = DB::table('is')
+                ->where('id', $data->id_is)
+                ->first();
+        }
 
         $data->tunjangan = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
@@ -274,13 +288,9 @@ class KaryawanController extends Controller
         $data->count_tj = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
             ->count('*');
-        $data_is = DB::table('is')
-            ->get();
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
         $data_jabatan = DB::table('mst_jabatan')
-            ->get();
-        $data_agama = DB::table('mst_agama')
             ->get();
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
@@ -288,7 +298,7 @@ class KaryawanController extends Controller
         return view('karyawan.detail', [
             'data' => $data,
             'panggol' => $data_panggol, 
-            'is' => $data_is,
+            'suis' => $data_suis,
             'jabatan' => $data_jabatan,
             'agama' => $data_agama,
             'tunjangan' => $data_tunjangan
@@ -348,7 +358,7 @@ class KaryawanController extends Controller
         try{
             // dd($request);
             $id_is = $request->get('id_is');
-            if($request->get('status_pernikahan') == 'Kawin'){
+            if($request->get('status_pernikahan') == 'Kawin' && $request->get('pasangan') != null){
                 $id_is = $request->get('id_is');
                 if($request->get('id_is') == null){
                     DB::table('is')
@@ -372,7 +382,7 @@ class KaryawanController extends Controller
                         ->update([
                             'id_is' => $idis->id
                         ]);
-                } else{
+                } else {
                     DB::table('is')
                         ->where('id', $id_is)
                         ->update([
