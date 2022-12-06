@@ -16,13 +16,15 @@
                     <a class="ml-3" href="{{ route('import') }}">
                       <button class="btn btn-primary">import karyawan</button>
                     </a>
-                    <div class="table-responsive overflow-scroll">
-                        <table class="table" id="table">
-                          <thead class=" text-primary">
+                    <div class="table-responsive overflow-hidden content-center">
+                        <table class="table whitespace-nowrap" id="table" style="width: 100%">
+                          <thead class="text-primary">
                             <th>
                                 No
                             </th>
-                            <th>NIP</th>
+                            <th>
+                              NIP
+                            </th>
                             <th>
                               NIK
                             </th>
@@ -111,9 +113,9 @@
                                       @endif
                                     </td>
                                     <td>
-                                      <div class="row">
+                                      {{-- <div class="row"> --}}
                                         <a href="{{ route('karyawan.show', $item->nip) }}">
-                                          <button class="btn btn-outline-info btn-sm">
+                                          <button class="btn btn-outline-info p-1">
                                             Detail
                                           </button>
                                         </a>
@@ -124,7 +126,7 @@
                                       
                                           <button type="submit" class="btn btn-danger btn-block">Delete</button>
                                         </form> --}}
-                                      </div>
+                                      {{-- </div> --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -138,8 +140,14 @@
 
 @section('custom_script')
   <script>
-    $(document).ready( function () {
-      $('#table').DataTable();
+    $(document).ready(function() {
+        var table = $('#table').DataTable({
+            'autoWidth': false,
+            'dom': 'Rlfrtip',
+            'colReorder': {
+                'allowReorder': false
+            }
+        });
     });
   </script>
 @endsection 
