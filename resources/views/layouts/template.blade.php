@@ -104,6 +104,8 @@ Coded by www.creative-tim.com
                     <a class="dropdown-item" href="#">Laporan Mutasi</a>
                     <a class="dropdown-item" href="#">Laporan Demosi</a>
                     <a class="dropdown-item" href="#">Laporan Promosi</a>
+                    <a class="dropdown-item" href="{{ route('laporan_bpjs.index') }}">Laporan BPJS</a>
+                    <a class="dropdown-item" href="{{ route('index_dpp') }}">Laporan DPP</a>
                 </div>
             </li>
             <li class="active-pro">

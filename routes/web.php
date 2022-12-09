@@ -94,6 +94,8 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/laporan_bpjs', JaminanController::class);
     Route::get('/laporan-jamsostek', [JaminanController::class, 'getJamsostek'])->name('get-jamsostek');
     Route::post('/post-jamsostek', [JaminanController::class, 'postJamsostek'])->name('post-jamsostek');
+    Route::get('/dpp', [JaminanController::class, 'dppIndex'])->name('index_dpp');
+    Route::post('/get-dpp', [JaminanController::class, 'getDPP'])->name('get-dpp');
     
     // Routing Import excel karyawan
     Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');

@@ -261,6 +261,127 @@ class JaminanController extends Controller
         ]);
     }
 
+    public function dppIndex()
+    {
+        return view('jaminan.dpp_index');
+    }
+    
+    public function getDPP(Request $request)
+    {
+        // dd($request);
+        $kantor = $request->kantor;
+        $kategori = $request->kategori;
+
+        // If yang dipilih kategori keseluruhan
+        if($kategori == 1){
+            $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
+            $cbg = array();
+            foreach($cabang as $item){
+                array_push($cbg, $item->kd_cabang);
+            }
+
+            $karyawan_pusat = DB::table('mst_karyawan')
+                ->where('status_karyawan', 'Tetap')
+                ->whereNotIn('kd_entitas', $cbg)
+                ->get();
+        
+            $total_tunjangan_keluarga = array();
+            $total_tunjangan_kesejahteraan = array();
+            $total_gj_pusat = array();
+            foreach($karyawan_pusat as $i){
+                $data_tunjangan_keluarga = DB::table('tunjangan_karyawan')
+                    ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
+                    ->where('nip', $i->nip)
+                    ->where('mst_tunjangan.id', 1)
+                    ->sum('nominal');
+
+                $data_tunjangan_kesejahteraan = DB::table('tunjangan_karyawan')
+                    ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
+                    ->where('nip', $i->nip)
+                    ->where('mst_tunjangan.id', 8)
+                    ->sum('nominal');
+                    
+                array_push($total_tunjangan_keluarga, $data_tunjangan_keluarga);
+                array_push($total_tunjangan_kesejahteraan, $data_tunjangan_kesejahteraan);
+                array_push($total_gj_pusat, $i->gj_pokok);
+            }
+
+            $dpp_pusat = (array_sum($total_gj_pusat) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13;
+
+            // dd($gj_pusat);
+            $data_pusat = DB::table('tunjangan_karyawan')
+                ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
+                ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+                ->where('mst_tunjangan.status', 1)
+                ->whereNotIn('kd_entitas', $cbg)
+                ->get();
+
+            // Get Data keseluruhan cabang
+            $data_cabang = DB::table('tunjangan_karyawan')
+                ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
+                ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+                ->where('mst_tunjangan.status', 1)
+                ->whereIn('kd_entitas', $cbg)
+                ->selectRaw('kd_entitas, sum(nominal) as nominal')
+                ->groupBy('mst_karyawan.kd_entitas')
+                ->get();
+
+            return view('jaminan.laporan_dpp', [
+                'status' => 1,
+                'dpp_pusat' => $dpp_pusat,
+                'data_pusat' => $data_pusat,
+                'data_cabang' => $data_cabang
+            ]);
+        }
+
+        // Get data per kantor/cabang 
+            $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
+            $cbg = array();
+            foreach($cabang as $item){
+                array_push($cbg, $item->kd_cabang);
+            }
+
+        $dpp = array();
+        // if kantor = pusat
+        if($kantor == 'Pusat'){
+            $karyawan = DB::table('mst_karyawan')
+                ->whereNotIn('kd_entitas', $cbg)
+                ->orWhere('kd_entitas', null)
+                ->where('status_karyawan', 'Tetap')
+                ->get();
+            foreach($karyawan as $i){
+                $tj_dpp = DB::table('tunjangan_karyawan')
+                    ->where('nip', $i->nip)
+                    ->where('id_tunjangan', 15)
+                    ->first();
+
+                array_push($dpp, (isset($tj_dpp->nominal)) ? $tj_dpp->nominal : 0);
+            }
+        } else {
+            $cabang = $request->get('cabang');
+            $karyawan = DB::table('mst_karyawan')
+                ->whereIn('kd_entitas', $cbg)
+                ->orWhere('kd_entitas', null)
+                ->where('status_karyawan', 'Tetap')
+                ->get();
+            foreach($karyawan as $i){
+                $tj_dpp = DB::table('tunjangan_karyawan')
+                    ->where('nip', $i->nip)
+                    ->where('id_tunjangan', 15)
+                    ->first();
+
+                array_push($dpp, (isset($tj_dpp->nominal)) ? $tj_dpp->nominal : 0);
+            }
+        }
+        
+        return view('jaminan.laporan_dpp', [
+            'status' => 2,
+            'karyawan' => $karyawan,
+            'dpp' => $dpp
+        ]);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
