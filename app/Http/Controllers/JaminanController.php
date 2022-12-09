@@ -360,8 +360,7 @@ class JaminanController extends Controller
         } else {
             $cabang = $request->get('cabang');
             $karyawan = DB::table('mst_karyawan')
-                ->whereIn('kd_entitas', $cbg)
-                ->orWhere('kd_entitas', null)
+                ->where('kd_entitas', $cabang)
                 ->where('status_karyawan', 'Tetap')
                 ->get();
             foreach($karyawan as $i){
