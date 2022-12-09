@@ -325,6 +325,9 @@
                         $("#cabang_col").empty();
                     }
                 })
+            } else{
+                $("#kantor_col").removeClass("col-md-4")
+                $("#kantor_col").empty()
             }
         })
 

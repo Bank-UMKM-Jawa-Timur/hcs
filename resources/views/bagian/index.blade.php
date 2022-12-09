@@ -11,7 +11,7 @@
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="{{ route('bagian.create') }}">
-                      <button class="btn btn-primary">tambah cabang</button>
+                      <button class="btn btn-primary">tambah bagian</button>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">

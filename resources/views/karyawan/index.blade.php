@@ -112,17 +112,17 @@
                                       {{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
                                       @endif
                                     </td>
-                                    <td style="min-width: 105px">
+                                    <td style="min-width: 130px">
                                       <div class="container">
                                         <div class="row">
                                           <a href="{{ route('karyawan.edit', $item->nip) }}">
-                                            <button class="btn btn-outline-warning p-1 mr-2">
+                                            <button class="btn btn-outline-warning p-1 mr-2" style="min-width: 60px">
                                               Edit
                                             </button>
                                           </a>
   
                                           <a href="{{ route('karyawan.show', $item->nip) }}">
-                                            <button class="btn btn-outline-info p-1">
+                                            <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                               Detail
                                             </button>
                                           </a>
