@@ -112,21 +112,29 @@
                                       {{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
                                       @endif
                                     </td>
-                                    <td>
-                                      {{-- <div class="row"> --}}
-                                        <a href="{{ route('karyawan.show', $item->nip) }}">
-                                          <button class="btn btn-outline-info p-1">
-                                            Detail
-                                          </button>
-                                        </a>
-                                        
+                                    <td style="min-width: 105px">
+                                      <div class="container">
+                                        <div class="row">
+                                          <a href="{{ route('karyawan.edit', $item->nip) }}">
+                                            <button class="btn btn-outline-warning p-1 mr-2">
+                                              Edit
+                                            </button>
+                                          </a>
+  
+                                          <a href="{{ route('karyawan.show', $item->nip) }}">
+                                            <button class="btn btn-outline-info p-1">
+                                              Detail
+                                            </button>
+                                          </a>
+                                        </div>
+                                      </div>
+
                                         {{-- <form action="{{ route('karyawan.destroy', $item->nip) }}" method="POST">
                                           @csrf
                                           @method('DELETE')
                                       
                                           <button type="submit" class="btn btn-danger btn-block">Delete</button>
                                         </form> --}}
-                                      {{-- </div> --}}
                                     </td>
                                 </tr>
                             @endforeach
