@@ -179,7 +179,7 @@ class JaminanController extends Controller
                 ->groupBy('mst_karyawan.kd_entitas')
                 ->get();
             
-            return view('jaminan.index', [
+            return view('jaminan.jamsostek', [
                 'status' => 1,
                 'jp1_pusat' => $jp1_pusat,
                 'jp2_pusat' => $jp2_pusat,
@@ -250,7 +250,7 @@ class JaminanController extends Controller
             array_push($jkm, $perhitungan_jkm);
         }
 
-        return view('jaminan.index', [
+        return view('jaminan.jamsostek', [
             'status' => 2,
             'karyawan' => $karyawan,
             'jkk' => $jkk,

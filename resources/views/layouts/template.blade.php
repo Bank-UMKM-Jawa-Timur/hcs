@@ -35,6 +35,7 @@ Coded by www.creative-tim.com
   <link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />
   <link href="{{ asset('style/assets/css/datatables.min.css') }}" rel="stylesheet" />
   <link rel="stylesheet" href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
 </head>
 
 <body>

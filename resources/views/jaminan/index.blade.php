@@ -34,20 +34,20 @@
                 @php
                     function rupiah($angka){
                         $hasil_rupiah = number_format($angka, 0, ",", ".");
-                        return $hasil_rupiah;
+                        return round($angka);
                     }
                 @endphp
                 @if ($status == 1)
                     <div class="row m-0">
                         <div class="col-md-4">
-                            <button class="btn btn-info" type="button">Export</button>
+                            <button class="btn btn-info" id="btn_export" type="button">Export</button>
                         </div>
                         <div class="col-md-4">
                             <button class="btn btn-danger" type="button" id="clear">Clear</button>
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table text-center" id="table">
+                        <table class="table text-center" id="table_export">
                             @php
                                 $a = 1;
                             @endphp
@@ -173,14 +173,14 @@
                 @elseif($status == 2)
                     <div class="row m-0">
                         <div class="col-md-4 m-0">
-                            <button class="btn btn-info" type="button">Export</button>
+                            <button class="btn btn-info" id="btn_export" type="button">Export</button>
                         </div>
                         <div class="col-md-4 m-0">
                             <button class="btn btn-danger" type="button" id="clear">Clear</button>
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table text-center" id="table">
+                        <table class="table text-center" id="table_export">
                             <thead>
                                 <th>NIP</th>
                                 <th>Nama Karyawan</th>
@@ -247,13 +247,31 @@
 @endsection
 
 @section('custom_script')
+    <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script> 
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> 
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script> 
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script> 
     <script>
-        // $(document).ready( function () {
-        //     $('#table').DataTable();
+        // document.getElementById('btn_export').addEventListener('click', function(){
+        //     var table2excel = new Table2Excel();
+        //     table2excel.export(document.querySelectorAll('#table_export'));
         // });
-        // $.each('.uang', function(i, item){
-        //     item.text(formatRupiah(item.text()))
-        // })
+
+        $("#table_export").DataTable({
+            dom : "Bfrtip",
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    title: 'Bank UMKM Jawa Timur',
+                    text:'Excel' 
+                }
+            ]
+        });
+        
 
         $("#clear").click(function(e){
             $("#row-baru").empty()
