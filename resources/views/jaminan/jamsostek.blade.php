@@ -11,200 +11,204 @@
   </head>
   <body>
 
-    <div class="row m-0" id="row-baru">
-        @if ($status != null)
-            @php
-                function rupiah($angka){
-                    $hasil_rupiah = number_format($angka, 0, ",", ",");
-                    return $hasil_rupiah;
-                }
-            @endphp
-            @if ($status == 1)
-                <div class="table-responsive">
-                    <table class="table text-center" id="table_export">
-                        <thead>
-                            <th>Kode Kantor</th>
-                            <th>Nama Kantor</th>
-                            <th>Jumlah Pegawai</th>
-                            <th>JKK</th>
-                            <th>JHT</th>
-                            <th>JKM</th>
-                            <th>Total</th>
-                            <th>JP(1%)</th>
-                            <th>JP(2%)</th>
-                            <th>Total JP</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>-</td>
-                                <td>Kantor Pusat</td>
-                                <td>{{ count($data_pusat) }}</td>
-                                <td>{{ rupiah(((0.0024 * $total_gaji_pusat))) }}</td>
-                                <td>{{ rupiah(((0.057 * $total_gaji_pusat))) }}</td>
-                                <td>{{ rupiah(((0.003 * $total_gaji_pusat))) }}</td>
-                                <td>{{ rupiah((((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 * $total_gaji_pusat))) }}</td>
-                                <td>{{ rupiah(array_sum($jp1_pusat)) }}</td>
-                                <td>{{ rupiah(array_sum($jp2_pusat)) }}</td>
-                                <td>{{ rupiah((array_sum($jp1_pusat) + array_sum($jp2_pusat))) }}</td>
-                            </tr>
-    
-                            @php
-                                $total_jkk = array();
-                                $total_jht = array();
-                                $total_jkm = array();
-                                $total_jamsostek = array();
-    
-                                $total_jp1 = array();
-                                $total_jp2 = array();
-                                $total_jp = array();
-    
-                                array_push($total_jamsostek, (((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 * $total_gaji_pusat)));
-                                array_push($total_jkk, ((0.0024 * $total_gaji_pusat)));
-                                array_push($total_jht, ((0.057 * $total_gaji_pusat)));
-                                array_push($total_jkm, ((0.003 * $total_gaji_pusat)));
-    
-                                array_push($total_jp, (array_sum($jp1_pusat) + array_sum($jp2_pusat)));
-                                array_push($total_jp1, array_sum($jp1_pusat));
-                                array_push($total_jp2, array_sum($jp2_pusat));
-                            @endphp
-                            
-                            @foreach ($data_cabang as $item)
-                                @php
-                                    $nama_cabang = DB::table('mst_cabang')
-                                        ->where('kd_cabang', $item->kd_entitas)
-                                        ->first();
-                                @endphp
-                                <tr>
-                                    <td>{{ $item->kd_entitas }}</td>
-                                    <td>{{ $nama_cabang->nama_cabang }}</td>
-                                    @php
-                                        $jp1_cabang = array();
-                                        $jp2_cabang = array();
-                                        $total_gaji_cabang = array();
-                                        
-                                        $karyawan = DB::table('mst_karyawan')
-                                            ->where('kd_entitas', $item->kd_entitas)
-                                            ->get();
-                                        foreach($karyawan as $i){
-                                            $data_gaji = DB::table('tunjangan_karyawan')
-                                                ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
-                                                ->where('nip', $i->nip)
-                                                ->where('mst_tunjangan.status', 1)
-                                                ->sum('tunjangan_karyawan.nominal');
-                                                
-                                            array_push($total_gaji_cabang, ($data_gaji + $i->gj_pokok));
-                                        }
-                                        foreach($total_gaji_cabang as $i){
-                                            array_push($jp1_cabang, ((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
-                                            array_push($jp2_cabang, ((($i >  9077600) ?  9077600 * 0.02 : $i * 0.02)));
-                                        }
-                                    @endphp
-                                    <td>{{ count($karyawan) }}</td>
-                                    <td>{{ rupiah(((0.0024 * $item->nominal))) }}</td>
-                                    <td>{{ rupiah(((0.057 * $item->nominal))) }}</td>
-                                    <td>{{ rupiah(((0.003 * $item->nominal))) }}</td>
-                                    <td>{{ rupiah((((0.0024 * $item->nominal)) + ((0.057 * $item->nominal))) + ((0.003 * $item->nominal))) }}</td>
-                                    <td>{{ rupiah(array_sum($jp1_cabang)) }}</td>
-                                    <td>{{ rupiah(array_sum($jp2_cabang)) }}</td>
-                                    <td>{{ rupiah((array_sum($jp1_cabang) + array_sum($jp2_cabang))) }}</td>
-    
-                                    @php
-                                        array_push($total_jamsostek, (((0.0024 * $item->nominal)) + ((0.057 * $item->nominal))) + ((0.003 * $item->nominal)));
-                                        array_push($total_jkk, ((0.0024 * $item->nominal)));
-                                        array_push($total_jht, ((0.057 * $item->nominal)));
-                                        array_push($total_jkm, ((0.003 * $item->nominal)));
-    
-                                        array_push($total_jp, (array_sum($jp1_cabang) + array_sum($jp2_cabang)));
-                                        array_push($total_jp1, array_sum($jp1_cabang));
-                                        array_push($total_jp2, array_sum($jp2_cabang));
-                                    @endphp
-                                </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="2">
-                                    Jumlah
-                                </td>
-                                @php
-                                    $total_karyawan = DB::table('mst_karyawan')->get();
-                                @endphp
-                                <td>{{ count($total_karyawan) }}</td>
-                                <td>{{ rupiah(array_sum($total_jkk)) }}</td>
-                                <td>{{ rupiah(array_sum($total_jht)) }}</td>
-                                <td>{{ rupiah(array_sum($total_jkm)) }}</td>
-                                <td>{{ rupiah(array_sum($total_jamsostek)) }}</td>
-                                <td>{{ rupiah(array_sum($total_jp1)) }}</td>
-                                <td>{{ rupiah(array_sum($total_jp2)) }}</td>
-                                <td>{{ rupiah(array_sum($total_jp   )) }}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            @elseif($status == 2)
-                <div class="table-responsive">
-                    <table class="table text-center" id="table_export">
-                        <thead>
-                            <th>NIP</th>
-                            <th>Nama Karyawan</th>
-                            <th>JKK</th>
-                            <th>JHT</th>
-                            <th>JKM</th>
-                            <th>Total</th>
-                            <th>JP(1%)</th>
-                            <th>JP(2%)</th>
-                            <th>Total JP</th>
-                        </thead>
-                        <tbody>
-                            @for ($i = 0; $i < count($karyawan); $i++)
-                                <tr>
-                                    <td>
-                                        {{ $karyawan[$i]->nip }}
-                                    </td>
-                                    <td>
-                                        {{ $karyawan[$i]->nama_karyawan }}
-                                    </td>
-                                    <td>
-                                        {{ rupiah(($jkk[$i])) }}
-                                    </td>
-                                    <td>
-                                        {{ rupiah(($jht[$i])) }}
-                                    </td>
-                                    <td>
-                                        {{ rupiah(($jkm[$i])) }}
-                                    </td>
-                                    <td>
-                                        {{ rupiah(($jkk[$i] + $jht[$i] + $jkm[$i])) }}
-                                    </td>
-                                    <td>
-                                        {{ rupiah(($jp1[$i])) }}
-                                    </td>
-                                    <td>
-                                        {{ rupiah(($jp2[$i])) }}
-                                    </td>
-                                    <td>
-                                        {{ rupiah(($jp1[$i] + $jp2[$i])) }}
-                                    </td>
-                                </tr>
-                            @endfor
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="2">Jumlah</td>
-                                <td>{{ rupiah(array_sum($jkk)) }}</td>
-                                <td>{{ rupiah(array_sum($jht)) }}</td>
-                                <td>{{ rupiah(array_sum($jkm)) }}</td>
-                                <td>{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm))) }}</td>
-                                <td>{{ rupiah((array_sum($jp1))) }}</td>
-                                <td>{{ rupiah((array_sum($jp2))) }}</td>
-                                <td>{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            @endif
+    <div class="row m-0 mt-3" id="row-baru">
+        <div class="col-lg-12">
+            <div class="container mt-3">
+                @if ($status != null)
+                    @php
+                        function rupiah($angka){
+                            $hasil_rupiah = number_format($angka, 0, ",", ",");
+                            return $hasil_rupiah;
+                        }
+                    @endphp
+                    @if ($status == 1)
+                        <div class="table-responsive">
+                            <table class="table text-center" id="table_export">
+                                <thead>
+                                    <th>Kode Kantor</th>
+                                    <th>Nama Kantor</th>
+                                    <th>Jumlah Pegawai</th>
+                                    <th>JKK</th>
+                                    <th>JHT</th>
+                                    <th>JKM</th>
+                                    <th>Total</th>
+                                    <th>JP(1%)</th>
+                                    <th>JP(2%)</th>
+                                    <th>Total JP</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>-</td>
+                                        <td>Kantor Pusat</td>
+                                        <td>{{ count($data_pusat) }}</td>
+                                        <td>{{ rupiah(((0.0024 * $total_gaji_pusat))) }}</td>
+                                        <td>{{ rupiah(((0.057 * $total_gaji_pusat))) }}</td>
+                                        <td>{{ rupiah(((0.003 * $total_gaji_pusat))) }}</td>
+                                        <td>{{ rupiah((((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 * $total_gaji_pusat))) }}</td>
+                                        <td>{{ rupiah(array_sum($jp1_pusat)) }}</td>
+                                        <td>{{ rupiah(array_sum($jp2_pusat)) }}</td>
+                                        <td>{{ rupiah((array_sum($jp1_pusat) + array_sum($jp2_pusat))) }}</td>
+                                    </tr>
             
-        @endif
+                                    @php
+                                        $total_jkk = array();
+                                        $total_jht = array();
+                                        $total_jkm = array();
+                                        $total_jamsostek = array();
+            
+                                        $total_jp1 = array();
+                                        $total_jp2 = array();
+                                        $total_jp = array();
+            
+                                        array_push($total_jamsostek, (((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 * $total_gaji_pusat)));
+                                        array_push($total_jkk, ((0.0024 * $total_gaji_pusat)));
+                                        array_push($total_jht, ((0.057 * $total_gaji_pusat)));
+                                        array_push($total_jkm, ((0.003 * $total_gaji_pusat)));
+            
+                                        array_push($total_jp, (array_sum($jp1_pusat) + array_sum($jp2_pusat)));
+                                        array_push($total_jp1, array_sum($jp1_pusat));
+                                        array_push($total_jp2, array_sum($jp2_pusat));
+                                    @endphp
+                                    
+                                    @foreach ($data_cabang as $item)
+                                        @php
+                                            $nama_cabang = DB::table('mst_cabang')
+                                                ->where('kd_cabang', $item->kd_entitas)
+                                                ->first();
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $item->kd_entitas }}</td>
+                                            <td>{{ $nama_cabang->nama_cabang }}</td>
+                                            @php
+                                                $jp1_cabang = array();
+                                                $jp2_cabang = array();
+                                                $total_gaji_cabang = array();
+                                                
+                                                $karyawan = DB::table('mst_karyawan')
+                                                    ->where('kd_entitas', $item->kd_entitas)
+                                                    ->get();
+                                                foreach($karyawan as $i){
+                                                    $data_gaji = DB::table('tunjangan_karyawan')
+                                                        ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
+                                                        ->where('nip', $i->nip)
+                                                        ->where('mst_tunjangan.status', 1)
+                                                        ->sum('tunjangan_karyawan.nominal');
+                                                        
+                                                    array_push($total_gaji_cabang, ($data_gaji + $i->gj_pokok));
+                                                }
+                                                foreach($total_gaji_cabang as $i){
+                                                    array_push($jp1_cabang, ((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
+                                                    array_push($jp2_cabang, ((($i >  9077600) ?  9077600 * 0.02 : $i * 0.02)));
+                                                }
+                                            @endphp
+                                            <td>{{ count($karyawan) }}</td>
+                                            <td>{{ rupiah(((0.0024 * $item->nominal))) }}</td>
+                                            <td>{{ rupiah(((0.057 * $item->nominal))) }}</td>
+                                            <td>{{ rupiah(((0.003 * $item->nominal))) }}</td>
+                                            <td>{{ rupiah((((0.0024 * $item->nominal)) + ((0.057 * $item->nominal))) + ((0.003 * $item->nominal))) }}</td>
+                                            <td>{{ rupiah(array_sum($jp1_cabang)) }}</td>
+                                            <td>{{ rupiah(array_sum($jp2_cabang)) }}</td>
+                                            <td>{{ rupiah((array_sum($jp1_cabang) + array_sum($jp2_cabang))) }}</td>
+            
+                                            @php
+                                                array_push($total_jamsostek, (((0.0024 * $item->nominal)) + ((0.057 * $item->nominal))) + ((0.003 * $item->nominal)));
+                                                array_push($total_jkk, ((0.0024 * $item->nominal)));
+                                                array_push($total_jht, ((0.057 * $item->nominal)));
+                                                array_push($total_jkm, ((0.003 * $item->nominal)));
+            
+                                                array_push($total_jp, (array_sum($jp1_cabang) + array_sum($jp2_cabang)));
+                                                array_push($total_jp1, array_sum($jp1_cabang));
+                                                array_push($total_jp2, array_sum($jp2_cabang));
+                                            @endphp
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2">
+                                            Jumlah
+                                        </td>
+                                        @php
+                                            $total_karyawan = DB::table('mst_karyawan')->get();
+                                        @endphp
+                                        <td>{{ count($total_karyawan) }}</td>
+                                        <td>{{ rupiah(array_sum($total_jkk)) }}</td>
+                                        <td>{{ rupiah(array_sum($total_jht)) }}</td>
+                                        <td>{{ rupiah(array_sum($total_jkm)) }}</td>
+                                        <td>{{ rupiah(array_sum($total_jamsostek)) }}</td>
+                                        <td>{{ rupiah(array_sum($total_jp1)) }}</td>
+                                        <td>{{ rupiah(array_sum($total_jp2)) }}</td>
+                                        <td>{{ rupiah(array_sum($total_jp   )) }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    @elseif($status == 2)
+                        <div class="table-responsive">
+                            <table class="table text-center" id="table_export">
+                                <thead>
+                                    <th>NIP</th>
+                                    <th>Nama Karyawan</th>
+                                    <th>JKK</th>
+                                    <th>JHT</th>
+                                    <th>JKM</th>
+                                    <th>Total</th>
+                                    <th>JP(1%)</th>
+                                    <th>JP(2%)</th>
+                                    <th>Total JP</th>
+                                </thead>
+                                <tbody>
+                                    @for ($i = 0; $i < count($karyawan); $i++)
+                                        <tr>
+                                            <td>
+                                                {{ $karyawan[$i]->nip }}
+                                            </td>
+                                            <td>
+                                                {{ $karyawan[$i]->nama_karyawan }}
+                                            </td>
+                                            <td>
+                                                {{ rupiah(($jkk[$i])) }}
+                                            </td>
+                                            <td>
+                                                {{ rupiah(($jht[$i])) }}
+                                            </td>
+                                            <td>
+                                                {{ rupiah(($jkm[$i])) }}
+                                            </td>
+                                            <td>
+                                                {{ rupiah(($jkk[$i] + $jht[$i] + $jkm[$i])) }}
+                                            </td>
+                                            <td>
+                                                {{ rupiah(($jp1[$i])) }}
+                                            </td>
+                                            <td>
+                                                {{ rupiah(($jp2[$i])) }}
+                                            </td>
+                                            <td>
+                                                {{ rupiah(($jp1[$i] + $jp2[$i])) }}
+                                            </td>
+                                        </tr>
+                                    @endfor
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2">Jumlah</td>
+                                        <td>{{ rupiah(array_sum($jkk)) }}</td>
+                                        <td>{{ rupiah(array_sum($jht)) }}</td>
+                                        <td>{{ rupiah(array_sum($jkm)) }}</td>
+                                        <td>{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm))) }}</td>
+                                        <td>{{ rupiah((array_sum($jp1))) }}</td>
+                                        <td>{{ rupiah((array_sum($jp2))) }}</td>
+                                        <td>{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    @endif
+                    
+                @endif
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
