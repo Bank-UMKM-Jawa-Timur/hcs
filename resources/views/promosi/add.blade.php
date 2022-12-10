@@ -27,7 +27,7 @@
                         <input type="hidden" name="nama_karyawan" id="nama_karyawan" value="{{ old('nama_karyawan') }}">
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="">Jabatan Lama</label>
                         <input type="text" disabled class="form-control" name="" id="jabatan_show" value="{{ old('jabatan_lama') }}">

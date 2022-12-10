@@ -136,7 +136,7 @@ class BagianController extends Controller
             ->get();
         $data->divisi = DB::table('mst_divisi')
             ->get();
-        dd($data);
+        // dd($data);
         return view('bagian.edit', ['data' => $data]);
     }
 
