@@ -23,7 +23,15 @@ class KaryawanController extends Controller
      */
     public function index()
     {
-        $data = DB::table('mst_karyawan')
+        $cbg = array();
+        $cabang = DB::table('mst_cabang')
+            ->get();
+        foreach($cabang as $i){
+            array_push($cbg, $i->kd_cabang);
+        }
+        $data_pusat = DB::table('mst_karyawan')
+            ->whereNotIn('kd_entitas', $cbg)
+            ->orWhere('kd_entitas', null)
             ->select(
                 'mst_karyawan.nip',
                 'mst_karyawan.nik',
@@ -37,10 +45,13 @@ class KaryawanController extends Controller
                 'mst_karyawan.status_jabatan',
             )
             ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
+            ->orderBy('kd_jabatan', 'desc')
             ->get();
-            // dd($data);
 
-        return view('karyawan.index', ['data' => $data]);
+        return view('karyawan.index', [
+            'data_pusat' => $data_pusat,
+            'cabang' => $cabang
+        ]);
     }
 
     public function import()
