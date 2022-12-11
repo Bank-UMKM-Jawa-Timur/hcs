@@ -2,24 +2,28 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Tambah Bagian</h5>
+            <h5 class="card-title">Edit Bagian</h5>
             <p class="card-title"><a href="/">Dashboard </a> > <a href="/bagian">Bagian </a> > Edit</p>
         </div>
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col">
-                <form action="{{ route('bagian.store') }}" method="POST" enctype="multipart/form-data" name="bagian" class="form-group">
+            <div class="col"> 
+                <form action="{{ route('bagian.update',  $data->kd_bagian) }}" method="POST" enctype="multipart/form-data" name="bagian" class="form-group">
                     @csrf
+                    @method('PUT')
                     <div class="row m-0">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kantor">Nama Kantor</label>
-                                <select name="kantor" class="form-control" id="kantor">
-                                    <option value="">-- Pilih ---</option>
-                                    <option value="1">Kantor Pusat</option>
-                                    <option value="2">Kantor Cabang</option>
+                                <select name="kantor" class="@error('kantor') is-invalid @enderror form-control" id="kantor">
+                                    <option {{ old('kantor') == "-" ? 'selected' : '' }} value="-">-- Pilih ---</option>
+                                    <option {{ old('kantor') == 1 ? 'selected' : '' }} value="1">Kantor Pusat</option>
+                                    <option {{ old('kantor') == 2 ? 'selected' : '' }} value="2">Kantor Cabang</option>
                                 </select>
+                                @error('kantor')
+                                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="col" id="kantor_row1">
@@ -30,17 +34,23 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_cabang">Nama Bagian</label>
-                                <input type="text" class="form-control" name="nama_bagian" id="nama_bagian" value="{{ $data->nama_bagian }}">
+                                <label for="nama_bagian">Nama Bagian</label>
+                                <input type="text" class="@error('nama_bagian') is-invalid @enderror form-control" name="nama_bagian" id="nama_bagian" value="{{ $data->nama_bagian }}">
                             </div>
+                            @error('nama_bagian')
+                                <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kode_bagian">Kode Bagian</label>
-                                <input type="text" name="kd_bagian" id="kode_bagian" class="form-control" value="{{ $data->kd_bagian }}">
+                                <input type="text" name="kd_bagian" id="kode_bagian" class="@error('kd_bagian') is-invalid @enderror form-control" value="{{ $data->kd_bagian }}">
                             </div>
+                            @error('kd_bagian')
+                                <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
-                        <button class="btn btn-info">Update</button>
+                        <button class="btn btn-info" type="submit" value="submit">Update</button>
                     </div>
 
                 </form>
@@ -51,10 +61,9 @@
 
 @section('custom_script')
     <script>
-        var idKantor = {{ $data->kd_entitas }}
-        console.log(idKantor);
-        function getKantor(){
-            var kantor_id = $('#kantor').val();
+        $('#kantor').change(function(){
+            var kantor_id = $(this).val();
+
             if(kantor_id == 1){
                 $.ajax({
                     type: "GET",
@@ -113,22 +122,21 @@
                         $("#kantor_row2").empty();
                         $("#kantor_row1").append(`
                                 <div class="form-group">
-                                    <label for="Cabang">Cabang</label>
-                                    <select name="cabang" id="cabang" class="form-control">
+                                    <label for="kd_cabang">Cabang</label>
+                                    <select name="kd_cabang" id="cabang" class="form-control">
                                         <option value="">--- Pilih Cabang ---</option>
                                     </select>
                                 </div>`
                         );
-                        $.each(res, function(i, item){
-                            $('#cabang').append('<option value="'+item.id+'">'+item.nama_cabang+'</option>')
+                        $.each(res[0], function(i, item){
+                            $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
                         })
                     }
                 })
+            } else {
+                $("#kantor_row1").empty();
+                $("#kantor_row2").empty();
             }
-        }
-
-        $('#kantor').change(function(){
-           getKantor();
         });
     </script>
 @endsection

@@ -13,13 +13,23 @@ class PromosiController extends Controller
     public function getgolongan(Request $request)
     {
         $data = DB::table('mst_karyawan')
-            ->select('nip', 'nama_karyawan', 'mst_pangkat_golongan.golongan', 'mst_pangkat_golongan.pangkat')
             ->where('nip', $request->get('nip'))
             ->join('mst_pangkat_golongan', 'mst_pangkat_golongan.golongan', '=', 'mst_karyawan.kd_panggol')
             ->first();
 
         return response()->json($data);
     }
+
+    public function getdatapromosi(Request $request)
+    {
+        $data = DB::table('mst_karyawan')
+            ->where('nip', $request->nip)
+            ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
+            ->first();
+
+        return response()->json($data);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -67,6 +77,7 @@ class PromosiController extends Controller
         $request->validate([
             'nip' => 'required|alpha_num',
             'jabatan_baru' => 'required|not_in:-',
+            'kantor' => 'required|not_in:-',
             'tanggal_pengesahan' => 'required',
             'bukti_sk' => 'required',
         ], [
@@ -79,14 +90,26 @@ class PromosiController extends Controller
         ]);
 
         try{
+            $entitas = null;
+            if($request->get('subdiv') != null){
+                $entitas = $request->get('subdiv');
+            } else if($request->get('cabang') != null){
+                $entitas = $request->get('cabang');
+            } else{
+                $entitas = $request->get('divisi');
+            }
+
             DB::table('demosi_promosi_pangkat')
                 ->insert([
-                    'kd_jabatan_lama' => $request->get('jabatan_lama'),
-                    'kd_jabatan_baru' => $request->get('jabatan_baru'),
                     'nip' => $request->get('nip'),
                     'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
                     'bukti_sk' => $request->get('bukti_sk'),
                     'keterangan' => 'Promosi Jabatan',
+                    'kd_jabatan_lama' => $request->get('jabatan_lama'),
+                    'kd_jabatan_baru' => $request->get('jabatan_baru'),
+                    'kd_entitas_lama' => $request->get('kantor_lama'),
+                    'kd_entitas_baru' => $entitas,
+                    'created_at' => now()
                 ]);
 
             DB::table('mst_karyawan')
@@ -94,6 +117,8 @@ class PromosiController extends Controller
                 ->update([
                     'kd_jabatan' => $request->get('jabatan_baru'),
                     'ket_jabatan' => $request->get('ket_jabatan'),
+                    'kd_entitas' => $entitas,
+                    'kd_bagian' => $request->get('bagian'),
                     'updated_at' => now()
                 ]);
 
@@ -105,7 +130,7 @@ class PromosiController extends Controller
             return redirect()->route('promosi.index');
         } catch(QueryException $e){
             DB::rollBack();
-            Alert::error('Terjadi Kesalahan', 'Berhasil melakukan promosi pangkat.'.$e->getMessage());
+            Alert::error('Terjadi Kesalahan', 'Gagal melakukan promosi pangkat.'.$e->getMessage());
             return redirect()->route('promosi.index');
         }
     }

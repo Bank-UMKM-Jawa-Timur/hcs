@@ -110,6 +110,7 @@ Route::group(['middleware' => 'auth'], function(){
 
     // Get komponen untuk mutasi
     Route::get('getdatakaryawan', [\App\Http\Controllers\MutasiController::class, 'getdatakaryawan']);
+    Route::get('getdatapromosi', [\App\Http\Controllers\PromosiController::class, 'getdatapromosi']);
 
     // Get komponen untuk demosi dan promosi
     Route::get('getgolongan', [DemosiController::class, 'getgolongan']);

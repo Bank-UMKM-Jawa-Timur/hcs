@@ -34,7 +34,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nama_bagian">Nama Bagian</label>
-                                <input type="text" class="@error('nama_bagian') is-invalid @enderror form-control" name="nama_bagian" id="nama_bagian">
+                                <input type="text" class="@error('nama_bagian') is-invalid @enderror form-control" name="nama_bagian" id="nama_bagian" value="{{ old('nama_bagian') }}">
                             </div>
                             @error('nama_bagian')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
@@ -43,7 +43,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kd_bagian">Kode Bagian</label>
-                                <input type="text" name="kd_bagian" id="kd_bagian" class="@error('kd_bagian') is-invalid @enderror form-control">
+                                <input type="text" name="kd_bagian" id="kd_bagian" class="@error('kd_bagian') is-invalid @enderror form-control" value="{{ old('kd_bagian') }}">
                             </div>
                             @error('kd_bagian')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
@@ -132,6 +132,9 @@
                         })
                     }
                 })
+            } else {
+                $("#kantor_row1").empty();
+                $("#kantor_row2").empty();
             }
         });
     </script>

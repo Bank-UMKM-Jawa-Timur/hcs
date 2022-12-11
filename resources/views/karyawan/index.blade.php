@@ -148,7 +148,18 @@
                                       <td>{{ $i->nip }}</td>
                                       <td>{{ $i->nik }}</td>
                                       <td>{{ $i->nama_karyawan }}</td>
-                                      <td>{{ $i->kd_entitas }}</td>
+                                      <td>
+                                        @php
+                                            $data = DB::table('mst_cabang')
+                                              ->where('kd_cabang', $i->kd_entitas)
+                                              ->first();
+
+                                              if (isset($data)) {
+                                                $data = $data->nama_cabang;
+                                              } 
+                                        @endphp
+                                        {{ $data }}
+                                      </td>
                                       <td>
                                         @php
                                             $ket = null;
@@ -184,13 +195,13 @@
                                         <div class="container">
                                           <div class="row">
                                             <a href="{{ route('karyawan.edit', $i->nip) }}">
-                                              <button class="btn btn-outline-warning p-1 mr-2">
+                                              <button class="btn btn-outline-warning p-1 mr-2" style="min-width: 60px">
                                                 Edit
                                               </button>
                                             </a>
     
                                             <a href="{{ route('karyawan.show', $i->nip) }}">
-                                              <button class="btn btn-outline-info p-1">
+                                              <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                                 Detail
                                               </button>
                                             </a>

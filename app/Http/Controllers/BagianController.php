@@ -17,9 +17,11 @@ class BagianController extends Controller
      */
     public function index()
     {
+        $kd_ent = null;
+
         $data = DB::table('mst_bagian')
             ->get();
-
+            
         return view('bagian.index', ['data' => $data]);
     }
 
@@ -47,12 +49,12 @@ class BagianController extends Controller
         $request->validate([
             'kantor' => 'required|not_in:-',
             'kd_bagian' => 'required',
-            'nama_bagian' => 'required'
+            'nama_bagian' => 'required',
         ], [
             'kantor.required' => 'Data harus diisi.',
             'kantor.not_in' => 'Data harus diisi.',
             'kd_bagian.required' => 'Data harus diisi.',
-            'nama.required' => 'Data harus diisi.'
+            'nama.required' => 'Data harus diisi.',
         ]);
 
         try{
@@ -82,7 +84,7 @@ class BagianController extends Controller
                 DB::rollBack();
                 Alert::error('Terjadi Kesalahan', 'Gagal Menambah Bagian.'.$e->getMessage());
                 return redirect()->route('bagian.index');
-        }
+        }   
     }
 
     /**
@@ -107,36 +109,7 @@ class BagianController extends Controller
         $data = DB::table('mst_bagian')
             ->where('kd_bagian', $id)
             ->first();
-        $data1 = DB::table('mst_divisi')
-            ->where('kd_divisi', $data->kd_entitas)
-            ->first();
-        $data2 = DB::table('mst_sub_divisi')
-            ->where('kd_subdiv', $data->kd_entitas)
-            ->first();
-        $data3 = DB::table('mst_cabang')
-            ->where('kd_cabang', $data->kd_entitas)
-            ->first();
-        if(isset($data1)){
-            $data = DB::table('mst_bagian, mst.divisi')
-            ->join('mst_divisi', 'mst_divisi.kd_divisi', '=', 'mst_bagian.kd_bagian')
-                ->join('mst_kantor', 'mst_kantor.id', '=', 'mst_divisi.id_kantor')
-                ->first();
-        }else if(isset($data2)){
-            $data = DB::table('mst_bagian')
-                ->join('mst_sub_divisi', 'mst_sub_divisi.kd_subdiv', '=', 'mst_bagian.kd_entitas')
-                ->join('mst_divisi', 'mst_divisi.kd_divisi', '=', 'mst_sub_divisi.kd_divisi')
-                ->join('mst_kantor', 'mst_kantor.id', '=', 'mst_divisi.id_kantor')
-                ->first();
-        }else if(isset($data3)){
-            $data = DB::table('mst_bagian, mst.cabang')
-                ->join('mst_kantor', 'mst_kantor.id', '=', 'mst_divisi.id_kantor')
-                ->first();
-        }
-        $data->cabang = DB::table('mst_cabang')
-            ->get();
-        $data->divisi = DB::table('mst_divisi')
-            ->get();
-        // dd($data);
+
         return view('bagian.edit', ['data' => $data]);
     }
 
@@ -149,7 +122,46 @@ class BagianController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'kantor' => 'required|not_in:-',
+            'kd_bagian' => 'required',
+            'nama_bagian' => 'required',
+        ], [
+            'kantor.required' => 'Data harus diisi.',
+            'kantor.not_in' => 'Data harus diisi.',
+            'kd_bagian.required' => 'Data harus diisi.',
+            'nama.required' => 'Data harus diisi.',
+        ]);
+
+        try {
+            if ($request->get('kd_subidv') != null) {
+                $kd_entitas = $request->get('kd_subdiv');
+            } else if ($request->get('kd_cabang') != null) {
+                $kd_entitas = $request->get('kd_cabang');
+            } else {
+                $kd_entitas = $request->get('kd_divisi');
+            }
+
+            DB::table('mst_bagian')
+                ->where('kd_bagian', $id)
+                ->update([
+                    'kd_bagian' => $request->get('kd_bagian'),
+                    'nama_bagian' => $request->get('nama_bagian'),
+                    'kd_entitas' => $kd_entitas,
+                    'updated_at' => now()
+                ]);
+            
+            Alert::success('Berhasil', 'Berhasil Mengupdate Bagian.');
+            return redirect()->route('bagian.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', ''.$e->getMessage());
+            return redirect()->route('bagian.index');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            Alert::error('Terjadi Kesahalan', 'Gagal Mengupdate Bagian.'.$e->getMessage());
+            redirect()->route('bagian.index');
+        }
     }
 
     /**

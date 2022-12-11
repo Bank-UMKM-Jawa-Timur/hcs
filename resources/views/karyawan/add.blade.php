@@ -122,7 +122,7 @@
                         <div class="row m-0 pb-3 col-md-12" id="#kantor_row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="">Jabatan</label>
+                                    <label for="-">Jabatan</label>
                                     <select name="jabatan" id="jabatan" class="form-control">
                                         <option value="">--- Pilih ---</option>
                                         @foreach ($jabatan as $item)
@@ -176,7 +176,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Keterangan Jabatan</label>
-                                    <input type="text" class="form-control" name="key_jabatan">
+                                    <input type="text" class="form-control" name="ket_jabatan">
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -447,6 +447,10 @@
                         })
                     }
                 })
+            } else {
+                $("#kantor_row1").empty();
+                $("#kantor_row2").empty();
+                $("#kantor_row3").empty();
             }
         }
 
@@ -475,18 +479,18 @@
                 $("kantor_row2").removeClass("col-md-6")
                 $("#kantor_row2").hide();
                 $("#kantor_row3").hide()
-            } else if(value == ""){
+            } else if(value == "-"){
                 kantorChange();
             }else {
                 $('#kantor').removeAttr("disabled")
             }
         })
 
-        $('#data_is').hide();
-
         $('#kantor').change(function(){
             kantorChange();
         });
+
+        $('#data_is').hide();
 
         $('#status').change(function(){
             var stat = $(this).val();
