@@ -354,6 +354,8 @@
                             $('#divisi').append('<option value="'+item.kd_divisi+'">'+item.nama_divisi+'</option>')
                         });
 
+                        $("#kantor_row2").empty();
+
                         $("#kantor_row2").append(`
                                 <div class="form-group">
                                     <label for="subdiv">Sub divisi</label>
@@ -379,6 +381,7 @@
                                         });
 
                                         $("#kantor_row3").empty();
+                                        $("#kantor_row3").addClass("col-md-6");
 
                                         $("#kantor_row3").append(`
                                                 <div class="form-group">
@@ -434,7 +437,8 @@
                             </div>  
                         `)
 
-                        $("#kantor_row3").hide()
+                        $("#kantor_row3").empty()
+                        $("#kantor_row3").removeClass("col-md-6")
                         $.each(res[0], function(i, item){
                             $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
                         })

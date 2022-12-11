@@ -452,6 +452,14 @@ class KaryawanController extends Controller
                     ->delete();
 
             }
+            $entitas = null;
+            if($request->get('subdiv') != null){
+                $entitas = $request->get('subdiv');
+            } else if($request->get('cabang') != null){
+                $entitas = $request->get('cabang');
+            } else{
+                $entitas = $request->get('divisi');
+            }
 
             DB::table('mst_karyawan')
                 ->where('nip', $id)
@@ -459,6 +467,11 @@ class KaryawanController extends Controller
                     'nip' => $request->get('nip'),
                     'nama_karyawan' => $request->get('nama'),
                     'nik' => $request->get('nik'),
+                    'ket_jabatan' => $request->get('ket_jabatan'), 
+                    'kd_entitas' => $entitas,
+                    'kd_bagian' => $request->get('bagian'),
+                    'kd_jabatan' => $request->get('jabatan'),
+                    'kd_panggol' => $request->get('panggol'),
                     'kd_agama' => $request->get('agama'),
                     'tmp_lahir' => $request->get('tmp_lahir'),
                     'tgl_lahir' => $request->get('tgl_lahir'),
