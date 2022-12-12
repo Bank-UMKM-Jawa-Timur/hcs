@@ -281,8 +281,9 @@ class JaminanController extends Controller
             }
 
             $karyawan_pusat = DB::table('mst_karyawan')
-                ->where('status_karyawan', 'Tetap')
                 ->whereNotIn('kd_entitas', $cbg)
+                ->orWhere('kd_entitas', null)
+                ->where('status_karyawan', 'Tetap')
                 ->get();
         
             $total_tunjangan_keluarga = array();
