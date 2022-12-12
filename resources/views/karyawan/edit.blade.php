@@ -123,7 +123,7 @@
                                     <select name="jabatan" id="jabatan" class="form-control">
                                         <option value="">--- Pilih ---</option>
                                         @foreach ($jabatan as $item)
-                                            <option value="{{ $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
+                                            <option value="{{ $item->kd_jabatan }}" {{ ($data->kd_jabatan == $item->kd_jabatan) ? 'selected' : '' }}>{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -360,10 +360,43 @@
         let status = $("#status");
         var nip = $("#nip").val()
         var x = {{ $data->count_tj }};
+        var subdiv;
+        var bag;
+        kantorChange();
+        getKantor();
         cekStatus();
-        console.log(x);
+        jabatanChange();
+
+        function getKantor(){
+            $.ajax({
+                type: "GET",
+                url: "{{ route('getKantorKaryawan') }}?nip={{ $data->nip }}",
+                datatype: "json",
+                success: function(res){
+                    console.log(res.kantor);
+                    if(res.kantor == "Pusat"){
+                        $("#kantor").val(1)
+                        kantorChange(res.div.kd_divisi)
+                        if(res.subdiv != null){
+                            subdiv = res.subdiv.kd_subdiv
+                        }
+                        if(res.bag != null){
+                            bag = res.bag.kd_bagian
+                        }
+                    } else if(res.kantor == "Cabang"){
+                        $("#kantor").val(2).change()
+                        kantorChange(res.kd_kantor)
+                        if(res.bag != null){
+                            bag = res.bag.kd_bagian
+                        }
+                    }
+
+                    console.log(bag);
+                }
+            })
+        }
         
-        function kantorChange(){
+        function kantorChange(kd_div){
             var kantor_id = $("#kantor").val();
 
             if(kantor_id == 1){
@@ -382,8 +415,10 @@
                                 </div>`
                         );
                         $.each(res, function(i, item){
-                            $('#divisi').append('<option value="'+item.kd_divisi+'">'+item.nama_divisi+'</option>')
+                            $('#divisi').append('<option value="'+item.kd_divisi+'" '+ (kd_div === item.kd_divisi ? 'selected' : '') +'>'+item.nama_divisi+'</option>')
                         });
+                        var value = $('#divisi').val();
+                        divisiChange(value);
 
                         $("#kantor_row2").empty();
 
@@ -397,49 +432,8 @@
                         );
         
                         $("#divisi").change(function(){
-                            var divisi = $(this).val();
-
-                            if(divisi){
-                                $.ajax({
-                                    type: "GET",
-                                    url: "/getsubdivisi?divisiID="+divisi,
-                                    datatype: "JSON",
-                                    success: function(res1){
-                                        $('#sub_divisi').empty();
-                                        $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
-                                        $.each(res1, function(i, item){
-                                            $('#sub_divisi').append('<option value="'+item.kd_subdiv+'">'+item.nama_subdivisi+'</option>')
-                                        });
-
-                                        $("#kantor_row3").empty();
-                                        $("#kantor_row3").addClass("col-md-6");
-
-                                        $("#kantor_row3").append(`
-                                                <div class="form-group">
-                                                    <label for="bagian">Bagian</label>
-                                                    <select name="bagian" id="bagian" class="form-control">
-                                                        <option value="">--- Pilih bagian ---</option>
-                                                    </select>
-                                                </div>`
-                                        );
-
-                                        $("#sub_divisi").change(function(){
-                                            $.ajax({
-                                                type: "GET",
-                                                url: "/getbagian?kd_entitas="+$(this).val(),
-                                                datatype: "JSON",
-                                                success: function(res2){
-                                                    $('#bagian').empty();
-                                                    $('#bagian').append('<option value="">--- Pilih Bagian ---</option>')
-                                                    $.each(res2, function(i, item){
-                                                        $('#bagian').append('<option value="'+item.kd_bagian+'">'+item.nama_bagian+'</option>')
-                                                    });
-                                                }
-                                            })
-                                        })
-                                    }
-                                })
-                            }
+                            var value = $(this).val();
+                            divisiChange(value);
                         })
                     }
                 })
@@ -471,18 +465,69 @@
                         $("#kantor_row3").empty()
                         $("#kantor_row3").removeClass("col-md-6")
                         $.each(res[0], function(i, item){
-                            $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
+                            $('#cabang').append('<option value="'+item.kd_cabang+'" '+ (kd_div === item.kd_cabang ? 'selected' : '') +'>'+item.nama_cabang+'</option>')
                         })
                         $.each(res[1], function(i, item){
-                            $('#bagian').append('<option value="'+item.kd_bagian+'">'+item.nama_bagian+'</option>')
+                            $('#bagian').append('<option value="'+item.kd_bagian+'" '+ (bag === item.kd_bagian ? 'selected' : '') +'>'+item.nama_bagian+'</option>')
                         })
                     }
                 })
             }
         }
 
-        $("#jabatan").change(function(){
-            var value = $(this).val();
+        function divisiChange(divisi){
+            if(divisi){
+                $.ajax({
+                    type: "GET",
+                    url: "/getsubdivisi?divisiID="+divisi,
+                    datatype: "JSON",
+                    success: function(res1){
+                        $('#sub_divisi').empty();
+                        $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
+                        $.each(res1, function(i, item){
+                            $('#sub_divisi').append('<option value="'+item.kd_subdiv+'" '+ (subdiv === item.kd_subdiv ? 'selected' : '')  +'>'+item.nama_subdivisi+'</option>')
+                        });
+                        var val = $('#sub_divisi').val();
+                        subdivChange(val)
+
+                        $("#kantor_row3").empty();
+                        $("#kantor_row3").addClass("col-md-6");
+
+                        $("#kantor_row3").append(`
+                                <div class="form-group">
+                                    <label for="bagian">Bagian</label>
+                                    <select name="bagian" id="bagian" class="form-control">
+                                        <option value="">--- Pilih bagian ---</option>
+                                    </select>
+                                </div>`
+                        );
+
+                        $("#sub_divisi").change(function(){
+                            var val = $(this).val();
+                            subdivChange(val)
+                        })
+                    }
+                })
+            }
+        }
+
+        function subdivChange(kd_subdiv){
+            $.ajax({
+                type: "GET",
+                url: "/getbagian?kd_entitas="+kd_subdiv,
+                datatype: "JSON",
+                success: function(res2){
+                    $('#bagian').empty();
+                    $('#bagian').append('<option value="">--- Pilih Bagian ---</option>')
+                    $.each(res2, function(i, item){
+                        $('#bagian').append('<option value="'+item.kd_bagian+'" '+ (bag === item.kd_bagian ? 'selected' : '') +'>'+item.nama_bagian+'</option>')
+                    });
+                }
+            })
+        }
+
+        function jabatanChange(){
+            var value = $("#jabatan").val();
             $("#kantor_row2").show();
             if(value == "PIMDIV"){
                 $("#kantor").val("1")
@@ -511,6 +556,10 @@
             }else {
                 $('#kantor').removeAttr("disabled")
             }
+        }
+
+        $("#jabatan").change(function(){
+            jabatanChange()
         })
 
         $('#kantor').change(function(){
