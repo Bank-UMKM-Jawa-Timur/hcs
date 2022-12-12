@@ -23,40 +23,40 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">NIP</label>
-                                    <input type="text" class="form-control" name="nip" id="">
+                                    <input type="text" class="@error('nip') is-invalid @enderror form-control" name="nip" id="" value="{{ old('nip') }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">NIK</label>
-                                    <input type="text" class="form-control" name="nik" id="">
+                                    <input type="number" class="@error('nik') is-invalid @enderror form-control" name="nik" id="" value="{{ old('nik') }}">
                                 </div>
                             </div>   
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Nama Karyawan</label>
-                                    <input type="text" class="form-control" name="nama" id="">
+                                    <input type="text" class="@error('nama') is-invalid @enderror form-control" name="nama" id="" value="{{ old('nama') }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Tempat Lahir</label>
-                                    <input type="text" class="form-control" name="tmp_lahir" id="">
+                                    <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-control" name="tmp_lahir" id="" value="{{ old('tmp_lahir') }}">
                                 </div>
                             </div> 
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Tanggal Lahir</label>
-                                    <input type="date" class="form-control" name="tgl_lahir" id="">
+                                    <input type="date" class="@error('tgl_lahir') is-invalid @enderror form-control" name="tgl_lahir" id="" value="{{ old('tgl_lahir') }}">
                                 </div>
                             </div> 
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Agama</label>
-                                    <select name="agama" id="" class="form-control">
-                                        <option value="">--- Pilih ---</option>
+                                    <select name="agama" id="" class="@error('agama') is-invalid @enderror form-control">
+                                        <option value="-">--- Pilih ---</option>
                                         @foreach ($agama as $item)
-                                            <option value="{{ $item->kd_agama }}">{{ $item->agama }}</option>
+                                            <option {{ old('agama') == $item->kd_agama ? 'selected' : '' }} value="{{ $item->kd_agama }}">{{ $item->agama }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -64,41 +64,41 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Jenis Kelamin</label>
-                                    <select name="jk" id="" class="form-control">
-                                        <option value="">--- Pilih ---</option>
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
+                                    <select name="jk" id="" class="@error('jk') is-invalid @enderror form-control">
+                                        <option {{ old('jk') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
+                                        <option {{ old('jk') == 'Laki-Laki' ? 'selected' : '' }} value="Laki-laki">Laki-laki</option>
+                                        <option {{ old('jk') == 'Perempuan' ? 'selected' : '' }} value="Perempuan">Perempuan</option>
                                     </select>
                                 </div>
                             </div> 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Status pernikahan</label>
-                                    <select name="status pernikahan" id="status" class="form-control">
-                                        <option value="">--- Pilih ---</option>
-                                        <option value="Kawin">Kawin</option>
-                                        <option value="Belum Kawin">Belum Kawin</option>
-                                        <option value="Cerai">Cerai</option>
-                                        <option value="Cerai Mati">Cerai Mati</option>
-                                        <option value="Janda">Janda</option>
-                                        <option value="Duda">Duda</option>
+                                    <select name="status_pernikahan" id="status" class="@error('status_pernikahan') is-invalid @enderror form-control">
+                                        <option {{ old('status_pernikahan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
+                                        <option {{ old('status_pernikahan') == 'Kawin' ? 'selected' : '' }} value="Kawin">Kawin</option>
+                                        <option {{ old('status_pernikahan') == 'Belum Kawin' ? 'selected' : '' }} value="Belum Kawin">Belum Kawin</option>
+                                        <option {{ old('status_pernikahan') == 'Cerai' ? 'selected' : '' }} value="Cerai">Cerai</option>
+                                        <option {{ old('status_pernikahan') == 'Cerai Mati' ? 'selected' : '' }} value="Cerai Mati">Cerai Mati</option>
+                                        <option {{ old('status_pernikahan') == 'Janda' ? 'selected' : '' }} value="Janda">Janda</option>
+                                        <option {{ old('status_pernikahan') == 'Duda' ? 'selected' : '' }} value="Duda">Duda</option>
                                     </select>
                                 </div>
                             </div> 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Kewarganegaraan</label>
-                                    <select name="kewarganegaraan" id="" class="form-control">
-                                        <option value="">--- Pilih ---</option>
-                                        <option value="WNI">WNI</option>
-                                        <option value="WNA">WNA</option>
+                                    <select name="kewarganegaraan" id="" class="@error('kewarganegaraan') is-invalid @enderror form-control">
+                                        <option {{ old('kewarganegaraan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
+                                        <option {{ old('kewarganegaraan') == 'WNI' ? 'selected' : '' }} value="WNI">WNI</option>
+                                        <option  {{ old('kewarganegaraan') == 'WNA' ? 'selected' : '' }} value="WNA">WNA</option>
                                     </select>
                                 </div>
                             </div> 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Alamat KTP</label>
-                                    <textarea name="alamat_ktp" id="" class="form-control"></textarea>
+                                    <textarea name="alamat_ktp" id="" class="@error('alamat_ktp') is-invalid @enderror form-control">{{ old('alamat_ktp') }}</textarea>
                                 </div>
                             </div>    
                             <div class="col-md-12">

@@ -173,8 +173,21 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nip' => 'required',
+            'nik' => 'required',
+            'nama' => 'required',
+            'tmp_lahir' => 'required',
+            'tgl_lahir' => 'required',
+            'agama' => 'required|not_in:-',
+            'jk' => 'required|not_in:-',
+            'status_pernikahan' => 'required|not_in:-',
+            'kewarganegaraan' => 'required|not_in:-',
+            'alamat_ktp' => 'required'
+        ], [
+            
+        ]);
         try{
-            // dd($request);
             if($request->get('status_pernikahan') == 'Kawin'){
                 DB::table('is')
                     ->insert([
