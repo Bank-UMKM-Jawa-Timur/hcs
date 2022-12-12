@@ -40,7 +40,7 @@
                                     <tr>
                                         <td>-</td>
                                         <td>Kantor Pusat</td>
-                                        <td>{{ count($data_pusat) }}</td>
+                                        <td>{{ $count_pusat }}</td>
                                         <td>{{ rupiah(((0.0024 * $total_gaji_pusat))) }}</td>
                                         <td>{{ rupiah(((0.057 * $total_gaji_pusat))) }}</td>
                                         <td>{{ rupiah(((0.003 * $total_gaji_pusat))) }}</td>

@@ -185,6 +185,7 @@ class JaminanController extends Controller
                 'jp2_pusat' => $jp2_pusat,
                 'total_gaji_pusat' => array_sum($total_gaji_pusat),
                 'data_pusat' => $data_pusat,
+                'count_pusat' => count($karyawan_pusat),
                 'data_cabang' => $data_cabang
             ]);
         }
@@ -241,8 +242,8 @@ class JaminanController extends Controller
             $perhitungan_jkk = 0.0024 * $item;
             $perhitungan_jht = 0.057 * $item;
             $perhitungan_jkm = 0.003 * $item;
-            $perhitungan_jp1 = ($item >  9077600) ?  9077600 * 0.001 : $item * 0.001;
-            $perhitungan_jp2 = ($item >  9077600) ?  9077600 * 0.002 : $item * 0.002;
+            $perhitungan_jp1 = ($item >  9077600) ?  9077600 * 0.01 : $item * 0.01;
+            $perhitungan_jp2 = ($item >  9077600) ?  9077600 * 0.02 : $item * 0.02;
             array_push($jp1, $perhitungan_jp1);
             array_push($jp2, $perhitungan_jp2);
             array_push($jkk, $perhitungan_jkk);
