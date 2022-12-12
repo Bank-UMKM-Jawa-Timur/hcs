@@ -332,12 +332,12 @@
                                         <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control" value="{{ $tj->nominal }}">
                                     </div>
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-1 mt-3">
                                     <button class="btn btn-info" type="button" id="btn-add">
                                         <i class="bi-plus-lg"></i>
                                     </button>
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-1 mt-3">
                                     <button class="btn btn-info" type="button" id="btn-delete">
                                         <i class="bi-dash-lg"></i>
                                     </button>
@@ -626,12 +626,12 @@
                                     <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-1 mt-3">
                                 <button class="btn btn-info" type="button" id="btn-add">
                                     <i class="bi-plus-lg"></i>
                                 </button>
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-1 mt-3">
                                 <button class="btn btn-info" type="button" id="btn-delete">
                                     <i class="bi-dash-lg"></i>
                                 </button>
