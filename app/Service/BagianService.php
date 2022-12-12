@@ -18,10 +18,15 @@ class BagianService
             ->where('kd_divisi', ($subDiv) ? $subDiv->kd_divisi : $entity)
             ->first();
 
+        $cab = DB::table('mst_cabang')
+            ->select('*')
+            ->where('kd_cabang', $entity)
+            ->first();
+
         if($subDiv) return [
             'type' => 1,
             'subDiv' => $subDiv,
-            'div' => $div,
+            'div' => $div
         ];
 
         if($div) return [
@@ -30,7 +35,8 @@ class BagianService
         ];
 
         return [
-            'type' => 2
+            'type' => 2,
+            'cab' => $cab
         ];
     }
 }

@@ -64,7 +64,7 @@
         var lastTrigger = 0;
 
         function triggerChange(step) {
-            @isset($entity['div'])
+            @if($entity['type'] == 1)
                 if(step == 2 && lastTrigger < 2) {
                     $('#divisi').val('{{ $entity['div']->kd_divisi }}');
                     $('#divisi').trigger('change');
@@ -78,7 +78,16 @@
                         lastTrigger = 3;
                     }
                 @endisset
-            @endisset
+            @endif
+
+            @if($entity['type'] == 2)
+            if(step == 2 && lastTrigger < 2) {
+                $('#cabang').val('{{ $entity['cab']?->kd_cabang }}')
+                $('#cabang').trigger('change');
+
+                lastTrigger = 2;
+            }
+            @endif
         }
 
         $('#kantor').change(function(){
@@ -155,6 +164,8 @@
                         $.each(res[0], function(i, item){
                             $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
                         })
+
+                        triggerChange(2);
                     }
                 })
             } else {
