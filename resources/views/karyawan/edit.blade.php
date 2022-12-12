@@ -23,38 +23,38 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">NIP</label>
-                                    <input type="text" class="form-control" name="nip" id="nip" value="{{ $data->nip }}">
+                                    <input type="text" class="@error('nip') is-invalid @enderror  form-control" name="nip" id="nip" value="{{ old('nip', $data->nip) }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">NIK</label>
-                                    <input type="text" class="form-control" name="nik" id="" value="{{ $data->nik }}">
+                                    <input type="text" class="@error('nik') is-invalid @enderror form-control" name="nik" id="" value="{{ old('nik', $data->nik) }}">
                                 </div>
                             </div>   
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Nama Karyawan</label>
-                                    <input type="text" class="form-control" name="nama" id="" value="{{ $data->nama_karyawan }}">
+                                    <input type="text" class="@error('nama') is-invalid @enderror form-control" name="nama" id="" value="{{ old('nama', $data->nama_karyawan) }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Tempat Lahir</label>
-                                    <input type="text" class="form-control" name="tmp_lahir" id="" value="{{ $data->tmp_lahir }}">
+                                    <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-control" name="tmp_lahir" id="" value="{{ old('tmp_lahir', $data->tmp_lahir) }}">
                                 </div>
                             </div> 
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Tanggal Lahir</label>
-                                    <input type="date" class="form-control" name="tgl_lahir" id="" value="{{ $data->tgl_lahir }}">
+                                    <input type="date" class="@error('tgl_lahir') is-invalid @enderror form-control" name="tgl_lahir" id="" value="{{ old('tgl_lahir', $data->tgl_lahir) }}">
                                 </div>
                             </div> 
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Agama</label>
-                                    <select name="agama" id="" class="form-control">
-                                        <option value="">--- Pilih ---</option>
+                                    <select name="agama" id="" class="@error('agama') is-invalid @enderror form-control">
+                                        <option value="-">--- Pilih ---</option>
                                         @foreach ($agama as $item)
                                             <option value="{{ $item->kd_agama }}" {{ ($data->kd_agama == $item->kd_agama) ? 'selected' : '' }}>{{ $item->agama }}</option>
                                         @endforeach
@@ -64,8 +64,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Jenis Kelamin</label>
-                                    <select name="jk" id="" class="form-control">
-                                        <option value="">--- Pilih ---</option>
+                                    <select name="jk" id="" class="@error('jk') is-invalid @enderror form-control">
+                                        <option value="-">--- Pilih ---</option>
                                         <option value="Laki-laki" {{ ($data->jk == 'Laki-laki') ? 'selected' : '' }}>Laki-laki</option>
                                         <option value="Perempuan" {{ ($data->jk == 'Perempuan') ? 'selected' : '' }}>Perempuan</option>
                                     </select>
@@ -74,7 +74,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Status pernikahan</label>
-                                    <select name="status_pernikahan" id="status" class="form-control">
+                                    <select name="status_pernikahan" id="status" class="@error('status_pernikahan') is-invalid @enderror form-control">
                                         <option value="">--- Pilih ---</option>
                                         <option value="Kawin" {{ ($data->status == 'Kawin') ? 'selected' : '' }}>Kawin</option>
                                         <option value="Belum Kawin" {{ ($data->status == 'Belum Kawin') ? 'selected' : '' }}>Belum Kawin</option>
@@ -87,8 +87,8 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Kewarganegaraan</label>
-                                    <select name="kewarganegaraan" id="" class="form-control">
-                                        <option value="">--- Pilih ---</option>
+                                    <select name="kewarganegaraan" id="" class="@error('kewarganegaraan') is-invalid @enderror form-control">
+                                        <option value="-">--- Pilih ---</option>
                                         <option value="WNI" {{ ($data->kewarganegaraan == 'WNI' ) ? 'selected' : ''}}>WNI</option>
                                         <option value="WNA" {{ ($data->kewarganegaraan == 'WNA' ) ? 'selected' : ''}}>WNA</option>
                                     </select>
@@ -97,13 +97,13 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Alamat KTP</label>
-                                    <textarea name="alamat_ktp" id="" class="form-control">{{ $data->alamat_ktp }}</textarea>
+                                    <textarea name="alamat_ktp" id="" class="@error('alamat_ktp') is-invalid @enderror form-control">{{ old('alamat_ktp', $data->alamat_ktp)}}</textarea>
                                 </div>
                             </div>    
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Alamat sekarang</label>
-                                    <textarea name="alamat_sek" id="" class="form-control">{{ $data->alamat_sek }}</textarea>
+                                    <textarea name="alamat_sek" id="" class="form-control">{{ old('alamat_sek', $data->alamat_sek) }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -151,7 +151,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Pangkat Dan Golongan</label>
-                                    <select name="panggol" id="" class="form-control">
+                                    <select name="panggol" id="" class="@error('panggol') is-invalid @enderror form-control">
                                         <option value="">--- Pilih ---</option>
                                         @foreach ($panggol as $item)
                                             <option value="{{ $item->golongan }}" {{ ($data->kd_panggol == $item->golongan) ? 'selected' : '' }} >{{ $item->golongan }} - {{ $item->pangkat }}</option>
@@ -162,7 +162,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Status Jabatan</label>
-                                    <select name="status_jabatan" id="" class="form-control">
+                                    <select name="status_jabatan" id="" class="@error('status_jabatan') is-invalid @enderror form-control">
                                         <option value="">--- Pilih ---</option>
                                         <option value="Definitif" {{ ($data->status_jabatan == 'Definitif') ? 'selected' : '' }}>Definitif</option>
                                         <option value="Penjabat Sementara" {{ ($data->status_jabatan == 'Penjabat Sementara') ? 'selected' : '' }}>Penjabat Sementara</option>
@@ -173,37 +173,37 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Keterangan Jabatan</label>
-                                    <input type="text" class="form-control" name="key_jabatan" value="{{ $data->ket_jabatan }}">
+                                    <input type="text" class="form-control" name="ket_jabatan" value="{{ old('ket_jabatan', $data->ket_jabatan) }}">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">KPJ</label>
-                                    <input type="text" class="form-control" name="kpj" value="{{ $data->kpj }}">
+                                    <input type="text" class="@error('kpj') is-invalid @enderror form-control" name="kpj" value="{{ old('kpj', $data->kpj) }}">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">JKN</label>
-                                    <input type="text" class="form-control" name="jkn" value="{{ $data->jkn }}">
+                                    <input type="text" class="@error('jkn') is-invalid @enderror form-control" name="jkn" value="{{ old('jkn', $data->jkn) }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Gaji Pokok</label>
-                                    <input type="text" class="form-control" name="gj_pokok" value="{{ $data->gj_pokok }}">
+                                    <input type="text" class="@error('gj_pokok') is-invalid @enderror form-control" name="gj_pokok" value="{{ old('gj_pokok', $data->gj_pokok) }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Gaji Penyesuaian</label>
-                                    <input type="text" class="form-control" name="gj_penyesuaian" value="{{ $data->gj_penyesuaian }}">
+                                    <input type="text" class="form-control" name="gj_penyesuaian" value="{{ old('gj_penyesuaian', $data->gj_penyesuaian) }}">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Status Karyawan</label>
-                                    <select name="status_karyawan" id="" class="form-control">
+                                    <select name="status_karyawan" id="" class="@error('status_karyawan') is-invalid @enderror form-control">
                                         <option value="">--- Pilih ---</option>
                                         <option value="Tetap" {{ ($data->status_karyawan == 'Tetap') ? 'selected' : ''}}>Tetap</option>
                                         <option value="IKJP" {{ ($data->status_karyawan == 'IKJP') ? 'selected' : ''}}>IKJP</option>
@@ -214,13 +214,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">SK Pengangkatan</label>
-                                    <input type="text" class="form-control" name="skangkat" value="{{ $data->skangkat }}">
+                                    <input type="text" class="@error('skangkat') is-invalid @enderror form-control" name="skangkat" value="{{ old('skangkat', $data->skangkat)}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Tanggal Pengangkatan</label>
-                                    <input type="date" class="form-control" name="tanggal_pengangkat" value="{{ $data->tanggal_pengangkat }}">
+                                    <input type="date" class="@error('tanggal_pengangkat') is-invalid @enderror form-control" name="tanggal_pengangkat" value="{{ old('tanggal_pengangkat', $data->tanggal_pengangkat) }}">
                                 </div>
                             </div>
                         </div>
@@ -302,12 +302,12 @@
                             </div>
                             <div class="col-md-1">
                                 <button class="btn btn-info" type="button" id="btn-add">
-                                    +
+                                    <i class="bi-plus-lg"></i>
                                 </button>
                             </div>
                             <div class="col-md-1">
                                 <button class="btn btn-info" type="button" id="btn-delete">
-                                    -
+                                    <i class="bi-dash-lg"></i>
                                 </button>
                             </div>
                         </div>
@@ -334,12 +334,12 @@
                                 </div>
                                 <div class="col-md-1">
                                     <button class="btn btn-info" type="button" id="btn-add">
-                                        +
+                                        <i class="bi-plus-lg"></i>
                                     </button>
                                 </div>
                                 <div class="col-md-1">
                                     <button class="btn btn-info" type="button" id="btn-delete">
-                                        -
+                                        <i class="bi-dash-lg"></i>
                                     </button>
                                 </div>
                             </div>
@@ -628,12 +628,12 @@
                             </div>
                             <div class="col-md-1">
                                 <button class="btn btn-info" type="button" id="btn-add">
-                                    +
+                                    <i class="bi-plus-lg"></i>
                                 </button>
                             </div>
                             <div class="col-md-1">
                                 <button class="btn btn-info" type="button" id="btn-delete">
-                                    -
+                                    <i class="bi-dash-lg"></i>
                                 </button>
                             </div>
                         </div>

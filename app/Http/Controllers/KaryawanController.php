@@ -257,10 +257,17 @@ class KaryawanController extends Controller
             'jk' => 'required|not_in:-',
             'status_pernikahan' => 'required|not_in:-',
             'kewarganegaraan' => 'required|not_in:-',
-            'alamat_ktp' => 'required'
-        ], [
-            
+            'alamat_ktp' => 'required',
+            'panggol' => 'required|not_in:-',
+            'status_jabatan' => 'required|not_in:-',
+            'kpj' => 'required',
+            'jkn' => 'required',
+            'gj_pokok' => 'required',
+            'status_karyawan' => 'required|not_in:-',
+            'skangkat' => 'required|not_in:-',
+            'tanggal_pengangkat' => 'required|not_in:-'
         ]);
+
         try{
             if($request->get('status_pernikahan') == 'Kawin'){
                 DB::table('is')
@@ -488,8 +495,28 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nip' => 'required',
+            'nik' => 'required',
+            'nama' => 'required',
+            'tmp_lahir' => 'required',
+            'tgl_lahir' => 'required',
+            'agama' => 'required|not_in:-',
+            'jk' => 'required|not_in:-',
+            'status_pernikahan' => 'required|not_in:-',
+            'kewarganegaraan' => 'required|not_in:-',
+            'alamat_ktp' => 'required',
+            'panggol' => 'required|not_in:-',
+            'status_jabatan' => 'required|not_in:-',
+            'kpj' => 'required',
+            'jkn' => 'required',
+            'gj_pokok' => 'required',
+            'status_karyawan' => 'required|not_in:-',
+            'skangkat' => 'required|not_in:-',
+            'tanggal_pengangkat' => 'required|not_in:-'
+        ]);
+
         try{
-            // dd($request);
             $id_is = $request->get('id_is');
             if($request->get('status_pernikahan') == 'Kawin' && $request->get('pasangan') != null){
                 $id_is = $request->get('id_is');
