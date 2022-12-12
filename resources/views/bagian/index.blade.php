@@ -25,7 +25,9 @@
                             <th>
                                 Nama Bagian
                             </th>
-                            <th>Kode Kantor</th>
+                            <th>
+                                Kode Kantor
+                            </th>
                             <th>
                                 Aksi
                             </th>
@@ -46,11 +48,28 @@
                                         {{ $item->nama_bagian }}
                                     </td>
                                     <td>
-                                        @if ($item->kd_entitas == "2")
-                                          Cabang
-                                        @else
-                                          Pusat
-                                        @endif
+                                        @php
+                                            $data1 = DB::table('mst_divisi')
+                                                ->where('kd_divisi', $item->kd_entitas)
+                                                ->first();
+                                            $data2 = DB::table('mst_sub_divisi')
+                                                ->where('kd_subdiv', $item->kd_entitas)
+                                                ->first();
+                                            $data3 = DB::table('mst_cabang')
+                                                ->where('kd_cabang', $item->kd_entitas)
+                                                ->first();
+
+                                            if (isset($data1)) {
+                                              $kantor = 'Pusat';
+                                            } else if (isset($data2)) {
+                                              $kantor = 'Pusat';
+                                            } else if (isset($data3)) {
+                                              $kantor = 'Cabang';
+                                            } else if ($item->kd_entitas == '2' ) {
+                                              $kantor = 'Cabang';
+                                            }
+                                        @endphp
+                                        {{ $kantor }}
                                     </td>
                                     <td>
                                       {{-- <div class="row"> --}}

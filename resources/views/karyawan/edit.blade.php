@@ -472,6 +472,10 @@
                         })
                     }
                 })
+            } else {
+                $("#kantor_row1").empty();
+                $("#kantor_row2").empty();
+                $("#kantor_row3").empty();
             }
         }
 
