@@ -8,7 +8,7 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col"> 
+            <div class="col">
                 <form action="{{ route('bagian.update',  $data->kd_bagian) }}" method="POST" enctype="multipart/form-data" name="bagian" class="form-group">
                     @csrf
                     @method('PUT')
@@ -18,8 +18,8 @@
                                 <label for="kantor">Nama Kantor</label>
                                 <select name="kantor" class="@error('kantor') is-invalid @enderror form-control" id="kantor">
                                     <option {{ old('kantor') == "-" ? 'selected' : '' }} value="-">-- Pilih ---</option>
-                                    <option {{ old('kantor') == 1 ? 'selected' : '' }} value="1">Kantor Pusat</option>
-                                    <option {{ old('kantor') == 2 ? 'selected' : '' }} value="2">Kantor Cabang</option>
+                                    <option {{ old('kantor') ?? $entity['type'] == 1 ? 'selected' : '' }} value="1">Kantor Pusat</option>
+                                    <option {{ old('kantor') ?? $entity['type'] == 2 ? 'selected' : '' }} value="2">Kantor Cabang</option>
                                 </select>
                                 @error('kantor')
                                     <div class="mt-2 alert alert-danger">{{ $message }}</div>
@@ -61,6 +61,26 @@
 
 @section('custom_script')
     <script>
+        var lastTrigger = 0;
+
+        function triggerChange(step) {
+            @isset($entity['div'])
+                if(step == 2 && lastTrigger < 2) {
+                    $('#divisi').val('{{ $entity['div']->kd_divisi }}');
+                    $('#divisi').trigger('change');
+
+                    lastTrigger = 2;
+                }
+
+                @isset($entity['subDiv'])
+                    if(step == 3 && lastTrigger < 3) {
+                        $('#sub_divisi').val('{{ $entity['subDiv']->kd_subdiv }}');
+                        lastTrigger = 3;
+                    }
+                @endisset
+            @endisset
+        }
+
         $('#kantor').change(function(){
             var kantor_id = $(this).val();
 
@@ -91,7 +111,7 @@
                                     </select>
                                 </div>`
                         );
-        
+
                         $("#divisi").change(function(){
                             var divisi = $(this).val();
 
@@ -106,10 +126,14 @@
                                         $.each(res, function(i, item){
                                             $('#sub_divisi').append('<option value="'+item.kd_subdiv+'">'+item.nama_subdivisi+'</option>')
                                         })
+
+                                        triggerChange(3);
                                     }
                                 })
                             }
                         })
+
+                        triggerChange(2);
                     }
                 })
             } else if(kantor_id == 2){
@@ -138,5 +162,7 @@
                 $("#kantor_row2").empty();
             }
         });
+
+        $('#kantor').trigger('change');
     </script>
 @endsection
