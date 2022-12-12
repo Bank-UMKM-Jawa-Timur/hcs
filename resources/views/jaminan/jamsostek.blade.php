@@ -94,7 +94,11 @@
                                                         ->where('mst_tunjangan.status', 1)
                                                         ->sum('tunjangan_karyawan.nominal');
                                                         
-                                                    array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok : 0 + $i->gj_pokok));
+                                                    if ($i->gj_penyesuaian != null) {
+                                                        array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok + $i->gj_penyesuaian : 0 + $i->gj_pokok + $i->gj_penyesuaian));
+                                                    } else {
+                                                        array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok : 0 + $i->gj_pokok));
+                                                    }
                                                 }
                                                 foreach($total_gaji_cabang as $i){
                                                     array_push($jp1_cabang, ((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
