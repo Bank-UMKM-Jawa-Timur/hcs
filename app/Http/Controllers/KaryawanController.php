@@ -158,10 +158,17 @@ class KaryawanController extends Controller
                 $subdivisi = DB::table('mst_sub_divisi')
                     ->where('kd_subdiv', $subdiv)
                     ->first();
-                $div = DB::table('mst_divisi')
-                    ->where('kd_divisi', $subdivisi->kd_divisi)
-                    ->select('kd_divisi')
-                    ->first();
+                if(isset($subdivisi)){
+                    $div = DB::table('mst_divisi')
+                        ->where('kd_divisi', $subdivisi->kd_divisi)
+                        ->select('kd_divisi')
+                        ->first();
+                } else {
+                    $div = DB::table('mst_divisi')
+                        ->where('kd_divisi', $subdiv)
+                        ->select('kd_divisi')
+                        ->first();
+                }
             } else {
                 $kantor = 'Cabang';
                 $kd_kantor = $karyawan->kd_entitas;
