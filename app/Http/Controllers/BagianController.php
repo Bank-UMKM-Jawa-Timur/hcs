@@ -138,10 +138,19 @@ class BagianController extends Controller
         try {
             if ($request->get('kd_subdiv') != null) {
                 $kd_entitas = $request->get('kd_subdiv');
+                $request->validate([
+                    'kd_subdiv' => 'required|exists:mst_sub_divisi,kd_subdiv'
+                ]);
             } else if ($request->get('kd_cabang') != null) {
                 $kd_entitas = $request->get('kd_cabang');
+                $request->validate([
+                    'kd_cabang' => 'required|exists:mst_cabang,kd_cabang'
+                ]);
             } else {
                 $kd_entitas = $request->get('kd_divisi');
+                $request->validate([
+                    'kd_divisi' => 'required|exists:mst_divisi,kd_divisi'
+                ]);
             }
 
             DB::table('mst_bagian')
