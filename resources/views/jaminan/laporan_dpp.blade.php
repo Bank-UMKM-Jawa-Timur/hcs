@@ -62,7 +62,7 @@
 
                                                 $karyawan = DB::table('mst_karyawan')
                                                     ->where('kd_entitas', $item->kd_entitas)
-                                                    ->where('status_karyawan', 'Tetap')
+                                                    ->whereNotIn('status_karyawan', ['Kontrak Perpanjangan', 'IKJP'])
                                                     ->get();
                                                 foreach($karyawan as $i){
                                                     $data_tunjangan_keluarga = DB::table('tunjangan_karyawan')
@@ -79,7 +79,7 @@
                                                         
                                                     array_push($total_tunjangan_keluarga, $data_tunjangan_keluarga);
                                                     array_push($total_tunjangan_kesejahteraan, $data_tunjangan_kesejahteraan);
-                                                    array_push($total_gj_cabang, $i->gj_pokok);
+                                                    array_push($total_gj_cabang, ($i->gj_pokok));
                                                 }
 
                                                 $gj_cabang = (array_sum($total_gj_cabang) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13;
@@ -100,11 +100,13 @@
                                 </thead>
                                 <tbody>
                                     @for ($i = 0; $i < count($karyawan); $i++)
-                                        <tr>
-                                            <td>{{ $karyawan[$i]->nip }}</td>
-                                            <td>{{ $karyawan[$i]->nama_karyawan }}</td>
-                                            <td>{{ rupiah($dpp[$i]) }}</td>
-                                        </tr>
+                                        @if ($karyawan[$i]->status_karyawan == 'Tetap')
+                                            <tr>
+                                                <td>{{ $karyawan[$i]->nip }}</td>
+                                                <td>{{ $karyawan[$i]->nama_karyawan }}</td>
+                                                <td>{{ rupiah($dpp[$i]) }}</td>
+                                            </tr>
+                                        @endif
                                     @endfor
                                 </tbody>
                             </table>

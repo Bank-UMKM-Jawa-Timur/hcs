@@ -152,8 +152,12 @@ class JaminanController extends Controller
                     ->where('nip', $i->nip)
                     ->where('mst_tunjangan.status', 1)
                     ->sum('tunjangan_karyawan.nominal');
-                    
-                array_push($total_gaji_pusat, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok : 0 + $i->gj_pokok));
+                
+                if($i->gj_penyesuaian != null){
+                    array_push($total_gaji_pusat, ($data_gaji + $i->gj_pokok + $i->gj_penyesuaian));
+                } else {
+                    array_push($total_gaji_pusat, ($data_gaji + $i->gj_pokok));
+                }
             }
             foreach($total_gaji_pusat as $i){
                 array_push($jp1_pusat, round((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
@@ -185,6 +189,7 @@ class JaminanController extends Controller
                 'jp2_pusat' => $jp2_pusat,
                 'total_gaji_pusat' => array_sum($total_gaji_pusat),
                 'data_pusat' => $data_pusat,
+                'count_pusat' => count($karyawan_pusat),
                 'data_cabang' => $data_cabang
             ]);
         }
@@ -211,7 +216,11 @@ class JaminanController extends Controller
                     ->where('mst_tunjangan.status', 1)
                     ->sum('tunjangan_karyawan.nominal');
                 // dd($i->nama_karyawan. ' '.$data_gaji.' '.  $i->gj_pokok);
-                array_push($total_gaji, ($data_gaji + $i->gj_pokok));
+                if($i->gj_penyesuaian != null){
+                    array_push($total_gaji, ($data_gaji + $i->gj_pokok + $i->gj_penyesuaian));
+                } else {
+                    array_push($total_gaji, ($data_gaji + $i->gj_pokok));
+                }
             }
         } else {
             $cabang = $request->get('cabang');
@@ -226,8 +235,12 @@ class JaminanController extends Controller
                     ->where('nip', $i->nip)
                     ->where('mst_tunjangan.status', 1)
                     ->sum('tunjangan_karyawan.nominal');
-                    
-                array_push($total_gaji, ($data_gaji + $i->gj_pokok));
+                
+                if($i->gj_penyesuaian != null){
+                    array_push($total_gaji, ($data_gaji + $i->gj_pokok + $i->gj_penyesuaian));
+                } else {
+                    array_push($total_gaji, ($data_gaji + $i->gj_pokok));
+                }
             }
         }
         
@@ -241,8 +254,8 @@ class JaminanController extends Controller
             $perhitungan_jkk = 0.0024 * $item;
             $perhitungan_jht = 0.057 * $item;
             $perhitungan_jkm = 0.003 * $item;
-            $perhitungan_jp1 = ($item >  9077600) ?  9077600 * 0.001 : $item * 0.001;
-            $perhitungan_jp2 = ($item >  9077600) ?  9077600 * 0.002 : $item * 0.002;
+            $perhitungan_jp1 = ($item >  9077600) ?  9077600 * 0.01 : $item * 0.01;
+            $perhitungan_jp2 = ($item >  9077600) ?  9077600 * 0.02 : $item * 0.02;
             array_push($jp1, $perhitungan_jp1);
             array_push($jp2, $perhitungan_jp2);
             array_push($jkk, $perhitungan_jkk);
@@ -281,31 +294,35 @@ class JaminanController extends Controller
             }
 
             $karyawan_pusat = DB::table('mst_karyawan')
-                ->where('status_karyawan', 'Tetap')
                 ->whereNotIn('kd_entitas', $cbg)
+                ->orWhere('kd_entitas', null)
+                ->where('status_karyawan', 'Tetap')
                 ->get();
         
             $total_tunjangan_keluarga = array();
             $total_tunjangan_kesejahteraan = array();
             $total_gj_pusat = array();
+            $s = array();
             foreach($karyawan_pusat as $i){
-                $data_tunjangan_keluarga = DB::table('tunjangan_karyawan')
-                    ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
-                    ->where('nip', $i->nip)
-                    ->where('mst_tunjangan.id', 1)
-                    ->sum('nominal');
-
-                $data_tunjangan_kesejahteraan = DB::table('tunjangan_karyawan')
-                    ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
-                    ->where('nip', $i->nip)
-                    ->where('mst_tunjangan.id', 8)
-                    ->sum('nominal');
-                    
-                array_push($total_tunjangan_keluarga, $data_tunjangan_keluarga);
-                array_push($total_tunjangan_kesejahteraan, $data_tunjangan_kesejahteraan);
-                array_push($total_gj_pusat, $i->gj_pokok);
+                if($i->status_karyawan == 'Tetap'){
+                    $data_tunjangan_keluarga = DB::table('tunjangan_karyawan')
+                        ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
+                        ->where('nip', $i->nip)
+                        ->where('mst_tunjangan.id', 1)
+                        ->sum('nominal');
+    
+                    $data_tunjangan_kesejahteraan = DB::table('tunjangan_karyawan')
+                        ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
+                        ->where('nip', $i->nip)
+                        ->where('mst_tunjangan.id', 8)
+                        ->sum('nominal');
+                        
+                    array_push($total_tunjangan_keluarga, $data_tunjangan_keluarga);
+                    array_push($total_tunjangan_kesejahteraan, $data_tunjangan_kesejahteraan);
+                    array_push($total_gj_pusat, $i->gj_pokok);
+                    array_push($s, $i->status_karyawan);
+                }
             }
-
             $dpp_pusat = (array_sum($total_gj_pusat) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13;
 
             // dd($gj_pusat);

@@ -40,7 +40,7 @@
                                     <tr>
                                         <td>-</td>
                                         <td>Kantor Pusat</td>
-                                        <td>{{ count($data_pusat) }}</td>
+                                        <td>{{ $count_pusat }}</td>
                                         <td>{{ rupiah(((0.0024 * $total_gaji_pusat))) }}</td>
                                         <td>{{ rupiah(((0.057 * $total_gaji_pusat))) }}</td>
                                         <td>{{ rupiah(((0.003 * $total_gaji_pusat))) }}</td>
@@ -94,7 +94,11 @@
                                                         ->where('mst_tunjangan.status', 1)
                                                         ->sum('tunjangan_karyawan.nominal');
                                                         
-                                                    array_push($total_gaji_cabang, ($data_gaji + $i->gj_pokok));
+                                                    if ($i->gj_penyesuaian != null) {
+                                                        array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok + $i->gj_penyesuaian : 0 + $i->gj_pokok + $i->gj_penyesuaian));
+                                                    } else {
+                                                        array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok : 0 + $i->gj_pokok));
+                                                    }
                                                 }
                                                 foreach($total_gaji_cabang as $i){
                                                     array_push($jp1_cabang, ((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
@@ -102,19 +106,19 @@
                                                 }
                                             @endphp
                                             <td>{{ count($karyawan) }}</td>
-                                            <td>{{ rupiah(((0.0024 * $item->nominal))) }}</td>
-                                            <td>{{ rupiah(((0.057 * $item->nominal))) }}</td>
-                                            <td>{{ rupiah(((0.003 * $item->nominal))) }}</td>
-                                            <td>{{ rupiah((((0.0024 * $item->nominal)) + ((0.057 * $item->nominal))) + ((0.003 * $item->nominal))) }}</td>
+                                            <td>{{ rupiah(((0.0024 * array_sum($total_gaji_cabang)))) }}</td>
+                                            <td>{{ rupiah(((0.057 * array_sum($total_gaji_cabang)))) }}</td>
+                                            <td>{{ rupiah(((0.003 * array_sum($total_gaji_cabang)))) }}</td>
+                                            <td>{{ rupiah((((0.0024 * array_sum($total_gaji_cabang))) + ((0.057 * array_sum($total_gaji_cabang)))) + ((0.003 * array_sum($total_gaji_cabang)))) }}</td>
                                             <td>{{ rupiah(array_sum($jp1_cabang)) }}</td>
                                             <td>{{ rupiah(array_sum($jp2_cabang)) }}</td>
                                             <td>{{ rupiah((array_sum($jp1_cabang) + array_sum($jp2_cabang))) }}</td>
             
                                             @php
-                                                array_push($total_jamsostek, (((0.0024 * $item->nominal)) + ((0.057 * $item->nominal))) + ((0.003 * $item->nominal)));
-                                                array_push($total_jkk, ((0.0024 * $item->nominal)));
-                                                array_push($total_jht, ((0.057 * $item->nominal)));
-                                                array_push($total_jkm, ((0.003 * $item->nominal)));
+                                                array_push($total_jamsostek, (((0.0024 * array_sum($total_gaji_cabang))) + ((0.057 * array_sum($total_gaji_cabang)))) + ((0.003 * array_sum($total_gaji_cabang))));
+                                                array_push($total_jkk, ((0.0024 * array_sum($total_gaji_cabang))));
+                                                array_push($total_jht, ((0.057 * array_sum($total_gaji_cabang))));
+                                                array_push($total_jkm, ((0.003 * array_sum($total_gaji_cabang))));
             
                                                 array_push($total_jp, (array_sum($jp1_cabang) + array_sum($jp2_cabang)));
                                                 array_push($total_jp1, array_sum($jp1_cabang));

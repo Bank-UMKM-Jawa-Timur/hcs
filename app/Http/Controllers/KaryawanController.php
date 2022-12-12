@@ -135,6 +135,80 @@ class KaryawanController extends Controller
         return response()->json($data);
     }
 
+    public function getKantorKaryawan(Request $request)
+    {
+        $nip = $request->get('nip');
+        $karyawan = DB::table('mst_karyawan')
+            ->where('nip', $nip)
+            ->first();
+        $kantor = null;
+        $kd_kantor = null;
+        $div = null;
+        $subdiv = null;
+
+        if($karyawan->kd_bagian != null || $karyawan->kd_bagian == ''){
+            $bag1 = DB::table('mst_bagian')
+                ->where('kd_bagian', $karyawan->kd_bagian)
+                ->first();
+
+            if($bag1->kd_entitas != 2){
+                $kantor = 'Pusat';
+
+                $subdiv = $bag1->kd_entitas;
+                $subdivisi = DB::table('mst_sub_divisi')
+                    ->where('kd_subdiv', $subdiv)
+                    ->first();
+                if(isset($subdivisi)){
+                    $div = DB::table('mst_divisi')
+                        ->where('kd_divisi', $subdivisi->kd_divisi)
+                        ->select('kd_divisi')
+                        ->first();
+                } else {
+                    $div = DB::table('mst_divisi')
+                        ->where('kd_divisi', $subdiv)
+                        ->select('kd_divisi')
+                        ->first();
+                }
+            } else {
+                $kantor = 'Cabang';
+                $kd_kantor = $karyawan->kd_entitas;
+
+                $cabang = DB::table('mst_cabang')
+                    ->where('kd_cabang', $karyawan->kd_entitas)
+                    ->first();
+            }
+        } else {
+            $cabang = DB::table('mst_cabang')->get();
+            $cbg = array();
+            foreach($cabang as $i){
+                array_push($cbg, $i->kd_cabang);
+            }
+            if(in_array($karyawan->kd_entitas, $cbg)){
+                $kantor = 'Cabang';
+                $kd_kantor = $karyawan->kd_entitas;
+            } else {
+                $kantor = 'Pusat';
+                $subdiv = DB::table('mst_sub_divisi')
+                    ->where('kd_subdiv', $karyawan->kd_entitas)
+                    ->select('kd_subdiv')
+                    ->first();
+                $div = DB::table('mst_divisi')
+                    ->where('kd_divisi', $karyawan->kd_entitas)
+                    ->select('kd_div')
+                    ->first();
+            }
+        }
+        $data = [
+            'kantor' => $kantor,
+            'div' => $div,
+            'subdiv' => $subdiv,
+            'bag' => $bag1,
+            'kd_kantor' => $kd_kantor
+        ];
+
+        return response()->json($data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
