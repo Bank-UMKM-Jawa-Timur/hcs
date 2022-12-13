@@ -575,6 +575,58 @@ class KaryawanController extends Controller
                 $entitas = $request->get('divisi');
             }
 
+            $karyawan = DB::table('mst_karyawan')
+                ->where('nip', $id)
+                ->first();
+            $tj_karyawan = DB::table('tunjangan_karyawan')
+                ->select('tunjangan_karyawan.id', 'tunjangan_karyawan.nominal', 'mst_tunjangan.nama_tunjangan')
+                ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+                ->where('nip', $karyawan->nip)
+                ->get();
+            if($request->get('gj_pokok') != $karyawan->gj_pokok){
+                DB::table('history_penyesuaian_gaji')
+                    ->insert([
+                        'nip' => $request->get('nip'),
+                        'keterangan' => 'Penyesuaian Gaji Pokok',
+                        'nominal_baru' => $request->get('gj_pokok'),
+                        'nominal_lama' => $karyawan->gj_pokok,
+                        'created_at' => now()
+                    ]);
+            }
+            if($request->get('gj_penyesuaian') != $karyawan->gj_penyesuaian && $request->get('gj_penyesuaian' != 0)){
+                DB::table('history_penyesuaian_gaji')
+                    ->insert([
+                        'nip' => $request->get('nip'),
+                        'keterangan' => 'Penyesuaian Gaji penyesuaian',
+                        'nominal_baru' => $request->get('gj_penyesuaian'),
+                        'nominal_lama' => $karyawan->gj_penyesuaian,
+                        'created_at' => now()
+                    ]);
+            }
+            for($i = 0; $i < count($request->get('tunjangan')); $i++){
+                if($request->get('id_tk')[$i] != null){
+                    if($request->get('nominal_tunjangan')[$i] != $tj_karyawan[$i]->nominal){
+                        DB::table('history_penyesuaian_gaji')
+                        ->insert([
+                            'nip' => $request->get('nip'),
+                            'keterangan' => 'Penyesuaian Tunjangan '.$tj_karyawan[$i]->nama_tunjangan,
+                            'nominal_baru' => $request->get('nominal_tunjangan')[$i],
+                            'nominal_lama' => $tj_karyawan[$i]->nominal,
+                            'created_at' => now()
+                        ]);
+                    }
+                } else {
+                    DB::table('history_penyesuaian_gaji')
+                        ->insert([
+                            'nip' => $request->get('nip'),
+                            'keterangan' => 'Penambahan Tunjangan Baru',
+                            'nominal_baru' => $request->get('nominal_tunjangan')[$i],
+                            'nominal_lama' => 0,
+                            'created_at' => now()
+                        ]);
+                }
+            }
+
             DB::table('mst_karyawan')
                 ->where('nip', $id)
                 ->update([
