@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Service\BagianService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class BagianController extends Controller
 
         $data = DB::table('mst_bagian')
             ->get();
-            
+
         return view('bagian.index', ['data' => $data]);
     }
 
@@ -84,7 +85,7 @@ class BagianController extends Controller
                 DB::rollBack();
                 Alert::error('Terjadi Kesalahan', 'Gagal Menambah Bagian.'.$e->getMessage());
                 return redirect()->route('bagian.index');
-        }   
+        }
     }
 
     /**
@@ -95,7 +96,7 @@ class BagianController extends Controller
      */
     public function show($id)
     {
-       
+
     }
 
     /**
@@ -109,8 +110,9 @@ class BagianController extends Controller
         $data = DB::table('mst_bagian')
             ->where('kd_bagian', $id)
             ->first();
+        $entity = BagianService::getEntity($data->kd_entitas);
 
-        return view('bagian.edit', ['data' => $data]);
+        return view('bagian.edit', compact('data', 'entity'));
     }
 
     /**
@@ -134,12 +136,21 @@ class BagianController extends Controller
         ]);
 
         try {
-            if ($request->get('kd_subidv') != null) {
+            if ($request->get('kd_subdiv') != null) {
                 $kd_entitas = $request->get('kd_subdiv');
+                $request->validate([
+                    'kd_subdiv' => 'required|exists:mst_sub_divisi,kd_subdiv'
+                ]);
             } else if ($request->get('kd_cabang') != null) {
                 $kd_entitas = $request->get('kd_cabang');
+                $request->validate([
+                    'kd_cabang' => 'required|exists:mst_cabang,kd_cabang'
+                ]);
             } else {
                 $kd_entitas = $request->get('kd_divisi');
+                $request->validate([
+                    'kd_divisi' => 'required|exists:mst_divisi,kd_divisi'
+                ]);
             }
 
             DB::table('mst_bagian')
@@ -150,7 +161,7 @@ class BagianController extends Controller
                     'kd_entitas' => $kd_entitas,
                     'updated_at' => now()
                 ]);
-            
+
             Alert::success('Berhasil', 'Berhasil Mengupdate Bagian.');
             return redirect()->route('bagian.index');
         } catch (Exception $e) {
