@@ -381,7 +381,7 @@
                         $("#kantor").val(1)
                         kantorChange(res.div.kd_divisi)
                         if(res.subdiv != null){
-                            subdiv = res.subdiv.kd_subdiv
+                            subdiv = res.subdiv;
                         }
                         if(res.bag != null){
                             bag = res.bag.kd_bagian
@@ -393,8 +393,6 @@
                             bag = res.bag.kd_bagian
                         }
                     }
-
-                    console.log(bag);
                 }
             })
         }
@@ -489,13 +487,8 @@
                     url: "/getsubdivisi?divisiID="+divisi,
                     datatype: "JSON",
                     success: function(res1){
+                        $('#kantor_row2').show();
                         $('#sub_divisi').empty();
-                        $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
-                        $.each(res1, function(i, item){
-                            $('#sub_divisi').append('<option value="'+item.kd_subdiv+'" '+ (subdiv === item.kd_subdiv ? 'selected' : '')  +'>'+item.nama_subdivisi+'</option>')
-                        });
-                        var val = $('#sub_divisi').val();
-                        subdivChange(val)
 
                         $("#kantor_row3").empty();
                         $("#kantor_row3").addClass("col-md-6");
@@ -509,6 +502,19 @@
                                 </div>`
                         );
 
+                        if(res1.length < 1) {
+                            $('#kantor_row2').hide();
+                            subdivChange(divisi);
+                            return;
+                        }
+
+                        $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
+                        $.each(res1, function(i, item){
+                            $('#sub_divisi').append('<option value="'+item.kd_subdiv+'" '+ (subdiv === item.kd_subdiv ? 'selected' : '')  +'>'+item.nama_subdivisi+'</option>')
+                        });
+                        var val = $('#sub_divisi').val();
+                        subdivChange(val)
+
                         $("#sub_divisi").change(function(){
                             var val = $(this).val();
                             subdivChange(val)
@@ -519,6 +525,7 @@
         }
 
         function subdivChange(kd_subdiv){
+            console.log("subdiv "+kd_subdiv);
             $.ajax({
                 type: "GET",
                 url: "/getbagian?kd_entitas="+kd_subdiv,
