@@ -47,11 +47,11 @@ use Illuminate\Support\Facades\Auth;
 
 // Route::get('mutasi', function() {
 //     return view('mutasi/index');
-// }); 
+// });
 
 // Route::get('mutasi/add', function() {
 //     return view('mutasi/add');
-// }); 
+// });
 
 // Route::get('demosi', function () {
 //     return view('demosi/index');
@@ -91,12 +91,12 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/promosi', PromosiController::class);
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
-    Route::resource('/laporan_bpjs', JaminanController::class);
+    Route::resource('/laporan_jamsostek', JaminanController::class);
     Route::get('/laporan-jamsostek', [JaminanController::class, 'getJamsostek'])->name('get-jamsostek');
     Route::post('/post-jamsostek', [JaminanController::class, 'postJamsostek'])->name('post-jamsostek');
     Route::get('/dpp', [JaminanController::class, 'dppIndex'])->name('index_dpp');
     Route::post('/get-dpp', [JaminanController::class, 'getDPP'])->name('get-dpp');
-    
+
     // Routing Import excel karyawan
     Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');
     Route::post('/upload-karyawan', [\App\Http\Controllers\KaryawanController::class, 'upload_karyawan'])->name('upload_karyawan');

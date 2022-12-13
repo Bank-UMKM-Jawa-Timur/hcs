@@ -105,7 +105,7 @@ Coded by www.creative-tim.com
                     <a class="dropdown-item" href="#">Laporan Mutasi</a>
                     <a class="dropdown-item" href="#">Laporan Demosi</a>
                     <a class="dropdown-item" href="#">Laporan Promosi</a>
-                    <a class="dropdown-item" href="{{ route('laporan_bpjs.index') }}">Laporan BPJS</a>
+                    <a class="dropdown-item" href="{{ route('laporan_jamsostek.index') }}">Laporan Jamsostek</a>
                     <a class="dropdown-item" href="{{ route('index_dpp') }}">Laporan DPP</a>
                 </div>
             </li>
@@ -116,7 +116,7 @@ Coded by www.creative-tim.com
             </li>
         </ul>
       </div>
-      
+
     </div>
     <div class="main-panel">
       <!-- Navbar -->
@@ -155,11 +155,11 @@ Coded by www.creative-tim.com
                     {{-- @endif --}}
                   </a>
                 <div class="dropdown-menu dropdown-primary dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); 
+                  <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                   </a>
-                  
+
                   <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                       @csrf
                   </form>
@@ -171,13 +171,13 @@ Coded by www.creative-tim.com
         </div>
       </nav>
       <!-- End Navbar -->
-      
+
       {{-- Content --}}
 
       <div class="content">
 
         <div class="card">
-          @yield('content')  
+          @yield('content')
           @include('sweetalert::alert')
         </div>
 

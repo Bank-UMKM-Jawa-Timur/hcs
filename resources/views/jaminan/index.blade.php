@@ -2,7 +2,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Laporan BPJS</h5>
+            <h5 class="card-title">Laporan Jamsostek</h5>
         </div>
     </div>
 
@@ -25,7 +25,7 @@
                 <div id="cabang_col">
                 </div>
                 <div class="col-md-4 mt-3">
-                    <button class="btn btn-info" type="submit">cari data</button>
+                    <button class="btn btn-info" type="submit">Tampilkan</button>
                 </div>
             </div>
         </form>
@@ -96,7 +96,7 @@
                                     array_push($total_jp1, array_sum($jp1_pusat));
                                     array_push($total_jp2, array_sum($jp2_pusat));
                                 @endphp
-                                
+
                                 @foreach ($data_cabang as $item)
                                     @php
                                         $nama_cabang = DB::table('mst_cabang')
@@ -110,7 +110,7 @@
                                             $jp1_cabang = array();
                                             $jp2_cabang = array();
                                             $total_gaji_cabang = array();
-                                            
+
                                             $karyawan = DB::table('mst_karyawan')
                                                 ->where('kd_entitas', $item->kd_entitas)
                                                 ->get();
@@ -120,7 +120,7 @@
                                                     ->where('nip', $i->nip)
                                                     ->where('mst_tunjangan.status', 1)
                                                     ->sum('tunjangan_karyawan.nominal');
-                                                    
+
                                                 array_push($total_gaji_cabang, ($data_gaji + $i->gj_pokok));
                                             }
                                             foreach($total_gaji_cabang as $i){
@@ -240,7 +240,7 @@
                         </table>
                     </div>
                 @endif
-                
+
             @endif
         </div>
     </div>
@@ -248,13 +248,13 @@
 
 @section('custom_script')
     <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script> 
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> 
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script> 
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script> 
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
         // document.getElementById('btn_export').addEventListener('click', function(){
         //     var table2excel = new Table2Excel();
@@ -267,11 +267,11 @@
                 {
                     extend: 'excelHtml5',
                     title: 'Bank UMKM Jawa Timur',
-                    text:'Excel' 
+                    text:'Excel'
                 }
             ]
         });
-        
+
 
         $("#clear").click(function(e){
             $("#row-baru").empty()
@@ -293,8 +293,8 @@
                         </select>
                     </div>
                 `)
-                
-        
+
+
                 $("#kantor").change(function(e){
                     var value = $(this).val();
                     if(value == 'Cabang'){
@@ -337,13 +337,13 @@
             sisa = split[0].length % 3,
             rupiah = split[0].substr(0, sisa),
             ribuan = split[0].substr(sisa).match(/\d{3}/gi);
- 
+
             // tambahkan titik jika yang di input sudah menjadi angka satuan ribuan
             if(ribuan){
                 separator = sisa ? '.' : '';
                 rupiah += separator + ribuan.join('.');
             }
- 
+
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }

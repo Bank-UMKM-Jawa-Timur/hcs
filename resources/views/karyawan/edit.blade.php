@@ -31,7 +31,7 @@
                                     <label for="">NIK</label>
                                     <input type="text" class="@error('nik') is-invalid @enderror form-control" name="nik" id="" value="{{ old('nik', $data->nik) }}">
                                 </div>
-                            </div>   
+                            </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Nama Karyawan</label>
@@ -43,13 +43,13 @@
                                     <label for="">Tempat Lahir</label>
                                     <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-control" name="tmp_lahir" id="" value="{{ old('tmp_lahir', $data->tmp_lahir) }}">
                                 </div>
-                            </div> 
+                            </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Tanggal Lahir</label>
                                     <input type="date" class="@error('tgl_lahir') is-invalid @enderror form-control" name="tgl_lahir" id="" value="{{ old('tgl_lahir', $data->tgl_lahir) }}">
                                 </div>
-                            </div> 
+                            </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Agama</label>
@@ -60,7 +60,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Jenis Kelamin</label>
@@ -70,20 +70,23 @@
                                         <option value="Perempuan" {{ ($data->jk == 'Perempuan') ? 'selected' : '' }}>Perempuan</option>
                                     </select>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Status pernikahan</label>
                                     <select name="status_pernikahan" id="status" class="@error('status_pernikahan') is-invalid @enderror form-control">
-                                        <option value="">--- Pilih ---</option>
-                                        <option value="Kawin" {{ ($data->status == 'Kawin') ? 'selected' : '' }}>Kawin</option>
-                                        <option value="Belum Kawin" {{ ($data->status == 'Belum Kawin') ? 'selected' : '' }}>Belum Kawin</option>
-                                        <option value="Janda" {{ ($data->status == 'Janda') ? 'selected' : '' }}>Janda</option>
-                                        <option value="Duda" {{ ($data->status == 'Duda') ? 'selected' : '' }}>Duda</option>
+                                        <option value="">--- Pilih ---</option>>
+                                        <option value="Kawin" @selected($data->status == 'Kawin')>Kawin</option>
+                                        <option value="Belum Kawin" @selected($data->status == 'Belum Kawin')>Belum Kawin</option>
+                                        <option value="Cerai" @selected($data->status == 'Cerai')>Cerai</option>
+                                        <option value="Cerai Mati" @selected($data->status == 'Cerai Mati')>Cerai Mati</option>
+                                        <option value="Janda" @selected($data->status == 'Janda')>Janda</option>
+                                        <option value="Duda" @selected($data->status == 'Duda')>Duda</option>
+                                        <option value="Tidak Diketahui" @selected($data->status == 'Tidak Diketahui')>Tidak Diketahui</option>
                                     </select>
                                 </div>
                                 <input type="hidden" name="id_is" value="{{ $data->id_is }}">
-                            </div> 
+                            </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Kewarganegaraan</label>
@@ -93,13 +96,13 @@
                                         <option value="WNA" {{ ($data->kewarganegaraan == 'WNA' ) ? 'selected' : ''}}>WNA</option>
                                     </select>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Alamat KTP</label>
                                     <textarea name="alamat_ktp" id="" class="@error('alamat_ktp') is-invalid @enderror form-control">{{ old('alamat_ktp', $data->alamat_ktp)}}</textarea>
                                 </div>
-                            </div>    
+                            </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Alamat sekarang</label>
@@ -127,7 +130,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="kantor">Kantor</label>
@@ -139,15 +142,15 @@
                                 </div>
                             </div>
                             <div class="col-md-4" id="kantor_row1">
-            
+
                             </div>
                             <div class="col-md-6"  id="kantor_row2">
-                                
+
                             </div>
                             <div class="col-md-6"  id="kantor_row3">
-                                
+
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Pangkat Dan Golongan</label>
@@ -346,7 +349,7 @@
                         @endforeach
                     </div>
                 </div>
-            </div>  
+            </div>
 
             <div class="row m-3">
                 <button type="submit" class="btn btn-info">Update</button>
@@ -395,7 +398,7 @@
                 }
             })
         }
-        
+
         function kantorChange(kd_div){
             var kantor_id = $("#kantor").val();
 
@@ -430,7 +433,7 @@
                                     </select>
                                 </div>`
                         );
-        
+
                         $("#divisi").change(function(){
                             var value = $(this).val();
                             divisiChange(value);
@@ -459,7 +462,7 @@
                                 <select name="bagian" id="bagian" class="form-control">
                                     <option value="">--- Pilih bagian ---</option>
                                 </select>
-                            </div>  
+                            </div>
                         `)
 
                         $("#kantor_row3").empty()
