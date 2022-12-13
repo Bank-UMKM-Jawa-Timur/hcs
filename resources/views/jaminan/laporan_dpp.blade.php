@@ -43,6 +43,8 @@
                                         $total_jamsostek = array();
             
                                         $total_dpp = array();
+
+                                        array_push($total_dpp, $dpp_pusat);
                                     @endphp
                                     
                                     @foreach ($data_cabang as $item)
@@ -83,11 +85,21 @@
                                                 }
 
                                                 $gj_cabang = (array_sum($total_gj_cabang) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13;
+                                                
+                                                array_push($total_dpp, $gj_cabang);
                                             @endphp
                                             <td>{{ rupiah($gj_cabang) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td>
+                                            Jumlah
+                                        </td>
+                                        <td>{{ rupiah(array_sum($total_dpp)) }}</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     @elseif($status == 2)
@@ -109,6 +121,12 @@
                                         @endif
                                     @endfor
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td>Jumlah</td>
+                                        <td>{{ array_sum($dpp) }}</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     @endif
