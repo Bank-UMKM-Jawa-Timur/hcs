@@ -15,7 +15,6 @@
         <div class="card">
             <div class="card-header">
                     <h5 class="card-title text-center">REKAPITULASI BEBAN ASURANSI</h5>
-                    <h5 class="card-title text-center">BANK UMKM JAWA TIMUR</h5>
                     <h5 class="card-title text-center">
                         @php
                             $nama;
@@ -24,11 +23,12 @@
                             } elseif ($status == 2 && $kantor == 'Pusat') {
                                 $nama = "KANTOR PUSAT";
                             } elseif ($status == 2 && $kantor == 'Cabang') {
-                                $nama = "KANTOR CABANG";
+                                $nama = "KANTOR CABANG ".strtoupper($cab->nama_cabang);
                             }
                         @endphp 
                         {{ $nama }}
                     </h5> 
+                    <h5 class="card-title text-center">BANK UMKM JAWA TIMUR</h5>
                     <h5 class="card-title text-center" id="bulan"></h5>
             </div>
 

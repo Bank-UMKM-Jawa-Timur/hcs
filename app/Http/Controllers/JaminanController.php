@@ -196,6 +196,7 @@ class JaminanController extends Controller
 
         // Get data per kantor/cabang 
         // if kantor = pusat
+        $cab = null;
         if($kantor == 'Pusat'){
             $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
             $cbg = array();
@@ -227,7 +228,9 @@ class JaminanController extends Controller
             $karyawan = DB::table('mst_karyawan')
                 ->where('kd_entitas', $cabang)
                 ->get();
-
+            $cab = DB::table('mst_cabang')
+                ->where('kd_cabang', $cabang)
+                ->first();
             $total_gaji = array();
             foreach($karyawan as $i){
                 $data_gaji = DB::table('tunjangan_karyawan')
@@ -266,6 +269,7 @@ class JaminanController extends Controller
         return view('jaminan.jamsostek', [
             'status' => 2,
             'kantor' => $kantor,
+            'cab' => $cab,
             'karyawan' => $karyawan,
             'jkk' => $jkk,
             'jht' => $jht,
