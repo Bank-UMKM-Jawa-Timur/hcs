@@ -17,7 +17,17 @@
                     <h5 class="card-title text-center">REKAPITULASI BEBAN ASURANSI</h5>
                     <h5 class="card-title text-center">BANK UMKM JAWA TIMUR</h5>
                     <h5 class="card-title text-center">
-                        {{ ($status == 1) ? "REKAP KESELURUHAN" : "KANTOR CABANG" }}
+                        @php
+                            $nama;
+                            if ($status == 1) {
+                                $nama = "REKAP KESELURUHAN";
+                            } elseif ($status == 2 && $kantor == 'Pusat') {
+                                $nama = "KANTOR PUSAT";
+                            } elseif ($status == 2 && $kantor == 'Cabang') {
+                                $nama = "KANTOR CABANG";
+                            }
+                        @endphp 
+                        {{ $nama }}
                     </h5> 
                     <h5 class="card-title text-center" id="bulan"></h5>
             </div>

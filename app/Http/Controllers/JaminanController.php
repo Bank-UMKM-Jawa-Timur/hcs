@@ -222,7 +222,7 @@ class JaminanController extends Controller
                     array_push($total_gaji, ($data_gaji + $i->gj_pokok));
                 }
             }
-        } else {
+        } elseif ($kantor == 'Cabang') {
             $cabang = $request->get('cabang');
             $karyawan = DB::table('mst_karyawan')
                 ->where('kd_entitas', $cabang)
@@ -265,6 +265,7 @@ class JaminanController extends Controller
 
         return view('jaminan.jamsostek', [
             'status' => 2,
+            'kantor' => $kantor,
             'karyawan' => $karyawan,
             'jkk' => $jkk,
             'jht' => $jht,
