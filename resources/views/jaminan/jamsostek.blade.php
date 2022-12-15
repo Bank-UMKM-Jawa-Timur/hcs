@@ -45,8 +45,8 @@
                             <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2" >Kode Kantor</th>
-                                        <th rowspan="2" >Nama Kantor</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">Kode Kantor</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">Nama Kantor</th>
                                         <th rowspan="2" style="background-color: #CCD6A6">Jumlah Pegawai</th>
                                         <th colspan="4" style="background-color: #CCD6A6">JAMSOSTEK</th>
                                         <th rowspan="2" style="background-color: #CCD6A6">JP(1%)</th>
@@ -163,10 +163,14 @@
                                         <td>{{ rupiah(array_sum($total_jkk)) }}</td>
                                         <td>{{ rupiah(array_sum($total_jht)) }}</td>
                                         <td>{{ rupiah(array_sum($total_jkm)) }}</td>
-                                        <td>{{ rupiah(array_sum($total_jamsostek)) }}</td>
+                                        <td style="background-color: #FED049">{{ rupiah(array_sum($total_jamsostek)) }}</td>
                                         <td>{{ rupiah(array_sum($total_jp1)) }}</td>
                                         <td>{{ rupiah(array_sum($total_jp2)) }}</td>
-                                        <td style="background-color: #FED049">{{ rupiah(array_sum($total_jp   )) }}</td>
+                                        <td style="background-color: #FED049">{{ rupiah(array_sum($total_jp)) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="9">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>
+                                        <td style="background-color: #54B435">{{ rupiah((array_sum($total_jamsostek) + array_sum($total_jp))) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -176,8 +180,8 @@
                             <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2" >NIP</th>
-                                        <th rowspan="2" >Nama Karyawan</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">NIP</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">Nama Karyawan</th>
                                         <th colspan="4" style="background-color: #CCD6A6">JAMSOSTEK</th>
                                         <th rowspan="2" style="background-color: #CCD6A6">JP(1%)</th>
                                         <th rowspan="2" style="background-color: #CCD6A6">JP(2%)</th>
@@ -223,16 +227,20 @@
                                         </tr>
                                     @endfor
                                 </tbody>
-                                <tfoot>
+                                <tfoot style="font-weight: bold">
                                     <tr>
                                         <td colspan="2">Jumlah</td>
                                         <td>{{ rupiah(array_sum($jkk)) }}</td>
                                         <td>{{ rupiah(array_sum($jht)) }}</td>
                                         <td>{{ rupiah(array_sum($jkm)) }}</td>
-                                        <td>{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm))) }}</td>
+                                        <td style="background-color: #FED049">{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm))) }}</td>
                                         <td>{{ rupiah((array_sum($jp1))) }}</td>
                                         <td>{{ rupiah((array_sum($jp2))) }}</td>
                                         <td style="background-color: #FED049">{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>
+                                        <td style="background-color: #54B435">{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2))) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
