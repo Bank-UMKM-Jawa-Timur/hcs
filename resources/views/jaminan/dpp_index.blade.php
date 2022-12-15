@@ -25,7 +25,7 @@
                 <div id="cabang_col">
                 </div>
                 <div class="col-md-4 mt-3">
-                    <button class="btn btn-info" type="submit">cari data</button>
+                    <button class="btn btn-info" type="submit">Tampilkan</button>
                 </div>
             </div>
         </form>

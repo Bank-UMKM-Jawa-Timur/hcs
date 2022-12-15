@@ -8,12 +8,21 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-  </head>
+</head>
   <body>
 
-    <div class="row m-0 mt-3" id="row-baru">
-        <div class="col-lg-12">
-            <div class="container mt-3">
+    <div class="container mt-3 mb-3" style="min-width: 1250px" id="row-baru">
+        <div class="card">
+            <div class="card-header">
+                    <h5 class="card-title text-center">REKAPITULASI BEBAN ASURANSI</h5>
+                    <h5 class="card-title text-center">BANK UMKM JAWA TIMUR</h5>
+                    <h5 class="card-title text-center">
+                        {{ ($status == 1) ? "REKAP KESELURUHAN" : "KANTOR CABANG" }}
+                    </h5> 
+                    <h5 class="card-title text-center" id="bulan"></h5>
+            </div>
+
+            <div class="card-body">
                 @if ($status != null)
                     @php
                         function rupiah($angka){
@@ -22,19 +31,24 @@
                         }
                     @endphp
                     @if ($status == 1)
-                        <div class="table-responsive">
-                            <table class="table text-center" id="table_export">
+                        <div class="">
+                            <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                                 <thead>
-                                    <th>Kode Kantor</th>
-                                    <th>Nama Kantor</th>
-                                    <th>Jumlah Pegawai</th>
-                                    <th>JKK</th>
-                                    <th>JHT</th>
-                                    <th>JKM</th>
-                                    <th>Total</th>
-                                    <th>JP(1%)</th>
-                                    <th>JP(2%)</th>
-                                    <th>Total JP</th>
+                                    <tr>
+                                        <th rowspan="2" >Kode Kantor</th>
+                                        <th rowspan="2" >Nama Kantor</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">Jumlah Pegawai</th>
+                                        <th colspan="4" style="background-color: #CCD6A6">JAMSOSTEK</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">JP(1%)</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">JP(2%)</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">Total JP</th>
+                                    </tr>                                   
+                                    <tr style="background-color: #DAE2B6">
+                                        <th>JKK</th>
+                                        <th>JHT</th>
+                                        <th>JKM</th>
+                                        <th>Total</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
@@ -49,27 +63,27 @@
                                         <td>{{ rupiah(array_sum($jp2_pusat)) }}</td>
                                         <td>{{ rupiah((array_sum($jp1_pusat) + array_sum($jp2_pusat))) }}</td>
                                     </tr>
-
+    
                                     @php
                                         $total_jkk = array();
                                         $total_jht = array();
                                         $total_jkm = array();
                                         $total_jamsostek = array();
-
+    
                                         $total_jp1 = array();
                                         $total_jp2 = array();
                                         $total_jp = array();
-
+    
                                         array_push($total_jamsostek, (((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 * $total_gaji_pusat)));
                                         array_push($total_jkk, ((0.0024 * $total_gaji_pusat)));
                                         array_push($total_jht, ((0.057 * $total_gaji_pusat)));
                                         array_push($total_jkm, ((0.003 * $total_gaji_pusat)));
-
+    
                                         array_push($total_jp, (array_sum($jp1_pusat) + array_sum($jp2_pusat)));
                                         array_push($total_jp1, array_sum($jp1_pusat));
                                         array_push($total_jp2, array_sum($jp2_pusat));
                                     @endphp
-
+    
                                     @foreach ($data_cabang as $item)
                                         @php
                                             $nama_cabang = DB::table('mst_cabang')
@@ -83,7 +97,7 @@
                                                 $jp1_cabang = array();
                                                 $jp2_cabang = array();
                                                 $total_gaji_cabang = array();
-
+    
                                                 $karyawan = DB::table('mst_karyawan')
                                                     ->where('kd_entitas', $item->kd_entitas)
                                                     ->get();
@@ -93,7 +107,7 @@
                                                         ->where('nip', $i->nip)
                                                         ->where('mst_tunjangan.status', 1)
                                                         ->sum('tunjangan_karyawan.nominal');
-
+    
                                                     // if ($i->gj_penyesuaian != null) {
                                                         array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok + $i->gj_penyesuaian : 0 + $i->gj_pokok + $i->gj_penyesuaian));
                                                     // } else {
@@ -113,13 +127,13 @@
                                             <td>{{ rupiah(array_sum($jp1_cabang)) }}</td>
                                             <td>{{ rupiah(array_sum($jp2_cabang)) }}</td>
                                             <td>{{ rupiah((array_sum($jp1_cabang) + array_sum($jp2_cabang))) }}</td>
-
+    
                                             @php
                                                 array_push($total_jamsostek, (((0.0024 * array_sum($total_gaji_cabang))) + ((0.057 * array_sum($total_gaji_cabang)))) + ((0.003 * array_sum($total_gaji_cabang))));
                                                 array_push($total_jkk, ((0.0024 * array_sum($total_gaji_cabang))));
                                                 array_push($total_jht, ((0.057 * array_sum($total_gaji_cabang))));
                                                 array_push($total_jkm, ((0.003 * array_sum($total_gaji_cabang))));
-
+    
                                                 array_push($total_jp, (array_sum($jp1_cabang) + array_sum($jp2_cabang)));
                                                 array_push($total_jp1, array_sum($jp1_cabang));
                                                 array_push($total_jp2, array_sum($jp2_cabang));
@@ -127,7 +141,7 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-                                <tfoot>
+                                <tfoot style="font-weight: bold">
                                     <tr>
                                         <td colspan="2">
                                             Jumlah
@@ -142,24 +156,29 @@
                                         <td>{{ rupiah(array_sum($total_jamsostek)) }}</td>
                                         <td>{{ rupiah(array_sum($total_jp1)) }}</td>
                                         <td>{{ rupiah(array_sum($total_jp2)) }}</td>
-                                        <td>{{ rupiah(array_sum($total_jp   )) }}</td>
+                                        <td style="background-color: #FED049">{{ rupiah(array_sum($total_jp   )) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
                         </div>
                     @elseif($status == 2)
-                        <div class="table-responsive">
-                            <table class="table text-center" id="table_export">
+                        <div class="">
+                            <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                                 <thead>
-                                    <th>NIP</th>
-                                    <th>Nama Karyawan</th>
-                                    <th>JKK</th>
-                                    <th>JHT</th>
-                                    <th>JKM</th>
-                                    <th>Total</th>
-                                    <th>JP(1%)</th>
-                                    <th>JP(2%)</th>
-                                    <th>Total JP</th>
+                                    <tr>
+                                        <th rowspan="2" >NIP</th>
+                                        <th rowspan="2" >Nama Karyawan</th>
+                                        <th colspan="4" style="background-color: #CCD6A6">JAMSOSTEK</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">JP(1%)</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">JP(2%)</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6">Total JP</th>
+                                    </tr>                                   
+                                    <tr style="background-color: #DAE2B6">
+                                        <th>JKK</th>
+                                        <th>JHT</th>
+                                        <th>JKM</th>
+                                        <th>Total</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @for ($i = 0; $i < count($karyawan); $i++)
@@ -203,13 +222,13 @@
                                         <td>{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm))) }}</td>
                                         <td>{{ rupiah((array_sum($jp1))) }}</td>
                                         <td>{{ rupiah((array_sum($jp2))) }}</td>
-                                        <td>{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
+                                        <td style="background-color: #FED049">{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
                         </div>
                     @endif
-
+    
                 @endif
             </div>
         </div>
@@ -226,6 +245,14 @@
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
+        const month = ["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
+        const d = new Date();
+        let name = month[d.getMonth()];
+        
+        const years = new Date()
+        let year = years.getFullYear();
+        document.getElementById("bulan").innerHTML = name + " " + year;
+        
         $("#table_export").DataTable({
             dom : "Bfrtip",
             aLengthMenu: [
@@ -241,9 +268,9 @@
                 }
             ]
         });
-
-        $(".buttons-excel").attr("class","btn btn-success");
-
+        
+        $(".buttons-excel").attr("class","btn btn-success mb-2");
+        
         document.getElementById('btn_export').addEventListener('click', function(){
             var table2excel = new Table2Excel();
             table2excel.export(document.querySelectorAll('#table_export'));
