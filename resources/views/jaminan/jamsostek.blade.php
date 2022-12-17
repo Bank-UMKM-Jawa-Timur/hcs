@@ -35,8 +35,14 @@
             <div class="card-body">
                 @if ($status != null)
                     @php
-                        function rupiah($angka){
-                            $hasil_rupiah = number_format($angka, 0, ",", ",");
+                        function rupiah($angka)
+                        {
+                            $hasil_rupiah = number_format($angka, 2, ".", ",");
+                            return $hasil_rupiah;
+                        }
+                        function rupiahJkk($angka)
+                        {
+                            $hasil_rupiah = number_format($angka, 4, ".", ",");
                             return $hasil_rupiah;
                         }
                     @endphp
@@ -65,7 +71,7 @@
                                         <td>-</td>
                                         <td>Kantor Pusat</td>
                                         <td>{{ $count_pusat }}</td>
-                                        <td>{{ rupiah(((0.0024 * $total_gaji_pusat))) }}</td>
+                                        <td>{{ rupiahJkk(((0.0024 * $total_gaji_pusat))) }}</td>
                                         <td>{{ rupiah(((0.057 * $total_gaji_pusat))) }}</td>
                                         <td>{{ rupiah(((0.003 * $total_gaji_pusat))) }}</td>
                                         <td>{{ rupiah((((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 * $total_gaji_pusat))) }}</td>
@@ -130,7 +136,7 @@
                                                 }
                                             @endphp
                                             <td>{{ count($karyawan) }}</td>
-                                            <td>{{ rupiah(((0.0024 * array_sum($total_gaji_cabang)))) }}</td>
+                                            <td>{{ rupiahJkk(((0.0024 * array_sum($total_gaji_cabang)))) }}</td>
                                             <td>{{ rupiah(((0.057 * array_sum($total_gaji_cabang)))) }}</td>
                                             <td>{{ rupiah(((0.003 * array_sum($total_gaji_cabang)))) }}</td>
                                             <td>{{ rupiah((((0.0024 * array_sum($total_gaji_cabang))) + ((0.057 * array_sum($total_gaji_cabang)))) + ((0.003 * array_sum($total_gaji_cabang)))) }}</td>
@@ -160,7 +166,7 @@
                                             $total_karyawan = DB::table('mst_karyawan')->get();
                                         @endphp
                                         <td>{{ count($total_karyawan) }}</td>
-                                        <td>{{ rupiah(array_sum($total_jkk)) }}</td>
+                                        <td>{{ rupiahJkk(array_sum($total_jkk)) }}</td>
                                         <td>{{ rupiah(array_sum($total_jht)) }}</td>
                                         <td>{{ rupiah(array_sum($total_jkm)) }}</td>
                                         <td style="background-color: #FED049">{{ rupiah(array_sum($total_jamsostek)) }}</td>
@@ -204,7 +210,7 @@
                                                 {{ $karyawan[$i]->nama_karyawan }}
                                             </td>
                                             <td>
-                                                {{ rupiah(($jkk[$i])) }}
+                                                {{ rupiahJkk(($jkk[$i])) }}
                                             </td>
                                             <td>
                                                 {{ rupiah(($jht[$i])) }}
@@ -281,8 +287,11 @@
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur',
-                    text:'Excel'
+                    title: 'Bank UMKM Jawa Timur\n Bulan '+name,
+                    text:'Excel',
+                    customize: function( xlsx, row ) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    }
                 }
             ]
         });

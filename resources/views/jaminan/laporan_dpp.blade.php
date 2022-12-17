@@ -94,7 +94,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td>
+                                        <td colspan="2">
                                             Jumlah
                                         </td>
                                         <td>{{ rupiah(array_sum($total_dpp)) }}</td>
@@ -123,7 +123,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td>Jumlah</td>
+                                        <td colspan="2">Jumlah</td>
                                         <td>{{ array_sum($dpp) }}</td>
                                     </tr>
                                 </tfoot>
