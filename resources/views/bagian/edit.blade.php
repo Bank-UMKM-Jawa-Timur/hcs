@@ -50,7 +50,9 @@
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <button class="btn btn-info" type="submit" value="submit">Update</button>
+                        <div class="col">
+                            <button class="btn btn-info" type="submit" value="submit">Update</button>
+                        </div>
                     </div>
 
                 </form>
@@ -140,29 +142,6 @@
                                     }
                                 })
                             }
-                        })
-
-                        triggerChange(2);
-                    }
-                })
-            } else if(kantor_id == 2){
-                $.ajax({
-                    type: "GET",
-                    url: '/getcabang',
-                    datatype: 'JSON',
-                    success: function(res){
-                        $("#kantor_row1").empty();
-                        $("#kantor_row2").empty();
-                        $("#kantor_row1").append(`
-                                <div class="form-group">
-                                    <label for="kd_cabang">Cabang</label>
-                                    <select name="kd_cabang" id="cabang" class="form-control">
-                                        <option value="">--- Pilih Cabang ---</option>
-                                    </select>
-                                </div>`
-                        );
-                        $.each(res[0], function(i, item){
-                            $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
                         })
 
                         triggerChange(2);
