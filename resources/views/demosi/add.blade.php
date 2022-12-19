@@ -10,6 +10,7 @@
     <div class="card-body">
         <form action="{{ route('demosi.store') }}" method="POST" enctype="multipart/form-data" name="" class="form-group">
             @csrf
+            <input type="hidden" name="kd_entitas">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -19,7 +20,7 @@
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>    
+                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="nama_karyawan">Nama Karyawan</label>
@@ -33,7 +34,7 @@
                         <input type="text" disabled class="form-control" name="" id="jabatan_show" value="{{ old('jabatan_lama') }}">
                         <input type="hidden" name="jabatan_lama" id="jabatan_lama" value="{{ old('jabatan_lama') }}">
                     </div>
-                </div>    
+                </div>
             </div>
             <hr>
             <div class="row align-content-center justify-content-center">
@@ -53,7 +54,7 @@
                         @error('jabatan_baru')
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
-                    </div>  
+                    </div>
                 </div>
             </div>
             <hr>
@@ -69,7 +70,7 @@
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>    
+                </div>
                 <div class= "col-md-6">
                     <div class="form-group">
                         <label for="">Surat Keputusan</label>
@@ -105,8 +106,9 @@
                 $("#nama_karyawan").val(res.nama_karyawan)
                 $("#jabatan_lama").val(res.kd_jabatan)
                 $("#jabatan_show").val(res.nama_jabatan)
+                $('input[name=kd_entitas]').val(res.kd_entitas)
             }
-           }) 
+           })
         });
     </script>
 @endsection

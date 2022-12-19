@@ -65,6 +65,7 @@ class DemosiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'kd_entitas' => 'required',
             'nip' => 'required|alpha_num',
             'jabatan_baru' => 'required|not_in:-',
             'tanggal_pengesahan' => 'required',
@@ -81,6 +82,8 @@ class DemosiController extends Controller
         try{
             DB::table('demosi_promosi_pangkat')
                 ->insert([
+                    'kd_entitas_lama' => $request->kd_entitas,
+                    'kd_entitas_baru' => $request->kd_entitas,
                     'kd_jabatan_lama' => $request->get('jabatan_lama'),
                     'kd_jabatan_baru' => $request->get('jabatan_baru'),
                     'nip' => $request->get('nip'),
