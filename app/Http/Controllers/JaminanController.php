@@ -475,19 +475,21 @@ class JaminanController extends Controller
                 ->where('status_karyawan', 'Tetap')
                 ->get();
             foreach($karyawan as $i){
-                $tj_dpp = DB::table('tunjangan_karyawan')
-                    ->where('nip', $i->nip)
-                    ->where('id_tunjangan', 15)
-                    ->first();
-
-                $perubahan_tj = DB::table('history_penyesuaian_gaji')
-                    ->where('nip', $i->nip)
-                    ->where('id_tunjangan', 15)
-                    ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                    ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                    ->first();
-
-                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj : $tj_dpp);
+                if($i->status_karyawan == 'Tetap'){
+                    $tj_dpp = DB::table('tunjangan_karyawan')
+                        ->where('nip', $i->nip)
+                        ->where('id_tunjangan', 15)
+                        ->first();
+    
+                    $perubahan_tj = DB::table('history_penyesuaian_gaji')
+                        ->where('nip', $i->nip)
+                        ->where('id_tunjangan', 15)
+                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
+                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
+                        ->first();
+    
+                    array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
+                }
             }
         } else {
             $cabang = $request->get('cabang');
@@ -496,19 +498,21 @@ class JaminanController extends Controller
                 ->where('status_karyawan', 'Tetap')
                 ->get();
             foreach($karyawan as $i){
-                $tj_dpp = DB::table('tunjangan_karyawan')
-                    ->where('nip', $i->nip)
-                    ->where('id_tunjangan', 15)
-                    ->first();
-
-                $perubahan_tj = DB::table('history_penyesuaian_gaji')
-                    ->where('nip', $i->nip)
-                    ->where('id_tunjangan', 15)
-                    ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                    ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                    ->first();
-
-                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
+                if($i->status_karyawan == 'Tetap'){
+                    $tj_dpp = DB::table('tunjangan_karyawan')
+                        ->where('nip', $i->nip)
+                        ->where('id_tunjangan', 15)
+                        ->first();
+    
+                    $perubahan_tj = DB::table('history_penyesuaian_gaji')
+                        ->where('nip', $i->nip)
+                        ->where('id_tunjangan', 15)
+                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
+                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
+                        ->first();
+    
+                    array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
+                }
             }
         }
         
