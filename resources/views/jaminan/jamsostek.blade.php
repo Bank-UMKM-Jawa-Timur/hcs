@@ -123,9 +123,35 @@
                                                         ->where('nip', $i->nip)
                                                         ->where('mst_tunjangan.status', 1)
                                                         ->sum('tunjangan_karyawan.nominal');
+
+                                                    $gj_bulan = DB::table('history_penyesuaian_gaji')
+                                                        ->where('nip', $i->nip)
+                                                        ->where('keterangan', 'Penyesuaian Gaji Pokok')
+                                                        ->orWhere('keterangan', 'Penyesuaian Gaji penyesuaian')
+                                                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
+                                                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
+                                                        ->sum('history_penyesuaian_gaji.nominal_lama');
+
+                                                    $perubahan = DB::table('history_penyesuaian_gaji')
+                                                        ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
+                                                        ->where('nip', $i->nip)
+                                                        ->where('mst_tunjangan.status', 1)
+                                                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
+                                                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
+                                                        ->sum('history_penyesuaian_gaji.nominal_lama');
+                                                    
+                                                    if($gj_bulan != null && $perubahan != null){
+                                                        array_push($total_gaji_cabang, ($gj_bulan + $perubahan));
+                                                    } else if($gj_bulan != null) {
+                                                        array_push($total_gaji_cabang, ($data_gaji + $gj_bulan));
+                                                    } else if($perubahan != null){
+                                                        array_push($total_gaji_cabang, ($perubahan + $i->gj_pokok));
+                                                    } else{
+                                                        array_push($total_gaji_cabang, ($data_gaji + $i->gj_pokok + $i->gj_penyesuaian));
+                                                    }
     
                                                     // if ($i->gj_penyesuaian != null) {
-                                                        array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok + $i->gj_penyesuaian : 0 + $i->gj_pokok + $i->gj_penyesuaian));
+                                                        // array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok + $i->gj_penyesuaian : 0 + $i->gj_pokok + $i->gj_penyesuaian));
                                                     // } else {
                                                     //     array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok : 0 + $i->gj_pokok));
                                                     // }
