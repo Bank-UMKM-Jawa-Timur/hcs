@@ -508,7 +508,7 @@ class JaminanController extends Controller
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
                     ->first();
 
-                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj : $tj_dpp);
+                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
             }
         }
         
