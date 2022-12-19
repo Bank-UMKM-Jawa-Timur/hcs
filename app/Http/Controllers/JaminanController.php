@@ -276,6 +276,8 @@ class JaminanController extends Controller
                 // }
             }
         } elseif ($kantor == 'Cabang') {
+            $tahun = $request->tahun;
+            $bulan = $request->bulan;
             $cabang = $request->get('cabang');
             $karyawan = DB::table('mst_karyawan')
                 ->where('kd_entitas', $cabang)
@@ -348,7 +350,9 @@ class JaminanController extends Controller
             'jht' => $jht,
             'jkm' => $jkm,
             'jp1' => $jp1,
-            'jp2' => $jp2
+            'jp2' => $jp2,
+            'bulan' => $bulan,
+            'tahun' => $tahun
         ]);
     }
 

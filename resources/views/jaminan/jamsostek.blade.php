@@ -29,7 +29,49 @@
                         {{ $nama }}
                     </h5> 
                     <h5 class="card-title text-center">BANK UMKM JAWA TIMUR</h5>
-                    <h5 class="card-title text-center" id="bulan"></h5>
+                    <h5 class="card-title text-center" id="bulan">
+                       @switch($bulan)
+                            @case(1)
+                               JANUARI
+                               @break
+                            @case(2)
+                               FEBRUARI 
+                               @break
+                            @case(3)
+                                MARET
+                               @break
+                            @case(4)
+                                APRIL
+                               @break
+                            @case(5)
+                                MEI
+                               @break
+                            @case(6)
+                                JUNI 
+                               @break
+                            @case(7)
+                                JULI 
+                               @break
+                            @case(8)
+                                AGUSTUS
+                               @break
+                            @case(9)
+                                SEPTEMBER  
+                               @break
+                            @case(10)
+                                OKTOBER
+                               @break
+                            @case(11)
+                                NOVEMBER  
+                               @break
+                            @case(12)
+                                DESEMBER
+                               @break
+                           @default
+                               BULAN TIDAK DI KETAHUI
+                       @endswitch
+                       {{ $tahun }}
+                    </h5>
             </div>
 
             <div class="card-body">
@@ -47,7 +89,7 @@
                         }
                     @endphp
                     @if ($status == 1)
-                        <div class="">
+                        <div class="table-responsive">
                             <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                                 <thead>
                                     <tr>
@@ -123,35 +165,9 @@
                                                         ->where('nip', $i->nip)
                                                         ->where('mst_tunjangan.status', 1)
                                                         ->sum('tunjangan_karyawan.nominal');
-
-                                                    $gj_bulan = DB::table('history_penyesuaian_gaji')
-                                                        ->where('nip', $i->nip)
-                                                        ->where('keterangan', 'Penyesuaian Gaji Pokok')
-                                                        ->orWhere('keterangan', 'Penyesuaian Gaji penyesuaian')
-                                                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                                                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                                                        ->sum('history_penyesuaian_gaji.nominal_lama');
-
-                                                    $perubahan = DB::table('history_penyesuaian_gaji')
-                                                        ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
-                                                        ->where('nip', $i->nip)
-                                                        ->where('mst_tunjangan.status', 1)
-                                                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                                                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                                                        ->sum('history_penyesuaian_gaji.nominal_lama');
-                                                    
-                                                    if($gj_bulan != null && $perubahan != null){
-                                                        array_push($total_gaji_cabang, ($gj_bulan + $perubahan));
-                                                    } else if($gj_bulan != null) {
-                                                        array_push($total_gaji_cabang, ($data_gaji + $gj_bulan));
-                                                    } else if($perubahan != null){
-                                                        array_push($total_gaji_cabang, ($perubahan + $i->gj_pokok));
-                                                    } else{
-                                                        array_push($total_gaji_cabang, ($data_gaji + $i->gj_pokok + $i->gj_penyesuaian));
-                                                    }
     
                                                     // if ($i->gj_penyesuaian != null) {
-                                                        // array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok + $i->gj_penyesuaian : 0 + $i->gj_pokok + $i->gj_penyesuaian));
+                                                        array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok + $i->gj_penyesuaian : 0 + $i->gj_pokok + $i->gj_penyesuaian));
                                                     // } else {
                                                     //     array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok : 0 + $i->gj_pokok));
                                                     // }
@@ -295,13 +311,13 @@
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
-        const month = ["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
-        const d = new Date();
-        let name = month[d.getMonth()];
+        // const month = ["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
+        // const d = new Date();
+        // let name = month[d.getMonth()];
         
-        const years = new Date()
-        let year = years.getFullYear();
-        document.getElementById("bulan").innerHTML = name + " " + year;
+        // const years = new Date()
+        // let year = years.getFullYear();
+        // document.getElementById("bulan").innerHTML = name + " " + year;
         
         $("#table_export").DataTable({
             dom : "Bfrtip",
