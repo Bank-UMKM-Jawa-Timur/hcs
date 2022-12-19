@@ -469,33 +469,38 @@ class JaminanController extends Controller
         $tahun = $request->tahun;
         $bulan = $request->bulan;
         $dpp = array();
+
+        $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
+        $cbg = array();
+        foreach($cabang as $item){
+            array_push($cbg, $item->kd_cabang);
+        }
+
         // if kantor = pusat
         if($kantor == 'Pusat'){
-            $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
-            $cbg = array();
-            foreach($cabang as $item){
-                array_push($cbg, $item->kd_cabang);
-            }
-
             $karyawan = DB::table('mst_karyawan')
                 ->whereNotIn('kd_entitas', $cbg)
                 ->orWhere('kd_entitas', null)
                 ->where('status_karyawan', 'Tetap')
                 ->get();
             foreach($karyawan as $i){
-                $tj_dpp = DB::table('tunjangan_karyawan')
-                    ->where('nip', $i->nip)
-                    ->where('id_tunjangan', 15)
-                    ->first();
+                if ($i->status_karyawan == 'Tetap') {
+                    $tj_dpp = DB::table('tunjangan_karyawan')
+                        ->where('nip', $i->nip)
+                        ->where('id_tunjangan', 15)
+                        ->first();
+    
+                    $perubahan_tj = DB::table('history_penyesuaian_gaji')
+                        ->where('nip', $i->nip)
+                        ->where('id_tunjangan', 15)
+                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
+                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
+                        ->first();
+                }
 
-                $perubahan_tj = DB::table('history_penyesuaian_gaji')
-                    ->where('nip', $i->nip)
-                    ->where('id_tunjangan', 15)
-                    ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                    ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                    ->first();
-
-                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj : $tj_dpp);
+                if ($tj_dpp->nominal != null) {
+                    array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj : $tj_dpp->nominal);
+                }
             }
         } else {
             $cabang = $request->get('cabang');
