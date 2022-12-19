@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MutasiRequest;
+use App\Service\EntityService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -12,24 +14,20 @@ class MutasiController extends Controller
 {
     public function getDataKaryawan(Request $request)
     {
-        $data = DB::table('mst_karyawan')
-            ->where('nip', $request->nip)
-            ->first();
-        if($data->kd_cabang != null){
-            $data_kantor = DB::table('mst_karyawan')
-                ->where('nip', $request->nip)
-                ->join('mst_cabang', 'mst_cabang.kd_cabang', '=', 'mst_karyawan.kd_cabang')
-                ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
-                ->first();
-        } else if($data->id_subdivisi != null){
-            $data_kantor = DB::table('mst_karyawan')
-                ->where('nip', $request->nip)
-                ->join('mst_sub_divisi', 'mst_sub_divisi.kd_subdiv', '=', 'mst_karyawan.kd_subdivisi')
-                ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
-                ->first();
-        }
+        $officer = DB::table('mst_karyawan')->where('nip', $request->nip)->first();
 
-        return response()->json($data_kantor);
+        if(!$officer) return response()->json([
+            'success' => false,
+            'message' => 'Data karyawan tidak ditemukan',
+        ]);
+
+        $officer->entitas = EntityService::getEntity($officer->kd_entitas);
+        $officer->jabatan = DB::table('mst_jabatan')->where('kd_jabatan', $officer->kd_jabatan)->first();
+
+        return response()->json([
+            'success' => true,
+            'karyawan' => $officer,
+        ]);
     }
     /**
      * Display a listing of the resource.
@@ -40,10 +38,7 @@ class MutasiController extends Controller
     {
         $data = DB::table('mutasi')
             ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'mutasi.nip')
-            ->join('mst_cabang', 'mst_cabang.kd_cabang', '=', 'mutasi.kd_cabang_baru')
             ->get();
-
-            // dd($data)
 
         return view('mutasi.index', ['data' => $data]);
     }
@@ -72,131 +67,42 @@ class MutasiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MutasiRequest $request)
     {
-        $request->validate([
-            'nip' => 'required|alpha_num',
-            'kantor' => 'required|not_in:-',
-            'id_jabatan_baru' => 'required|not_in:-',
-            'ket_jabatan' => 'required',
-            'tanggal_pengesahan' => 'required',
-            'bukti_sk' => 'required',
-            'keterangan' => 'required'
-        ], [
-            'nip.required' => 'Data harus diisi.',
-            'nip.alpha_num' => 'NIP berupa alfa numerik.',
-            'kantor.required' => 'Data harus diisi.',
-            'kantor.not_in' => 'Data harus diisi',
-            'id_jabatan_baru.required' => 'Data harus diisi.',
-            'id_jabatan_baru.not_in' => 'Data harus diisi',
-            'tanggal_pengesahan.required' => 'Data harus diisi.',
-            'bukti_sk.required' => 'Data harus diisi.',
-            'keterangan.required' => 'Data harus diisi.',
-            'ket_jabatan.required' => 'Data harus diisi.'
-        ]);
+        $entity = EntityService::getEntityFromRequest($request);
+        $mutasi = DB::table('mutasi')
+            ->insert([
+                'nip' => $request->nip,
+                'tanggal_pengesahan' => $request->tanggal_pengesahan,
+                'bukti_sk' => $request->bukti_sk,
+                'keterangan' => $request->keterangan,
+                'kd_entitas_lama' => $request->kd_entity,
+                'kd_entitas_baru' => $entity,
+                'kd_jabatan_lama' => $request->id_jabatan_lama,
+                'kd_jabatan_baru' => $request->id_jabatan_baru,
+                'created_at' => now(),
+            ]);
 
-        try{
-            if($request->get('id_jabatan_baru' == null)){
-                DB::table('mutasi')
-                ->insert([
-                    'nip' => $request->get('nip'),
-                    'id_subdiv_lama' => $request->get('id_subdiv_lama'),
-                    'id_subdiv_baru' => $request->get('id_subdiv_baru'),
-                    'kd_cabang_lama' => $request->get('id_cabang_lama'),
-                    'kd_cabang_baru' => $request->get('id_cabang_baru'),
-                    'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
-                    'bukti_sk' => $request->get('bukti_sk'),
-                    'keterangan' => $request->get('keterangan'),
-                    'created_at' => now()
-                ]);
-
-                DB::table('mst_karyawan')
-                    ->where('nip', $request->get('nip'))
-                    ->update([
-                        'kd_jabatan' => $request->get('id_jabatan_baru'),
-                        'kd_cabang' => $request->get('id_cabang_baru'),
-                        'id_subdivisi' => $request->get('id_subdiv_baru'),
-                        'updated_at' => now()
-                    ]);
-            } else if($request->get('id_subdiv_baru') == null){
-                DB::table('mutasi')
-                ->insert([
-                    'nip' => $request->get('nip'),
-                    'kd_jabatan_lama' => $request->get('id_jabatan_lama'),
-                    'kd_jabatan_baru' => $request->get('id_jabatan_baru'),
-                    'kd_cabang_lama' => $request->get('id_cabang_lama'),
-                    'kd_cabang_baru' => $request->get('id_cabang_baru'),
-                    'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
-                    'bukti_sk' => $request->get('bukti_sk'),
-                    'keterangan' => $request->get('keterangan'),
-                    'created_at' => now()
-                ]);
-
-                DB::table('mst_karyawan')
-                    ->where('nip', $request->get('nip'))
-                    ->update([
-                        'kd_jabatan' => $request->get('id_jabatan_baru'),
-                        'kd_cabang' => $request->get('id_cabang_baru'),
-                        'id_subdivisi' => $request->get('id_subdiv_baru'),
-                        'updated_at' => now()
-                    ]);
-            } else if($request->get('id_cabang_baru') == null){
-                DB::table('mutasi')
-                ->insert([
-                    'nip' => $request->get('nip'),
-                    'kd_cabang_lama' => $request->get('id_cabang_lama'),
-                    'kd_cabang_baru' => $request->get('id_cabang_baru'),
-                    'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
-                    'bukti_sk' => $request->get('bukti_sk'),
-                    'keterangan' => $request->get('keterangan'),
-                    'created_at' => now()
-                ]);
-
-                DB::table('mst_karyawan')
-                    ->where('nip', $request->get('nip'))
-                    ->update([
-                        'kd_jabatan' => $request->get('id_jabatan_baru'),
-                        'kd_cabang' => $request->get('id_cabang_baru'),
-                        'id_subdivisi' => $request->get('id_subdiv_baru'),
-                        'updated_at' => now()
-                    ]);
-            } else{
-                DB::table('mutasi')
-                    ->insert([
-                        'nip' => $request->get('nip'),
-                        'kd_jabatan_lama' => $request->get('id_jabatan_lama'),
-                        'kd_jabatan_baru' => $request->get('id_jabatan_baru'),
-                        'id_subdiv_lama' => $request->get('id_subdiv_lama'),
-                        'id_subdiv_baru' => $request->get('id_subdiv_baru'),
-                        'kd_cabang_lama' => $request->get('id_cabang_lama'),
-                        'kd_cabang_baru' => $request->get('id_cabang_baru'),
-                        'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
-                        'bukti_sk' => $request->get('bukti_sk'),
-                        'keterangan' => $request->get('keterangan'),
-                        'created_at' => now()
-                    ]);
-
-                DB::table('mst_karyawan')
-                    ->where('nip', $request->get('nip'))
-                    ->update([
-                        'kd_jabatan' => $request->get('id_jabatan_baru'),
-                        'kd_cabang' => $request->get('id_cabang_baru'),
-                        'id_subdivisi' => $request->get('id_subdiv_baru'),
-                        'updated_at' => now()
-                    ]);
-            }
-
-            Alert::success('Berhasil', 'Berhasil melakukan mutasi karyawan.');
-            return redirect()->route('mutasi.index');
-        }catch(Exception $e){
-            DB::rollBack();
-            Alert::error('Terjadi Kesalahan', $e->getMessage());
-            return redirect()->route('mutasi.index');
-        }catch(QueryException $e){
-            DB::rollBack();
-            Alert::error('Terjadi Kesalahan', 'Gagal melakukan mutasi karyawan'.$e->getMessage());
-            return redirect()->route('mutasi.index');
+        if(!$mutasi) {
+            Alert::error('Error', 'Gagal menambahkan data mutasi');
+            return back()->withInput();
         }
+
+        $officer = DB::table('mst_karyawan')
+            ->where('nip', $request->nip)
+            ->update([
+                'kd_jabatan' => $request->id_jabatan_baru,
+                'kd_entitas' => $entity,
+                'updated_at' => now(),
+            ]);
+
+        if($officer < 1) {
+            Alert::error('Error', 'Gagal mengupdate data karyawan');
+            return back()->withInput();
+        }
+
+        Alert::success('Berhasil', 'Berhasil menambahkan data mutasi');
+        return redirect()->route('mutasi.index');
     }
 
     /**

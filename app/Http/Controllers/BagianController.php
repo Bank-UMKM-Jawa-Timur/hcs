@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Service\BagianService;
+use App\Service\EntityService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -110,7 +110,7 @@ class BagianController extends Controller
         $data = DB::table('mst_bagian')
             ->where('kd_bagian', $id)
             ->first();
-        $entity = BagianService::getEntity($data->kd_entitas);
+        $entity = EntityService::getEntity($data->kd_entitas);
 
         return view('bagian.edit', compact('data', 'entity'));
     }

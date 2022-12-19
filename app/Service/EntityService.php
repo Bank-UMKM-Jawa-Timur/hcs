@@ -2,9 +2,10 @@
 
 namespace App\Service;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class BagianService
+class EntityService
 {
     public static function getEntity($entity)
     {
@@ -38,5 +39,17 @@ class BagianService
             'type' => 2,
             'cab' => $cab
         ];
+    }
+
+    public static function getEntityFromRequest(Request $request) {
+        $division = $request->kd_divisi;
+        $subdiv = $request->kd_subdiv;
+        $branch = $request->kd_cabang;
+
+        if($division && $subdiv) return $subdiv;
+        if($division) return $division;
+        if($branch) return $branch;
+
+        return false;
     }
 }
