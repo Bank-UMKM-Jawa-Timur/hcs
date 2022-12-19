@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('nip', 25);
             $table->string('keterangan');
+            $table->unsignedBigInteger('id_tunjangan')->nullable();
             $table->integer('nominal_lama');
             $table->integer('nominal_baru');
             $table->timestamps();
@@ -24,6 +25,12 @@ return new class extends Migration
             $table->foreign('nip')
                 ->references('nip')
                 ->on('mst_karyawan')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+                
+            $table->foreign('id_tunjangan')
+                ->references('id')
+                ->on('mst_tunjangan')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });

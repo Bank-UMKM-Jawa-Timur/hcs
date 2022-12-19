@@ -600,7 +600,8 @@ class KaryawanController extends Controller
                         'keterangan' => 'Penyesuaian Gaji penyesuaian',
                         'nominal_baru' => $request->get('gj_penyesuaian'),
                         'nominal_lama' => $karyawan->gj_penyesuaian,
-                        'created_at' => now()
+                        'created_at' => now(),
+                        'id_tunjangan' => null
                     ]);
             }
             for($i = 0; $i < count($request->get('tunjangan')); $i++){
@@ -610,6 +611,7 @@ class KaryawanController extends Controller
                         ->insert([
                             'nip' => $request->get('nip'),
                             'keterangan' => 'Penyesuaian Tunjangan '.$tj_karyawan[$i]->nama_tunjangan,
+                            'id_tunjangan' => $request->get('tunjangan')[$i],
                             'nominal_baru' => $request->get('nominal_tunjangan')[$i],
                             'nominal_lama' => $tj_karyawan[$i]->nominal,
                             'created_at' => now()
