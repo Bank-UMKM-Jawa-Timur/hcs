@@ -495,9 +495,7 @@ class JaminanController extends Controller
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
                     ->first();
 
-                if ($tj_dpp->nominal != null) {
-                    array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
-                }
+                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj : $tj_dpp);
             }
         } else {
             $cabang = $request->get('cabang');
@@ -520,10 +518,8 @@ class JaminanController extends Controller
                     ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
                     ->first();
-                    
-                if ($tj_dpp->nominal != null) {
-                    array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
-                }
+
+                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
             }
         }
         
