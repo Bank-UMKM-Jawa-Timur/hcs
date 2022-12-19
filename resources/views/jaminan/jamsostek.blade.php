@@ -68,7 +68,7 @@
                                 DESEMBER
                                @break
                            @default
-                               BULAN TIDAK DI KETAHUI
+                               BULAN DAN TAHUN TIDAK DIPILIH
                        @endswitch
                        {{ $tahun }}
                     </h5>
@@ -224,7 +224,7 @@
                             </table>
                         </div>
                     @elseif($status == 2)
-                        <div class="">
+                        <div class="table-responsive">
                             <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                                 <thead>
                                     <tr>

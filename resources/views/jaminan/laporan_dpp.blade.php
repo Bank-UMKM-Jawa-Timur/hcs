@@ -11,20 +11,82 @@
   </head>
   <body>
 
-    <div class="row m-0 mt-3" id="row-baru">
-        <div class="col-lg-12">
-            <div class="container mt-3">
+    <div class="container mt-3 mb-3" style="min-width: 1250px" id="row-baru">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title text-center">DAFTAR IURAN PEMBERI KERJA</h5>
+                    <h5 class="card-title text-center">
+                        @php
+                            $nama;
+                            if ($status == 1) {
+                                $nama = "REKAP KESELURUHAN";
+                            } elseif ($status == 2 && $kantor == 'Pusat') {
+                                $nama = "KANTOR PUSAT";
+                            } elseif ($status == 2 && $kantor == 'Cabang') {
+                                $nama = "KANTOR CABANG ".strtoupper($cab->nama_cabang);
+                            }
+                        @endphp 
+                        {{ $nama }}
+                    </h5> 
+                    <h5 class="card-title text-center">DANA PENSIUN PEGAWAI BANK BPR JATIM</h5>
+                    <h5 class="card-title text-center" id="bulan">
+                       @switch($bulan)
+                            @case(1)
+                               JANUARI
+                               @break
+                            @case(2)
+                               FEBRUARI 
+                               @break
+                            @case(3)
+                                MARET
+                               @break
+                            @case(4)
+                                APRIL
+                               @break
+                            @case(5)
+                                MEI
+                               @break
+                            @case(6)
+                                JUNI 
+                               @break
+                            @case(7)
+                                JULI 
+                               @break
+                            @case(8)
+                                AGUSTUS
+                               @break
+                            @case(9)
+                                SEPTEMBER  
+                               @break
+                            @case(10)
+                                OKTOBER
+                               @break
+                            @case(11)
+                                NOVEMBER  
+                               @break
+                            @case(12)
+                                DESEMBER
+                               @break
+                            @default
+                                BULAN DAN TAHUN TIDAK DIPILIH
+                       @endswitch
+                       {{ $tahun }}
+                    </h5>
+            </div>
+
+            <div class="card-body">
                 @if ($status != null)
                     @php
-                        function rupiah($angka){
-                            $hasil_rupiah = number_format($angka, 0, ",", ",");
+                        function rupiah($angka)
+                        {
+                            $hasil_rupiah = number_format($angka, 0, ".", ",");
                             return $hasil_rupiah;
                         }
                     @endphp
                     @if ($status == 1)
                         <div class="table-responsive">
-                            <table class="table text-center" id="table_export">
-                                <thead>
+                            <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
+                                <thead style="background-color: #CCD6A6">
                                     <th>Kode Kantor</th>
                                     <th>Nama Kantor</th>
                                     <th>DPP</th>
@@ -119,15 +181,15 @@
                                         <td colspan="2">
                                             Jumlah
                                         </td>
-                                        <td>{{ rupiah(array_sum($total_dpp)) }}</td>
+                                        <td style="background-color: #FED049">{{ rupiah(array_sum($total_dpp)) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
                         </div>
                     @elseif($status == 2)
                         <div class="table-responsive">
-                            <table class="table text-center" id="table_export">
-                                <thead>
+                            <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
+                                <thead style="background-color: #CCD6A6">
                                     <th>NIP</th>
                                     <th>Nama Karyawan</th>
                                     <th>DPP</th>
@@ -146,7 +208,7 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="2">Jumlah</td>
-                                        <td>{{ array_sum($dpp) }}</td>
+                                        <td style="background-color: #FED049">{{ rupiah(array_sum($dpp)) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -179,13 +241,13 @@
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur',
+                    title: 'Bank UMKM Jawa Timur\n Bulan '+name,
                     text:'Excel' 
                 }
             ]
         });
 
-        $(".buttons-excel").attr("class","btn btn-success");
+        $(".buttons-excel").attr("class","btn btn-success mb-2");
 
         document.getElementById('btn_export').addEventListener('click', function(){
             var table2excel = new Table2Excel();

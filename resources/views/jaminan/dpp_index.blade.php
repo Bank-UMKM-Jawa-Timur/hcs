@@ -146,6 +146,9 @@
                         $("#cabang_col").empty();
                     }
                 })
+            } else {
+                $("#cabang_col").removeClass("col-md-4");
+                $("#cabang_col").empty();
             }
         })
 

@@ -464,15 +464,19 @@ class JaminanController extends Controller
         }
 
         // Get data per kantor/cabang 
+        $cab = null;
+        $kantor = $request->kantor;
+        $tahun = $request->tahun;
+        $bulan = $request->bulan;
+        $dpp = array();
+        // if kantor = pusat
+        if($kantor == 'Pusat'){
             $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
             $cbg = array();
             foreach($cabang as $item){
                 array_push($cbg, $item->kd_cabang);
             }
 
-        $dpp = array();
-        // if kantor = pusat
-        if($kantor == 'Pusat'){
             $karyawan = DB::table('mst_karyawan')
                 ->whereNotIn('kd_entitas', $cbg)
                 ->orWhere('kd_entitas', null)
@@ -491,7 +495,9 @@ class JaminanController extends Controller
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
                     ->first();
 
-                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj : $tj_dpp);
+                if ($tj_dpp->nominal != null) {
+                    array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
+                }
             }
         } else {
             $cabang = $request->get('cabang');
@@ -499,6 +505,9 @@ class JaminanController extends Controller
                 ->where('kd_entitas', $cabang)
                 ->where('status_karyawan', 'Tetap')
                 ->get();
+            $cab = DB::table('mst_cabang')
+                ->where('kd_cabang', $cabang)
+                ->first();
             foreach($karyawan as $i){
                 $tj_dpp = DB::table('tunjangan_karyawan')
                     ->where('nip', $i->nip)
@@ -511,15 +520,21 @@ class JaminanController extends Controller
                     ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
                     ->first();
-
-                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
+                    
+                if ($tj_dpp->nominal != null) {
+                    array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
+                }
             }
         }
         
         return view('jaminan.laporan_dpp', [
             'status' => 2,
+            'kantor' => $kantor,
+            'cab' => $cab,
             'karyawan' => $karyawan,
-            'dpp' => $dpp
+            'dpp' => $dpp,
+            'bulan' => $bulan,
+            'tahun' => $tahun
         ]);
     }
 
