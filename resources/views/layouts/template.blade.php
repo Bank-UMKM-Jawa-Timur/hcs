@@ -96,6 +96,16 @@ Coded by www.creative-tim.com
                 </div>
             </li>
             <li class="dropdown">
+              <a href="" data-toggle="dropdown" aria-expanded="false">
+                  <i class="nc-icon nc-money-coins"></i>
+                  <p class="dropdown-toggle" id="navbarDropdownMenuLink">Penghasilan </p>
+                  <p></p>
+              </a>
+              <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                  <a class="dropdown-item" href="/penghasilan">Penghasilan Tidak Teratur</a>
+              </div>
+          </li>
+            <li class="dropdown">
                 <a href="" data-toggle="dropdown" aria-expanded="false">
                   <i class="nc-icon nc-paper"></i>
                   <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan </p>

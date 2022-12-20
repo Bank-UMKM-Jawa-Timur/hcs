@@ -73,6 +73,14 @@ use Illuminate\Support\Facades\Auth;
 //     return view('karyawan/detail');
 // });
 
+Route::get('penghasilan', function() {
+    return view('penghasilan/index');
+});
+
+Route::get('penghasilan/add', function() {
+    return view('penghasilan/add');
+});
+
 Route::get('/', function(){
     return redirect()->route('login');
 });

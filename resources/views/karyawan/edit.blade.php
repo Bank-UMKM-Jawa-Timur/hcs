@@ -120,6 +120,12 @@
                     </div>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                         <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Nomor Rekening</label>
+                                    <input type="number" class="form-control" name="no_rek" value="{{ old('no_rek') }}">
+                                </div>
+                            </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Jabatan</label>
