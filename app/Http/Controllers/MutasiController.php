@@ -67,13 +67,14 @@ class MutasiController extends Controller
      */
     public function store(MutasiRequest $request)
     {
+        // dd($request->all());
         $entity = EntityService::getEntityFromRequest($request);
         $mutasi = DB::table('mutasi')
             ->insert([
                 'nip' => $request->nip,
                 'tanggal_pengesahan' => $request->tanggal_pengesahan,
                 'bukti_sk' => $request->bukti_sk,
-                'keterangan' => $request->keterangan,
+                'keterangan' => 'Mutasi Jabatan',
                 'kd_entitas_lama' => $request->kd_entity,
                 'kd_entitas_baru' => $entity,
                 'kd_jabatan_lama' => $request->id_jabatan_lama,
@@ -90,7 +91,9 @@ class MutasiController extends Controller
             ->where('nip', $request->nip)
             ->update([
                 'kd_jabatan' => $request->id_jabatan_baru,
+                'ket_jabatan' => $request->keterangan,
                 'kd_entitas' => $entity,
+                'kd_bagian' => $request->kd_bagian,
                 'updated_at' => now(),
             ]);
 

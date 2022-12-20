@@ -19,7 +19,7 @@
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>    
+                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="nama_karyawan">Nama Karyawan</label>
@@ -33,14 +33,14 @@
                         <input type="text" disabled class="form-control" name="" id="jabatan_show" value="{{ old('jabatan_lama') }}">
                         <input type="hidden" name="jabatan_lama" id="jabatan_lama" value="{{ old('jabatan_lama') }}">
                     </div>
-                </div>    
+                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="">Kantor Lama</label>
                         <input type="text" disabled class="form-control" name="" id="kantor_lama_show" value="{{ old('kantor_lama') }}">
                         <input type="hidden" name="kantor_lama" id="kantor_lama" value="{{ old('kantor_lama') }}">
                     </div>
-                </div>   
+                </div>
             </div>
             <hr>
             <div class="row" id="#kantor_row">
@@ -61,7 +61,7 @@
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                </div> 
+                </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="kantor">Kantor</label>
@@ -79,10 +79,10 @@
 
                 </div>
                 <div class="col-md-4"  id="kantor_row2">
-                    
+
                 </div>
                 <div class="col-md-4"  id="kantor_row3">
-                    
+
                 </div>
             </div>
             <hr>
@@ -98,7 +98,7 @@
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>    
+                </div>
                 <div class= "col-md-6">
                     <div class="form-group">
                         <label for="">Surat Keputusan</label>
@@ -137,7 +137,7 @@
                 $("#kantor_lama_show").val(res.kd_entitas)
                 $("#kantor_lama").val(res.kd_entitas)
             }
-           }) 
+           })
         });
 
         let kantor = $('#kantor_row');
@@ -176,7 +176,7 @@
                                     </select>
                                 </div>`
                         );
-        
+
                         $("#divisi").change(function(){
                             var divisi = $(this).val();
 
@@ -246,7 +246,7 @@
                                 <select name="bagian" id="bagian" class="form-control">
                                     <option value="">--- Pilih bagian ---</option>
                                 </select>
-                            </div>  
+                            </div>
                         `)
 
                         $("#kantor_row3").empty()

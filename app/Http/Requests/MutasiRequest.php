@@ -25,9 +25,7 @@ class MutasiRequest extends FormRequest
     {
         return [
             'nip' => 'required|alpha_num|exists:mst_karyawan,nip',
-            'kantor' => 'required|not_in:-',
             'id_jabatan_baru' => 'required|not_in:-|exists:mst_jabatan,kd_jabatan',
-            'ket_jabatan' => 'required',
             'tanggal_pengesahan' => 'required',
             'bukti_sk' => 'required',
             'keterangan' => 'required'
