@@ -315,6 +315,7 @@ class KaryawanController extends Controller
                     'status_jabatan' => $request->get('status_jabatan'),
                     'skangkat' => $request->get('skangkat'),
                     'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
+                    'no_rekening' => $request->get('no_rek'),
                     'created_at' => now(),
                 ]);
 
@@ -656,6 +657,7 @@ class KaryawanController extends Controller
                     'status_jabatan' => $request->get('status_jabatan'),
                     'skangkat' => $request->get('skangkat'),
                     'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
+                    'no_rekening' => $request->get('no_rek'),
                     'created_at' => now(),
                 ]);
 
