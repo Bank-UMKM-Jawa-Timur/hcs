@@ -46,6 +46,20 @@ class MutasiController extends Controller
             ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'mutasi.kd_jabatan_lama')
             ->get();
 
+        $data->map(function($mutasi) {
+            $entity = EntityService::getEntity($mutasi->kd_entitas);
+            $type = $entity['type'];
+
+            if($type == 2) $mutasi->kantor_baru = "Cab. " . $entity['cab']->nama_cabang;
+            if($type == 1) {
+                $mutasi->kantor_baru = isset($entity['subDiv']) ?
+                    $entity['subDiv']->nama_subdivisi :
+                    $entity['div']->nama_divisi;
+            }
+
+            return $mutasi;
+        });
+
         return view('mutasi.index', compact('data'));
     }
 
