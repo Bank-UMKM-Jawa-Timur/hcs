@@ -7,7 +7,7 @@
             <h5 class="card-title">Data Mutasi</h5>
             <p class="card-title"><a href="/">Dashboard</a> > <a href="/mutasi">Mutasi</a></p>
         </div>
-        
+
         <div class="card-body">
             <div class="col">
                 <div class="row">
@@ -15,46 +15,54 @@
                         <button  class="btn btn-primary">Tambah Mutasi</button>
                     </a>
                     <div class="table-responsive overflow-hidden">
-                        <table class="table" id="table">
-                            <thead class="text-primary">
-                                <th>
-                                    Id Mutasi
-                                </th>
-                                <th>
-                                    Nama Karyawan
-                                </th>
-                                <th>
-                                    Tanggal Mutasi
-                                </th>
-                                <th>
-                                    Bukti SK
-                                </th>
-                                <th>
-                                    Keterangan
-                                </th>
-                            </thead>
-                            <tbody>
-                                @foreach ($data as $item)
-                                    <tr>
-                                        <td>
-                                            {{ $item->id }}
-                                        </td>
-                                        <td>
-                                            {{ $item->nama_karyawan }}
-                                        </td>
-                                        <td>
-                                            {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
-                                        </td>
-                                        <td>
-                                            {{ $item->bukti_sk }}
-                                        </td>
-                                        <td>
-                                            {{ $item->keterangan }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <div class="table">
+                            <table class="table" id="table">
+                                <thead class="text-primary">
+                                    <th>
+                                        NIP
+                                    </th>
+                                    <th>
+                                        Nama Karyawan
+                                    </th>
+                                    <th>
+                                        Tanggal Mutasi
+                                    </th>
+                                    <th>
+                                        Jabatan Lama
+                                    </th>
+                                    <th>
+                                        Jabatan Baru
+                                    </th>
+                                    <th>
+                                        Bukti SK
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data as $item)
+                                        <tr>
+                                            <td>
+                                                {{ $item->nip }}
+                                            </td>
+                                            <td>
+                                                {{ $item->nama_karyawan }}
+                                            </td>
+                                            <td>
+                                                {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
+                                            </td>
+                                            <td>
+                                                {{ $item->jabatan_lama }}
+                                            </td>
+                                            <td>
+                                                {{ $item->jabatan_baru }}
+                                            </td>
+                                            <td>
+                                                {{ $item->bukti_sk }}
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                     </div>
                     <div class="row">
                         <div class="col">
@@ -64,7 +72,7 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 @endsection
 

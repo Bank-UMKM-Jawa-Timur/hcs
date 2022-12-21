@@ -29,17 +29,20 @@ class DemosiController extends Controller
      */
     public function index()
     {
-        $data = DB::table('demosi_promosi_pangkat')
+        $data = DB::table('demosi_promosi_pangkat as demosi')
+            ->select(
+                'demosi.*',
+                'karyawan.*',
+                'newPos.nama_jabatan as jabatan_baru',
+                'oldPos.nama_jabatan as jabatan_lama'
+            )
+            ->join('mst_karyawan as karyawan', 'karyawan.nip', '=', 'demosi.nip')
+            ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi.kd_jabatan_baru')
+            ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi.kd_jabatan_lama')
             ->where('keterangan', 'Demosi Jabatan')
-            ->select('kd_jabatan_lama', 'kd_jabatan_baru', 'demosi_promosi_pangkat.id', 'mst_karyawan.nip', 'tanggal_pengesahan', 'bukti_sk', 'mst_karyawan.nama_karyawan', 'pg_lama.nama_jabatan as jabatan_lama', 'pg_baru.nama_jabatan as jabatan_baru')
-            ->join('mst_jabatan as pg_lama', 'pg_lama.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
-            ->join('mst_jabatan as pg_baru', 'pg_baru.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
-            ->join('mst_karyawan', 'demosi_promosi_pangkat.nip', '=', 'mst_karyawan.nip')
             ->get();
 
-            // dd($data);
-
-        return view('demosi.index', ['data' => $data]);
+        return view('demosi.index', compact('data'));
     }
 
     /**

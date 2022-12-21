@@ -35,10 +35,18 @@ class MutasiController extends Controller
     public function index()
     {
         $data = DB::table('mutasi')
-            ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'mutasi.nip')
+            ->select(
+                'mutasi.*',
+                'karyawan.*',
+                'newPos.nama_jabatan as jabatan_baru',
+                'oldPos.nama_jabatan as jabatan_lama'
+            )
+            ->join('mst_karyawan as karyawan', 'karyawan.nip', '=', 'mutasi.nip')
+            ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'mutasi.kd_jabatan_baru')
+            ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'mutasi.kd_jabatan_lama')
             ->get();
 
-        return view('mutasi.index', ['data' => $data]);
+        return view('mutasi.index', compact('data'));
     }
 
     /**
