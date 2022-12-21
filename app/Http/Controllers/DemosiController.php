@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DemosiRequest;
+use App\Service\EntityService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -50,10 +52,10 @@ class DemosiController extends Controller
         $data = DB::table('mst_karyawan')
             ->select('nip', 'nama_karyawan', 'kd_panggol')
             ->get();
-        $data_panggol = DB::table('mst_jabatan')
+        $data_jabatan = DB::table('mst_jabatan')
             ->get();
 
-        return view('demosi.add', ['data' => $data, 'jabatan' => $data_panggol]);
+        return view('demosi.add', compact('data', 'data_jabatan'));
     }
 
     /**
@@ -62,56 +64,44 @@ class DemosiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DemosiRequest $request)
     {
-        $request->validate([
-            'kd_entitas' => 'required',
-            'nip' => 'required|alpha_num',
-            'jabatan_baru' => 'required|not_in:-',
-            'tanggal_pengesahan' => 'required',
-            'bukti_sk' => 'required',
-        ], [
-            'nip.required' => 'Data harus diisi.',
-            'nip.alpha_num' => 'NIP berupa alfa numerik.',
-            'jabatan_baru.required' => 'Data harus diisi.',
-            'jabatan_baru.not_in' => 'Data harus diisi',
-            'tanggal_pengesahan.required' => 'Data harus diisi.',
-            'bukti_sk.required' => 'Data harus diisi.',
-        ]);
+        $entity = EntityService::getEntityFromRequest($request);
+        $demosi = DB::table('demosi_promosi_pangkat')
+            ->insert([
+                'nip' => $request->nip,
+                'tanggal_pengesahan' => $request->tanggal_pengesahan,
+                'bukti_sk' => $request->bukti_sk,
+                'keterangan' => 'Demosi Jabatan',
+                'kd_entitas_lama' => $request->kd_entity,
+                'kd_entitas_baru' => $entity,
+                'kd_jabatan_lama' => $request->id_jabatan_lama,
+                'kd_jabatan_baru' => $request->id_jabatan_baru,
+                'created_at' => now(),
+            ]);
 
-        try{
-            DB::table('demosi_promosi_pangkat')
-                ->insert([
-                    'kd_entitas_lama' => $request->kd_entitas,
-                    'kd_entitas_baru' => $request->kd_entitas,
-                    'kd_jabatan_lama' => $request->get('jabatan_lama'),
-                    'kd_jabatan_baru' => $request->get('jabatan_baru'),
-                    'nip' => $request->get('nip'),
-                    'tanggal_pengesahan' => $request->get('tanggal_pengesahan'),
-                    'bukti_sk' => $request->get('bukti_sk'),
-                    'keterangan' => 'Demosi Jabatan',
-                    'created_at' => now()
-                ]);
-
-            DB::table('mst_karyawan')
-                ->where('nip', $request->nip)
-                ->update([
-                    'kd_jabatan' => $request->get('jabatan_baru'),
-                    'ket_jabatan' => $request->get('ket_jabatan'),
-                    'updated_at' => now()
-                ]);
-
-            Alert::success('Berhasil', 'Berhasil melakukan demosi pangkat.');
-            return redirect()->route('demosi.index');
-        } catch(Exception $e){
-            DB::rollBack();
-            Alert::error('Terjadi Kesalahan', $e->getMessage());
-            return redirect()->route('demosi.index');
-        } catch(QueryException $e){
-            DB::rollBack();
-            Alert::error('Terjadi Kesalahan', 'Gagal melakukan demosi pangkat.'.$e->getMessage());
-            return redirect()->route('demosi.index');
+        if(!$demosi) {
+            Alert::error('Error', 'Gagal menambahkan data demosi');
+            return back()->withInput();
         }
+
+        $officer = DB::table('mst_karyawan')
+            ->where('nip', $request->nip)
+            ->update([
+                'kd_jabatan' => $request->id_jabatan_baru,
+                'ket_jabatan' => $request->keterangan,
+                'kd_entitas' => $entity,
+                'kd_bagian' => $request->kd_bagian,
+                'updated_at' => now(),
+            ]);
+
+        if($officer < 1) {
+            Alert::error('Error', 'Gagal mengupdate data karyawan');
+            return back()->withInput();
+        }
+
+        Alert::success('Berhasil', 'Berhasil menambahkan data demosi');
+        return redirect()->route('demosi.index');
     }
 
     /**

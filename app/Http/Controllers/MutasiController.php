@@ -67,7 +67,6 @@ class MutasiController extends Controller
      */
     public function store(MutasiRequest $request)
     {
-        // dd($request->all());
         $entity = EntityService::getEntityFromRequest($request);
         $mutasi = DB::table('mutasi')
             ->insert([
