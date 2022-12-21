@@ -28,7 +28,6 @@ class MutasiRequest extends FormRequest
             'id_jabatan_baru' => 'required|not_in:-|exists:mst_jabatan,kd_jabatan',
             'tanggal_pengesahan' => 'required',
             'bukti_sk' => 'required',
-            'keterangan' => 'required'
         ];
     }
 }
