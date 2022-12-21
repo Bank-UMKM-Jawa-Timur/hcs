@@ -47,7 +47,7 @@ class MutasiController extends Controller
             ->get();
 
         $data->map(function($mutasi) {
-            $entity = EntityService::getEntity($mutasi->kd_entitas);
+            $entity = EntityService::getEntity($mutasi->kd_entitas_baru);
             $type = $entity['type'];
 
             if($type == 2) $mutasi->kantor_baru = "Cab. " . $entity['cab']->nama_cabang;
