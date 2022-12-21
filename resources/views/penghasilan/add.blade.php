@@ -4,8 +4,8 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Penghasilan Tidak Teratur</h5>
-                <p class="card-title"><a href="/">Dashboard </a> > <a href="/penghasilan">Penghasilan Tidak Teratur </a> > Tambah</p>
+                <h5 class="card-title">Gaji Pajak</h5>
+                <p class="card-title"><a href="/">Dashboard </a> > <a href="/penghasilan">Gaji Pajak </a> > Tambah</p>
             </div>
         </div>
     </div>
