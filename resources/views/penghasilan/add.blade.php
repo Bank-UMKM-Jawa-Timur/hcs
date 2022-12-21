@@ -5,12 +5,13 @@
         <div class="card-header">
             <div class="card-title">
                 <h5 class="card-title">Gaji Pajak</h5>
-                <p class="card-title"><a href="/">Dashboard </a> > <a href="/penghasilan">Gaji Pajak </a> > Tambah</p>
+                <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('penghasilan-tidak-teratur.index') }}">Gaji Pajak </a> > Tambah</p>
             </div>
         </div>
     </div>
     <div class="card-body">
-        <form action="" class="form-group" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('penghasilan-tidak-teratur.store') }}" class="form-group" method="POST" enctype="multipart/form-data">
+            @csrf
             <div id="accordion">
                 <div class="card p-2 ml-3 mr-3 shadow">
                     <div class="card-header" id="headingOne">
@@ -24,15 +25,49 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">NIP</label>
-                                    <input type="text" class="@error('nip') is-invalid @enderror form-control" name="nip" id="" value="{{ old('nip') }}">
+                                    <input type="text" class="@error('nip') is-invalid @enderror form-control" name="nip" id="nip" value="{{ old('nip') }}">
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Nama Karyawan</label>
-                                    <input type="text" class="@error('nama') is-invalid @enderror form-control" name="nama" id="" value="{{ old('nama') }}">
+                                    <input type="text" id="nama" class="form-control" disabled>
                                 </div>
+                            </div>@php
+                            $already_selected_value = 2022;
+                            $earliest_year = 2010;
+                        @endphp
+                        <div class="col-md-6">
+                            <label for="tahun">Tahun</label>
+                            <div class="form-group">
+                                <select name="tahun" class="form-control">
+                                    <option value="">--- Pilih Tahun ---</option>
+                                    @foreach (range(date('Y'), $earliest_year) as $x)
+                                        <option value="{{ $x }}">{{ $x }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Bulan">Bulan</label>
+                                <select name="bulan" class="form-control">
+                                    <option value="">--- Pilih Bulan ---</option>
+                                    <option value='1'>Januari</option>
+                                    <option value='2'>Februari </option>
+                                    <option value='3'>Maret</option>
+                                    <option value='4'>April</option>
+                                    <option value='5'>Mei</option>
+                                    <option value='6'>Juni</option>
+                                    <option value='7'>Juli</option>
+                                    <option value='8'>Agustus</option>
+                                    <option value='9'>September</option>
+                                    <option value='10'>Oktober</option>
+                                    <option value='11'>November</option>
+                                    <option value='12'>Desember</option>
+                                </select>
+                            </div>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -49,16 +84,18 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Tunjangan</label>
-                                    <select name="" id="" class="form-control">
+                                    <select name="id_teratur[]" id="" class="form-control">
                                         <option value="-">--- Pilih ---</option>
-                                            <option value="">Nama Tunjangan</option>
+                                        @foreach ($tj as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Nominal</label>
-                                    <input type="number" id="" name="" class="form-control">
+                                    <input type="number" id="" name="nominal_teratur[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -87,16 +124,18 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Tunjangan</label>
-                                    <select name="" id="" class="form-control">
+                                    <select name="id_tidak_teratur[]" id="" class="form-control">
                                         <option value="-">--- Pilih ---</option>
-                                            <option value="">Nama Tunjangan</option>
+                                        @foreach ($tidak_teratur as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Nominal</label>
-                                    <input type="number" id="" name="" class="form-control">
+                                    <input type="number" id="" name="nominal_tidak_teratur[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -125,16 +164,18 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Tunjangan</label>
-                                    <select name="" id="" class="form-control">
+                                    <select name="id_bonus[]" id="" class="form-control">
                                         <option value="-">--- Pilih ---</option>
-                                            <option value="">Nama Tunjangan</option>
+                                        @foreach ($bonus as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Nominal</label>
-                                    <input type="number" id="" name="" class="form-control">
+                                    <input type="number" id="" name="nominal_bonus[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -169,16 +210,18 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Tunjangan</label>
-                                    <select name="" id="" class="form-control">
+                                    <select name="id_teratur[]" id="" class="form-control">
                                         <option value="">--- Pilih ---</option>
-                                            <option value="">Data Tunjangan</option>
+                                        @foreach ($tj as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for=""">Nominal</label>
-                                    <input type="number" id="" name="" class="form-control">
+                                    <input type="number" id="" name="nominal_teratur[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -209,16 +252,18 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Tunjangan</label>
-                                    <select name="" id="" class="form-control">
+                                    <select name="id_tidak_teratur[]" id="" class="form-control">
                                         <option value="">--- Pilih ---</option>
-                                            <option value="">Data Tunjangan</option>
+                                        @foreach ($tidak_teratur as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Nominal</label>
-                                    <input type="number" id="" name="" class="form-control">
+                                    <input type="number" id="" name="nominal_tidak_teratur[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -249,16 +294,18 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Tunjangan</label>
-                                    <select name="" id="" class="form-control">
-                                        <option value="">--- Pilih ---</option>
-                                            <option value="">Data Tunjangan</option>
+                                    <select name="id_bonus[]" id="" class="form-control">
+                                        <option value="-">--- Pilih ---</option>
+                                        @foreach ($bonus as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="">Nominal</label>
-                                    <input type="number" id="" name="" class="form-control">
+                                    <input type="number" id="" name="nominal_bonus[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -272,6 +319,7 @@
                                 </button>
                             </div>
                         </div>
+                    </div>
             `);
             x++
         });
@@ -282,5 +330,20 @@
                 x--;
             }
         })
+
+        $("#nip").change(function(e){
+            var nip = $(this).val();
+            console.log(nip);
+
+            $.ajax({
+                type: "GET",
+                url: '/getdatapromosi?nip='+nip,
+                datatype: "json",
+                success: function(res){
+                    $("#nama").val(res.nama_karyawan)
+                }
+            })
+        })
+        
     </script>
 @endsection

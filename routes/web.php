@@ -6,6 +6,7 @@ use App\Http\Controllers\JaminanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\TunjanganKaryawanController;
 use Illuminate\Support\Facades\Auth;
@@ -99,6 +100,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/promosi', PromosiController::class);
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
+    Route::resource('/penghasilan-tidak-teratur', PenghasilanTidakTeraturController::class);
     
     Route::resource('/laporan_jamsostek', JaminanController::class);
     Route::get('/laporan-jamsostek', [JaminanController::class, 'getJamsostek'])->name('get-jamsostek');
