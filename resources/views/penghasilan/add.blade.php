@@ -10,94 +10,277 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col m-3">
-                <form action="" class="form-group" method="POST" enctype="multipart/form-data">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <h6>Tunjangan 1</h6>
-                        </div>
+        <form action="" class="form-group" method="POST" enctype="multipart/form-data">
+            <div id="accordion">
+                <div class="card p-2 ml-3 mr-3 shadow">
+                    <div class="card-header" id="headingOne">
+                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Data Karyawan</a>
+                        </h6>
+                    </div>
 
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label for="tUangMkn">T. Uang Makan</label>
-                                <input type="number" name="tUangMkn" id="tUangMkn" class="@error('tUangMkn') is-invalid @enderror form-control" value="{{ old('tUangMkn') }}">
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">NIP</label>
+                                    <input type="text" class="@error('nip') is-invalid @enderror form-control" name="nip" id="" value="{{ old('nip') }}">
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="col-lg-3">
-                            <div class="form_group">
-                                <label for="tUangPlsa">T. Uang Pulsa</label>
-                                <input type="number" name="tUangPlsa" id="tUangPlsa" class="@error('tUangPlsa') is-invalid @enderror form-control" value="{{ old('tUangPlsa') }}">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label for="tUangVit">T. Uang Vitamin</label>
-                                <input type="number" name="tUangVit" id="tUangVit" class="@error('tUangVit') is-invalid @enderror form-control" value="{{ old('tUangVit') }}">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label for="tUangTrans">T. Uang Transport</label>
-                                <input type="number" name="tUangTrans" id="tUangTrans" class="@error('tUangTrans') is-invalid @enderror form-control" value="{{ old('tUangTrans') }}">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Nama Karyawan</label>
+                                    <input type="text" class="@error('nama') is-invalid @enderror form-control" name="nama" id="" value="{{ old('nama') }}">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <h6>Tunjangan 2</h6>
-                        </div>
+                </div>
 
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="tUangLmbr">T. Uang Lembur</label>
-                                <input type="number" name="tUangLmbr" id="tUangLmbr" class="@error('tUangLmbr') is-invalid @enderror form-control" value="{{ old('tUangLmbr') }}">
+                <div class="card p-2 ml-3 mr-3 shadow">
+                    <div class="card-header" id="headingTwo">
+                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <a class="text-decoration-none" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Penghasilan Teratur</a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Tunjangan</label>
+                                    <select name="" id="" class="form-control">
+                                        <option value="-">--- Pilih ---</option>
+                                            <option value="">Nama Tunjangan</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="tPenggantiKshtn">Pengganti Biaya Kesehatan</label>
-                                <input type="number" name="tPenggantiKshtn" id="tPenggantiKshtn" class="@error('tPenggantiKshtn') is-invalid @enderror form-control" value="{{ old('tPenggantiKshtn') }}">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Nominal</label>
+                                    <input type="number" id="" name="" class="form-control">
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="tUangDuka">Uang Duka</label>
-                                <input type="number" name="tUangDuka" id="tUangDuka" class="@error('tUangDuka') is-invalid @enderror form-control" value="{{ old('tUangDuka') }}">
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    <i class="bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    <i class="bi-dash-lg"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="tSPD">SPD</label>
-                                <input type="number" name="tSPD" id="tSPD" class="@error('tSPD') is-invalid @enderror form-control" value="{{ old('tSPD') }}">
+                </div>
+
+                <div class="card p-2 ml-3 mr-3 shadow" id="data_is">
+                    <div class="card-header" id="headingThree">
+                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Penghasilan Tidak Teratur</a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                        <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Tunjangan</label>
+                                    <select name="" id="" class="form-control">
+                                        <option value="-">--- Pilih ---</option>
+                                            <option value="">Nama Tunjangan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Nominal</label>
+                                    <input type="number" id="" name="" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    <i class="bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    <i class="bi-dash-lg"></i>
+                                </button>
                             </div>
                         </div>
+                    </div>         
+                </div>
 
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="tSPDPenddkn">SPD Pendidikan</label>
-                                <input type="number" name="tSPDPenddkn" id="tSPDPenddkn" class="@error('tSPDPenddkn') is-invalid @enderror form-control" value="{{ old('tSPDPenddkn') }}">
+                <div class="card p-2 ml-3 mr-3 shadow">
+                    <div class="card-header" id="headingFour">
+                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">Bonus</a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                        <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Tunjangan</label>
+                                    <select name="" id="" class="form-control">
+                                        <option value="-">--- Pilih ---</option>
+                                            <option value="">Nama Tunjangan</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="tSPDTgs">SPD Pindah Tugas</label>
-                                <input type="number" name="tSPDTgs" id="tSPDTgs" class="@error('tSPDTgs') is-invalid @enderror form-control" value="{{ old('tSPDTgs') }}">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Nominal</label>
+                                    <input type="number" id="" name="" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    <i class="bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    <i class="bi-dash-lg"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-info" value="submit" type="submit">Simpan</button>
-                </form>
+                </div>
             </div>
-        </div>
+
+            <div class="row m-3">
+                <button type="submit" id="submit" class="btn btn-info">Simpan</button>
+            </div>
+        </form>
     </div>
+@endsection
+
+@section('custom_script')
+    <script>
+        var x =1;
+
+        $('#collapseTwo').on('click', "#btn-add", function(){
+            $('#collapseTwo').append(`
+            <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Tunjangan</label>
+                                    <select name="" id="" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                            <option value="">Data Tunjangan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for=""">Nominal</label>
+                                    <input type="number" id="" name="" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    <i class="bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    <i class="bi-dash-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+            `);
+            x++
+        });
+
+        $('#collapseTwo').on('click', "#btn-delete", function(){
+            if(x > 1){
+                $(this).closest('.row').remove();
+                x--;
+            }
+        })
+
+        $('#collapseThree').on('click', "#btn-add", function(){
+            $('#collapseThree').append(`
+            <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Tunjangan</label>
+                                    <select name="" id="" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                            <option value="">Data Tunjangan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Nominal</label>
+                                    <input type="number" id="" name="" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    <i class="bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    <i class="bi-dash-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+            `);
+            x++
+        });
+
+        $('#collapseThree').on('click', "#btn-delete", function(){
+            if(x > 1){
+                $(this).closest('.row').remove();
+                x--;
+            }
+        })
+
+        $('#collapseFour').on('click', "#btn-add", function(){
+            $('#collapseFour').append(`
+            <div class="row m-0 pb-3 col-md-12">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Tunjangan</label>
+                                    <select name="" id="" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                            <option value="">Data Tunjangan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="">Nominal</label>
+                                    <input type="number" id="" name="" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    <i class="bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    <i class="bi-dash-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+            `);
+            x++
+        });
+
+        $('#collapseFour').on('click', "#btn-delete", function(){
+            if(x > 1){
+                $(this).closest('.row').remove();
+                x--;
+            }
+        })
+    </script>
 @endsection

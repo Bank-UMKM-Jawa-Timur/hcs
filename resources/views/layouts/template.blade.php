@@ -102,7 +102,7 @@ Coded by www.creative-tim.com
                   <p></p>
               </a>
               <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                  <a class="dropdown-item" href="/penghasilan">Penghasilan Tidak Teratur</a>
+                  <a class="dropdown-item" href="/penghasilan">Gaji Pajak</a>
               </div>
           </li>
             <li class="dropdown">

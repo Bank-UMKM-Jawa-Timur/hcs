@@ -11,7 +11,7 @@
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="/penghasilan/add">
-                      <button class="btn btn-primary">Tambah Penghasilan Tidak Teratur</button>
+                      <button class="btn btn-primary">Tambah Gaji Pajak</button>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
