@@ -82,6 +82,10 @@ Route::get('penghasilan/add', function() {
     return view('penghasilan/add');
 });
 
+Route::get('penghasilan/gajipajak', function() {
+    return view('penghasilan/gajipajak');
+});
+
 Route::get('/', function(){
     return redirect()->route('login');
 });

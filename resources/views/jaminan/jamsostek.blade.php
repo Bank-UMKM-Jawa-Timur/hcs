@@ -310,15 +310,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
-    <script>
-        // const month = ["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
-        // const d = new Date();
-        // let name = month[d.getMonth()];
-        
-        // const years = new Date()
-        // let year = years.getFullYear();
-        // document.getElementById("bulan").innerHTML = name + " " + year;
-        
+    <script>        
         $("#table_export").DataTable({
             dom : "Bfrtip",
             aLengthMenu: [
