@@ -16,18 +16,18 @@
             <div class="card-header">
                     <h5 class="card-title text-center">GAJI PAJAK</h5>
                     <h5 class="card-title text-center">BANK UMKM JAWA TIMUR</h5>
-                    <h5 class="card-title text-center" id="bulan">JANUARI</h5>
             </div>
 
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table stripe" id="table_export" style="width: 100%">
+                    <table class="table stripe" style="min-width: 1350px" id="table_export" style="width: 100%">
                         <tr>
                             <td class="p-0">
                                 <h5 class="card-title">PENGHASILAN TERATUR</h5>
                                 <table class="table text-center cell-border stripe" style="width: 100%">
                                     <thead>
                                         <tr>
+                                            <th rowspan="2" style="background-color: #CCD6A6">Bulan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">Gaji Pokok</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">JAMSOSTEK</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">T. Makan</th>
@@ -50,6 +50,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>Januari</td>
                                             <td>125.000</td>
                                             <td>125.000</td>
                                             <td>125.000</td>
@@ -85,6 +86,7 @@
                                 <table class="table text-center cell-border stripe" style="width: 100%">
                                     <thead>
                                         <tr>
+                                            <th rowspan="2" style="background-color: #CCD6A6">Bulan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">T. Lembur</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">BP Kesehatan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">Uang Duka</th>
@@ -95,6 +97,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>Januari</td>
                                             <td>125.000</td>
                                             <td>125.000</td>
                                             <td>125.000</td>
@@ -120,6 +123,7 @@
                                 <table class="table text-center cell-border stripe" style="width: 100%">
                                     <thead>
                                         <tr>
+                                            <th rowspan="2" style="background-color: #CCD6A6">Bulan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">Tunjangan Hari Raya</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">Jasa Produksi</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">Dana Pendidikan</th>
@@ -127,6 +131,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>Januari</td>
                                             <td>125.000</td>
                                             <td>125.000</td>
                                             <td>125.000</td>
