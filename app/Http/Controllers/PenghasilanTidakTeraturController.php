@@ -249,7 +249,8 @@ class PenghasilanTidakTeraturController extends Controller
             'tunjangan' => $tk,
             'penghasilan' => $ptt,
             'bonus' => $bonus,
-            'penyesuaian' => $gj_penyesuaian
+            'penyesuaian' => $gj_penyesuaian,
+            'tahun' => $tahun
         ]);
     }
     

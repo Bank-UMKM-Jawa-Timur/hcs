@@ -16,6 +16,7 @@
             <div class="card-header">
                     <h5 class="card-title text-center">GAJI PAJAK</h5>
                     <h5 class="card-title text-center">BANK UMKM JAWA TIMUR</h5>
+                    <h5 class="card-title text-center">{{ $tahun }}</h5>
             </div>
             @php
                 $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
@@ -38,24 +39,24 @@
                                             $total_nonkuning = array();
                                         @endphp
                                         <tr>
-                                            <th rowspan="2" style="background-color: #CCD6A6">Bulan</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6">Gaji Pokok</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px">Bulan</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px">Gaji Pokok</th>
+                                            <th colspan="9" style="background-color: #CCD6A6">Tunjangan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">JAMSOSTEK</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6">T. Makan</th>
-                                            <th colspan="8" style="background-color: #CCD6A6">Tunjangan</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6">T. Pulsa</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6">T. Vitamin</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6">T. Transport</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px">Tunjangan <br> Uang Pulsa</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px">Tunjangan <br> Uang Vitamin</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px">Tunjangan <br> Uang Transport</th>
                                         </tr>                                   
                                         <tr style="background-color: #DAE2B6">
-                                            <th>Klrg</th>
-                                            <th>Jbtn</th>
-                                            <th>Pysn</th>
-                                            <th>Prmhn</th>
-                                            <th>Lst Air</th>
-                                            <th>Plksn</th>
-                                            <th>Kmhln</th>
-                                            <th>Ksjhtn</th>
+                                            <th>Keluarga</th>
+                                            <th>Jabatan</th>
+                                            <th>penyesuaian</th>
+                                            <th>Perumahan</th>
+                                            <th style="min-width: 100px">Listrik & Air</th>
+                                            <th>Pelaksana</th>
+                                            <th>Kemahalan</th>
+                                            <th>Kesejahteraan</th>
+                                            <th>Khusus</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -63,8 +64,7 @@
                                             <tr>
                                                 <td>{{ $bulan[$i] }}</td>
                                                 <td>{{ rupiah($gj_pokok[$i]) }}</td>
-                                                <td>{{ rupiah($jamsostek[$i]) }}</td>
-                                                <td>{{ ($tunjangan[$i][10] != 0) ? rupiah($tunjangan[$i][10]) : '-' }}</td>
+                                                <td style="background-color: #FED049">{{ ($tunjangan[$i][10] != 0) ? rupiah($tunjangan[$i][10]) : '-' }}</td>
                                                 <td style="background-color: #FED049" >{{ ($tunjangan[$i][0] != 0) ? rupiah($tunjangan[$i][0]) : '-' }}</td>
                                                 <td style="background-color: #FED049" >{{ ($penyesuaian[$i] != 0) ? rupiah($penyesuaian[$i]) : '-' }}</td>
                                                 <td style="background-color: #FED049" >{{ ($tunjangan[$i][2] != 0) ? rupiah($tunjangan[$i][2]) : '-' }}</td>
@@ -73,6 +73,7 @@
                                                 <td style="background-color: #FED049" >{{ ($tunjangan[$i][5] != 0) ? rupiah($tunjangan[$i][5]) : '-' }}</td>
                                                 <td style="background-color: #FED049" >{{ ($tunjangan[$i][4] != 0) ? rupiah($tunjangan[$i][4]) : '-' }}</td>
                                                 <td style="background-color: #FED049" >{{ ($tunjangan[$i][6] != 0) ? rupiah($tunjangan[$i][6]) : '-' }}</td>
+                                                <td>{{ rupiah($jamsostek[$i]) }}</td>
                                                 <td>{{ ($tunjangan[$i][8] != 0) ? rupiah($tunjangan[$i][8]) : '-' }}</td>
                                                 <td>{{ ($tunjangan[$i][9] != 0) ? rupiah($tunjangan[$i][9]) : '-' }}</td>
                                                 <td>{{ ($tunjangan[$i][7] != 0) ? rupiah($tunjangan[$i][7]) : '-' }}</td>
@@ -94,11 +95,11 @@
                                     </tbody>
                                     <tfoot style="font-weight: bold">
                                         <tr>
-                                            <td colspan="6">
+                                            <td colspan="2">
                                                 Total Tunjangan + Keseluruhan
                                             </td>
-                                            <td style="background-color: #FED049" colspan="5">{{ rupiah(array_sum($total_kuning)) }}</td>
-                                            <td style="background-color: #54B435" colspan="4">{{ rupiah(array_sum($total_nonkuning)) }}</td>
+                                            <td style="background-color: #FED049" colspan="9">{{ rupiah(array_sum($total_kuning)) }}</td>
+                                            <td style="background-color: #54B435" colspan="5">{{ rupiah(array_sum($total_nonkuning)) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -111,8 +112,8 @@
                                     <thead>
                                         <tr>
                                             <th rowspan="2" style="background-color: #CCD6A6">Bulan</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6">T. Lembur</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6">BP Kesehatan</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6">Tunjangan Uang Lembur</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6">Pengganti Biaya Kesehatan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">Uang Duka</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">SPD</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">SPD Pendidikan </th>
@@ -137,10 +138,10 @@
                                     </tbody>
                                     <tfoot style="font-weight: bold">
                                         <tr>
-                                            <td colspan="4">
+                                            <td colspan="1">
                                                 Total
                                             </td>
-                                            <td style="background-color: #54B435" colspan="2">{{ rupiah(array_sum($total_penghasilan)) }}</td>
+                                            <td style="background-color: #54B435" colspan="6">{{ rupiah(array_sum($total_penghasilan)) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -176,10 +177,10 @@
                                     </tbody>
                                     <tfoot style="font-weight: bold">
                                         <tr>
-                                            <td colspan="2">
+                                            <td colspan="1">
                                                 Total
                                             </td>
-                                            <td style="background-color: #54B435" colspan="2">{{ rupiah(array_sum($total_bonus)) }}</td>
+                                            <td style="background-color: #54B435" colspan="3">{{ rupiah(array_sum($total_bonus)) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -201,25 +202,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
-    <script>        
-        $("#table_export").DataTable({
-            dom : "Bfrtip",
-            aLengthMenu: [
-                [25, 50, 100, 200, -1],
-                [25, 50, 100, 200, "All"]
-            ],
-            iDisplayLength: -1,
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur\n Bulan '+name,
-                    text:'Excel',
-                    customize: function( xlsx, row ) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    }
-                }
-            ]
-        });
+    <script>
+        $(document).ready(function () {
+            $("#table_export").DataTable({
+                scrollX: true,
+            });
+        });       
         
         $(".buttons-excel").attr("class","btn btn-success mb-2");
         
