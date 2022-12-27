@@ -5,12 +5,12 @@
         <div class="card-header">
             <div class="card-title">
                 <h5 class="card-title">Gaji Pajak</h5>
-                <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('penghasilan-tidak-teratur.index') }}">Gaji Pajak </a> > Tambah</p>
+                <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('penghasilan.index') }}">Gaji Pajak </a> > Tambah</p>
             </div>
         </div>
     </div>
     <div class="card-body">
-        <form action="{{ route('penghasilan-tidak-teratur.store') }}" class="form-group" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('penghasilan.store') }}" class="form-group" method="POST" enctype="multipart/form-data">
             @csrf
             <div id="accordion">
                 <div class="card p-2 ml-3 mr-3 shadow">

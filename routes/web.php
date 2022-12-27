@@ -104,13 +104,14 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/promosi', PromosiController::class);
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
-    Route::resource('/penghasilan-tidak-teratur', PenghasilanTidakTeraturController::class);
+    Route::resource('/penghasilan', PenghasilanTidakTeraturController::class);
     
     Route::resource('/laporan_jamsostek', JaminanController::class);
     Route::get('/laporan-jamsostek', [JaminanController::class, 'getJamsostek'])->name('get-jamsostek');
     Route::post('/post-jamsostek', [JaminanController::class, 'postJamsostek'])->name('post-jamsostek');
     Route::get('/dpp', [JaminanController::class, 'dppIndex'])->name('index_dpp');
     Route::post('/get-dpp', [JaminanController::class, 'getDPP'])->name('get-dpp');
+    Route::post('penghasilan/get-gaji', [PenghasilanTidakTeraturController::class, 'filter'])->name('get-penghasilan');
 
     // Routing Import excel karyawan
     Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');

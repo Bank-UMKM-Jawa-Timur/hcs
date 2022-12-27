@@ -8,13 +8,19 @@
 </div>
 
 <div class="card-body">
-  <form action="" method="post">
+  <form action="{{ route('get-penghasilan') }}" method="post">
       @csrf
       <div class="row m-0">
           <div class="col-md-4">
               <div class="form-group">
                   <label for="">NIP</label>
                   <input type="text" class="@error('nip') is-invalid @enderror form-control" name="nip" id="nip" value="{{ old('nip') }}">
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="form-group">
+                  <label for="">NIP</label>
+                  <input type="text" class="form-control" name="nama" id="nama" value="" disabled>
               </div>
           </div>
           @php
@@ -29,26 +35,6 @@
                       @foreach (range(date('Y'), $earliest_year) as $x)
                           <option value="{{ $x }}">{{ $x }}</option>
                       @endforeach
-                  </select>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="form-group">
-                  <label for="Bulan">Bulan</label>
-                  <select name="bulan" class="form-control">
-                      <option value="">--- Pilih Bulan ---</option>
-                      <option value='1'>Januari</option>
-                      <option value='2'>Februari </option>
-                      <option value='3'>Maret</option>
-                      <option value='4'>April</option>
-                      <option value='5'>Mei</option>
-                      <option value='6'>Juni</option>
-                      <option value='7'>Juli</option>
-                      <option value='8'>Agustus</option>
-                      <option value='9'>September</option>
-                      <option value='10'>Oktober</option>
-                      <option value='11'>November</option>
-                      <option value='12'>Desember</option>
                   </select>
               </div>
           </div>
@@ -71,5 +57,18 @@
             }
         });
     });
+
+    $("#nip").change(function(e){
+        var nip = $(this).val();
+
+        $.ajax({
+            url: "/getdatapromosi?nip="+nip,
+            type: "GET",
+            datatype: "json",
+            success: function(res){
+                $("#nama").val(res.nama_karyawan)
+            }
+        })
+    })
   </script>
 @endsection 

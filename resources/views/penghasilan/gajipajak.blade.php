@@ -17,7 +17,14 @@
                     <h5 class="card-title text-center">GAJI PAJAK</h5>
                     <h5 class="card-title text-center">BANK UMKM JAWA TIMUR</h5>
             </div>
-
+            @php
+                $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+   
+                function rupiah($angka){
+                    $hasil_rupiah = number_format($angka, 0, ",", ".");
+                    return $hasil_rupiah;
+                }
+            @endphp
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table stripe" style="min-width: 1350px" id="table_export" style="width: 100%">
@@ -26,12 +33,16 @@
                                 <h5 class="card-title">PENGHASILAN TERATUR</h5>
                                 <table class="table text-center cell-border stripe" style="width: 100%">
                                     <thead>
+                                        @php
+                                            $total_kuning = array();
+                                            $total_nonkuning = array();
+                                        @endphp
                                         <tr>
                                             <th rowspan="2" style="background-color: #CCD6A6">Bulan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">Gaji Pokok</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">JAMSOSTEK</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">T. Makan</th>
-                                            <th colspan="9" style="background-color: #CCD6A6">Tunjangan</th>
+                                            <th colspan="8" style="background-color: #CCD6A6">Tunjangan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">T. Pulsa</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">T. Vitamin</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">T. Transport</th>
@@ -45,36 +56,49 @@
                                             <th>Plksn</th>
                                             <th>Kmhln</th>
                                             <th>Ksjhtn</th>
-                                            <th>Khss</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Januari</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                            <td style="background-color: #FED049">125.000</td>
-                                            <td style="background-color: #FED049">125.000</td>
-                                            <td style="background-color: #FED049">125.000</td>
-                                            <td style="background-color: #FED049">125.000</td>
-                                            <td style="background-color: #FED049">125.000</td>
-                                            <td style="background-color: #FED049">125.000</td>
-                                            <td style="background-color: #FED049">125.000</td>
-                                            <td style="background-color: #FED049">125.000</td>
-                                            <td style="background-color: #FED049">125.000</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                        </tr>
+                                        @for ($i = 0; $i < 12; $i++)
+                                            <tr>
+                                                <td>{{ $bulan[$i] }}</td>
+                                                <td>{{ rupiah($gj_pokok[$i]) }}</td>
+                                                <td>{{ rupiah($jamsostek[$i]) }}</td>
+                                                <td>{{ ($tunjangan[$i][10] != 0) ? rupiah($tunjangan[$i][10]) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][0] != 0) ? rupiah($tunjangan[$i][0]) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($penyesuaian[$i] != 0) ? rupiah($penyesuaian[$i]) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][2] != 0) ? rupiah($tunjangan[$i][2]) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][3] != 0) ? rupiah($tunjangan[$i][3]) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][1] != 0) ? rupiah($tunjangan[$i][1]) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][5] != 0) ? rupiah($tunjangan[$i][5]) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][4] != 0) ? rupiah($tunjangan[$i][4]) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][6] != 0) ? rupiah($tunjangan[$i][6]) : '-' }}</td>
+                                                <td>{{ ($tunjangan[$i][8] != 0) ? rupiah($tunjangan[$i][8]) : '-' }}</td>
+                                                <td>{{ ($tunjangan[$i][9] != 0) ? rupiah($tunjangan[$i][9]) : '-' }}</td>
+                                                <td>{{ ($tunjangan[$i][7] != 0) ? rupiah($tunjangan[$i][7]) : '-' }}</td>
+                                                @for ($j = 0; $j < 11; $j++)
+                                                    @php
+                                                        if ($j == 10 || $j == 8 || $j == 9 || $j == 7){
+                                                            array_push($total_nonkuning, $tunjangan[$i][$j]);
+                                                            array_push($total_nonkuning, $penyesuaian[$i]);
+                                                        } else {
+                                                            array_push($total_kuning, $tunjangan[$i][$j]);
+                                                        }
+                                                    @endphp
+                                                @endfor
+                                                @php
+                                                    array_push($total_nonkuning, $gj_pokok[$i]);
+                                                @endphp
+                                            </tr>
+                                        @endfor
                                     </tbody>
                                     <tfoot style="font-weight: bold">
                                         <tr>
                                             <td colspan="6">
                                                 Total Tunjangan + Keseluruhan
                                             </td>
-                                            <td style="background-color: #FED049" colspan="5">625.000</td>
-                                            <td style="background-color: #54B435" colspan="4">1.375.000</td>
+                                            <td style="background-color: #FED049" colspan="5">{{ rupiah(array_sum($total_kuning)) }}</td>
+                                            <td style="background-color: #54B435" colspan="4">{{ rupiah(array_sum($total_nonkuning)) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -96,22 +120,27 @@
                                         </tr>                                   
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Januari</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                        </tr>
+                                        @php
+                                            $total_penghasilan = array();
+                                        @endphp
+                                        @for ($i = 0; $i < 12; $i++)
+                                            <tr>
+                                                <td>{{ $bulan[$i] }}</td>
+                                                @for ($j = 0; $j < 6; $j++)
+                                                    <td>{{ ($penghasilan[$i][$j] != 0) ? rupiah($penghasilan[$i][$j]) : '-' }}</td>
+                                                    @php
+                                                        array_push($total_penghasilan, $penghasilan[$i][$j]);
+                                                    @endphp
+                                                @endfor
+                                            </tr>
+                                        @endfor
                                     </tbody>
                                     <tfoot style="font-weight: bold">
                                         <tr>
                                             <td colspan="4">
                                                 Total
                                             </td>
-                                            <td style="background-color: #54B435" colspan="2">750.000</td>
+                                            <td style="background-color: #54B435" colspan="2">{{ rupiah(array_sum($total_penghasilan)) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -130,19 +159,27 @@
                                         </tr>                                   
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Januari</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                            <td>125.000</td>
-                                        </tr>
+                                        @php
+                                            $total_bonus =array();
+                                        @endphp
+                                        @for ($i = 0; $i < 12; $i++)
+                                            <tr>
+                                                <td>{{ $bulan[$i] }}</td>
+                                                @for ($j = 0; $j < 3; $j++)
+                                                    <td>{{ ($bonus[$i][$j] != 0) ? rupiah($bonus[$i][$j]) : '-' }}</td>
+                                                    @php
+                                                        array_push($total_bonus, $bonus[$i][$j]);
+                                                    @endphp
+                                                @endfor
+                                            </tr>
+                                        @endfor
                                     </tbody>
                                     <tfoot style="font-weight: bold">
                                         <tr>
                                             <td colspan="2">
                                                 Total
                                             </td>
-                                            <td style="background-color: #54B435" colspan="2">375.000</td>
+                                            <td style="background-color: #54B435" colspan="2">{{ rupiah(array_sum($total_bonus)) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>

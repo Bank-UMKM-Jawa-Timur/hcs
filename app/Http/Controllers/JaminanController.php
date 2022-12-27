@@ -161,7 +161,7 @@ class JaminanController extends Controller
                     ->orWhere('keterangan', 'Penyesuaian Gaji penyesuaian')
                     ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                    ->sum('history_penyesuaian_gaji.nominal_lama');
+                    ->sum('history_penyesuaian_gaji.nominal_baru');
 
                 $perubahan = DB::table('history_penyesuaian_gaji')
                     ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
@@ -169,7 +169,7 @@ class JaminanController extends Controller
                     ->where('mst_tunjangan.status', 1)
                     ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                    ->sum('history_penyesuaian_gaji.nominal_lama');
+                    ->sum('history_penyesuaian_gaji.nominal_baru');
                 // dd($perubahan);
                 // array_push($total_gaji_pusat, ($gj_bulan != null) ? $gj_bulan + $perubahan : ($data_gaji + $i->gj_pokok + $i->gj_penyesuaian));
                 if($gj_bulan != null && $perubahan != null){
@@ -248,7 +248,7 @@ class JaminanController extends Controller
                     ->orWhere('keterangan', 'Penyesuaian Gaji penyesuaian')
                     ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                    ->sum('history_penyesuaian_gaji.nominal_lama');
+                    ->sum('history_penyesuaian_gaji.nominal_baru');
 
                 $perubahan = DB::table('history_penyesuaian_gaji')
                     ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
@@ -256,7 +256,7 @@ class JaminanController extends Controller
                     ->where('mst_tunjangan.status', 1)
                     ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                    ->sum('history_penyesuaian_gaji.nominal_lama');
+                    ->sum('history_penyesuaian_gaji.nominal_baru');
                 
                 // array_push($total_gaji_pusat, ($gj_bulan != null) ? $gj_bulan + $perubahan : ($data_gaji + $i->gj_pokok + $i->gj_penyesuaian));
                 if($gj_bulan != null && $perubahan != null){
@@ -299,7 +299,7 @@ class JaminanController extends Controller
                     ->orWhere('keterangan', 'Penyesuaian Gaji penyesuaian')
                     ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                    ->sum('history_penyesuaian_gaji.nominal_lama');
+                    ->sum('history_penyesuaian_gaji.nominal_baru');
 
                 $perubahan = DB::table('history_penyesuaian_gaji')
                     ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
@@ -307,7 +307,7 @@ class JaminanController extends Controller
                     ->where('mst_tunjangan.status', 1)
                     ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                    ->sum('history_penyesuaian_gaji.nominal_lama');
+                    ->sum('history_penyesuaian_gaji.nominal_baru');
                 
                 // array_push($total_gaji_pusat, ($gj_bulan) ? $gj_bulan + $perubahan : ($data_gaji + $i->gj_pokok + $i->gj_penyesuaian));
                 if($gj_bulan != null && $perubahan != null){
@@ -407,7 +407,7 @@ class JaminanController extends Controller
                         ->orWhere('keterangan', 'Penyesuaian Gaji penyesuaian')
                         ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                         ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                        ->sum('history_penyesuaian_gaji.nominal_lama');
+                        ->sum('history_penyesuaian_gaji.nominal_baru');
     
                     $perubahan_tj_keluarga = DB::table('history_penyesuaian_gaji')
                         ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
@@ -416,7 +416,7 @@ class JaminanController extends Controller
                         ->where('mst_tunjangan.status', 1)
                         ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                         ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                        ->sum('history_penyesuaian_gaji.nominal_lama');
+                        ->sum('history_penyesuaian_gaji.nominal_baru');
 
                     $perubahan_tj_kesejahteraan = DB::table('history_penyesuaian_gaji')
                         ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
@@ -425,7 +425,7 @@ class JaminanController extends Controller
                         ->where('mst_tunjangan.status', 1)
                         ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
                         ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                        ->sum('history_penyesuaian_gaji.nominal_lama');
+                        ->sum('history_penyesuaian_gaji.nominal_baru');
                         
                     array_push($total_tunjangan_keluarga, ($perubahan_tj_keluarga != null) ? $perubahan_tj_keluarga : $data_tunjangan_keluarga);
                     array_push($total_tunjangan_kesejahteraan, ($perubahan_tj_kesejahteraan != null) ? $perubahan_tj_kesejahteraan : $data_tunjangan_kesejahteraan);
@@ -524,7 +524,7 @@ class JaminanController extends Controller
                     ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
                     ->first();
 
-                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_lama : $tj_dpp->nominal);
+                array_push($dpp, ($perubahan_tj != null) ? $perubahan_tj->nominal_baru : $tj_dpp->nominal);
             }
         }
         
