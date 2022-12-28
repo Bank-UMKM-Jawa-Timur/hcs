@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('nip', 25);
             $table->unsignedBigInteger('id_tunjangan');
-            $table->int('nominal');
+            $table->integer('nominal');
             $table->string('tahun');
             $table->string('bulan');
             $table->timestamps();
