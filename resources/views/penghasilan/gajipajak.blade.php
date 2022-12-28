@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
 </head>
   <body>
 
-    <div class="container mt-3 mb-3" style="min-width: 1250px" id="row-baru">
+    <div class="container mt-3 mb-3" style="min-width: 1800px" id="row-baru">
         <div class="card">
             <div class="card-header">
                     <h5 class="card-title text-center">GAJI PAJAK</h5>
@@ -28,7 +29,7 @@
             @endphp
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table stripe" style="min-width: 1350px" id="table_export" style="width: 100%">
+                    <table class="table stripe" id="table_export" style="width: 100%">
                         <tr>
                             <td class="p-0">
                                 <h5 class="card-title">PENGHASILAN TERATUR</h5>
@@ -207,6 +208,7 @@
             $("#table_export").DataTable({
                 scrollX: true,
             });
+            
         });       
         
         $(".buttons-excel").attr("class","btn btn-success mb-2");
