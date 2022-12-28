@@ -8,6 +8,13 @@
 </div>
 
 <div class="card-body">
+    <div class="row m-0">
+        <div class="col">
+            <a class="mb-3" href="{{ route('penghasilan.create') }}">
+                <button class="btn btn-primary">tambah penghasilan</button>
+            </a>
+        </div>
+    </div>
   <form action="{{ route('get-penghasilan') }}" method="post">
       @csrf
       <div class="row m-0">
