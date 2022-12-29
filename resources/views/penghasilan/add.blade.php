@@ -33,10 +33,11 @@
                                     <label for="">Nama Karyawan</label>
                                     <input type="text" id="nama" class="form-control" disabled>
                                 </div>
-                            </div>@php
-                            $already_selected_value = 2022;
-                            $earliest_year = 2010;
-                        @endphp
+                            </div>
+                            @php
+                                $already_selected_value = date('y');
+                                $earliest_year = 2022;
+                            @endphp
                         <div class="col-md-6">
                             <label for="tahun">Tahun</label>
                             <div class="form-group">

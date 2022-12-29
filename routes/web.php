@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\DemosiController;
+use App\Http\Controllers\GajiPerBulanController;
 use App\Http\Controllers\JaminanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
@@ -105,6 +106,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
     Route::resource('/penghasilan', PenghasilanTidakTeraturController::class);
+    Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     
     Route::resource('/laporan_jamsostek', JaminanController::class);
     Route::get('/laporan-jamsostek', [JaminanController::class, 'getJamsostek'])->name('get-jamsostek');

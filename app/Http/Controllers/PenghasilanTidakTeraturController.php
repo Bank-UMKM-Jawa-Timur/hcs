@@ -23,12 +23,12 @@ class PenghasilanTidakTeraturController extends Controller
     {
         $tahun = $request->get('tahun');
         $nip = $request->get('nip');
-        $gj_pokok = array();
-        $gj_penyesuaian = array();
+        $gaji = array();
+        $total_gaji = array();
         $tk = array();
         $ptt = array();
         $bonus = array();
-        $total_tj = array();
+        $total_gj = array();
         $jamsostek = array();
         $tj = [];
         $peng = [];
@@ -38,144 +38,48 @@ class PenghasilanTidakTeraturController extends Controller
         $y = 0;
         $z = 0;
 
-        // Get gaji karyawan selama setahun
+        // Get gaji secara bulanan
         for($i = 1; $i <= 12; $i++){
-            $pokok_penyesuaian = DB::table('history_penyesuaian_gaji')
-                    ->where('nip', $nip)
-                    ->where('id_tunjangan', null)
-                    ->where('keterangan', 'Penyesuaian Gaji Pokok')
-                    ->whereYear('created_at', $tahun)
-                    ->whereMonth('created_at', $i)
-                    ->first();
-            if($i == 1){
-                $tes = DB::table('history_penyesuaian_gaji')
-                    ->where('nip', $nip)
-                    ->where('id_tunjangan', null)
-                    ->where('keterangan', 'Penyesuaian Gaji Pokok')
-                    ->whereYear('created_at', $tahun)
-                    ->whereMonth('created_at', $i)
-                    ->first();
-                $x = $i;
-            }
-            elseif($i>1){
-                if ($pokok_penyesuaian == []) {
-                    $tes = DB::table('history_penyesuaian_gaji')
-                        ->where('nip', $nip)
-                        ->where('id_tunjangan', null)
-                        ->where('keterangan', 'Penyesuaian Gaji Pokok')
-                        ->whereYear('created_at', $tahun)
-                        ->whereMonth('created_at', $x)
-                        ->first();
-                } else {
-                    $tes = DB::table('history_penyesuaian_gaji')
-                        ->where('nip', $nip)
-                        ->where('id_tunjangan', null)
-                        ->where('keterangan', 'Penyesuaian Gaji Pokok')
-                        ->whereYear('created_at', $tahun)
-                        ->whereMonth('created_at', $i)
-                        ->first();
-                    $x = $i;
-                }
-                
-            }
-
-            // Get Gaji penyesuaian 
-            $penyesuaian = DB::table('history_penyesuaian_gaji')
-                    ->where('nip', $nip)
-                    ->where('id_tunjangan', null)
-                    ->where('keterangan', 'Penyesuaian Gaji Pokok')
-                    ->whereYear('created_at', $tahun)
-                    ->whereMonth('created_at', $i)
-                    ->first();
-            if($i == 1){
-                $penyesuaian_cari = DB::table('history_penyesuaian_gaji')
-                    ->where('nip', $nip)
-                    ->where('id_tunjangan', null)
-                    ->where('keterangan', 'Penyesuaian Gaji Pokok')
-                    ->whereYear('created_at', $tahun)
-                    ->whereMonth('created_at', $i)
-                    ->first();
-                $z = $i;
-            }
-            elseif($i>1){
-                if ($penyesuaian == []) {
-                    $penyesuaian_cari = DB::table('history_penyesuaian_gaji')
-                        ->where('nip', $nip)
-                        ->where('id_tunjangan', null)
-                        ->where('keterangan', 'Penyesuaian Gaji Pokok')
-                        ->whereYear('created_at', $tahun)
-                        ->whereMonth('created_at', $z)
-                        ->first();
-                } else {
-                    $penyesuaian_cari = DB::table('history_penyesuaian_gaji')
-                        ->where('nip', $nip)
-                        ->where('id_tunjangan', null)
-                        ->where('keterangan', 'Penyesuaian Gaji Pokok')
-                        ->whereYear('created_at', $tahun)
-                        ->whereMonth('created_at', $i)
-                        ->first();
-                    $z = $i;
-                }
-                
-            }
-            $pokok = DB::table('mst_karyawan')
+            $data = DB::table('gaji_per_bulan')
                 ->where('nip', $nip)
+                ->where('bulan', $i)
+                ->where('tahun', $tahun)
                 ->first();
-            $gj_pokok[$i-1] = ($tes != null) ? $tes->nominal_baru : $pokok->gj_pokok;
-            $gj_penyesuaian[$i-1] = ($penyesuaian_cari != null) ? $penyesuaian_cari->nominal_baru : $pokok->gj_penyesuaian;
-
-            // Get tunjangan karyawan
-            for($j = 1; $j <= 14; $j++){
-                if($i != 10 || $i != 9 || $i != 4){
-                    $tnj = DB::table('history_penyesuaian_gaji')
-                        ->where('nip', $nip)
-                        ->where('id_tunjangan', $j)
-                        ->whereYear('created_at', $tahun)
-                        ->whereMonth('created_at', $i)
-                        ->first();
-                    if($i == 1){
-                        $tnj = DB::table('history_penyesuaian_gaji')
-                            ->where('nip', $nip)
-                            ->where('id_tunjangan', $j)
-                            ->whereYear('created_at', $tahun)
-                            ->whereMonth('created_at', $i)
-                            ->first();
-                        $y = $i;
-                    }
-                    elseif($i>1){
-                        if ($pokok_penyesuaian == []) {
-                            $tnj = DB::table('history_penyesuaian_gaji')
-                                ->where('nip', $nip)
-                                ->where('id_tunjangan', $j)
-                                ->whereYear('created_at', $tahun)
-                                ->whereMonth('created_at', $y)
-                                ->first();
-                        } else {
-                            $tnj = DB::table('history_penyesuaian_gaji')
-                                ->where('nip', $nip)
-                                ->where('id_tunjangan', $j)
-                                ->whereYear('created_at', $tahun)
-                                ->whereMonth('created_at', $i)
-                                ->first();
-                            $y = $i;
-                        }
-                    }
-                    $tun = DB::table('tunjangan_karyawan')
-                        ->where('nip', $nip)
-                        ->where('id_tunjangan', $j)
-                        ->first();
-                    if($tnj != null){
-                        $tj[$j-1] = $tnj->nominal_baru;
-                    } else if($tnj == null && $tun != null){
-                        $tj[$j-1] = $tun->nominal;
-                    } else {
-                        $tj[$j-1] = 0;
-                    }
-                }
-            }
-            array_push($tk, $tj);
-            
-            // Get Penghasilan tidak teratur karyawan
+           $gj[$i - 1] = [
+            'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
+            'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
+            'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
+            'tj_telepon' => ($data != null) ? $data->gj_pokok : 0,
+            'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
+            'tj_teller' => ($data != null) ? $data->tj_teller : 0,
+            'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
+            'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
+            'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
+            'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
+            'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
+            'tj_ti' => ($data != null) ? $data->tj_ti : 0,
+            'tj_transport' => ($data != null) ? $data->tj_transport : 0,
+            'tj_pulsa' => ($data != null) ? $data->tj_pulsa : 0,
+            'tj_vitamin' => ($data != null) ? $data->tj_vitamin : 0,
+            'uang_makan' => ($data != null) ? $data->uang_makan : 0
+           ];
+           
+           $total_gj[$i-1] = [
+            'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
+            'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
+            'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
+            'tj_telepon' => ($data != null) ? $data->gj_pokok : 0,
+            'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
+            'tj_teller' => ($data != null) ? $data->tj_teller : 0,
+            'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
+            'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
+            'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
+            'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
+            'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
+           ];
+           array_push($gaji, $gj[$i-1]);
+           array_push($total_gaji, array_sum($total_gj[$i-1]));
+        // Get Penghasilan tidak teratur karyawan
             for($j = 16; $j <= 21; $j++){
                 $penghasilan = DB::table('penghasilan_tidak_teratur')
                     ->where('nip', $nip)
@@ -198,58 +102,20 @@ class PenghasilanTidakTeraturController extends Controller
                 $bon[$j-21] = ($bns != null) ? $bns->nominal : 0;
             }
             array_push($bonus, $bon);
-
-            // Get Total Tunjangan Karyawan
-            if($i == 1){
-                $total_tunjangan = DB::table('history_penyesuaian_gaji')
-                    ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
-                    ->where('nip', $nip)
-                    ->where('mst_tunjangan.status', 1)
-                    ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                    ->whereMonth('history_penyesuaian_gaji.created_at', '=', $i)
-                    ->sum('history_penyesuaian_gaji.nominal_baru');
-                $w = $i;
-            }
-            elseif($i>1){
-                if ($pokok_penyesuaian == []) {
-                    $total_tunjangan = DB::table('history_penyesuaian_gaji')
-                        ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
-                        ->where('nip', $nip)
-                        ->where('mst_tunjangan.status', 1)
-                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $w)
-                        ->sum('history_penyesuaian_gaji.nominal_baru');
-                } else {
-                    $total_tunjangan = DB::table('history_penyesuaian_gaji')
-                        ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
-                        ->where('nip', $nip)
-                        ->where('mst_tunjangan.status', 1)
-                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $i)
-                        ->sum('history_penyesuaian_gaji.nominal_baru');
-                    $w = $i;
-                }
-            }
-            $tunjangan = DB::table('tunjangan_karyawan')
-                ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-                ->where('mst_tunjangan.status', 1)
-                ->where('tunjangan_karyawan.nip', $nip)
-                ->sum('nominal');
-            array_push($total_tj, ($total_tunjangan != null) ? $total_tunjangan : $tunjangan);
-            
-            $total_gaji = $gj_pokok[$i-1] + $gj_penyesuaian[$i-1] + $total_tj[$i-1];
-            $jms = 0.03 * $total_gaji;
-            array_push($jamsostek, $jms);
         }
-        // dd($ptt);
+
+        // Get Jamsostek
+        foreach($total_gaji as $item){
+            array_push($jamsostek, 0.03 * $item);
+        }
+        // dd($gj);
 
         return view('penghasilan.gajipajak', [
-            'gj_pokok' => $gj_pokok,
+            'gj' => $gj,
             'jamsostek' => $jamsostek,
             'tunjangan' => $tk,
             'penghasilan' => $ptt,
             'bonus' => $bonus,
-            'penyesuaian' => $gj_penyesuaian,
             'tahun' => $tahun
         ]);
     }

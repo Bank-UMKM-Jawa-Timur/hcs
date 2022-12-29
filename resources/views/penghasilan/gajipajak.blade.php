@@ -35,13 +35,13 @@
                                 <table class="table text-center cell-border stripe" style="width: 100%">
                                     <thead>
                                         @php
-                                            $total_kuning = array();
-                                            $total_nonkuning = array();
+                                            $total_k = null;
+                                            $total_non = null;
                                         @endphp
                                         <tr>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px">Bulan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px">Gaji Pokok</th>
-                                            <th colspan="9" style="background-color: #CCD6A6">Tunjangan</th>
+                                            <th colspan="8" style="background-color: #CCD6A6">Tunjangan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6">JAMSOSTEK</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px">Tunjangan <br> Uang Pulsa</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px">Tunjangan <br> Uang Vitamin</th>
@@ -56,39 +56,28 @@
                                             <th>Pelaksana</th>
                                             <th>Kemahalan</th>
                                             <th>Kesejahteraan</th>
-                                            <th>Khusus</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @for ($i = 0; $i < 12; $i++)
                                             <tr>
                                                 <td>{{ $bulan[$i] }}</td>
-                                                <td>{{ rupiah($gj_pokok[$i]) }}</td>
-                                                <td style="background-color: #FED049">{{ ($tunjangan[$i][10] != 0) ? rupiah($tunjangan[$i][10]) : '-' }}</td>
-                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][0] != 0) ? rupiah($tunjangan[$i][0]) : '-' }}</td>
-                                                <td style="background-color: #FED049" >{{ ($penyesuaian[$i] != 0) ? rupiah($penyesuaian[$i]) : '-' }}</td>
-                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][2] != 0) ? rupiah($tunjangan[$i][2]) : '-' }}</td>
-                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][3] != 0) ? rupiah($tunjangan[$i][3]) : '-' }}</td>
-                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][1] != 0) ? rupiah($tunjangan[$i][1]) : '-' }}</td>
-                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][5] != 0) ? rupiah($tunjangan[$i][5]) : '-' }}</td>
-                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][4] != 0) ? rupiah($tunjangan[$i][4]) : '-' }}</td>
-                                                <td style="background-color: #FED049" >{{ ($tunjangan[$i][6] != 0) ? rupiah($tunjangan[$i][6]) : '-' }}</td>
-                                                <td>{{ rupiah($jamsostek[$i]) }}</td>
-                                                <td>{{ ($tunjangan[$i][8] != 0) ? rupiah($tunjangan[$i][8]) : '-' }}</td>
-                                                <td>{{ ($tunjangan[$i][9] != 0) ? rupiah($tunjangan[$i][9]) : '-' }}</td>
-                                                <td>{{ ($tunjangan[$i][7] != 0) ? rupiah($tunjangan[$i][7]) : '-' }}</td>
-                                                @for ($j = 0; $j < 11; $j++)
-                                                    @php
-                                                        if ($j == 10 || $j == 8 || $j == 9 || $j == 7){
-                                                            array_push($total_nonkuning, $tunjangan[$i][$j]);
-                                                            array_push($total_nonkuning, $penyesuaian[$i]);
-                                                        } else {
-                                                            array_push($total_kuning, $tunjangan[$i][$j]);
-                                                        }
-                                                    @endphp
-                                                @endfor
+                                                <td>{{ ($gj[$i]['gj_pokok'] != 0) ? rupiah($gj[$i]['gj_pokok']) : '-' }}</td>
+                                                <td style="background-color: #FED049">{{ ($gj[$i]['tj_keluarga'] != 0) ? rupiah($gj[$i]['tj_keluarga']) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($gj[$i]['tj_jabatan'] != 0) ? rupiah($gj[$i]['tj_jabatan']) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($gj[$i]['gj_penyesuaian'] != 0) ? rupiah($gj[$i]['gj_penyesuaian']) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($gj[$i]['tj_perumahan'] != 0) ? rupiah($gj[$i]['tj_perumahan']) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($gj[$i]['tj_telepon'] != 0) ? rupiah($gj[$i]['tj_telepon']) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($gj[$i]['tj_pelaksana'] != 0) ? rupiah($gj[$i]['tj_pelaksana']) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
+                                                <td style="background-color: #FED049" >{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
+                                                <td>{{ ($jamsostek[$i] != 0) ?rupiah($jamsostek[$i]) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['tj_pulsa'] != 0) ? rupiah($gj[$i]['tj_pulsa']) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['tj_vitamin'] != 0) ? rupiah($gj[$i]['tj_vitamin']) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
                                                 @php
-                                                    array_push($total_nonkuning, $gj_pokok[$i]);
+                                                    $total_k += $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] + $gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] +$gj[$i]['tj_kesejahteraan'];
+                                                    $total_non += $gj[$i]['gj_pokok'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_pulsa'] + rupiah($gj[$i]['uang_makan']);
                                                 @endphp
                                             </tr>
                                         @endfor
@@ -98,8 +87,8 @@
                                             <td colspan="2">
                                                 Total Tunjangan + Keseluruhan
                                             </td>
-                                            <td style="background-color: #FED049" colspan="9">{{ rupiah(array_sum($total_kuning)) }}</td>
-                                            <td style="background-color: #54B435" colspan="5">{{ rupiah(array_sum($total_nonkuning)) }}</td>
+                                            <td style="background-color: #FED049" colspan="9">{{ rupiah($total_k) }}</td>
+                                            <td style="background-color: #54B435" colspan="5">{{ rupiah($total_non) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>

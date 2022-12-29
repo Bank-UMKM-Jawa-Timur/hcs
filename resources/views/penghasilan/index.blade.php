@@ -31,8 +31,8 @@
               </div>
           </div>
           @php
-              $already_selected_value = 2022;
-              $earliest_year = 2010;
+            $already_selected_value = date('y');
+            $earliest_year = 2022;
           @endphp
           <div class="col-md-4">
               <label for="tahun">Tahun</label>
