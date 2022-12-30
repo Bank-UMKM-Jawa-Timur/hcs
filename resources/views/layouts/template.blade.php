@@ -117,7 +117,7 @@ Coded by www.creative-tim.com
                   <p></p>
               </a>
               <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                  <a class="dropdown-item" href="/penghasilan">Gaji Pajak</a>
+                  <a class="dropdown-item" href="/penghasilan">Pajak Penghasilan</a>
               </div>
           </li>
             <li class="dropdown">

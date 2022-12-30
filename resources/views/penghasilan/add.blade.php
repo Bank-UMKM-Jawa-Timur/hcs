@@ -4,8 +4,8 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Gaji Pajak</h5>
-                <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('penghasilan.index') }}">Gaji Pajak </a> > Tambah</p>
+                <h5 class="card-title">Pajak Penghasilan</h5>
+                <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('penghasilan.index') }}">Pajak Penghasilan </a> > Tambah</p>
             </div>
         </div>
     </div>
@@ -15,8 +15,8 @@
             <div id="accordion">
                 <div class="card p-2 ml-3 mr-3 shadow">
                     <div class="card-header" id="headingOne">
-                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Data Karyawan</a>
+                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Data Karyawan</a>
                         </h6>
                     </div>
 

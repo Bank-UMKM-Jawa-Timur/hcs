@@ -2,9 +2,12 @@
 
 @section('content')
 <div class="card-header">
-  <div class="card-header">
-      <h5 class="card-title">Cari Data Karyawan</h5>
-  </div>
+    <div class="card-header">
+        <div class="card-title">
+            <h5 class="card-title">Pajak Penghasilan</h5>
+            <p class="card-title"><a href="/">Dashboard </a> > <a href="">Pajak Penghasilan </a></p>
+        </div>
+    </div>
 </div>
 
 <div class="card-body">
