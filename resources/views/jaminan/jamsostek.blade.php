@@ -160,14 +160,15 @@
                                                     ->where('kd_entitas', $item->kd_entitas)
                                                     ->get();
                                                 foreach($karyawan as $i){
-                                                    $data_gaji = DB::table('tunjangan_karyawan')
-                                                        ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
+                                                    $data_gaji = DB::table('gaji_per_bulan')
                                                         ->where('nip', $i->nip)
-                                                        ->where('mst_tunjangan.status', 1)
-                                                        ->sum('tunjangan_karyawan.nominal');
+                                                        ->where('bulan', $bulan)
+                                                        ->where('tahun', $tahun)
+                                                        ->first();
+                                                    array_push($total_gaji_cabang, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_pokok + $data_gaji->gj_penyesuaian) : 0);
     
                                                     // if ($i->gj_penyesuaian != null) {
-                                                        array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok + $i->gj_penyesuaian : 0 + $i->gj_pokok + $i->gj_penyesuaian));
+                                                        // array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok + $i->gj_penyesuaian : 0 + $i->gj_pokok + $i->gj_penyesuaian));
                                                     // } else {
                                                     //     array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok : 0 + $i->gj_pokok));
                                                     // }
