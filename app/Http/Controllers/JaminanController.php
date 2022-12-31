@@ -13,9 +13,9 @@ class JaminanController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function getJamsostek()
+     public function getJamsostek(Request $request)
      {
-        return view('jaminan.jamsostek', [
+        return view('jaminan.index', [
             'status' => null
         ]);
      }
@@ -50,7 +50,7 @@ class JaminanController extends Controller
                 ->groupBy('mst_karyawan.kd_entitas')
                 ->get();
                 // dd($data_cabang);
-            return view('jaminan.jamsostek', [
+            return view('jaminan.index', [
                 'status' => 1,
                 'data_pusat' => $data_pusat,
                 'data_cabang' => $data_cabang
@@ -107,7 +107,7 @@ class JaminanController extends Controller
             array_push($jp2, $perhitungan_jp2);
         }
 
-        return view('jaminan.jamsostek', [
+        return view('jaminan.index', [
             'status' => 2,
             'karyawan' => $karyawan,
             'jp1' => $jp1,
@@ -206,7 +206,7 @@ class JaminanController extends Controller
                 ->groupBy('mst_karyawan.kd_entitas')
                 ->get();
             
-            return view('jaminan.jamsostek', [
+            return view('jaminan.index', [
                 'status' => 1,
                 'jp1_pusat' => $jp1_pusat,
                 'jp2_pusat' => $jp2_pusat,
@@ -341,7 +341,7 @@ class JaminanController extends Controller
             array_push($jkm, $perhitungan_jkm);
         }
 
-        return view('jaminan.jamsostek', [
+        return view('jaminan.index', [
             'status' => 2,
             'kantor' => $kantor,
             'cab' => $cab,

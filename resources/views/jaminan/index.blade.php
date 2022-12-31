@@ -1,8 +1,24 @@
 @extends('layouts.template')
 @section('content')
+    <style>
+        .dataTables_wrapper .dataTables_filter{
+            float: right;
+        }
+        .dataTables_wrapper .dataTables_length{
+            float: left;
+        }
+
+        div.dataTables_wrapper div.dataTables_filter input {
+            width: 90%; 
+        }
+    </style>
+
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Laporan Jamsostek</h5>
+            <div class="card-title">
+                <h5 class="card-title">Laporan JAMSOSTEK</h5>
+                <p class="card-title"><a href="/">Dashboard </a> > <a href="">Laporan JAMSOSTEK </a></p>
+            </div>
         </div>
     </div>
 
@@ -14,9 +30,9 @@
                     <div class="form-group">
                         <label for="">Kategori</label>
                         <select name="kategori" class="form-control" id="kategori">
-                            <option value="">--- Pilih Kategori ---</option>
-                            <option value="1">Rekap Keseluruhan</option>
-                            <option value="2">Rekap Kantor / Cabang</option>
+                            <option value="-">--- Pilih Kategori ---</option>
+                            <option {{ old('kategori') == '1' ? 'selected' : '' }} value="1">Rekap Keseluruhan</option>
+                            <option {{ old('kategori') == '2' ? 'selected' : '' }} value="2">Rekap Kantor / Cabang</option>
                         </select>
                     </div>
                 </div>
@@ -30,7 +46,7 @@
                         <select name="tahun" class="form-control">
                             <option value="">--- Pilih Tahun ---</option>
                             @foreach (range(date('Y'), $earliest_year) as $x)
-                                <option value="{{ $x }}">{{ $x }}</option>
+                                <option {{ old('tahun') == $x  ? 'selected' : '' }} value="{{ $x }}">{{ $x }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -39,19 +55,19 @@
                     <div class="form-group">
                         <label for="Bulan">Bulan</label>
                         <select name="bulan" class="form-control">
-                            <option value="">--- Pilih Bulan ---</option>
-                            <option value='1'>Januari</option>
-                            <option value='2'>Februari </option>
-                            <option value='3'>Maret</option>
-                            <option value='4'>April</option>
-                            <option value='5'>Mei</option>
-                            <option value='6'>Juni</option>
-                            <option value='7'>Juli</option>
-                            <option value='8'>Agustus</option>
-                            <option value='9'>September</option>
-                            <option value='10'>Oktober</option>
-                            <option value='11'>November</option>
-                            <option value='12'>Desember</option>
+                            <option {{ old('bulan') == '-' ? 'selected' : '' }} value="-">--- Pilih Bulan ---</option>
+                            <option {{ old('bulan') == '1' ? 'selected' : '' }} value='1'>Januari</option>
+                            <option {{ old('bulan') == '2' ? 'selected' : '' }} value='2'>Februari </option>
+                            <option {{ old('bulan') == '3' ? 'selected' : '' }} value='3'>Maret</option>
+                            <option {{ old('bulan') == '4' ? 'selected' : '' }} value='4'>April</option>
+                            <option {{ old('bulan') == '5' ? 'selected' : '' }} value='5'>Mei</option>
+                            <option {{ old('bulan') == '6' ? 'selected' : '' }} value='6'>Juni</option>
+                            <option {{ old('bulan') == '7' ? 'selected' : '' }} value='7'>Juli</option>
+                            <option {{ old('bulan') == '8' ? 'selected' : '' }} value='8'>Agustus</option>
+                            <option {{ old('bulan') == '9' ? 'selected' : '' }} value='9'>September</option>
+                            <option {{ old('bulan') == '10' ? 'selected' : '' }} value='10'>Oktober</option>
+                            <option {{ old('bulan') == '11' ? 'selected' : '' }} value='11'>November</option>
+                            <option {{ old('bulan') == '12' ? 'selected' : '' }} value='12'>Desember</option>
                         </select>
                     </div>
                 </div>
@@ -59,51 +75,54 @@
                 </div>
                 <div id="cabang_col">
                 </div>
-                <div class="col-md-4 mt-3">
+                <div class="col-md-4 mt-2">
                     <button class="btn btn-info" type="submit">Tampilkan</button>
                 </div>
             </div>
         </form>
-        <div class="row m-0" id="row-baru">
+    </div>
+
+    <div class="card ml-3 mr-3 mb-3 mt-3 shadow">
+        <div class="col-md-12">
             @if ($status != null)
                 @php
-                    function rupiah($angka){
-                        $hasil_rupiah = number_format($angka, 0, ",", ".");
-                        return round($angka);
+                    function rupiah($angka)
+                    {
+                        $hasil_rupiah = number_format($angka, 2, ".", ",");
+                        return $hasil_rupiah;
+                    }
+                    function rupiahJkk($angka)
+                    {
+                        $hasil_rupiah = number_format($angka, 4, ".", ",");
+                        return $hasil_rupiah;
                     }
                 @endphp
                 @if ($status == 1)
-                    <div class="row m-0">
-                        <div class="col-md-4">
-                            <button class="btn btn-info" id="btn_export" type="button">Export</button>
-                        </div>
-                        <div class="col-md-4">
-                            <button class="btn btn-danger" type="button" id="clear">Clear</button>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table text-center" id="table_export">
-                            @php
-                                $a = 1;
-                            @endphp
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                             <thead>
-                                <th>Kode Kantor</th>
-                                <th>Nama Kantor</th>
-                                <th>Jumlah Pegawai</th>
-                                <th>JKK</th>
-                                <th>JHT</th>
-                                <th>JKM</th>
-                                <th>Total</th>
-                                <th>JP(1%)</th>
-                                <th>JP(2%)</th>
-                                <th>Total JP</th>
+                                <tr>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Kode Kantor</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Nama Kantor</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Jumlah Pegawai</th>
+                                    <th colspan="4" style="background-color: #CCD6A6; text-align: center;">JAMSOSTEK</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">JP(1%)</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">JP(2%)</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Total JP</th>
+                                </tr>                                   
+                                <tr style="background-color: #DAE2B6">
+                                    <th style="text-align: center;">JKK</th>
+                                    <th style="text-align: center;">JHT</th>
+                                    <th style="text-align: center;">JKM</th>
+                                    <th style="text-align: center;">Total</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>-</td>
                                     <td>Kantor Pusat</td>
-                                    <td>{{ count($data_pusat) }}</td>
-                                    <td>{{ rupiah(((0.0024 * $total_gaji_pusat))) }}</td>
+                                    <td>{{ $count_pusat }}</td>
+                                    <td>{{ rupiahJkk(((0.0024 * $total_gaji_pusat))) }}</td>
                                     <td>{{ rupiah(((0.057 * $total_gaji_pusat))) }}</td>
                                     <td>{{ rupiah(((0.003 * $total_gaji_pusat))) }}</td>
                                     <td>{{ rupiah((((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 * $total_gaji_pusat))) }}</td>
@@ -156,7 +175,11 @@
                                                     ->where('mst_tunjangan.status', 1)
                                                     ->sum('tunjangan_karyawan.nominal');
 
-                                                array_push($total_gaji_cabang, ($data_gaji + $i->gj_pokok));
+                                                // if ($i->gj_penyesuaian != null) {
+                                                    array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok + $i->gj_penyesuaian : 0 + $i->gj_pokok + $i->gj_penyesuaian));
+                                                // } else {
+                                                //     array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok : 0 + $i->gj_pokok));
+                                                // }
                                             }
                                             foreach($total_gaji_cabang as $i){
                                                 array_push($jp1_cabang, ((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
@@ -164,19 +187,19 @@
                                             }
                                         @endphp
                                         <td>{{ count($karyawan) }}</td>
-                                        <td>{{ rupiah(((0.0024 * $item->nominal))) }}</td>
-                                        <td>{{ rupiah(((0.057 * $item->nominal))) }}</td>
-                                        <td>{{ rupiah(((0.003 * $item->nominal))) }}</td>
-                                        <td>{{ rupiah((((0.0024 * $item->nominal)) + ((0.057 * $item->nominal))) + ((0.003 * $item->nominal))) }}</td>
+                                        <td>{{ rupiahJkk(((0.0024 * array_sum($total_gaji_cabang)))) }}</td>
+                                        <td>{{ rupiah(((0.057 * array_sum($total_gaji_cabang)))) }}</td>
+                                        <td>{{ rupiah(((0.003 * array_sum($total_gaji_cabang)))) }}</td>
+                                        <td>{{ rupiah((((0.0024 * array_sum($total_gaji_cabang))) + ((0.057 * array_sum($total_gaji_cabang)))) + ((0.003 * array_sum($total_gaji_cabang)))) }}</td>
                                         <td>{{ rupiah(array_sum($jp1_cabang)) }}</td>
                                         <td>{{ rupiah(array_sum($jp2_cabang)) }}</td>
                                         <td>{{ rupiah((array_sum($jp1_cabang) + array_sum($jp2_cabang))) }}</td>
 
                                         @php
-                                            array_push($total_jamsostek, (((0.0024 * $item->nominal)) + ((0.057 * $item->nominal))) + ((0.003 * $item->nominal)));
-                                            array_push($total_jkk, ((0.0024 * $item->nominal)));
-                                            array_push($total_jht, ((0.057 * $item->nominal)));
-                                            array_push($total_jkm, ((0.003 * $item->nominal)));
+                                            array_push($total_jamsostek, (((0.0024 * array_sum($total_gaji_cabang))) + ((0.057 * array_sum($total_gaji_cabang)))) + ((0.003 * array_sum($total_gaji_cabang))));
+                                            array_push($total_jkk, ((0.0024 * array_sum($total_gaji_cabang))));
+                                            array_push($total_jht, ((0.057 * array_sum($total_gaji_cabang))));
+                                            array_push($total_jkm, ((0.003 * array_sum($total_gaji_cabang))));
 
                                             array_push($total_jp, (array_sum($jp1_cabang) + array_sum($jp2_cabang)));
                                             array_push($total_jp1, array_sum($jp1_cabang));
@@ -185,47 +208,48 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
+                            <tfoot style="font-weight: bold">
                                 <tr>
-                                    <td colspan="2">
+                                    <td colspan="2" style="text-align: center;">
                                         Jumlah
                                     </td>
                                     @php
                                         $total_karyawan = DB::table('mst_karyawan')->get();
                                     @endphp
-                                    <td>{{ count($total_karyawan) }}</td>
-                                    <td>{{ rupiah(array_sum($total_jkk)) }}</td>
-                                    <td>{{ rupiah(array_sum($total_jht)) }}</td>
-                                    <td>{{ rupiah(array_sum($total_jkm)) }}</td>
-                                    <td>{{ rupiah(array_sum($total_jamsostek)) }}</td>
-                                    <td>{{ rupiah(array_sum($total_jp1)) }}</td>
-                                    <td>{{ rupiah(array_sum($total_jp2)) }}</td>
-                                    <td>{{ rupiah(array_sum($total_jp   )) }}</td>
+                                    <td style="text-align: center;">{{ count($total_karyawan) }}</td>
+                                    <td style="text-align: center;">{{ rupiahJkk(array_sum($total_jkk)) }}</td>
+                                    <td style="text-align: center;">{{ rupiah(array_sum($total_jht)) }}</td>
+                                    <td style="text-align: center;">{{ rupiah(array_sum($total_jkm)) }}</td>
+                                    <td style="background-color: #FED049; text-align: center;">{{ rupiah(array_sum($total_jamsostek)) }}</td>
+                                    <td style="text-align: center;">{{ rupiah(array_sum($total_jp1)) }}</td>
+                                    <td style="text-align: center;">{{ rupiah(array_sum($total_jp2)) }}</td>
+                                    <td style="background-color: #FED049; text-align: center;">{{ rupiah(array_sum($total_jp)) }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="9" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>
+                                    <td style="background-color: #54B435; text-align: center;">{{ rupiah((array_sum($total_jamsostek) + array_sum($total_jp))) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                 @elseif($status == 2)
-                    <div class="row m-0">
-                        <div class="col-md-4 m-0">
-                            <button class="btn btn-info" id="btn_export" type="button">Export</button>
-                        </div>
-                        <div class="col-md-4 m-0">
-                            <button class="btn btn-danger" type="button" id="clear">Clear</button>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table text-center" id="table_export">
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                             <thead>
-                                <th>NIP</th>
-                                <th>Nama Karyawan</th>
-                                <th>JKK</th>
-                                <th>JHT</th>
-                                <th>JKM</th>
-                                <th>Total</th>
-                                <th>JP(1%)</th>
-                                <th>JP(2%)</th>
-                                <th>Total JP</th>
+                                <tr>
+                                    <th rowspan="2" style="background-color: #CCD6A6">NIP</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6">Nama Karyawan</th>
+                                    <th colspan="4" style="background-color: #CCD6A6">JAMSOSTEK</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6">JP(1%)</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6">JP(2%)</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6">Total JP</th>
+                                </tr>                                   
+                                <tr style="background-color: #DAE2B6">
+                                    <th>JKK</th>
+                                    <th>JHT</th>
+                                    <th>JKM</th>
+                                    <th>Total</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 @for ($i = 0; $i < count($karyawan); $i++)
@@ -237,7 +261,7 @@
                                             {{ $karyawan[$i]->nama_karyawan }}
                                         </td>
                                         <td>
-                                            {{ rupiah(($jkk[$i])) }}
+                                            {{ rupiahJkk(($jkk[$i])) }}
                                         </td>
                                         <td>
                                             {{ rupiah(($jht[$i])) }}
@@ -260,16 +284,20 @@
                                     </tr>
                                 @endfor
                             </tbody>
-                            <tfoot>
+                            <tfoot style="font-weight: bold; text-align: center;">
                                 <tr>
                                     <td colspan="2">Jumlah</td>
                                     <td>{{ rupiah(array_sum($jkk)) }}</td>
                                     <td>{{ rupiah(array_sum($jht)) }}</td>
                                     <td>{{ rupiah(array_sum($jkm)) }}</td>
-                                    <td>{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm))) }}</td>
+                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm))) }}</td>
                                     <td>{{ rupiah((array_sum($jp1))) }}</td>
                                     <td>{{ rupiah((array_sum($jp2))) }}</td>
-                                    <td>{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
+                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>
+                                    <td style="background-color: #54B435">{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2))) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -291,23 +319,6 @@
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
-        // document.getElementById('btn_export').addEventListener('click', function(){
-        //     var table2excel = new Table2Excel();
-        //     table2excel.export(document.querySelectorAll('#table_export'));
-        // });
-
-        $("#table_export").DataTable({
-            dom : "Bfrtip",
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur',
-                    text:'Excel'
-                }
-            ]
-        });
-
-
         $("#clear").click(function(e){
             $("#row-baru").empty()
         })
@@ -322,9 +333,9 @@
                 <div class="form-group">
                         <label for="">Kantor</label>
                         <select name="kantor" class="form-control" id="kantor">
-                            <option value="">--- Pilih Kantor ---</option>
-                            <option value="Pusat">Pusat</option>
-                            <option value="Cabang">Cabang</option>
+                            <option {{ old('kantor') == '-' ? 'selected' : '' }} value="-">--- Pilih Kantor ---</option>
+                            <option {{ old('kantor') == 'Pusat' ? 'selected' : '' }} value="Pusat">Pusat</option>
+                            <option {{ old('kantor') == 'Cabang' ? 'selected' : '' }} value="Cabang">Cabang</option>
                         </select>
                     </div>
                 `)
@@ -351,7 +362,7 @@
 
                                 $("#kantor_row3").hide()
                                 $.each(res[0], function(i, item){
-                                    $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.kd_cabang + ' - ' +item.nama_cabang+'</option>')
+                                    $('#cabang').append('<option {{ old('cabang') == '+item.kd_cabang+' ? 'selected' : '' }} value="'+item.kd_cabang+'">'+item.kd_cabang + ' - ' +item.nama_cabang+'</option>')
                                 })
                             }
                         })
@@ -366,21 +377,26 @@
             }
         })
 
-        function formatRupiah(angka, prefix){
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-            split = number_string.split(','),
-            sisa = split[0].length % 3,
-            rupiah = split[0].substr(0, sisa),
-            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-            // tambahkan titik jika yang di input sudah menjadi angka satuan ribuan
-            if(ribuan){
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-        }
+        $("#table_export").DataTable({
+            dom : "Bfrtip",
+            iDisplayLength: -1,
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    title: 'Bank UMKM Jawa Timur\n Bulan '+name,
+                    text:'Excel',
+                    customize: function( xlsx, row ) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    }
+                }
+            ]
+        });
+        
+        $(".buttons-excel").attr("class","btn btn-success mb-2");
+        
+        document.getElementById('btn_export').addEventListener('click', function(){
+            var table2excel = new Table2Excel();
+            table2excel.export(document.querySelectorAll('#table_export'));
+        });
     </script>
 @endsection

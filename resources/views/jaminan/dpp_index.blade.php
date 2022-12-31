@@ -2,7 +2,10 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Laporan DPP</h5>
+            <div class="card-title">
+                <h5 class="card-title">Laporan DPP</h5>
+                <p class="card-title"><a href="/">Dashboard </a> > <a href="">Laporan DPP </a></p>
+            </div>
         </div>
     </div>
 
