@@ -129,43 +129,17 @@
                                                     ->whereNotIn('status_karyawan', ['Kontrak Perpanjangan', 'IKJP'])
                                                     ->get();
                                                 foreach($karyawan as $i){
-                                                    $data_tunjangan_keluarga = DB::table('tunjangan_karyawan')
-                                                        ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
-                                                        ->where('nip', $i->nip)
-                                                        ->where('mst_tunjangan.id', 1)
-                                                        ->sum('nominal');
-                                                    $data_tunjangan_kesejahteraan = DB::table('tunjangan_karyawan')
-                                                        ->join('mst_tunjangan', 'tunjangan_karyawan.id_tunjangan', '=', 'mst_tunjangan.id')
-                                                        ->where('nip', $i->nip)
-                                                        ->where('mst_tunjangan.id', 8)
-                                                        ->sum('nominal');
-                                                    $gj_bulan = DB::table('history_penyesuaian_gaji')
+                                                    if($i->status_karyawan == 'Tetap'){
+                                                        $data_gaji = DB::table('gaji_per_bulan')
                                                             ->where('nip', $i->nip)
-                                                            ->where('keterangan', 'Penyesuaian Gaji Pokok')
-                                                            ->orWhere('keterangan', 'Penyesuaian Gaji penyesuaian')
-                                                            ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                                                            ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                                                            ->sum('history_penyesuaian_gaji.nominal_lama');
-                                                    $perubahan_tj_keluarga = DB::table('history_penyesuaian_gaji')
-                                                        ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
-                                                        ->where('nip', $i->nip)
-                                                        ->where('mst_tunjangan.id', 1)
-                                                        ->where('mst_tunjangan.status', 1)
-                                                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                                                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                                                        ->sum('history_penyesuaian_gaji.nominal_lama');
-                                                    $perubahan_tj_kesejahteraan = DB::table('history_penyesuaian_gaji')
-                                                        ->join('mst_tunjangan', 'history_penyesuaian_gaji.id_tunjangan', '=', 'mst_tunjangan.id')
-                                                        ->where('nip', $i->nip)
-                                                        ->where('mst_tunjangan.id', 8)
-                                                        ->where('mst_tunjangan.status', 1)
-                                                        ->whereYear('history_penyesuaian_gaji.created_at', '=', $tahun)
-                                                        ->whereMonth('history_penyesuaian_gaji.created_at', '=', $bulan)
-                                                        ->sum('history_penyesuaian_gaji.nominal_lama');
-                                                        
-                                                    array_push($total_tunjangan_keluarga, ($perubahan_tj_keluarga != null) ? $perubahan_tj_keluarga : $data_tunjangan_keluarga);
-                                                    array_push($total_tunjangan_kesejahteraan, ($perubahan_tj_kesejahteraan != null) ? $perubahan_tj_kesejahteraan : $data_tunjangan_kesejahteraan);
-                                                    array_push($total_gj_cabang, ($gj_bulan != null) ? $gj_bulan : $i->gj_pokok);
+                                                            ->where('bulan', $bulan)
+                                                            ->where('tahun', $tahun)
+                                                            ->first();
+                                                            
+                                                        array_push($total_tunjangan_keluarga, ($data_gaji != null) ? $data_gaji->tj_keluarga : 0);
+                                                        array_push($total_tunjangan_kesejahteraan, ($data_gaji != null) ? $data_gaji->tj_kesejahteraan : 0);
+                                                        array_push($total_gj_cabang, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
+                                                    }
                                                 }
 
                                                 $gj_cabang = (array_sum($total_gj_cabang) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13;
