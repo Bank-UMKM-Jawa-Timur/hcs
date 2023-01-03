@@ -107,7 +107,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/bagian', BagianController::class);
     Route::resource('/penghasilan', PenghasilanTidakTeraturController::class);
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
-    
+
     Route::resource('/laporan_jamsostek', JaminanController::class);
     Route::get('/laporan-jamsostek', [JaminanController::class, 'getJamsostek'])->name('get-jamsostek');
     Route::post('/post-jamsostek', [JaminanController::class, 'postJamsostek'])->name('post-jamsostek');
@@ -141,7 +141,7 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/getbagian', [KaryawanController::class, 'get_bagian']);
 
-    Route::post('/laporan_jaminan', [JaminanController::class, 'filter'])->name('filter-laporan');
+    Route::post('/laporan_jamsostek', [JaminanController::class, 'filter'])->name('filter-laporan');
 });
 Auth::routes();
 

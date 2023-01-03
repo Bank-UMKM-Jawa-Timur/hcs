@@ -183,7 +183,7 @@ class JaminanController extends Controller
                 ->selectRaw('kd_entitas, sum(nominal) as nominal')
                 ->groupBy('mst_karyawan.kd_entitas')
                 ->get();
-            
+
             return view('jaminan.index', [
                 'status' => 1,
                 'jp1_pusat' => $jp1_pusat,
@@ -194,11 +194,12 @@ class JaminanController extends Controller
                 'count_pusat' => count($karyawan_pusat),
                 'data_cabang' => $data_cabang,
                 'tahun' => $tahun,
-                'bulan' => $bulan
+                'bulan' => $bulan,
+                'request' => $request,
             ]);
         }
 
-        // Get data per kantor/cabang 
+        // Get data per kantor/cabang
         // if kantor = pusat
         $cab = null;
         if($kantor == 'Pusat'){
@@ -248,7 +249,7 @@ class JaminanController extends Controller
                 array_push($total_gaji, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_pokok + $data_gaji->gj_penyesuaian) : 0);
             }
         }
-        
+
         $jkk = array();
         $jht = array();
         $jkm = array();
@@ -279,7 +280,8 @@ class JaminanController extends Controller
             'jp1' => $jp1,
             'jp2' => $jp2,
             'bulan' => $bulan,
-            'tahun' => $tahun
+            'tahun' => $tahun,
+            'request' => $request,
         ]);
     }
 
@@ -287,7 +289,7 @@ class JaminanController extends Controller
     {
         return view('jaminan.dpp_index');
     }
-    
+
     public function getDPP(Request $request)
     {
         // dd($request);
@@ -309,7 +311,7 @@ class JaminanController extends Controller
                 ->orWhere('kd_entitas', null)
                 ->where('status_karyawan', 'Tetap')
                 ->get();
-        
+
             $total_tunjangan_keluarga = array();
             $total_tunjangan_kesejahteraan = array();
             $total_gj_pusat = array();
@@ -321,7 +323,7 @@ class JaminanController extends Controller
                         ->where('bulan', $bulan)
                         ->where('tahun', $tahun)
                         ->first();
-                        
+
                     array_push($total_tunjangan_keluarga, ($data_gaji != null) ? $data_gaji->tj_keluarga : 0);
                     array_push($total_tunjangan_kesejahteraan, ($data_gaji != null) ? $data_gaji->tj_kesejahteraan : 0);
                     array_push($total_gj_pusat, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
@@ -358,7 +360,7 @@ class JaminanController extends Controller
             ]);
         }
 
-        // Get data per kantor/cabang 
+        // Get data per kantor/cabang
         $cab = null;
         $kantor = $request->kantor;
         $tahun = $request->tahun;
@@ -408,7 +410,7 @@ class JaminanController extends Controller
                 array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
             }
         }
-        
+
         return view('jaminan.laporan_dpp', [
             'status' => 2,
             'kantor' => $kantor,

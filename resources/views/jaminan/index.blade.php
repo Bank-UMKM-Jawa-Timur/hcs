@@ -1,4 +1,7 @@
 @extends('layouts.template')
+@php
+$request = isset($request) ? $request : null;
+@endphp
 @section('content')
     <style>
         .dataTables_wrapper .dataTables_filter{
@@ -9,7 +12,7 @@
         }
 
         div.dataTables_wrapper div.dataTables_filter input {
-            width: 90%; 
+            width: 90%;
         }
     </style>
 
@@ -28,11 +31,11 @@
             <div class="row m-0">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="">Kategori</label>
+                        <label for="">Kategori {{ old('kategori') }}</label>
                         <select name="kategori" class="form-control" id="kategori">
                             <option value="-">--- Pilih Kategori ---</option>
-                            <option {{ old('kategori') == '1' ? 'selected' : '' }} value="1">Rekap Keseluruhan</option>
-                            <option {{ old('kategori') == '2' ? 'selected' : '' }} value="2">Rekap Kantor / Cabang</option>
+                            <option @selected($request?->kategori == 1) value="1">Rekap Keseluruhan</option>
+                            <option @selected($request?->kategori == 2) value="2">Rekap Kantor / Cabang</option>
                         </select>
                     </div>
                 </div>
@@ -46,7 +49,7 @@
                         <select name="tahun" class="form-control">
                             <option value="">--- Pilih Tahun ---</option>
                             @foreach (range(date('Y'), $earliest_year) as $x)
-                                <option {{ old('tahun') == $x  ? 'selected' : '' }} value="{{ $x }}">{{ $x }}</option>
+                                <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -55,27 +58,18 @@
                     <div class="form-group">
                         <label for="Bulan">Bulan</label>
                         <select name="bulan" class="form-control">
-                            <option {{ old('bulan') == '-' ? 'selected' : '' }} value="-">--- Pilih Bulan ---</option>
-                            <option {{ old('bulan') == '1' ? 'selected' : '' }} value='1'>Januari</option>
-                            <option {{ old('bulan') == '2' ? 'selected' : '' }} value='2'>Februari </option>
-                            <option {{ old('bulan') == '3' ? 'selected' : '' }} value='3'>Maret</option>
-                            <option {{ old('bulan') == '4' ? 'selected' : '' }} value='4'>April</option>
-                            <option {{ old('bulan') == '5' ? 'selected' : '' }} value='5'>Mei</option>
-                            <option {{ old('bulan') == '6' ? 'selected' : '' }} value='6'>Juni</option>
-                            <option {{ old('bulan') == '7' ? 'selected' : '' }} value='7'>Juli</option>
-                            <option {{ old('bulan') == '8' ? 'selected' : '' }} value='8'>Agustus</option>
-                            <option {{ old('bulan') == '9' ? 'selected' : '' }} value='9'>September</option>
-                            <option {{ old('bulan') == '10' ? 'selected' : '' }} value='10'>Oktober</option>
-                            <option {{ old('bulan') == '11' ? 'selected' : '' }} value='11'>November</option>
-                            <option {{ old('bulan') == '12' ? 'selected' : '' }} value='12'>Desember</option>
+                            <option value="-">--- Pilih Bulan ---</option>
+                            @for($i = 1; $i <= 12; $i++)
+                                <option @selected($request?->bulan == $i) value="{{ $i }}">{{ getMonth($i) }}</option>
+                            @endfor
                         </select>
                     </div>
                 </div>
-                <div id="kantor_col">
+                <div id="kantor_col" class="col-md-4">
                 </div>
-                <div id="cabang_col">
+                <div id="cabang_col" class="col-md-4">
                 </div>
-                <div class="col-md-4 mt-2">
+                <div class="col-md-12 mt-2">
                     <button class="btn btn-info" type="submit">Tampilkan</button>
                 </div>
             </div>
@@ -109,7 +103,7 @@
                                     <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">JP(1%)</th>
                                     <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">JP(2%)</th>
                                     <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Total JP</th>
-                                </tr>                                   
+                                </tr>
                                 <tr style="background-color: #DAE2B6">
                                     <th style="text-align: center;">JKK</th>
                                     <th style="text-align: center;">JHT</th>
@@ -243,7 +237,7 @@
                                     <th rowspan="2" style="background-color: #CCD6A6">JP(1%)</th>
                                     <th rowspan="2" style="background-color: #CCD6A6">JP(2%)</th>
                                     <th rowspan="2" style="background-color: #CCD6A6">Total JP</th>
-                                </tr>                                   
+                                </tr>
                                 <tr style="background-color: #DAE2B6">
                                     <th>JKK</th>
                                     <th>JHT</th>
@@ -323,80 +317,61 @@
             $("#row-baru").empty()
         })
 
-        $("#kategori").change(function(e){
-            var value = $(this).val();
-            $("#kantor_col").empty();
-            console.log(value);
-            if(value == 2){
-                $("#kantor_col").addClass("col-md-4");
-                $("#kantor_col").append(`
+        $('#kategori').change(function(e) {
+            const value = $(this).val();
+            $('#kantor_col').empty();
+            $('#cabang_col').empty();
+
+            if(value == 2) generateOffice();
+        });
+
+        function generateOffice() {
+            const office = '{{ $request?->kantor }}';
+            $('#kantor_col').append(`
                 <div class="form-group">
-                        <label for="">Kantor</label>
-                        <select name="kantor" class="form-control" id="kantor">
-                            <option {{ old('kantor') == '-' ? 'selected' : '' }} value="-">--- Pilih Kantor ---</option>
-                            <option {{ old('kantor') == 'Pusat' ? 'selected' : '' }} value="Pusat">Pusat</option>
-                            <option {{ old('kantor') == 'Cabang' ? 'selected' : '' }} value="Cabang">Cabang</option>
-                        </select>
-                    </div>
-                `)
+                    <label for="kantor">Kantor</label>
+                    <select name="kantor" class="form-control" id="kantor">
+                        <option value="-">--- Pilih Kantor ---</option>
+                        <option ${ office == "Pusat" ? 'selected' : '' } value="Pusat">Pusat</option>
+                        <option ${ office == "Cabang" ? 'selected' : '' } value="Cabang">Cabang</option>
+                    </select>
+                </div>
+            `);
 
+            $('#kantor').change(function(e) {
+                $('#cabang_col').empty();
+                if($(this).val() != "Cabang") return;
+                generateSubOffice();
+            });
 
-                $("#kantor").change(function(e){
-                    var value = $(this).val();
-                    if(value == 'Cabang'){
-                        $.ajax({
-                            type: "GET",
-                            url: '/getcabang',
-                            datatype: 'JSON',
-                            success: function(res){
-                                $('#cabang_col').addClass("col-md-4");
-                                $("#cabang_col").empty();
-                                $("#cabang_col").append(`
-                                        <div class="form-group">
-                                            <label for="Cabang">Cabang</label>
-                                            <select name="cabang" id="cabang" class="form-control">
-                                                <option value="">--- Pilih Cabang ---</option>
-                                            </select>
-                                        </div>`
-                                );
+            function generateSubOffice() {
+                $('#cabang_col').empty();
+                const subOffice = '{{ $request?->cabang }}';
 
-                                $("#kantor_row3").hide()
-                                $.each(res[0], function(i, item){
-                                    $('#cabang').append('<option {{ old('cabang') == '+item.kd_cabang+' ? 'selected' : '' }} value="'+item.kd_cabang+'">'+item.kd_cabang + ' - ' +item.nama_cabang+'</option>')
-                                })
-                            }
-                        })
-                    }else {
-                        $("#cabang_col").removeClass("col-md-4");
-                        $("#cabang_col").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '/getcabang',
+                    dataType: 'JSON',
+                    success: (res) => {
+                        $('#cabang_col').append(`
+                            <div class="form-group">
+                                <label for="Cabang">Cabang</label>
+                                <select name="cabang" id="cabang" class="form-control">
+                                    <option value="">--- Pilih Cabang ---</option>
+                                </select>
+                            </div>
+                        `);
+
+                        $.each(res[0], (i, item) => {
+                            const kd_cabang = item.kd_cabang;
+                            $('#cabang').append(`<option ${subOffice == kd_cabang ? 'selected' : ''} value="${kd_cabang}">${item.kd_cabang} - ${item.nama_cabang}</option>`);
+                        });
                     }
-                })
-            } else{
-                $("#kantor_col").removeClass("col-md-4")
-                $("#kantor_col").empty()
+                });
             }
-        })
+        }
 
-        $("#table_export").DataTable({
-            dom : "Bfrtip",
-            iDisplayLength: -1,
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur\n Bulan '+name,
-                    text:'Excel',
-                    customize: function( xlsx, row ) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    }
-                }
-            ]
-        });
-        
-        $(".buttons-excel").attr("class","btn btn-success mb-2");
-        
-        document.getElementById('btn_export').addEventListener('click', function(){
-            var table2excel = new Table2Excel();
-            table2excel.export(document.querySelectorAll('#table_export'));
-        });
+        $('#kategori').trigger('change');
+        $('#kantor').trigger('change');
     </script>
 @endsection
