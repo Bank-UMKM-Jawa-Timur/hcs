@@ -1,4 +1,8 @@
 @extends('layouts.template')
+@php
+$request = isset($request) ? $request : null;
+$status = isset($status) ? $status : null;
+@endphp
 @section('content')
     <div class="card-header">
         <div class="card-header">
@@ -10,16 +14,16 @@
     </div>
 
     <div class="card-body">
-        <form action="{{ route('get-dpp') }}" method="post">
+        <form action="{{ route('filter-laporan') }}" method="post">
             @csrf
             <div class="row m-0">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="">Kategori</label>
+                        <label for="">Kategori {{ old('kategori') }}</label>
                         <select name="kategori" class="form-control" id="kategori">
-                            <option value="">--- Pilih Kategori ---</option>
-                            <option value="1">Rekap Keseluruhan</option>
-                            <option value="2">Rekap Kantor / Cabang</option>
+                            <option value="-">--- Pilih Kategori ---</option>
+                            <option @selected($request?->kategori == 1) value="1">Rekap Keseluruhan</option>
+                            <option @selected($request?->kategori == 2) value="2">Rekap Kantor / Cabang</option>
                         </select>
                     </div>
                 </div>
@@ -33,7 +37,7 @@
                         <select name="tahun" class="form-control">
                             <option value="">--- Pilih Tahun ---</option>
                             @foreach (range(date('Y'), $earliest_year) as $x)
-                                <option value="{{ $x }}">{{ $x }}</option>
+                                <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -42,43 +46,152 @@
                     <div class="form-group">
                         <label for="Bulan">Bulan</label>
                         <select name="bulan" class="form-control">
-                            <option value="">--- Pilih Bulan ---</option>
-                            <option value='1'>Januari</option>
-                            <option value='2'>Februari </option>
-                            <option value='3'>Maret</option>
-                            <option value='4'>April</option>
-                            <option value='5'>Mei</option>
-                            <option value='6'>Juni</option>
-                            <option value='7'>Juli</option>
-                            <option value='8'>Agustus</option>
-                            <option value='9'>September</option>
-                            <option value='10'>Oktober</option>
-                            <option value='11'>November</option>
-                            <option value='12'>Desember</option>
+                            <option value="-">--- Pilih Bulan ---</option>
+                            @for($i = 1; $i <= 12; $i++)
+                                <option @selected($request?->bulan == $i) value="{{ $i }}">{{ getMonth($i) }}</option>
+                            @endfor
                         </select>
                     </div>
                 </div>
-                <div id="kantor_col">
+                <div id="kantor_col" class="col-md-4">
                 </div>
-                <div id="cabang_col">
+                <div id="cabang_col" class="col-md-4">
                 </div>
-                <div class="col-md-4 mt-3">
+                <div class="col-md-12 mt-2">
                     <button class="btn btn-info" type="submit">Tampilkan</button>
                 </div>
             </div>
         </form>
     </div>
+    <div class="card ml-3 mr-3 mb-3 mt-3 shadow">
+        <div class="col-md-12">
+            @if ($status != null)
+                @php
+                    function rupiah($angka)
+                    {
+                        $hasil_rupiah = number_format($angka, 0, ".", ",");
+                        return $hasil_rupiah;
+                    }
+                @endphp
+                @if ($status == 1)
+                    <div class="table-responsive">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
+                            <thead style="background-color: #CCD6A6">
+                                <th>Kode Kantor</th>
+                                <th>Nama Kantor</th>
+                                <th>DPP</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>-</td>
+                                    <td>Kantor Pusat</td>
+                                    <td>{{ rupiah($dpp_pusat) }}</td>
+                                </tr>
+
+                                @php
+                                    $total_tunjangan_keluarga = array();
+                                    $total_tunjangan_kesejahteraan = array();
+                                    $total_gj_cabang = array();
+                                    $total_jamsostek = array();
+
+                                    $total_dpp = array();
+
+                                    array_push($total_dpp, $dpp_pusat);
+                                @endphp
+
+                                @foreach ($data_cabang as $item)
+                                    @php
+                                        $nama_cabang = DB::table('mst_cabang')
+                                            ->where('kd_cabang', $item->kd_entitas)
+                                            ->first();
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $item->kd_entitas }}</td>
+                                        <td>{{ $nama_cabang->nama_cabang }}</td>
+                                        @php
+                                            $total_tunjangan_keluarga = array();
+                                            $total_tunjangan_kesejahteraan = array();
+                                            $total_gj_cabang = array();
+                                            $gj_cabang = null;
+
+                                            $karyawan = DB::table('mst_karyawan')
+                                                ->where('kd_entitas', $item->kd_entitas)
+                                                ->whereNotIn('status_karyawan', ['Kontrak Perpanjangan', 'IKJP'])
+                                                ->get();
+                                            foreach($karyawan as $i){
+                                                if($i->status_karyawan == 'Tetap'){
+                                                    $data_gaji = DB::table('gaji_per_bulan')
+                                                        ->where('nip', $i->nip)
+                                                        ->where('bulan', $bulan)
+                                                        ->where('tahun', $tahun)
+                                                        ->first();
+
+                                                    array_push($total_tunjangan_keluarga, ($data_gaji != null) ? $data_gaji->tj_keluarga : 0);
+                                                    array_push($total_tunjangan_kesejahteraan, ($data_gaji != null) ? $data_gaji->tj_kesejahteraan : 0);
+                                                    array_push($total_gj_cabang, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
+                                                }
+                                            }
+
+                                            $gj_cabang = (array_sum($total_gj_cabang) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13;
+
+                                            array_push($total_dpp, $gj_cabang);
+                                        @endphp
+                                        <td>{{ rupiah($gj_cabang) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">
+                                        Jumlah
+                                    </td>
+                                    <td style="background-color: #FED049">{{ rupiah(array_sum($total_dpp)) }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                @elseif($status == 2)
+                    <div class="table-responsive">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
+                            <thead style="background-color: #CCD6A6">
+                                <th>NIP</th>
+                                <th>Nama Karyawan</th>
+                                <th>DPP</th>
+                            </thead>
+                            <tbody>
+                                @for ($i = 0; $i < count($karyawan); $i++)
+                                    @if ($karyawan[$i]->status_karyawan == 'Tetap')
+                                        <tr>
+                                            <td>{{ $karyawan[$i]->nip }}</td>
+                                            <td>{{ $karyawan[$i]->nama_karyawan }}</td>
+                                            <td>{{ rupiah($dpp[$i]) }}</td>
+                                        </tr>
+                                    @endif
+                                @endfor
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">Jumlah</td>
+                                    <td style="background-color: #FED049">{{ rupiah(array_sum($dpp)) }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                @endif
+            @endif
+        </div>
+    </div>
 @endsection
 
 @section('custom_script')
     <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script> 
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> 
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script> 
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script> 
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
         // document.getElementById('btn_export').addEventListener('click', function(){
         //     var table2excel = new Table2Excel();
@@ -91,69 +204,69 @@
                 {
                     extend: 'excelHtml5',
                     title: 'Bank UMKM Jawa Timur',
-                    text:'Excel' 
+                    text:'Excel'
                 }
             ]
         });
-        
+
 
         $("#clear").click(function(e){
             $("#row-baru").empty()
         })
 
-        $("#kategori").change(function(e){
-            var value = $(this).val();
-            $("#kantor_col").empty();
-            console.log(value);
-            if(value == 2){
-                $("#kantor_col").addClass("col-md-4");
-                $("#kantor_col").append(`
-                <div class="form-group">
-                        <label for="">Kantor</label>
-                        <select name="kantor" class="form-control" id="kantor">
-                            <option value="">--- Pilih Kantor ---</option>
-                            <option value="Pusat">Pusat</option>
-                            <option value="Cabang">Cabang</option>
-                        </select>
-                    </div>
-                `)
-                
-        
-                $("#kantor").change(function(e){
-                    var value = $(this).val();
-                    if(value == 'Cabang'){
-                        $.ajax({
-                            type: "GET",
-                            url: '/getcabang',
-                            datatype: 'JSON',
-                            success: function(res){
-                                $('#cabang_col').addClass("col-md-4");
-                                $("#cabang_col").empty();
-                                $("#cabang_col").append(`
-                                        <div class="form-group">
-                                            <label for="Cabang">Cabang</label>
-                                            <select name="cabang" id="cabang" class="form-control">
-                                                <option value="">--- Pilih Cabang ---</option>
-                                            </select>
-                                        </div>`
-                                );
+        $('#kategori').change(function(e) {
+            const value = $(this).val();
+            $('#kantor_col').empty();
+            $('#cabang_col').empty();
 
-                                $("#kantor_row3").hide()
-                                $.each(res[0], function(i, item){
-                                    $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.kd_cabang + ' - ' +item.nama_cabang+'</option>')
-                                })
-                            }
-                        })
-                    }else {
-                        $("#cabang_col").removeClass("col-md-4");
-                        $("#cabang_col").empty();
+            if(value == 2) generateOffice();
+        });
+
+        function generateOffice() {
+            const office = '{{ $request?->kantor }}';
+            $('#kantor_col').append(`
+                <div class="form-group">
+                    <label for="kantor">Kantor</label>
+                    <select name="kantor" class="form-control" id="kantor">
+                        <option value="-">--- Pilih Kantor ---</option>
+                        <option ${ office == "Pusat" ? 'selected' : '' } value="Pusat">Pusat</option>
+                        <option ${ office == "Cabang" ? 'selected' : '' } value="Cabang">Cabang</option>
+                    </select>
+                </div>
+            `);
+
+            $('#kantor').change(function(e) {
+                $('#cabang_col').empty();
+                if($(this).val() != "Cabang") return;
+                generateSubOffice();
+            });
+
+            function generateSubOffice() {
+                $('#cabang_col').empty();
+                const subOffice = '{{ $request?->cabang }}';
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/getcabang',
+                    dataType: 'JSON',
+                    success: (res) => {
+                        $('#cabang_col').append(`
+                            <div class="form-group">
+                                <label for="Cabang">Cabang</label>
+                                <select name="cabang" id="cabang" class="form-control">
+                                    <option value="">--- Pilih Cabang ---</option>
+                                </select>
+                            </div>
+                        `);
+
+                        $.each(res[0], (i, item) => {
+                            const kd_cabang = item.kd_cabang;
+                            $('#cabang').append(`<option ${subOffice == kd_cabang ? 'selected' : ''} value="${kd_cabang}">${item.kd_cabang} - ${item.nama_cabang}</option>`);
+                        });
                     }
-                })
-            } else {
-                $("#cabang_col").removeClass("col-md-4");
-                $("#cabang_col").empty();
+                });
             }
-        })
+        }
 
         function formatRupiah(angka, prefix){
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
@@ -161,15 +274,18 @@
             sisa = split[0].length % 3,
             rupiah = split[0].substr(0, sisa),
             ribuan = split[0].substr(sisa).match(/\d{3}/gi);
- 
+
             // tambahkan titik jika yang di input sudah menjadi angka satuan ribuan
             if(ribuan){
                 separator = sisa ? '.' : '';
                 rupiah += separator + ribuan.join('.');
             }
- 
+
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
+
+        $('#kategori').trigger('change');
+        $('#kantor').trigger('change');
     </script>
 @endsection

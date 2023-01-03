@@ -292,7 +292,6 @@ class JaminanController extends Controller
 
     public function getDPP(Request $request)
     {
-        // dd($request);
         $kantor = $request->kantor;
         $kategori = $request->kategori;
         $tahun = $request->tahun;
@@ -356,7 +355,8 @@ class JaminanController extends Controller
                 'data_pusat' => $data_pusat,
                 'data_cabang' => $data_cabang,
                 'tahun' => $tahun,
-                'bulan' => $bulan
+                'bulan' => $bulan,
+                'request' => $request,
             ]);
         }
 
@@ -418,7 +418,8 @@ class JaminanController extends Controller
             'karyawan' => $karyawan,
             'dpp' => $dpp,
             'bulan' => $bulan,
-            'tahun' => $tahun
+            'tahun' => $tahun,
+            'request' => $request,
         ]);
     }
 
