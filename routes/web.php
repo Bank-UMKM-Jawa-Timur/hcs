@@ -112,7 +112,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/laporan-jamsostek', [JaminanController::class, 'getJamsostek'])->name('get-jamsostek');
     Route::post('/post-jamsostek', [JaminanController::class, 'postJamsostek'])->name('post-jamsostek');
     Route::get('/dpp', [JaminanController::class, 'dppIndex'])->name('index_dpp');
-    Route::post('/dpp', [JaminanController::class, 'getDPP'])->name('get-dpp');
+    Route::post('/dpp', [JaminanController::class, 'getDpp'])->name('get-dpp');
     Route::post('penghasilan/get-gaji', [PenghasilanTidakTeraturController::class, 'filter'])->name('get-penghasilan');
 
     // Routing Import excel karyawan

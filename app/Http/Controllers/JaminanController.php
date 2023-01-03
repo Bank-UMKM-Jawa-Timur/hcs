@@ -349,7 +349,7 @@ class JaminanController extends Controller
                 ->groupBy('mst_karyawan.kd_entitas')
                 ->get();
 
-            return view('jaminan.laporan_dpp', [
+            return view('jaminan.dpp_index', [
                 'status' => 1,
                 'dpp_pusat' => $dpp_pusat,
                 'data_pusat' => $data_pusat,
@@ -411,7 +411,7 @@ class JaminanController extends Controller
             }
         }
 
-        return view('jaminan.laporan_dpp', [
+        return view('jaminan.dpp_index', [
             'status' => 2,
             'kantor' => $kantor,
             'cab' => $cab,

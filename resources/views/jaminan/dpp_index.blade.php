@@ -14,7 +14,7 @@ $status = isset($status) ? $status : null;
     </div>
 
     <div class="card-body">
-        <form action="{{ route('filter-laporan') }}" method="post">
+        <form action="{{ route('get-dpp') }}" method="post">
             @csrf
             <div class="row m-0">
                 <div class="col-md-4">
