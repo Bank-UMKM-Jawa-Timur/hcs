@@ -148,15 +148,19 @@ class JaminanController extends Controller
             $jp1_pusat = array();
             $jp2_pusat = array();
             $total_gaji_pusat = array();
+            $jkk_pusat = array();
             foreach($karyawan_pusat as $i){
                 $data_gaji = DB::table('gaji_per_bulan')
                     ->where('nip', $i->nip)
                     ->where('bulan', $bulan)
                     ->where('tahun', $tahun)
                     ->first();
-                array_push($total_gaji_pusat, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_pokok + $data_gaji->gj_penyesuaian) : 0);
+                array_push($total_gaji_pusat, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
             }
+
+            // dd($total_gaji_pusat);
             foreach($total_gaji_pusat as $i){
+                array_push($jkk_pusat, $i * 0.0024);
                 array_push($jp1_pusat, round((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
                 array_push($jp2_pusat, round((($i >  9077600) ?  9077600 * 0.02 : $i * 0.02)));
             }
@@ -184,6 +188,7 @@ class JaminanController extends Controller
                 'status' => 1,
                 'jp1_pusat' => $jp1_pusat,
                 'jp2_pusat' => $jp2_pusat,
+                'jkk_pusat' => $jkk_pusat,
                 'total_gaji_pusat' => array_sum($total_gaji_pusat),
                 'data_pusat' => $data_pusat,
                 'count_pusat' => count($karyawan_pusat),

@@ -49,7 +49,7 @@
             </div>
             <div class="row m-0">
                 <div class="col-md-5">
-                    <button class="btn btn-info">bayar</button>
+                    <button class="btn btn-info">proses</button>
                 </div>
             </div>
         </form>
