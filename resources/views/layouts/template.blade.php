@@ -113,10 +113,11 @@ Coded by www.creative-tim.com
             <li class="dropdown">
               <a href="" data-toggle="dropdown" aria-expanded="false">
                   <i class="nc-icon nc-money-coins"></i>
-                  <p class="dropdown-toggle" id="navbarDropdownMenuLink">Penghasilan </p>
+                  <p class="dropdown-toggle" id="navbarDropdownMenuLink">Gaji </p>
                   <p></p>
               </a>
               <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                  <a class="dropdown-item" href="{{ route('gaji_perbulan.index') }}">Pembayaran Gaji</a>
                   <a class="dropdown-item" href="/penghasilan">Pajak Penghasilan</a>
               </div>
           </li>
