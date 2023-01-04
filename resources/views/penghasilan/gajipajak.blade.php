@@ -1,5 +1,27 @@
 @extends('layouts.template')
 @section('content')
+<style>
+    .dataTables_wrapper .dataTables_filter{
+        float: right;
+    }
+    .dataTables_wrapper .dataTables_length{
+        float: left;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        width: 90%;
+    }
+
+    .table-responsive {
+        -ms-overflow-style: none;  
+        scrollbar-width: none;  
+    }
+    .table-responsive::-webkit-scrollbar { 
+        overflow-y: hidden;
+        overflow-x: scroll;
+    }
+</style>
+
 <div class="card-header">
     <div class="card-header">
         <div class="card-title">
@@ -54,24 +76,21 @@
           </a>
         </div>
   </form>
-      </div>
+    <div class="card ml-3 mr-3 mb-3 mt-4 shadow">
+        <div class="col-md-12">
+            @php
+                $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
 
-<div class="card mt-3 mb-3 shadow" id="row-baru">
-    <div class="card">
-        @php
-            $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
-
-            function rupiah($angka){
-                $hasil_rupiah = number_format($angka, 0, ",", ".");
-                return $hasil_rupiah;
-            }
-        @endphp
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table stripe" id="table_export" style="width: 100%">
+                function rupiah($angka){
+                    $hasil_rupiah = number_format($angka, 0, ",", ".");
+                    return $hasil_rupiah;
+                }
+            @endphp
+            <div class="table-responsive p-0">
+                <table class="table" id="table_export" style="width: 100%">
                     <tr>
                         <td class="p-0">
-                            <h5 class="card-title">PENGHASILAN TERATUR</h5>
+                            <h5 class="card-title mt-3">PENGHASILAN TERATUR</h5>
                             <table class="table text-center cell-border stripe" style="width: 100%">
                                 <thead>
                                     @php
@@ -79,13 +98,13 @@
                                         $total_non = null;
                                     @endphp
                                     <tr>
-                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px">Bulan</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px">Gaji Pokok</th>
-                                        <th colspan="8" style="background-color: #CCD6A6">Tunjangan</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6">JAMSOSTEK</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px">Tunjangan <br> Uang Pulsa</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px">Tunjangan <br> Uang Vitamin</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px">Tunjangan <br> Uang Transport</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px; text-align: center;">Bulan</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px; text-align: center;">Gaji Pokok</th>
+                                        <th colspan="8" style="background-color: #CCD6A6; text-align: center;">Tunjangan</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">JAMSOSTEK</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">Tunjangan <br> Uang Pulsa</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">Tunjangan <br> Uang Vitamin</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">Tunjangan <br> Uang Transport</th>
                                     </tr>
                                     <tr style="background-color: #DAE2B6">
                                         <th>Keluarga</th>
@@ -124,11 +143,11 @@
                                 </tbody>
                                 <tfoot style="font-weight: bold">
                                     <tr>
-                                        <td colspan="2">
+                                        <td colspan="2" style="text-align: center;">
                                             Total Tunjangan + Keseluruhan
                                         </td>
-                                        <td style="background-color: #FED049" colspan="9">{{ rupiah($total_k) }}</td>
-                                        <td style="background-color: #54B435" colspan="5">{{ rupiah($total_non) }}</td>
+                                        <td style="background-color: #FED049; text-align: center;" colspan="8">{{ rupiah($total_k) }}</td>
+                                        <td style="background-color: #54B435; text-align: center;" colspan="6">{{ rupiah($total_non) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -140,13 +159,13 @@
                             <table class="table text-center cell-border stripe" style="width: 100%">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2" style="background-color: #CCD6A6">Bulan</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6">Tunjangan Uang Lembur</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6">Pengganti Biaya Kesehatan</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6">Uang Duka</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6">SPD</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6">SPD Pendidikan </th>
-                                        <th rowspan="2" style="background-color: #CCD6A6">SPD Pindah Tugas</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Bulan</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Tunjangan Uang Lembur</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Pengganti Biaya Kesehatan</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Uang Duka</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">SPD</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">SPD Pendidikan </th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">SPD Pindah Tugas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -167,10 +186,10 @@
                                 </tbody>
                                 <tfoot style="font-weight: bold">
                                     <tr>
-                                        <td colspan="1">
+                                        <td colspan="1" style="text-align: center;">
                                             Total
                                         </td>
-                                        <td style="background-color: #54B435" colspan="6">{{ rupiah(array_sum($total_penghasilan)) }}</td>
+                                        <td style="background-color: #54B435; text-align: center;" colspan="6">{{ rupiah(array_sum($total_penghasilan)) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -182,10 +201,10 @@
                             <table class="table text-center cell-border stripe" style="width: 100%">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2" style="background-color: #CCD6A6">Bulan</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6">Tunjangan Hari Raya</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6">Jasa Produksi</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6">Dana Pendidikan</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Bulan</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Tunjangan Hari Raya</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Jasa Produksi</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Dana Pendidikan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -206,10 +225,10 @@
                                 </tbody>
                                 <tfoot style="font-weight: bold">
                                     <tr>
-                                        <td colspan="1">
+                                        <td colspan="1" style="text-align: center;">
                                             Total
                                         </td>
-                                        <td style="background-color: #54B435" colspan="3">{{ rupiah(array_sum($total_bonus)) }}</td>
+                                        <td style="background-color: #54B435; text-align: center;" colspan="3">{{ rupiah(array_sum($total_bonus)) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -234,6 +253,12 @@
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
 <script>
+    $("#table_export").DataTable({
+        dom : "Bfrtip",
+        iDisplayLength: -1, 
+        scrollX: true,
+    });
+
     $("#nip").change(function(e){
         var nip = $(this).val();
 
