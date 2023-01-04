@@ -169,9 +169,6 @@ $request = isset($request) ? $request : null;
                                                     ->where('tahun', $tahun)
                                                     ->first();
                                                 array_push($total_gaji_cabang, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
-                                                // } else {
-                                                //     array_push($total_gaji_cabang, ((isset($data_gaji)) ? $data_gaji + $i->gj_pokok : 0 + $i->gj_pokok));
-                                                // }
                                             }
                                             foreach($total_gaji_cabang as $i){
                                                 array_push($jp1_cabang, ((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
@@ -311,6 +308,28 @@ $request = isset($request) ? $request : null;
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
+        $("#table_export").DataTable({
+            dom : "Bfrtip",
+            iDisplayLength: -1,
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    title: 'Bank UMKM Jawa Timur\n Bulan '+name,
+                    text:'Excel',
+                    customize: function( xlsx, row ) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    }
+                }
+            ]
+        });
+        
+        $(".buttons-excel").attr("class","btn btn-success mb-2");
+        
+        document.getElementById('btn_export').addEventListener('click', function(){
+            var table2excel = new Table2Excel();
+            table2excel.export(document.querySelectorAll('#table_export'));
+        });
+
         $("#clear").click(function(e){
             $("#row-baru").empty()
         })

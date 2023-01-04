@@ -4,6 +4,19 @@ $request = isset($request) ? $request : null;
 $status = isset($status) ? $status : null;
 @endphp
 @section('content')
+    <style>
+        .dataTables_wrapper .dataTables_filter{
+            float: right;
+        }
+        .dataTables_wrapper .dataTables_length{
+            float: left;
+        }
+
+        div.dataTables_wrapper div.dataTables_filter input {
+            width: 90%;
+        }
+    </style>
+
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
@@ -74,12 +87,12 @@ $status = isset($status) ? $status : null;
                     }
                 @endphp
                 @if ($status == 1)
-                    <div class="table-responsive">
+                    <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                             <thead style="background-color: #CCD6A6">
-                                <th>Kode Kantor</th>
-                                <th>Nama Kantor</th>
-                                <th>DPP</th>
+                                <th style="text-align: center">Kode Kantor</th>
+                                <th style="text-align: center">Nama Kantor</th>
+                                <th style="text-align: center">DPP</th>
                             </thead>
                             <tbody>
                                 <tr>
@@ -140,23 +153,23 @@ $status = isset($status) ? $status : null;
                                     </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
+                            <tfoot style="font-weight: bold">
                                 <tr>
-                                    <td colspan="2">
+                                    <td colspan="2" style="text-align: center">
                                         Jumlah
                                     </td>
-                                    <td style="background-color: #FED049">{{ rupiah(array_sum($total_dpp)) }}</td>
+                                    <td style="background-color: #FED049; text-align: center;">{{ rupiah(array_sum($total_dpp)) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                 @elseif($status == 2)
-                    <div class="table-responsive">
+                    <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                             <thead style="background-color: #CCD6A6">
-                                <th>NIP</th>
-                                <th>Nama Karyawan</th>
-                                <th>DPP</th>
+                                <th style="text-align: center">NIP</th>
+                                <th style="text-align: center">Nama Karyawan</th>
+                                <th style="text-align: center">DPP</th>
                             </thead>
                             <tbody>
                                 @for ($i = 0; $i < count($karyawan); $i++)
@@ -169,10 +182,10 @@ $status = isset($status) ? $status : null;
                                     @endif
                                 @endfor
                             </tbody>
-                            <tfoot>
+                            <tfoot style="font-weight: bold">
                                 <tr>
-                                    <td colspan="2">Jumlah</td>
-                                    <td style="background-color: #FED049">{{ rupiah(array_sum($dpp)) }}</td>
+                                    <td colspan="2" style="text-align: center">Jumlah</td>
+                                    <td style="background-color: #FED049; text-align: center;">{{ rupiah(array_sum($dpp)) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -193,20 +206,26 @@ $status = isset($status) ? $status : null;
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
-        // document.getElementById('btn_export').addEventListener('click', function(){
-        //     var table2excel = new Table2Excel();
-        //     table2excel.export(document.querySelectorAll('#table_export'));
-        // });
-
         $("#table_export").DataTable({
             dom : "Bfrtip",
+            iDisplayLength: -1,
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur',
-                    text:'Excel'
+                    title: 'Bank UMKM Jawa Timur\n Bulan '+name,
+                    text:'Excel',
+                    customize: function( xlsx, row ) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    }
                 }
             ]
+        });
+        
+        $(".buttons-excel").attr("class","btn btn-success mb-2");
+        
+        document.getElementById('btn_export').addEventListener('click', function(){
+            var table2excel = new Table2Excel();
+            table2excel.export(document.querySelectorAll('#table_export'));
         });
 
 
