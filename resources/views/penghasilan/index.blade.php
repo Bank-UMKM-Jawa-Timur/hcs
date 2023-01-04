@@ -29,7 +29,7 @@
           </div>
           <div class="col-md-4">
               <div class="form-group">
-                  <label for="">NIP</label>
+                  <label for="">Nama Karyawan</label>
                   <input type="text" class="form-control" name="nama" id="nama" value="" disabled>
               </div>
           </div>
@@ -81,4 +81,4 @@
         })
     })
   </script>
-@endsection 
+@endsection
