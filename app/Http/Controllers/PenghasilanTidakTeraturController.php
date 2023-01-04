@@ -87,7 +87,8 @@ class PenghasilanTidakTeraturController extends Controller
             'jamsostek' => $totalGaji,
             'penghasilan' => $ptt,
             'bonus' => $bonus,
-            'tahun' => $request->tahun
+            'tahun' => $request->tahun,
+            'request' => $request,
         ]);
     }
 
