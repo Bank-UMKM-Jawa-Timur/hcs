@@ -19,107 +19,79 @@ class PenghasilanTidakTeraturController extends Controller
         return response()->json($karyawan);
     }
 
-    public function filter(Request $request)
-    {
-        $tahun = $request->get('tahun');
-        $nip = $request->get('nip');
-        $gaji = array();
-        $total_gaji = array();
-        $tk = array();
-        $ptt = array();
-        $bonus = array();
-        $total_gj = array();
-        $jamsostek = array();
-        $tj = [];
-        $peng = [];
-        $bon = [];
-        $w = 0;
-        $x = 0;
-        $y = 0;
-        $z = 0;
+    public function filter(Request $request) {
+        $gaji = $totalGaji = $ptt = $bonus = [];
 
-        // Get gaji secara bulanan
-        for($i = 1; $i <= 12; $i++){
+        for($month = 1; $month <= 12; $month++) {
+            $pen = $bon = [];
             $data = DB::table('gaji_per_bulan')
-                ->where('nip', $nip)
-                ->where('bulan', $i)
-                ->where('tahun', $tahun)
+                ->where('nip', $request->nip)
+                ->where('bulan', $month)
+                ->where('tahun', $request->tahun)
                 ->first();
-           $gj[$i - 1] = [
-            'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
-            'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
-            'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
-            'tj_telepon' => ($data != null) ? $data->gj_pokok : 0,
-            'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
-            'tj_teller' => ($data != null) ? $data->tj_teller : 0,
-            'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
-            'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
-            'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
-            'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
-            'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
-            'tj_ti' => ($data != null) ? $data->tj_ti : 0,
-            'tj_transport' => ($data != null) ? $data->tj_transport : 0,
-            'tj_pulsa' => ($data != null) ? $data->tj_pulsa : 0,
-            'tj_vitamin' => ($data != null) ? $data->tj_vitamin : 0,
-            'uang_makan' => ($data != null) ? $data->uang_makan : 0
-           ];
-           
-           $total_gj[$i-1] = [
-            'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
-            'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
-            'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
-            'tj_telepon' => ($data != null) ? $data->gj_pokok : 0,
-            'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
-            'tj_teller' => ($data != null) ? $data->tj_teller : 0,
-            'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
-            'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
-            'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
-            'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
-            'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
-           ];
-           array_push($gaji, $gj[$i-1]);
-           array_push($total_gaji, array_sum($total_gj[$i-1]));
-        // Get Penghasilan tidak teratur karyawan
-            for($j = 16; $j <= 21; $j++){
+
+            $arr1 = [
+                'gj_pokok' => $data?->gj_pokok ?? 0,
+                'gj_penyesuaian' => $data?->gj_penyesuaian ?? 0,
+                'tj_keluarga' => $data?->tj_keluarga ?? 0,
+                'tj_telepon' => $data?->gj_pokok ?? 0,
+                'tj_jabatan' => $data?->tj_jabatan ?? 0,
+                'tj_teller' => $data?->tj_teller ?? 0,
+                'tj_perumahan' => $data?->tj_perumahan ?? 0,
+                'tj_kemahalan' => $data?->tj_kemahalan ?? 0,
+                'tj_pelaksana' => $data?->tj_pelaksana ?? 0,
+                'tj_kesejahteraan' => $data?->tj_kesejahteraan ?? 0,
+                'tj_multilevel' => $data?->tj_multilevel ?? 0,
+            ];
+
+            $arr2 = [
+                'tj_ti' => $data?->tj_ti ?? 0,
+                'tj_transport' => $data?->tj_transport ?? 0,
+                'tj_pulsa' => $data?->tj_pulsa ?? 0,
+                'tj_vitamin' => $data?->tj_vitamin ?? 0,
+                'uang_makan' => $data?->uang_makan ?? 0
+            ];
+
+            // Get penghasilan tidak teratur
+            for($tunjangan = 16; $tunjangan <= 21; $tunjangan++) {
                 $penghasilan = DB::table('penghasilan_tidak_teratur')
-                    ->where('nip', $nip)
-                    ->where('id_tunjangan', $j)
-                    ->where('tahun', $tahun)
-                    ->where('bulan', $i)
+                    ->where('nip', $request->nip)
+                    ->where('id_tunjangan', $tunjangan)
+                    ->where('tahun', $request->tahun)
+                    ->where('bulan', $month)
                     ->first();
-                $peng[$j-16] = ($penghasilan != null) ? $penghasilan->nominal : 0;
-            }
-            array_push($ptt, $peng);
 
-            // Get Bonus Karyawan
-            for($j = 21; $j <= 24; $j++){
+                $pen[] = $penghasilan?->nominal ?? 0;
+            }
+
+            // Get bonus
+            for($tunjangan = 21; $tunjangan <= 24; $tunjangan++) {
                 $bns = DB::table('penghasilan_tidak_teratur')
-                    ->where('nip', $nip)
-                    ->where('id_tunjangan', $j)
-                    ->where('tahun', $tahun)
-                    ->where('bulan', $i)
+                    ->where('nip', $request->nip)
+                    ->where('id_tunjangan', $tunjangan)
+                    ->where('tahun', $request->tahun)
+                    ->where('bulan', $month)
                     ->first();
-                $bon[$j-21] = ($bns != null) ? $bns->nominal : 0;
-            }
-            array_push($bonus, $bon);
-        }
 
-        // Get Jamsostek
-        foreach($total_gaji as $item){
-            array_push($jamsostek, 0.03 * $item);
+                $bon[] = $bns?->nominal ?? 0;
+            }
+
+            $ptt[] = $pen;
+            $bonus[] = $bon;
+            $gaji[] = array_merge($arr1, $arr2);
+            $totalGaji[] = 0.03 * array_sum($arr1);
         }
-        // dd($gj);
 
         return view('penghasilan.gajipajak', [
-            'gj' => $gj,
-            'jamsostek' => $jamsostek,
-            'tunjangan' => $tk,
+            'gj' => $gaji,
+            'jamsostek' => $totalGaji,
             'penghasilan' => $ptt,
             'bonus' => $bonus,
-            'tahun' => $tahun
+            'tahun' => $request->tahun,
+            'request' => $request,
         ]);
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -146,7 +118,7 @@ class PenghasilanTidakTeraturController extends Controller
         $bonus = DB::table('mst_tunjangan')
             ->whereIn('id', [22, 23, 24])
             ->get();
-        
+
         return view('penghasilan.add', [
             'tj' => $tj,
             'tidak_teratur' => $tidak_teratur,
