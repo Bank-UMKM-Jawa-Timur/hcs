@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\PenghasilanImport;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PenghasilanTidakTeraturController extends Controller
@@ -13,16 +15,70 @@ class PenghasilanTidakTeraturController extends Controller
     public function getDataKaryawan(Request $request)
     {
         $nip = $request->get('nip');
-        $karyawan = DB::table('mst_karyawan')
+        $data = DB::table('mst_karyawan')
             ->where('nip', $nip)
+            ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
+            ->select('mst_karyawan.*', 'mst_jabatan.nama_jabatan')
             ->first();
-        return response()->json($karyawan);
+        if($data == null){
+            return null;
+        }
+        if($data->status_karyawan == "Tetap"){
+            $jabatan = "Pegawai ".$data->status_karyawan . ' ' . $data->nama_jabatan;
+        }
+        else{
+            $jabatan = $data->status_karyawan . ' ' . $data->nama_jabatan;
+        }
+        $dk = [
+            'nip' => $data->nip,
+            'nama' => $data->nama_karyawan,
+            'jabatan' => $jabatan
+        ];
+
+        return response()->json($dk);
+    }
+
+    public function cariNama(Request $request)
+    {
+        $nama = $request->get('nama');
+        $data = DB::table('mst_karyawan')
+            ->where('nama_karyawan', 'like', '%'.$nama.'%')
+            ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
+            ->select('mst_karyawan.*', 'mst_jabatan.nama_jabatan')
+            ->first();
+        if($data == null){
+            return null;
+        }
+        if($data->status_karyawan == "Tetap"){
+            $jabatan = "Pegawai ".$data->status_karyawan . ' ' . $data->nama_jabatan;
+        }
+        else{
+            $jabatan = $data->status_karyawan . ' ' . $data->nama_jabatan;
+        }
+        $dk = [
+            'nip' => $data->nip,
+            'nama' => $data->nama_karyawan,
+            'jabatan' => $jabatan
+        ];
+
+        return response()->json($dk);
+    }
+
+    public function upload(Request $request)
+    {
+        $file = $request->file('upload_csv');
+        $import = new PenghasilanImport;   
+        $row = Excel::toArray($import, $file);
+        // dd(count($row[0]));
+        $import = $import->import($file);
+        Alert::success('Berhasil', 'Berhasil mengimport '.count($row[0]).' data');
+        return redirect()->route('penghasilan.index');
     }
 
     public function filter(Request $request)
     {
         $tahun = $request->get('tahun');
-        $nip = $request->get('nip');
+        $nip = $request->get('nip_post');
         $gaji = array();
         $total_gaji = array();
         $tk = array();
@@ -45,6 +101,30 @@ class PenghasilanTidakTeraturController extends Controller
                 ->where('bulan', $i)
                 ->where('tahun', $tahun)
                 ->first();
+            $tj_trans =  DB::table('penghasilan_tidak_teratur')
+                ->where('nip', $nip)
+                ->where('id_tunjangan', 11)
+                ->where('tahun', $tahun)
+                ->where('bulan', $i)
+                ->first();
+            $tj_pulsa =  DB::table('penghasilan_tidak_teratur')
+                ->where('nip', $nip)
+                ->where('id_tunjangan', 12)
+                ->where('tahun', $tahun)
+                ->where('bulan', $i)
+                ->first();
+            $tj_vitamin =  DB::table('penghasilan_tidak_teratur')
+                ->where('nip', $nip)
+                ->where('id_tunjangan', 13)
+                ->where('tahun', $tahun)
+                ->where('bulan', $i)
+                ->first();
+            $tj_uang_makan =  DB::table('penghasilan_tidak_teratur')
+                ->where('nip', $nip)
+                ->where('id_tunjangan', 14)
+                ->where('tahun', $tahun)
+                ->where('bulan', $i)
+                ->first();
            $gj[$i - 1] = [
             'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
             'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
@@ -58,10 +138,10 @@ class PenghasilanTidakTeraturController extends Controller
             'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
             'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
             'tj_ti' => ($data != null) ? $data->tj_ti : 0,
-            'tj_transport' => ($data != null) ? $data->tj_transport : 0,
-            'tj_pulsa' => ($data != null) ? $data->tj_pulsa : 0,
-            'tj_vitamin' => ($data != null) ? $data->tj_vitamin : 0,
-            'uang_makan' => ($data != null) ? $data->uang_makan : 0
+            'tj_transport' => ($tj_trans != null) ? $tj_trans->nominal : 0,
+            'tj_pulsa' => ($tj_pulsa != null) ? $tj_pulsa->nominal : 0,
+            'tj_vitamin' => ($tj_vitamin != null) ? $tj_vitamin->nominal : 0,
+            'uang_makan' => ($tj_uang_makan != null) ? $tj_uang_makan->nominal : 0,
            ];
            
            $total_gj[$i-1] = [
@@ -204,15 +284,15 @@ class PenghasilanTidakTeraturController extends Controller
             }
 
             Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan');
-            return redirect()->route('penghasilan-tidak-teratur.index');
+            return redirect()->route('penghasilan.index');
         } catch(Exception $e){
             DB::rollBack();
             Alert::error('Terjadi Kesalahan', $e->getMessage());
-            return redirect()->route('penghasilan-tidak-teratur.index');
+            return redirect()->route('penghasilan.index');
         } catch(QueryException $e){
             DB::rollBack();
             Alert::error('Terjadi Kesalahan', $e->getMessage());
-            return redirect()->route('penghasilan-tidak-teratur.index');
+            return redirect()->route('penghasilan.index');
         }
     }
 

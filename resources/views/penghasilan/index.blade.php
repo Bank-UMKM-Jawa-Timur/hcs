@@ -18,19 +18,25 @@
             </a>
         </div>
     </div>
+    <div class="row m-0">
+        <div class="col">
+            <hr>
+            <h5>Cari Karyawan</h5>
+        </div>
+    </div>
   <form action="{{ route('get-penghasilan') }}" method="post">
       @csrf
       <div class="row m-0">
           <div class="col-md-4">
               <div class="form-group">
-                  <label for="">NIP</label>
+                  <label for="">Cari Berdasarkan NIP:</label>
                   <input type="text" class="@error('nip') is-invalid @enderror form-control" name="nip" id="nip" value="{{ old('nip') }}">
               </div>
           </div>
           <div class="col-md-4">
               <div class="form-group">
-                  <label for="">NIP</label>
-                  <input type="text" class="form-control" name="nama" id="nama" value="" disabled>
+                  <label for="">Cari Berdasarkan Nama:</label>
+                  <input type="text" class="form-control" name="nama" id="nama" value="{{ old('nama') }}">
               </div>
           </div>
           @php
@@ -48,6 +54,28 @@
                   </select>
               </div>
           </div>
+          <div class="col-md-12">
+              <hr>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+                <label for="">NIP</label>
+                <input type="text" class="@error('nip') is-invalid @enderror form-control" name="nip_show" id="nip_show" disabled>
+                <input type="hidden" name="nip_post" id="nip_post">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">Nama Karyawan</label>
+                <input type="text" class="form-control" name="nama_show" id="nama_show" disabled>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">Jabatan Karyawan</label>
+                <input type="text" class="form-control" name="jabatan" id="jabatan" disabled>
+            </div>
+        </div>
         </div>
         <div class="col-md-4">
           <a href="penghasilan/gajipajak">
@@ -68,15 +96,36 @@
         });
     });
 
+    $("#nama").change(function(e){
+        var nama = $(this).val();
+        console.log(nama);
+        if(nama.length >= 3){
+            $.ajax({
+                url: "{{ route('getKaryawanByNama') }}?nama="+nama,
+                type: "Get",
+                datatype: "json",
+                success: function(res){
+                    $("#nama_show").val(res.nama);
+                    $("#nip_show").val(res.nip);
+                    $("#nip_post").val(res.nip);
+                    $("#jabatan").val(res.jabatan);
+                }
+            })
+        }
+    })
+
     $("#nip").change(function(e){
         var nip = $(this).val();
 
         $.ajax({
-            url: "/getdatapromosi?nip="+nip,
+            url: "{{ route('getKaryawanByNip') }}?nip="+nip,
             type: "GET",
             datatype: "json",
             success: function(res){
-                $("#nama").val(res.nama_karyawan)
+                $("#nama_show").val(res.nama);
+                $("#nip_show").val(res.nip);
+                $("#nip_post").val(res.nip);
+                $("#jabatan").val(res.jabatan);
             }
         })
     })

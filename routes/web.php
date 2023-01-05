@@ -114,6 +114,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/dpp', [JaminanController::class, 'dppIndex'])->name('index_dpp');
     Route::post('/get-dpp', [JaminanController::class, 'getDPP'])->name('get-dpp');
     Route::post('penghasilan/get-gaji', [PenghasilanTidakTeraturController::class, 'filter'])->name('get-penghasilan');
+    Route::get('/getPenghasilan', [PenghasilanTidakTeraturController::class, 'getPenghasilan'])->name('getPenghasilanResult');
 
     // Routing Import excel karyawan
     Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');
@@ -142,6 +143,10 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/getbagian', [KaryawanController::class, 'get_bagian']);
 
     Route::post('/laporan_jaminan', [JaminanController::class, 'filter'])->name('filter-laporan');
+
+    Route::post('/upload_penghasilan', [PenghasilanTidakTeraturController::class, 'upload'])->name('upload_penghasilan');
+    Route::get('/getKaryawanByNama', [PenghasilanTidakTeraturController::class, 'cariNama'])->name('getKaryawanByNama');
+    Route::get('/getKaryawanByNip', [\App\Http\Controllers\PenghasilanTidakTeraturController::class, 'getDataKaryawan'])->name('getKaryawanByNip');
 });
 Auth::routes();
 
