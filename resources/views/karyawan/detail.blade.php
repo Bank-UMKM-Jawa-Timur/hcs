@@ -15,6 +15,17 @@
                     <h6>Biodata Diri Karyawan</h6>
                 </div>
             </div> 
+            @php
+                $no = 1;
+                function rupiah($angka){
+                    $hasil_rupiah = number_format($angka, 0, ",", ".");
+                    return $hasil_rupiah;
+                }
+                $tj = DB::table('tunjangan_karyawan')
+                    ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+                    ->where('nip', $data->nip)
+                    ->get();
+            @endphp
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">NIP</label>
                 <div class="col-sm-10">
@@ -209,7 +220,7 @@
                 <label class="col-sm-2 mt-2">Gaji Pokok</label>
                 <div class="col-sm-10">
                     @if (isset($data->gj_pokok) != null)
-                        <input type="text" disabled class="form-control" value="{{ $data->gj_pokok }}">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($data->gj_pokok) }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
@@ -219,24 +230,13 @@
                 <label class="col-sm-2 mt-2">Gaji Penyesuaian</label>
                 <div class="col-sm-10">
                     @if (isset($data->gj_penyesuaian) != null)
-                        <input type="text" disabled class="form-control" value="{{ $data->gj_penyesuaian }}">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($data->gj_penyesuaian) }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
                 </div>
             </div>
             <br>
-                @php
-                    $no = 1;
-                    function rupiah($angka){
-                        $hasil_rupiah = number_format($angka, 0, ",", ".");
-                        return $hasil_rupiah;
-                    }
-                    $tj = DB::table('tunjangan_karyawan')
-                        ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-                        ->where('nip', $data->nip)
-                        ->get();
-                @endphp
                 @if (isset($tj))
                     @foreach ($tj as $item)
                         <div class="row m-0 mt-2">

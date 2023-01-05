@@ -201,13 +201,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Gaji Pokok</label>
-                                    <input type="number" class="@error('gj_pokok') is-invalid @enderror form-control" name="gj_pokok" value="{{ old('gj_pokok') }}">
+                                    <input type="text" id="gj_pokok" class="@error('gj_pokok') is-invalid @enderror form-control" name="gj_pokok" value="{{ old('gj_pokok') }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Gaji Penyesuaian</label>
-                                    <input type="number" class="form-control" name="gj_penyesuaian" value="{{ old('gj_penyesuaian') }}">
+                                    <input type="text" id="gj_penyesuaian" class="form-control" name="gj_penyesuaian" value="{{ old('gj_penyesuaian') }}">
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -307,7 +307,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -338,6 +338,23 @@
         let status = $('#status');
         $('#kantor').attr("disabled", "disabled");
         var x =1;
+
+        $('#gj_pokok').keyup(function(){
+            var angka = $(this).val();
+
+            $("#gj_pokok").val(formatRupiah(angka));
+        })
+        $('#gj_penyesuaian').keyup(function(){
+            var angka = $(this).val();
+
+            $("#gj_penyesuaian").val(formatRupiah(angka));
+        })
+        $('#nominal').keyup(function(){
+            var angka = $(this).val();
+            console.log(angka);
+
+            $("#nominal").val(formatRupiah(angka));
+        })
 
         function kantorChange(){
             var kantor_id = $("#kantor").val();
@@ -526,7 +543,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -549,6 +566,11 @@
                 $(this).closest('.row').remove()
                 x--;
             }
+        })
+        $('#nominal').keyup(function(){
+            var angka = $(this).val();
+
+            $("#nominal").val(formatRupiah(angka));
         })
     </script>
 @endsection

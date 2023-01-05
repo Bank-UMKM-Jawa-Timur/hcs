@@ -200,13 +200,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Gaji Pokok</label>
-                                    <input type="text" class="@error('gj_pokok') is-invalid @enderror form-control" name="gj_pokok" value="{{ old('gj_pokok', $data->gj_pokok) }}">
+                                    <input type="text" id="gj_pokok" class="@error('gj_pokok') is-invalid @enderror form-control" name="gj_pokok" value="{{ old('gj_pokok', $data->gj_pokok) }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Gaji Penyesuaian</label>
-                                    <input type="text" class="form-control" name="gj_penyesuaian" value="{{ old('gj_penyesuaian', $data->gj_penyesuaian) }}">
+                                    <input type="text" class="form-control" id="gj_penyesuaian" name="gj_penyesuaian" value="{{ old('gj_penyesuaian', $data->gj_penyesuaian) }}">
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -338,7 +338,7 @@
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="is_nama">Nominal</label>
-                                        <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control" value="{{ $tj->nominal }}">
+                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control" value="{{ $tj->nominal }}">
                                     </div>
                                 </div>
                                 <div class="col-md-1 mt-3">
@@ -375,6 +375,26 @@
         getKantor();
         cekStatus();
         jabatanChange();
+        $("#gj_pokok").val(formatRupiah($("#gj_pokok").val()));
+        $("#gj_penyesuaian").val(formatRupiah($("#gj_penyesuaian").val()));
+        $("#nominal").val(formatRupiah($("#nominal").val()));
+
+        $('#gj_pokok').keyup(function(){
+            var angka = $(this).val();
+
+            $("#gj_pokok").val(formatRupiah(angka));
+        })
+        $('#gj_penyesuaian').keyup(function(){
+            var angka = $(this).val();
+
+            $("#gj_penyesuaian").val(formatRupiah(angka));
+        })
+        $('#nominal').keyup(function(){
+            var angka = $(this).val();
+            console.log(angka);
+
+            $("#nominal").val(formatRupiah(angka));
+        })
 
         function getKantor(){
             $.ajax({
