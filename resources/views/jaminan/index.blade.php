@@ -39,6 +39,13 @@ $request = isset($request) ? $request : null;
                         </select>
                     </div>
                 </div>
+                
+                <div id="kantor_col" class="col-md-4">
+                </div>
+                <div id="cabang_col" class="col-md-4">
+                </div>
+            </div>
+            <div class="row m-0">
                 @php
                     $already_selected_value = date('y');
                     $earliest_year = 2022;
@@ -64,10 +71,6 @@ $request = isset($request) ? $request : null;
                             @endfor
                         </select>
                     </div>
-                </div>
-                <div id="kantor_col" class="col-md-4">
-                </div>
-                <div id="cabang_col" class="col-md-4">
                 </div>
                 <div class="col-md-12 mt-2">
                     <button class="btn btn-info" type="submit">Tampilkan</button>
@@ -171,8 +174,8 @@ $request = isset($request) ? $request : null;
                                                 array_push($total_gaji_cabang, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
                                             }
                                             foreach($total_gaji_cabang as $i){
-                                                array_push($jp1_cabang, ((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
-                                                array_push($jp2_cabang, ((($i >  9077600) ?  9077600 * 0.02 : $i * 0.02)));
+                                                array_push($jp1_cabang, ((($i >  9077600) ?  round(9077600 * 0.01) : round($i * 0.01))));
+                                                array_push($jp2_cabang, ((($i >  9077600) ?  round(9077600 * 0.02) : round($i * 0.02))));
                                             }
                                         @endphp
                                         <td>{{ count($karyawan) }}</td>
@@ -325,10 +328,10 @@ $request = isset($request) ? $request : null;
         
         $(".buttons-excel").attr("class","btn btn-success mb-2");
         
-        document.getElementById('btn_export').addEventListener('click', function(){
-            var table2excel = new Table2Excel();
-            table2excel.export(document.querySelectorAll('#table_export'));
-        });
+        // document.getElementById('btn_export').addEventListener('click', function(){
+        //     var table2excel = new Table2Excel();
+        //     table2excel.export(document.querySelectorAll('#table_export'));
+        // });
 
         $("#clear").click(function(e){
             $("#row-baru").empty()

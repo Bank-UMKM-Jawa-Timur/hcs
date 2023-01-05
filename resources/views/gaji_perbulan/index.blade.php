@@ -3,8 +3,8 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Pembayaran Gaji Bulanan</h5>
-            <p class="card-title"><a href="/">Dashboard </a> > Pembayaran Gaji Bulanan</p>
+            <h5 class="card-title">Proses Gaji Bulanan</h5>
+            <p class="card-title"><a href="/">Dashboard </a> > Proses Gaji Bulanan</p>
         </div>
     </div>
     @php

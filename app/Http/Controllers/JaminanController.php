@@ -201,6 +201,8 @@ class JaminanController extends Controller
 
         // Get data per kantor/cabang
         // if kantor = pusat
+
+        $total_gaji = array();
         $cab = null;
         if($kantor == 'Pusat'){
             $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
@@ -213,8 +215,6 @@ class JaminanController extends Controller
                 ->whereNotIn('kd_entitas', $cbg)
                 ->orWhere('kd_entitas', null)
                 ->get();
-
-            $total_gaji = array();
             foreach($karyawan as $i){
                 $data_gaji = DB::table('gaji_per_bulan')
                     ->where('nip', $i->nip)
@@ -239,7 +239,6 @@ class JaminanController extends Controller
             $cab = DB::table('mst_cabang')
                 ->where('kd_cabang', $cabang)
                 ->first();
-            $total_gaji = array();
             foreach($karyawan as $i){
                 $data_gaji = DB::table('gaji_per_bulan')
                     ->where('nip', $i->nip)
