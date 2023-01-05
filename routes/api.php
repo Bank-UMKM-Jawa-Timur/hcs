@@ -19,6 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('select2')->name('api.select2.')->group(function() {
+Route::middleware('auth')->prefix('select2')->name('api.select2.')->group(function() {
     Route::get('employees', KaryawanController::class)->name('karyawan');
 });
