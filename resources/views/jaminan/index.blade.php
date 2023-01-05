@@ -285,7 +285,7 @@ $request = isset($request) ? $request : null;
                                     <td style="background-color: #FED049">{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm))) }}</td>
                                     <td>{{ rupiah((array_sum($jp1))) }}</td>
                                     <td>{{ rupiah((array_sum($jp2))) }}</td>
-                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
+                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jp1))) }} - {{rupiah(array_sum($jp2)) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="8">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>

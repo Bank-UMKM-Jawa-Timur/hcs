@@ -161,11 +161,11 @@ class JaminanController extends Controller
             // dd($total_gaji_pusat);
             foreach($total_gaji_pusat as $i){
                 array_push($jkk_pusat, $i * 0.0024);
-                array_push($jp1_pusat, round((($i >  9077600) ?  9077600 * 0.01 : $i * 0.01)));
-                array_push($jp2_pusat, round((($i >  9077600) ?  9077600 * 0.02 : $i * 0.02)));
+                array_push($jp1_pusat, (($i >  9077600) ?  round(9077600 * 0.01) : round($i * 0.01)));
+                array_push($jp2_pusat, (($i >  9077600) ?  round(9077600 * 0.02) : round($i * 0.02)));
             }
 
-            // dd(array_sum($total_gaji_pusat));
+            dd(array_sum($jp1_pusat));
 
             $data_pusat = DB::table('tunjangan_karyawan')
                 ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
@@ -259,8 +259,8 @@ class JaminanController extends Controller
             $perhitungan_jkk = 0.0024 * $item;
             $perhitungan_jht = 0.057 * $item;
             $perhitungan_jkm = 0.003 * $item;
-            $perhitungan_jp1 = ($item >  9077600) ?  9077600 * 0.01 : $item * 0.01;
-            $perhitungan_jp2 = ($item >  9077600) ?  9077600 * 0.02 : $item * 0.02;
+            $perhitungan_jp1 = ($item >  9077600) ?  round(9077600 * 0.01) : round($item * 0.01);
+            $perhitungan_jp2 = ($item >  9077600) ?  round(9077600 * 0.02) : round($item * 0.02);
             array_push($jp1, $perhitungan_jp1);
             array_push($jp2, $perhitungan_jp2);
             array_push($jkk, $perhitungan_jkk);
