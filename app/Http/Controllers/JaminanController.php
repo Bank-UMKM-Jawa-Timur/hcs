@@ -386,8 +386,9 @@ class JaminanController extends Controller
                         ->where('bulan', $bulan)
                         ->where('tahun', $tahun)
                         ->first();
+                    array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
                 }
-                array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
+
             }
         } else {
             $cabang = $request->get('cabang');
@@ -405,8 +406,8 @@ class JaminanController extends Controller
                         ->where('bulan', $bulan)
                         ->where('tahun', $tahun)
                         ->first();
+                    array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
                 }
-                array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
             }
         }
 
