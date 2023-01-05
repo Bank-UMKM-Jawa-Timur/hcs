@@ -35,6 +35,7 @@ Coded by www.creative-tim.com
   <link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />
   <link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />
   <link href="{{ asset('style/assets/css/datatables.min.css') }}" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ asset('style/assets/css/loading.css') }}">
   <link rel="stylesheet" href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
 
@@ -49,6 +50,18 @@ Coded by www.creative-tim.com
     /* Firefox */
     input[type=number] {
       -moz-appearance: textfield;
+    }
+
+    .loader-wrapper {
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 100px;
+      position: fixed;
+      background-color: rgba(110, 110, 110, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   </style>
 
@@ -224,6 +237,20 @@ Coded by www.creative-tim.com
       </footer>
     </div>
   </div>
+
+  <div class="loader-wrapper">
+    <div class="la-line-spin-clockwise-fade la-dark la-2x">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
   <!--   Core JS Files   -->
   <script src="resources/js/dselect.js"></script>
   <script src="{{ asset('style/assets/js/core/jquery.min.js') }}"></script>
@@ -266,6 +293,10 @@ Coded by www.creative-tim.com
 			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
 			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
 		}
+
+    $(window).on("load", function() {
+      $(".loader-wrapper").fadeOut("slow");
+    });
   </script>
   @yield('custom_script')
 </body>

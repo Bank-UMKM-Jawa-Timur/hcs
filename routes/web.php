@@ -107,12 +107,12 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/bagian', BagianController::class);
     Route::resource('/penghasilan', PenghasilanTidakTeraturController::class);
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
-    
+
     Route::resource('/laporan_jamsostek', JaminanController::class);
     Route::get('/laporan-jamsostek', [JaminanController::class, 'getJamsostek'])->name('get-jamsostek');
     Route::post('/post-jamsostek', [JaminanController::class, 'postJamsostek'])->name('post-jamsostek');
     Route::get('/dpp', [JaminanController::class, 'dppIndex'])->name('index_dpp');
-    Route::post('/get-dpp', [JaminanController::class, 'getDPP'])->name('get-dpp');
+    Route::post('/dpp', [JaminanController::class, 'getDpp'])->name('get-dpp');
     Route::post('penghasilan/get-gaji', [PenghasilanTidakTeraturController::class, 'filter'])->name('get-penghasilan');
     Route::get('/getPenghasilan', [PenghasilanTidakTeraturController::class, 'getPenghasilan'])->name('getPenghasilanResult');
 
@@ -147,6 +147,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::post('/upload_penghasilan', [PenghasilanTidakTeraturController::class, 'upload'])->name('upload_penghasilan');
     Route::get('/getKaryawanByNama', [PenghasilanTidakTeraturController::class, 'cariNama'])->name('getKaryawanByNama');
     Route::get('/getKaryawanByNip', [\App\Http\Controllers\PenghasilanTidakTeraturController::class, 'getDataKaryawan'])->name('getKaryawanByNip');
+    Route::post('/laporan_jamsostek', [JaminanController::class, 'filter'])->name('filter-laporan');
 });
 Auth::routes();
 
