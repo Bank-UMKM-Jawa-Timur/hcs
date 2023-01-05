@@ -68,6 +68,7 @@
             <div class="form-group">
                 <label for="">Nama Karyawan</label>
                 <input type="text" class="form-control" name="nama_show" id="nama_show" disabled>
+                <input type="hidden" name="nama_post" id="nama_post">
             </div>
         </div>
         <div class="col-md-4">
@@ -106,6 +107,7 @@
                 datatype: "json",
                 success: function(res){
                     $("#nama_show").val(res.nama);
+                    $("#nama_post").val(res.nama);
                     $("#nip_show").val(res.nip);
                     $("#nip_post").val(res.nip);
                     $("#jabatan").val(res.jabatan);
@@ -123,6 +125,7 @@
             datatype: "json",
             success: function(res){
                 $("#nama_show").val(res.nama);
+                $("#nama_post").val(res.nama);
                 $("#nip_show").val(res.nip);
                 $("#nip_post").val(res.nip);
                 $("#jabatan").val(res.jabatan);

@@ -136,9 +136,9 @@
                                             <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
                                             @php
                                                 $total_k += $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] + $gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] +$gj[$i]['tj_kesejahteraan'];
-                                                $total_non += $gj[$i]['gj_pokok'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_pulsa'] + rupiah($gj[$i]['uang_makan']);
-                                            @endphp
-                                        </tr>
+                                                $total_non += $gj[$i]['gj_pokok'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_pulsa'] + $gj[$i]['uang_makan'];
+                                        @endphp
+                                    </tr>
                                     @endfor
                                 </tbody>
                                 <tfoot style="font-weight: bold">
