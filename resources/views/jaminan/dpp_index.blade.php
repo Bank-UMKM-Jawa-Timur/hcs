@@ -223,10 +223,10 @@ $status = isset($status) ? $status : null;
         
         $(".buttons-excel").attr("class","btn btn-success mb-2");
         
-        document.getElementById('btn_export').addEventListener('click', function(){
-            var table2excel = new Table2Excel();
-            table2excel.export(document.querySelectorAll('#table_export'));
-        });
+        // document.getElementById('btn_export').addEventListener('click', function(){
+        //     var table2excel = new Table2Excel();
+        //     table2excel.export(document.querySelectorAll('#table_export'));
+        // });
 
 
         $("#clear").click(function(e){
