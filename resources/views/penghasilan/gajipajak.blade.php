@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@include('vendor.select2')
 @section('content')
 <style>
     .dataTables_wrapper .dataTables_filter{
@@ -13,10 +14,10 @@
     }
 
     .table-responsive {
-        -ms-overflow-style: none;  
-        scrollbar-width: none;  
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
-    .table-responsive::-webkit-scrollbar { 
+    .table-responsive::-webkit-scrollbar {
         overflow-y: hidden;
         overflow-x: scroll;
     }
@@ -42,18 +43,12 @@
   <form action="{{ route('get-penghasilan') }}" method="post">
       @csrf
       <div class="row m-0">
-          <div class="col-md-4">
-              <div class="form-group">
-                  <label for="">NIP</label>
-                  <input type="text" class="@error('nip') is-invalid @enderror form-control" name="nip" id="nip" value="{{ $request->nip }}">
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="form-group">
-                  <label for="">Nama Karyawan</label>
-                  <input type="text" class="form-control" name="nama" id="nama" value="" disabled>
-              </div>
-          </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">Karyawan:</label>
+                <select name="nip" id="nip" class="form-control"></select>
+            </div>
+        </div>
           @php
             $already_selected_value = date('y');
             $earliest_year = 2022;
@@ -241,7 +236,7 @@
 </div>
 @endsection
 
-@section('custom_script')
+@push('script')
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
@@ -253,25 +248,26 @@
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
 <script>
-    $("#table_export").DataTable({
-        dom : "Bfrtip",
-        iDisplayLength: -1, 
-        scrollX: true,
+    const nipSelect = $('#nip').select2({
+        ajax: {
+            url: '{{ route('api.select2.karyawan') }}'
+        },
+        templateResult: function(data) {
+            if(data.loading) return data.text;
+            return $(`
+                <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
+            `);
+        }
     });
 
-    $("#nip").change(function(e){
-        var nip = $(this).val();
+    nipSelect.append(`
+        <option value="{{$karyawan?->nip}}">{{$karyawan?->nip}} - {{$karyawan?->nama_karyawan}}</option>
+    `).trigger('change');
 
-        $.ajax({
-            url: "/getdatapromosi?nip="+nip,
-            type: "GET",
-            datatype: "json",
-            success: function(res){
-                $("#nama").val(res.nama_karyawan)
-            }
-        })
-    })
-
-    $('#nip').trigger('change');
+    // $("#table_export").DataTable({
+    //     dom : "Bfrtip",
+    //     iDisplayLength: -1,
+    //     scrollX: true,
+    // });
 </script>
-@endsection
+@endpush

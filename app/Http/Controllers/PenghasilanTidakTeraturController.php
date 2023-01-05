@@ -38,36 +38,10 @@ class PenghasilanTidakTeraturController extends Controller
         return response()->json($dk);
     }
 
-    public function cariNama(Request $request)
-    {
-        $nama = $request->get('nama');
-        $data = DB::table('mst_karyawan')
-            ->where('nama_karyawan', 'like', '%'.$nama.'%')
-            ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
-            ->select('mst_karyawan.*', 'mst_jabatan.nama_jabatan')
-            ->first();
-        if($data == null){
-            return null;
-        }
-        if($data->status_karyawan == "Tetap"){
-            $jabatan = "Pegawai ".$data->status_karyawan . ' ' . $data->nama_jabatan;
-        }
-        else{
-            $jabatan = $data->status_karyawan . ' ' . $data->nama_jabatan;
-        }
-        $dk = [
-            'nip' => $data->nip,
-            'nama' => $data->nama_karyawan,
-            'jabatan' => $jabatan
-        ];
-
-        return response()->json($dk);
-    }
-
     public function upload(Request $request)
     {
         $file = $request->file('upload_csv');
-        $import = new PenghasilanImport;   
+        $import = new PenghasilanImport;
         $row = Excel::toArray($import, $file);
         // dd(count($row[0]));
         $import = $import->import($file);
@@ -79,7 +53,6 @@ class PenghasilanTidakTeraturController extends Controller
     {
         $tahun = $request->get('tahun');
         $nip = $request->get('nip');
-        $nip = $request->get('nip_post');
         $gaji = array();
         $total_gaji = array();
         $tk = array();
@@ -94,6 +67,11 @@ class PenghasilanTidakTeraturController extends Controller
         $x = 0;
         $y = 0;
         $z = 0;
+
+        $karyawan = DB::table('mst_karyawan')
+            ->where(compact('nip'))
+            ->first();
+
         // Get gaji secara bulanan
         for($i = 1; $i <= 12; $i++){
             $data = DB::table('gaji_per_bulan')
@@ -143,7 +121,7 @@ class PenghasilanTidakTeraturController extends Controller
             'tj_vitamin' => ($tj_vitamin != null) ? $tj_vitamin->nominal : 0,
             'uang_makan' => ($tj_uang_makan != null) ? $tj_uang_makan->nominal : 0,
            ];
-           
+
            $total_gj[$i-1] = [
             'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
             'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
@@ -197,6 +175,7 @@ class PenghasilanTidakTeraturController extends Controller
             'penghasilan' => $ptt,
             'bonus' => $bonus,
             'tahun' => $tahun,
+            'karyawan' => $karyawan,
             'request' => $request
         ]);
     }

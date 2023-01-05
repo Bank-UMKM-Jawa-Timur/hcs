@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@include('vendor.select2')
 
 @section('content')
 <div class="card-header">
@@ -29,14 +30,8 @@
       <div class="row m-0">
           <div class="col-md-4">
               <div class="form-group">
-                  <label for="">Cari Berdasarkan NIP:</label>
-                  <input type="text" class="@error('nip') is-invalid @enderror form-control" name="nip" id="nip" value="{{ old('nip') }}">
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="form-group">
-                  <label for="">Cari Berdasarkan Nama:</label>
-                  <input type="text" class="form-control" name="nama" id="nama" value="{{ old('nama') }}">
+                  <label for="">Karyawan:</label>
+                  <select name="nip" id="nip" class="form-control"></select>
               </div>
           </div>
           @php
@@ -54,29 +49,6 @@
                   </select>
               </div>
           </div>
-          <div class="col-md-12">
-              <hr>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-                <label for="">NIP</label>
-                <input type="text" class="@error('nip') is-invalid @enderror form-control" name="nip_show" id="nip_show" disabled>
-                <input type="hidden" name="nip_post" id="nip_post">
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="">Nama Karyawan</label>
-                <input type="text" class="form-control" name="nama_show" id="nama_show" disabled>
-                <input type="hidden" name="nama_post" id="nama_post">
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="">Jabatan Karyawan</label>
-                <input type="text" class="form-control" name="jabatan" id="jabatan" disabled>
-            </div>
-        </div>
         </div>
         <div class="col-md-4">
           <a href="penghasilan/gajipajak">
@@ -85,52 +57,28 @@
         </div>
 @endsection
 
-@section('custom_script')
-  <script>
-   $(document).ready(function() {
-        var table = $('#table').DataTable({
-            'autoWidth': false,
-            'dom': 'Rlfrtip',
-            'colReorder': {
-                'allowReorder': false
-            }
-        });
-    });
-
-    $("#nama").change(function(e){
-        var nama = $(this).val();
-        console.log(nama);
-        if(nama.length >= 3){
-            $.ajax({
-                url: "{{ route('getKaryawanByNama') }}?nama="+nama,
-                type: "Get",
-                datatype: "json",
-                success: function(res){
-                    $("#nama_show").val(res.nama);
-                    $("#nama_post").val(res.nama);
-                    $("#nip_show").val(res.nip);
-                    $("#nip_post").val(res.nip);
-                    $("#jabatan").val(res.jabatan);
-                }
-            })
+@push('script')
+<script>
+$(document).ready(function() {
+    var table = $('#table').DataTable({
+        'autoWidth': false,
+        'dom': 'Rlfrtip',
+        'colReorder': {
+            'allowReorder': false
         }
-    })
+    });
+})
 
-    $("#nip").change(function(e){
-        var nip = $(this).val();
-
-        $.ajax({
-            url: "{{ route('getKaryawanByNip') }}?nip="+nip,
-            type: "GET",
-            datatype: "json",
-            success: function(res){
-                $("#nama_show").val(res.nama);
-                $("#nama_post").val(res.nama);
-                $("#nip_show").val(res.nip);
-                $("#nip_post").val(res.nip);
-                $("#jabatan").val(res.jabatan);
-            }
-        })
-    })
-  </script>
-@endsection
+$('#nip').select2({
+    ajax: {
+        url: '{{ route('api.select2.karyawan') }}'
+    },
+    templateResult: function(data) {
+        if(data.loading) return data.text;
+        return $(`
+            <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
+        `);
+    }
+});
+</script>
+@endpush

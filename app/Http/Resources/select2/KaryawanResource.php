@@ -17,6 +17,7 @@ class KaryawanResource extends JsonResource
         return [
             "id" => $this->nip,
             "text" => "{$this->nip} - {$this->nama_karyawan}",
+            "nama" => $this->nama_karyawan,
             "jabatan" => $this->nama_jabatan,
         ];
     }

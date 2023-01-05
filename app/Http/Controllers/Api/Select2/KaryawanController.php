@@ -16,8 +16,11 @@ class KaryawanController extends Controller
             ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
             ->orWhere('nip', 'LIKE', "%{$query}%")
             ->orWhere('nama_karyawan', 'LIKE', "%{$query}%")
+            ->orderBy('nama_karyawan', 'ASC')
             ->get();
 
-        return KaryawanResource::collection($karyawan);
+        return [
+            'results' => KaryawanResource::collection($karyawan)->toArray($request)
+        ];
     }
 }
