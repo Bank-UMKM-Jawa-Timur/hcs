@@ -145,7 +145,7 @@ $status = isset($status) ? $status : null;
                                                 }
                                             }
 
-                                            $gj_cabang = (array_sum($total_gj_cabang) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13;
+                                            $gj_cabang = round((array_sum($total_gj_cabang) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13);
 
                                             array_push($total_dpp, $gj_cabang);
                                         @endphp
