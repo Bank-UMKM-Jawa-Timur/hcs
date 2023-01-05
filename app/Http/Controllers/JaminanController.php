@@ -165,7 +165,7 @@ class JaminanController extends Controller
                 array_push($jp2_pusat, (($i >  9077600) ?  round(9077600 * 0.02) : round($i * 0.02)));
             }
 
-            dd(array_sum($jp1_pusat));
+            // dd(array_sum($jp1_pusat));
 
             $data_pusat = DB::table('tunjangan_karyawan')
                 ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')

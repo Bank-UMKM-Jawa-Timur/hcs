@@ -88,9 +88,15 @@ $request = isset($request) ? $request : null;
                         $hasil_rupiah = number_format($angka, 0, ".", ",");
                         return $hasil_rupiah;
                     }
-                    function rupiahJkk($angka)
+                    
+                    function rupiah2($angka)
                     {
-                        $hasil_rupiah = number_format($angka, 0, ".", ",");
+                        $hasil_rupiah = number_format($angka, 2, ".", ",");
+                        return $hasil_rupiah;
+                    }
+                    function rupiah4($angka)
+                    {
+                        $hasil_rupiah = number_format($angka, 4, ".", ",");
                         return $hasil_rupiah;
                     }
                 @endphp
@@ -253,16 +259,16 @@ $request = isset($request) ? $request : null;
                                             {{ $karyawan[$i]->nama_karyawan }}
                                         </td>
                                         <td>
-                                            {{ rupiahJkk(($jkk[$i])) }}
+                                            {{ rupiah4(($jkk[$i])) }}
                                         </td>
                                         <td>
-                                            {{ rupiah(($jht[$i])) }}
+                                            {{ rupiah2(($jht[$i])) }}
                                         </td>
                                         <td>
-                                            {{ rupiah(($jkm[$i])) }}
+                                            {{ rupiah2(($jkm[$i])) }}
                                         </td>
                                         <td>
-                                            {{ rupiah(($jkk[$i] + $jht[$i] + $jkm[$i])) }}
+                                            {{ rupiah2(($jkk[$i] + $jht[$i] + $jkm[$i])) }}
                                         </td>
                                         <td>
                                             {{ rupiah(($jp1[$i])) }}
@@ -279,13 +285,13 @@ $request = isset($request) ? $request : null;
                             <tfoot style="font-weight: bold; text-align: center;">
                                 <tr>
                                     <td colspan="2">Jumlah</td>
-                                    <td>{{ rupiah(array_sum($jkk)) }}</td>
+                                    <td>{{ rupiah2(array_sum($jkk)) }}</td>
                                     <td>{{ rupiah(array_sum($jht)) }}</td>
                                     <td>{{ rupiah(array_sum($jkm)) }}</td>
                                     <td style="background-color: #FED049">{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm))) }}</td>
                                     <td>{{ rupiah((array_sum($jp1))) }}</td>
                                     <td>{{ rupiah((array_sum($jp2))) }}</td>
-                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jp1))) }} - {{rupiah(array_sum($jp2)) }}</td>
+                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="8">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>
