@@ -97,9 +97,11 @@
                                         <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px; text-align: center;">Gaji Pokok</th>
                                         <th colspan="8" style="background-color: #CCD6A6; text-align: center;">Tunjangan</th>
                                         <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">JAMSOSTEK</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">Tunjangan <br> Uang Pulsa</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">Tunjangan <br> Uang Vitamin</th>
-                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">Tunjangan <br> Uang Transport</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">Penambah <br>Bruto Jamsostek</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">T. Uang Makan</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">T. Uang Pulsa</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">T. Uang Vitamin</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; text-align: center;">T. Uang Transport</th>
                                     </tr>
                                     <tr style="background-color: #DAE2B6">
                                         <th>Keluarga</th>
@@ -126,9 +128,11 @@
                                             <td style="background-color: #FED049" >{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
                                             <td style="background-color: #FED049" >{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
                                             <td>{{ ($jamsostek[$i] != 0) ?rupiah($jamsostek[$i]) : '-' }}</td>
+                                            <td>-</td>
+                                            <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
                                             <td>{{ ($gj[$i]['tj_pulsa'] != 0) ? rupiah($gj[$i]['tj_pulsa']) : '-' }}</td>
                                             <td>{{ ($gj[$i]['tj_vitamin'] != 0) ? rupiah($gj[$i]['tj_vitamin']) : '-' }}</td>
-                                            <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
+                                            <td>{{ ($gj[$i]['tj_transport'] != 0) ? rupiah($gj[$i]['tj_transport']) : '-' }}</td>
                                             @php
                                                 $total_k += $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] + $gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] +$gj[$i]['tj_kesejahteraan'];
                                                 $total_non += $gj[$i]['gj_pokok'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_pulsa'] + $gj[$i]['uang_makan'];
