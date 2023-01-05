@@ -328,7 +328,7 @@ class JaminanController extends Controller
                     array_push($s, $i->status_karyawan);
                 }
             }
-            $dpp_pusat = (array_sum($total_gj_pusat) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13;
+            $dpp_pusat = round((array_sum($total_gj_pusat) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13);
 
             // dd($gj_pusat);
             $data_pusat = DB::table('tunjangan_karyawan')

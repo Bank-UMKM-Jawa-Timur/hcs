@@ -125,7 +125,7 @@ $request = isset($request) ? $request : null;
                                     <td>-</td>
                                     <td>Kantor Pusat</td>
                                     <td>{{ $count_pusat }}</td>
-                                    <td>{{ rupiahJkk(((0.0024 * $total_gaji_pusat))) }}</td>
+                                    <td>{{ rupiah(((0.0024 * $total_gaji_pusat))) }}</td>
                                     <td>{{ rupiah(((0.057 * $total_gaji_pusat))) }}</td>
                                     <td>{{ rupiah(((0.003 * $total_gaji_pusat))) }}</td>
                                     <td>{{ rupiah((((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 * $total_gaji_pusat))) }}</td>
@@ -185,7 +185,7 @@ $request = isset($request) ? $request : null;
                                             }
                                         @endphp
                                         <td>{{ count($karyawan) }}</td>
-                                        <td>{{ rupiahJkk(((0.0024 * array_sum($total_gaji_cabang)))) }}</td>
+                                        <td>{{ rupiah(((0.0024 * array_sum($total_gaji_cabang)))) }}</td>
                                         <td>{{ rupiah(((0.057 * array_sum($total_gaji_cabang)))) }}</td>
                                         <td>{{ rupiah(((0.003 * array_sum($total_gaji_cabang)))) }}</td>
                                         <td>{{ rupiah((((0.0024 * array_sum($total_gaji_cabang))) + ((0.057 * array_sum($total_gaji_cabang)))) + ((0.003 * array_sum($total_gaji_cabang)))) }}</td>
@@ -215,7 +215,7 @@ $request = isset($request) ? $request : null;
                                         $total_karyawan = DB::table('mst_karyawan')->get();
                                     @endphp
                                     <td style="text-align: center;">{{ count($total_karyawan) }}</td>
-                                    <td style="text-align: center;">{{ rupiahJkk(array_sum($total_jkk)) }}</td>
+                                    <td style="text-align: center;">{{ rupiah(array_sum($total_jkk)) }}</td>
                                     <td style="text-align: center;">{{ rupiah(array_sum($total_jht)) }}</td>
                                     <td style="text-align: center;">{{ rupiah(array_sum($total_jkm)) }}</td>
                                     <td style="background-color: #FED049; text-align: center;">{{ rupiah(array_sum($total_jamsostek)) }}</td>
@@ -288,14 +288,14 @@ $request = isset($request) ? $request : null;
                                     <td>{{ rupiah2(array_sum($jkk)) }}</td>
                                     <td>{{ rupiah(array_sum($jht)) }}</td>
                                     <td>{{ rupiah(array_sum($jkm)) }}</td>
-                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm))) }}</td>
+                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jkk) + array_sum($jht) + array_sum($jkm))) }}</td>
                                     <td>{{ rupiah((array_sum($jp1))) }}</td>
                                     <td>{{ rupiah((array_sum($jp2))) }}</td>
                                     <td style="background-color: #FED049">{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="8">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>
-                                    <td style="background-color: #54B435">{{ rupiah((array_sum($jkm) + array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2))) }}</td>
+                                    <td style="background-color: #54B435">{{ rupiah((array_sum($jkk) + array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2))) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
