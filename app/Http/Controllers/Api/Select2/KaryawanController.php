@@ -17,10 +17,13 @@ class KaryawanController extends Controller
             ->orWhere('nip', 'LIKE', "%{$query}%")
             ->orWhere('nama_karyawan', 'LIKE', "%{$query}%")
             ->orderBy('nama_karyawan', 'ASC')
-            ->get();
+            ->simplePaginate();
 
         return [
-            'results' => KaryawanResource::collection($karyawan)->toArray($request)
+            'results' => KaryawanResource::collection($karyawan)->toArray($request),
+            'pagination' => [
+                'more' => !empty($karyawan->nextPageUrl())
+            ]
         ];
     }
 }

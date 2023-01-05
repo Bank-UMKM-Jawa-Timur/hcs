@@ -250,7 +250,14 @@
 <script>
     const nipSelect = $('#nip').select2({
         ajax: {
-            url: '{{ route('api.select2.karyawan') }}'
+            url: '{{ route('api.select2.karyawan') }}',
+            data: function(params) {
+                return {
+                    search: params.term || '',
+                    page: params.page || 1
+                }
+            },
+            cache: true,
         },
         templateResult: function(data) {
             if(data.loading) return data.text;
