@@ -12,7 +12,7 @@ class KaryawanController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $query = $request->q;
+        $query = $request->q ?? $request->search;
         $karyawan = DB::table('mst_karyawan')
             ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
             ->where(function(Builder $builder) use($query) {;
