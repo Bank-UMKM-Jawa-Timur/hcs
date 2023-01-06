@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Karyawan\PenonaktifanRequest;
 use App\Imports\ImportKaryawan;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -62,7 +63,7 @@ class KaryawanController extends Controller
     public function upload_karyawan(Request $request)
     {
         $file = $request->file('upload_csv');
-        $import = new ImportKaryawan;   
+        $import = new ImportKaryawan;
         $import = $import->import($file);
 
         Alert::success('Berhasil', 'Berhasil mengimport data excel');
@@ -131,7 +132,7 @@ class KaryawanController extends Controller
         $data = DB::table('mst_bagian')
             ->where('kd_entitas', $request->kd_entitas)
             ->get();
-            
+
         return response()->json($data);
     }
 
@@ -230,7 +231,7 @@ class KaryawanController extends Controller
             ->get();
 
         return view('karyawan.add', [
-            'panggol' => $data_panggol, 
+            'panggol' => $data_panggol,
             'is' => $data_is,
             'jabatan' => $data_jabatan,
             'agama' => $data_agama,
@@ -294,7 +295,7 @@ class KaryawanController extends Controller
                     'nip' => $request->get('nip'),
                     'nama_karyawan' => $request->get('nama'),
                     'nik' => $request->get('nik'),
-                    'ket_jabatan' => $request->get('ket_jabatan'), 
+                    'ket_jabatan' => $request->get('ket_jabatan'),
                     'kd_entitas' => $entitas,
                     'kd_bagian' => $request->get('bagian'),
                     'kd_jabatan' => $request->get('jabatan'),
@@ -437,7 +438,7 @@ class KaryawanController extends Controller
 
         return view('karyawan.detail', [
             'data' => $data,
-            'panggol' => $data_panggol, 
+            'panggol' => $data_panggol,
             'suis' => $data_suis,
             'ent' => $data_ent,
             'agama' => $data_agama,
@@ -479,7 +480,7 @@ class KaryawanController extends Controller
 
         return view('karyawan.edit', [
             'data' => $data,
-            'panggol' => $data_panggol, 
+            'panggol' => $data_panggol,
             'is' => $data_is,
             'jabatan' => $data_jabatan,
             'agama' => $data_agama,
@@ -537,7 +538,7 @@ class KaryawanController extends Controller
                         ->select('id')
                         ->orderBy('id', 'desc')
                         ->first();
-                        
+
                     DB::table('mst_karyawan')
                         ->where('nip', $request->get('nip'))
                         ->update([
@@ -636,7 +637,7 @@ class KaryawanController extends Controller
                     'nip' => $request->get('nip'),
                     'nama_karyawan' => $request->get('nama'),
                     'nik' => $request->get('nik'),
-                    'ket_jabatan' => $request->get('ket_jabatan'), 
+                    'ket_jabatan' => $request->get('ket_jabatan'),
                     'kd_entitas' => $entitas,
                     'kd_bagian' => $request->get('bagian'),
                     'kd_jabatan' => $request->get('jabatan'),
@@ -693,6 +694,20 @@ class KaryawanController extends Controller
             Alert::error('Tejadi kesalahan', ''.$e);
             return redirect()->route('karyawan.index');
         }
+    }
+
+    public function penonaktifan(PenonaktifanRequest $request) {
+        if($request->isMethod('GET')) return view('karyawan.penonaktifan');
+
+        DB::table('mst_karyawan')
+            ->where('nip', $request->nip)
+            ->update([
+                'status_karyawan' => 'Nonaktif',
+                'tanggal_penonaktifan' => $request->tanggal_penonaktifan,
+            ]);
+
+        Alert::success('Berhasil menonaktifkan karyawan');
+        return back();
     }
 
     /**
