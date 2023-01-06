@@ -51,17 +51,6 @@ $request = isset($request) ? $request : null;
                     $earliest_year = 2022;
                 @endphp
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="Bulan">Bulan</label>
-                        <select name="bulan" class="form-control">
-                            <option value="-">--- Pilih Bulan ---</option>
-                            @for($i = 1; $i <= 12; $i++)
-                                <option @selected($request?->bulan == $i) value="{{ $i }}">{{ getMonth($i) }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4">
                     <label for="tahun">Tahun</label>
                     <div class="form-group">
                         <select name="tahun" class="form-control">
@@ -69,6 +58,17 @@ $request = isset($request) ? $request : null;
                             @foreach (range(date('Y'), $earliest_year) as $x)
                                 <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Bulan">Bulan</label>
+                        <select name="bulan" class="form-control">
+                            <option value="-">--- Pilih Bulan ---</option>
+                            @for($i = 1; $i <= 12; $i++)
+                                <option @selected($request?->bulan == $i) value="{{ $i }}">{{ getMonth($i) }}</option>
+                            @endfor
                         </select>
                     </div>
                 </div>
@@ -235,12 +235,12 @@ $request = isset($request) ? $request : null;
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">NIP</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Nama Karyawan</th>
-                                    <th colspan="4" style="background-color: #CCD6A6; text-align: center;">JAMSOSTEK</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">JP(1%)</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">JP(2%)</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6; text-align: center;">Total JP</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6">NIP</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6">Nama Karyawan</th>
+                                    <th colspan="4" style="background-color: #CCD6A6">JAMSOSTEK</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6">JP(1%)</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6">JP(2%)</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6">Total JP</th>
                                 </tr>
                                 <tr style="background-color: #DAE2B6">
                                     <th>JKK</th>
@@ -282,20 +282,20 @@ $request = isset($request) ? $request : null;
                                     </tr>
                                 @endfor
                             </tbody>
-                            <tfoot style="font-weight: bold;">
+                            <tfoot style="font-weight: bold; text-align: center;">
                                 <tr>
-                                    <td colspan="2" style="text-align: center;">Jumlah</td>
-                                    <td style="text-align: center;">{{ rupiah2(array_sum($jkk)) }}</td>
-                                    <td style="text-align: center;">{{ rupiah(array_sum($jht)) }}</td>
-                                    <td style="text-align: center;">{{ rupiah(array_sum($jkm)) }}</td>
-                                    <td style="background-color: #FED049; text-align: center;">{{ rupiah((array_sum($jkk) + array_sum($jht) + array_sum($jkm))) }}</td>
-                                    <td style="text-align: center;">{{ rupiah((array_sum($jp1))) }}</td>
-                                    <td style="text-align: center;">{{ rupiah((array_sum($jp2))) }}</td>
-                                    <td style="background-color: #FED049; text-align: center;">{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
+                                    <td colspan="2">Jumlah</td>
+                                    <td>{{ rupiah2(array_sum($jkk)) }}</td>
+                                    <td>{{ rupiah(array_sum($jht)) }}</td>
+                                    <td>{{ rupiah(array_sum($jkm)) }}</td>
+                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jkk) + array_sum($jht) + array_sum($jkm))) }}</td>
+                                    <td>{{ rupiah((array_sum($jp1))) }}</td>
+                                    <td>{{ rupiah((array_sum($jp2))) }}</td>
+                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>
-                                    <td style="background-color: #54B435; text-align: center;">{{ rupiah((array_sum($jkk) + array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2))) }}</td>
+                                    <td colspan="8">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>
+                                    <td style="background-color: #54B435">{{ rupiah((array_sum($jkk) + array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2))) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
