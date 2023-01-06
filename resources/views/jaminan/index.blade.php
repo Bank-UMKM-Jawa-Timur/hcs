@@ -172,12 +172,14 @@ $request = isset($request) ? $request : null;
                                                 ->where('kd_entitas', $item->kd_entitas)
                                                 ->get();
                                             foreach($karyawan as $i){
-                                                $data_gaji = DB::table('gaji_per_bulan')
-                                                    ->where('nip', $i->nip)
-                                                    ->where('bulan', $bulan)
-                                                    ->where('tahun', $tahun)
-                                                    ->first();
-                                                array_push($total_gaji_cabang, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
+                                                if ($i->status_karyawan != 'Nonaktif') {
+                                                    $data_gaji = DB::table('gaji_per_bulan')
+                                                        ->where('nip', $i->nip)
+                                                        ->where('bulan', $bulan)
+                                                        ->where('tahun', $tahun)
+                                                        ->first();
+                                                    array_push($total_gaji_cabang, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
+                                                }
                                             }
                                             foreach($total_gaji_cabang as $i){
                                                 array_push($jp1_cabang, ((($i >  9077600) ?  round(9077600 * 0.01) : round($i * 0.01))));
