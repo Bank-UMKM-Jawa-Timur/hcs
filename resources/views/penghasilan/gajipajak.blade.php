@@ -93,7 +93,7 @@
             </a>
         </div>
   </form>
-    <div class="card ml-3 mr-3 mb-3 mt-4 shadow">
+    <div class="card ml-3 mr-3 mb-3 mt-4 shadow" id="reportPrinting">
         <div class="col-md-12">
             @php
                 $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
@@ -107,8 +107,11 @@
             <div class="card-body ml-0 mr-0 mt-0 mb-2">
                 <div class="row m-0 mt-2 mb-2">
                     <label class="col-sm-2 mt-2">Nomor</label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-7">
                         <input type="text" disabled class="form-control" style="max-width: 100px" value="">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="button" class="btn-success" style="text-align: right" value="Print" onClick="printReport()">
                     </div>
                 </div>
                 <div class="row m-0 ">
@@ -593,6 +596,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+
 <script>
     const nipSelect = $('#nip').select2({
         ajax: {
@@ -616,5 +620,28 @@
     nipSelect.append(`
         <option value="{{$karyawan?->nip}}">{{$karyawan?->nip}} - {{$karyawan?->nama_karyawan}}</option>
     `).trigger('change');
+
+    function printReport()
+    {
+        var prtContent = document.getElementById("reportPrinting");
+        var mywindow = window.open();
+
+        mywindow.document.write('<html><head><title></title>');
+        mywindow.document.write('<link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />');
+        mywindow.document.write('<link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />');
+        mywindow.document.write('<link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />');
+        mywindow.document.write('<style> .table-responsive {-ms-overflow-style: none; scrollbar-width: none; } .table-responsive::-webkit-scrollbar { overflow-y: hidden; overflow-x: scroll; } </style>');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(prtContent.innerHTML);
+        mywindow.document.write('</body></html>');
+
+        setTimeout(function () {
+        mywindow.print();
+        mywindow.close();
+        }, 1000)
+        return true;
+
+        return true;
+    }
 </script>
 @endpush
