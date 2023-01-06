@@ -70,7 +70,7 @@
             <div class="row m-0">
                 <div class="card-body">
                     <div class="col-l-12">
-                        <div class="table-responsive">
+                        <div class="table-responsive overflow-hidden">
                             <table class="table table-bordered table-striped" id="table">
                                 <thead>
                                     <tr>
