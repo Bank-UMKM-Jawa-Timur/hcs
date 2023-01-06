@@ -16,9 +16,30 @@ class GajiPerBulanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function getBulan(Request $request)
+    {
+        $tahun = $request->get('tahun');
+
+        $bulan = DB::table('gaji_per_bulan')
+            ->where('tahun', $tahun)
+            ->distinct()
+            ->get('bulan');
+        if(count($bulan) > 0){
+            return response()->json($bulan);
+        } else{
+            return null;
+        }
+    }
+
     public function index()
     {
-        return view('gaji_perbulan.index');
+        $data = DB::table('gaji_per_bulan')
+            ->distinct('tahun')
+            ->select('bulan', 'tahun')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('gaji_perbulan.index', ['data_gaji' => $data]);
     }
 
     /**
