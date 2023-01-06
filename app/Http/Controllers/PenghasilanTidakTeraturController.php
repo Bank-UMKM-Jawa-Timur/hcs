@@ -52,6 +52,7 @@ class PenghasilanTidakTeraturController extends Controller
     public function filter(Request $request)
     {
         $tahun = $request->get('tahun');
+        $mode = $request->get('mode');
         $nip = $request->get('nip');
         $gaji = array();
         $total_gaji = array();
@@ -176,7 +177,8 @@ class PenghasilanTidakTeraturController extends Controller
             'bonus' => $bonus,
             'tahun' => $tahun,
             'karyawan' => $karyawan,
-            'request' => $request
+            'request' => $request,
+            'mode' => $mode
         ]);
     }
 

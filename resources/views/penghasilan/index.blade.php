@@ -28,17 +28,27 @@
   <form action="{{ route('get-penghasilan') }}" method="post">
       @csrf
       <div class="row m-0">
-          <div class="col-md-4">
+          <div class="col-lg-4">
               <div class="form-group">
                   <label for="">Karyawan:</label>
                   <select name="nip" id="nip" class="form-control"></select>
               </div>
           </div>
+          <div class="col-lg-4">
+            <label for="mode">Mode Lihat Data</label>
+            <div class="form-group">
+                <select name="mode" class="form-control">
+                    <option value="">--- Pilih Mode ---</option>
+                    <option value="1">Bukti Pembayaran Gaji Pajak</option>
+                    <option value="2">Detail Gaji Pajak</option>
+                </select>
+            </div>
+          </div>
           @php
             $already_selected_value = date('y');
             $earliest_year = 2022;
           @endphp
-          <div class="col-md-4">
+          <div class="col-lg-4">
               <label for="tahun">Tahun</label>
               <div class="form-group">
                   <select name="tahun" class="form-control">
@@ -50,7 +60,7 @@
               </div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-4">
           <a href="penghasilan/gajipajak">
             <button class="btn btn-info" type="submit">Tampilkan</button>
           </a>
@@ -59,15 +69,15 @@
 
 @push('script')
 <script>
-$(document).ready(function() {
-    var table = $('#table').DataTable({
-        'autoWidth': false,
-        'dom': 'Rlfrtip',
-        'colReorder': {
-            'allowReorder': false
-        }
-    });
-})
+// $(document).ready(function() {
+//     var table = $('#table').DataTable({
+//         'autoWidth': false,
+//         'dom': 'Rlfrtip',
+//         'colReorder': {
+//             'allowReorder': false
+//         }
+//     });
+// })
 
 $('#nip').select2({
     ajax: {
