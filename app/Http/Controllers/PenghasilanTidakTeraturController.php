@@ -108,7 +108,7 @@ class PenghasilanTidakTeraturController extends Controller
             'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
             'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
             'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
-            'tj_telepon' => ($data != null) ? $data->gj_pokok : 0,
+            'tj_telepon' => ($data != null) ? $data->tj_telepon : 0,
             'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
             'tj_teller' => ($data != null) ? $data->tj_teller : 0,
             'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
@@ -117,10 +117,10 @@ class PenghasilanTidakTeraturController extends Controller
             'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
             'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
             'tj_ti' => ($data != null) ? $data->tj_ti : 0,
-            'tj_transport' => ($tj_trans != null) ? $tj_trans->nominal : 0,
-            'tj_pulsa' => ($tj_pulsa != null) ? $tj_pulsa->nominal : 0,
-            'tj_vitamin' => ($tj_vitamin != null) ? $tj_vitamin->nominal : 0,
-            'uang_makan' => ($tj_uang_makan != null) ? $tj_uang_makan->nominal : 0,
+            'tj_transport' => ($tj_trans != null && $data != null) ? $tj_trans->nominal : 0,
+            'tj_pulsa' => ($tj_pulsa != null && $data != null) ? $tj_pulsa->nominal : 0,
+            'tj_vitamin' => ($tj_vitamin != null && $data != null) ? $tj_vitamin->nominal : 0,
+            'uang_makan' => ($tj_uang_makan != null && $data != null) ? $tj_uang_makan->nominal : 0,
            ];
 
            $total_gj[$i-1] = [
