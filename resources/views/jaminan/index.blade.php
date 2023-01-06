@@ -51,17 +51,6 @@ $request = isset($request) ? $request : null;
                     $earliest_year = 2022;
                 @endphp
                 <div class="col-md-4">
-                    <label for="tahun">Tahun</label>
-                    <div class="form-group">
-                        <select name="tahun" class="form-control">
-                            <option value="">--- Pilih Tahun ---</option>
-                            @foreach (range(date('Y'), $earliest_year) as $x)
-                                <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4">
                     <div class="form-group">
                         <label for="Bulan">Bulan</label>
                         <select name="bulan" class="form-control">
@@ -69,6 +58,17 @@ $request = isset($request) ? $request : null;
                             @for($i = 1; $i <= 12; $i++)
                                 <option @selected($request?->bulan == $i) value="{{ $i }}">{{ getMonth($i) }}</option>
                             @endfor
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="tahun">Tahun</label>
+                    <div class="form-group">
+                        <select name="tahun" class="form-control">
+                            <option value="">--- Pilih Tahun ---</option>
+                            @foreach (range(date('Y'), $earliest_year) as $x)
+                                <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

@@ -40,21 +40,17 @@ $status = isset($status) ? $status : null;
                         </select>
                     </div>
                 </div>
+                
+                <div id="kantor_col" class="col-md-4">
+                </div>
+                <div id="cabang_col" class="col-md-4">
+                </div>
+            </div>
+            <div class="row m-0">
                 @php
                     $already_selected_value = date('y');
                     $earliest_year = 2022;
                 @endphp
-                <div class="col-md-4">
-                    <label for="tahun">Tahun</label>
-                    <div class="form-group">
-                        <select name="tahun" class="form-control">
-                            <option value="">--- Pilih Tahun ---</option>
-                            @foreach (range(date('Y'), $earliest_year) as $x)
-                                <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="Bulan">Bulan</label>
@@ -66,9 +62,16 @@ $status = isset($status) ? $status : null;
                         </select>
                     </div>
                 </div>
-                <div id="kantor_col" class="col-md-4">
-                </div>
-                <div id="cabang_col" class="col-md-4">
+                <div class="col-md-4">
+                    <label for="tahun">Tahun</label>
+                    <div class="form-group">
+                        <select name="tahun" class="form-control">
+                            <option value="">--- Pilih Tahun ---</option>
+                            @foreach (range(date('Y'), $earliest_year) as $x)
+                                <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="col-md-12 mt-2">
                     <button class="btn btn-info" type="submit">Tampilkan</button>
