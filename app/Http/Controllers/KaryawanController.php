@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Karyawan\PenonaktifanRequest;
 use App\Imports\ImportKaryawan;
+use App\Imports\UpdateTunjanganImport;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -208,6 +209,21 @@ class KaryawanController extends Controller
         ];
 
         return response()->json($data);
+    }
+
+    public function import_tunjangan()
+    {
+        return view('karyawan.update_tunjangan');
+    }
+
+    public function update_tunjangan(Request $request)
+    {
+        $file = $request->file('upload_csv');
+        $import = new UpdateTunjanganImport;
+        $import = $import->import($file);
+
+        Alert::success('Berhasil', 'Berhasil mengimport data excel');
+        return redirect()->route('karyawan.index');
     }
 
     /**

@@ -71,6 +71,8 @@ class PenghasilanTidakTeraturController extends Controller
 
         $karyawan = DB::table('mst_karyawan')
             ->where(compact('nip'))
+            ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
+            ->select('mst_karyawan.*', 'mst_jabatan.nama_jabatan')
             ->first();
 
         // Get gaji secara bulanan

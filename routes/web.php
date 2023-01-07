@@ -154,6 +154,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/getKaryawanByNip', [\App\Http\Controllers\PenghasilanTidakTeraturController::class, 'getDataKaryawan'])->name('getKaryawanByNip');
     Route::post('/laporan_jamsostek', [JaminanController::class, 'filter'])->name('filter-laporan');
     Route::get('/getBulan', [GajiPerBulanController::class, 'getBulan'])->name('getBulan');
+
+    Route::get('/update-tunjangan', [KaryawanController::class, 'import_tunjangan'])->name('import-tunjangan');
+    Route::post('/update_tunjangan', [KaryawanController::class, 'update_tunjangan'])->name('update_tunjangan');
 });
 Auth::routes();
 
