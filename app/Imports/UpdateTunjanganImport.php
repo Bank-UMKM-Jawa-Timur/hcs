@@ -44,7 +44,7 @@ class UpdateTunjanganImport implements ToCollection, WithHeadingRow, SkipsOnErro
                     ->insert([
                         'nip' => $row['nip'],
                         'id_tunjangan' => 2,
-                        'nominal' => $row['tj_keluarga']
+                        'nominal' => $row['tj_telairlis']
                     ]);
             }
             if($row['tj_jabatan'] != 0){
@@ -52,7 +52,7 @@ class UpdateTunjanganImport implements ToCollection, WithHeadingRow, SkipsOnErro
                     ->insert([
                         'nip' => $row['nip'],
                         'id_tunjangan' => 3,
-                        'nominal' => $row['tj_keluarga']
+                        'nominal' => $row['tj_jabatan']
                     ]);
             }
             if($row['tj_teller'] != 0){
@@ -60,7 +60,7 @@ class UpdateTunjanganImport implements ToCollection, WithHeadingRow, SkipsOnErro
                     ->insert([
                         'nip' => $row['nip'],
                         'id_tunjangan' => 4,
-                        'nominal' => $row['tj_keluarga']
+                        'nominal' => $row['tj_teller']
                     ]);
             }
             if($row['tj_perumahan'] != 0){
@@ -68,7 +68,7 @@ class UpdateTunjanganImport implements ToCollection, WithHeadingRow, SkipsOnErro
                     ->insert([
                         'nip' => $row['nip'],
                         'id_tunjangan' => 5,
-                        'nominal' => $row['tj_keluarga']
+                        'nominal' => $row['tj_perumahan']
                     ]);
             }
             if($row['tj_kemahalan'] != 0){
@@ -76,7 +76,7 @@ class UpdateTunjanganImport implements ToCollection, WithHeadingRow, SkipsOnErro
                     ->insert([
                         'nip' => $row['nip'],
                         'id_tunjangan' => 6,
-                        'nominal' => $row['tj_keluarga']
+                        'nominal' => $row['tj_kemahalan']
                     ]);
             }
             if($row['tj_pelaksana'] != 0){
@@ -84,7 +84,7 @@ class UpdateTunjanganImport implements ToCollection, WithHeadingRow, SkipsOnErro
                     ->insert([
                         'nip' => $row['nip'],
                         'id_tunjangan' => 7,
-                        'nominal' => $row['tj_keluarga']
+                        'nominal' => $row['tj_pelaksana']
                     ]);
             }
             if($row['tj_kesejahteraan'] != 0){
@@ -92,7 +92,7 @@ class UpdateTunjanganImport implements ToCollection, WithHeadingRow, SkipsOnErro
                     ->insert([
                         'nip' => $row['nip'],
                         'id_tunjangan' => 8,
-                        'nominal' => $row['tj_keluarga']
+                        'nominal' => $row['tj_kesejahteraan']
                     ]);
             }
             if($row['dpp'] != 0){
@@ -100,7 +100,7 @@ class UpdateTunjanganImport implements ToCollection, WithHeadingRow, SkipsOnErro
                     ->insert([
                         'nip' => $row['nip'],
                         'id_tunjangan' => 15,
-                        'nominal' => $row['tj_keluarga']
+                        'nominal' => $row['dpp']
                     ]);
             }
             DB::commit();
