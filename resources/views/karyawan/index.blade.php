@@ -24,19 +24,13 @@
                               NIP
                             </th>
                             <th>
-                              NIK
+                              kd_entitas
                             </th>
                             <th>
-                                Nama karyawan
+                                kd_bagian
                             </th>
                             <th>
-                              Kantor
-                            </th>
-                            <th>
-                              Jabatan
-                            </th>
-                            <th>
-                                Aksi
+                              nama_karyawan
                             </th>
                           </thead>
                           @php
@@ -56,67 +50,12 @@
                                       {{ $num }}
                                     </td>
                                     <td>{{ $item->nip }}</td>
-                                    <td>{{ $item->nik }}</td>
+                                    <td>{{ $item->kd_entitas }}</td>
+                                    <td>
+                                      {{ $item->kd_bagian }}
+                                    </td>
                                     <td>
                                       {{ $item->nama_karyawan }}
-                                    </td>
-                                    <td>
-                                      {{ $jabatan }}
-                                    </td>
-                                    <td>
-                                      @php
-                                          $ket = null;
-                                          if($item->ket_jabatan != null){
-                                            $ket = ' ('.$item->ket_jabatan.')';
-                                          }
-                                          $st_jabatan = DB::table('mst_jabatan')
-                                            ->where('kd_jabatan', $item->kd_jabatan)
-                                            ->first();
-
-                                          $bagian = '';
-                                          if ($item->kd_bagian != null) {
-                                            $bagian1 = DB::table('mst_bagian')
-                                              ->select('nama_bagian')
-                                              ->where('kd_bagian', $item->kd_bagian)
-                                              ->first();
-
-                                              if (isset($bagian1)) {
-                                                $bagian = $bagian1->nama_bagian;
-                                              }
-                                          }
-                                      @endphp
-
-                                      @if ($item->status_jabatan == "Penjabat")
-                                          Pj.{{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
-                                      @elseif($item->status_jabatan == "Penjabat Sementara")
-                                          Pjs.{{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
-                                      @else
-                                      {{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
-                                      @endif
-                                    </td>
-                                    <td style="min-width: 130px">
-                                      <div class="container">
-                                        <div class="row">
-                                          <a href="{{ route('karyawan.edit', $item->nip) }}">
-                                            <button class="btn btn-outline-warning p-1 mr-2" style="min-width: 60px">
-                                              Edit
-                                            </button>
-                                          </a>
-  
-                                          <a href="{{ route('karyawan.show', $item->nip) }}">
-                                            <button class="btn btn-outline-info p-1" style="min-width: 60px">
-                                              Detail
-                                            </button>
-                                          </a>
-                                        </div>
-                                      </div>
-
-                                        {{-- <form action="{{ route('karyawan.destroy', $item->nip) }}" method="POST">
-                                          @csrf
-                                          @method('DELETE')
-                                      
-                                          <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                                        </form> --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -146,8 +85,8 @@
                                     <tr>
                                       <td>{{ $num++ }}</td>
                                       <td>{{ $i->nip }}</td>
-                                      <td>{{ $i->nik }}</td>
-                                      <td>{{ $i->nama_karyawan }}</td>
+                                      <td>{{ $i->kd_entitas }}</td>
+                                      <td>{{ $i->kd_bagian }}</td>
                                       <td>
                                         @php
                                             $data = DB::table('mst_cabang')
@@ -158,62 +97,7 @@
                                                 $data = $data->nama_cabang;
                                               } 
                                         @endphp
-                                        {{ $data }}
-                                      </td>
-                                      <td>
-                                        @php
-                                            $ket = null;
-                                            if($i->ket_jabatan != null){
-                                              $ket = ' ('.$i->ket_jabatan.')';
-                                            }
-                                            $st_jabatan = DB::table('mst_jabatan')
-                                              ->where('kd_jabatan', $i->kd_jabatan)
-                                              ->first();
-  
-                                            $bagian = '';
-                                            if ($i->kd_bagian != null) {
-                                              $bagian1 = DB::table('mst_bagian')
-                                                ->select('nama_bagian')
-                                                ->where('kd_bagian', $i->kd_bagian)
-                                                ->first();
-  
-                                                if (isset($bagian1)) {
-                                                  $bagian = $bagian1->nama_bagian;
-                                                }
-                                            }
-                                        @endphp
-  
-                                        @if ($i->status_jabatan == "Penjabat")
-                                            Pj.{{ $i->nama_jabatan . ' ' . $bagian.$ket }} 
-                                        @elseif($i->status_jabatan == "Penjabat Sementara")
-                                            Pjs.{{ $i->nama_jabatan . ' ' . $bagian.$ket }} 
-                                        @else
-                                        {{ $i->nama_jabatan . ' ' . $bagian.$ket }} 
-                                        @endif
-                                      </td>
-                                      <td style="min-width: 105px">
-                                        <div class="container">
-                                          <div class="row">
-                                            <a href="{{ route('karyawan.edit', $i->nip) }}">
-                                              <button class="btn btn-outline-warning p-1 mr-2" style="min-width: 60px">
-                                                Edit
-                                              </button>
-                                            </a>
-    
-                                            <a href="{{ route('karyawan.show', $i->nip) }}">
-                                              <button class="btn btn-outline-info p-1" style="min-width: 60px">
-                                                Detail
-                                              </button>
-                                            </a>
-                                          </div>
-                                        </div>
-  
-                                          {{-- <form action="{{ route('karyawan.destroy', $item->nip) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                        
-                                            <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                                          </form> --}}
+                                        {{ $i->nama_karyawan }}
                                       </td>
                                     </tr>
                                 @endforeach
@@ -227,14 +111,84 @@
 @endsection
 
 @section('custom_script')
+
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
   <script>
     $(document).ready(function() {
+      $('#table thead tr')
+        .clone(true)
+        .addClass('filters')
+        .appendTo('#table thead');
         var table = $('#table').DataTable({
-            'autoWidth': false,
-            'dom': 'Rlfrtip',
-            'colReorder': {
-                'allowReorder': false
-            }
+          dom : "Bfrtip",orderCellsTop: true,
+        fixedHeader: true,
+        initComplete: function () {
+            var api = this.api();
+ 
+            // For each column
+            api
+                .columns()
+                .eq(0)
+                .each(function (colIdx) {
+                    // Set the header cell to contain the input element
+                    var cell = $('.filters th').eq(
+                        $(api.column(colIdx).header()).index()
+                    );
+                    var title = $(cell).text();
+                    $(cell).html('<input type="text" placeholder="' + title + '" />');
+ 
+                    // On every keypress in this input
+                    $(
+                        'input',
+                        $('.filters th').eq($(api.column(colIdx).header()).index())
+                    )
+                        .off('keyup change')
+                        .on('change', function (e) {
+                            // Get the search value
+                            $(this).attr('title', $(this).val());
+                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
+ 
+                            var cursorPosition = this.selectionStart;
+                            // Search the column for that value
+                            api
+                                .column(colIdx)
+                                .search(
+                                    this.value != ''
+                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                        : '',
+                                    this.value != '',
+                                    this.value == ''
+                                )
+                                .draw();
+                        })
+                        .on('keyup', function (e) {
+                            e.stopPropagation();
+ 
+                            $(this).trigger('change');
+                            $(this)
+                                .focus()[0]
+                                .setSelectionRange(cursorPosition, cursorPosition);
+                        });
+                });
+        },
+          buttons: [
+              {
+                  extend: 'excelHtml5',
+                  text:'Excel',
+                  customize: function( xlsx, row ) {
+                      var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                  }
+              }
+          ]
         });
     });
   </script>
