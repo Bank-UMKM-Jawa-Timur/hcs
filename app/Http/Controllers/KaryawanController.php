@@ -337,8 +337,8 @@ class KaryawanController extends Controller
                 DB::table('tunjangan_karyawan')
                     ->insert([
                         'nip' => $request->get('nip'),
-                        'id_tunjangan' => $request->get('tunjangan')[$i],
-                        'nominal' => $request->get('nominal_tunjangan')[$i],
+                        'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
+                        'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
                         'created_at' => now()
                     ]);
             }
@@ -590,7 +590,7 @@ class KaryawanController extends Controller
                     ->insert([
                         'nip' => $request->get('nip'),
                         'keterangan' => 'Penyesuaian Gaji Pokok',
-                        'nominal_baru' => $request->get('gj_pokok'),
+                        'nominal_baru' => str_replace('.', '', $request->get('gj_pokok')),
                         'nominal_lama' => $karyawan->gj_pokok,
                         'created_at' => now()
                     ]);
@@ -600,35 +600,35 @@ class KaryawanController extends Controller
                     ->insert([
                         'nip' => $request->get('nip'),
                         'keterangan' => 'Penyesuaian Gaji penyesuaian',
-                        'nominal_baru' => $request->get('gj_penyesuaian'),
+                        'nominal_baru' => str_replace('.', '', $request->get('gj_penyesuaian')),
                         'nominal_lama' => $karyawan->gj_penyesuaian,
                         'created_at' => now(),
                         'id_tunjangan' => null
                     ]);
             }
             for($i = 0; $i < count($request->get('tunjangan')); $i++){
-                if($request->get('id_tk')[$i] != null){
-                    if($request->get('nominal_tunjangan')[$i] != $tj_karyawan[$i]->nominal){
+                if($request->get('nominal_tunjangan')[$i] != $tj_karyawan[$i]->nominal){
+                    if($request->get('id_tk')[$i] != null){
                         DB::table('history_penyesuaian_gaji')
                         ->insert([
                             'nip' => $request->get('nip'),
                             'keterangan' => 'Penyesuaian Tunjangan '.$tj_karyawan[$i]->nama_tunjangan,
-                            'id_tunjangan' => $request->get('tunjangan')[$i],
+                            'id_tunjangan' => str_replace('.', '',$request->get('tunjangan')[$i]),
                             'nominal_baru' => $request->get('nominal_tunjangan')[$i],
                             'nominal_lama' => $tj_karyawan[$i]->nominal,
                             'created_at' => now()
                         ]);
+                    } else {
+                        DB::table('history_penyesuaian_gaji')
+                            ->insert([
+                                'nip' => $request->get('nip'),
+                                'keterangan' => 'Penambahan Tunjangan Baru',
+                                'nominal_baru' => str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                'nominal_lama' => 0,
+                                'created_at' => now()
+                            ]);
                     }
-                } else {
-                    DB::table('history_penyesuaian_gaji')
-                        ->insert([
-                            'nip' => $request->get('nip'),
-                            'keterangan' => 'Penambahan Tunjangan Baru',
-                            'nominal_baru' => $request->get('nominal_tunjangan')[$i],
-                            'nominal_lama' => 0,
-                            'created_at' => now()
-                        ]);
-                }
+                } 
             }
 
             DB::table('mst_karyawan')
@@ -667,8 +667,8 @@ class KaryawanController extends Controller
                         DB::table('tunjangan_karyawan')
                             ->insert([
                                 'nip' => $request->get('nip'),
-                                'id_tunjangan' => $request->get('tunjangan')[$i],
-                                'nominal' => $request->get('nominal_tunjangan')[$i],
+                                'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
+                                'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
                                 'created_at' => now()
                             ]);
                     } else{
@@ -676,8 +676,8 @@ class KaryawanController extends Controller
                             ->where('id', $request->get('id_tk')[$i])
                             ->update([
                                 'nip' => $request->get('nip'),
-                                'id_tunjangan' => $request->get('tunjangan')[$i],
-                                'nominal' => $request->get('nominal_tunjangan')[$i],
+                                'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
+                                'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
                                 'updated_at' => now()
                             ]);
                     }
@@ -688,11 +688,11 @@ class KaryawanController extends Controller
         } catch(Exception $e){
             DB::rollBack();
             Alert::error('Tejadi kesalahan', ''.$e);
-            return redirect()->route('karyawan.index');
+            return $e->getMessage();
         } catch(QueryException $e){
             DB::rollBack();
             Alert::error('Tejadi kesalahan', ''.$e);
-            return redirect()->route('karyawan.index');
+            return $e->getMessage() ;
         }
     }
 
