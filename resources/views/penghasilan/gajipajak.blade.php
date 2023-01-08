@@ -126,51 +126,51 @@
                     </div>
                     <label class="col-sm-2 mt-2 text-left">NO. REKENING GAJI :</label>
                     <div class="col-sm-3">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->no_rekening }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">NIK</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->nik }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">NAMA</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->nama_karyawan }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">ALAMAT</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->alamat_ktp }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">JENIS KELAMIN</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->jk }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">JABATAN</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->nama_jabatan }}">
                     </div>
-                    <label class="col-sm-2 mt-2 text-left">BPJSKT :</label>
+                    <label class="col-sm-2 mt-2 text-left">BPJSTK :</label>
                     <div class="col-sm-3">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->kpj }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">STATUS PERKAWINAN</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->status }}">
                     </div>
                     <label class="col-sm-2 mt-2 text-left">BPKSKES :</label>
                     <div class="col-sm-3">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->jkn }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -208,20 +208,41 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
+                            @php
+                                $total_rutin = 0;
+                                $total_gaji = 0;
+                                $total_tidak_rutin = 0;
+                                $total_tj_lainnya = 0;
+                                $jaminan = array_sum($jamsostek);
+                                $bonus_sum = array_sum($bonus);
+                                $total_pph = 0;
+                                $total_honorium = 0;
+                                $total_pph_21 = 0;
+                            @endphp
+                            @for ($i = 0; $i < 12; $i++)
+                                <tr>
+                                    <td>{{ $bulan[$i] }}</td>
+                                    <td>{{ rupiah(array_sum($gj[$i]) + $jamsostek[$i]) }}</td>
+                                    <td>{{ rupiah(array_sum($penghasilan[$i])) }}</td>
+                                    @php
+                                        $total_rutin += array_sum($gj[$i]) + $jamsostek[$i];
+                                        $total_tidak_rutin += array_sum($penghasilan[$i]);
+                                        $total_gaji += $gj[$i]['gj_pokok'] + $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] +$gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] + $gj[$i]['tj_kesejahteraan'];
+                                        $total_tj_lainnya += $gj[$i]['uang_makan'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_vitamin'] + $gj[$i]['tj_transport'] + $total_tidak_rutin;
+                                    @endphp
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                            @endfor
                         </tbody>
                         <tfoot style="font-weight: bold">
                             <tr>
                                 <td colspan="1">
                                     Total 
                                 </td>
-                                <td style="background-color: #54B435; ">-</td>
-                                <td style="background-color: #54B435; ">-</td>
+                                <td style="background-color: #54B435; ">{{ rupiah($total_rutin) }}</td>
+                                <td style="background-color: #54B435; ">{{ rupiah($total_tidak_rutin) }}</td>
                                 <td style="background-color: #54B435; ">-</td>
                                 <td style="background-color: #54B435; ">-</td>
                                 <td style="background-color: #54B435; ">-</td>
@@ -238,13 +259,13 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-3 mt-2">PENGHASILAN TERATUR</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($total_rutin) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-3">PENGHASILAN TIDAK TERATUR</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($total_tidak_rutin) }}">
                     </div>
                 </div><div class="row m-0 mt-3">
                     <div class="col-lg-12">
@@ -254,7 +275,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-1">1. Gaji/Pensiun atau THT/JHT</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($total_gaji) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -266,7 +287,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-1">3. Tunjangan Lainnya, Uang Lembur dan sebagainya</label> 
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($total_tj_lainnya) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -278,7 +299,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-1">5. Premi Asuransi yang dibayarkan Pemberi Kerja</label>  
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($jaminan) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -290,20 +311,20 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">7. Tantiem, Bonus, Gratifikasi, Jaspro dan THR</label>  
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($bonus_sum) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5" style="margin-top: 40px">8. Jumlah Penghasilan Bruto (1 + 2 + 3 + 4 + 5 + 6 + 7)</label>  
                     <div class="col-sm-3 ">
                         <hr>    
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($total_gaji + $total_pph + $total_tj_lainnya + $total_honorium + $jaminan + $total_pph_21 + $bonus_sum) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-4">
                     <label class="col-sm-5 mt-2" style="font-weight: bold; text-align: center;">Total Penghasilan (Teratur + Tidak Teratur)</label>  
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" style="font-weight: bold" value="">
+                        <input type="text" disabled class="form-control" style="font-weight: bold" value="{{ rupiah($total_rutin + $total_tidak_rutin) }}">
                     </div>
                 </div>
 
