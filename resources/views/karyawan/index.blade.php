@@ -123,23 +123,7 @@
                             {{-- Foreach Data selain Pusat --}}
                             @foreach ($cabang as $item)
                                 @php
-                                    $data_cabang = DB::table('mst_karyawan')
-                                    ->where('kd_entitas', $item->kd_cabang)
-                                    ->select(
-                                        'mst_karyawan.nip',
-                                        'mst_karyawan.nik',
-                                        'mst_karyawan.nama_karyawan',
-                                        'mst_karyawan.kd_entitas',
-                                        'mst_karyawan.kd_jabatan',
-                                        'mst_karyawan.kd_bagian',
-                                        'mst_karyawan.ket_jabatan',
-                                        'mst_karyawan.status_karyawan',
-                                        'mst_jabatan.nama_jabatan',
-                                        'mst_karyawan.status_jabatan',
-                                    )
-                                    ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
-                                    ->orderBy('kd_jabatan', 'desc')
-                                    ->get();
+                                    $data_cabang =  DB::select("SELECT mst_karyawan.nip, mst_karyawan.nik, mst_karyawan.nama_karyawan, mst_karyawan.kd_entitas, mst_karyawan.kd_jabatan, mst_karyawan.kd_bagian, mst_karyawan.ket_jabatan, mst_karyawan.status_karyawan, mst_jabatan.nama_jabatan, mst_karyawan.status_jabatan FROM `mst_karyawan` JOIN mst_jabatan ON mst_jabatan.kd_jabatan = mst_karyawan.kd_jabatan WHERE mst_karyawan.kd_entitas = '".$item->kd_cabang."' ORDER BY CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1 WHEN mst_karyawan.kd_jabatan='PSD' THEN 2 WHEN mst_karyawan.kd_jabatan='PC' THEN 3 WHEN mst_karyawan.kd_jabatan='PBO' THEN 4 WHEN mst_karyawan.kd_jabatan='PBP' THEN 5 WHEN mst_karyawan.kd_jabatan='PEN' THEN 6 WHEN mst_karyawan.kd_jabatan='ST' THEN 7 WHEN mst_karyawan.kd_jabatan='IKJP' THEN 8 WHEN mst_karyawan.kd_jabatan='NST' THEN 9 END ASC");
                                 @endphp
 
                                 @foreach ($data_cabang as $i)

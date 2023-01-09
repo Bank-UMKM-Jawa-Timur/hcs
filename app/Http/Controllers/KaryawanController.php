@@ -32,25 +32,8 @@ class KaryawanController extends Controller
         foreach($cabang as $i){
             array_push($cbg, $i->kd_cabang);
         }
-        $data_pusat = DB::table('mst_karyawan')
-            ->whereNotIn('kd_entitas', $cbg)
-            ->orWhere('kd_entitas', null)
-            ->select(
-                'mst_karyawan.nip',
-                'mst_karyawan.nik',
-                'mst_karyawan.nama_karyawan',
-                'mst_karyawan.kd_entitas',
-                'mst_karyawan.kd_jabatan',
-                'mst_karyawan.kd_bagian',
-                'mst_karyawan.ket_jabatan',
-                'mst_karyawan.status_karyawan',
-                'mst_jabatan.nama_jabatan',
-                'mst_karyawan.status_jabatan',
-            )
-            ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
-            ->orderBy('kd_jabatan', 'desc')
-            ->get();
-
+        $data_pusat = DB::select("SELECT mst_karyawan.nip, mst_karyawan.nik, mst_karyawan.nama_karyawan, mst_karyawan.kd_entitas, mst_karyawan.kd_jabatan, mst_karyawan.kd_bagian, mst_karyawan.ket_jabatan, mst_karyawan.status_karyawan, mst_jabatan.nama_jabatan, mst_karyawan.status_jabatan FROM `mst_karyawan` JOIN mst_jabatan ON mst_jabatan.kd_jabatan = mst_karyawan.kd_jabatan WHERE mst_karyawan.kd_entitas NOT IN('".implode("', '", $cbg)."') or mst_karyawan.kd_entitas IS NULL ORDER BY CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1 WHEN mst_karyawan.kd_jabatan='PSD' THEN 2 WHEN mst_karyawan.kd_jabatan='PC' THEN 3 WHEN mst_karyawan.kd_jabatan='PBO' THEN 4 WHEN mst_karyawan.kd_jabatan='PBP' THEN 5 WHEN mst_karyawan.kd_jabatan='PEN' THEN 6 WHEN mst_karyawan.kd_jabatan='ST' THEN 7 WHEN mst_karyawan.kd_jabatan='IKJP' THEN 8 WHEN mst_karyawan.kd_jabatan='NST' THEN 9 END ASC");
+        // dd($data_pusat);
         return view('karyawan.index', [
             'data_pusat' => $data_pusat,
             'cabang' => $cabang
