@@ -539,7 +539,7 @@
                             $('#sub_divisi').append('<option value="'+item.kd_subdiv+'" '+ (subdiv === item.kd_subdiv ? 'selected' : '')  +'>'+item.nama_subdivisi+'</option>')
                         });
                         var val = $('#sub_divisi').val();
-                        subdivChange(val)
+                        subdivChange(val, divisi)
 
                         $("#sub_divisi").change(function(){
                             var val = $(this).val();
@@ -550,8 +550,12 @@
             }
         }
 
-        function subdivChange(kd_subdiv){
-            console.log("subdiv "+kd_subdiv);
+        function subdivChange(kd_subdiv, divisi){
+            if(kd_subdiv.length < 1) {
+                updateBagianDirectly(divisi);
+                return;
+            }
+
             $.ajax({
                 type: "GET",
                 url: "/getbagian?kd_entitas="+kd_subdiv,
@@ -700,5 +704,22 @@
                 }
             }
         })
+
+        function updateBagianDirectly(divisi) {
+            const kd_bagian = '{{ $data->kd_bagian }}';
+
+            $.ajax({
+                type: "GET",
+                url: "/getbagian?kd_entitas="+divisi,
+                datatype: "JSON",
+                success: function(res2){
+                    $('#bagian').empty();
+                    $('#bagian').append('<option value="">--- Pilih Bagian ---</option>')
+                    $.each(res2, function(i, item){
+                        $('#bagian').append(`<option ${item.kd_bagian == kd_bagian ? 'selected' : ''} value="${item.kd_bagian}">${item.nama_bagian}</option>`);
+                    });
+                }
+            })
+        }
     </script>
 @endsection
