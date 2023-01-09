@@ -10,6 +10,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\TunjanganKaryawanController;
+use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -155,8 +156,13 @@ Route::group(['middleware' => 'auth'], function(){
     Route::post('/laporan_jamsostek', [JaminanController::class, 'filter'])->name('filter-laporan');
     Route::get('/getBulan', [GajiPerBulanController::class, 'getBulan'])->name('getBulan');
 
+    // Import update Tunjangan
     Route::get('/update-tunjangan', [KaryawanController::class, 'import_tunjangan'])->name('import-tunjangan');
     Route::post('/update_tunjangan', [KaryawanController::class, 'update_tunjangan'])->name('update_tunjangan');
+
+    // Import Npwp dan Norek
+    Route::get('/import_npwp', [KaryawanController::class, 'importNpwpRekeningIndex'])->name('import-npwp-index');
+    Route::post('/import_npwp-rekening', [KaryawanController::class, 'importNpwpRekening'])->name('import-npwp');
 });
 Auth::routes();
 

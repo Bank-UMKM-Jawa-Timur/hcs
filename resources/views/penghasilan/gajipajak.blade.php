@@ -122,7 +122,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">NPWP</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->npwp }}">
                     </div>
                     <label class="col-sm-2 mt-2 text-left">NO. REKENING GAJI :</label>
                     <div class="col-sm-3">

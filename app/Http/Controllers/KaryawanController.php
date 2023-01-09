@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Karyawan\PenonaktifanRequest;
 use App\Imports\ImportKaryawan;
+use App\Imports\ImportNpwpRekening;
 use App\Imports\UpdateTunjanganImport;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -54,6 +55,21 @@ class KaryawanController extends Controller
             'data_pusat' => $data_pusat,
             'cabang' => $cabang
         ]);
+    }
+
+    public function importNpwpRekeningIndex()
+    {
+        return view('karyawan.import_npwp_rekening');
+    }
+
+    public function importNpwpRekening(Request $request)
+    {
+        $file = $request->file('upload_csv');
+        $import = new ImportNpwpRekening;
+        $import = $import->import($file);
+
+        Alert::success('Berhasil', 'Berhasil mengimport data excel');
+        return redirect()->route('karyawan.index');
     }
 
     public function import()
