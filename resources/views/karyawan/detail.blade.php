@@ -103,7 +103,12 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Nomor Rekening</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="###">
+                    {{-- <input type="text" disabled class="form-control" value="###"> --}}
+                    @if (isset($data->alamat_sek) != null || $data->alamat_sek != '')
+                        <input type="text" disabled class="form-control" value="{{ $data->no_rekening }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
                 </div>
             </div>
             <div class="row m-0 mt-2">
