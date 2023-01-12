@@ -163,6 +163,10 @@ Route::group(['middleware' => 'auth'], function(){
     // Import Npwp dan Norek
     Route::get('/import_npwp', [KaryawanController::class, 'importNpwpRekeningIndex'])->name('import-npwp-index');
     Route::post('/import_npwp-rekening', [KaryawanController::class, 'importNpwpRekening'])->name('import-npwp');
+
+    // Import Status
+    Route::get('import_update_status', [KaryawanController::class, 'importStatusIndex'])->name('import-status-index');
+    Route::post('import_update-status', [KaryawanController::class, 'importStatus'])->name('import_status');
 });
 Auth::routes();
 
