@@ -53,11 +53,25 @@ class MutasiController extends Controller
             if($type == 2) $mutasi->kantor_baru = "Cab. " . $entity['cab']->nama_cabang;
             if($type == 1) {
                 $mutasi->kantor_baru = isset($entity['subDiv']) ?
-                    $entity['subDiv']->nama_subdivisi :
-                    $entity['div']->nama_divisi;
+                    $entity['subDiv']->nama_subdivisi . " (Pusat)" :
+                    $entity['div']->nama_divisi . " (Pusat)";
             }
 
             return $mutasi;
+        });
+
+        $data->map(function($mutasiLama) {
+            $entityLama = EntityService::getEntity($mutasiLama->kd_entitas_lama);
+            $typeLama = $entityLama['type'];
+
+            if($typeLama == 2) $mutasiLama->kantor_lama = "Cab. " . $entityLama['cab']->nama_cabang;
+            if($typeLama == 1) {
+                $mutasiLama->kantor_lama = isset($entityLama['subDiv']) ?
+                    $entityLama['subDiv']->nama_subdivisi . " (Pusat)" :
+                    $entityLama['div']->nama_divisi . " (Pusat)";
+            }
+
+            return $mutasiLama;
         });
 
         return view('mutasi.index', compact('data'));
