@@ -98,6 +98,15 @@
             @php
                 $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
                 $total_ket = 0;
+                function formatNpwp($npwp) {
+                    $ret = substr($npwp,0,2)."."
+                    .substr($npwp,2,3)."."
+                    .substr($npwp,5,3)."."
+                    .substr($npwp,8,1)."-"
+                    .substr($npwp,9,3)."."
+                    .substr($npwp,12,3);
+                    return $ret;
+                }
 
                 for ($i=1; $i < 12; $i++) {
                     if ((array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i]) != 0)) {
@@ -129,7 +138,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">NPWP</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="{{ $karyawan->npwp }}">
+                        <input type="text" disabled class="form-control" value="{{ formatNpwp($karyawan->npwp) }}">
                     </div>
                     <label class="col-sm-2 mt-2 text-left">NO. REKENING GAJI :</label>
                     <div class="col-sm-3">
@@ -314,7 +323,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-1">2. Tunjangan PPh</label> 
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="0">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -326,7 +335,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-1">4. Honorarium dan Imbalan Lainnya</label> 
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="0">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -338,7 +347,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 ">6. Penerimaan dalam Bentuk Natura atau Kenikmatan Lainnya yang dikenakan Pemotongan PPh Pasal 21</label>  
                     <div class="col-sm-3 mt-1 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="0">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
