@@ -21,16 +21,61 @@ class UpdateStatusImport implements ToCollection, WithHeadingRow, SkipsOnError, 
     {
         foreach($collection as $row){
             $nik = $row['nik'];
+            $status = $row['status'];
 
-            DB::table('mst_karyawan')
-                ->where('nik', $nik)
-                ->update([
-                    'status' => $row['status'],
-                    'no_rekening' => $row['no_rekening'],
-                    'npwp' => $row['npwp'],
-                    'kpj' => $row['kpj'],
-                    'jkn' => $row['jkn']
-                ]);
+            if($status == 'TK'){
+                $status = 'TK';
+                DB::table('mst_karyawan')
+                    ->where('nik', $nik)
+                    ->update([
+                        'status' => $status,
+                        'no_rekening' => $row['no_rekening'],
+                        'npwp' => $row['npwp'],
+                        'kpj' => $row['kpj'],
+                        'jkn' => $row['jkn']
+                    ]);
+            } else{
+                $arr = str_split($status);
+                $status = $arr[0];
+                $jml = $arr[2];
+                $is = DB::table('mst_karyawan')
+                    ->where('nik', $nik)
+                    ->first('id_is');
+                if($is == null){
+                    DB::table('is')
+                        ->insert([
+                            'is_jml_anak' => $jml
+                        ]);
+                    $id = DB::table('id_is')
+                        ->orderBy('id', 'desc')
+                        ->first('id');
+                    DB::table('mst_karyawan')
+                    ->where('nik', $nik)
+                    ->update([
+                        'status' => $status,
+                        'no_rekening' => $row['no_rekening'],
+                        'npwp' => $row['npwp'],
+                        'kpj' => $row['kpj'],
+                        'jkn' => $row['jkn'],
+                        'id_is' => $id
+                    ]);
+                } else{
+                    DB::table('is')
+                        ->where('id', $is)
+                        ->update([
+                            'is_jml_anak' => $jml
+                        ]);
+                    DB::table('mst_karyawan')
+                    ->where('nik', $nik)
+                    ->update([
+                        'status' => $status,
+                        'no_rekening' => $row['no_rekening'],
+                        'npwp' => $row['npwp'],
+                        'kpj' => $row['kpj'],
+                        'jkn' => $row['jkn']
+                    ]);
+                }
+            }
         }
     }
 }

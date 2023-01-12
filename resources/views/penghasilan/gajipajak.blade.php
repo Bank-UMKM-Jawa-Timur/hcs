@@ -103,6 +103,24 @@
             @php
                 $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
                 $total_ket = 0;
+                $status = 'TK';
+                if ($karyawan->status == 'K') {
+                    $anak = DB::table('mst_karyawan')
+                        ->where('nip', $karyawan->nip)
+                        ->join('is', 'is.id', 'mst_karyawan.id_is')
+                        ->first('is_jml_anak');
+                    if ($anak != null && $anak > 3) {
+                        $status = 'K/3';
+                    } else if ($anak != null) {
+                        $status = 'K/'.$anak;
+                    } else {
+                        $status = 'K/0';
+                    }
+                }
+                $status_pegawai = 'Lama';
+                $ptkp = DB::table('set_ptkp')
+                    ->where('kode', $status)
+                    ->first();
                 function formatNpwp($npwp) {
                     $ret = substr($npwp,0,2)."."
                     .substr($npwp,2,3)."."
@@ -186,7 +204,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">STATUS PERKAWINAN</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="{{ $karyawan->status }}">
+                        <input type="text" disabled class="form-control" value="{{ $status }}">
                     </div>
                     <label class="col-sm-2 mt-2 text-left">BPKSKES :</label>
                     <div class="col-sm-3">
@@ -294,6 +312,17 @@
                             $rumus_14 = 0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum);
                         }
                         $no_14 = (($total_rutin + $total_tj_lainnya + $total_tidak_rutin) - $bonus_sum - $rumus_14 - 0) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
+                    }
+
+                    $no_16 = 0;
+                    if ($status == 'Mutasi Keluar') {
+                        $no_16 = floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000;
+                    } else {
+                        if (($no_14 - $ptkp->ptkp_tahun) <= 0) {
+                            $no_16 = 0;
+                        } else {
+                            $no_16 = $no_14 - $ptkp->ptkp_tahun;
+                        }
                     }
                 @endphp
 
@@ -431,13 +460,13 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">15. Penghasilan Tidak Kena Pajak (PTKP)</label>  
                     <div class="col-sm-3 "> 
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($ptkp->ptkp_tahun) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">16. Penghasilan Kena Pajak Setahun/Disetahunkan</label>  
                     <div class="col-sm-3 "> 
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($no_16) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
