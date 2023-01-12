@@ -6,6 +6,7 @@ use App\Http\Requests\Karyawan\PenonaktifanRequest;
 use App\Imports\ImportKaryawan;
 use App\Imports\ImportNpwpRekening;
 use App\Imports\UpdateTunjanganImport;
+use App\Repository\KaryawanRepository;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -26,17 +27,12 @@ class KaryawanController extends Controller
      */
     public function index()
     {
-        $cbg = array();
-        $cabang = DB::table('mst_cabang')
-            ->get();
-        foreach($cabang as $i){
-            array_push($cbg, $i->kd_cabang);
-        }
-        $data_pusat = DB::select("SELECT mst_karyawan.nip, mst_karyawan.nik, mst_karyawan.nama_karyawan, mst_karyawan.kd_entitas, mst_karyawan.kd_jabatan, mst_karyawan.kd_bagian, mst_karyawan.ket_jabatan, mst_karyawan.status_karyawan, mst_jabatan.nama_jabatan, mst_karyawan.status_jabatan FROM `mst_karyawan` JOIN mst_jabatan ON mst_jabatan.kd_jabatan = mst_karyawan.kd_jabatan WHERE mst_karyawan.kd_entitas NOT IN('".implode("', '", $cbg)."') or mst_karyawan.kd_entitas IS NULL ORDER BY CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1 WHEN mst_karyawan.kd_jabatan='PSD' THEN 2 WHEN mst_karyawan.kd_jabatan='PC' THEN 3 WHEN mst_karyawan.kd_jabatan='PBO' THEN 4 WHEN mst_karyawan.kd_jabatan='PBP' THEN 5 WHEN mst_karyawan.kd_jabatan='PEN' THEN 6 WHEN mst_karyawan.kd_jabatan='ST' THEN 7 WHEN mst_karyawan.kd_jabatan='IKJP' THEN 8 WHEN mst_karyawan.kd_jabatan='NST' THEN 9 END ASC");
-        // dd($data_pusat);
+        $karyawanRepo = new KaryawanRepository();
+
+        // dd($karyawanRepo->getAllKaryawan()->last()->toArray());
+
         return view('karyawan.index', [
-            'data_pusat' => $data_pusat,
-            'cabang' => $cabang
+            'karyawan' => $karyawanRepo->getAllKaryawan()
         ]);
     }
 
@@ -643,7 +639,7 @@ class KaryawanController extends Controller
                                 'created_at' => now()
                             ]);
                     }
-                } 
+                }
             }
 
             DB::table('mst_karyawan')

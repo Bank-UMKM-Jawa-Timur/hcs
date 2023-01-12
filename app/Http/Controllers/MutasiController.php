@@ -48,13 +48,13 @@ class MutasiController extends Controller
 
         $data->map(function($mutasi) {
             $entity = EntityService::getEntity($mutasi->kd_entitas_baru);
-            $type = $entity['type'];
+            $type = $entity->type;
 
-            if($type == 2) $mutasi->kantor_baru = "Cab. " . $entity['cab']->nama_cabang;
+            if($type == 2) $mutasi->kantor_baru = "Cab. " . $entity->cab->nama_cabang;
             if($type == 1) {
-                $mutasi->kantor_baru = isset($entity['subDiv']) ?
-                    $entity['subDiv']->nama_subdivisi . " (Pusat)" :
-                    $entity['div']->nama_divisi . " (Pusat)";
+                $mutasi->kantor_baru = isset($entity->subDiv) ?
+                    $entity->subDiv->nama_subdivisi . " (Pusat)" :
+                    $entity->div->nama_divisi . " (Pusat)";
             }
 
             return $mutasi;
@@ -62,13 +62,13 @@ class MutasiController extends Controller
 
         $data->map(function($mutasiLama) {
             $entityLama = EntityService::getEntity($mutasiLama->kd_entitas_lama);
-            $typeLama = $entityLama['type'];
+            $typeLama = $entityLama->type;
 
-            if($typeLama == 2) $mutasiLama->kantor_lama = "Cab. " . $entityLama['cab']->nama_cabang;
+            if($typeLama == 2) $mutasiLama->kantor_lama = "Cab. " . $entityLama->cab->nama_cabang;
             if($typeLama == 1) {
-                $mutasiLama->kantor_lama = isset($entityLama['subDiv']) ?
-                    $entityLama['subDiv']->nama_subdivisi . " (Pusat)" :
-                    $entityLama['div']->nama_divisi . " (Pusat)";
+                $mutasiLama->kantor_lama = isset($entityLama->subDiv) ?
+                    $entityLama->subDiv->nama_subdivisi . " (Pusat)" :
+                    $entityLama->div->nama_divisi . " (Pusat)";
             }
 
             return $mutasiLama;

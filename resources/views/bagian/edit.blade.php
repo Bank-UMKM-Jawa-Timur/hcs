@@ -18,8 +18,8 @@
                                 <label for="kantor">Nama Kantor</label>
                                 <select name="kantor" class="@error('kantor') is-invalid @enderror form-control" id="kantor">
                                     <option {{ old('kantor') == "-" ? 'selected' : '' }} value="-">-- Pilih ---</option>
-                                    <option {{ old('kantor') ?? $entity['type'] == 1 ? 'selected' : '' }} value="1">Kantor Pusat</option>
-                                    <option {{ old('kantor') ?? $entity['type'] == 2 ? 'selected' : '' }} value="2">Kantor Cabang</option>
+                                    <option {{ old('kantor') ?? $entity->type == 1 ? 'selected' : '' }} value="1">Kantor Pusat</option>
+                                    <option {{ old('kantor') ?? $entity->type == 2 ? 'selected' : '' }} value="2">Kantor Cabang</option>
                                 </select>
                                 @error('kantor')
                                     <div class="mt-2 alert alert-danger">{{ $message }}</div>
@@ -66,25 +66,25 @@
         var lastTrigger = 0;
 
         function triggerChange(step) {
-            @if($entity['type'] == 1)
+            @if($entity->type == 1)
                 if(step == 2 && lastTrigger < 2) {
-                    $('#divisi').val('{{ $entity['div']->kd_divisi }}');
+                    $('#divisi').val('{{ $entity->div->kd_divisi }}');
                     $('#divisi').trigger('change');
 
                     lastTrigger = 2;
                 }
 
-                @isset($entity['subDiv'])
+                @isset($entity->subDiv)
                     if(step == 3 && lastTrigger < 3) {
-                        $('#sub_divisi').val('{{ $entity['subDiv']->kd_subdiv }}');
+                        $('#sub_divisi').val('{{ $entity->subDiv->kd_subdiv }}');
                         lastTrigger = 3;
                     }
                 @endisset
             @endif
 
-            @if($entity['type'] == 2)
+            @if($entity->type == 2)
             if(step == 2 && lastTrigger < 2) {
-                $('#cabang').val('{{ $entity['cab']?->kd_cabang }}')
+                $('#cabang').val('{{ $entity->cab?->kd_cabang }}')
                 $('#cabang').trigger('change');
 
                 lastTrigger = 2;
