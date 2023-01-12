@@ -96,21 +96,36 @@
             </div>
             <hr>
             <div class="row m-0 ">
-                <div class="col-lg-12">
-                    <h6>Data Karyawan</h6>
+                <div class="col-lg-12"> 
+                    <h6>No Rekening & NPWP</h6>
                 </div>
             </div> 
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Nomor Rekening</label>
                 <div class="col-sm-10">
-                    {{-- <input type="text" disabled class="form-control" value="###"> --}}
-                    @if (isset($data->alamat_sek) != null || $data->alamat_sek != '')
+                    @if (isset($data->no_rekening) != null || $data->no_rekening != '')
                         <input type="text" disabled class="form-control" value="{{ $data->no_rekening }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
                 </div>
             </div>
+            <div class="row m-0 mt-2">
+                <label class="col-sm-2 mt-2">NPWP</label>
+                <div class="col-sm-10">
+                    @if (isset($data->npwp) != null || $data->npwp != '')
+                        <input type="text" disabled class="form-control" value="{{ $data->npwp }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
+                </div>
+            </div>
+            <hr>
+            <div class="row m-0 ">
+                <div class="col-lg-12"> 
+                    <h6>Data Karyawan</h6>
+                </div>
+            </div> 
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Kantor</label>
                 <div class="col-sm-10">
@@ -176,6 +191,16 @@
                 </div>
             </div>
             <div class="row m-0 mt-2">
+                <label class="col-sm-2 mt-2">Tanggal Mulai</label>
+                <div class="col-sm-10">
+                    @if (isset($data->tgl_mulai) != null)
+                        <input type="text" disabled class="form-control" value="{{ date('d F Y', strtotime($data->tgl_mulai)) }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="-">
+                    @endif
+                </div>
+            </div>
+            <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">SK Pengangkatan</label>
                 <div class="col-sm-10">
                     @if (isset($data->skangkat) != null)
@@ -185,11 +210,29 @@
                     @endif
                 </div>
             </div>
+            @php
+                use Carbon\Carbon;
+                $mulaKerja = Carbon::create($data->tgl_mulai);
+                $waktuSekarang = Carbon::now();
+
+                $tahunMulai = Carbon::parse($mulaKerja)->year;
+                $bulanMulai = Carbon::parse($mulaKerja)->month;
+                $hariMulai = Carbon::parse($mulaKerja)->day;
+
+                $tahunSekarang = Carbon::parse($waktuSekarang)->year;
+                $bulanSekarang = Carbon::parse($waktuSekarang)->month;
+                $hariSekarang = Carbon::parse($waktuSekarang)->day;
+
+                $masaKerjaThn = $tahunSekarang - $tahunMulai;
+                $masaKerjaBln = $bulanSekarang - $bulanMulai;
+                $masaKerjaHr = $hariSekarang - $hariMulai;
+
+            @endphp
             <div class="row m-0 mt-2">
-                <label class="col-sm-2 mt-2">Tanggal Pengangkatan</label>
+                <label class="col-sm-2 mt-2">Masa Kerja</label>
                 <div class="col-sm-10">
-                    @if (isset($data->tanggal_pengangkat) != null)
-                        <input type="text" disabled class="form-control" value="{{ date('d F Y', strtotime($data->tanggal_pengangkat)) }}">
+                    @if (isset($data->tgl_mulai) != null)
+                        <input type="text" disabled class="form-control" value="{{ $masaKerjaThn }} Tahun | {{ $masaKerjaBln }} Bulan | {{ $masaKerjaHr }} Hari">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
@@ -258,6 +301,12 @@
             <br>
 
             @if (isset($suis))    
+                <hr>
+                <div class="row m-0 ">
+                    <div class="col-lg-12">
+                        <h6>Data Pasangan</h6>
+                    </div>
+                </div> 
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-0">Status Pasangan</label>
                     <div class="col-sm-10">

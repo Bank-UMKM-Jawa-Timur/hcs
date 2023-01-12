@@ -10,7 +10,11 @@
     <div class="card-body">
         <form action="{{ route('promosi.store') }}" method="POST" enctype="multipart/form-data" name="divis" class="form-group">
             @csrf
+            <input type="hidden" name="kd_entity" value="">
             <div class="row">
+                <div class="col-lg-12">
+                    <h6>Karyawan</h6>
+                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="">NIP</label>
@@ -23,41 +27,41 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="nama_karyawan">Nama Karyawan</label>
-                        <input type="text" name="" id="nama_karyawan_show" disabled class="form-control" value="{{ old('nama_karyawan') }}">
-                        <input type="hidden" name="nama_karyawan" id="nama_karyawan" value="{{ old('nama_karyawan') }}">
+                        <input type="text" name="nama" id="nama_karyawan" disabled class="form-control">
                     </div>
+                </div>
+                <div class="" id="">
+
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="">Jabatan Lama</label>
-                        <input type="text" disabled class="form-control" name="" id="jabatan_show" value="{{ old('jabatan_lama') }}">
-                        <input type="hidden" name="jabatan_lama" id="jabatan_lama" value="{{ old('jabatan_lama') }}">
+                        <input type="text" class="form-control" disabled name="" id="jabatan_lama">
+                        <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="">Kantor Lama</label>
-                        <input type="text" disabled class="form-control" name="" id="kantor_lama_show" value="{{ old('kantor_lama') }}">
-                        <input type="hidden" name="kantor_lama" id="kantor_lama" value="{{ old('kantor_lama') }}">
+                        <input type="text" class="form-control" disabled name="" id="kantor_lama">
                     </div>
                 </div>
             </div>
             <hr>
-            <div class="row" id="#kantor_row">
+            <div class="row align-content-center">
                 <div class="col-lg-12">
-                    <h6>Jabatan Baru</h6>
+                    <h6>Pembaruan Data</h6>
                 </div>
-
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="">Jabatan</label>
-                        <select name="jabatan_baru" id="jabatan_baru" class="@error('jabatan_baru') is-invalid @enderror form-control">
+                        <label for="">Jabatan Baru</label>
+                        <select name="id_jabatan_baru" id="jabatan_baru" class="@error('id_jabatan_baru') @enderror form-control">
                             <option value="-">--- Pilih ---</option>
                             @foreach ($jabatan as $item)
-                                <option value="{{ $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
+                                <option {{ old('id_jabatan_baru') == $item->kd_jabatan ? 'selected' : '-' }} value="{{ $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
                             @endforeach
                         </select>
-                        @error('jabatan_baru')
+                        @error('id_jabatan_baru')
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
@@ -65,25 +69,20 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="kantor">Kantor</label>
-                        <select name="kantor" class="@error('kantor') is-invalid @enderror form-control" id="kantor">
-                            <option value="-">-- Pilih ---</option>
-                            <option value="1">Kantor Pusat</option>
-                            <option value="2">Kantor Cabang</option>
+                        <select name="kantor" id="kantor" class="@error('kantor') @enderror form-control" disabled>
+                            <option value="-">--- Pilih Kantor ---</option>
+                            <option @selected(old('kantor') == '1') value="1">Kantor Pusat</option>
+                            <option @selected(old('kantor') == '2') value="2">Kantor Cabang</option>
                         </select>
                         @error('kantor')
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-4" id="kantor_row1">
-
-                </div>
-                <div class="col-md-4"  id="kantor_row2">
-
-                </div>
-                <div class="col-md-4"  id="kantor_row3">
-
-                </div>
+                <div id="divisions-section"></div>
+                <div id="subdivs-section"></div>
+                <div id="bagians-section"></div>
+                <div id="branches-section"></div>
             </div>
             <hr>
             <div class="row align-content-center justify-content-center">
@@ -123,183 +122,181 @@
 
 @section('custom_script')
     <script>
-        $('#karyawan').change(function(e){
-            var nip = $(this).val();
-            $.ajax({
-            type: "GET",
-            url: "/getdatapromosi?nip="+nip,
-            datatype: "json",
-            success: function(res){
-                $("#nama_karyawan_show").val(res.nama_karyawan)
-                $("#nama_karyawan").val(res.nama_karyawan)
-                $("#jabatan_lama").val(res.kd_jabatan)
-                $("#jabatan_show").val(res.nama_jabatan)
-                $("#kantor_lama_show").val(res.kd_entitas)
-                $("#kantor_lama").val(res.kd_entitas)
-            }
-           })
-        });
+        // Give divisi option's value
+        function fillDivision(data) {
+            const section = $('#divisions-section');
 
-        let kantor = $('#kantor_row');
-        $('#kantor').attr("disabled", "disabled");
-        var x =1;
+            section.empty();
+            section.addClass('col-md-4');
+            section.append(`
+                <div class="form-group">
+                    <label for="divisi">Divisi</label>
+                    <select name="kd_divisi" id="divisi" class="form-control">
+                        <option value="">--- Pilih divisi ---</option>
+                    </select>
+                </div>`
+            );
 
-        function kantorChange(){
-            var kantor_id = $("#kantor").val();
+            $.each(data, function(i, item){
+                $('#divisi').append('<option value="'+item.kd_divisi+'">'+item.nama_divisi+'</option>')
+            });
 
-            if(kantor_id == 1){
+            $('#divisi').change(function(e) {
                 $.ajax({
-                    type: "GET",
-                    url: '/getdivisi',
-                    datatype: 'JSON',
-                    success: function(res){
-                        $("#kantor_row1").empty();
-                        $("#kantor_row1").append(`
-                                <div class="form-group">
-                                    <label for="divisi">Divisi</label>
-                                    <select name="divisi" id="divisi" class="form-control">
-                                        <option value="">--- Pilih divisi ---</option>
-                                    </select>
-                                </div>`
-                        );
-                        $.each(res, function(i, item){
-                            $('#divisi').append('<option value="'+item.kd_divisi+'">'+item.nama_divisi+'</option>')
-                        });
-
-                        $("#kantor_row2").empty();
-
-                        $("#kantor_row2").append(`
-                                <div class="form-group">
-                                    <label for="subdiv">Sub divisi</label>
-                                    <select name="subdiv" id="sub_divisi" class="form-control">
-                                        <option value="">--- Pilih sub divisi ---</option>
-                                    </select>
-                                </div>`
-                        );
-
-                        $("#divisi").change(function(){
-                            var divisi = $(this).val();
-
-                            if(divisi){
-                                $.ajax({
-                                    type: "GET",
-                                    url: "/getsubdivisi?divisiID="+divisi,
-                                    datatype: "JSON",
-                                    success: function(res1){
-                                        $('#sub_divisi').empty();
-                                        $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
-                                        $.each(res1, function(i, item){
-                                            $('#sub_divisi').append('<option value="'+item.kd_subdiv+'">'+item.nama_subdivisi+'</option>')
-                                        });
-
-                                        $("#kantor_row3").empty();
-                                        $("#kantor_row3").addClass("col-md-6");
-
-                                        $("#kantor_row3").append(`
-                                                <div class="form-group">
-                                                    <label for="bagian">Bagian</label>
-                                                    <select name="bagian" id="bagian" class="form-control">
-                                                        <option value="">--- Pilih bagian ---</option>
-                                                    </select>
-                                                </div>`
-                                        );
-
-                                        $("#sub_divisi").change(function(){
-                                            $.ajax({
-                                                type: "GET",
-                                                url: "/getbagian?kd_entitas="+$(this).val(),
-                                                datatype: "JSON",
-                                                success: function(res2){
-                                                    $('#bagian').empty();
-                                                    $('#bagian').append('<option value="">--- Pilih Bagian ---</option>')
-                                                    $.each(res2, function(i, item){
-                                                        $('#bagian').append('<option value="'+item.kd_bagian+'">'+item.nama_bagian+'</option>')
-                                                    });
-                                                }
-                                            })
-                                        })
-                                    }
-                                })
-                            }
-                        })
-                    }
-                })
-            } else if(kantor_id == 2){
-                $.ajax({
-                    type: "GET",
-                    url: '/getcabang',
-                    datatype: 'JSON',
-                    success: function(res){
-                        $("#kantor_row1").empty();
-                        $("#kantor_row2").empty();
-                        $("#kantor_row1").append(`
-                                <div class="form-group">
-                                    <label for="Cabang">Cabang</label>
-                                    <select name="cabang" id="cabang" class="form-control">
-                                        <option value="">--- Pilih Cabang ---</option>
-                                    </select>
-                                </div>`
-                        );
-                        $("#kantor_row2").append(`
-                            <div class="form-group">
-                                <label for="bagian">Bagian</label>
-                                <select name="bagian" id="bagian" class="form-control">
-                                    <option value="">--- Pilih bagian ---</option>
-                                </select>
-                            </div>
-                        `)
-
-                        $("#kantor_row3").empty()
-                        $("#kantor_row3").removeClass("col-md-6")
-                        $.each(res[0], function(i, item){
-                            $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
-                        })
-                        $.each(res[1], function(i, item){
-                            $('#bagian').append('<option value="'+item.kd_bagian+'">'+item.nama_bagian+'</option>')
-                        })
-                    }
-                })
-            } else {
-                $("#kantor_row1").empty();
-                $("#kantor_row2").empty();
-                $("#kantor_row3").empty();
-            }
+                    url: `/getsubdivisi?divisiID=${this.value}`,
+                    dataType: 'JSON',
+                    success: (res) => fillSubDivision(res)
+                });
+            });
         }
 
-        $("#jabatan_baru").change(function(){
-            var value = $(this).val();
-            $("#kantor_row2").show();
-            if(value == "PIMDIV"){
-                $("#kantor").val("1")
-                kantorChange();
-                $('#kantor').attr("disabled", "disabled");
-                $("kantor_row2").removeClass("col-md-6")
-                $("#kantor_row2").hide();
-                $("#kantor_row3").hide()
-            } else if(value == "PSD"){
-                $("#kantor").val("1")
-                kantorChange();
-                $('#kantor').attr("disabled", "disabled");
-            } else if(value == "PC" || value == "PBP"){
-                $("#kantor").val("2")
-                kantorChange();
-                $('#kantor').attr("disabled", "disabled");
-                $("#kantor_row2").hide();
-            } else if(value == "PBO"){
-                kantorChange();
-                $('#kantor').removeAttr("disabled")
-                $("kantor_row2").removeClass("col-md-6")
-                $("#kantor_row2").hide();
-                $("#kantor_row3").hide()
-            } else if(value == "-"){
-                kantorChange();
-            }else {
-                $('#kantor').removeAttr("disabled")
-            }
-        })
+        // Give subdivisi option's value
+        function fillSubDivision(data) {
+            const hides = ['PBO', 'PIMDIV'];
+            const skips = ['PSD'];
 
-        $('#kantor').change(function(){
-            kantorChange();
+            const section = $('#subdivs-section');
+            const jabVal = $('#jabatan_baru').val();
+            // If empmty, then skip the append element
+            section.empty();
+            $('#bagians-section').empty();
+            if(data.length < 1 || hides.includes(jabVal)) return;
+
+            section.addClass('col-md-4');
+            section.append(`
+                <div class="form-group">
+                    <label for="sub_divisi">Sub divisi</label>
+                    <select name="kd_subdiv" id="sub_divisi" class="form-control">
+                        <option value="">--- Pilih sub divisi ---</option>
+                    </select>
+                </div>`
+            );
+
+            $('#sub_divisi').empty();
+            $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
+            $.each(data, function(i, item){
+                $('#sub_divisi').append('<option value="'+item.kd_subdiv+'">'+item.nama_subdivisi+'</option>')
+            })
+
+            if(skips.includes(jabVal)) return;
+            $('#sub_divisi').change(function(e) {
+                $.ajax({
+                    url: `/getbagian?kd_entitas=${this.value}`,
+                    dataType: 'JSON',
+                    success: (res) => fillBagian(res)
+                });
+            });
+        }
+
+        // Give bagian option's value
+        function fillBagian(data) {
+            const hides = ['PBO', 'PBP', 'PC'];
+            const section = $('#bagians-section');
+            const jabVal = $('#jabatan_baru').val();
+
+            section.empty();
+            if(data.length < 1 || hides.includes(jabVal)) return;
+
+            section.addClass('col-md-4');
+            section.append(`
+                <div class="form-group">
+                    <label for="kd_bagian">Bagian</label>
+                    <select name="kd_bagian" id="kd_bagian" class="form-control">
+                        <option value="">--- Pilih ---</option>
+                    </select>
+                </div>`
+            );
+
+            $('#kd_bagian').empty();
+            $('#kd_bagian').append('<option value="">--- Pilih ---</option>')
+            $.each(data, function(i, item){
+                console.log(item);
+                $('#kd_bagian').append('<option value="'+item.kd_bagian+'">'+item.nama_bagian+'</option>')
+            })
+        }
+
+        // Give branch option's value
+        function fillBranches(data) {
+            $("#divisions-section").empty();
+            $("#subdivs-section").empty();
+
+            $('#divisions-section').addClass('col-md-4');
+            $("#divisions-section").append(`
+                    <div class="form-group">
+                        <label for="kd_cabang">Cabang</label>
+                        <select name="kd_cabang" id="cabang" class="form-control">
+                            <option value="">--- Pilih Cabang ---</option>
+                        </select>
+                    </div>`
+            );
+            $.each(data, function(i, item){
+                $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
+            })
+        }
+
+        $('#karyawan').change(function(e) {
+            const nip = $(this).val();
+
+            $.ajax({
+                url: '/getdatakaryawan',
+                data: {nip},
+                dataType: 'JSON',
+                success: (data) => {
+                    if(!data.success) return;
+
+                    $('input[name=kd_entity]').val(data.karyawan.kd_entitas);
+                    $('#nama_karyawan').val(data.karyawan.nama_karyawan);
+                    $('#jabatan_lama').val(data.karyawan.jabatan.nama_jabatan || '');
+                    $('#kantor_lama').val(data.karyawan.kd_entitas);
+                    $('#id_jabatan_lama').val(data.karyawan.jabatan.kd_jabatan);
+                }
+            });
+        });
+
+        $('#kantor').change(function(e) {
+            const office = $(this).val();
+            $('#bagians-section').empty();
+
+            if(office == 1) {
+                $.ajax({
+                    url: '/getdivisi',
+                    dataType: 'JSON',
+                    success: (res) => fillDivision(res)
+                });
+            }
+
+            if(office == 2) {
+                $.ajax({
+                    url: '/getcabang',
+                    dataType: 'JSON',
+                    success: (res) => {
+                        fillBranches(res[0]);
+                        fillBagian(res[1]);
+                    }
+                })
+            }
+        });
+
+        $('#jabatan_baru').change(function(e) {
+            const kantor = $('#kantor');
+            const value = $(this).val();
+
+            kantor.attr('disabled', false);
+
+            if(value == 'PIMDIV') {
+                kantor.val("1").change();
+                kantor.attr('disabled', true);
+            }
+
+            if(value == "PSD") {
+                kantor.val("1").change();
+                kantor.attr("disabled", true);
+            }
+
+            if(value == "PC" || value == "PBP") {
+                kantor.val("2").change();
+                kantor.attr("disabled", true);
+            }
         });
     </script>
 @endsection

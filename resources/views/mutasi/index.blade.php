@@ -34,6 +34,9 @@
                                         Jabatan Baru
                                     </th>
                                     <th>
+                                        Kantor Lama
+                                    </th>
+                                    <th>
                                         Kantor Baru
                                     </th>
                                     <th>
@@ -59,6 +62,9 @@
                                                 {{ $item->jabatan_baru }}
                                             </td>
                                             <td>
+                                                {{ $item->kantor_lama ?? '-' }}
+                                            </td>
+                                            <td>
                                                 {{ $item->kantor_baru ?? '-' }}
                                             </td>
                                             <td>
@@ -69,10 +75,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                        </div>
                     </div>
                 </div>
             </div>

@@ -31,6 +31,12 @@
                                     Jabatan Baru
                                 </th>
                                 <th>
+                                    Kantor Lama
+                                </th>
+                                <th>
+                                    Kantor Baru
+                                </th>
+                                <th>
                                     Bukti SK
                                 </th>
                             </thead>
@@ -51,6 +57,12 @@
                                         </td>
                                         <td>
                                             {{ $item->jabatan_baru }}
+                                        </td>
+                                        <td>
+                                            {{ $item->kantor_lama ?? '-' }}
+                                        </td>
+                                        <td>
+                                            {{ $item->kantor_baru ?? '-' }}
                                         </td>
                                         <td>
                                             {{ $item->bukti_sk }}

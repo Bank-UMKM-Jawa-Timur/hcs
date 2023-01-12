@@ -52,6 +52,11 @@
             </a>
         </div>
     </div>
+    <div class="row m-0">
+        <div class="col">
+            <hr>
+        </div>
+    </div>
   <form action="{{ route('get-penghasilan') }}" method="post">
       @csrf
         <div class="row m-0">
@@ -112,15 +117,14 @@
             @endphp
             @if ($mode == 1)
             <div class="card-body ml-0 mr-0 mt-0 mb-2">
-                <div class="row m-0 mt-2 mb-2">
-                    <label class="col-sm-2 mt-2">Nomor</label>
-                    <div class="col-sm-7">
-                        <input type="text" disabled class="form-control" style="max-width: 100px" value="">
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="button" class="btn-success" style="text-align: right" value="Print" onClick="printReport()">
+                <div class="row m-0 mt-1">
+                    <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold">BUKTI PEMBAYARAN GAJI PAJAK {{ $tahun }}</p>
+                    <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold; margin-top: -15px">{{ $karyawan->nama_karyawan }}</p>
+                    <div class="col-sm-12 text-right">
+                        <input type="button" class="btn btn-success" style="margin-top: -5px" value="Print" onClick="printReport()">
                     </div>
                 </div>
+                <hr style="margin-top: 5px">
                 <div class="row m-0 ">
                     <div class="col-lg-12">
                         <h6>A. IDENTITAS PENERIMA PENGHASILAN YANG DIPOTONG</h6>
@@ -150,7 +154,7 @@
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">ALAMAT</label>
-                    <div class="col-sm-5">
+                    <div class="col-sm-7">
                         <input type="text" disabled class="form-control" value="{{ $karyawan->alamat_ktp }}">
                     </div>
                 </div>
