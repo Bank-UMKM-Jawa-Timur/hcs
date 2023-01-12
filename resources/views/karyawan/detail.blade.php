@@ -215,24 +215,15 @@
                 $mulaKerja = Carbon::create($data->tgl_mulai);
                 $waktuSekarang = Carbon::now();
 
-                $tahunMulai = Carbon::parse($mulaKerja)->year;
-                $bulanMulai = Carbon::parse($mulaKerja)->month;
-                $hariMulai = Carbon::parse($mulaKerja)->day;
-
-                $tahunSekarang = Carbon::parse($waktuSekarang)->year;
-                $bulanSekarang = Carbon::parse($waktuSekarang)->month;
-                $hariSekarang = Carbon::parse($waktuSekarang)->day;
-
-                $masaKerjaThn = $tahunSekarang - $tahunMulai;
-                $masaKerjaBln = $bulanSekarang - $bulanMulai;
-                $masaKerjaHr = $hariSekarang - $hariMulai;
+                $hitung = $waktuSekarang->diff($mulaKerja);
+                $masaKerja = $hitung->format('%y Tahun | %m Bulan | %d Hari');
 
             @endphp
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Masa Kerja</label>
                 <div class="col-sm-10">
                     @if (isset($data->tgl_mulai) != null)
-                        <input type="text" disabled class="form-control" value="{{ $masaKerjaThn }} Tahun | {{ $masaKerjaBln }} Bulan | {{ $masaKerjaHr }} Hari">
+                        <input type="text" disabled class="form-control" value="{{ $masaKerja }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
