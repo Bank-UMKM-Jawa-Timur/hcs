@@ -37,4 +37,19 @@ class KaryawanModel extends Model
         'tanggal_pengangkat',
 
     ];
+
+    public function jabatan()
+    {
+        return $this->belongsTo(JabatanModel::class, 'kd_jabatan', 'kd_jabatan');
+    }
+
+    public function bagian()
+    {
+        return $this->belongsTo(BagianModel::class, 'kd_bagian', 'kd_bagian');
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(CabangModel::class);
+    }
 }

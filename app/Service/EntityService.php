@@ -9,6 +9,10 @@ class EntityService
 {
     public static function getEntity($entity)
     {
+        if(!$entity) return (object) [
+            'type' => 1,
+        ];
+
         $subDiv = DB::table('mst_sub_divisi')
             ->select('*')
             ->where('kd_subdiv', $entity)
@@ -24,18 +28,18 @@ class EntityService
             ->where('kd_cabang', $entity)
             ->first();
 
-        if($subDiv) return [
+        if($subDiv) return (object) [
             'type' => 1,
             'subDiv' => $subDiv,
             'div' => $div
         ];
 
-        if($div) return [
+        if($div) return (object) [
             'type' => 1,
             'div' => $div
         ];
 
-        return [
+        return (object) [
             'type' => 2,
             'cab' => $cab
         ];
