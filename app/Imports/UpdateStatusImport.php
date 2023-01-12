@@ -35,9 +35,9 @@ class UpdateStatusImport implements ToCollection, WithHeadingRow, SkipsOnError, 
                         'jkn' => $row['jkn']
                     ]);
             } else{
-                $arr = str_split($status);
+                $arr = explode('/' ,$status);
                 $status = $arr[0];
-                $jml = $arr[2];
+                $jml = $arr[1];
                 $is = DB::table('mst_karyawan')
                     ->where('nik', $nik)
                     ->first('id_is');
@@ -61,7 +61,7 @@ class UpdateStatusImport implements ToCollection, WithHeadingRow, SkipsOnError, 
                     ]);
                 } else{
                     DB::table('is')
-                        ->where('id', $is)
+                        ->where('id', $is->id_is)
                         ->update([
                             'is_jml_anak' => $jml
                         ]);
