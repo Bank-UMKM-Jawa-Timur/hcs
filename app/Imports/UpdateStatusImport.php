@@ -46,7 +46,7 @@ class UpdateStatusImport implements ToCollection, WithHeadingRow, SkipsOnError, 
                         ->insert([
                             'is_jml_anak' => $jml
                         ]);
-                    $id = DB::table('id_is')
+                    $id = DB::table('is')
                         ->orderBy('id', 'desc')
                         ->first('id');
                     DB::table('mst_karyawan')
@@ -57,7 +57,7 @@ class UpdateStatusImport implements ToCollection, WithHeadingRow, SkipsOnError, 
                         'npwp' => $row['npwp'],
                         'kpj' => $row['kpj'],
                         'jkn' => $row['jkn'],
-                        'id_is' => $id
+                        'id_is' => $id->id
                     ]);
                 } else{
                     DB::table('is')
