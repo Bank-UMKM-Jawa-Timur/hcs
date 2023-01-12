@@ -29,8 +29,6 @@ class KaryawanController extends Controller
     {
         $karyawanRepo = new KaryawanRepository();
 
-        // dd($karyawanRepo->getAllKaryawan()->last()->toArray());
-
         return view('karyawan.index', [
             'karyawan' => $karyawanRepo->getAllKaryawan()
         ]);

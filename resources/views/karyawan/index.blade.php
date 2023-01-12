@@ -58,8 +58,16 @@
                                         };
 
                                         $ket = $krywn->ket_jabatan ? "({$krywn->ket_jabatan})" : "";
+
+                                        if(isset($krywn->entitas->subDiv)) {
+                                            $entitas = $krywn->entitas->subDiv->nama_subdivisi;
+                                        } else if(isset($krywn->entitas->div)) {
+                                            $entitas = $krywn->entitas->div->nama_divisi;
+                                        } else {
+                                            $entitas = '';
+                                        }
                                     @endphp
-                                    <td>{{ $prefix . $krywn->jabatan->nama_jabatan }} {{ $krywn?->bagian?->nama_bagian }} {{ $ket }}</td>
+                                    <td>{{ $prefix . $krywn->jabatan->nama_jabatan }} {{ $entitas }} {{ $krywn?->bagian?->nama_bagian }} {{ $ket }}</td>
                                     <td style="min-width: 130px">
                                       <div class="container">
                                         <div class="row">
