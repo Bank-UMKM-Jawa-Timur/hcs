@@ -9,5 +9,8 @@ class JabatanModel extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+
     protected $table = 'mst_jabatan';
+    protected $keyType = 'string';
 }
