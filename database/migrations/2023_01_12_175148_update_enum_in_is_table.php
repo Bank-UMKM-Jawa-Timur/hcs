@@ -14,9 +14,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('mst_karyawan', function (Blueprint $table) {
-            DB::statement("update mst_karyawan set status = 'TK' where status = 'Belum Kawin'");
-            DB::statement("update mst_karyawan set status = 'K' where status = 'Kawin'");
+        Schema::table('is', function (Blueprint $table) {
+            DB::statement("ALTER TABLE `is` CHANGE `enum` `enum` ENUM('Istri','Suami') NULL");
         });
     }
 
@@ -27,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('mst_karyawan', function (Blueprint $table) {
+        Schema::table('is', function (Blueprint $table) {
             //
         });
     }

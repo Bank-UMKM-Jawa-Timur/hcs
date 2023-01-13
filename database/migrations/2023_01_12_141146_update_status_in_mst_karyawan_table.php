@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('mst_karyawan', function (Blueprint $table) {
-            DB::statement("ALTER TABLE `mst_karyawan` CHANGE `status` `status` ENUM('Kawin','Belum Kawin','Janda','Duda','Tidak Diketahui','Cerai','Cerai Mati', 'K', 'TK')");
+            DB::statement("ALTER TABLE `mst_karyawan` CHANGE `status` `status` ENUM('Kawin','Belum Kawin','Janda','Duda','Tidak Diketahui','Cerai','Cerai Mati', 'K','TK')");
         });
     }
 

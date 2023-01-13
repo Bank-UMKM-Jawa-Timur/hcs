@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Karyawan\PenonaktifanRequest;
 use App\Imports\ImportKaryawan;
 use App\Imports\ImportNpwpRekening;
+use App\Imports\UpdateStatusImport;
 use App\Imports\UpdateTunjanganImport;
 use App\Models\KaryawanModel;
 use App\Repository\KaryawanRepository;
@@ -33,6 +34,21 @@ class KaryawanController extends Controller
         return view('karyawan.index', [
             'karyawan' => $karyawanRepo->getAllKaryawan()
         ]);
+    }
+
+    public function importStatusIndex()
+    {
+        return view('karyawan.import_update_status');
+    }
+
+    public function importStatus(Request $request)
+    {
+        $file = $request->file('upload_csv');
+        $import = new UpdateStatusImport;
+        $import = $import->import($file);
+
+        Alert::success('Berhasil', 'Berhasil mengimport data excel');
+        return redirect()->route('karyawan.index');
     }
 
     public function importNpwpRekeningIndex()
