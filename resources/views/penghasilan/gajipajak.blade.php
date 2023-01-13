@@ -71,8 +71,8 @@
                 <div class="form-group">
                     <select name="mode" class="form-control">
                         <option value="">--- Pilih Mode ---</option>
-                        <option value="1">Bukti Pembayaran Gaji Pajak</option>
-                        <option value="2">Detail Gaji Pajak</option>
+                        <option value="1" {{ ($request->mode == 1) ? 'selected' : '' }}>Bukti Pembayaran Gaji Pajak</option>
+                        <option value="2" {{ ($request->mode == 2) ? 'selected' : '' }}>Detail Gaji Pajak</option>
                     </select>
                 </div>
             </div>
@@ -160,7 +160,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">NPWP</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="{{ formatNpwp($karyawan->npwp) }}">
+                        <input type="text" disabled class="form-control" value="{{ ($karyawan->npwp != null) ? formatNpwp($karyawan->npwp) : '-' }}">
                     </div>
                     <label class="col-sm-2 mt-2 text-left">NO. REKENING GAJI :</label>
                     <div class="col-sm-3">
@@ -324,6 +324,50 @@
                             $no_16 = $no_14 - $ptkp->ptkp_tahun;
                         }
                     }
+                    $persen5 = 0;
+                    if (($no_14 - $ptkp->ptkp_tahun) <= 60000000) {
+                        $persen5 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000) * 0.05 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000) * 0.06;
+                    } else {
+                        $persen5 = ($karyawan->npwp != null) ? 60000000 * 0.05 : 60000000 * 0.06;
+                    }
+                    $persen15 = 0;
+                    if (($no_14 - $ptkp->ptkp_tahun) > 60000000) {
+                        if (($no_14 - $ptkp->ptkp_tahun) <= 250000000) {
+                            $persen15 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 60000000) * 0.15 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000- 60000000) * 0.18;
+                        } else {
+                            $persen15 = 190000000;
+                        }
+                    } else {
+                        $persen20 = 0;
+                    }
+                    $persen25 = 0;
+                    if (($no_14 - $ptkp->ptkp_tahun) > 250000000) {
+                        if (($no_14 - $ptkp->ptkp_tahun) <= 500000000) {
+                            $persen25 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.25 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.3;
+                        } else {
+                            $persen25 = 250000000;
+                        }
+                    } else {
+                        $persen25 = 0;
+                    }
+                    $persen30 = 0;
+                    if (($no_14 - $ptkp->ptkp_tahun) > 250000000) {
+                        if (($no_14 - $ptkp->ptkp_tahun) <= 500000000) {
+                            $persen30 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.3 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.36;
+                        } else {
+                            $persen30 = 4500000000;
+                        }
+                    } else {
+                        $persen30 = 0;
+                    }
+                    $persen35 = 0;
+                    if (($no_14 - $ptkp->ptkp_tahun) > 500000000) {
+                            $persen35 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.35 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.42;
+                    } else {
+                        $persen35 = 0;
+                    }
+
+                    $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
                 @endphp
 
                 <div class="row m-0 ">
@@ -472,7 +516,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">17. PPh Pasal 21 atas Penghasilan Kena Pajak Setahun/Disetahunkan</label>  
                     <div class="col-sm-3 "> 
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($no17) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
