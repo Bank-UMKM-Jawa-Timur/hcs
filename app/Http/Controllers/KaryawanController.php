@@ -7,6 +7,7 @@ use App\Imports\ImportKaryawan;
 use App\Imports\ImportNpwpRekening;
 use App\Imports\UpdateStatusImport;
 use App\Imports\UpdateTunjanganImport;
+use App\Models\KaryawanModel;
 use App\Repository\KaryawanRepository;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -389,86 +390,30 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
-        $data_agama = null;
         $data_suis = null;
-        $data_panggol = null;
-        $data_cabang = null;
-        $data_subDiv = null;
-        $data_bagian = null;
+        $karyawan = KaryawanModel::findOrFail($id);
 
-        $data = DB::table('mst_karyawan')
-        ->where('nip', $id)
-        ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
-        ->first();
-
-        // dd($data);
-
-        if($data->kd_bagian != null){
-            $data_bagian = DB::table('mst_bagian')
-                ->where('kd_bagian', $data->kd_bagian)
-                ->first();
-        }
-
-        if($data->kd_agama != null) {
-            $data_agama = DB::table('mst_agama')
-                ->where('kd_agama', $data->kd_agama)
-                ->first();
-        }
-
-        if($data->id_is != null) {
+        if($karyawan?->id_is) {
             $data_suis = DB::table('is')
-                ->where('id', $data->id_is)
+                ->where('id', $karyawan->id_is)
                 ->first();
         }
 
-        if($data->kd_panggol != null) {
-            $data_panggol = DB::table('mst_pangkat_golongan')
-                ->where('golongan', $data->kd_panggol)
-                ->first();
-        }
-
-        $data_ent = null;
-
-        if($data->kd_entitas != null) {
-            $data_subDiv = DB::table('mst_sub_divisi')
-                ->where('kd_subdiv', $data->kd_entitas)
-                ->select('nama_subdivisi as nama')
-                ->first();
-            $data_div = DB::table('mst_divisi')
-                ->where('kd_divisi', $data->kd_entitas)
-                ->select('nama_divisi as nama')
-                ->first();
-            $data_cabang = DB::table('mst_cabang')
-                ->where('kd_cabang', $data->kd_entitas)
-                ->select('nama_cabang as nama')
-                ->first();
-            if(isset($data_subDiv))
-                $data_ent = $data_subDiv;
-            else if(isset($data_div))
-                $data_ent = $data_div;
-            else if(isset($data_cabang))
-                $data_ent = $data_cabang;
-        }
-
-        $data->tunjangan = DB::table('tunjangan_karyawan')
+        $karyawan->tunjangan = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
             ->select('tunjangan_karyawan.*')
             ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id')
             ->get();
-        $data->count_tj = DB::table('tunjangan_karyawan')
+        $karyawan->count_tj = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
             ->count('*');
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
 
         return view('karyawan.detail', [
-            'data' => $data,
-            'panggol' => $data_panggol,
+            'karyawan' => $karyawan,
             'suis' => $data_suis,
-            'ent' => $data_ent,
-            'agama' => $data_agama,
             'tunjangan' => $data_tunjangan,
-            'bagian' => $data_bagian
         ]);
     }
 

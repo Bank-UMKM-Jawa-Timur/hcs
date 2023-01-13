@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Service\EntityService;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +12,10 @@ class KaryawanModel extends Model
     use HasFactory;
 
     protected $table = 'mst_karyawan';
+    protected $primaryKey = 'nip';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
         'nip',
         'nama_karyawan',
@@ -38,6 +44,23 @@ class KaryawanModel extends Model
 
     ];
 
+    protected $casts = [
+        'tgl_lahir' => 'date',
+        'tgl_mulai' => 'date',
+    ];
+
+    public function entitas(): Attribute
+    {
+        return new Attribute(
+            get: fn($value, $attributes) => EntityService::getEntity($attributes['kd_entitas'])
+        );
+    }
+
+    public function agama()
+    {
+        return $this->belongsTo(AgamaModel::class, 'kd_agama', 'kd_agama');
+    }
+
     public function jabatan()
     {
         return $this->belongsTo(JabatanModel::class, 'kd_jabatan', 'kd_jabatan');
@@ -51,5 +74,10 @@ class KaryawanModel extends Model
     public function cabang()
     {
         return $this->belongsTo(CabangModel::class);
+    }
+
+    public function panggol()
+    {
+        return $this->belongsTo(PanggolModel::class, 'kd_panggol', 'golongan');
     }
 }

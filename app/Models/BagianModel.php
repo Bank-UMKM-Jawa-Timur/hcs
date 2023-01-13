@@ -9,5 +9,8 @@ class BagianModel extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+
     protected $table = 'mst_bagian';
+    protected $keyType = 'string';
 }
