@@ -101,7 +101,7 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">NPWP</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $karyawan->npwp ?? '-' }}">
+                    <input type="text" disabled class="form-control" value="{{ npwp($karyawan->npwp) ?? '-' }}">
                 </div>
             </div>
             <hr>
