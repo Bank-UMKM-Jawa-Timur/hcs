@@ -117,6 +117,15 @@
                         $status = 'K/0';
                     }
                 }
+                function formatNpwp($npwp) {
+                    $ret = substr($npwp,0,2)."."
+                    .substr($npwp,2,3)."."
+                    .substr($npwp,5,3)."."
+                    .substr($npwp,8,1)."-"
+                    .substr($npwp,9,3)."."
+                    .substr($npwp,12,3);
+                    return $ret;
+                }
                 $status_pegawai = 'Lama';
                 $ptkp = DB::table('set_ptkp')
                     ->where('kode', $status)
