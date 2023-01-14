@@ -261,18 +261,18 @@
                             @for ($i = 0; $i < 12; $i++)
                                 <tr>
                                     <td>{{ $bulan[$i] }}</td>
-                                    <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] != 0) ? rupiah(array_sum($gj[$i]) + $jamsostek[$i]) : '-' }}</td>
+                                    <td>{{ (array_sum($gj[$i]) != 0) ? rupiah(array_sum($gj[$i])) : '-' }}</td>
                                     <td>{{ (array_sum($penghasilan[$i]) != 0) ? rupiah(array_sum($penghasilan[$i])) : '-' }}</td>
                                     @php
-                                        $total_rutin += array_sum($gj[$i]) + $jamsostek[$i];
+                                        $total_rutin += array_sum($gj[$i]);
                                         $total_tidak_rutin += array_sum($penghasilan[$i]);
                                         $total_gaji += $gj[$i]['gj_pokok'] + $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] +$gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] + $gj[$i]['tj_kesejahteraan'];
                                         $total_tj_lainnya += $gj[$i]['uang_makan'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_vitamin'] + $gj[$i]['tj_transport'] + $total_tidak_rutin;
-                                        $total_penghasilan_bruto += array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i]);
+                                        $total_penghasilan_bruto += array_sum($gj[$i]) + array_sum($penghasilan[$i]);
                                     @endphp
-                                    <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i]) != 0) ? rupiah(array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i])) : '-' }}</td>
+                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) != 0) ? rupiah(array_sum($gj[$i]) + array_sum($penghasilan[$i])) : '-' }}</td>
                                     <td>-</td>
-                                    <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i]) != 0) ? 1 : 0 }}</td>
+                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) != 0) ? 1 : 0 }}</td>
                                 </tr>
                             @endfor
                         </tbody>
@@ -576,7 +576,6 @@
                                             <th class="sticky-col" rowspan="2" style="background-color: #CCD6A6; min-width: 100px;">Bulan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px; ">Gaji Pokok</th>
                                             <th colspan="8" style="background-color: #CCD6A6; ">Tunjangan</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6; ">JAMSOSTEK</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">Penambah <br>Bruto Jamsostek</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">T. Uang Makan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">T. Uang Pulsa</th>
@@ -607,7 +606,6 @@
                                                 <td  >{{ ($gj[$i]['tj_pelaksana'] != 0) ? rupiah($gj[$i]['tj_pelaksana']) : '-' }}</td>
                                                 <td  >{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
                                                 <td  >{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
-                                                <td>{{ ($jamsostek[$i] != 0) ?rupiah($jamsostek[$i]) : '-' }}</td>
                                                 <td>-</td>
                                                 <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_pulsa'] != 0) ? rupiah($gj[$i]['tj_pulsa']) : '-' }}</td>
@@ -646,7 +644,6 @@
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_pelaksana) }}</td>
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_kemahalan) }}</td>
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_kesejahteraan) }}</td>
-                                            <td style="background-color: #54B435; ">{{ rupiah($total_jamsostek) }}</td>
                                             <td style="background-color: #54B435; ">-</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_uang_makan) }}</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_tj_pulsa) }}</td>
