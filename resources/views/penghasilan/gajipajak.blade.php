@@ -126,7 +126,7 @@
                     .substr($npwp,12,3);
                     return $ret;
                 }
-                $status_pegawai = 'Lama';
+                $status_pegawai = $karyawan->ket;
                 $ptkp = DB::table('set_ptkp')
                     ->where('kode', $status)
                     ->first();
@@ -226,7 +226,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">KETERANGAN PEGAWAI</label>
                     <div class="col-sm-5 ">
-                        <input type="text" disabled class="form-control" value="LAMA">
+                        <input type="text" disabled class="form-control" value="{{ $status_pegawai }}">
                     </div>
                 </div>
 
