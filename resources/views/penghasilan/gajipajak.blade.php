@@ -109,10 +109,10 @@
                         ->where('nip', $karyawan->nip)
                         ->join('is', 'is.id', 'mst_karyawan.id_is')
                         ->first('is_jml_anak');
-                    if ($anak != null && $anak > 3) {
+                    if ($anak != null && $anak->is_jml_anak > 3) {
                         $status = 'K/3';
                     } else if ($anak != null) {
-                        $status = 'K/'.$anak;
+                        $status = 'K/'.$anak->is_jml_anak;
                     } else {
                         $status = 'K/0';
                     }
@@ -325,10 +325,14 @@
                         }
                     }
                     $persen5 = 0;
-                    if (($no_14 - $ptkp->ptkp_tahun) <= 60000000) {
-                        $persen5 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000) * 0.05 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000) * 0.06;
+                    if (($no_14 - $ptkp->ptkp_tahun) > 0) {
+                        if (($no_14 - $ptkp->ptkp_tahun) <= 60000000) {
+                            $persen5 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000) * 0.05 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000) * 0.06;
+                        } else {
+                            $persen5 = ($karyawan->npwp != null) ? 60000000 * 0.05 : 60000000 * 0.06;
+                        }
                     } else {
-                        $persen5 = ($karyawan->npwp != null) ? 60000000 * 0.05 : 60000000 * 0.06;
+                        $persen5 = 0;
                     }
                     $persen15 = 0;
                     if (($no_14 - $ptkp->ptkp_tahun) > 60000000) {
