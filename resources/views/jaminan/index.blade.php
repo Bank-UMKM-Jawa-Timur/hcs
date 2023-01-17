@@ -53,7 +53,7 @@ $request = isset($request) ? $request : null;
                 <div class="col-md-4">
                     <label for="tahun">Tahun</label>
                     <div class="form-group">
-                        <select name="tahun" class="form-control">
+                        <select name="tahun" id="tahun" class="form-control">
                             <option value="">--- Pilih Tahun ---</option>
                             @foreach (range(date('Y'), $earliest_year) as $x)
                                 <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
@@ -64,7 +64,7 @@ $request = isset($request) ? $request : null;
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="Bulan">Bulan</label>
-                        <select name="bulan" class="form-control">
+                        <select name="bulan" id="bulan" class="form-control">
                             <option value="-">--- Pilih Bulan ---</option>
                             @for($i = 1; $i <= 12; $i++)
                                 <option @selected($request?->bulan == $i) value="{{ $i }}">{{ getMonth($i) }}</option>
@@ -237,18 +237,18 @@ $request = isset($request) ? $request : null;
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" style="background-color: #CCD6A6">NIP</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6">Nama Karyawan</th>
-                                    <th colspan="4" style="background-color: #CCD6A6">JAMSOSTEK</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6">JP(1%)</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6">JP(2%)</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6">Total JP</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">NIP</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">Nama Karyawan</th>
+                                    <th colspan="4" style="background-color: #CCD6A6; text-align:center;">JAMSOSTEK</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">JP(1%)</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">JP(2%)</th>
+                                    <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">Total JP</th>
                                 </tr>
                                 <tr style="background-color: #DAE2B6">
-                                    <th>JKK</th>
-                                    <th>JHT</th>
-                                    <th>JKM</th>
-                                    <th>Total</th>
+                                    <th style="text-align: center;">JKK</th>
+                                    <th style="text-align: center;">JHT</th>
+                                    <th style="text-align: center;">JKM</th>
+                                    <th style="text-align: center;">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -286,18 +286,18 @@ $request = isset($request) ? $request : null;
                             </tbody>
                             <tfoot style="font-weight: bold; text-align: center;">
                                 <tr>
-                                    <td colspan="2">Jumlah</td>
-                                    <td>{{ rupiah2(array_sum($jkk)) }}</td>
-                                    <td>{{ rupiah(array_sum($jht)) }}</td>
-                                    <td>{{ rupiah(array_sum($jkm)) }}</td>
-                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jkk) + array_sum($jht) + array_sum($jkm))) }}</td>
-                                    <td>{{ rupiah((array_sum($jp1))) }}</td>
-                                    <td>{{ rupiah((array_sum($jp2))) }}</td>
-                                    <td style="background-color: #FED049">{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
+                                    <td colspan="2" style="text-align: center;">Jumlah</td>
+                                    <td style="text-align: center;">{{ rupiah2(array_sum($jkk)) }}</td>
+                                    <td style="text-align: center;">{{ rupiah(array_sum($jht)) }}</td>
+                                    <td style="text-align: center;">{{ rupiah(array_sum($jkm)) }}</td>
+                                    <td style="background-color: #FED049; text-align: center;">{{ rupiah((array_sum($jkk) + array_sum($jht) + array_sum($jkm))) }}</td>
+                                    <td style="text-align: center;">{{ rupiah((array_sum($jp1))) }}</td>
+                                    <td style="text-align: center;">{{ rupiah((array_sum($jp2))) }}</td>
+                                    <td style="background-color: #FED049; text-align: center;">{{ rupiah((array_sum($jp1) + array_sum($jp2))) }}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>
-                                    <td style="background-color: #54B435">{{ rupiah((array_sum($jkk) + array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2))) }}</td>
+                                    <td colspan="8" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)</td>
+                                    <td style="background-color: #54B435; text-align: center;">{{ rupiah((array_sum($jkk) + array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2))) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -319,27 +319,111 @@ $request = isset($request) ? $request : null;
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
+        var a = document.getElementById("bulan");
+        var b = document.getElementById("tahun");
+        var bulan = a.options[a.selectedIndex].text;
+        var tahun = b.options[b.selectedIndex].text;
+        
         $("#table_export").DataTable({
+
             dom : "Bfrtip",
             iDisplayLength: -1,
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur\n Bulan '+name,
+                    title: 'Bank UMKM Jawa Timur',
+                    filename : 'Bank UMKM Jawa Timur Laporan Jamsostek',
+                    message: 'Rekapitulasi Beban Asuransi\n ' + bulan + ' ' + tahun,
                     text:'Excel',
+                    header: true,
+                    footer: true,
                     customize: function( xlsx, row ) {
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: 'Bank UMKM Jawa Timur\n Rekapitulasi Beban Asuransi ' + bulan + ' ' + tahun,
+                    filename : 'Bank UMKM Jawa Timur Laporan Jamsostek',
+                    text:'PDF',
+                    footer: true,
+                    paperSize: 'A4',
+                    orientation: 'landscape',
+                    customize: function (doc) {
+                        var now = new Date();
+						var jsDate = now.getDate()+' / '+(now.getMonth()+1)+' / '+now.getFullYear();
+                        
+                        doc.styles.tableHeader.fontSize = 10; 
+                        doc.defaultStyle.fontSize = 9;
+                        doc.defaultStyle.alignment = 'center';
+                        doc.styles.tableHeader.alignment = 'center';
+                        
+                        doc.content[1].margin = [0, 0, 0, 0];
+                        doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+                        doc['footer']=(function(page, pages) {
+							return {
+								columns: [
+									{
+										alignment: 'left',
+										text: ['Created on: ', { text: jsDate.toString() }]
+									},
+									{
+										alignment: 'right',
+										text: ['Page ', { text: page.toString() },	' of ',	{ text: pages.toString() }]
+									}
+								],
+								margin: 20
+							}
+						});
+
+                    }
+                },
+                {
+                    extend: 'print',
+                    title: 'Bank UMKM Jawa Timur Rekapitulasi Beban Asuransi ' + bulan + ' ' + tahun,
+                    text:'print',
+                    footer: true,
+                    paperSize: 'A4',
+                    customize: function (win) {
+                        var last = null;
+                        var current = null;
+                        var bod = [];
+        
+                        var css = '@page { size: landscape; }',
+                            head = win.document.head || win.document.getElementsByTagName('head')[0],
+                            style = win.document.createElement('style');
+        
+                        style.type = 'text/css';
+                        style.media = 'print';
+        
+                        if (style.styleSheet) {
+                            style.styleSheet.cssText = css;
+                        } else {
+                            style.appendChild(win.document.createTextNode(css));
+                        }
+        
+                        head.appendChild(style);
+
+                        $(win.document.body).find('h1')
+                            .css('text-align', 'center')
+                            .css( 'font-size', '16pt' )
+                            .css('margin-top', '20px');
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '10pt')
+                            .css('width', '1000px');
+                        $(win.document.body).find('tr:nth-child(odd) th').each(function(index){
+                            $(this).css('text-align','center');
+                        });
                     }
                 }
             ]
         });
         
         $(".buttons-excel").attr("class","btn btn-success mb-2");
-        
-        // document.getElementById('btn_export').addEventListener('click', function(){
-        //     var table2excel = new Table2Excel();
-        //     table2excel.export(document.querySelectorAll('#table_export'));
-        // });
+        $(".buttons-pdf").attr("class","btn btn-success mb-2");
+        $(".buttons-print").attr("class","btn btn-success mb-2");
 
         $("#clear").click(function(e){
             $("#row-baru").empty()

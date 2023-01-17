@@ -53,30 +53,24 @@
                 </div>
             </div>
         </form>
+        <hr>
     </div>
 
-    <div class="card-body">
-        <div class="row m-0">
-            <div class="col">
-                <hr>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">
-                <div class="card-header">
-                    <h5 class="card-title">Data Gaji yang Telah Terproses</h5>
-                </div>
+    <div class="card-body ">
+        <div class="card shadow">
+            <div class="row m-0 mt-3">
+                <p class="col-sm-12 text-center" style="font-size: 20px; font-weight: 550">DATA GAJI YANG TELAH DI PROSES</p>
             </div>
             <div class="row m-0">
                 <div class="card-body">
                     <div class="col-l-12">
                         <div class="table-responsive overflow-hidden">
-                            <table class="table table-bordered table-striped" id="table">
+                            <table class="table stripe" id="table" style="width: 100%">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Bulan</th>
-                                        <th>Tahun</th>
+                                        <th style="text-align: center">No</th>
+                                        <th style="text-align: center">Bulan</th>
+                                        <th style="text-align: center">Tahun</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -86,9 +80,9 @@
                                     @endphp
                                     @foreach ($data_gaji as $item)
                                         <tr>
-                                            <td>{{ $i++ }}</td>
-                                            <td>{{ $months[$item->bulan] }}</td>
-                                            <td>{{ $item->tahun }}</td>
+                                            <td style="text-align: center">{{ $i++ }}</td>
+                                            <td style="text-align: center">{{ $months[$item->bulan] }}</td>
+                                            <td style="text-align: center">{{ $item->tahun }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
