@@ -71,8 +71,8 @@
                 <div class="form-group">
                     <select name="mode" class="form-control">
                         <option value="">--- Pilih Mode ---</option>
-                        <option value="1">Bukti Pembayaran Gaji Pajak</option>
-                        <option value="2">Detail Gaji Pajak</option>
+                        <option value="1" {{ ($request->mode == 1) ? 'selected' : '' }}>Bukti Pembayaran Gaji Pajak</option>
+                        <option value="2" {{ ($request->mode == 2) ? 'selected' : '' }}>Detail Gaji Pajak</option>
                     </select>
                 </div>
             </div>
@@ -103,6 +103,20 @@
             @php
                 $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
                 $total_ket = 0;
+                $status = 'TK';
+                if ($karyawan->status == 'K') {
+                    $anak = DB::table('mst_karyawan')
+                        ->where('nip', $karyawan->nip)
+                        ->join('is', 'is.id', 'mst_karyawan.id_is')
+                        ->first('is_jml_anak');
+                    if ($anak != null && $anak->is_jml_anak > 3) {
+                        $status = 'K/3';
+                    } else if ($anak != null) {
+                        $status = 'K/'.$anak->is_jml_anak;
+                    } else {
+                        $status = 'K/0';
+                    }
+                }
                 function formatNpwp($npwp) {
                     $ret = substr($npwp,0,2)."."
                     .substr($npwp,2,3)."."
@@ -112,6 +126,10 @@
                     .substr($npwp,12,3);
                     return $ret;
                 }
+                $status_pegawai = $karyawan->ket;
+                $ptkp = DB::table('set_ptkp')
+                    ->where('kode', $status)
+                    ->first();
 
                 for ($i=1; $i < 12; $i++) {
                     if ((array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i]) != 0)) {
@@ -138,11 +156,11 @@
                     <div class="col-lg-12">
                         <h6>A. IDENTITAS PENERIMA PENGHASILAN YANG DIPOTONG</h6>
                     </div>
-                </div> 
+                </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">NPWP</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="{{ formatNpwp($karyawan->npwp) }}">
+                        <input type="text" disabled class="form-control" value="{{ ($karyawan->npwp != null) ? formatNpwp($karyawan->npwp) : '-' }}">
                     </div>
                     <label class="col-sm-2 mt-2 text-left">NO. REKENING GAJI :</label>
                     <div class="col-sm-3">
@@ -186,7 +204,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">STATUS PERKAWINAN</label>
                     <div class="col-sm-5">
-                        <input type="text" disabled class="form-control" value="{{ $karyawan->status }}">
+                        <input type="text" disabled class="form-control" value="{{ $status }}">
                     </div>
                     <label class="col-sm-2 mt-2 text-left">BPKSKES :</label>
                     <div class="col-sm-3">
@@ -208,10 +226,10 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">KETERANGAN PEGAWAI</label>
                     <div class="col-sm-5 ">
-                        <input type="text" disabled class="form-control" value="LAMA">
+                        <input type="text" disabled class="form-control" value="{{ $status_pegawai }}">
                     </div>
                 </div>
-                
+
                 <div class="table-responsive mt-5" style="align-content: center">
                     <table class="table text-center cell-border table-striped" style="width: 100%;">
                         <thead>
@@ -243,25 +261,25 @@
                             @for ($i = 0; $i < 12; $i++)
                                 <tr>
                                     <td>{{ $bulan[$i] }}</td>
-                                    <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] != 0) ? rupiah(array_sum($gj[$i]) + $jamsostek[$i]) : '-' }}</td>
+                                    <td>{{ (array_sum($gj[$i]) != 0) ? rupiah(array_sum($gj[$i])) : '-' }}</td>
                                     <td>{{ (array_sum($penghasilan[$i]) != 0) ? rupiah(array_sum($penghasilan[$i])) : '-' }}</td>
                                     @php
-                                        $total_rutin += array_sum($gj[$i]) + $jamsostek[$i];
+                                        $total_rutin += array_sum($gj[$i]);
                                         $total_tidak_rutin += array_sum($penghasilan[$i]);
                                         $total_gaji += $gj[$i]['gj_pokok'] + $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] +$gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] + $gj[$i]['tj_kesejahteraan'];
                                         $total_tj_lainnya += $gj[$i]['uang_makan'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_vitamin'] + $gj[$i]['tj_transport'] + $total_tidak_rutin;
-                                        $total_penghasilan_bruto += array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i]);
+                                        $total_penghasilan_bruto += array_sum($gj[$i]) + array_sum($penghasilan[$i]);
                                     @endphp
-                                    <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i]) != 0) ? rupiah(array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i])) : '-' }}</td>
+                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) != 0) ? rupiah(array_sum($gj[$i]) + array_sum($penghasilan[$i])) : '-' }}</td>
                                     <td>-</td>
-                                    <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i]) != 0) ? 1 : 0 }}</td>
+                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) != 0) ? 1 : 0 }}</td>
                                 </tr>
                             @endfor
                         </tbody>
                         <tfoot style="font-weight: bold">
                             <tr>
                                 <td colspan="1">
-                                    Total 
+                                    Total
                                 </td>
                                 <td style="background-color: #54B435; ">{{ ($total_rutin != 0) ? rupiah($total_rutin) : '-' }}</td>
                                 <td style="background-color: #54B435; ">{{ ($total_tidak_rutin != 0) ? rupiah($total_tidak_rutin) : '-' }}</td>
@@ -295,13 +313,72 @@
                         }
                         $no_14 = (($total_rutin + $total_tj_lainnya + $total_tidak_rutin) - $bonus_sum - $rumus_14 - 0) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
                     }
+
+                    $no_16 = 0;
+                    if ($status == 'Mutasi Keluar') {
+                        $no_16 = floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000;
+                    } else {
+                        if (($no_14 - $ptkp->ptkp_tahun) <= 0) {
+                            $no_16 = 0;
+                        } else {
+                            $no_16 = $no_14 - $ptkp->ptkp_tahun;
+                        }
+                    }
+                    $persen5 = 0;
+                    if (($no_14 - $ptkp->ptkp_tahun) > 0) {
+                        if (($no_14 - $ptkp->ptkp_tahun) <= 60000000) {
+                            $persen5 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000) * 0.05 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000) * 0.06;
+                        } else {
+                            $persen5 = ($karyawan->npwp != null) ? 60000000 * 0.05 : 60000000 * 0.06;
+                        }
+                    } else {
+                        $persen5 = 0;
+                    }
+                    $persen15 = 0;
+                    if (($no_14 - $ptkp->ptkp_tahun) > 60000000) {
+                        if (($no_14 - $ptkp->ptkp_tahun) <= 250000000) {
+                            $persen15 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 60000000) * 0.15 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000- 60000000) * 0.18;
+                        } else {
+                            $persen15 = 190000000;
+                        }
+                    } else {
+                        $persen20 = 0;
+                    }
+                    $persen25 = 0;
+                    if (($no_14 - $ptkp->ptkp_tahun) > 250000000) {
+                        if (($no_14 - $ptkp->ptkp_tahun) <= 500000000) {
+                            $persen25 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.25 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.3;
+                        } else {
+                            $persen25 = 250000000;
+                        }
+                    } else {
+                        $persen25 = 0;
+                    }
+                    $persen30 = 0;
+                    if (($no_14 - $ptkp->ptkp_tahun) > 250000000) {
+                        if (($no_14 - $ptkp->ptkp_tahun) <= 500000000) {
+                            $persen30 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.3 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.36;
+                        } else {
+                            $persen30 = 4500000000;
+                        }
+                    } else {
+                        $persen30 = 0;
+                    }
+                    $persen35 = 0;
+                    if (($no_14 - $ptkp->ptkp_tahun) > 500000000) {
+                            $persen35 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.35 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.42;
+                    } else {
+                        $persen35 = 0;
+                    }
+
+                    $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
                 @endphp
 
                 <div class="row m-0 ">
                     <div class="col-lg-12">
                         <h6>B.1. RINCIAN PENGHASILAN</h6>
                     </div>
-                </div> 
+                </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-3 mt-2">PENGHASILAN TERATUR</label>
                     <div class="col-sm-3 ">
@@ -317,7 +394,7 @@
                     <div class="col-lg-12">
                         <h6>PENGHASILAN BRUTO</h6>
                     </div>
-                </div> 
+                </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-1">1. Gaji/Pensiun atau THT/JHT</label>
                     <div class="col-sm-3 ">
@@ -325,50 +402,50 @@
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-1">2. Tunjangan PPh</label> 
+                    <label class="col-sm-5 mt-1">2. Tunjangan PPh</label>
                     <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="0">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-1">3. Tunjangan Lainnya, Uang Lembur dan sebagainya</label> 
+                    <label class="col-sm-5 mt-1">3. Tunjangan Lainnya, Uang Lembur dan sebagainya</label>
                     <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="{{ rupiah($total_tj_lainnya) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-1">4. Honorarium dan Imbalan Lainnya</label> 
+                    <label class="col-sm-5 mt-1">4. Honorarium dan Imbalan Lainnya</label>
                     <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="0">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-1">5. Premi Asuransi yang dibayarkan Pemberi Kerja</label>  
+                    <label class="col-sm-5 mt-1">5. Premi Asuransi yang dibayarkan Pemberi Kerja</label>
                     <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="{{ rupiah($jaminan) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 ">6. Penerimaan dalam Bentuk Natura atau Kenikmatan Lainnya yang dikenakan Pemotongan PPh Pasal 21</label>  
+                    <label class="col-sm-5 ">6. Penerimaan dalam Bentuk Natura atau Kenikmatan Lainnya yang dikenakan Pemotongan PPh Pasal 21</label>
                     <div class="col-sm-3 mt-1 ">
                         <input type="text" disabled class="form-control" value="0">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">7. Tantiem, Bonus, Gratifikasi, Jaspro dan THR</label>  
+                    <label class="col-sm-5 mt-2">7. Tantiem, Bonus, Gratifikasi, Jaspro dan THR</label>
                     <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="{{ rupiah($bonus_sum) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5" style="margin-top: 40px">8. Jumlah Penghasilan Bruto (1 + 2 + 3 + 4 + 5 + 6 + 7)</label>  
+                    <label class="col-sm-5" style="margin-top: 40px">8. Jumlah Penghasilan Bruto (1 + 2 + 3 + 4 + 5 + 6 + 7)</label>
                     <div class="col-sm-3 ">
-                        <hr>    
+                        <hr>
                         <input type="text" disabled class="form-control" value="{{ rupiah($total_gaji + $total_pph + $total_tj_lainnya + $total_honorium + $jaminan + $total_pph_21 + $bonus_sum) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-4">
-                    <label class="col-sm-5 mt-2" style="font-weight: bold; text-align: center;">Total Penghasilan (Teratur + Tidak Teratur)</label>  
+                    <label class="col-sm-5 mt-2" style="font-weight: bold; text-align: center;">Total Penghasilan (Teratur + Tidak Teratur)</label>
                     <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" style="font-weight: bold" value="{{ rupiah($total_rutin + $total_tidak_rutin) }}">
                     </div>
@@ -378,22 +455,22 @@
                     <div class="col-lg-12">
                         <h6>PENGURANGAN PENGHASILAN</h6>
                     </div>
-                </div> 
+                </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">9. Biaya Jabatan/Biaya Pensiun</label>  
+                    <label class="col-sm-5 mt-2">9. Biaya Jabatan/Biaya Pensiun</label>
                     <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="{{ rupiah($biaya_jabatan) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">10. Iuran Pensiun atau Iuran THT/JHT</label>  
+                    <label class="col-sm-5 mt-2">10. Iuran Pensiun atau Iuran THT/JHT</label>
                     <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">11. Jumlah Pengurangan (9 + 10)</label>  
-                    <div class="col-sm-3 "> 
+                    <label class="col-sm-5 mt-2">11. Jumlah Pengurangan (9 + 10)</label>
+                    <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="{{ rupiah($biaya_jabatan) }}">
                     </div>
                 </div>
@@ -402,76 +479,76 @@
                     <div class="col-lg-12">
                         <h6>B.2 PENGHITUNGAN PPh PASAL 21</h6>
                     </div>
-                </div> 
+                </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">12. Jumlah Penghasilan Neto (8 - 11)</label>  
-                    <div class="col-sm-3 "> 
+                    <label class="col-sm-5 mt-2">12. Jumlah Penghasilan Neto (8 - 11)</label>
+                    <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="{{ rupiah(($total_rutin + $total_tidak_rutin) - $biaya_jabatan) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">13. Penghasilan Neto Masa sebelumnya</label>  
-                    <div class="col-sm-3 "> 
+                    <label class="col-sm-5 mt-2">13. Penghasilan Neto Masa sebelumnya</label>
+                    <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2" style="font-weight: bold; text-align: center;">Total Penghasilan Neto</label>  
-                    <div class="col-sm-3 "> 
+                    <label class="col-sm-5 mt-2" style="font-weight: bold; text-align: center;">Total Penghasilan Neto</label>
+                    <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" style="font-weight: bold;" value="{{ rupiah(($total_rutin + $total_tidak_rutin) - $biaya_jabatan) }}">
                     </div>
                 </div>
 
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-1">14. Jumlah Penghasilan Neto untuk PPh Pasal 21 (Setahun/Disetahunkan)</label>  
-                    <div class="col-sm-3 "> 
+                    <label class="col-sm-5 mt-1">14. Jumlah Penghasilan Neto untuk PPh Pasal 21 (Setahun/Disetahunkan)</label>
+                    <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="{{ rupiah(round($no_14)) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">15. Penghasilan Tidak Kena Pajak (PTKP)</label>  
-                    <div class="col-sm-3 "> 
-                        <input type="text" disabled class="form-control" value="">
+                    <label class="col-sm-5 mt-2">15. Penghasilan Tidak Kena Pajak (PTKP)</label>
+                    <div class="col-sm-3 ">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($ptkp->ptkp_tahun) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">16. Penghasilan Kena Pajak Setahun/Disetahunkan</label>  
-                    <div class="col-sm-3 "> 
-                        <input type="text" disabled class="form-control" value="">
+                    <label class="col-sm-5 mt-2">16. Penghasilan Kena Pajak Setahun/Disetahunkan</label>
+                    <div class="col-sm-3 ">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($no_16) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">17. PPh Pasal 21 atas Penghasilan Kena Pajak Setahun/Disetahunkan</label>  
                     <div class="col-sm-3 "> 
+                        <input type="text" disabled class="form-control" value="{{ rupiah($no17) }}">
+                    </div>
+                </div>
+                <div class="row m-0 mt-2">
+                    <label class="col-sm-5 mt-2">18. PPh Pasal 21 yang telah dipotong Masa Sebelumnya</label>
+                    <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">18. PPh Pasal 21 yang telah dipotong Masa Sebelumnya</label>  
-                    <div class="col-sm-3 "> 
+                    <label class="col-sm-5 mt-2">19. PPh Pasal 21 Terutang</label>
+                    <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">19. PPh Pasal 21 Terutang</label>  
-                    <div class="col-sm-3 "> 
+                    <label class="col-sm-5 mt-2">20. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi</label>
+                    <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">20. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi</label>  
-                    <div class="col-sm-3 "> 
-                        <input type="text" disabled class="form-control" value="">
-                    </div>
-                </div>
-                <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">U. PPh Pasal 21 yang masih harus dibayar</label>  
-                    <div class="col-sm-3 "> 
+                    <label class="col-sm-5 mt-2">U. PPh Pasal 21 yang masih harus dibayar</label>
+                    <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="">
                     </div>
                 </div>
             </div>
-            @else     
+            @else
                 <div class="table-responsive">
                     <table class="table cell-border" id="table_export" style="width: 100%; white-space: nowrap; table-layout: fixed;">
                         <tr>
@@ -491,7 +568,7 @@
                                             $total_tj_kesejahteraan = null;
                                             $total_jamsostek = null;
                                             $total_uang_makan = null;
-                                            $total_tj_pulsa = null; 
+                                            $total_tj_pulsa = null;
                                             $total_tj_vitamin = null;
                                             $total_tj_transport = null;
                                         @endphp
@@ -499,7 +576,6 @@
                                             <th class="sticky-col" rowspan="2" style="background-color: #CCD6A6; min-width: 100px;">Bulan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px; ">Gaji Pokok</th>
                                             <th colspan="8" style="background-color: #CCD6A6; ">Tunjangan</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6; ">JAMSOSTEK</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">Penambah <br>Bruto Jamsostek</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">T. Uang Makan</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">T. Uang Pulsa</th>
@@ -530,7 +606,6 @@
                                                 <td  >{{ ($gj[$i]['tj_pelaksana'] != 0) ? rupiah($gj[$i]['tj_pelaksana']) : '-' }}</td>
                                                 <td  >{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
                                                 <td  >{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
-                                                <td>{{ ($jamsostek[$i] != 0) ?rupiah($jamsostek[$i]) : '-' }}</td>
                                                 <td>-</td>
                                                 <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_pulsa'] != 0) ? rupiah($gj[$i]['tj_pulsa']) : '-' }}</td>
@@ -558,7 +633,7 @@
                                     <tfoot style="font-weight: bold">
                                         <tr>
                                             <td class="sticky-col" colspan="1">
-                                                Total 
+                                                Total
                                             </td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_gj_pokok) }}</td>
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_keluarga) }}</td>
@@ -569,7 +644,6 @@
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_pelaksana) }}</td>
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_kemahalan) }}</td>
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_kesejahteraan) }}</td>
-                                            <td style="background-color: #54B435; ">{{ rupiah($total_jamsostek) }}</td>
                                             <td style="background-color: #54B435; ">-</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_uang_makan) }}</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_tj_pulsa) }}</td>

@@ -9,5 +9,8 @@ class KantorModel extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+
     protected $table = 'mst_kantor';
+    protected $keyType = 'string';
 }

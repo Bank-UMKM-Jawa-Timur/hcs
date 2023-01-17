@@ -7,14 +7,14 @@
         </div>
     </div>
     <div class="card-body">
-        <form action="{{ route('karyawan.show', $data->nip) }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
+        <form action="{{ route('karyawan.show', $karyawan->nip) }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
             @csrf
             @method('PUT')
             <div class="row m-0 ">
                 <div class="col-lg-12">
                     <h6>Biodata Diri Karyawan</h6>
                 </div>
-            </div> 
+            </div>
             @php
                 $no = 1;
                 function rupiah($angka){
@@ -23,196 +23,174 @@
                 }
                 $tj = DB::table('tunjangan_karyawan')
                     ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-                    ->where('nip', $data->nip)
+                    ->where('nip', $karyawan->nip)
                     ->get();
             @endphp
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">NIP</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->nip }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->nip }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">NIK</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->nik }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->nik }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Nama Karyawan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->nama_karyawan }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->nama_karyawan }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Tempat, Tanggal Lahir</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->tmp_lahir }}, {{ date('d F Y', strtotime($data->tgl_lahir)) }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->tmp_lahir }}, {{ $karyawan->tgl_lahir->format('d F Y') }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Agama</label>
                 <div class="col-sm-10">
-                    @if (isset($agama->agama) != null)
-                        <input type="text" disabled class="form-control" value="{{ $agama->agama }}">                        
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan?->agama?->agama ?? '-' }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Jenis Kelamin</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->jk }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->jk }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Status Pernikahan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control"  value="{{ $data->status }}">
+                    <input type="text" disabled class="form-control"  value="{{ $karyawan->status ?? '-' }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Kewarganegaraan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control"  value="{{ $data->kewarganegaraan }}">
+                    <input type="text" disabled class="form-control"  value="{{ $karyawan->kewarganegaraan }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Alamat KTP</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->alamat_ktp }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->alamat_ktp }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Alamat Sekarang</label>
                 <div class="col-sm-10">
-                    @if (isset($data->alamat_sek) != null || $data->alamat_sek != '')
-                        <input type="text" disabled class="form-control" value="{{ $data->alamat_sek }}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->alamat_sek ?? '-' }}">
                 </div>
             </div>
             <hr>
             <div class="row m-0 ">
-                <div class="col-lg-12"> 
+                <div class="col-lg-12">
                     <h6>No Rekening & NPWP</h6>
                 </div>
-            </div> 
+            </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Nomor Rekening</label>
                 <div class="col-sm-10">
-                    @if (isset($data->no_rekening) != null || $data->no_rekening != '')
-                        <input type="text" disabled class="form-control" value="{{ $data->no_rekening }}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->no_rekening ?? '-' }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">NPWP</label>
                 <div class="col-sm-10">
-                    @if (isset($data->npwp) != null || $data->npwp != '')
-                        <input type="text" disabled class="form-control" value="{{ $data->npwp }}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ npwp($karyawan->npwp) ?? '-' }}">
                 </div>
             </div>
             <hr>
             <div class="row m-0 ">
-                <div class="col-lg-12"> 
+                <div class="col-lg-12">
                     <h6>Data Karyawan</h6>
                 </div>
-            </div> 
+            </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Kantor</label>
                 <div class="col-sm-10">
-                    @if (isset($ent))
-                        <input type="text" disabled class="form-control" value="{{ $ent->nama }}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->entitas->type == 2 ? "Cabang {$karyawan->entitas->cab->nama_cabang}" : 'Pusat' }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Jabatan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->nama_jabatan }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->jabatan->nama_jabatan }}">
                 </div>
             </div>
+            @if(isset($karyawan->entitas->div))
+                <div class="row m-0 mt-2">
+                    <label class="col-sm-2 mt-2">Divisi</label>
+                    <div class="col-sm-10">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->entitas->div->nama_divisi }}">
+                    </div>
+                </div>
+            @endif
+            @if(isset($karyawan->entitas->subDiv))
+                <div class="row m-0 mt-2">
+                    <label class="col-sm-2 mt-2">Sub Divisi</label>
+                    <div class="col-sm-10">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->entitas->subDiv->nama_subdivisi }}">
+                    </div>
+                </div>
+            @endif
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Pangkat</label>
                 <div class="col-sm-10">
-                    @if (isset($panggol->pangkat) != null) 
-                        <input type="text" disabled class="form-control" value="{{ $panggol->pangkat }}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->panggol?->pangkat ?? '-' }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Golongan</label>
                 <div class="col-sm-10">
-                    @if (isset($panggol->golongan) != null) 
-                        <input type="text" disabled class="form-control" value="{{ $panggol->golongan }}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->panggol?->golongan ?? '-' }}">
                 </div>
             </div>
+            @if($karyawan->bagian)
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Bagian</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ ($bagian != null) ? $bagian->nama_bagian : '-' }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->bagian->nama_bagian }}">
                 </div>
             </div>
+            @endif
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Status Karyawan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->status_karyawan}}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->status_karyawan}}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Status Jabatan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $data->status_jabatan}}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->status_jabatan}}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Keterangan Jabatan</label>
                 <div class="col-sm-10">
-                    @if (isset($data->ket_jabatan) != null)
-                        <input type="text" disabled class="form-control" value="{{ $data->ket_jabatan }}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->ket_jabatan ?? '-' }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Tanggal Mulai</label>
                 <div class="col-sm-10">
-                    @if (isset($data->tgl_mulai) != null)
-                        <input type="text" disabled class="form-control" value="{{ date('d F Y', strtotime($data->tgl_mulai)) }}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan?->tgl_mulai?->format('d F Y') ?? '-' }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">SK Pengangkatan</label>
                 <div class="col-sm-10">
-                    @if (isset($data->skangkat) != null)
-                        <input type="text" disabled class="form-control" value="{{ $data->skangkat}}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->skangkat ?? '-' }}">
                 </div>
             </div>
             @php
                 use Carbon\Carbon;
-                $mulaKerja = Carbon::create($data->tgl_mulai);
+                $mulaKerja = Carbon::create($karyawan->tgl_mulai);
                 $waktuSekarang = Carbon::now();
 
                 $hitung = $waktuSekarang->diff($mulaKerja);
@@ -222,7 +200,7 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Masa Kerja</label>
                 <div class="col-sm-10">
-                    @if (isset($data->tgl_mulai) != null)
+                    @if (isset($karyawan->tgl_mulai) != null)
                         <input type="text" disabled class="form-control" value="{{ $masaKerja }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
@@ -234,32 +212,24 @@
                 <div class="col-lg-12">
                     <h6>Data Tunjangan Karyawan</h6>
                 </div>
-            </div> 
+            </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Kartu Peserta Jamsostek (KPJ)</label>
                 <div class="col-sm-10">
-                    @if (isset($data->kpj) != null)
-                        <input type="text" disabled class="form-control" value="{{ $data->kpj }}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->kpj ?? '-' }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Jaminan Kesehatan Nasional (JKN)</label>
                 <div class="col-sm-10">
-                    @if (isset($data->jkn) != null)
-                        <input type="text" disabled class="form-control" value="{{ $data->jkn }}">
-                    @else
-                        <input type="text" disabled class="form-control" value="-">
-                    @endif
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->jkn ?? '-' }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Gaji Pokok</label>
                 <div class="col-sm-10">
-                    @if (isset($data->gj_pokok) != null)
-                        <input type="text" disabled class="form-control" value="{{ rupiah($data->gj_pokok) }}">
+                    @if (isset($karyawan->gj_pokok) != null)
+                        <input type="text" disabled class="form-control" value="{{ rupiah($karyawan->gj_pokok) }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
@@ -268,8 +238,8 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Gaji Penyesuaian</label>
                 <div class="col-sm-10">
-                    @if (isset($data->gj_penyesuaian) != null)
-                        <input type="text" disabled class="form-control" value="{{ rupiah($data->gj_penyesuaian) }}">
+                    @if (isset($karyawan->gj_penyesuaian) != null)
+                        <input type="text" disabled class="form-control" value="{{ rupiah($karyawan->gj_penyesuaian) }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
@@ -291,13 +261,13 @@
                 @endif
             <br>
 
-            @if (isset($suis))    
+            @if (isset($suis))
                 <hr>
                 <div class="row m-0 ">
                     <div class="col-lg-12">
                         <h6>Data Pasangan</h6>
                     </div>
-                </div> 
+                </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-0">Status Pasangan</label>
                     <div class="col-sm-10">

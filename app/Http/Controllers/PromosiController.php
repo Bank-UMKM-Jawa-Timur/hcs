@@ -52,13 +52,13 @@ class PromosiController extends Controller
 
         $data->map(function($promosi) {
             $entity = EntityService::getEntity($promosi->kd_entitas_baru);
-            $type = $entity['type'];
+            $type = $entity->type;
 
-            if($type == 2) $promosi->kantor_baru = "Cab. " . $entity['cab']->nama_cabang;
+            if($type == 2) $promosi->kantor_baru = "Cab. " . $entity->cab->nama_cabang;
             if($type == 1) {
-                $promosi->kantor_baru = isset($entity['subDiv']) ?
-                $entity['subDiv']->nama_subdivisi . " (Pusat)":
-                $entity['div']->nama_divisi . " (Pusat)";
+                $promosi->kantor_baru = isset($entity->subDiv) ?
+                $entity->subDiv->nama_subdivisi . " (Pusat)":
+                $entity->div->nama_divisi . " (Pusat)";
             }
 
             return $promosi;
@@ -66,13 +66,13 @@ class PromosiController extends Controller
 
         $data->map(function($promosiLama) {
             $entityLama = EntityService::getEntity($promosiLama->kd_entitas_lama);
-            $typeLama = $entityLama['type'];
+            $typeLama = $entityLama->type;
 
-            if($typeLama == 2) $promosiLama->kantor_lama = "Cab. " . $entityLama['cab']->nama_cabang;
+            if($typeLama == 2) $promosiLama->kantor_lama = "Cab. " . $entityLama->cab->nama_cabang;
             if($typeLama == 1) {
-                $promosiLama->kantor_lama = isset($entityLama['subDiv']) ?
-                $entityLama['subDiv']->nama_subdivisi . " (Pusat)":
-                $entityLama['div']->nama_divisi . " (Pusat)";
+                $promosiLama->kantor_lama = isset($entityLama->subDiv) ?
+                $entityLama->subDiv->nama_subdivisi . " (Pusat)":
+                $entityLama->div->nama_divisi . " (Pusat)";
             }
 
             return $promosiLama;
