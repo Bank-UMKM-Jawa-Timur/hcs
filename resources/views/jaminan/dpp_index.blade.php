@@ -54,7 +54,7 @@ $status = isset($status) ? $status : null;
                 <div class="col-md-4">
                     <label for="tahun">Tahun</label>
                     <div class="form-group">
-                        <select name="tahun" class="form-control">
+                        <select name="tahun" id="tahun" class="form-control">
                             <option value="">--- Pilih Tahun ---</option>
                             @foreach (range(date('Y'), $earliest_year) as $x)
                                 <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
@@ -65,7 +65,7 @@ $status = isset($status) ? $status : null;
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="Bulan">Bulan</label>
-                        <select name="bulan" class="form-control">
+                        <select name="bulan" id="bulan" class="form-control">
                             <option value="-">--- Pilih Bulan ---</option>
                             @for($i = 1; $i <= 12; $i++)
                                 <option @selected($request?->bulan == $i) value="{{ $i }}">{{ getMonth($i) }}</option>
@@ -209,28 +209,111 @@ $status = isset($status) ? $status : null;
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
+        var a = document.getElementById("bulan");
+        var b = document.getElementById("tahun");
+        var bulan = a.options[a.selectedIndex].text;
+        var tahun = b.options[b.selectedIndex].text;
+
         $("#table_export").DataTable({
             dom : "Bfrtip",
             iDisplayLength: -1,
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur\n Bulan '+name,
+                    title: 'Bank UMKM Jawa Timur',
+                    filename : 'Bank UMKM Jawa Timur Laporan DPP',
+                    message: 'Rekapitulasi DPP\n ' + bulan + ' ' + tahun,
                     text:'Excel',
+                    header: true,
+                    footer: true,
                     customize: function( xlsx, row ) {
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: 'Bank UMKM Jawa Timur\n Rekapitulasi DPP ' + bulan + ' ' + tahun,
+                    filename : 'Bank UMKM Jawa Timur Laporan DPP',
+                    text:'PDF',
+                    footer: true,
+                    paperSize: 'A4',
+                    orientation: 'landscape',
+                    customize: function (doc) {
+                        var now = new Date();
+						var jsDate = now.getDate()+' / '+(now.getMonth()+1)+' / '+now.getFullYear();
+                        
+                        doc.styles.tableHeader.fontSize = 10; 
+                        doc.defaultStyle.fontSize = 9;
+                        doc.defaultStyle.alignment = 'center';
+                        doc.styles.tableHeader.alignment = 'center';
+                        
+                        doc.content[1].margin = [150, 0, 150, 0];
+                        doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+                        doc['footer']=(function(page, pages) {
+							return {
+								columns: [
+									{
+										alignment: 'left',
+										text: ['Created on: ', { text: jsDate.toString() }]
+									},
+									{
+										alignment: 'right',
+										text: ['Page ', { text: page.toString() },	' of ',	{ text: pages.toString() }]
+									}
+								],
+								margin: 20
+							}
+						});
+
+                    }
+                },
+                {
+                    extend: 'print',
+                    title: 'Bank UMKM Jawa Timur Rekapitulasi DPP ' + bulan + ' ' + tahun,
+                    text:'print',
+                    footer: true,
+                    paperSize: 'A4',
+                    customize: function (win) {
+                        var last = null;
+                        var current = null;
+                        var bod = [];
+        
+                        var css = '@page { size: landscape; }',
+                            head = win.document.head || win.document.getElementsByTagName('head')[0],
+                            style = win.document.createElement('style');
+        
+                        style.type = 'text/css';
+                        style.media = 'print';
+        
+                        if (style.styleSheet) {
+                            style.styleSheet.cssText = css;
+                        } else {
+                            style.appendChild(win.document.createTextNode(css));
+                        }
+        
+                        head.appendChild(style);
+
+                        $(win.document.body).find('h1')
+                            .css('text-align', 'center')
+                            .css( 'font-size', '16pt' )
+                            .css('margin-top', '20px');
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '10pt')
+                            .css('width', '1000px')
+                            .css('border', '#bbbbbb solid 1px');
+                        $(win.document.body).find('tr:nth-child(odd) th').each(function(index){
+                            $(this).css('text-align','center');
+                        });
                     }
                 }
             ]
         });
         
         $(".buttons-excel").attr("class","btn btn-success mb-2");
-        
-        // document.getElementById('btn_export').addEventListener('click', function(){
-        //     var table2excel = new Table2Excel();
-        //     table2excel.export(document.querySelectorAll('#table_export'));
-        // });
-
+        $(".buttons-pdf").attr("class","btn btn-success mb-2");
+        $(".buttons-print").attr("class","btn btn-success mb-2");
 
         $("#clear").click(function(e){
             $("#row-baru").empty()

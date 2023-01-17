@@ -412,7 +412,8 @@ $request = isset($request) ? $request : null;
                         $(win.document.body).find('table')
                             .addClass('compact')
                             .css('font-size', '10pt')
-                            .css('width', '1000px');
+                            .css('width', '1000px')
+                            .css('border', '#bbbbbb solid 1px');
                         $(win.document.body).find('tr:nth-child(odd) th').each(function(index){
                             $(this).css('text-align','center');
                         });
