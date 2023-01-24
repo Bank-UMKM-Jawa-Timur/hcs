@@ -164,7 +164,7 @@
                                     <select name="panggol" id="" class="@error('panggol') is-invalid @enderror form-control">
                                         <option value="-">--- Pilih ---</option>
                                         @foreach ($panggol as $item)
-                                            <option {{ old('panggol') == $item->golongan ? 'selected' : '--- Pilih ---' }} value="{{ $item->golongan }}">{{ $item->pangkat }}</option>
+                                            <option {{ old('panggol') == $item->golongan ? 'selected' : '--- Pilih ---' }} value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
                                         @endforeach
                                     </select>
                                 </div>
