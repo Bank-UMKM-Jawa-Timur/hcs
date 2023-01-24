@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\KategoriPenonaktifan;
 use App\Service\EntityService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,18 +42,21 @@ class KaryawanModel extends Model
         'status_karyawan',
         'skangkat',
         'tanggal_pengangkat',
-
+        'tanggal_penonaktifan',
+        'kategori_penonaktifan',
+        'sk_pemberhentian',
     ];
 
     protected $casts = [
         'tgl_lahir' => 'date',
         'tgl_mulai' => 'date',
+        'kategori_penonaktifan' => KategoriPenonaktifan::class,
     ];
 
     public function entitas(): Attribute
     {
         return new Attribute(
-            get: fn($value, $attributes) => EntityService::getEntity($attributes['kd_entitas'])
+            get: fn ($value, $attributes) => EntityService::getEntity($attributes['kd_entitas'])
         );
     }
 

@@ -9,6 +9,7 @@ use App\Imports\UpdateStatusImport;
 use App\Imports\UpdateTunjanganImport;
 use App\Models\KaryawanModel;
 use App\Repository\KaryawanRepository;
+use App\Service\EmployeeService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -120,7 +121,7 @@ class KaryawanController extends Controller
             ->where('nip', $request->nip)
             ->orderBy('id', 'desc')
             ->first();
-        if(!isset($data)){
+        if (!isset($data)) {
             $data = null;
         }
 
@@ -135,7 +136,7 @@ class KaryawanController extends Controller
             ->where('id', $id)
             ->delete();
 
-            return response()->json("sukses");
+        return response()->json("sukses");
     }
 
     public function get_bagian(Request $request)
@@ -158,19 +159,19 @@ class KaryawanController extends Controller
         $div = null;
         $subdiv = null;
 
-        if($karyawan->kd_bagian != null || $karyawan->kd_bagian == ''){
+        if ($karyawan->kd_bagian != null || $karyawan->kd_bagian == '') {
             $bag1 = DB::table('mst_bagian')
                 ->where('kd_bagian', $karyawan->kd_bagian)
                 ->first();
 
-            if($bag1->kd_entitas != 2){
+            if ($bag1->kd_entitas != 2) {
                 $kantor = 'Pusat';
 
                 $subdiv = $bag1->kd_entitas;
                 $subdivisi = DB::table('mst_sub_divisi')
                     ->where('kd_subdiv', $subdiv)
                     ->first();
-                if(isset($subdivisi)){
+                if (isset($subdivisi)) {
                     $div = DB::table('mst_divisi')
                         ->where('kd_divisi', $subdivisi->kd_divisi)
                         ->select('kd_divisi')
@@ -192,10 +193,10 @@ class KaryawanController extends Controller
         } else {
             $cabang = DB::table('mst_cabang')->get();
             $cbg = array();
-            foreach($cabang as $i){
+            foreach ($cabang as $i) {
                 array_push($cbg, $i->kd_cabang);
             }
-            if(in_array($karyawan->kd_entitas, $cbg)){
+            if (in_array($karyawan->kd_entitas, $cbg)) {
                 $kantor = 'Cabang';
                 $kd_kantor = $karyawan->kd_entitas;
             } else {
@@ -295,8 +296,8 @@ class KaryawanController extends Controller
             'tanggal_pengangkat' => 'required|not_in:-'
         ]);
 
-        try{
-            if($request->get('status_pernikahan') == 'Kawin'){
+        try {
+            if ($request->get('status_pernikahan') == 'Kawin') {
                 DB::table('is')
                     ->insert([
                         'enum' => $request->get('is'),
@@ -309,11 +310,11 @@ class KaryawanController extends Controller
                     ]);
             }
             $entitas = null;
-            if($request->get('subdiv') != null){
+            if ($request->get('subdiv') != null) {
                 $entitas = $request->get('subdiv');
-            } else if($request->get('cabang') != null){
+            } else if ($request->get('cabang') != null) {
                 $entitas = $request->get('cabang');
-            } else{
+            } else {
                 $entitas = $request->get('divisi');
             }
             DB::table('mst_karyawan')
@@ -346,7 +347,7 @@ class KaryawanController extends Controller
                     'created_at' => now(),
                 ]);
 
-            if($request->get('status_pernikahan') == 'Kawin'){
+            if ($request->get('status_pernikahan') == 'Kawin') {
                 $id_is = DB::table('is')
                     ->select('id')
                     ->orderBy('id', 'DESC')
@@ -359,7 +360,7 @@ class KaryawanController extends Controller
                     ]);
             }
 
-            for($i = 0; $i < count($request->get('tunjangan')); $i++){
+            for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
                 DB::table('tunjangan_karyawan')
                     ->insert([
                         'nip' => $request->get('nip'),
@@ -371,13 +372,13 @@ class KaryawanController extends Controller
 
             Alert::success('Berhasil', 'Berhasil menambah karyawan.');
             return redirect()->route('karyawan.index');
-        } catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', ''.$e);
+            Alert::error('Tejadi kesalahan', '' . $e);
             return redirect()->route('karyawan.index');
-        } catch(QueryException $e){
+        } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', ''.$e);
+            Alert::error('Tejadi kesalahan', '' . $e);
             return redirect()->route('karyawan.index');
         }
     }
@@ -393,7 +394,7 @@ class KaryawanController extends Controller
         $data_suis = null;
         $karyawan = KaryawanModel::findOrFail($id);
 
-        if($karyawan?->id_is) {
+        if ($karyawan?->id_is) {
             $data_suis = DB::table('is')
                 ->where('id', $karyawan->id_is)
                 ->first();
@@ -488,21 +489,21 @@ class KaryawanController extends Controller
             'tanggal_pengangkat' => 'required|not_in:-'
         ]);
 
-        try{
+        try {
             $id_is = $request->get('id_is');
-            if($request->get('status_pernikahan') == 'Kawin' && $request->get('pasangan') != null){
+            if ($request->get('status_pernikahan') == 'Kawin' && $request->get('pasangan') != null) {
                 $id_is = $request->get('id_is');
-                if($request->get('id_is') == null){
+                if ($request->get('id_is') == null) {
                     DB::table('is')
-                    ->insert([
-                        'enum' => $request->get('is'),
-                        'is_nama' => $request->get('is_nama'),
-                        'is_tgl_lahir' => $request->get('is_tgl_lahir'),
-                        'is_alamat' => $request->get('is_alamat'),
-                        'is_pekerjaan' => $request->get('is_pekerjaan'),
-                        'is_jml_anak' => $request->get('is_jml_anak'),
-                        'created_at' => now()
-                    ]);
+                        ->insert([
+                            'enum' => $request->get('is'),
+                            'is_nama' => $request->get('is_nama'),
+                            'is_tgl_lahir' => $request->get('is_tgl_lahir'),
+                            'is_alamat' => $request->get('is_alamat'),
+                            'is_pekerjaan' => $request->get('is_pekerjaan'),
+                            'is_jml_anak' => $request->get('is_jml_anak'),
+                            'created_at' => now()
+                        ]);
 
                     $idis = DB::table('is')
                         ->select('id')
@@ -527,7 +528,7 @@ class KaryawanController extends Controller
                             'updated_at' => now()
                         ]);
                 }
-            } else{
+            } else {
                 DB::table('mst_karyawan')
                     ->where('nip', $request->get('nip'))
                     ->update([
@@ -536,14 +537,13 @@ class KaryawanController extends Controller
                 DB::table('is')
                     ->where('id', $request->get('id_is'))
                     ->delete();
-
             }
             $entitas = null;
-            if($request->get('subdiv') != null){
+            if ($request->get('subdiv') != null) {
                 $entitas = $request->get('subdiv');
-            } else if($request->get('cabang') != null){
+            } else if ($request->get('cabang') != null) {
                 $entitas = $request->get('cabang');
-            } else{
+            } else {
                 $entitas = $request->get('divisi');
             }
 
@@ -555,7 +555,7 @@ class KaryawanController extends Controller
                 ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
                 ->where('nip', $karyawan->nip)
                 ->get();
-            if($request->get('gj_pokok') != $karyawan->gj_pokok){
+            if ($request->get('gj_pokok') != $karyawan->gj_pokok) {
                 DB::table('history_penyesuaian_gaji')
                     ->insert([
                         'nip' => $request->get('nip'),
@@ -565,7 +565,7 @@ class KaryawanController extends Controller
                         'created_at' => now()
                     ]);
             }
-            if($request->get('gj_penyesuaian') != $karyawan->gj_penyesuaian && $request->get('gj_penyesuaian' != 0)){
+            if ($request->get('gj_penyesuaian') != $karyawan->gj_penyesuaian && $request->get('gj_penyesuaian' != 0)) {
                 DB::table('history_penyesuaian_gaji')
                     ->insert([
                         'nip' => $request->get('nip'),
@@ -576,18 +576,18 @@ class KaryawanController extends Controller
                         'id_tunjangan' => null
                     ]);
             }
-            for($i = 0; $i < count($request->get('tunjangan')); $i++){
-                if($request->get('nominal_tunjangan')[$i] != $tj_karyawan[$i]->nominal){
-                    if($request->get('id_tk')[$i] != null){
+            for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
+                if ($request->get('nominal_tunjangan')[$i] != $tj_karyawan[$i]->nominal) {
+                    if ($request->get('id_tk')[$i] != null) {
                         DB::table('history_penyesuaian_gaji')
-                        ->insert([
-                            'nip' => $request->get('nip'),
-                            'keterangan' => 'Penyesuaian Tunjangan '.$tj_karyawan[$i]->nama_tunjangan,
-                            'id_tunjangan' => str_replace('.', '',$request->get('tunjangan')[$i]),
-                            'nominal_baru' => $request->get('nominal_tunjangan')[$i],
-                            'nominal_lama' => $tj_karyawan[$i]->nominal,
-                            'created_at' => now()
-                        ]);
+                            ->insert([
+                                'nip' => $request->get('nip'),
+                                'keterangan' => 'Penyesuaian Tunjangan ' . $tj_karyawan[$i]->nama_tunjangan,
+                                'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
+                                'nominal_baru' => $request->get('nominal_tunjangan')[$i],
+                                'nominal_lama' => $tj_karyawan[$i]->nominal,
+                                'created_at' => now()
+                            ]);
                     } else {
                         DB::table('history_penyesuaian_gaji')
                             ->insert([
@@ -632,49 +632,49 @@ class KaryawanController extends Controller
                     'created_at' => now(),
                 ]);
 
-                for($i = 0; $i < count($request->get('tunjangan')); $i++){
-                    if($request->get('id_tk')[$i] == null){
-                        DB::table('tunjangan_karyawan')
-                            ->insert([
-                                'nip' => $request->get('nip'),
-                                'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
-                                'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                'created_at' => now()
-                            ]);
-                    } else{
-                        DB::table('tunjangan_karyawan')
-                            ->where('id', $request->get('id_tk')[$i])
-                            ->update([
-                                'nip' => $request->get('nip'),
-                                'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
-                                'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                'updated_at' => now()
-                            ]);
-                    }
+            for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
+                if ($request->get('id_tk')[$i] == null) {
+                    DB::table('tunjangan_karyawan')
+                        ->insert([
+                            'nip' => $request->get('nip'),
+                            'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
+                            'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                            'created_at' => now()
+                        ]);
+                } else {
+                    DB::table('tunjangan_karyawan')
+                        ->where('id', $request->get('id_tk')[$i])
+                        ->update([
+                            'nip' => $request->get('nip'),
+                            'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
+                            'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                            'updated_at' => now()
+                        ]);
                 }
+            }
 
-                Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
-                return redirect()->route('karyawan.index');
-        } catch(Exception $e){
+            Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
+            return redirect()->route('karyawan.index');
+        } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', ''.$e);
+            Alert::error('Tejadi kesalahan', '' . $e);
             return $e->getMessage();
-        } catch(QueryException $e){
+        } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', ''.$e);
-            return $e->getMessage() ;
+            Alert::error('Tejadi kesalahan', '' . $e);
+            return $e->getMessage();
         }
     }
 
-    public function penonaktifan(PenonaktifanRequest $request) {
-        if($request->isMethod('GET')) return view('karyawan.penonaktifan');
+    public function penonaktifan(PenonaktifanRequest $request)
+    {
+        if ($request->isMethod('GET')) return view('karyawan.penonaktifan');
 
-        DB::table('mst_karyawan')
-            ->where('nip', $request->nip)
-            ->update([
-                'status_karyawan' => 'Nonaktif',
-                'tanggal_penonaktifan' => $request->tanggal_penonaktifan,
-            ]);
+        EmployeeService::deactivate($request->only([
+            'nip',
+            'tanggal_penonaktifan',
+            'kategori_penonaktifan',
+        ]), $request->file('sk_pemberhentian'));
 
         Alert::success('Berhasil menonaktifkan karyawan');
         return back();
