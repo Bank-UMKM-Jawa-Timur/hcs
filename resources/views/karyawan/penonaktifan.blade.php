@@ -11,9 +11,9 @@
 </div>
 
 <div class="card-body">
-  <form action="{{ route('karyawan.penonaktifan') }}" method="post">
+  <form action="{{ route('karyawan.penonaktifan') }}" method="post" enctype="multipart/form-data">
       @csrf
-      <div class="row m-0">
+      <div class="row">
         <div class="col-md-4">
             <div class="form-group">
                 <label for="">Karyawan:</label>
@@ -32,12 +32,36 @@
                 @enderror
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="tanggal_penonaktifan">Kategori Penonaktifan:</label>
+                <select name="kategori_penonaktifan" id="kategori_penonaktifan" class="form-control @error('kategori_penonaktifan') is-invalid @enderror">
+                    <option>-- Pilih Kategori --</option>
+                    @foreach (\App\Enum\KategoriPenonaktifan::cases() as $cat)
+                    <option value="{{ $cat }}">{{ $cat }}</option>
+                    @endforeach
+                </select>
+                @error('kategori_penonaktifan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
         </div>
         <div class="col-md-4">
-          <a href="penghasilan/gajipajak">
-            <button class="btn btn-info" type="submit">Proses</button>
-          </a>
+            <label for="">SK Pemberhentian</label>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input @error('sk_pemberhentian') is-invalid @enderror" name="sk_pemberhentian" id="sk_pemberhentian" accept="application/pdf">
+                <label for="sk_pemberhentian" class="custom-file-label">Pilih File (PDF)</label>
+                @error('sk_pemberhentian')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
         </div>
+      </div>
+      <div class="row justify-content-center">
+          <div class="col-md-4 text-center">
+              <button class="btn btn-info" type="submit">Proses</button>
+          </div>
+      </div>
   </form>
 </div>
 @endsection

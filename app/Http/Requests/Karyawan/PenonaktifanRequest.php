@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Karyawan;
 
+use App\Enum\KategoriPenonaktifan;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class PenonaktifanRequest extends FormRequest
 {
@@ -23,11 +25,13 @@ class PenonaktifanRequest extends FormRequest
      */
     public function rules()
     {
-        if($this->isMethod('GET')) return [];
+        if ($this->isMethod('GET')) return [];
 
         return [
             'nip' => 'required|exists:mst_karyawan,nip',
-            'tanggal_penonaktifan' => 'required|date'
+            'tanggal_penonaktifan' => 'required|date',
+            'kategori_penonaktifan' => [new Enum(KategoriPenonaktifan::class)],
+            'sk_pemberhentian' => 'required|mimes:pdf',
         ];
     }
 }
