@@ -6,7 +6,7 @@
             <p class="card-title"><a href="/">Dashboard </a> > <a href="/cabang">Kantor Cabang </a> > Tambah</p>
         </div>
     </div>
-    <div class="card-body">
+    <div class="card-body ml-3 mr-3">
         <div class="row">
             <div class="col">
                 <form action="{{ route('cabang.store') }}" method="POST" enctype="multipart/form-data" name="cabang" class="form-group" >

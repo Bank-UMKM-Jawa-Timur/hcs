@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="card-body">
+    <div class="card-body ml-3 mr-3">
         <div class="row">
             <div class="col">
                 <form action="{{ route('sub_divisi.update', $data->kd_subdiv) }}" method="POST" enctype="multipart/form-data" class="form-group">

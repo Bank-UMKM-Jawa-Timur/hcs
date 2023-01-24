@@ -7,7 +7,7 @@
             <p class="card-title"><a href="/">Dashboard </a> > <a href="/divisi">Divisi </a> > Edit</p>
         </div>
     </div>
-    <div class="card-body">
+    <div class="card-body ml-3 mr-3">
         <div class="row">
             <div class="col-md-12">
                 <form action="{{ route('divisi.update', $data['kd_divisi']) }}" name="divisi" method="POST" enctype="multipart/form-data" class="form-group">

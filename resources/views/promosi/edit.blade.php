@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    <div class="card-body">
+    <div class="card-body ml-3 mr-3">
         <form action="" method="POST" enctype="multipart/form-data" name="divis" class="form-group">
             @csrf
             <div class="row">

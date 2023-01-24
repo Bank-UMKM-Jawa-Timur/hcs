@@ -9,7 +9,7 @@
             </div>
         </div>
     </div>
-    <div class="card-body">
+    <div class="card-body ml-3 mr-3">
         <div class="row">
             <div class="col">
                 <form action="{{ route('jabatan.store') }}" class="form-group" method="POST" enctype="multipart/form-data">

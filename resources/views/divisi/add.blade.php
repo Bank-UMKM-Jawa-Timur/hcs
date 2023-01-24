@@ -6,7 +6,7 @@
             <p class="card-title"><a href="/">Dashboard </a> > <a href="/divisi">Divisi </a> > Tambah</p>
         </div>
     </div>   
-    <div class="card-body">
+    <div class="card-body ml-3 mr-3">
         <div class="row">
             <div class="col">
                 <form action="{{ route('divisi.store') }}" method="POST" enctype="multipart/form-data" name="divisi" class="form-group">

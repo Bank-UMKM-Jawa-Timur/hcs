@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    <div class="card-body">
+    <div class="card-body ml-3 mr-3">
         <form action="{{ route('demosi.store') }}" method="POST" enctype="multipart/form-data" name="divisi" class="form-group">
             @csrf
             <input type="hidden" name="kd_entity" value="">

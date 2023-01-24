@@ -6,8 +6,8 @@
             <h5 class="card-title">Edit Mutasi</h5>
             <p class="card-title"><a href="/">Dashboard</a> > <a href="/mutasi">Mutasi</a> > Edit</p>
         </div>
-    </div>
-    <div class="card-body">
+    </div> 
+    <div class="card-body ml-3 mr-3">
         <form action="" method="POST" enctype="multipart/form-data" name="divis" class="form-group">
             @csrf
             <div class="row">
