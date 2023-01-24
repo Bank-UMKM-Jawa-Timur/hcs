@@ -76,17 +76,25 @@ use Illuminate\Support\Facades\Auth;
 //     return view('karyawan/detail');
 // });
 
-Route::get('penghasilan', function() {
-    return view('penghasilan/index');
-});
+// Route::get('penghasilan', function() {
+//     return view('penghasilan/index');
+// });
 
-Route::get('penghasilan/add', function() {
-    return view('penghasilan/add');
-});
+// Route::get('penghasilan/add', function() {
+//     return view('penghasilan/add');
+// });
 
-Route::get('penghasilan/gajipajak', function() {
-    return view('penghasilan/gajipajak');
-});
+// Route::get('penghasilan/gajipajak', function() {
+//     return view('penghasilan/gajipajak');
+// });
+
+// Route::get('umur/add', function() {
+//     return view('umur/add');
+// });
+
+// Route::get('umur', function () {
+//     return view('umur/add');
+// });
 
 Route::get('/', function(){
     return redirect()->route('login');
@@ -94,14 +102,15 @@ Route::get('/', function(){
 
 Route::group(['middleware' => 'auth'], function(){
     Route::resource('/kantor', KantorController::class);
-    Route::resource('/divisi', App\Http\Controllers\DivisiController::class);
-    Route::resource('/sub_divisi', App\Http\Controllers\SubdivisiController::class);
-    Route::resource('/jabatan', App\Http\Controllers\JabatanController::class);
+    Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);
+    Route::resource('/sub_divisi', \App\Http\Controllers\SubdivisiController::class);
+    Route::resource('/jabatan', \App\Http\Controllers\JabatanController::class);
     Route::resource('/cabang', \App\Http\Controllers\KantorCabangController::class);
     Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
     Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
     Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
     Route::resource('/mutasi', \App\Http\Controllers\MutasiController::class);
+    Route::resource('/umur', \App\Http\Controllers\UmurController::class);
     Route::resource('/demosi', DemosiController::class);
     Route::resource('/promosi', PromosiController::class);
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
