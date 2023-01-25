@@ -96,6 +96,10 @@ use Illuminate\Support\Facades\Auth;
 //     return view('umur/add');
 // });
 
+Route::get('karyawan/klasifikasi', function() {
+    return view('karyawan/klasifikasi');
+});
+
 Route::get('/', function(){
     return redirect()->route('login');
 });
