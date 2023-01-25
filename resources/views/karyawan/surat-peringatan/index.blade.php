@@ -19,6 +19,7 @@
                 <tr>
                     <th>No</th>
                     <th>Nomor SP</th>
+                    <th>NIP</th>
                     <th>Nama Karyawan</th>
                     <th>Tanggal SP</th>
                     <th>Pelanggaran</th>
@@ -30,17 +31,18 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $sp->no_sp }}</td>
-                    <td>{{ $sp->karyawan->nama_karyawan }} - {{ $sp->nip }}</td>
+                    <td>{{ $sp->nip }}</td>
+                    <td>{{ $sp->karyawan->nama_karyawan }}</td>
                     <td>{{ $sp->tanggal_sp->format('d M Y') }}</td>
                     <td>{{ $sp->pelanggaran }}</td>
                     <td class="d-flex">
                         <a href="{{ route('surat-peringatan.edit', $sp) }}" class="btn btn-outline-warning p-1 mr-1" style="min-width: 60px;">Edit</a>
-                        <a href="{{ route('surat-peringatan.destroy', $sp) }}" class="btn btn-outline-info p-1" style="min-width: 60px;">Detail</a>
+                        <a href="{{ route('surat-peringatan.show', $sp) }}" class="btn btn-outline-info p-1" style="min-width: 60px;">Detail</a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6">Data masih kosong</td>
+                    <td colspan="7">Data masih kosong</td>
                 </tr>
                 @endforelse
             </tbody>
