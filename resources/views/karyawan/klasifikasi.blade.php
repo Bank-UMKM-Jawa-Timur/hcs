@@ -48,16 +48,16 @@
             <div class="row">
                 <div id="kantor_col" class="col-md-4">
                 </div>
-                
+
                 <div id="cabang_col" class="col-md-4">
                 </div>
-    
+
                 <div id="divisi_col" class="col-md-4">
                 </div>
-    
+
                 <div id="subDivisi_col" class="col-md-4">
                 </div>
-    
+
                 <div id="bagian_col" class="col-md-4">
                 </div>
 
@@ -71,7 +71,7 @@
     <div class="card ml-3 mr-3 mb-3 mt-3 shadow">
         <div class="col-md-12">
             @if ($status != null)
-                @if ($status == 1)                    
+                @if ($status == 1)
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                             <thead>
@@ -121,7 +121,7 @@
                             </tbody>
                         </table>
                     </div>
-                @elseif ($status == 3) 
+                @elseif ($status == 3)
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                             <thead>
@@ -214,12 +214,12 @@
                     customize: function (doc) {
                         var now = new Date();
                         var jsDate = now.getDate()+' / '+(now.getMonth()+1)+' / '+now.getFullYear();
-                        
-                        doc.styles.tableHeader.fontSize = 10; 
+
+                        doc.styles.tableHeader.fontSize = 10;
                         doc.defaultStyle.fontSize = 9;
                         doc.defaultStyle.alignment = 'center';
                         doc.styles.tableHeader.alignment = 'center';
-                        
+
                         doc.content[1].margin = [0, 0, 0, 0];
                         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
 
@@ -416,10 +416,10 @@
 
                     $('#divisi').change(function(e) {
                         var divisi = $(this).val();
-        
+
                         if (divisi) {
                             const subDivision = '{{ $request?->subDivisi }}';
-        
+
                             $.ajax({
                                 type: 'GET',
                                 url: '/getsubdivisi?divisiID='+divisi,
@@ -427,7 +427,7 @@
                                 success: (res) => {
                                     $('#subDivisi').empty();
                                     $('#subDivisi').append('<option value="">--- Pilih Sub Divisi ---</option>');
-        
+
                                     $.each(res, (i, item) => {
                                         const kd_subDivisi = item.kd_subdiv;
                                         $('#subDivisi').append(`<option ${subDivision == kd_subDivisi ? 'selected' : ''} value="${kd_subDivisi}">${item.kd_subdiv} - ${item.nama_subdivisi}</option>`);
@@ -436,6 +436,8 @@
                             });
                         }
                     });
+
+                    $('#divisi').trigger('change');
                 }
 
             });
