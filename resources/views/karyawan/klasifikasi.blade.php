@@ -71,7 +71,82 @@
     <div class="card ml-3 mr-3 mb-3 mt-3 shadow">
         <div class="col-md-12">
             @if ($status != null)
-                @if ($status == 4)                    
+                @if ($status == 1)                    
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #CCD6A6; text-align: center;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">NIK</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Nama Karyawan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Alamat Sekarang</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Pengangkatan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($karyawan as $item)
+                                    <tr>
+                                        <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nik }}</td>
+                                        <td>{{ $item->nama_karyawan }}</td>
+                                        <td>{{ ($item->alamat_sek != null) ? $item->alamat_sek : $item->alamat_ktp }}</td>
+                                        <td>{{ ($item->tanggal_pengangkat != null) ? $item->tanggal_pengangkat : $item->tgl_mulai }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @elseif ($status == 2)
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #CCD6A6; text-align: center;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">NIK</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Nama Karyawan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Alamat Sekarang</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Pengangkatan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($karyawan as $item)
+                                    <tr>
+                                        <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nik }}</td>
+                                        <td>{{ $item->nama_karyawan }}</td>
+                                        <td>{{ ($item->alamat_sek != null) ? $item->alamat_sek : $item->alamat_ktp }}</td>
+                                        <td>{{ ($item->tanggal_pengangkat != null) ? $item->tanggal_pengangkat : $item->tgl_mulai }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @elseif ($status == 3) 
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #CCD6A6; text-align: center;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">NIK</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Nama Karyawan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Alamat Sekarang</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Pengangkatan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($karyawan as $item)
+                                    <tr>
+                                        <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nik }}</td>
+                                        <td>{{ $item->nama_karyawan }}</td>
+                                        <td>{{ ($item->alamat_sek != null) ? $item->alamat_sek : $item->alamat_ktp }}</td>
+                                        <td>{{ ($item->tanggal_pengangkat != null) ? $item->tanggal_pengangkat : $item->tgl_mulai }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @elseif ($status == 4)
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
                             <thead>
@@ -114,8 +189,7 @@
     <script>
         $("#table_export").DataTable({
             dom : "Bfrtip",
-            // pageLength: 25,
-            iDisplayLength: -1,
+            pageLength: 25,
             buttons: [
                 {
                     extend: 'excelHtml5',
@@ -214,14 +288,12 @@
         $(".buttons-pdf").attr("class","btn btn-success mb-2");
         $(".buttons-print").attr("class","btn btn-success mb-2");
 
-        $("#clear").click(function(e){
-            $("#row-baru").empty()
-        })
-
         $('#kategori').change(function(e) {
             const value = $(this).val();
             $('#kantor_col').empty();
             $('#cabang_col').empty();
+            $('#divisi_col').empty();
+            $('#subDivisi_col').empty();
 
             if (value == 1) {
                 generateDivision();
@@ -332,7 +404,6 @@
                     });
 
                     $('#subDivisi_col').empty();
-
                     $('#subDivisi_col').append(`
                         <div class="form-group">
                             <label for="subDivisi">Sub Divisi</label>
@@ -362,7 +433,6 @@
                                     });
 
                                     $('#bagian_col').empty();
-
                                     $('#bagian_col').append(`
                                         <div class="form-group">
                                             <label for="bagian">Bagian</label>
@@ -446,5 +516,8 @@
 
         $('#kategori').trigger('change');
         $('#kantor').trigger('change');
+        $('#divisi').trigger('change');
+        $('#subDivisi').trigger('change');
+        $('#bagian').trigger('change');
     </script>
 @endsection
