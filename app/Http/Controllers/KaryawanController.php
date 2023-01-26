@@ -245,16 +245,16 @@ class KaryawanController extends Controller
         ]);
     }
 
-    public function klasifikasi_data(Request $request) 
+    public function klasifikasi_data(Request $request)
     {
         $kantor = $request->kantor;
         $cab = null;
 
-        if($request->kategori == 4){ 
-            if($kantor == 'Pusat'){
+        if ($request->kategori == 4) {
+            if ($kantor == 'Pusat') {
                 $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
                 $cbg = array();
-                foreach($cabang as $item){
+                foreach ($cabang as $item) {
                     array_push($cbg, $item->kd_cabang);
                 }
                 // dd($cbg);
@@ -271,15 +271,15 @@ class KaryawanController extends Controller
                     ->where('kd_cabang', $cabang)
                     ->first();
             }
-            
+
             return view('karyawan.klasifikasi', [
                 'status' => 4,
                 'kantor' => $kantor,
                 'cab' => $cab,
-                'karyawan' => $karyawan
+                'karyawan' => $karyawan,
+                'request' => $request,
             ]);
         }
-
     }
 
     /**
