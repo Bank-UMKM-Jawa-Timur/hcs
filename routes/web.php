@@ -9,6 +9,7 @@ use App\Http\Controllers\KantorController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PromosiController;
+use App\Http\Controllers\SuratPeringatanController;
 use App\Http\Controllers\TunjanganKaryawanController;
 use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
@@ -96,15 +97,17 @@ use Illuminate\Support\Facades\Auth;
 //     return view('umur/add');
 // });
 
+
 // Route::get('karyawan/klasifikasi', function() {
 //     return view('karyawan/klasifikasi');
 // });
 
-Route::get('/', function(){
+
+Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::group(['middleware' => 'auth'], function(){
+Route::group(['middleware' => 'auth'], function () {
     Route::resource('/kantor', KantorController::class);
     Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);
     Route::resource('/sub_divisi', \App\Http\Controllers\SubdivisiController::class);
@@ -123,9 +126,13 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
 
     // Penonaktifan Karyawan
-    Route::controller(KaryawanController::class)->group(function() {
+    Route::controller(KaryawanController::class)->group(function () {
         Route::match(['get', 'post'], 'penonaktifan', 'penonaktifan')->name('karyawan.penonaktifan');
     });
+
+    // Surat Peringatan
+    Route::resource('surat-peringatan', SuratPeringatanController::class)
+        ->except('destroy');
 
     Route::resource('/laporan_jamsostek', JaminanController::class);
     Route::get('/laporan-jamsostek', [JaminanController::class, 'getJamsostek'])->name('get-jamsostek');

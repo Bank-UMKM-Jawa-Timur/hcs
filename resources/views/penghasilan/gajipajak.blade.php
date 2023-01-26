@@ -518,8 +518,8 @@
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
-                    <label class="col-sm-5 mt-2">17. PPh Pasal 21 atas Penghasilan Kena Pajak Setahun/Disetahunkan</label>  
-                    <div class="col-sm-3 "> 
+                    <label class="col-sm-5 mt-2">17. PPh Pasal 21 atas Penghasilan Kena Pajak Setahun/Disetahunkan</label>
+                    <div class="col-sm-3 ">
                         <input type="text" disabled class="form-control" value="{{ rupiah($no17) }}">
                     </div>
                 </div>
