@@ -97,9 +97,11 @@ use Illuminate\Support\Facades\Auth;
 //     return view('umur/add');
 // });
 
-Route::get('karyawan/klasifikasi', function () {
-    return view('karyawan/klasifikasi');
-});
+
+// Route::get('karyawan/klasifikasi', function() {
+//     return view('karyawan/klasifikasi');
+// });
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -139,10 +141,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/dpp', [JaminanController::class, 'getDpp'])->name('get-dpp');
     Route::post('penghasilan/get-gaji', [PenghasilanTidakTeraturController::class, 'filter'])->name('get-penghasilan');
     Route::get('/getPenghasilan', [PenghasilanTidakTeraturController::class, 'getPenghasilan'])->name('getPenghasilanResult');
+    Route::post('/klasifikasi_data', [KaryawanController::class, 'klasifikasi_data'])->name('klasifikasi-data');;
 
     // Routing Import excel karyawan
     Route::get('/import-karyawan', [\App\Http\Controllers\KaryawanController::class, 'import'])->name('import');
     Route::post('/upload-karyawan', [\App\Http\Controllers\KaryawanController::class, 'upload_karyawan'])->name('upload_karyawan');
+
+    Route::get('/klasifikasi-karyawan', [\App\Http\Controllers\KaryawanController::class, 'klasifikasi'])->name('klasifikasi_karyawan');
 
     // Get komponen untuk CRUD master karyawan
     Route::get('getdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_divisi']);

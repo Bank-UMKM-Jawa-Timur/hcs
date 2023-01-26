@@ -237,6 +237,51 @@ class KaryawanController extends Controller
         return redirect()->route('karyawan.index');
     }
 
+    public function klasifikasi()
+    {
+        return view('karyawan.klasifikasi', [
+            'karyawan' => null,
+            'status' => null
+        ]);
+    }
+
+    public function klasifikasi_data(Request $request)
+    {
+        $kantor = $request->kantor;
+        $cab = null;
+
+        if ($request->kategori == 4) {
+            if ($kantor == 'Pusat') {
+                $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
+                $cbg = array();
+                foreach ($cabang as $item) {
+                    array_push($cbg, $item->kd_cabang);
+                }
+                // dd($cbg);
+                $karyawan = DB::table('mst_karyawan')
+                    ->whereNotIn('kd_entitas', $cbg)
+                    ->orWhere('kd_entitas', null)
+                    ->get();
+            } elseif ($kantor == 'Cabang') {
+                $cabang = $request->get('cabang');
+                $karyawan = DB::table('mst_karyawan')
+                    ->where('kd_entitas', $cabang)
+                    ->get();
+                $cab = DB::table('mst_cabang')
+                    ->where('kd_cabang', $cabang)
+                    ->first();
+            }
+
+            return view('karyawan.klasifikasi', [
+                'status' => 4,
+                'kantor' => $kantor,
+                'cab' => $cab,
+                'karyawan' => $karyawan,
+                'request' => $request,
+            ]);
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
