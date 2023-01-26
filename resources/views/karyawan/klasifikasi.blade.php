@@ -294,6 +294,7 @@
             $('#cabang_col').empty();
             $('#divisi_col').empty();
             $('#subDivisi_col').empty();
+            $('#bagian_col').empty();
 
             if (value == 1) {
                 generateDivision();
