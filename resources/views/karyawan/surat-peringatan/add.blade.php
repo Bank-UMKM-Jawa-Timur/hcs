@@ -15,7 +15,7 @@
 </div>
 <div class="card-body">
     <form action="{{ route('surat-peringatan.store') }}" method="post">
-        @include('karyawan.surat-peringatan.form')
+        @include('karyawan.surat-peringatan.form', ['sp' => null])
     </form>
 </div>
 @endsection
