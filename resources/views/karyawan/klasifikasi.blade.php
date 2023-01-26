@@ -22,7 +22,7 @@
         <div class="card-header">
             <div class="card-title">
                 <h5 class="card-title">Pengklasifikasian Data</h5>
-                <p class="card-title"><a href="/">Dashboard</a> > <a href="/karyawan">Karyawan</a> > <a href="">Pengklasifikasian Data</a></p>
+                <p class="card-title"><a href="/">Dashboard</a> > <a href="/karyawan">Karyawan</a> > Pengklasifikasian Data</p>
             </div>
         </div>
     </div>
@@ -330,13 +330,13 @@
                 $('#cabang').attr("disabled", "disabled");
                 $("#cabang_col").hide();
             } else if (value == 3) {
-                generateDivision();
+                generateBagian();
 
-                $('#divisi').removeAttr("disabled", "disabled");
-                $("#divisi_col").show();
+                $('#divisi').attr("disabled", "disabled");
+                $("#divisi_col").hide();
 
-                $('#subDivisi').removeAttr("disabled", "disabled");
-                $("#subDivisi_col").show();
+                $('#subDivisi').attr("disabled", "disabled");
+                $("#subDivisi_col").hide();
 
                 $('#bagian').removeAttr("disabled", "disabled");
                 $("#bagian_col").show();
@@ -431,34 +431,6 @@
                                         const kd_subDivisi = item.kd_subdiv;
                                         $('#subDivisi').append(`<option ${subDivision == kd_subDivisi ? 'selected' : ''} value="${kd_subDivisi}">${item.kd_subdiv} - ${item.nama_subdivisi}</option>`);
                                     });
-
-                                    $('#bagian_col').empty();
-                                    $('#bagian_col').append(`
-                                        <div class="form-group">
-                                            <label for="bagian">Bagian</label>
-                                            <select name="bagian" id="bagian" class="form-control">
-                                                <option value="">--- Pilih Bagian ---</option>
-                                            </select>
-                                        </div>
-                                    `);
-
-                                    $("#subDivisi").change(function(){
-                                        const bagian = '{{ $request?->bagian}}';
-                                        $.ajax({
-                                            type: "GET",
-                                            url: "/getbagian?kd_entitas="+$(this).val(),
-                                            datatype: "JSON",
-                                            success: function(res){
-                                                $('#bagian').empty();
-                                                $('#bagian').append('<option value="">--- Pilih Bagian ---</option>');
-
-                                                $.each(res, (i, item) => {
-                                                    const kd_bagian = item.kd_bagian;
-                                                    $('#bagian').append(`<option ${bagian == kd_bagian ? 'selected' : ''} value="${kd_bagian}">${item.kd_bagian} - ${item.nama_bagian}</option>`);
-                                                });
-                                            }
-                                        })
-                                    });
                                 }
                             });
                         }
@@ -466,6 +438,21 @@
                 }
 
             });
+        }
+
+        function generateBagian() {
+            const bagian = '{{ $request?->bagian}}';
+            $('#bagian_col').append(`
+                <div class="form-group">
+                    <label for="bagian">Bagian</label>
+                    <select name="bagian" id="bagian" class="form-control">
+                        <option value="-">--- Pilih Bagian ---</option>
+                        <option ${ bagian == "Penyelia" ? 'selected' : '' } value="Penyelia">Penyelia</option>
+                        <option ${ bagian == "Staff" ? 'selected' : '' } value="Staff">Staff</option>
+                        <option ${ bagian == "IKJP" ? 'selected' : '' } value="IKJP">IKJP</option>
+                    </select>
+                </div>
+            `);
         }
 
         function generateOffice() {

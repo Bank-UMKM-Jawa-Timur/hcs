@@ -287,16 +287,16 @@ class KaryawanController extends Controller
                 'request' => $request,
             ]);
         } else if ($request->kategori == 3) {
-            $databagian = DB::table('mst_bagian')
-                ->where('kd_bagian', $bagian)
-                ->select('kd_bagian')
+            $databagian = DB::table('mst_jabatan')
+                ->where('kd_jabatan', $bagian)
+                ->select('kd_jabatan')
                 ->get();
             $bag = array();
             foreach($databagian  as $item) {
-                array_push($bag , $item->kd_bagian);
+                array_push($bag , $item->kd_jabatan);
             }
             $karyawan = DB::table('mst_karyawan')
-                ->where('kd_bagian', $bag)
+                ->where('kd_jabatan', $bag)
                 ->get();
             return view('karyawan.klasifikasi', [
                 'status' => 3,
