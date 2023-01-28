@@ -62,6 +62,10 @@ Coded by www.creative-tim.com
       justify-content: center;
       align-items: center;
     }
+
+    .vh-100 {
+      height: 85vh!important;
+    }
   </style>
   @stack('style')
 
@@ -80,83 +84,190 @@ Coded by www.creative-tim.com
           Bio Interface
         </a>
       </div>
-      <div class="dropdown sidebar-wrapper">
-        <ul class="nav">
+
+      <div class="row row-offcanvas row-offcanvas-left vh-100" style="width: 1700px">
+        <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar" role="navigation">
+          <ul class="nav flex-column sticky-top pl-3 mt-0">
             <li class="active">
                 <a href="/home">
                     <i class="nc-icon nc-bank"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
+            {{-- Menu Manajemen Karyawan --}}
             <li>
                 <a class="nav-link disabled">
-                    <p>Navigation</p>
+                    <p>Manajemen Karyawan</p>
                 </a>
             </li>
-            <li class="dropdown">
+            <li style="margin-top: -15px">
+              <a href="{{ route('karyawan.index') }}">
+                <i class="nc-icon nc-badge"></i>
+                <p>Karyawan </p>
+                <p></p>
+              </a>
+            </li>
+            <li style="margin-top: -15px">
+              <a href="#">
+                <i class="nc-icon nc-ruler-pencil"></i>
+                <p>Pengkinian Data </p>
+                <p></p>
+              </a>
+            </li>
+            <li class="dropdown" style="margin-top: -15px">
                 <a href="" data-toggle="dropdown" aria-expanded="false">
-                    <i class="nc-icon nc-badge"></i>
-                    <p class="dropdown-toggle" id="navbarDropdownMenuLink">Karyawan </p>
+                    <i class="nc-icon nc-chart-bar-32"></i>
+                    <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
                     <p></p>
                 </a>
                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                    <a class="dropdown-item" href="{{ route('karyawan.index') }}">Data Karyawan</a>
                     <a class="dropdown-item" href="{{ route('mutasi.index') }}">Mutasi</a>
                     <a class="dropdown-item" href="{{ route('demosi.index') }}">Demosi</a>
                     <a class="dropdown-item" href="{{ route('promosi.index') }}">Promosi</a>
                     <a class="dropdown-item" href="{{ route('karyawan.penonaktifan') }}">Penonaktifan</a>
-                    <a class="dropdown-item" href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
-                    {{-- <a class="dropdown-item" href="{{ route('tunjangan_karyawan.index') }}">Tunjangan Karyawan</a> --}}
                 </div>
             </li>
-            <li class="dropdown">
+            <li class="dropdown" style="margin-top: -15px">
+              <a href="" data-toggle="dropdown" aria-expanded="false">
+                  <i class="nc-icon nc-bell-55"></i>
+                  <p class="dropdown-toggle" id="navbarDropdownMenuLink">Reward & Punishment </p>
+                  <p></p>
+              </a>
+              <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                  <a class="dropdown-item" href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
+              </div>
+            </li>
+            {{-- Menu Penghasilan  --}}
+            <li>
+              <a class="nav-link disabled">
+                  <p>Penghasilan</p>
+              </a>
+            </li>
+            <li style="margin-top: -15px">
+              <a href="/gaji_perbulan">
+                <i class="nc-icon nc-money-coins"></i>
+                <p>Proses Penghasilan</p>
+                <p></p>
+              </a>
+            </li>
+            <li style="margin-top: -15px">
+              <a href="/pajak_penghasilan">
+                <i class="nc-icon nc-scissors"></i>
+                <p>Pajak Penghasilan</p>
+                <p></p>
+              </a>
+            </li>
+            {{-- Menu Histori --}}
+            <li>
+              <a class="nav-link disabled">
+                  <p>Histori</p>
+              </a>
+            </li>
+            <li style="margin-top: -15px">
+              <a href="#">
+                <i class="nc-icon nc-briefcase-24"></i>
+                <p>Jabatan</p>
+                <p></p>
+              </a>
+            </li>
+            <li style="margin-top: -15px">
+              <a href="#">
+                <i class="nc-icon nc-tie-bow"></i>
+                <p>Penjabat Sementara</p>
+                <p></p>
+              </a>
+            </li>
+            <li style="margin-top: -15px">
+              <a href="#">
+                <i class="nc-icon nc-email-85"></i>
+                <p>Surat Peringatan</p>
+                <p></p>
+              </a>
+            </li>
+            {{-- Menu Laporan --}}
+            <li >
+              <a class="nav-link disabled">
+                  <p>Laporan</p>
+              </a>
+            </li>
+            <li class="dropdown" style="margin-top: -15px">
+              <a href="" data-toggle="dropdown" aria-expanded="false">
+                <i class="nc-icon nc-single-copy-04"></i>
+                <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
+                <p></p>
+              </a>
+              <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                  <a class="dropdown-item" href="#">Laporan Mutasi</a>
+                  <a class="dropdown-item" href="#">Laporan Demosi</a>
+                  <a class="dropdown-item" href="#">Laporan Promosi</a>
+              </div>
+            </li>
+            <li style="margin-top: -15px">
+              <a href="{{ route('laporan_jamsostek.index') }}">
+                <i class="nc-icon nc-single-copy-04"></i>
+                <p>Laporan Jamsostek</p>
+                <p></p>
+              </a>
+            </li>
+            <li style="margin-top: -15px">
+              <a href="{{ route('index_dpp') }}">
+                <i class="nc-icon nc-single-copy-04"></i>
+                <p>Laporan DPP</p>
+                <p></p>
+              </a>
+            </li>
+            {{-- Menu Log Aktivitas --}}
+            <li>
+              <a href="#">
+                <i class="nc-icon nc-refresh-69"></i>
+                <p>Log Aktivitas</p>
+                <p></p>
+              </a>
+            </li>
+            {{-- Menu Setting --}}
+            <li >
+              <a class="nav-link disabled">
+                  <p>Setting</p>
+              </a>
+            </li>
+            <li class="dropdown" style="margin-top: -15px">
                 <a href="" data-toggle="dropdown" aria-expanded="false">
-                    <i class="nc-icon nc-briefcase-24"></i>
-                    <p class="dropdown-toggle" id="navbarDropdownMenuLink">Master Data </p>
+                    <i class="nc-icon nc-box"></i>
+                    <p class="dropdown-toggle" id="navbarDropdownMenuLink">Master </p>
                     <p></p>
                 </a>
                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('cabang.index') }}">Kantor Cabang</a>
                     <a class="dropdown-item" href="{{ route('divisi.index') }}">Divisi</a>
                     <a class="dropdown-item" href="{{ route('sub_divisi.index') }}">Sub Divisi</a>
+                    <a class="dropdown-item" href="{{ route('bagian.index') }}">Bagian</a>
                     <a class="dropdown-item" href="{{ route('jabatan.index') }}">Jabatan</a>
                     <a class="dropdown-item" href="{{ route('pangkat_golongan.index') }}">Pangkat & Golongan</a>
                     <a class="dropdown-item" href="{{ route('tunjangan.index') }}">Tunjangan</a>
-                    <a class="dropdown-item" href="{{ route('bagian.index') }}">Bagian</a>
                     <a class="dropdown-item" href="{{ route('umur.index') }}">Rentang Umur</a>
                 </div>
             </li>
-            <li class="dropdown">
-              <a href="" data-toggle="dropdown" aria-expanded="false">
-                  <i class="nc-icon nc-money-coins"></i>
-                  <p class="dropdown-toggle" id="navbarDropdownMenuLink">Penghasilan </p>
-                  <p></p>
+            <li style="margin-top: -15px">
+              <a href="#">
+                <i class="nc-icon nc-single-02"></i>
+                <p>User Akses</p>
+                <p></p>
               </a>
-              <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                  <a class="dropdown-item" href="{{ route('gaji_perbulan.index') }}">Proses Gaji</a>
-                  <a class="dropdown-item" href="/penghasilan">Pajak Penghasilan</a>
-              </div>
-          </li>
-            <li class="dropdown">
-                <a href="" data-toggle="dropdown" aria-expanded="false">
-                  <i class="nc-icon nc-paper"></i>
-                  <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan </p>
-                  <p></p>
-                </a>
-                <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                    <a class="dropdown-item" href="#">Laporan Mutasi</a>
-                    <a class="dropdown-item" href="#">Laporan Demosi</a>
-                    <a class="dropdown-item" href="#">Laporan Promosi</a>
-                    <a class="dropdown-item" href="{{ route('laporan_jamsostek.index') }}">Laporan Jamsostek</a>
-                    <a class="dropdown-item" href="{{ route('index_dpp') }}">Laporan DPP</a>
-                </div>
             </li>
-            <li class="active-pro">
+            <li style="margin-top: -15px">
+              <a href="#">
+                <i class="nc-icon nc-vector"></i>
+                <p>Database</p>
+                <p></p>
+              </a>
+            </li>
+            <li>
                 <a href="">
                 <p class="text-center">BANK UMKM JATIM</p>
                 </a>
             </li>
-        </ul>
+          </ul>
+        </div>
       </div>
 
     </div>
@@ -280,6 +391,7 @@ Coded by www.creative-tim.com
       // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
       demo.initChartsPages();
     });
+
     function formatRupiah(angka, prefix){
 			var number_string = angka.replace(/[^,\d]/g, '').toString(),
 			split   		= number_string.split(','),

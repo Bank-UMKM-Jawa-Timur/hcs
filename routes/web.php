@@ -123,7 +123,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/promosi', PromosiController::class);
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
-    Route::resource('/penghasilan', PenghasilanTidakTeraturController::class);
+    Route::resource('/pajak_penghasilan', PenghasilanTidakTeraturController::class);
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::resource('/backup', BackupController::class);
 

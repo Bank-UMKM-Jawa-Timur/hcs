@@ -71,7 +71,7 @@ class KlasifikasiController extends Controller
             if ($kantor == 'Pusat') {
                 $cbgs = DB::table('mst_cabang')->pluck('kd_cabang');
                 $karyawan = KaryawanModel::whereNotIn('kd_entitas', $cbgs)
-                    ->orWhere('kd_entitas', '');
+                    ->orWhere('kd_entitas', null);
             }
 
             $status = 4;
