@@ -53,7 +53,7 @@
                 @foreach ($report as $sp)
                     <tr>
                         <td>{{ $sp->no_sp }}</td>
-                        <td>{{ $sp->tanggal_sp }}</td>
+                        <td>{{ $sp->tanggal_sp->format('d/m/Y') }}</td>
                         <td>{{ $sp->karyawan->nama_karyawan }}</td>
                         <td>{{ $sp->pelanggaran }}</td>
                         <td>{{ $sp->sanksi }}</td>
