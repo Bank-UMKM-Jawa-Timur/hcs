@@ -58,9 +58,9 @@ class KlasifikasiController extends Controller
                 ->where('kd_subdiv', $subDivisi)
                 ->select('kd_subdiv')
                 ->get();
-
+                
             $subdiv = array();
-            foreach($dataSubDivisi  as $item) {
+            foreach($dataSubDivisi as $item) {
                 array_push($subdiv, $item->kd_subdiv);
             }
 
@@ -75,19 +75,19 @@ class KlasifikasiController extends Controller
                 'request' => $request,
             ]);
         } else if ($request->kategori == 3) {
-            $databagian = DB::table('mst_jabatan')
-                ->where('kd_jabatan', $bagian)
-                ->select('kd_jabatan')
+            $databagian = DB::table('mst_bagian')
+                ->where('kd_bagian', $bagian)
+                ->select('kd_bagian')
                 ->get();
 
             $bag = array();
             foreach($databagian  as $item) {
-                array_push($bag , $item->kd_jabatan);
+                array_push($bag , $item->kd_bagian);
             }
 
             $karyawan = DB::table('mst_karyawan')
                 ->leftJoin('is', 'is.id', '=', 'mst_karyawan.id_is')
-                ->where('kd_jabatan', $bag)
+                ->where('kd_bagian', $bag)
                 ->get();
 
             return view('karyawan.klasifikasi', [
@@ -110,7 +110,11 @@ class KlasifikasiController extends Controller
                     ->orWhere('kd_entitas', null)
                     ->get();
             } elseif ($kantor == 'Cabang') {
-                $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
+                $kd_cab = $request->get('cabang');
+                $cabang = DB::table('mst_cabang')
+                    ->where('kd_cabang', $kd_cab)
+                    ->select('kd_cabang')
+                    ->get();
 
                 $cbg = array();
                 foreach($cabang as $item){
@@ -160,88 +164,7 @@ class KlasifikasiController extends Controller
      */
     public function show(Request $request)
     {
-        {
-            $kantor = $request->kantor;
-            $divisi = $request->get('divisi');
-            $subDivisi = $request->get('subDivisi');
-            $bagian = $request->get('bagian');
-    
-            if ($request->kategori == 1) {
-                $dataDivisi = DB::table('mst_divisi')
-                    ->where('kd_divisi', $divisi)
-                    ->select('kd_divisi')
-                    ->get();
-                $div = array();
-                foreach($dataDivisi  as $item) {
-                    array_push($div, $item->kd_divisi);
-                }
-                $karyawan = DB::table('mst_karyawan')
-                    ->where('kd_entitas', $div)
-                    ->get();
-                return view('karyawan.klasifikasi', [
-                    'status' => 1,
-                    'karyawan' => $karyawan,
-                    'request' => $request,
-                ]);
-            } else if ($request->kategori == 2) {
-                $dataSubDivisi = DB::table('mst_sub_divisi')
-                    ->where('kd_subdiv', $subDivisi)
-                    ->select('kd_subdiv')
-                    ->get();
-                $subdiv = array();
-                foreach($dataSubDivisi  as $item) {
-                    array_push($subdiv, $item->kd_subdiv);
-                }
-                $karyawan = DB::table('mst_karyawan')
-                    ->where('kd_entitas', $subdiv)
-                    ->get();
-                return view('karyawan.klasifikasi', [
-                    'status' => 2,
-                    'karyawan' => $karyawan,
-                    'request' => $request,
-                ]);
-            } else if ($request->kategori == 3) {
-                $databagian = DB::table('mst_jabatan')
-                    ->where('kd_jabatan', $bagian)
-                    ->select('kd_jabatan')
-                    ->get();
-                $bag = array();
-                foreach($databagian  as $item) {
-                    array_push($bag , $item->kd_jabatan);
-                }
-                $karyawan = DB::table('mst_karyawan')
-                    ->where('kd_jabatan', $bag)
-                    ->get();
-                return view('karyawan.klasifikasi', [
-                    'status' => 3,
-                    'karyawan' => $karyawan,
-                    'request' => $request,
-                ]);
-            } else if ($request->kategori == 4) {
-                if ($kantor == 'Pusat') {
-                    $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
-                    $cbg = array();
-                    foreach ($cabang as $item) {
-                        array_push($cbg, $item->kd_cabang);
-                    }
-                    $karyawan = DB::table('mst_karyawan')
-                        ->whereNotIn('kd_entitas', $cbg)
-                        ->orWhere('kd_entitas', null)
-                        ->get();
-                } elseif ($kantor == 'Cabang') {
-                    $cabang = $request->get('cabang');
-                    $karyawan = DB::table('mst_karyawan')
-                        ->where('kd_entitas', $cabang)
-                        ->get();
-                }
-    
-                return view('karyawan.klasifikasi', [
-                    'status' => 4,
-                    'karyawan' => $karyawan,
-                    'request' => $request,
-                ]);
-            }
-        }
+        //
     }
 
     /**
