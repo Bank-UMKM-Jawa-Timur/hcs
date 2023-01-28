@@ -105,6 +105,7 @@ Coded by www.creative-tim.com
                     <a class="dropdown-item" href="{{ route('demosi.index') }}">Demosi</a>
                     <a class="dropdown-item" href="{{ route('promosi.index') }}">Promosi</a>
                     <a class="dropdown-item" href="{{ route('karyawan.penonaktifan') }}">Penonaktifan</a>
+                    <a class="dropdown-item" href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
                     {{-- <a class="dropdown-item" href="{{ route('tunjangan_karyawan.index') }}">Tunjangan Karyawan</a> --}}
                 </div>
             </li>
