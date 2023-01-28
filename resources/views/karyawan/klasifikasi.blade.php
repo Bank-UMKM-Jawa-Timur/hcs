@@ -96,7 +96,7 @@
                                     <tr>
                                         <td>{{ $item->nip }}</td>
                                         <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->nama_jabatan ?? '-' }}</td>
                                         @php
                                             $nama_cabang = DB::table('mst_cabang')
                                                 ->where('kd_cabang', $item->kd_entitas)
@@ -171,7 +171,7 @@
                                                     $status = 'DA';
                                                     $anak = 0;
                                                 }
-                                            } 
+                                            }
                                         @endphp
                                         <td>{{ $status }}/{{ $anak }}</td>
                                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
@@ -215,7 +215,7 @@
                                     <tr>
                                         <td>{{ $item->nip }}</td>
                                         <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->nama_jabatan ?? '-' }}</td>
                                         @php
                                             $nama_cabang = DB::table('mst_cabang')
                                                 ->where('kd_cabang', $item->kd_entitas)
@@ -290,7 +290,7 @@
                                                     $status = 'DA';
                                                     $anak = 0;
                                                 }
-                                            } 
+                                            }
                                         @endphp
                                         <td>{{ $status }}/{{ $anak }}</td>
                                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
@@ -334,7 +334,7 @@
                                     <tr>
                                         <td>{{ $item->nip }}</td>
                                         <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->nama_jabatan ?? '-' }}</td>
                                         @php
                                             $nama_cabang = DB::table('mst_cabang')
                                                 ->where('kd_cabang', $item->kd_entitas)
@@ -409,7 +409,7 @@
                                                     $status = 'DA';
                                                     $anak = 0;
                                                 }
-                                            } 
+                                            }
                                         @endphp
                                         <td>{{ $status }}/{{ $anak }}</td>
                                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
@@ -453,7 +453,7 @@
                                     <tr>
                                         <td>{{ $item->nip }}</td>
                                         <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->nama_jabatan ?? '-' }}</td>
                                         @php
                                             $nama_cabang = DB::table('mst_cabang')
                                                 ->where('kd_cabang', $item->kd_entitas)
