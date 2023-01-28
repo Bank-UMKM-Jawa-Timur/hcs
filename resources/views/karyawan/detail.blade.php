@@ -62,10 +62,17 @@
                     <input type="text" disabled class="form-control" value="{{ $karyawan->jk }}">
                 </div>
             </div>
+            @php
+                if ($karyawan->status == 'K' || $karyawan->status == 'Kawin') {
+                    $status = 'Kawin';
+                } elseif ($karyawan->status == 'TK' || $karyawan->status == 'Belum Kawin') {
+                    $status = 'Belum Kawin';
+                }
+            @endphp
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Status Pernikahan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control"  value="{{ $karyawan->status ?? '-' }}">
+                    <input type="text" disabled class="form-control"  value="{{ $status ?? '-' }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">

@@ -11,7 +11,8 @@
 </div>
 <div class="card-body">
     <div class="d-flex">
-        <a href="{{ route('surat-peringatan.create') }}" class="btn btn-primary">Tambah Surat Peringatan</a>
+        <a href="{{ route('surat-peringatan.create') }}" class="btn btn-primary mr-3">Tambah Surat Peringatan</a>
+        <a href="{{ route('surat-peringatan.report') }}?tahun={{ date('Y') }}" class="btn btn-primary">Laporan</a>
     </div>
     <div class="table-responsive content-center mt-2">
         <table class="table whitespace-nowrap" id="sp-table">

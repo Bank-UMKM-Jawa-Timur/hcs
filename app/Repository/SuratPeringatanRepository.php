@@ -16,4 +16,14 @@ class SuratPeringatanRepository
             'sanksi' => $data['sanksi']
         ]);
     }
+
+    public function report(array $data)
+    {
+        $sp = SpModel::with('karyawan');
+
+        if (isset($data['tahun'])) $sp->whereYear('tanggal_sp', $data['tahun']);
+        if (isset($data['nip'])) $sp->where('nip', $data['nip']);
+
+        return $sp->get();
+    }
 }
