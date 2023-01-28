@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\BackupController;
+// use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
@@ -125,6 +125,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/bagian', BagianController::class);
     Route::resource('/penghasilan', PenghasilanTidakTeraturController::class);
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
+    // Route::resource('/backup', BackupController::class);
 
     // Penonaktifan Karyawan
     Route::controller(KaryawanController::class)->group(function () {
