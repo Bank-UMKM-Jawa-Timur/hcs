@@ -8,7 +8,7 @@
             <p class="card-title">
                 <a href="/">Dashboard </a> >
                 <a href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a> >
-                <a href="">Tambah</a>
+                Tambah
             </p>
         </div>
     </div>
