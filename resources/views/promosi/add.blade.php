@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@include('vendor.select2')
 @section('content')
     <div class="card-header">
         <div class="card-header">
@@ -12,24 +13,20 @@
             @csrf
             <input type="hidden" name="kd_entity" value="">
             <div class="row">
-                <div class="col-lg-12">
-                    <h6>Karyawan</h6>
-                </div>
-                <div class="col-md-6">
+                <div class="col-lg-6">
                     <div class="form-group">
-                        <label for="">NIP</label>
-                        <input type="text" name="nip" id="karyawan" class="@error('nip') is-invalid @enderror form-control" value="{{ old('nip') }}">
-                        @error('nip')
-                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
-                        @enderror
+                        <label for="">Karyawan:</label>
+                        <select name="nip" id="nip" class="form-control"></select>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-lg-6">
                     <div class="form-group">
-                        <label for="nama_karyawan">Nama Karyawan</label>
-                        <input type="text" name="nama" id="nama_karyawan" disabled class="form-control">
+                        <label for="">Status Jabatan</label>
+                        <input type="text" id="status_jabatan" class="form-control" disabled>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="" id="">
 
                 </div>
@@ -50,7 +47,18 @@
             <hr>
             <div class="row align-content-center">
                 <div class="col-lg-12">
-                    <h6>Pembaruan Data</h6>
+                    <h6>Pembaruan Data Jabatan</h6>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">Status Jabatan</label>
+                        <select name="status_jabatan" id="" class="@error('status_jabatan') is-invalid @enderror form-control">
+                            <option value="">--- Pilih ---</option>
+                            <option value="Definitif">Definitif</option>
+                            <option value="Penjabat Sementara">Penjabat Sementara</option>
+                            <option value="Penjabat">Penjabat</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
@@ -83,6 +91,34 @@
                 <div id="subdivs-section"></div>
                 <div id="bagians-section"></div>
                 <div id="branches-section"></div>
+            </div>
+            <hr>
+            <div class="row align-content-center">
+                <div class="col-lg-12">
+                    <h6>Pembaruan Data Gaji</h6>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="gj_pokok">Gaji Pokok</label>
+                        <input class="form-control" type="text" name="gj_pokok" id="gj_pokok" disabled>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="gj_penyesuaian">Gaji Penyesuaian</label>
+                        <input class="form-control" type="text" name="gj_penyesuaian" id="gj_penyesuaian" disabled>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row align-content-center">
+                <div class="col-lg-12">
+                    <h6>Pembaruan Data Tunjangan</h6>
+                </div>
+                <div class="col-lg-12" id="tj">
+
+                </div>
             </div>
             <hr>
             <div class="row align-content-center justify-content-center">
@@ -120,8 +156,36 @@
     </div>
 @endsection
 
+@push('script')
+<script>
+// $(document).ready(function() {
+//     var table = $('#table').DataTable({
+//         'autoWidth': false,
+//         'dom': 'Rlfrtip',
+//         'colReorder': {
+//             'allowReorder': false
+//         }
+//     });
+// })
+
+$('#nip').select2({
+    ajax: {
+        url: '{{ route('api.select2.karyawan') }}'
+    },
+    templateResult: function(data) {
+        if(data.loading) return data.text;
+        return $(`
+            <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
+        `);
+    }
+});
+</script>
+@endpush
+
+
 @section('custom_script')
     <script>
+        var x = 0;
         // Give divisi option's value
         function fillDivision(data) {
             const section = $('#divisions-section');
@@ -234,7 +298,11 @@
             })
         }
 
-        $('#karyawan').change(function(e) {
+        function setTunjangan(index, value){
+            $("#tunjangan"+index).val(value)
+        }
+
+        $('#nip').change(function(e) {
             const nip = $(this).val();
 
             $.ajax({
@@ -245,13 +313,137 @@
                     if(!data.success) return;
 
                     $('input[name=kd_entity]').val(data.karyawan.kd_entitas);
-                    $('#nama_karyawan').val(data.karyawan.nama_karyawan);
                     $('#jabatan_lama').val(data.karyawan.jabatan.nama_jabatan || '');
                     $('#kantor_lama').val(data.karyawan.kd_entitas);
                     $('#id_jabatan_lama').val(data.karyawan.jabatan.kd_jabatan);
+                    $("#status_jabatan").val(data.karyawan.status_jabatan)
                 }
             });
+
+            $.ajax({
+                url: '{{ route('getDataGjPromosi') }}?nip='+nip,
+                dataType: "json",
+                type: "Get",
+                success: function(res){
+                    x = res.data_tj.length
+                    $("#gj_pokok").removeAttr("disabled")
+                    $("#gj_penyesuaian").removeAttr("disabled")
+                    $("#gj_pokok").val(formatRupiah(res.data_gj.gj_pokok.toString()))
+                    $("#gj_penyesuaian").val(formatRupiah(res.data_gj.gj_penyesuaian.toString()))
+                    $.each(res.data_tj, function(i, item){
+                        var idTj = item.id_tunjangan
+                        $("#tj").append(`
+                        <div class="row" id="row_tunjangan">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="is">Tunjangan</label>
+                                        <select name="tunjangan[]" id="tunjangan`+i+`" class="form-control">
+                                            <option value="">--- Pilih ---</option>
+                                            @foreach ($tunjangan as $item)
+                                                <option value="{{ $item->id }}" {{ ($item->id == `+ idTj +`) ? 'selected' : '' }}>{{ $item->nama_tunjangan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="id_tk[]" id="id_tk" value="`+item.id+`">
+                                <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="`+item.nominal+`">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="is_nama">Nominal</label>
+                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control" value="`+formatRupiah(item.nominal.toString())+`">
+                                    </div>
+                                </div>
+                                <div class="col-md-1 mt-3">
+                                    <button class="btn btn-info" type="button" id="btn-add">
+                                        <i class="bi-plus-lg"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-1 mt-3">
+                                    <button class="btn btn-info" type="button" id="btn-delete">
+                                        <i class="bi-dash-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `);
+                        setTunjangan(i, item.id_tunjangan)
+                    })
+                }
+            })
         });
+        $('#tj').on('click', "#btn-add", function(){
+            $('#tj').append(`
+            <div class="row pb-3">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is">Tunjangan</label>
+                                    <select name="tunjangan[]" id="row_tunjangan" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        @foreach ($tunjangan as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                            <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="0">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is_nama">Nominal</label>
+                                    <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    <i class="bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    <i class="bi-dash-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+            `);
+            x++
+        });
+        $('#tj').on('click', "#btn-delete", function(){
+            var row = $(this).closest('.row')
+            var value = row.children('#id_tk').val()
+            console.log(value);
+            if(x > 1){
+                if(value != null){
+                    $.ajax({
+                        type: "GET",
+                        url: "/deleteEditTunjangan?id_tk="+value,
+                        datatype: "json",
+                        success: function(res){
+                            if(res == "sukses"){
+                                row.remove()
+                                x--;
+                            }
+                        }
+                    })
+                    $(this).closest('.row').remove()
+                    x--;
+                } else{
+                    $(this).closest('.row').remove()
+                    x--;
+                }
+            }
+        })
+
+        $("#gj_pokok").keyup(function(){
+            var value = $(this).val()
+            $(this).val(formatRupiah(value))
+        })
+        $("#gj_penyesuaian").keyup(function(){
+            var value = $(this).val()
+            $(this).val(formatRupiah(value))
+        })
+        $("#tj").on("keyup", "#nominal", function(){
+            var value = $(this).val()
+            $(this).val(formatRupiah(value))
+        })
 
         $('#kantor').change(function(e) {
             const office = $(this).val();

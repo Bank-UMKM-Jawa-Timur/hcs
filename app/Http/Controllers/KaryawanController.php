@@ -131,10 +131,22 @@ class KaryawanController extends Controller
     public function deleteEditTunjangan(Request $request)
     {
         $id = $request->id_tk;
+        $nip = DB::table('tunjangan_karyawan')
+            ->where('id', $id)
+            ->first('nip');
 
         DB::table('tunjangan_karyawan')
             ->where('id', $id)
             ->delete();
+
+        DB::table('history_penyesuaian_gaji')
+            ->insert([
+                'keterangan' => 'Hapus Tunjangan',
+                'nip' => $nip->nip,
+                'nominal_lama' => 0,
+                'nominal_baru' => 0,
+                'created_at' => now()
+            ]);
 
         return response()->json("sukses");
     }

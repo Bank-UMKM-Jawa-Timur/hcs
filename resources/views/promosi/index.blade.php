@@ -16,6 +16,9 @@
                         <table class="table" id="table">
                             <thead class="text-primary">
                                 <th>
+                                    #
+                                </th>
+                                <th>
                                     NIP
                                 </th>
                                 <th>
@@ -41,8 +44,14 @@
                                 </th>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
                                 @foreach ($data as $item)
                                     <tr>
+                                        <td>
+                                            {{ $i++ }}
+                                        </td>
                                         <td>
                                             {{ $item->nip }}
                                         </td>

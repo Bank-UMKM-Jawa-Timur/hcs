@@ -31,6 +31,27 @@ class PromosiController extends Controller
         return response()->json($data);
     }
 
+    public function getDataGajiPromosi(Request $request)
+    {
+        $nip = $request->get('nip');
+
+        $data_gj = DB::table('mst_karyawan')
+            ->where('nip', $nip)
+            ->select('gj_pokok', 'gj_penyesuaian')
+            ->first();
+        $data_tj = DB::table('tunjangan_karyawan')
+            ->where('nip', $nip)
+            ->get();
+        $tj = DB::table('mst_tunjangan')    
+            ->get();
+
+        return response()->json([
+            'data_gj' => $data_gj,
+            'data_tj' => $data_tj,
+            'tj' => $tj
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -48,6 +69,7 @@ class PromosiController extends Controller
             ->join('mst_karyawan as karyawan', 'karyawan.nip', '=', 'demosi_promosi_pangkat.nip')
             ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
             ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
+            ->orderBy('id', 'desc')
             ->get();
 
         $data->map(function($promosi) {
@@ -72,7 +94,7 @@ class PromosiController extends Controller
             if($typeLama == 1) {
                 $promosiLama->kantor_lama = isset($entityLama->subDiv) ?
                 $entityLama->subDiv->nama_subdivisi . " (Pusat)":
-                $entityLama->div->nama_divisi . " (Pusat)";
+                 " (Pusat)";
             }
 
             return $promosiLama;
@@ -93,8 +115,10 @@ class PromosiController extends Controller
             ->get();
         $data_panggol = DB::table('mst_jabatan')
             ->get();
+        $tj = DB::table('mst_tunjangan')
+            ->get();
 
-        return view('promosi.add', ['data' => $data, 'jabatan' => $data_panggol]);
+        return view('promosi.add', ['data' => $data, 'jabatan' => $data_panggol, 'tunjangan' => $tj]);
     }
 
     /**
@@ -105,6 +129,76 @@ class PromosiController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
+        foreach($request->tunjangan as $key => $item){
+            $tj = DB::table('mst_tunjangan')
+                ->where('id', $request->tunjangan[$key])
+                ->first('nama_tunjangan');
+
+            if($request->id_tk[$key] != 0){
+                DB::table('history_penyesuaian')
+                    ->insert([
+                        'nip' => $request->nip,
+                        'keterangan' => "Penyesuaian Tunjangan ".$tj->nama_tunjangan,
+                        'nominal_lama' => $request->nominal_lama[$key],
+                        'nominal_baru' => str_replace('.', '',$request->nominal_tunjangan[$key]),
+                        'id_tunjangan' => $item,
+                        'created_at' => now()
+                    ]);
+                DB::table('tunjangan_karyawan')
+                    ->where('id', $request->id_tk[$key])
+                    ->update([
+                        'nominal' => str_replace('.', '',$request->nominal_tunjangan[$key]),
+                        'updated_at' => now()
+                    ]);
+            } else{
+                DB::table('tunjangan_karyawan')
+                    ->insert([
+                        'nip' => $request->nip,
+                        'id_Tunjangan' => $request->tunjangan[$key],
+                        'nominal' => str_replace('.', '',$request->nominal[$key]),
+                        'created_at' => now()
+                    ]);
+                DB::table('history_penyesuaian')
+                    ->insert([
+                        'nip' => $request->nip,
+                        'keterangan' => "Penambahan Tunjangan ".$tj->nama_tunjangan,
+                        'nominal_lama' => $request->nominal_lama[$key],
+                        'nominal_baru' => str_replace('.', '',$request->nominal_tunjangan[$key]),
+                        'id_tunjangan' => $item,
+                        'created_at' => now()
+                    ]);
+            }
+        }
+        $karyawan = DB::table('mst_karyawan')
+            ->select('gj_pokok', 'gj_penyesuaian')
+            ->where('nip', $request->nip)
+            ->first();
+        DB::table('history_penyesuaian')
+            ->insert([
+                'nip' => $request->nip,
+                'keterangan' => 'Penyesuaian Gaji Pokok',
+                'nominal_baru' => str_replace('.', '', $request->gj_pokok),
+                'nominal_lama' => $karyawan->gj_pokok,
+                'created_At' => now()
+            ]);
+
+        DB::table('history_penyesuaian')
+            ->insert([
+                'nip' => $request->nip,
+                'keterangan' => 'Penyesuaian Gaji Penyesuaian',
+                'nominal_baru' => str_replace('.', '', $request->gj_penyesuaian),
+                'nominal_lama' => $karyawan->gj_penyesuaian,
+                'created_At' => now()
+            ]);
+
+        DB::table('mst_karyawan')
+            ->where('nip', $request->nip)
+            ->update([
+                'gj_pokok' => str_replace('.', '', $request->gj_pokok),
+                'gj_penyesuaian' => str_replace('.', '', $request->gj_penyesuaian)
+            ]);
+
         $entity = EntityService::getEntityFromRequest($request);
         $promosi = DB::table('demosi_promosi_pangkat')
             ->insert([
@@ -131,6 +225,7 @@ class PromosiController extends Controller
                 'ket_jabatan' => $request->ket_jabatan,
                 'kd_entitas' => $entity,
                 'kd_bagian' => $request->kd_bagian,
+                'status_jabatan' => $request->status_jabatan,
                 'updated_at' => now(),
             ]);
 

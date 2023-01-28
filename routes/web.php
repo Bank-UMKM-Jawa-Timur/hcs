@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
@@ -153,6 +154,7 @@ Route::group(['middleware' => 'auth'], function(){
 
     // Get komponen untuk demosi dan promosi
     Route::get('getgolongan', [DemosiController::class, 'getgolongan']);
+    Route::get('getDataGjPromosi', [PromosiController::class, 'getDataGajiPromosi'])->name('getDataGjPromosi');
 
     // Get data untuk tunjangan karyawan
     Route::get('getdatatunjangan', [TunjanganKaryawanController::class, 'getdatatunjangan']);
