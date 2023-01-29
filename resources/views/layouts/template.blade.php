@@ -127,6 +127,13 @@ Coded by www.creative-tim.com
                     <a class="dropdown-item" href="{{ route('karyawan.penonaktifan') }}">Penonaktifan</a>
                 </div>
             </li>
+            <li style="margin-top: -15px">
+              <a href="#">
+                <i class="nc-icon nc-tie-bow"></i>
+                <p>Penjabat Sementara</p>
+                <p></p>
+              </a>
+            </li>
             <li class="dropdown" style="margin-top: -15px">
               <a href="" data-toggle="dropdown" aria-expanded="false">
                   <i class="nc-icon nc-bell-55"></i>
@@ -193,7 +200,7 @@ Coded by www.creative-tim.com
             <li class="dropdown" style="margin-top: -15px">
               <a href="" data-toggle="dropdown" aria-expanded="false">
                 <i class="nc-icon nc-single-copy-04"></i>
-                <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
+                <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan Pergerakan Karir </p>
                 <p></p>
               </a>
               <div class="dropdown-menu dropdown-primary dropdown-menu-right">
@@ -217,7 +224,12 @@ Coded by www.creative-tim.com
               </a>
             </li>
             {{-- Menu Log Aktivitas --}}
-            <li>
+            <li >
+              <a class="nav-link disabled">
+                  <p>Log</p>
+              </a>
+            </li>
+            <li style="margin-top: -15px">
               <a href="#">
                 <i class="nc-icon nc-refresh-69"></i>
                 <p>Log Aktivitas</p>
