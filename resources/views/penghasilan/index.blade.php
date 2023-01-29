@@ -14,7 +14,7 @@
 <div class="card-body">
     <div class="row m-0">
         <div class="col">
-            <a class="mb-3" href="{{ route('penghasilan.create') }}">
+            <a class="mb-3" href="{{ route('pajak_penghasilan.create') }}">
                 <button class="btn btn-primary">Import penghasilan</button>
             </a>
         </div>
