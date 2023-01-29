@@ -130,44 +130,46 @@ class PromosiController extends Controller
     public function store(Request $request)
     {
         // dd($request);
-        foreach($request->tunjangan as $key => $item){
-            $tj = DB::table('mst_tunjangan')
-                ->where('id', $request->tunjangan[$key])
-                ->first('nama_tunjangan');
-
-            if($request->id_tk[$key] != 0){
-                DB::table('history_penyesuaian')
-                    ->insert([
-                        'nip' => $request->nip,
-                        'keterangan' => "Penyesuaian Tunjangan ".$tj->nama_tunjangan,
-                        'nominal_lama' => $request->nominal_lama[$key],
-                        'nominal_baru' => str_replace('.', '',$request->nominal_tunjangan[$key]),
-                        'id_tunjangan' => $item,
-                        'created_at' => now()
-                    ]);
-                DB::table('tunjangan_karyawan')
-                    ->where('id', $request->id_tk[$key])
-                    ->update([
-                        'nominal' => str_replace('.', '',$request->nominal_tunjangan[$key]),
-                        'updated_at' => now()
-                    ]);
-            } else{
-                DB::table('tunjangan_karyawan')
-                    ->insert([
-                        'nip' => $request->nip,
-                        'id_Tunjangan' => $request->tunjangan[$key],
-                        'nominal' => str_replace('.', '',$request->nominal[$key]),
-                        'created_at' => now()
-                    ]);
-                DB::table('history_penyesuaian')
-                    ->insert([
-                        'nip' => $request->nip,
-                        'keterangan' => "Penambahan Tunjangan ".$tj->nama_tunjangan,
-                        'nominal_lama' => $request->nominal_lama[$key],
-                        'nominal_baru' => str_replace('.', '',$request->nominal_tunjangan[$key]),
-                        'id_tunjangan' => $item,
-                        'created_at' => now()
-                    ]);
+        if(count($request->tunjangan) > 0){
+            foreach($request->tunjangan as $key => $item){
+                $tj = DB::table('mst_tunjangan')
+                    ->where('id', $request->tunjangan[$key])
+                    ->first('nama_tunjangan');
+    
+                if($request->id_tk[$key] != 0){
+                    DB::table('history_penyesuaian')
+                        ->insert([
+                            'nip' => $request->nip,
+                            'keterangan' => "Penyesuaian Tunjangan ".$tj->nama_tunjangan,
+                            'nominal_lama' => $request->nominal_lama[$key],
+                            'nominal_baru' => str_replace('.', '',$request->nominal_tunjangan[$key]),
+                            'id_tunjangan' => $item,
+                            'created_at' => now()
+                        ]);
+                    DB::table('tunjangan_karyawan')
+                        ->where('id', $request->id_tk[$key])
+                        ->update([
+                            'nominal' => str_replace('.', '',$request->nominal_tunjangan[$key]),
+                            'updated_at' => now()
+                        ]);
+                } else{
+                    DB::table('tunjangan_karyawan')
+                        ->insert([
+                            'nip' => $request->nip,
+                            'id_Tunjangan' => ($request->tunjangan[$key] != null) ? $request->tunjangan[$key] : null,
+                            'nominal' => ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
+                            'created_at' => now()
+                        ]);
+                    DB::table('history_penyesuaian')
+                        ->insert([
+                            'nip' => $request->nip,
+                            'keterangan' => "Penambahan Tunjangan ".$tj->nama_tunjangan,
+                            'nominal_lama' => $request->nominal_lama[$key],
+                            'nominal_baru' =>  ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
+                            'id_tunjangan' => $item,
+                            'created_at' => now()
+                        ]);
+                }
             }
         }
         $karyawan = DB::table('mst_karyawan')
@@ -210,6 +212,7 @@ class PromosiController extends Controller
                 'kd_entitas_baru' => $entity,
                 'kd_jabatan_lama' => $request->id_jabatan_lama,
                 'kd_jabatan_baru' => $request->id_jabatan_baru,
+                'kd_bagian' => $request->kd_bagian,
                 'created_at' => now(),
             ]);
 

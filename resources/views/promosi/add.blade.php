@@ -117,7 +117,37 @@
                     <h6>Pembaruan Data Tunjangan</h6>
                 </div>
                 <div class="col-lg-12" id="tj">
-
+                    <div class="row pb-3">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="is">Tunjangan</label>
+                                <select name="tunjangan[]" id="row_tunjangan" class="form-control">
+                                    <option value="">--- Pilih ---</option>
+                                    @foreach ($tunjangan as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                        <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="0">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="is_nama">Nominal</label>
+                                <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-1 mt-3">
+                            <button class="btn btn-info" type="button" id="btn-add">
+                                <i class="bi-plus-lg"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-1 mt-3">
+                            <button class="btn btn-info" type="button" id="btn-delete">
+                                <i class="bi-dash-lg"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr>
