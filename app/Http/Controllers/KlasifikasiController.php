@@ -38,8 +38,14 @@ class KlasifikasiController extends Controller
         if ($request->kategori == 1) {
             $subDivs = DB::table('mst_sub_divisi')->where('kd_divisi', $request->divisi)
                 ->pluck('kd_subdiv');
+
+            $bagians = DB::table('mst_bagian')->whereIn('kd_entitas', $subDivs)
+                ->orWhere('kd_entitas', $request->divisi)
+                ->pluck('kd_bagian');
+
             $karyawan = KaryawanModel::where('kd_entitas', $request->divisi)
-                ->orWhereIn('kd_entitas', $subDivs);
+                ->orWhereIn('kd_entitas', $subDivs)
+                ->orWhereIn('kd_bagian', $bagians);
 
             $status = 1;
         }
@@ -49,6 +55,7 @@ class KlasifikasiController extends Controller
 
             $bagian = DB::table('mst_bagian')->where('kd_entitas', $entitas)
                 ->pluck('kd_bagian');
+
             $karyawan = KaryawanModel::where('kd_entitas', $entitas)
                 ->orWhereIn('kd_bagian', $bagian);
 
@@ -56,12 +63,7 @@ class KlasifikasiController extends Controller
         }
 
         if ($request->kategori == 3) {
-            $bagian = DB::table('mst_bagian')->where('kd_bagian', $request->bagian)->first();
-            $karyawan = ClassificationService::getWithDivision(
-                KaryawanModel::where('mst_karyawan.kd_bagian', $bagian->kd_bagian),
-                $bagian->kd_entitas
-            );
-
+            $karyawan = KaryawanModel::where('kd_bagian', $request->bagian)->whereNotNull('kd_bagian');
             $status = 3;
         }
 
