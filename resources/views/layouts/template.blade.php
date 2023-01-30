@@ -100,7 +100,7 @@ Coded by www.creative-tim.com
                   <i class="nc-icon nc-tile-56"></i>
                   Manajemen Karyawan
                 </a>
-                <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu1" aria-expanded="false">
+                <ul class="sub-menu list-unstyled flex-column collapse pl-2 show" id="submenu1" aria-expanded="false">
                   <li style="margin-top: -15px">
                     <a href="{{ route('karyawan.index') }}">
                       <i class="nc-icon nc-badge"></i>
@@ -153,7 +153,7 @@ Coded by www.creative-tim.com
                 <i class="nc-icon nc-tag-content"></i>
                 Penghasilan
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu2" aria-expanded="false">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 show" id="submenu2" aria-expanded="false">
                 <li style="margin-top: -15px">
                   <a href="/gaji_perbulan">
                     <i class="nc-icon nc-money-coins"></i>
@@ -176,7 +176,7 @@ Coded by www.creative-tim.com
                 <i class="nc-icon nc-compass-05"></i>
                 Histori
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu3" aria-expanded="false">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 show" id="submenu3" aria-expanded="false">
                 <li style="margin-top: -15px">
                   <a href="#">
                     <i class="nc-icon nc-briefcase-24"></i>
@@ -206,7 +206,7 @@ Coded by www.creative-tim.com
                 <i class="nc-icon nc-paper"></i>
                 Laporan
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu4" aria-expanded="false">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 show" id="submenu4" aria-expanded="false">
                 <li class="dropdown" style="margin-top: -15px">
                   <a data-toggle="dropdown" aria-expanded="false">
                     <i class="nc-icon nc-single-copy-04"></i>
@@ -241,7 +241,7 @@ Coded by www.creative-tim.com
                 <i class="nc-icon nc-tap-01"></i>
                 Log
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu5" aria-expanded="false">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 show" id="submenu5" aria-expanded="false">
                 <li style="margin-top: -15px">
                   <a href="#">
                     <i class="nc-icon nc-refresh-69"></i>
@@ -257,7 +257,7 @@ Coded by www.creative-tim.com
                 <i class="nc-icon nc-settings"></i>
                 Setting
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6" aria-expanded="false">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 show" id="submenu6" aria-expanded="false">
                 <li class="dropdown" style="margin-top: -15px">
                     <a data-toggle="dropdown" aria-expanded="false">
                         <i class="nc-icon nc-box"></i>
@@ -427,7 +427,11 @@ Coded by www.creative-tim.com
     // for treeview
     $('ul.sub-menu>li>a').filter(function() {
       return this.href == url;
-    }).parentsUntil(".nav > .sub-menu").addClass('active show');
+    }).parentsUntil(".nav > .sub-menu").addClass('active');
+
+    $('ul.sub-menu>li.dropdown>div.dropdown-menu>a').filter(function() {
+      return this.href == url;
+    }).parentsUntil(".nav > .sub-menu").addClass('active');
 
     function formatRupiah(angka, prefix){
 			var number_string = angka.replace(/[^,\d]/g, '').toString(),
