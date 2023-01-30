@@ -33,14 +33,14 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="">Jabatan Lama</label>
+                        <label for="">Jabatan Sekarang</label>
                         <input type="text" class="form-control" disabled name="" id="jabatan_lama">
                         <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="">Kantor Lama</label>
+                        <label for="">Kantor Sekarang</label>
                         <input type="text" class="form-control" disabled name="" id="kantor_lama">
                     </div>
                 </div>
