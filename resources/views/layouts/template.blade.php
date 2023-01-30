@@ -64,7 +64,7 @@ Coded by www.creative-tim.com
     }
 
     .vh-100 {
-      height: 85vh!important;
+      height: 90vh!important;
     }
   </style>
   @stack('style')
@@ -89,15 +89,15 @@ Coded by www.creative-tim.com
         <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar" role="navigation">
           <ul class="nav flex-column sticky-top pl-2 mt-0">
             <li>
-                <a href="/home">
-                    <i class="nc-icon nc-bank"></i>
+                <a href="/home" style="font-weight: bolder">
+                    <i class="nc-icon nc-bank" style="font-weight: bolder"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
             {{-- Menu Manajemen Karyawan --}}
             <li>
-                <a class="nav-link" href="#submenu1" data-toggle="collapse" data-target="#submenu1">
-                  <i class="nc-icon nc-tile-56"></i>
+                <a class="nav-link" href="#submenu1" data-toggle="collapse" data-target="#submenu1" style="font-weight: bolder">
+                  <i class="nc-icon nc-tile-56" style="font-weight: bolder"></i>
                   Manajemen Karyawan
                 </a>
                 <ul class="sub-menu list-unstyled flex-column collapse pl-2 " id="submenu1" aria-expanded="false">
@@ -122,10 +122,10 @@ Coded by www.creative-tim.com
                           <p></p>
                       </a>
                       <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                          <a class="dropdown-item" href="{{ route('mutasi.index') }}">Mutasi</a>
-                          <a class="dropdown-item" href="{{ route('demosi.index') }}">Demosi</a>
-                          <a class="dropdown-item" href="{{ route('promosi.index') }}">Promosi</a>
-                          <a class="dropdown-item" href="{{ route('karyawan.penonaktifan') }}">Penonaktifan</a>
+                          <a class="dropdown-item @active('mutasi.index')" href="{{ route('mutasi.index') }}">Mutasi</a>
+                          <a class="dropdown-item @active('demosi.index')" href="{{ route('demosi.index') }}">Demosi</a>
+                          <a class="dropdown-item @active('promosi.index')" href="{{ route('promosi.index') }}">Promosi</a>
+                          <a class="dropdown-item @active('karyawan.penonaktifan')" href="{{ route('karyawan.penonaktifan') }}">Penonaktifan</a>
                       </div>
                   </li>
                   <li style="margin-top: -15px">
@@ -142,15 +142,15 @@ Coded by www.creative-tim.com
                         <p></p>
                     </a>
                     <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                        <a class="dropdown-item" href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
+                        <a class="dropdown-item @active('surat-peringatan.index')" href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
                     </div>
                   </li>
                 </ul>
             </li>
             {{-- Menu Penghasilan  --}}
             <li>
-              <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2">
-                <i class="nc-icon nc-tag-content"></i>
+              <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2" style="font-weight: bolder">
+                <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
                 Penghasilan
               </a>
               <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu2" aria-expanded="false">
@@ -172,8 +172,8 @@ Coded by www.creative-tim.com
             </li>
             {{-- Menu Histori --}}
             <li>
-              <a class="nav-link" href="#submenu3" data-toggle="collapse" data-target="#submenu3">
-                <i class="nc-icon nc-compass-05"></i>
+              <a class="nav-link" href="#submenu3" data-toggle="collapse" data-target="#submenu3" style="font-weight: bolder">
+                <i class="nc-icon nc-compass-05" style="font-weight: bolder"></i>
                 Histori
               </a>
               <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu3" aria-expanded="false">
@@ -202,8 +202,8 @@ Coded by www.creative-tim.com
             </li>
             {{-- Menu Laporan --}}
             <li >
-              <a class="nav-link" href="#submenu4" data-toggle="collapse" data-target="#submenu4">
-                <i class="nc-icon nc-paper"></i>
+              <a class="nav-link" href="#submenu4" data-toggle="collapse" data-target="#submenu4" style="font-weight: bolder">
+                <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
                 Laporan
               </a>
               <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu4" aria-expanded="false">
@@ -237,8 +237,8 @@ Coded by www.creative-tim.com
             </li>
             {{-- Menu Log Aktivitas --}}
             <li >
-              <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5">
-                <i class="nc-icon nc-tap-01"></i>
+              <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5" style="font-weight: bolder">
+                <i class="nc-icon nc-tap-01" style="font-weight: bolder"></i>
                 Log
               </a>
               <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu5" aria-expanded="false">
@@ -253,8 +253,8 @@ Coded by www.creative-tim.com
             </li>
             {{-- Menu Setting --}}
             <li>
-              <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu6">
-                <i class="nc-icon nc-settings"></i>
+              <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu6" style="font-weight: bolder">
+                <i class="nc-icon nc-settings" style="font-weight: bolder"></i>
                 Setting
               </a>
               <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6" aria-expanded="false">
@@ -265,14 +265,14 @@ Coded by www.creative-tim.com
                         <p></p>
                     </a>
                     <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                        <a class="dropdown-item" href="{{ route('cabang.index') }}">Kantor Cabang</a>
-                        <a class="dropdown-item" href="{{ route('divisi.index') }}">Divisi</a>
-                        <a class="dropdown-item" href="{{ route('sub_divisi.index') }}">Sub Divisi</a>
-                        <a class="dropdown-item" href="{{ route('bagian.index') }}">Bagian</a>
-                        <a class="dropdown-item" href="{{ route('jabatan.index') }}">Jabatan</a>
-                        <a class="dropdown-item" href="{{ route('pangkat_golongan.index') }}">Pangkat & Golongan</a>
-                        <a class="dropdown-item" href="{{ route('tunjangan.index') }}">Tunjangan</a>
-                        <a class="dropdown-item" href="{{ route('umur.index') }}">Rentang Umur</a>
+                        <a class="dropdown-item @active('cabang.index')" href="{{ route('cabang.index') }}">Kantor Cabang</a>
+                        <a class="dropdown-item @active('divisi.index')" href="{{ route('divisi.index') }}">Divisi</a>
+                        <a class="dropdown-item @active('sub_divisi.index')" href="{{ route('sub_divisi.index') }}">Sub Divisi</a>
+                        <a class="dropdown-item @active('bagian.index')" href="{{ route('bagian.index') }}">Bagian</a>
+                        <a class="dropdown-item @active('jabatan.index')" href="{{ route('jabatan.index') }}">Jabatan</a>
+                        <a class="dropdown-item @active('pangkat_golongan.index')" href="{{ route('pangkat_golongan.index') }}">Pangkat & Golongan</a>
+                        <a class="dropdown-item @active('tunjangan.index')" href="{{ route('tunjangan.index') }}">Tunjangan</a>
+                        <a class="dropdown-item @active('umur.index')" href="{{ route('umur.index') }}">Rentang Umur</a>
                     </div>
                 </li>
                 <li style="margin-top: -15px">
@@ -391,13 +391,10 @@ Coded by www.creative-tim.com
   </div>
 
   <!--   Core JS Files   -->
-  <script src="resources/js/dselect.js"></script>
   <script src="{{ asset('style/assets/js/core/jquery.min.js') }}"></script>
   <script src="{{ asset('style/assets/js/core/popper.min.js') }}"></script>
   <script src="{{ asset('style/assets/js/core/bootstrap.min.js') }}"></script>
   <script src="{{ asset('style/assets/js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
-  <!--  Google Maps Plugin    -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
   <!-- Chart JS -->
   <script src="{{ asset('style/assets/js/plugins/chartjs.min.js') }}"></script>
   <!--  Notifications Plugin    -->
@@ -427,7 +424,7 @@ Coded by www.creative-tim.com
     // for treeview
     $('ul.sub-menu>li>a').filter(function() {
       return this.href == url;
-    }).parentsUntil(".nav > .sub-menu").addClass('active');
+    }).parentsUntil(".nav > .sub-menu").addClass('active show');
 
     $('ul.sub-menu>li.dropdown>div.dropdown-menu>a').filter(function() {
       return this.href == url;
