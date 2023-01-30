@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JabatanModel;
 use App\Models\KaryawanModel;
 use App\Models\PanggolModel;
+use App\Models\TunjanganModel;
 use App\Service\ClassificationService;
 use App\Service\EntityService;
 use Doctrine\DBAL\Query;
@@ -97,23 +98,7 @@ class KlasifikasiController extends Controller
         }
 
         if ($request->kategori == 6) {
-            // Get data karyawan dengan tunjangan
             $karyawan = KaryawanModel::with('tunjangan');
-            // Get data karyawan pertama
-            $karyawan = $karyawan->first();
-            $totalTunjangan = 0;
-
-            // Uncomment kode berikut untuk melihat struktur data
-            // dd($karyawan->toArray());
-
-            // Menjumlahkan seluruh nominal tunjangan pada karyawan
-            $karyawan->tunjangan->map(function ($tj) use (&$totalTunjangan) {
-                $totalTunjangan += $tj->pivot->nominal;
-            });
-
-            // Total gaji pokok ditambah dengan tunjangan
-            // dd($karyawan->gj_pokok + $totalTunjangan);
-
             $status = 6;
         }
 
@@ -136,7 +121,7 @@ class KlasifikasiController extends Controller
         }
 
         if ($karyawan instanceof Builder) {
-            $karyawan->leftJoin('is', 'is.id', 'mst_karyawan.id_is');
+            // $karyawan->leftJoin('is', 'is.id', 'mst_karyawan.id_is');
             $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
             $karyawan = $karyawan->get();
         }

@@ -138,7 +138,7 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
@@ -268,7 +268,7 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
@@ -398,7 +398,7 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
@@ -528,7 +528,7 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
@@ -658,7 +658,7 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
@@ -765,6 +765,23 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
+                                    @php
+                                    $tKeluarga = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Keluarga'))->first();
+
+                                    $tListrik = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Telpon, Air dan Listrik'))->first();
+
+                                    $tJabatan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Jabatan'))->first();
+
+                                    $tTeller = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Teller'))->first();
+
+                                    $tPerumahan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Perumahan'))->first();
+
+                                    $tKesejahteraan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kesejahteraan'))->first();
+
+                                    $tKemahalan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kemahalan'))->first();
+
+                                    $tPelaksana = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Pelaksana'))->first();
+                                    @endphp
                                     <tr>
                                         <td>{{ $item->nip }}</td>
                                         <td>{{ $item->nama_karyawan }}</td>
@@ -776,29 +793,28 @@
                                         @endphp
                                         <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
                                         @php
-                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
                                             $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($mulaKerja);
+                                            $hitung = $waktuSekarang->diff($item->tgl_mulai);
                                             $masaKerja = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                         <td>{{ $item->gj_pokok }}</td>
-                                        <td></td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
+                                        <td>{{ toRupiah($tKeluarga?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tListrik?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tJabatan?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tTeller?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tPerumahan?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tKesejahteraan?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tKemahalan?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tPelaksana?->pivot->nominal) }}</td>
                                         <td>{{ $item->gj_penyesuaian }}</td>
                                         <td>-</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>    
+                    </div>
                 @elseif ($status == 9)
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
@@ -847,7 +863,7 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
@@ -977,7 +993,7 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
@@ -1107,7 +1123,7 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
@@ -1188,7 +1204,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>    
+                    </div>
                 @endif
             @endif
         </div>
