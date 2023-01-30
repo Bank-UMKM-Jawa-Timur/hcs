@@ -28,4 +28,13 @@ class PejabatSementaraRepository
             'file_sk' => $skName,
         ]);
     }
+
+    public function deactivate(PjsModel $pjs, $endDate = null)
+    {
+        if (!$endDate) $endDate = now();
+
+        return $pjs->update([
+            'tanggal_berakhir' => $endDate,
+        ]);
+    }
 }

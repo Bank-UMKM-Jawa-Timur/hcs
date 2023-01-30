@@ -61,8 +61,12 @@ class PejabatSementaraController extends Controller
         //
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $pjs = PjsModel::findOrFail($id);
+        $this->repo->deactivate($pjs, $request->tanggal_berakhir);
+        Alert::success('Berhasil menonaktifkan PJS');
+
+        return redirect()->back();
     }
 }

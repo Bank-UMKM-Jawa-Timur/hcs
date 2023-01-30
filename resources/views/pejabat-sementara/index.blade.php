@@ -33,7 +33,8 @@
                     <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
                     <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
                     <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
-                    <td class="d-flex">
+                    <td class="d-flex justify-content-center">
+                        @if(!$data->tanggal_berakhir)
                         <form action="{{ route('pejabat-sementara.destroy', $data) }}" method="post">
                             @csrf
                             @method('DELETE')
@@ -41,6 +42,9 @@
                                 nonaktifkan
                             </button>
                         </form>
+                        @else
+                        -
+                        @endif
                     </td>
                 </tr>
             @endforeach
@@ -51,7 +55,22 @@
 @endsection
 
 @push('script')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $('#pjs-table').DataTable();
+
+    $('#pjs-table').on('click', '.btn-nonaktif', function(e) {
+        e.preventDefault();
+
+        Swal.fire({
+            icon: 'question',
+            title: 'Apakah anda yakin?',
+        })
+        .then((result) => {
+            if(result.isConfirmed) {
+                $(this).parent().submit();
+            }
+        });
+    });
 </script>
 @endpush
