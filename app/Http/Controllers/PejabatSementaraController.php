@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PejabatSementaraRequest;
 use App\Models\JabatanModel;
+use App\Models\KaryawanModel;
 use App\Models\PjsModel;
 use App\Repository\PejabatSementaraRepository;
 use App\Service\EntityService;
@@ -46,19 +47,27 @@ class PejabatSementaraController extends Controller
         return redirect()->route('pejabat-sementara.index');
     }
 
-    public function show($id)
+    public function history(Request $request)
     {
-        //
-    }
+        $pjs = $karyawan = null;
 
-    public function edit($id)
-    {
-        //
-    }
+        if ($request->kategori) {
+            $pjs = PjsModel::with('karyawan');
+            ($request->kategori == 'aktif') ?
+                $pjs->whereNull('tanggal_berakhir') :
+                $pjs->whereNotNull('tanggal_berakhir');
 
-    public function update(Request $request, $id)
-    {
-        //
+            $pjs = $pjs->get();
+        }
+
+        if ($request->nip) {
+            $karyawan = KaryawanModel::find($request->nip);
+            $pjs = PjsModel::with('karyawan')
+                ->where('nip', $request->nip)
+                ->get();
+        }
+
+        return view('pejabat-sementara.history', compact('pjs', 'karyawan'));
     }
 
     public function destroy(Request $request, $id)

@@ -140,6 +140,8 @@ Route::group(['middleware' => 'auth'], function () {
         ->except('destroy');
 
     // Pejabat Sementara
+    Route::match(['GET', 'POST'], 'pejabat-sementara/history', [PejabatSementaraController::class, 'history'])
+        ->name('pejabat-sementara.history');
     Route::resource('pejabat-sementara', PejabatSementaraController::class);
 
     Route::resource('/laporan_jamsostek', JaminanController::class);
