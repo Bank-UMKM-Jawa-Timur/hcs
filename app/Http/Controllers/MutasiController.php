@@ -12,7 +12,10 @@ class MutasiController extends Controller
 {
     public function getDataKaryawan(Request $request)
     {
-        $officer = DB::table('mst_karyawan')->where('nip', $request->nip)->first();
+        $officer = DB::table('mst_karyawan')
+            ->where('nip', $request->nip)
+            ->join('mst_pangkat_golongan', 'mst_pangkat_golongan.golongan', '=', 'mst_karyawan.kd_panggol')
+            ->first();
 
         if(!$officer) return response()->json([
             'success' => false,

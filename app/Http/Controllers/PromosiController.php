@@ -117,8 +117,10 @@ class PromosiController extends Controller
             ->get();
         $tj = DB::table('mst_tunjangan')
             ->get();
+        $panggol = DB::table('mst_pangkat_golongan')
+            ->get();
 
-        return view('promosi.add', ['data' => $data, 'jabatan' => $data_panggol, 'tunjangan' => $tj]);
+        return view('promosi.add', ['data' => $data, 'jabatan' => $data_panggol, 'tunjangan' => $tj, 'panggol' => $panggol]);
     }
 
     /**
@@ -214,6 +216,8 @@ class PromosiController extends Controller
                 'kd_jabatan_baru' => $request->id_jabatan_baru,
                 'kd_bagian' => $request->kd_bagian,
                 'kd_bagian_lama' => $request->bagian_lama,
+                'kd_panggol_lama' => $request->panggol_lama,
+                'kd_panggol_baru' => $request->panggol,
                 'created_at' => now(),
             ]);
 
@@ -230,6 +234,7 @@ class PromosiController extends Controller
                 'kd_entitas' => $entity,
                 'kd_bagian' => $request->kd_bagian,
                 'status_jabatan' => $request->status_jabatan,
+                'kd_panggol' => $request->panggol,
                 'updated_at' => now(),
             ]);
 

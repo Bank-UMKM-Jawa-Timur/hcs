@@ -19,10 +19,17 @@
                         <select name="nip" id="nip" class="form-control"></select>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-3">
                     <div class="form-group">
                         <label for="">Status Jabatan</label>
                         <input type="text" id="status_jabatan" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="">Pangkat dan Golongan Sekarang</label>
+                        <input type="text" id="panggol" class="form-control" disabled>
+                        <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-control">
                     </div>
                 </div>
             </div>
@@ -61,6 +68,19 @@
                         </select>
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">Pangkat dan Golongan</label>
+                        <select name="panggol" id="" class="@error('status_jabatan') is-invalid @enderror form-control">
+                            <option value="">--- Pilih ---</option>
+                            @foreach ($panggol as $item)
+                                <option value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-content-center">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="">Jabatan Baru</label>
@@ -349,6 +369,8 @@ $('#nip').select2({
                     $('#id_jabatan_lama').val(data.karyawan.jabatan.kd_jabatan);
                     $("#status_jabatan").val(data.karyawan.status_jabatan)
                     $("#bagian_lama").val(data.karyawan.kd_bagian)
+                    $("#panggol").val(data.karyawan.kd_panggol + " - " + data.karyawan.pangkat)
+                    $("#panggol_lama").val(data.karyawan.kd_panggol)
                 }
             });
 
