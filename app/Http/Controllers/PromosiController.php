@@ -213,6 +213,7 @@ class PromosiController extends Controller
                 'kd_jabatan_lama' => $request->id_jabatan_lama,
                 'kd_jabatan_baru' => $request->id_jabatan_baru,
                 'kd_bagian' => $request->kd_bagian,
+                'kd_bagian_lama' => $request->bagian_lama,
                 'created_at' => now(),
             ]);
 

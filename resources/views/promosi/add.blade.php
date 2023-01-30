@@ -27,6 +27,7 @@
                 </div>
             </div>
             <div class="row">
+                <input type="hidden" id="bagian_lama" name="bagian_lama">
                 <div class="" id="">
 
                 </div>
@@ -347,6 +348,7 @@ $('#nip').select2({
                     $('#kantor_lama').val(data.karyawan.kd_entitas);
                     $('#id_jabatan_lama').val(data.karyawan.jabatan.kd_jabatan);
                     $("#status_jabatan").val(data.karyawan.status_jabatan)
+                    $("#bagian_lama").val(data.karyawan.kd_bagian)
                 }
             });
 
@@ -360,6 +362,7 @@ $('#nip').select2({
                     $("#gj_penyesuaian").removeAttr("disabled")
                     $("#gj_pokok").val(formatRupiah(res.data_gj.gj_pokok.toString()))
                     $("#gj_penyesuaian").val(formatRupiah(res.data_gj.gj_penyesuaian.toString()))
+                    $("#tj").empty();
                     $.each(res.data_tj, function(i, item){
                         var idTj = item.id_tunjangan
                         $("#tj").append(`
