@@ -12,7 +12,7 @@
     </div>
 </div>
 <div class="card-body">
-    <form action="{{ route('pejabat-sementara.store') }}" method="post">
+    <form action="{{ route('pejabat-sementara.store') }}" method="post" enctype="multipart/form-data">
         @include('pejabat-sementara.form')
     </form>
 </div>

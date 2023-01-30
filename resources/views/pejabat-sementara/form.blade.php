@@ -17,16 +17,22 @@
 <div class="row" id="jabatan-wrapper">
     <div class="form-group col-md-4">
         <label for="tanggal-mulai">Tanggal Mulai PJS</label>
-        <input type="date" name="tangal_mulai" id="tanggal-mulai" class="form-control">
+        <input type="date" name="tanggal_mulai" id="tanggal-mulai" class="form-control @error('tanggal_mulai') is-invalid @enderror">
+        @error('tanggal_mulai')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
     <div class="form-group col-md-4">
         <label for="jabatan">Jabatan</label>
-        <select name="jabatan" id="jabatan" class="form-control">
+        <select name="kd_jabatan" id="jabatan" class="form-control @error('kd_jabatan') is-invalid @enderror">
             <option value="">-- Pilih Jabatan --</option>
             @foreach ($jabatan as $data)
                 <option value="{{ $data->kd_jabatan }}">{{ $data->nama_jabatan }}</option>
             @endforeach
         </select>
+        @error('kd_jabatan')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
 </div>
 
@@ -34,7 +40,6 @@
     <div class="col-md-4 form-group">
         <label for="no_sk">No SK</label>
         <input type="text" name="no_sk" id="no_sk" class="form-control @error('no_sk') is-invalid @enderror">
-
         @error('no_sk')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -51,6 +56,11 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-10 text-right">
+        <button type="submit" class="btn btn-primary">Simpan</button>
+    </div>
+</div>
 @push('script')
 <script>
     const nipSelect = $('#nip').select2({

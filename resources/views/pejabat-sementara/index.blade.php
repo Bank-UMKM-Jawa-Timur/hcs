@@ -37,7 +37,7 @@
                         <form action="{{ route('pejabat-sementara.destroy', $data) }}" method="post">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-outline-warning p-1 mr-1" style="min-width: 60px;">
+                            <button class="btn btn-outline-info p-1 mr-1" style="min-width: 60px;">
                                 nonaktifkan
                             </button>
                         </form>
