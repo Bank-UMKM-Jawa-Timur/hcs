@@ -104,7 +104,7 @@ class KlasifikasiController extends Controller
             $totalTunjangan = 0;
 
             // Uncomment kode berikut untuk melihat struktur data
-            dd($karyawan->toArray());
+            // dd($karyawan->toArray());
 
             // Menjumlahkan seluruh nominal tunjangan pada karyawan
             $karyawan->tunjangan->map(function ($tj) use (&$totalTunjangan) {
@@ -112,7 +112,9 @@ class KlasifikasiController extends Controller
             });
 
             // Total gaji pokok ditambah dengan tunjangan
-            dd($karyawan->gj_pokok + $totalTunjangan);
+            // dd($karyawan->gj_pokok + $totalTunjangan);
+
+            $status = 6;
         }
 
         if ($request->kategori == 9) {

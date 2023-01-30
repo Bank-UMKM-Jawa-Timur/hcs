@@ -104,7 +104,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -234,7 +234,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -364,7 +364,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -494,7 +494,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -624,7 +624,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -740,6 +740,65 @@
                             </tbody>
                         </table>
                     </div>
+                @elseif ($status == 6)
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all; table-layout: fixed;">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Gaji<br>Pokok</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Keluarga</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Listrik & Air</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Jabatan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Tlr</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Perumahan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Kesejahteraan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Kemahalan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Pelaksana</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Gaji<br>Penyesuaian</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Total<br>Gaji</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($karyawan as $item)
+                                    <tr>
+                                        <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nama_karyawan }}</td>
+                                        <td>{{ $item->nama_jabatan ?? '-' }}</td>
+                                        @php
+                                            $nama_cabang = DB::table('mst_cabang')
+                                                ->where('kd_cabang', $item->kd_entitas)
+                                                ->first();
+                                        @endphp
+                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                        @php
+                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                            $waktuSekarang = Carbon\Carbon::now();
+
+                                            $hitung = $waktuSekarang->diff($mulaKerja);
+                                            $masaKerja = $hitung->format('%y,%m');
+                                        @endphp
+                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                        <td>{{ $item->gj_pokok }}</td>
+                                        <td></td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>{{ $item->gj_penyesuaian }}</td>
+                                        <td>-</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>    
                 @elseif ($status == 9)
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
@@ -754,7 +813,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -884,7 +943,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -1014,7 +1073,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
