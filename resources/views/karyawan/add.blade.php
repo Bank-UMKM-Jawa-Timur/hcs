@@ -349,7 +349,7 @@
         $('#kantor').attr("disabled", "disabled");
         var x =1;
 
-        $("#is_jml_anak").change(function(){
+        $("#is_jml_anak").keyup(function(){
             $("#row_anak").empty();
             var angka = $(this).val()
             if(angka > 2) angka = 2;

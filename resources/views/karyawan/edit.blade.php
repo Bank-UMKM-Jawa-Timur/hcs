@@ -407,7 +407,7 @@
         $("#gj_penyesuaian").val(formatRupiah($("#gj_penyesuaian").val()));
         $("#nominal").val(formatRupiah($("#nominal").val()));
         
-        $("#is_jml_anak").change(function(){
+        $("#is_jml_anak").keyup(function(){
             $("#row_anak").empty();
             var angka = $(this).val()
             if(angka > 2) angka = 2;

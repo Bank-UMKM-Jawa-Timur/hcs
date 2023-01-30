@@ -268,7 +268,7 @@
                 @endif
             <br>
 
-            @if ($karyawan->status == 'Kawin')
+            @if ($karyawan->status == 'Kawin' && $suis != null)
                 <hr>
                 <div class="row m-0 ">
                     <div class="col-lg-12">
