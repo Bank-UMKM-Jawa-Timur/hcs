@@ -256,8 +256,6 @@ class KaryawanController extends Controller
      */
     public function create()
     {
-        $data_is = DB::table('is')
-            ->get();
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
         $data_jabatan = DB::table('mst_jabatan')
@@ -271,7 +269,6 @@ class KaryawanController extends Controller
 
         return view('karyawan.add', [
             'panggol' => $data_panggol,
-            'is' => $data_is,
             'jabatan' => $data_jabatan,
             'agama' => $data_agama,
             'tunjangan' => $data_tunjangan,
@@ -309,18 +306,6 @@ class KaryawanController extends Controller
         ]);
 
         try {
-            if ($request->get('status_pernikahan') == 'Kawin') {
-                DB::table('is')
-                    ->insert([
-                        'enum' => $request->get('is'),
-                        'is_nama' => $request->get('is_nama'),
-                        'is_tgl_lahir' => $request->get('is_tgl_lahir'),
-                        'is_alamat' => $request->get('is_alamat'),
-                        'is_pekerjaan' => $request->get('is_pekerjaan'),
-                        'is_jml_anak' => $request->get('is_jml_anak'),
-                        'created_at' => now()
-                    ]);
-            }
             $entitas = null;
             if ($request->get('subdiv') != null) {
                 $entitas = $request->get('subdiv');
@@ -360,16 +345,31 @@ class KaryawanController extends Controller
                 ]);
 
             if ($request->get('status_pernikahan') == 'Kawin') {
-                $id_is = DB::table('is')
-                    ->select('id')
-                    ->orderBy('id', 'DESC')
-                    ->first();
-
-                DB::table('mst_karyawan')
-                    ->where('nip', $request->get('nip'))
-                    ->update([
-                        'id_is' => $id_is->id
+                DB::table('keluarga')
+                    ->insert([
+                        'enum' => $request->get('is'),
+                        'nama' => $request->get('is_nama'),
+                        'tgl_lahir' => $request->get('is_tgl_lahir'),
+                        'alamat' => $request->get('is_alamat'),
+                        'pekerjaan' => $request->get('is_pekerjaan'),
+                        'jml_anak' => $request->get('is_jml_anak'),
+                        'nip' => $request->get('nip'),
+                        'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                        'created_at' => now()
                     ]);
+
+                if($request->get('nama_anak')[0] != null){
+                    foreach($request->get('nama_anak') as $key => $item){
+                        DB::table('keluarga')
+                            ->insert([
+                                'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+                                'nama' => $item,
+                                'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
+                                'nip' => $request->get('nip'),
+                                'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key]
+                            ]);
+                    }
+                }
             }
 
             for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
@@ -405,13 +405,14 @@ class KaryawanController extends Controller
     {
         $data_suis = null;
         $karyawan = KaryawanModel::findOrFail($id);
-
-        if ($karyawan?->id_is) {
-            $data_suis = DB::table('is')
-                ->where('id', $karyawan->id_is)
-                ->first();
-        }
-
+        $data_suis = DB::table('keluarga')
+            ->where('nip', $karyawan->nip)
+            ->whereIn('enum', ['Suami', 'Istri'])
+            ->first();
+        $data_anak = DB::table('keluarga')
+            ->where('nip', $karyawan->nip)
+            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->get();
         $karyawan->tunjangan = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
             ->select('tunjangan_karyawan.*')
@@ -427,6 +428,7 @@ class KaryawanController extends Controller
             'karyawan' => $karyawan,
             'suis' => $data_suis,
             'tunjangan' => $data_tunjangan,
+            'data_anak' => $data_anak
         ]);
     }
 
@@ -450,7 +452,13 @@ class KaryawanController extends Controller
         $data->count_tj = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
             ->count('*');
-        $data_is = DB::table('is')
+        $data_is = DB::table('keluarga')
+            ->where('nip', $id)
+            ->whereIn('enum', ['Suami', 'Istri'])
+            ->first();
+        $data_anak = DB::table('keluarga')
+            ->where('nip', $id)
+            ->whereIn('enum', ['ANAK1', 'ANAK2'])
             ->get();
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
@@ -467,7 +475,8 @@ class KaryawanController extends Controller
             'is' => $data_is,
             'jabatan' => $data_jabatan,
             'agama' => $data_agama,
-            'tunjangan' => $data_tunjangan
+            'tunjangan' => $data_tunjangan,
+            'data_anak' => $data_anak
         ]);
     }
 
@@ -480,6 +489,7 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request);
         $request->validate([
             'nip' => 'required',
             'nik' => 'required',
@@ -502,53 +512,36 @@ class KaryawanController extends Controller
         ]);
 
         try {
-            $id_is = $request->get('id_is');
-            if ($request->get('status_pernikahan') == 'Kawin' && $request->get('pasangan') != null) {
-                $id_is = $request->get('id_is');
-                if ($request->get('id_is') == null) {
-                    DB::table('is')
+            $id_is = $request->get('id_pasangan');
+            if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
+                if($request->get('id_pasangan') == null){
+                    DB::table('keluarga')
                         ->insert([
                             'enum' => $request->get('is'),
-                            'is_nama' => $request->get('is_nama'),
-                            'is_tgl_lahir' => $request->get('is_tgl_lahir'),
-                            'is_alamat' => $request->get('is_alamat'),
-                            'is_pekerjaan' => $request->get('is_pekerjaan'),
-                            'is_jml_anak' => $request->get('is_jml_anak'),
+                            'nama' => $request->get('is_nama'),
+                            'tgl_lahir' => $request->get('is_tgl_lahir'),
+                            'alamat' => $request->get('is_alamat'),
+                            'pekerjaan' => $request->get('is_pekerjaan'),
+                            'jml_anak' => $request->get('is_jml_anak'),
+                            'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                            'nip' => $request->get('nip'),
                             'created_at' => now()
                         ]);
-
-                    $idis = DB::table('is')
-                        ->select('id')
-                        ->orderBy('id', 'desc')
-                        ->first();
-
-                    DB::table('mst_karyawan')
-                        ->where('nip', $request->get('nip'))
-                        ->update([
-                            'id_is' => $idis->id
-                        ]);
-                } else {
-                    DB::table('is')
+                } else{
+                    DB::table('keluarga')
                         ->where('id', $id_is)
                         ->update([
                             'enum' => $request->get('is'),
-                            'is_nama' => $request->get('is_nama'),
-                            'is_tgl_lahir' => $request->get('is_tgl_lahir'),
-                            'is_alamat' => $request->get('is_alamat'),
-                            'is_pekerjaan' => $request->get('is_pekerjaan'),
-                            'is_jml_anak' => $request->get('is_jml_anak'),
+                            'nama' => $request->get('is_nama'),
+                            'tgl_lahir' => $request->get('is_tgl_lahir'),
+                            'alamat' => $request->get('is_alamat'),
+                            'pekerjaan' => $request->get('is_pekerjaan'),
+                            'jml_anak' => $request->get('is_jml_anak'),
+                            'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                            'nip' => $request->get('nip'),
                             'updated_at' => now()
                         ]);
                 }
-            } else {
-                DB::table('mst_karyawan')
-                    ->where('nip', $request->get('nip'))
-                    ->update([
-                        'id_is' => null
-                    ]);
-                DB::table('is')
-                    ->where('id', $request->get('id_is'))
-                    ->delete();
             }
             $entitas = null;
             if ($request->get('subdiv') != null) {
@@ -562,56 +555,6 @@ class KaryawanController extends Controller
             $karyawan = DB::table('mst_karyawan')
                 ->where('nip', $id)
                 ->first();
-            $tj_karyawan = DB::table('tunjangan_karyawan')
-                ->select('tunjangan_karyawan.id', 'tunjangan_karyawan.nominal', 'mst_tunjangan.nama_tunjangan')
-                ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-                ->where('nip', $karyawan->nip)
-                ->get();
-            if ($request->get('gj_pokok') != $karyawan->gj_pokok) {
-                DB::table('history_penyesuaian_gaji')
-                    ->insert([
-                        'nip' => $request->get('nip'),
-                        'keterangan' => 'Penyesuaian Gaji Pokok',
-                        'nominal_baru' => str_replace('.', '', $request->get('gj_pokok')),
-                        'nominal_lama' => $karyawan->gj_pokok,
-                        'created_at' => now()
-                    ]);
-            }
-            if ($request->get('gj_penyesuaian') != $karyawan->gj_penyesuaian && $request->get('gj_penyesuaian' != 0)) {
-                DB::table('history_penyesuaian_gaji')
-                    ->insert([
-                        'nip' => $request->get('nip'),
-                        'keterangan' => 'Penyesuaian Gaji penyesuaian',
-                        'nominal_baru' => str_replace('.', '', $request->get('gj_penyesuaian')),
-                        'nominal_lama' => $karyawan->gj_penyesuaian,
-                        'created_at' => now(),
-                        'id_tunjangan' => null
-                    ]);
-            }
-            for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
-                if ($request->get('nominal_tunjangan')[$i] != $tj_karyawan[$i]->nominal) {
-                    if ($request->get('id_tk')[$i] != null) {
-                        DB::table('history_penyesuaian_gaji')
-                            ->insert([
-                                'nip' => $request->get('nip'),
-                                'keterangan' => 'Penyesuaian Tunjangan ' . $tj_karyawan[$i]->nama_tunjangan,
-                                'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
-                                'nominal_baru' => $request->get('nominal_tunjangan')[$i],
-                                'nominal_lama' => $tj_karyawan[$i]->nominal,
-                                'created_at' => now()
-                            ]);
-                    } else {
-                        DB::table('history_penyesuaian_gaji')
-                            ->insert([
-                                'nip' => $request->get('nip'),
-                                'keterangan' => 'Penambahan Tunjangan Baru',
-                                'nominal_baru' => str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                'nominal_lama' => 0,
-                                'created_at' => now()
-                            ]);
-                    }
-                }
-            }
 
             DB::table('mst_karyawan')
                 ->where('nip', $id)
@@ -643,6 +586,32 @@ class KaryawanController extends Controller
                     'no_rekening' => $request->get('no_rek'),
                     'created_at' => now(),
                 ]);
+            
+            if($request->get('nama_anak')[0] != null){
+                foreach($request->get('nama_anak') as $key => $item){
+                    if($request->get('id_anak')[$key] != null){
+                        DB::table('keluarga')
+                            ->where('id', $request->get('id_anak')[$key])
+                            ->update([
+                                'nama' => $item,
+                                'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
+                                'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
+                                'nip' => $request->get('nip'),
+                                'updated_at' => now()
+                            ]);
+                    } else {
+                        DB::table('keluarga')
+                            ->insert([
+                                'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+                                'nama' => $item,
+                                'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
+                                'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
+                                'nip' => $request->get('nip'),
+                                'created_at' => now()
+                            ]);
+                    }
+                }
+            }
 
             for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
                 if ($request->get('id_tk')[$i] == null) {

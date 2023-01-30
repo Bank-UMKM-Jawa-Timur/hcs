@@ -240,7 +240,7 @@
                 <div class="card p-2 ml-3 mr-3 shadow" id="data_is">
                     <div class="card-header" id="headingThree">
                         <h6 class="ml-3" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Data Suami / Istri</a>
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Data Keluarga</a>
                         </h6>
                     </div>
 
@@ -264,11 +264,17 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <label for="sk_tunjangan">SK Tunjangan</label>
+                                    <input type="text" class="form-control" name="sk_tunjangan_is">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="is_tgl_lahir">Tanggal Lahir</label>
                                     <input type="date" name="is_tgl_lahir" class="form-control" value="{{ old('is_tgl_lahir') }}">
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label for="is_alamat">Alamat</label>
                                 <textarea name="is_alamat" class="form-control">{{ old('is_alamat') }}</textarea>
                             </div>
@@ -278,7 +284,11 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="is_jumlah_anak">Jumlah Anak</label>
-                                <input type="number" class="form-control" name="is_jml_anak" value="{{ old('is_jumlah_anak') }}">
+                                <input type="number" class="form-control" id="is_jml_anak" name="is_jml_anak" value="{{ old('is_jumlah_anak') }}">
+                            </div>
+                            <hr>
+                            <div class="col-md-12 mt-3" id="row_anak">
+                                
                             </div>
                         </div>
                     </div>
@@ -338,6 +348,33 @@
         let status = $('#status');
         $('#kantor').attr("disabled", "disabled");
         var x =1;
+
+        $("#is_jml_anak").change(function(){
+            $("#row_anak").empty();
+            var angka = $(this).val()
+            if(angka > 2) angka = 2;
+
+            for(var i = 0; i < angka; i++){
+                var ket = (i == 0) ? 'Pertama' : 'Kedua';
+                $("#row_anak").append(`
+                <h6 class="">Data Anak `+ ket +`</h6>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label for="nama_anak">Nama Anak</label>
+                        <input type="text" class="form-control" name="nama_anak[]">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                        <input type="date" class="form-control" name="tgl_lahir_anak[]">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                        <input type="text" class="form-control" name="sk_tunjangan_anak[]">
+                    </div>
+                </div>
+            `);
+            }
+        })
 
         $('#gj_pokok').keyup(function(){
             var angka = $(this).val();
@@ -571,6 +608,18 @@
             var angka = $(this).val();
 
             $("#nominal").val(formatRupiah(angka));
+        })
+
+        $("#row_anak").on("click", "#btn_plus-anak", function(){
+            
+            y++;
+        });
+
+        $("#row_anak").on("click", "#btn_minus-anak", function(){
+            if(y > 1){
+                $(this).closest('.card').remove()
+                y--;
+            }
         })
     </script>
 @endsection

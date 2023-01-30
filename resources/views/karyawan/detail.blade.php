@@ -268,11 +268,11 @@
                 @endif
             <br>
 
-            @if (isset($suis))
+            @if ($karyawan->status == 'Kawin')
                 <hr>
                 <div class="row m-0 ">
                     <div class="col-lg-12">
-                        <h6>Data Pasangan</h6>
+                        <h6>Data Keluarga</h6>
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -289,17 +289,23 @@
                     <label class="col-sm-2 mt-0">Nama</label>
                     <div class="col-sm-10">
                         @if (isset($suis) != null)
-                            <input type="text" disabled class="form-control" value="{{ $suis->is_nama }}">
+                            <input type="text" disabled class="form-control" value="{{ $suis->nama }}">
                         @else
                             <input type="text" disabled class="form-control" value="-">
                         @endif
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
+                    <label class="col-sm-2 mt-0">SK Tunjangan</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" disabled value="{{ $suis->sk_tunjangan }}">
+                    </div>
+                </div>
+                <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-0">Tanggal Lahir</label>
                     <div class="col-sm-10">
                         @if (isset($suis) != null)
-                            <input type="text" disabled class="form-control" value="{{ $suis->is_tgl_lahir }}">
+                            <input type="text" disabled class="form-control" value="{{ $suis->tgl_lahir }}">
                         @else
                             <input type="text" disabled class="form-control" value="-">
                         @endif
@@ -309,7 +315,7 @@
                     <label class="col-sm-2 mt-0">Alamat</label>
                     <div class="col-sm-10">
                         @if (isset($suis) != null)
-                            <input type="text" disabled class="form-control" value="{{ $suis->is_alamat }}">
+                            <input type="text" disabled class="form-control" value="{{ $suis->alamat }}">
                         @else
                             <input type="text" disabled class="form-control" value="-">
                         @endif
@@ -319,7 +325,7 @@
                     <label class="col-sm-2 mt-0">Pekerjaan</label>
                     <div class="col-sm-10">
                         @if (isset($suis) != null)
-                            <input type="text" disabled class="form-control" value="{{ $suis->is_pekerjaan }}">
+                            <input type="text" disabled class="form-control" value="{{ $suis->pekerjaan }}">
                         @else
                             <input type="text" disabled class="form-control" value="-">
                         @endif
@@ -329,12 +335,39 @@
                     <label class="col-sm-2 mt-0">Jumlah Anak</label>
                     <div class="col-sm-10">
                         @if (isset($suis) != null)
-                            <input type="text" disabled class="form-control" value="{{ $suis->is_jml_anak }}">
+                            <input type="text" disabled class="form-control" value="{{ $suis->jml_anak }}">
                         @else
                             <input type="text" disabled class="form-control" value="-">
                         @endif
                     </div>
                 </div>
+
+                @if (count($data_anak) > 0)
+                    <br>
+                    @foreach ($data_anak as $key => $item)
+                        @php
+                            $index = ($key == 0) ? 'Pertama' : 'Kedua';
+                        @endphp
+                        <div class="row m-0 mt-2">
+                            <label class="col-sm-2 mt-0">Nama Anak {{ $index }}</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" disabled value="{{ $item->nama }}">
+                            </div>
+                        </div>
+                        <div class="row m-0 mt-2">
+                            <label class="col-sm-2 mt-0">Tanggal Lahir Anak {{ $index }}</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" disabled value="{{ $item->tgl_lahir }}">
+                            </div>
+                        </div>
+                        <div class="row m-0 mt-2">
+                            <label class="col-sm-2 mt-0">SK Tunjangan Anak {{ $index }}</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" disabled value="{{ $item->sk_tunjangan }}">
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
             @endif
 
             <div class="row m-3">

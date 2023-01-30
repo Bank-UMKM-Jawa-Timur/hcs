@@ -85,7 +85,7 @@
                                         <option value="Tidak Diketahui" @selected($data->status == 'Tidak Diketahui')>Tidak Diketahui</option>
                                     </select>
                                 </div>
-                                <input type="hidden" name="id_is" value="{{ $data->id_is }}">
+                                <input type="hidden" name="id_pasangan" value="{{ $is?->id }}">
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -238,7 +238,7 @@
                 <div class="card p-2 ml-3 mr-3 shadow" id="data_is">
                     <div class="card-header" id="headingThree">
                         <h6 class="ml-3" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Data Suami / Istri</a>
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Data Keluarga</a>
                         </h6>
                     </div>
 
@@ -249,34 +249,62 @@
                                     <label for="is">Pasangan</label>
                                     <select name="is" id="is" class="form-control">
                                         <option value="">--- Pilih ---</option>
-                                        <option value="Suami">Suami</option>
-                                        <option value="Istri">Istri</option>
+                                        <option {{ ($is?->enum == 'Suami') ? 'selected' : '' }} value="Suami">Suami</option>
+                                        <option {{ ($is?->enum == 'Istri') ? 'selected' : '' }} value="Istri">Istri</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="is_nama">Nama</label>
-                                    <input type="text" name="is_nama" id="is_nama" class="form-control">
+                                    <input type="text" name="is_nama" id="is_nama" value="{{ $is?->nama }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="is_tgl_lahir">Tanggal Lahir</label>
-                                    <input type="date" name="is_tgl_lahir" class="form-control" id="is_tgl_lahir">
+                                    <label for="sk_tunjangan_is">SK Tunjangan</label>
+                                    <input type="text" name="sk_tunjangan_is" id="sk_tunjangan_is" value="{{ $is?->sk_tunjangan }}" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="is_tgl_lahir">Tanggal Lahir</label>
+                                    <input type="date" name="is_tgl_lahir" class="form-control" value="{{ $is?->tgl_lahir }}" id="is_tgl_lahir">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <label for="is_alamat">Alamat</label>
-                                <textarea name="is_alamat" class="form-control" id="is_alamat"></textarea>
+                                <textarea name="is_alamat" class="form-control" id="is_alamat">{{ $is?->alamat }}</textarea>
                             </div>
                             <div class="col-md-6">
                                 <label for="is_pekerjaan">Pekerjaan</label>
-                                <input type="text" class="form-control" name="is_pekerjaan" id="is_pekerjaan">
+                                <input type="text" class="form-control" name="is_pekerjaan" id="is_pekerjaan" value="{{ $is?->pekerjaan }}">
                             </div>
                             <div class="col-md-6">
                                 <label for="is_jumlah_anak">Jumlah Anak</label>
-                                <input type="number" class="form-control" name="is_jml_anak" id="is_jml_anak">
+                                <input type="number" class="form-control" name="is_jml_anak" id="is_jml_anak" value="{{ $is?->jml_anak }}">
+                            </div>
+                            <div class="col-md-12 mt-3" id="row_anak">
+                                @if (count($data_anak) > 0)
+                                    @foreach ($data_anak as $key => $item)
+                                    <h6 class="">Data Anak {{ ($key == 0) ? 'Pertama' : 'Kedua' }}</h6>
+                                    <div class="row">
+                                        <input type="hidden" name="id_anak[]" value="{{ $item->id }}">
+                                        <div class="col-md-6 form-group">
+                                            <label for="nama_anak">Nama Anak</label>
+                                            <input type="text" class="form-control" value="{{ $item->nama }}" name="nama_anak[]">
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                            <input type="date" class="form-control" name="tgl_lahir_anak[]" value="{{ $item->tgl_lahir }}">
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                            <input type="text" class="form-control" name="sk_tunjangan_anak[]" value="{{ $item->sk_tunjangan }}">
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -378,6 +406,35 @@
         $("#gj_pokok").val(formatRupiah($("#gj_pokok").val()));
         $("#gj_penyesuaian").val(formatRupiah($("#gj_penyesuaian").val()));
         $("#nominal").val(formatRupiah($("#nominal").val()));
+        
+        $("#is_jml_anak").change(function(){
+            $("#row_anak").empty();
+            var angka = $(this).val()
+            if(angka > 2) angka = 2;
+
+            for(var i = 0; i < angka; i++){
+                var ket = (i == 0) ? 'Pertama' : 'Kedua';
+                $("#row_anak").append(`
+                <h6 class="">Data Anak `+ ket +`</h6>
+                <div class="row">
+                    <input type="hidden" name="id_anak[]" value="">
+                    <div class="col-md-6 form-group">
+                        <label for="nama_anak">Nama Anak</label>
+                        <input type="text" class="form-control" name="nama_anak[]">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                        <input type="date" class="form-control" name="tgl_lahir_anak[]">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                        <input type="text" class="form-control" name="sk_tunjangan_anak[]">
+                    </div>
+                </div>
+            `);
+            }
+        })
+
 
         $('#gj_pokok').keyup(function(){
             var angka = $(this).val();
