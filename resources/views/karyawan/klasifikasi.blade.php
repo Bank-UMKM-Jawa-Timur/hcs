@@ -16,6 +16,9 @@
         div.dataTables_wrapper div.dataTables_filter input {
             width: 90%;
         }
+        table.dataTable td {
+            font-size: 10px;
+        }
     </style>
 
     <div class="card-header">
@@ -76,19 +79,19 @@
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
                             <thead>
                                 <tr>
-                                    <th style="background-color: #CCD6A6; text-align: center;">NIP</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Nama</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Jabatan</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Kantor</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Gol</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Lahir</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Umur</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">JK</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">SK Angkat</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Angkat</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Masa Kerja</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">Gol</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Lahir</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -113,7 +116,15 @@
                                             $umurSkrg = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ $umurSkrg }}</td>
-                                        <td>{{ $item->jk }}</td>
+                                        @php
+                                            if ($item->jk == 'Laki-laki') {
+                                                $jk = 'L';
+                                            } else {
+                                                $jk = 'P';
+                                            }
+                                            
+                                        @endphp
+                                        <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
                                                 if ($item->is_jml_anak != null) {
@@ -171,6 +182,9 @@
                                                     $status = 'DA';
                                                     $anak = 0;
                                                 }
+                                            } else {
+                                                $status = '-';
+                                                $anak = '-';
                                             }
                                         @endphp
                                         <td>{{ $status }}/{{ $anak }}</td>
@@ -195,19 +209,19 @@
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
                             <thead>
                                 <tr>
-                                    <th style="background-color: #CCD6A6; text-align: center;">NIP</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Nama</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Jabatan</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Kantor</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Gol</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Lahir</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Umur</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">JK</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">SK Angkat</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Angkat</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Masa Kerja</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">Gol</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Lahir</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -232,7 +246,15 @@
                                             $umurSkrg = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ $umurSkrg }}</td>
-                                        <td>{{ $item->jk }}</td>
+                                        @php
+                                            if ($item->jk == 'Laki-laki') {
+                                                $jk = 'L';
+                                            } else {
+                                                $jk = 'P';
+                                            }
+                                            
+                                        @endphp
+                                        <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
                                                 if ($item->is_jml_anak != null) {
@@ -290,6 +312,9 @@
                                                     $status = 'DA';
                                                     $anak = 0;
                                                 }
+                                            } else {
+                                                $status = '-';
+                                                $anak = '-';
                                             }
                                         @endphp
                                         <td>{{ $status }}/{{ $anak }}</td>
@@ -314,19 +339,19 @@
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
                             <thead>
                                 <tr>
-                                    <th style="background-color: #CCD6A6; text-align: center;">NIP</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Nama</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Jabatan</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Kantor</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Gol</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Lahir</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Umur</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">JK</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">SK Angkat</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Angkat</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Masa Kerja</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">Gol</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Lahir</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -351,7 +376,15 @@
                                             $umurSkrg = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ $umurSkrg }}</td>
-                                        <td>{{ $item->jk }}</td>
+                                        @php
+                                            if ($item->jk == 'Laki-laki') {
+                                                $jk = 'L';
+                                            } else {
+                                                $jk = 'P';
+                                            }
+                                            
+                                        @endphp
+                                        <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
                                                 if ($item->is_jml_anak != null) {
@@ -409,6 +442,9 @@
                                                     $status = 'DA';
                                                     $anak = 0;
                                                 }
+                                            } else {
+                                                $status = '-';
+                                                $anak = '-';
                                             }
                                         @endphp
                                         <td>{{ $status }}/{{ $anak }}</td>
@@ -433,19 +469,19 @@
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
                             <thead>
                                 <tr>
-                                    <th style="background-color: #CCD6A6; text-align: center;">NIP</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Nama</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Jabatan</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Kantor</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Gol</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Lahir</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Umur</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">JK</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">SK Angkat</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal Angkat</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Masa Kerja</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">Gol</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Lahir</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -470,7 +506,15 @@
                                             $umurSkrg = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ $umurSkrg }}</td>
-                                        <td>{{ $item->jk }}</td>
+                                        @php
+                                            if ($item->jk == 'Laki-laki') {
+                                                $jk = 'L';
+                                            } else {
+                                                $jk = 'P';
+                                            }
+                                            
+                                        @endphp
+                                        <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
                                                 if ($item->is_jml_anak != null) {
@@ -569,6 +613,7 @@
         $("#table_export").DataTable({
             dom : "Bfrtip",
             pageLength: 25,
+            ordering: false,
             buttons: [
                 {
                     extend: 'excelHtml5',
