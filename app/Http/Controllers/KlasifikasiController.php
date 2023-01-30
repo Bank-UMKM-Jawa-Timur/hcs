@@ -46,23 +46,6 @@ class KlasifikasiController extends Controller
         $jabatan = JabatanModel::all();
         $panggol = PanggolModel::all();
 
-        // Get data karyawan dengan tunjangan
-        $karyawan = KaryawanModel::with('tunjangan');
-        // Get data karyawan pertama
-        $karyawan = $karyawan->first();
-        $totalTunjangan = 0;
-
-        // Uncomment kode berikut untuk melihat struktur data
-        dd($karyawan->toArray());
-
-        // Menjumlahkan seluruh nominal tunjangan pada karyawan
-        $karyawan->tunjangan->map(function ($tj) use (&$totalTunjangan) {
-            $totalTunjangan += $tj->pivot->nominal;
-        });
-
-        // Total gaji pokok ditambah dengan tunjangan
-        dd($karyawan->gj_pokok + $totalTunjangan);
-
         if ($request->kategori == 1) {
             $karyawan = KaryawanModel::query();
 
@@ -111,6 +94,25 @@ class KlasifikasiController extends Controller
             }
 
             $status = 5;
+        }
+
+        if ($request->kategori == 6) {
+            // Get data karyawan dengan tunjangan
+            $karyawan = KaryawanModel::with('tunjangan');
+            // Get data karyawan pertama
+            $karyawan = $karyawan->first();
+            $totalTunjangan = 0;
+
+            // Uncomment kode berikut untuk melihat struktur data
+            dd($karyawan->toArray());
+
+            // Menjumlahkan seluruh nominal tunjangan pada karyawan
+            $karyawan->tunjangan->map(function ($tj) use (&$totalTunjangan) {
+                $totalTunjangan += $tj->pivot->nominal;
+            });
+
+            // Total gaji pokok ditambah dengan tunjangan
+            dd($karyawan->gj_pokok + $totalTunjangan);
         }
 
         if ($request->kategori == 9) {
