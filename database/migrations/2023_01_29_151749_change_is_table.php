@@ -14,9 +14,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('is', function (Blueprint $table) {
-            DB::statement("ALTER TABLE `is` RENAME TO `keluarga`");
-        });
+        // Schema::create('is', function (Blueprint $table) {
+        //     DB::statement("ALTER TABLE `is` RENAME TO `keluarga`");
+        // });
     }
 
     /**
