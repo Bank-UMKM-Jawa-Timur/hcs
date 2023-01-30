@@ -63,7 +63,6 @@
                         <select name="status_jabatan" id="" class="@error('status_jabatan') is-invalid @enderror form-control">
                             <option value="">--- Pilih ---</option>
                             <option value="Definitif">Definitif</option>
-                            <option value="Penjabat Sementara">Penjabat Sementara</option>
                             <option value="Penjabat">Penjabat</option>
                         </select>
                     </div>
