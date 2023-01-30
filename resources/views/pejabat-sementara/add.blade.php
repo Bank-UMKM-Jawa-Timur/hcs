@@ -3,10 +3,10 @@
 @section('content')
 <div class="card-header">
     <div class="card-title">
-        <h5 class="card-title">Tambah Pejabat Sementara (PJS)</h5>
+        <h5 class="card-title">Tambah Penjabat Sementara (PJS)</h5>
         <p class="card-title">
             <a href="/">Dashboard </a> >
-            <a href="{{ route('pejabat-sementara.index') }}">Pejabat Sementara</a> >
+            <a href="{{ route('pejabat-sementara.index') }}">Penjabat Sementara</a> >
             Tambah
         </p>
     </div>
