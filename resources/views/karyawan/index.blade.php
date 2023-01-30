@@ -17,7 +17,7 @@
                       <button class="btn btn-primary">import karyawan</button>
                     </a>
                     <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
-                      <button class="btn btn-primary">Klasifikasi Data</button>
+                      <button class="btn btn-primary">Export Karyawan</button>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
