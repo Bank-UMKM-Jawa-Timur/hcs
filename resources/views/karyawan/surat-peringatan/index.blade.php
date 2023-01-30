@@ -8,7 +8,7 @@
                 <p class="card-title"><a href="/">Dashboard </a> > <a href="">Surat Peringatan</a></p>
             </div>
         </div>
-        
+
         <div class="card-body">
             <div class="col">
                 <div class="row">

@@ -36,6 +36,11 @@ class PjsModel extends Model
         );
     }
 
+    public function karyawan()
+    {
+        return $this->belongsTo(KaryawanModel::class, 'nip');
+    }
+
     public function jabatan()
     {
         return $this->belongsTo(JabatanModel::class, 'kd_jabatan');
