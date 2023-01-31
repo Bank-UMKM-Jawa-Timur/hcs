@@ -60,10 +60,10 @@ class SuratPeringatanController extends Controller
         return redirect()->route('surat-peringatan.index');
     }
 
-    public function report(Request $request)
+    public function history(Request $request)
     {
-        return view('karyawan.surat-peringatan.report', [
-            'report' => $this->repo->report($request->only(['tahun', 'nip'])),
+        return view('karyawan.surat-peringatan.history', [
+            'history' => $this->repo->report($request->only(['tahun', 'nip'])),
             'firstData' => SpModel::oldest('tanggal_sp')->first(),
             'karyawan' => KaryawanModel::find($request->nip),
             'request' => $request,

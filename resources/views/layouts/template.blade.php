@@ -192,7 +192,7 @@ Coded by www.creative-tim.com
                   </a>
                 </li>
                 <li style="margin-top: -15px">
-                  <a href="#">
+                  <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}">
                     <i class="nc-icon nc-email-85"></i>
                     <p>Surat Peringatan</p>
                     <p></p>

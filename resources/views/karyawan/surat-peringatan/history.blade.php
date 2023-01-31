@@ -21,16 +21,16 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Laporan Surat Peringatan</h5>
-                <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a> > Laporan </p>
+                <h5 class="card-title">History Surat Peringatan (SP)</h5>
+                <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a> > History </p>
             </div>
         </div>
     </div>
 
     <div class="card-body ml-3 mr-3">
-        <form action="{{ route('surat-peringatan.report') }}" method="get">
+        <form action="{{ route('surat-peringatan.history') }}" method="get">
             <div class="row">
-                <div class="col-md-4">       
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="year">Tahun</label>
                         <select name="tahun" id="year" class="form-control">
@@ -60,7 +60,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($report as $sp)
+                    @foreach ($history as $sp)
                         <tr>
                             <td>{{ $sp->no_sp }}</td>
                             <td>{{ $sp->tanggal_sp->format('d/m/Y') }}</td>

@@ -134,8 +134,8 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     // Surat Peringatan
-    Route::get('surat-peringatan/laporan', [SuratPeringatanController::class, 'report'])
-        ->name('surat-peringatan.report');
+    Route::get('surat-peringatan/history', [SuratPeringatanController::class, 'history'])
+        ->name('surat-peringatan.history');
     Route::resource('surat-peringatan', SuratPeringatanController::class)
         ->except('destroy');
 

@@ -13,7 +13,6 @@
             <div class="col">
                 <div class="row">
                     <a href="{{ route('surat-peringatan.create') }}" class="btn btn-primary mr-3">Tambah Surat Peringatan</a>
-                    <a href="{{ route('surat-peringatan.report') }}?tahun={{ date('Y') }}" class="btn btn-primary">Laporan</a>
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="sp-table">
                             <thead class="text-primary">
@@ -28,7 +27,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($sps as $sp)
+                                @foreach ($sps as $sp)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $sp->no_sp }}</td>
@@ -41,11 +40,7 @@
                                         <a href="{{ route('surat-peringatan.show', $sp) }}" class="btn btn-outline-info p-1" style="min-width: 60px;">Detail</a>
                                     </td>
                                 </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="7">Data masih kosong</td>
-                                </tr>
-                                @endforelse
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
