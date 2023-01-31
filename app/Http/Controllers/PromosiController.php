@@ -218,6 +218,8 @@ class PromosiController extends Controller
                 'kd_bagian_lama' => $request->bagian_lama,
                 'kd_panggol_lama' => $request->panggol_lama,
                 'kd_panggol_baru' => $request->panggol,
+                'status_jabatan_lama' => $request->status_jabatan_lama,
+                'status_jabatan_baru' => $request->status_jabatan,
                 'created_at' => now(),
             ]);
 

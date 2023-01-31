@@ -35,6 +35,7 @@
             </div>
             <div class="row">
                 <input type="hidden" id="bagian_lama" name="bagian_lama">
+                <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
                 <div class="" id="">
 
                 </div>
@@ -370,6 +371,7 @@ $('#nip').select2({
                     $("#bagian_lama").val(data.karyawan.kd_bagian)
                     $("#panggol").val(data.karyawan.kd_panggol + " - " + data.karyawan.pangkat)
                     $("#panggol_lama").val(data.karyawan.kd_panggol)
+                    $("#status_jabatan_lama").val(data.karyawan.status_jabatan)
                 }
             });
 

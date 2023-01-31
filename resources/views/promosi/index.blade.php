@@ -62,10 +62,10 @@
                                             {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
                                         </td>
                                         <td>
-                                            {{ $item->jabatan_lama }}
+                                            {{ $item?->status_jabatan_lama }} - {{ $item->jabatan_lama }}
                                         </td>
                                         <td>
-                                            {{ $item->jabatan_baru }}
+                                            {{ $item?->status_jabatan_baru }} - {{ $item->jabatan_baru }}
                                         </td>
                                         <td>
                                             {{ $item->kantor_lama ?? '-' }}
