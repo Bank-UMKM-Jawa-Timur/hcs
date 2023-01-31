@@ -5,7 +5,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Data Mutasi</h5>
-            <p class="card-title"><a href="/">Dashboard</a> > <a href="/mutasi">Mutasi</a></p>
+            <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="/mutasi">Mutasi</a></p>
         </div>
 
         <div class="card-body">

@@ -3,7 +3,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Edit Kantor Cabang</h5>
-            <p class="card-title"><a href="/">Dashboard </a> > <a href="/cabang">Kantor Cabang </a> > Edit</p>
+            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="/cabang">Kantor Cabang</a> > <a>Edit</a></p>
         </div>
     </div>
     <div class="card-body ml-3 mr-3">

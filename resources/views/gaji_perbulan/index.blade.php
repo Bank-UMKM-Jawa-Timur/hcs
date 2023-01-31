@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Proses Gaji Bulanan</h5>
-            <p class="card-title"><a href="/">Dashboard </a> > Proses Gaji Bulanan</p>
+            <p class="card-title"><a href="">Penghasilan </a> > <a href="/gaji_perbulan">Proses Gaji Bulanan</a></p>
         </div>
     </div>
     @php

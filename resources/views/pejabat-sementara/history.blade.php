@@ -3,37 +3,41 @@
 
 @section('content')
 <div class="card-header">
-    <div class="card-title">
-        <h5 class="card-title">History PJS</h5>
-        <p class="card-title"><a href="/">Dashboard </a> > <a href="">History PJS</a></p>
+    <div class="card-header">
+        <div class="card-title">
+            <h5 class="card-title">History PJS</h5>
+            <p class="card-title"><a href="/">Histori </a> > <a href="/pejabat-sementara/history">History PJS</a></p>
+        </div>
     </div>
 </div>
 
-<div class="card-body p-4">
-    <div class="row justify-content-between">
-        <div class="col-md-5">
-            <form action="{{ route('pejabat-sementara.history') }}" method="post">
-                @csrf
-                <div class="form-group">
-                    <label for="kategori">Kategori</label>
-                    <select name="kategori" id="kategori" class="form-control">
-                        <option value="">-- Pilih --</option>
-                        <option value="aktif" @selected(request()?->kategori == 'aktif')>Aktif</option>
-                        <option value="nonaktif" @selected(request()?->kategori == 'nonaktif')>Nonaktif</option>
-                    </select>
-                    <button class="btn btn-primary float-right" type="submit">Tampilkan</button>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-5">
-            <form action="{{ route('pejabat-sementara.history') }}" method="post">
-                @csrf
-                <div class="form-group">
-                    <label for="nip">Karyawan</label>
-                    <select name="nip" id="nip" class="form-control"></select>
-                    <button class="btn btn-primary float-right" type="submit">Tampilkan</button>
-                </div>
-            </form>
+<div class="card-body">
+    <div class="col">
+        <div class="row justify-content-between">
+            <div class="col-md-5">
+                <form action="{{ route('pejabat-sementara.history') }}" method="post">
+                    @csrf
+                    <div class="form-group">
+                        <label for="kategori">Kategori</label>
+                        <select name="kategori" id="kategori" class="form-control">
+                            <option value="">-- Pilih --</option>
+                            <option value="aktif" @selected(request()?->kategori == 'aktif')>Aktif</option>
+                            <option value="nonaktif" @selected(request()?->kategori == 'nonaktif')>Nonaktif</option>
+                        </select>
+                        <button class="btn btn-primary float-right" type="submit">Tampilkan</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-5">
+                <form action="{{ route('pejabat-sementara.history') }}" method="post">
+                    @csrf
+                    <div class="form-group">
+                        <label for="nip">Karyawan</label>
+                        <select name="nip" id="nip" class="form-control"></select>
+                        <button class="btn btn-primary float-right" type="submit">Tampilkan</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

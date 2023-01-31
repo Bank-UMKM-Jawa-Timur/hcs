@@ -5,7 +5,7 @@
         <div class="card-header">
             <div class="card-title">
                 <h5 class="card-title">Surat Peringatan</h5>
-                <p class="card-title"><a href="/">Dashboard </a> > <a href="">Surat Peringatan</a></p>
+                <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="">Reward & Punishment</a> > <a href="/surat-peringatan">Surat Peringatan</a></p>
             </div>
         </div>
 
@@ -28,6 +28,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($sps as $sp)
+<<<<<<< Updated upstream
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $sp->no_sp }}</td>
@@ -40,6 +41,20 @@
                                         <a href="{{ route('surat-peringatan.show', $sp) }}" class="btn btn-outline-info p-1" style="min-width: 60px;">Detail</a>
                                     </td>
                                 </tr>
+=======
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $sp->no_sp }}</td>
+                                        <td>{{ $sp->nip }}</td>
+                                        <td>{{ $sp->karyawan->nama_karyawan }}</td>
+                                        <td>{{ $sp->tanggal_sp->format('d M Y') }}</td>
+                                        <td>{{ $sp->pelanggaran }}</td>
+                                        <td class="d-flex">
+                                            <a href="{{ route('surat-peringatan.edit', $sp) }}" class="btn btn-outline-warning p-1 mr-1" style="min-width: 60px;">Edit</a>
+                                            <a href="{{ route('surat-peringatan.show', $sp) }}" class="btn btn-outline-info p-1" style="min-width: 60px;">Detail</a>
+                                        </td>
+                                    </tr>
+>>>>>>> Stashed changes
                                 @endforeach
                             </tbody>
                         </table>
@@ -53,9 +68,9 @@
 @push('script')
 <script>
     $('#sp-table').DataTable({
-        'autoWidth': false,
-        'dom': 'Rlfrtip',
-        'colReorder': {
+        autoWidth: false,
+        dom: 'Rlfrtip',
+        colReorder: {
             'allowReorder': false
         }
     });

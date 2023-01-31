@@ -3,7 +3,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Edit Demosi</h5>
-            <p class="card-title"><a href="/">Dashboard</a> > <a href="/demosi">Demosi</a> > Edit</p>
+            <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="/demosi">Demosi</a> > Edit</p>
         </div>
     </div>
 

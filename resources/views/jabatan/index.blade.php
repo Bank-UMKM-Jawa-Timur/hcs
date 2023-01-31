@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Data Jabatan</h5>
-            <p class="card-title"><a href="/">Dashboard </a> > <a href="/jabatan">Jabatan </a></p>
+            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="/jabatan">Jabatan</a></p>
         </div>
 
         <div class="card-body">

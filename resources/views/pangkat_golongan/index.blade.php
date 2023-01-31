@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
           <h5 class="card-title">Data Pangkat Dan Golongan</h5>
-          <p class="card-title"><a href="/">Dashboard </a> > <a href="/pangkat_golongan">Pangkat Dan Golongan </a> 
+          <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="/pangkat_golongan">Pangkat Dan Golongan</a></p>
         </div>
     
         <div class="card-body">

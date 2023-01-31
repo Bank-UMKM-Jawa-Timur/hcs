@@ -25,7 +25,7 @@
         <div class="card-header">
             <div class="card-title">
                 <h5 class="card-title">Export Karyawan</h5>
-                <p class="card-title"><a href="/">Dashboard</a> > <a href="/karyawan">Karyawan</a> > Export Karyawan</p>
+                <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="/karyawan">Karyawan</a> > Eksport Karyawan</p>
             </div>
         </div>
     </div>

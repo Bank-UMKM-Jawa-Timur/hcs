@@ -6,7 +6,7 @@
     <div class="card-header">
         <div class="card-title">
             <h5 class="card-title">Pajak Penghasilan</h5>
-            <p class="card-title"><a href="/">Dashboard </a> > <a href="">Pajak Penghasilan </a></p>
+            <p class="card-title"><a href="">Penghasilan </a> > <a href="/pajak_penghasilan">Pajak Penghasilan</a></p>
         </div>
     </div>
 </div>

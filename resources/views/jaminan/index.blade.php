@@ -20,7 +20,7 @@ $request = isset($request) ? $request : null;
         <div class="card-header">
             <div class="card-title">
                 <h5 class="card-title">Laporan JAMSOSTEK</h5>
-                <p class="card-title"><a href="/">Dashboard </a> > <a href="">Laporan JAMSOSTEK </a></p>
+                <p class="card-title"><a href="">Laporan </a> > <a href="/laporan_jamsostek">Laporan JAMSOSTEK</a></p>
             </div>
         </div>
     </div>
