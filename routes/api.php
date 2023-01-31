@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\KaryawanController as ApiKaryawanController;
 use App\Http\Controllers\Api\Select2\KaryawanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth')->prefix('select2')->name('api.select2.')->group(function() {
+Route::middleware('auth')->prefix('select2')->name('api.select2.')->group(function () {
     Route::get('employees', KaryawanController::class)->name('karyawan');
+});
+
+Route::middleware('auth')->name('api.')->group(function () {
+    Route::get('karyawan', ApiKaryawanController::class)->name('karyawan');
 });

@@ -82,6 +82,35 @@
         }
     });
 
+    $('#nip').on('select2:select', function() {
+        const nip = $(this).val();
+        let jabatan = '';
+
+        $.ajax({
+            url: `{{ route('api.karyawan') }}?nip=${nip}`,
+            dataType: 'JSON',
+            success(res) {
+                const entitas = res.data.entitas;
+                jabatan = res.data.jabatan.nama_jabatan;
+
+                if(Object.hasOwn(entitas, 'subDiv')) {
+                    $('#jb-entity').val(`${jabatan} ${entitas.subDiv.nama_subdivisi}`);
+                    return;
+                }
+
+                if(Object.hasOwn(entitas, 'div')) {
+                    $('#jb-entity').val(`${jabatan} ${entitas.div.nama_divisi}`);
+                    return;
+                }
+
+                if(Object.hasOwn(entitas, 'cab')) {
+                    $('#jb-entity').val(`${jabatan} Cab. ${entitas.cab.nama_cabang}`);
+                    return;
+                }
+            }
+        });
+    });
+
     $('#jabatan').change(function() {
         const value = $(this).val();
         generateKantor();
