@@ -5,8 +5,8 @@
 <div class="card-header">
     <div class="card-header">
         <div class="card-title">
-            <h5 class="card-title">History PJS</h5>
-            <p class="card-title"><a href="/">Histori </a> > <a href="/pejabat-sementara/history">History PJS</a></p>
+            <h5 class="card-title">History Penjabat Sementara (PJS)</h5>
+            <p class="card-title"><a href="/">Histori </a> > <a href="/pejabat-sementara/history">History Penjabat Sementara</a></p>
         </div>
     </div>
 </div>

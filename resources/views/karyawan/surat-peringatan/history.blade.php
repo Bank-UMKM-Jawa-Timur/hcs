@@ -21,13 +21,8 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-<<<<<<< Updated upstream:resources/views/karyawan/surat-peringatan/history.blade.php
-                <h5 class="card-title">History Surat Peringatan (SP)</h5>
-                <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a> > History </p>
-=======
-                <h5 class="card-title">Laporan Surat Peringatan</h5>
-                <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="">Reward & Punishment</a> > <a href="/surat-peringatan">Surat Peringatan</a> > Laporan</p>
->>>>>>> Stashed changes:resources/views/karyawan/surat-peringatan/report.blade.php
+                <h5 class="card-title">Histori Surat Peringatan</h5>
+                <p class="card-title"><a href="">Histori</a> > <a href="/surat-peringatan">Surat Peringatan</a></p>
             </div>
         </div>
     </div>
