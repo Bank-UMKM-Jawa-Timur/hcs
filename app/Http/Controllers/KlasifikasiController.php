@@ -115,11 +115,18 @@ class KlasifikasiController extends Controller
             $status = 6;
         }
 
+        if ($request->kategori == 7) {
+            $karyawan = KaryawanModel::where('mst_karyawan.pendidikan', $request->pendidikan);
+
+            $status = 7;
+        }
+
         if ($request->kategori == 9) {
             $karyawan = KaryawanModel::where('mst_karyawan.kd_jabatan', $request->jabatan);
 
             $status = 9;
         }
+        
 
         if ($request->kategori == 10) {
             $karyawan = KaryawanModel::where('mst_karyawan.kd_panggol', $request->panggol);

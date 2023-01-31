@@ -80,6 +80,9 @@
                 <div id="status_col" class="col-md-4">
                 </div>
 
+                <div id="pendidikan_col" class="col-md-4">
+                </div>
+
                 <div class="col-md-12">
                     <button class="btn btn-info" type="submit">Tampilkan</button>
                 </div>
@@ -214,7 +217,7 @@
                                             $masaKerja = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->pendidikan ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -344,7 +347,7 @@
                                             $masaKerja = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->pendidikan ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -474,7 +477,7 @@
                                             $masaKerja = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->pendidikan ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -604,7 +607,7 @@
                                             $masaKerja = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->pendidikan ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -734,12 +737,13 @@
                                             $masaKerja = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->pendidikan ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
+                
                 @elseif ($status == 6)
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all; table-layout: fixed;">
@@ -815,6 +819,136 @@
                                                           ($tKesejahteraan?->pivot->nominal) + ($tKemahalan?->pivot->nominal) + ($tPelaksana?->pivot->nominal) + ($item->gj_penyesuaian));
                                         @endphp
                                         <td>{{ toRupiah($totalGaji) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @elseif ($status == 7)
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">Gol</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Lahir</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($karyawan as $item)
+                                    <tr>
+                                        <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nama_karyawan  }}</td>
+                                        <td>{{ $item->nama_jabatan ?? '-' }}</td>
+                                        @php
+                                            $nama_cabang = DB::table('mst_cabang')
+                                                ->where('kd_cabang', $item->kd_entitas)
+                                                ->first();
+                                        @endphp
+                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                        <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
+                                        <td>{{ date('d M Y', strtotime($item->tgl_lahir )) }}</td>
+                                        @php
+                                            $umur = Carbon\Carbon::create($item->tgl_lahir);
+                                            $waktuSekarang = Carbon\Carbon::now();
+
+                                            $hitung = $waktuSekarang->diff($umur);
+                                            $umurSkrg = $hitung->format('%y,%m');
+                                        @endphp
+                                        <td>{{ $umurSkrg }}</td>
+                                        @php
+                                            if ($item->jk == 'Laki-laki') {
+                                                $jk = 'L';
+                                            } else {
+                                                $jk = 'P';
+                                            }
+
+                                        @endphp
+                                        <td>{{ $jk }}</td>
+                                        @php
+                                            if ($item->status == 'Kawin' || $item->status == 'K') {
+                                                if ($item->jml_anak != null) {
+                                                    $status = 'K';
+                                                    $anak = $item->jml_anak;
+                                                } else {
+                                                    $status = 'K';
+                                                    $anak = 0;
+                                                }
+                                            } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
+                                                if ($item->jml_anak != null) {
+                                                    $status = 'TK';
+                                                    $anak = $item->jml_anak;
+                                                } else {
+                                                    $status = 'TK';
+                                                    $anak = 0;
+                                                }
+                                            } elseif ($item->status == 'Tidak Diketahui') {
+                                                if ($item->jml_anak != null) {
+                                                    $status = 'TD';
+                                                    $anak = $item->jml_anak;
+                                                } else {
+                                                    $status = 'TD';
+                                                    $anak = 0;
+                                                }
+                                            } elseif ($item->status == 'Cerai Mati') {
+                                                if ($item->jml_anak != null) {
+                                                    $status = 'CM';
+                                                    $anak = $item->jml_anak;
+                                                } else {
+                                                    $status = 'CM';
+                                                    $anak = 0;
+                                                }
+                                            } elseif ($item->status == 'Cerai') {
+                                                if ($item->jml_anak != null) {
+                                                    $status = 'CR';
+                                                    $anak = $item->jml_anak;
+                                                } else {
+                                                    $status = 'CR';
+                                                    $anak = 0;
+                                                }
+                                            } elseif ($item->status == 'Janda') {
+                                                if ($item->jml_anak != null) {
+                                                    $status = 'JD';
+                                                    $anak = $item->jml_anak;
+                                                } else {
+                                                    $status = 'JD';
+                                                    $anak = 0;
+                                                }
+                                            } elseif ($item->status == 'Duda') {
+                                                if ($item->jml_anak != null) {
+                                                    $status = 'DA';
+                                                    $anak = $item->jml_anak;
+                                                } else {
+                                                    $status = 'DA';
+                                                    $anak = 0;
+                                                }
+                                            } else {
+                                                $status = '-';
+                                                $anak = '-';
+                                            }
+                                        @endphp
+                                        <td>{{ $status }}/{{ $anak }}</td>
+                                        <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
+                                        <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
+                                        @php
+                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                            $waktuSekarang = Carbon\Carbon::now();
+
+                                            $hitung = $waktuSekarang->diff($mulaKerja);
+                                            $masaKerja = $hitung->format('%y,%m');
+                                        @endphp
+                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                        <td>{{ $item->pendidikan ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -944,7 +1078,7 @@
                                             $masaKerja = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->pendidikan ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -1074,7 +1208,7 @@
                                             $masaKerja = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->pendidikan ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -1204,7 +1338,7 @@
                                             $masaKerja = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>-</td>
+                                        <td>{{ $item->pendidikan ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -1338,6 +1472,7 @@
             $('#jabatan_col').empty();
             $('#panggol_col').empty();
             $('#status_col').empty();
+            $('#pendidikan_col').empty();
 
             if (value == 2) {
                 generateDivision();
@@ -1365,6 +1500,9 @@
 
                 $('#status').attr("disabled", "disabled");
                 $("#status_col").hide();
+
+                $('#pendidikan').attr("disabled", "disabled");
+                $("#pendidikan_col").hide();
             } else if (value == 3) {
                 generateDivision();
 
@@ -1391,6 +1529,9 @@
 
                 $('#status').attr("disabled", "disabled");
                 $("#status_col").hide();
+
+                $('#pendidikan').attr("disabled", "disabled");
+                $("#pendidikan_col").hide();
             } else if (value == 4) {
                 generateDivision();
 
@@ -1417,6 +1558,9 @@
 
                 $('#status').attr("disabled", "disabled");
                 $("#status_col").hide();
+
+                $('#pendidikan').attr("disabled", "disabled");
+                $("#pendidikan_col").hide();
             } else if (value == 5) {
                 generateOffice();
 
@@ -1443,6 +1587,9 @@
 
                 $('#status').attr("disabled", "disabled");
                 $("#status_col").hide();
+
+                $('#pendidikan').attr("disabled", "disabled");
+                $("#pendidikan_col").hide();
             } else if (value == 6) {
                 generateOfficeGaji();
 
@@ -1451,6 +1598,38 @@
 
                 $('#cabang').removeAttr("disabled", "disabled");
                 $("#cabang_col").show();
+
+                $('#divisi').attr("disabled", "disabled");
+                $("#divisi_col").hide();
+
+                $('#subDivisi').attr("disabled", "disabled");
+                $("#subDivisi_col").hide();
+
+                $('#bagian').attr("disabled", "disabled");
+                $("#bagian_col").hide();
+
+                $('#jabatan').attr("disabled", "disabled");
+                $("#jabatan_col").hide();
+
+                $('#panggol').attr("disabled", "disabled");
+                $("#panggol_col").hide();
+
+                $('#status').attr("disabled", "disabled");
+                $("#status_col").hide();
+
+                $('#pendidikan').attr("disabled", "disabled");
+                $("#pendidikan_col").hide();
+            } else if (value == 7) {
+                generatePendidikan();
+
+                $('#pendidikan').removeAttr("disabled", "disabled");
+                $("#pendidikan_col").show();
+
+                $('#kantor').attr("disabled", "disabled");
+                $("#kantor_col").hide();
+
+                $('#cabang').attr("disabled", "disabled");
+                $("#cabang_col").hide();
 
                 $('#divisi').attr("disabled", "disabled");
                 $("#divisi_col").hide();
@@ -1495,6 +1674,9 @@
 
                 $('#status').attr("disabled", "disabled");
                 $("#status_col").hide();
+
+                $('#pendidikan').attr("disabled", "disabled");
+                $("#pendidikan_col").hide();
             } else if (value == 10) {
                 generatePanggol();
 
@@ -1521,6 +1703,9 @@
 
                 $('#status').attr("disabled", "disabled");
                 $("#status_col").hide();
+
+                $('#pendidikan').attr("disabled", "disabled");
+                $("#pendidikan_col").hide();
             } else if (value == 11) {
                 generateStatus();
 
@@ -1547,6 +1732,9 @@
 
                 $('#cabang').attr("disabled", "disabled");
                 $("#cabang_col").hide();
+
+                $('#pendidikan').attr("disabled", "disabled");
+                $("#pendidikan_col").hide();
             } else {
                 $('#divisi').attr("disabled", "disabled");
                 $("#divisi_col").hide();
@@ -1571,6 +1759,9 @@
 
                 $('#status').attr("disabled", "disabled");
                 $("#status_col").hide();
+
+                $('#pendidikan').attr("disabled", "disabled");
+                $("#pendidikan_col").hide();
             }
         });
 
@@ -1796,6 +1987,21 @@
                         <option value="-">--- Pilih Status ---</option>
                         @foreach (\App\Enum\StatusKaryawan::cases() as $item)
                             <option ${ status == "{{ $item }}" ? 'selected' : '' } value="{{ $item }}">{{ $item }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            `);
+        }
+
+        function generatePendidikan() {
+            const pendidikan= '{{ $request?->pendidikan }}';
+            $('#pendidikan_col').append(`
+                <div class="form-group">
+                    <label for="pendidikan">Pendidikan</label>
+                    <select name="pendidikan" id="pendidikan" class="form-control">
+                        <option value="-">--- Pilih Pendidikan ---</option>
+                        @foreach (\App\Enum\PendidikanKaryawan::cases() as $item)
+                            <option ${ pendidikan == "{{ $item }}" ? 'selected' : '' } value="{{ $item }}">{{ $item }}</option>
                         @endforeach
                     </select>
                 </div>
