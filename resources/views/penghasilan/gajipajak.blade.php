@@ -106,13 +106,14 @@
                 $status = 'TK';
                 if ($karyawan->status == 'K') {
                     $anak = DB::table('mst_karyawan')
-                        ->where('nip', $karyawan->nip)
-                        ->join('is', 'is.id', 'mst_karyawan.id_is')
-                        ->first('is_jml_anak');
-                    if ($anak != null && $anak->is_jml_anak > 3) {
+                        ->where('keluarga.nip', $karyawan->nip)
+                        ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
+                        ->whereIn('enum', ['Suami', 'Istri'])
+                        ->first('jml_anak');
+                    if ($anak != null && $anak->jml_anak > 3) {
                         $status = 'K/3';
                     } else if ($anak != null) {
-                        $status = 'K/'.$anak->is_jml_anak;
+                        $status = 'K/'.$anak->jml_anak;
                     } else {
                         $status = 'K/0';
                     }
@@ -316,18 +317,18 @@
 
                     $no_16 = 0;
                     if ($status == 'Mutasi Keluar') {
-                        $no_16 = floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000;
+                        $no_16 = floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000;
                     } else {
-                        if (($no_14 - $ptkp->ptkp_tahun) <= 0) {
+                        if (($no_14 - $ptkp?->ptkp_tahun) <= 0) {
                             $no_16 = 0;
                         } else {
-                            $no_16 = $no_14 - $ptkp->ptkp_tahun;
+                            $no_16 = $no_14 - $ptkp?->ptkp_tahun;
                         }
                     }
                     $persen5 = 0;
-                    if (($no_14 - $ptkp->ptkp_tahun) > 0) {
-                        if (($no_14 - $ptkp->ptkp_tahun) <= 60000000) {
-                            $persen5 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000) * 0.05 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000) * 0.06;
+                    if (($no_14 - $ptkp?->ptkp_tahun) > 0) {
+                        if (($no_14 - $ptkp?->ptkp_tahun) <= 60000000) {
+                            $persen5 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000) * 0.05 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000) * 0.06;
                         } else {
                             $persen5 = ($karyawan->npwp != null) ? 60000000 * 0.05 : 60000000 * 0.06;
                         }
@@ -335,9 +336,9 @@
                         $persen5 = 0;
                     }
                     $persen15 = 0;
-                    if (($no_14 - $ptkp->ptkp_tahun) > 60000000) {
-                        if (($no_14 - $ptkp->ptkp_tahun) <= 250000000) {
-                            $persen15 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 60000000) * 0.15 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000- 60000000) * 0.18;
+                    if (($no_14 - $ptkp?->ptkp_tahun) > 60000000) {
+                        if (($no_14 - $ptkp?->ptkp_tahun) <= 250000000) {
+                            $persen15 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 60000000) * 0.15 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000- 60000000) * 0.18;
                         } else {
                             $persen15 = 190000000;
                         }
@@ -345,9 +346,9 @@
                         $persen20 = 0;
                     }
                     $persen25 = 0;
-                    if (($no_14 - $ptkp->ptkp_tahun) > 250000000) {
-                        if (($no_14 - $ptkp->ptkp_tahun) <= 500000000) {
-                            $persen25 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.25 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.3;
+                    if (($no_14 - $ptkp?->ptkp_tahun) > 250000000) {
+                        if (($no_14 - $ptkp?->ptkp_tahun) <= 500000000) {
+                            $persen25 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.25 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.3;
                         } else {
                             $persen25 = 250000000;
                         }
@@ -355,9 +356,9 @@
                         $persen25 = 0;
                     }
                     $persen30 = 0;
-                    if (($no_14 - $ptkp->ptkp_tahun) > 250000000) {
-                        if (($no_14 - $ptkp->ptkp_tahun) <= 500000000) {
-                            $persen30 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.3 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.36;
+                    if (($no_14 - $ptkp?->ptkp_tahun) > 250000000) {
+                        if (($no_14 - $ptkp?->ptkp_tahun) <= 500000000) {
+                            $persen30 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.3 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.36;
                         } else {
                             $persen30 = 4500000000;
                         }
@@ -365,8 +366,8 @@
                         $persen30 = 0;
                     }
                     $persen35 = 0;
-                    if (($no_14 - $ptkp->ptkp_tahun) > 500000000) {
-                            $persen35 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.35 :  (floor(($no_14 - $ptkp->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.42;
+                    if (($no_14 - $ptkp?->ptkp_tahun) > 500000000) {
+                            $persen35 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.35 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.42;
                     } else {
                         $persen35 = 0;
                     }
@@ -508,7 +509,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">15. Penghasilan Tidak Kena Pajak (PTKP)</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="{{ rupiah($ptkp->ptkp_tahun) }}">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($ptkp?->ptkp_tahun) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
