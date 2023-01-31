@@ -1443,6 +1443,32 @@
 
                 $('#status').attr("disabled", "disabled");
                 $("#status_col").hide();
+            } else if (value == 6) {
+                generateOfficeGaji();
+
+                $('#kantor').removeAttr("disabled", "disabled");
+                $("#kantor_col").show();
+
+                $('#cabang').removeAttr("disabled", "disabled");
+                $("#cabang_col").show();
+
+                $('#divisi').attr("disabled", "disabled");
+                $("#divisi_col").hide();
+
+                $('#subDivisi').attr("disabled", "disabled");
+                $("#subDivisi_col").hide();
+
+                $('#bagian').attr("disabled", "disabled");
+                $("#bagian_col").hide();
+
+                $('#jabatan').attr("disabled", "disabled");
+                $("#jabatan_col").hide();
+
+                $('#panggol').attr("disabled", "disabled");
+                $("#panggol_col").hide();
+
+                $('#status').attr("disabled", "disabled");
+                $("#status_col").hide();
             } else if (value == 9) {
                 generateJabatan();
 
@@ -1645,6 +1671,53 @@
                     <label for="kantor">Kantor</label>
                     <select name="kantor" class="form-control" id="kantor">
                         <option value="-">--- Pilih Kantor ---</option>
+                        <option ${ office == "Pusat" ? 'selected' : '' } value="Pusat">Pusat</option>
+                        <option ${ office == "Cabang" ? 'selected' : '' } value="Cabang">Cabang</option>
+                    </select>
+                </div>
+            `);
+
+            $('#kantor').change(function(e) {
+                $('#cabang_col').empty();
+                if($(this).val() != "Cabang") return;
+                generateSubOffice();
+            });
+
+            function generateSubOffice() {
+                $('#cabang_col').empty();
+                const subOffice = '{{ $request?->cabang }}';
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/getcabang',
+                    dataType: 'JSON',
+                    success: (res) => {
+                        $('#cabang_col').append(`
+                            <div class="form-group">
+                                <label for="cabang">Cabang</label>
+                                <select name="cabang" id="cabang" class="form-control">
+                                    <option value="">--- Pilih Cabang ---</option>
+                                </select>
+                            </div>
+                        `);
+
+                        $.each(res[0], (i, item) => {
+                            const kd_cabang = item.kd_cabang;
+                            $('#cabang').append(`<option ${subOffice == kd_cabang ? 'selected' : ''} value="${kd_cabang}">${item.kd_cabang} - ${item.nama_cabang}</option>`);
+                        });
+                    }
+                });
+            }
+        }
+
+        function generateOfficeGaji() {
+            const office = '{{ $request?->kantor }}';
+            $('#kantor_col').append(`
+                <div class="form-group">
+                    <label for="kantor">Kantor</label>
+                    <select name="kantor" class="form-control" id="kantor">
+                        <option value="-">--- Pilih Kantor ---</option>
+                        <option ${ office == "Keseluruhan" ? 'selected' : '' } value="Keseluruhan">Keseluruhan</option>
                         <option ${ office == "Pusat" ? 'selected' : '' } value="Pusat">Pusat</option>
                         <option ${ office == "Cabang" ? 'selected' : '' } value="Cabang">Cabang</option>
                     </select>

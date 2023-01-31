@@ -99,6 +99,19 @@ class KlasifikasiController extends Controller
 
         if ($request->kategori == 6) {
             $karyawan = KaryawanModel::with('tunjangan');
+
+            if ($kantor == 'Cabang') {
+                $karyawan = KaryawanModel::with('tunjangan')
+                    ->where('kd_entitas', $request->cabang);
+            } 
+
+            if ($kantor == 'Pusat') {
+                $cbgs = DB::table('mst_cabang')->pluck('kd_cabang');
+                $karyawan = KaryawanModel::with('tunjangan')
+                    ->whereNotIn('kd_entitas', $cbgs)
+                    ->orWhere('kd_entitas', null);
+            }
+            
             $status = 6;
         }
 
