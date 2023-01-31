@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\KaryawanModel;
+use App\Models\PjsModel;
+use App\Service\EntityService;
+
 if (!function_exists('getMonth()')) {
     function getMonth(int $index, bool $indexed = false)
     {
@@ -27,5 +31,12 @@ if (!function_exists('toRupiah')) {
     {
         if (is_null($value)) return '-';
         return number_format($value, 0, ".", ".");
+    }
+}
+
+if (!function_exists('jabatanLengkap')) {
+    function jabatanLengkap(KaryawanModel|PjsModel $model)
+    {
+        return EntityService::getPosition($model);
     }
 }

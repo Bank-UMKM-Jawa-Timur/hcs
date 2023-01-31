@@ -29,7 +29,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $data->nip }}</td>
                     <td>{{ $data->karyawan->nama_karyawan }}</td>
-                    <td>{{ $data->jabatan->nama_jabatan }}</td>
+                    <td>{{ jabatanLengkap($data) }}</td>
                     <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
                     <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
                     <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>

@@ -172,7 +172,7 @@
                 $('#jabatan-wrapper').append(`
                     <div class="form-group col-md-4">
                         <label for="divisi">Divisi</label>
-                        <select class="form-control" name="divisi" id="divisi">
+                        <select class="form-control" name="kd_divisi" id="divisi">
                             <option>-- Pilih Divisi --</option>
                             ${divisiOption}
                         </select>
