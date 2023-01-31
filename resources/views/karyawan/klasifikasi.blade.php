@@ -754,7 +754,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Keluarga</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Listrik & Air</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Jabatan</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Tlr</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Teller</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Perumahan</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Kesejahteraan</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Kemahalan</th>
@@ -766,21 +766,21 @@
                             <tbody>
                                 @foreach ($karyawan as $item)
                                     @php
-                                    $tKeluarga = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Keluarga'))->first();
+                                        $tKeluarga = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Keluarga'))->first();
 
-                                    $tListrik = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Telpon, Air dan Listrik'))->first();
+                                        $tListrik = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Telpon, Air dan Listrik'))->first();
 
-                                    $tJabatan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Jabatan'))->first();
+                                        $tJabatan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Jabatan'))->first();
 
-                                    $tTeller = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Teller'))->first();
+                                        $tTeller = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Teller'))->first();
 
-                                    $tPerumahan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Perumahan'))->first();
+                                        $tPerumahan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Perumahan'))->first();
 
-                                    $tKesejahteraan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kesejahteraan'))->first();
+                                        $tKesejahteraan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kesejahteraan'))->first();
 
-                                    $tKemahalan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kemahalan'))->first();
+                                        $tKemahalan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kemahalan'))->first();
 
-                                    $tPelaksana = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Pelaksana'))->first();
+                                        $tPelaksana = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Pelaksana'))->first();
                                     @endphp
                                     <tr>
                                         <td>{{ $item->nip }}</td>
@@ -799,7 +799,7 @@
                                             $masaKerja = $hitung->format('%y,%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ $item->gj_pokok }}</td>
+                                        <td>{{ toRupiah($item->gj_pokok) }}</td>
                                         <td>{{ toRupiah($tKeluarga?->pivot->nominal) }}</td>
                                         <td>{{ toRupiah($tListrik?->pivot->nominal) }}</td>
                                         <td>{{ toRupiah($tJabatan?->pivot->nominal) }}</td>
@@ -808,8 +808,13 @@
                                         <td>{{ toRupiah($tKesejahteraan?->pivot->nominal) }}</td>
                                         <td>{{ toRupiah($tKemahalan?->pivot->nominal) }}</td>
                                         <td>{{ toRupiah($tPelaksana?->pivot->nominal) }}</td>
-                                        <td>{{ $item->gj_penyesuaian }}</td>
-                                        <td>-</td>
+                                        <td>{{ toRupiah($item->gj_penyesuaian) }}</td>
+                                        @php
+                                            $totalGaji = (($item->gj_pokok) + ($tKeluarga?->pivot->nominal) + ($tListrik?->pivot->nominal) + 
+                                                          ($tJabatan?->pivot->nominal) + ($tTeller?->pivot->nominal) + ($tPerumahan?->pivot->nominal) +
+                                                          ($tKesejahteraan?->pivot->nominal) + ($tKemahalan?->pivot->nominal) + ($tPelaksana?->pivot->nominal) + ($item->gj_penyesuaian));
+                                        @endphp
+                                        <td>{{ toRupiah($totalGaji) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
