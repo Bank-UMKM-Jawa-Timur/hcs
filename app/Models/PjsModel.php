@@ -25,8 +25,8 @@ class PjsModel extends Model
     ];
 
     protected $casts = [
-        'tanggal_awal' => 'date',
-        'tanggal_akhir' => 'date',
+        'tanggal_mulai' => 'date',
+        'tanggal_berakhir' => 'date',
     ];
 
     public function entitas(): Attribute
@@ -36,13 +36,18 @@ class PjsModel extends Model
         );
     }
 
+    public function karyawan()
+    {
+        return $this->belongsTo(KaryawanModel::class, 'nip', 'nip');
+    }
+
     public function jabatan()
     {
-        return $this->belongsTo(JabatanModel::class, 'kd_jabatan');
+        return $this->belongsTo(JabatanModel::class, 'kd_jabatan', 'kd_jabatan');
     }
 
     public function bagian()
     {
-        return $this->belongsTo(BagianModel::class, 'kd_bagian');
+        return $this->belongsTo(BagianModel::class, 'kd_bagian', 'kd_bagian');
     }
 }

@@ -104,7 +104,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -138,62 +138,62 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'K';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'K';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TK';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TK';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CM';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CM';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CR';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CR';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Janda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'JD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'JD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Duda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'DA';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'DA';
                                                     $anak = 0;
@@ -234,7 +234,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -268,62 +268,62 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'K';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'K';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TK';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TK';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CM';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CM';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CR';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CR';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Janda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'JD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'JD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Duda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'DA';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'DA';
                                                     $anak = 0;
@@ -364,7 +364,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -398,62 +398,62 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'K';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'K';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TK';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TK';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CM';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CM';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CR';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CR';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Janda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'JD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'JD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Duda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'DA';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'DA';
                                                     $anak = 0;
@@ -494,7 +494,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -528,62 +528,62 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'K';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'K';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TK';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TK';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CM';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CM';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CR';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CR';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Janda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'JD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'JD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Duda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'DA';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'DA';
                                                     $anak = 0;
@@ -624,7 +624,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -658,62 +658,62 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'K';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'K';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TK';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TK';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CM';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CM';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CR';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CR';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Janda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'JD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'JD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Duda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'DA';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'DA';
                                                     $anak = 0;
@@ -740,6 +740,86 @@
                             </tbody>
                         </table>
                     </div>
+                @elseif ($status == 6)
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all; table-layout: fixed;">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Gaji<br>Pokok</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Keluarga</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Listrik & Air</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Jabatan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Teller</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Perumahan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Kesejahteraan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Kemahalan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Tun<br>Pelaksana</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Gaji<br>Penyesuaian</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px;">Total<br>Gaji</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($karyawan as $item)
+                                    @php
+                                        $tKeluarga = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Keluarga'))->first();
+
+                                        $tListrik = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Telpon, Air dan Listrik'))->first();
+
+                                        $tJabatan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Jabatan'))->first();
+
+                                        $tTeller = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Teller'))->first();
+
+                                        $tPerumahan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Perumahan'))->first();
+
+                                        $tKesejahteraan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kesejahteraan'))->first();
+
+                                        $tKemahalan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kemahalan'))->first();
+
+                                        $tPelaksana = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Pelaksana'))->first();
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nama_karyawan }}</td>
+                                        <td>{{ $item->nama_jabatan ?? '-' }}</td>
+                                        @php
+                                            $nama_cabang = DB::table('mst_cabang')
+                                                ->where('kd_cabang', $item->kd_entitas)
+                                                ->first();
+                                        @endphp
+                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                        @php
+                                            $waktuSekarang = Carbon\Carbon::now();
+
+                                            $hitung = $waktuSekarang->diff($item->tgl_mulai);
+                                            $masaKerja = $hitung->format('%y,%m');
+                                        @endphp
+                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                        <td>{{ toRupiah($item->gj_pokok) }}</td>
+                                        <td>{{ toRupiah($tKeluarga?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tListrik?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tJabatan?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tTeller?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tPerumahan?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tKesejahteraan?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tKemahalan?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($tPelaksana?->pivot->nominal) }}</td>
+                                        <td>{{ toRupiah($item->gj_penyesuaian) }}</td>
+                                        @php
+                                            $totalGaji = (($item->gj_pokok) + ($tKeluarga?->pivot->nominal) + ($tListrik?->pivot->nominal) + 
+                                                          ($tJabatan?->pivot->nominal) + ($tTeller?->pivot->nominal) + ($tPerumahan?->pivot->nominal) +
+                                                          ($tKesejahteraan?->pivot->nominal) + ($tKemahalan?->pivot->nominal) + ($tPelaksana?->pivot->nominal) + ($item->gj_penyesuaian));
+                                        @endphp
+                                        <td>{{ toRupiah($totalGaji) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @elseif ($status == 9)
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
@@ -754,7 +834,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -788,62 +868,62 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'K';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'K';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TK';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TK';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CM';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CM';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CR';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CR';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Janda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'JD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'JD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Duda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'DA';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'DA';
                                                     $anak = 0;
@@ -884,7 +964,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -918,62 +998,62 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'K';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'K';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TK';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TK';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CM';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CM';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CR';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CR';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Janda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'JD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'JD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Duda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'DA';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'DA';
                                                     $anak = 0;
@@ -1014,7 +1094,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 70px;">SK<br>Angkat</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
@@ -1048,62 +1128,62 @@
                                             } else {
                                                 $jk = 'P';
                                             }
-                                            
+
                                         @endphp
                                         <td>{{ $jk }}</td>
                                         @php
                                             if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'K';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'K';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TK';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TK';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'TD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'TD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CM';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CM';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Cerai') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'CR';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'CR';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Janda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'JD';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'JD';
                                                     $anak = 0;
                                                 }
                                             } elseif ($item->status == 'Duda') {
-                                                if ($item->is_jml_anak != null) {
+                                                if ($item->jml_anak != null) {
                                                     $status = 'DA';
-                                                    $anak = $item->is_jml_anak;
+                                                    $anak = $item->jml_anak;
                                                 } else {
                                                     $status = 'DA';
                                                     $anak = 0;
@@ -1129,7 +1209,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>    
+                    </div>
                 @endif
             @endif
         </div>
@@ -1363,6 +1443,32 @@
 
                 $('#status').attr("disabled", "disabled");
                 $("#status_col").hide();
+            } else if (value == 6) {
+                generateOfficeGaji();
+
+                $('#kantor').removeAttr("disabled", "disabled");
+                $("#kantor_col").show();
+
+                $('#cabang').removeAttr("disabled", "disabled");
+                $("#cabang_col").show();
+
+                $('#divisi').attr("disabled", "disabled");
+                $("#divisi_col").hide();
+
+                $('#subDivisi').attr("disabled", "disabled");
+                $("#subDivisi_col").hide();
+
+                $('#bagian').attr("disabled", "disabled");
+                $("#bagian_col").hide();
+
+                $('#jabatan').attr("disabled", "disabled");
+                $("#jabatan_col").hide();
+
+                $('#panggol').attr("disabled", "disabled");
+                $("#panggol_col").hide();
+
+                $('#status').attr("disabled", "disabled");
+                $("#status_col").hide();
             } else if (value == 9) {
                 generateJabatan();
 
@@ -1565,6 +1671,53 @@
                     <label for="kantor">Kantor</label>
                     <select name="kantor" class="form-control" id="kantor">
                         <option value="-">--- Pilih Kantor ---</option>
+                        <option ${ office == "Pusat" ? 'selected' : '' } value="Pusat">Pusat</option>
+                        <option ${ office == "Cabang" ? 'selected' : '' } value="Cabang">Cabang</option>
+                    </select>
+                </div>
+            `);
+
+            $('#kantor').change(function(e) {
+                $('#cabang_col').empty();
+                if($(this).val() != "Cabang") return;
+                generateSubOffice();
+            });
+
+            function generateSubOffice() {
+                $('#cabang_col').empty();
+                const subOffice = '{{ $request?->cabang }}';
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/getcabang',
+                    dataType: 'JSON',
+                    success: (res) => {
+                        $('#cabang_col').append(`
+                            <div class="form-group">
+                                <label for="cabang">Cabang</label>
+                                <select name="cabang" id="cabang" class="form-control">
+                                    <option value="">--- Pilih Cabang ---</option>
+                                </select>
+                            </div>
+                        `);
+
+                        $.each(res[0], (i, item) => {
+                            const kd_cabang = item.kd_cabang;
+                            $('#cabang').append(`<option ${subOffice == kd_cabang ? 'selected' : ''} value="${kd_cabang}">${item.kd_cabang} - ${item.nama_cabang}</option>`);
+                        });
+                    }
+                });
+            }
+        }
+
+        function generateOfficeGaji() {
+            const office = '{{ $request?->kantor }}';
+            $('#kantor_col').append(`
+                <div class="form-group">
+                    <label for="kantor">Kantor</label>
+                    <select name="kantor" class="form-control" id="kantor">
+                        <option value="-">--- Pilih Kantor ---</option>
+                        <option ${ office == "Keseluruhan" ? 'selected' : '' } value="Keseluruhan">Keseluruhan</option>
                         <option ${ office == "Pusat" ? 'selected' : '' } value="Pusat">Pusat</option>
                         <option ${ office == "Cabang" ? 'selected' : '' } value="Cabang">Cabang</option>
                     </select>

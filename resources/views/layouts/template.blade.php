@@ -129,7 +129,7 @@ Coded by www.creative-tim.com
                       </div>
                   </li>
                   <li style="margin-top: -15px">
-                    <a href="#">
+                    <a href="{{ route('pejabat-sementara.index') }}">
                       <i class="nc-icon nc-tie-bow"></i>
                       <p>Penjabat Sementara</p>
                       <p></p>
@@ -185,7 +185,7 @@ Coded by www.creative-tim.com
                   </a>
                 </li>
                 <li style="margin-top: -15px">
-                  <a href="#">
+                  <a href="{{ route('pejabat-sementara.history') }}">
                     <i class="nc-icon nc-tie-bow"></i>
                     <p>Penjabat Sementara</p>
                     <p></p>

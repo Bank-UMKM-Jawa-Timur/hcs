@@ -8,6 +8,7 @@ use App\Http\Controllers\JaminanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\SuratPeringatanController;
@@ -138,6 +139,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('surat-peringatan', SuratPeringatanController::class)
         ->except('destroy');
 
+    // Pejabat Sementara
+    Route::match(['GET', 'POST'], 'pejabat-sementara/history', [PejabatSementaraController::class, 'history'])
+        ->name('pejabat-sementara.history');
+    Route::resource('pejabat-sementara', PejabatSementaraController::class);
+
     Route::resource('/laporan_jamsostek', JaminanController::class);
     Route::get('/laporan-jamsostek', [JaminanController::class, 'getJamsostek'])->name('get-jamsostek');
     Route::post('/post-jamsostek', [JaminanController::class, 'postJamsostek'])->name('post-jamsostek');
@@ -145,7 +151,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/dpp', [JaminanController::class, 'getDpp'])->name('get-dpp');
     Route::post('penghasilan/get-gaji', [PenghasilanTidakTeraturController::class, 'filter'])->name('get-penghasilan');
     Route::get('/getPenghasilan', [PenghasilanTidakTeraturController::class, 'getPenghasilan'])->name('getPenghasilanResult');
-    
+
     // Klasifikasi Data Karyawan
     Route::post('/klasifikasi_data', [App\Http\Controllers\KlasifikasiController::class, 'klasifikasi_data'])->name('klasifikasi-data');
     Route::get('/klasifikasi-karyawan', [App\Http\Controllers\KlasifikasiController::class, 'index'])->name('klasifikasi_karyawan');

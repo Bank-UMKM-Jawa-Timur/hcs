@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JabatanModel;
 use App\Models\KaryawanModel;
 use App\Models\PanggolModel;
+use App\Models\TunjanganModel;
 use App\Service\ClassificationService;
 use App\Service\EntityService;
 use Doctrine\DBAL\Query;
@@ -96,6 +97,24 @@ class KlasifikasiController extends Controller
             $status = 5;
         }
 
+        if ($request->kategori == 6) {
+            $karyawan = KaryawanModel::with('tunjangan');
+
+            if ($kantor == 'Cabang') {
+                $karyawan = KaryawanModel::with('tunjangan')
+                    ->where('kd_entitas', $request->cabang);
+            } 
+
+            if ($kantor == 'Pusat') {
+                $cbgs = DB::table('mst_cabang')->pluck('kd_cabang');
+                $karyawan = KaryawanModel::with('tunjangan')
+                    ->whereNotIn('kd_entitas', $cbgs)
+                    ->orWhere('kd_entitas', null);
+            }
+            
+            $status = 6;
+        }
+
         if ($request->kategori == 9) {
             $karyawan = KaryawanModel::where('mst_karyawan.kd_jabatan', $request->jabatan);
 
@@ -115,7 +134,7 @@ class KlasifikasiController extends Controller
         }
 
         if ($karyawan instanceof Builder) {
-            $karyawan->leftJoin('is', 'is.id', 'mst_karyawan.id_is');
+            $karyawan->with('keluarga');
             $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
             $karyawan = $karyawan->get();
         }
@@ -157,7 +176,7 @@ class KlasifikasiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
-    { 
+    {
         //
     }
 
