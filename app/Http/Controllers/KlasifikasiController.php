@@ -121,7 +121,7 @@ class KlasifikasiController extends Controller
         }
 
         if ($karyawan instanceof Builder) {
-            // $karyawan->leftJoin('keluarga', 'keluarga.id', 'mst_karyawan.id_is');
+            $karyawan->leftJoin('keluarga', 'keluarga.nip', 'mst_karyawan.nip');
             $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
             $karyawan = $karyawan->get();
         }
