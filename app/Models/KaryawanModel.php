@@ -85,6 +85,11 @@ class KaryawanModel extends Model
         return $this->belongsTo(PanggolModel::class, 'kd_panggol', 'golongan');
     }
 
+    public function keluarga()
+    {
+        return $this->hasOne(KeluargaModel::class, 'nip');
+    }
+
     public function tunjangan()
     {
         return $this->belongsToMany(
