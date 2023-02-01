@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-enum PendidikanKaryawan:string {
+enum PendidikanKaryawan: string {
     case SD = 'SD';
     case SMP = 'SMP';
     case SLTA = 'SLTA';
