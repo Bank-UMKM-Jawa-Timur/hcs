@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-enum StatusKaryawan:string
+enum StatusKaryawan: string
 {
     case TETAP = 'Tetap';
     case IKJP = 'IKJP';

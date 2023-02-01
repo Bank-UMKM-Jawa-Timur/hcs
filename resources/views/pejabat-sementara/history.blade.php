@@ -12,34 +12,30 @@
 </div>
 
 <div class="card-body">
-    <div class="col">
-        <div class="row justify-content-between">
-            <div class="col-md-5">
-                <form action="{{ route('pejabat-sementara.history') }}" method="post">
-                    @csrf
+    <form action="{{ route('pejabat-sementara.history') }}" method="post">
+        @csrf
+        <div class="col">
+            <div class="row">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="kategori">Kategori</label>
                         <select name="kategori" id="kategori" class="form-control">
                             <option value="">-- Pilih --</option>
                             <option value="aktif" @selected(request()?->kategori == 'aktif')>Aktif</option>
-                            <option value="nonaktif" @selected(request()?->kategori == 'nonaktif')>Nonaktif</option>
+                            <option value="karyawan" @selected(request()->nip)>Karyawan</option>
                         </select>
-                        <button class="btn btn-primary float-right" type="submit">Tampilkan</button>
                     </div>
-                </form>
+                </div>
+                <div class="col-md-4" id="nip-wrapper">
+                </div>
             </div>
-            <div class="col-md-5">
-                <form action="{{ route('pejabat-sementara.history') }}" method="post">
-                    @csrf
-                    <div class="form-group">
-                        <label for="nip">Karyawan</label>
-                        <select name="nip" id="nip" class="form-control"></select>
-                        <button class="btn btn-primary float-right" type="submit">Tampilkan</button>
-                    </div>
-                </form>
+            <div class="row">
+                <div class="col-md-8">
+                    <button class="btn btn-primary" type="submit">Tampilkan</button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 @if($pjs)
@@ -103,32 +99,52 @@
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
 <script>
-    const nipSelect = $('#nip').select2({
-        ajax: {
-            url: '{{ route('api.select2.karyawan') }}',
-            data: function(params) {
-                return {
-                    search: params.term || '',
-                    page: params.page || 1
-                }
+    function initNIP() {
+        const nipSelect = $('#nip').select2({
+            ajax: {
+                url: '{{ route('api.select2.karyawan') }}',
+                data: function(params) {
+                    return {
+                        search: params.term || '',
+                        page: params.page || 1
+                    }
+                },
+                cache: true,
             },
-            cache: true,
-        },
-        templateResult: function(data) {
-            if(data.loading) return data.text;
-            return $(`
-                <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
-            `);
-        }
-    });
+            templateResult: function(data) {
+                if(data.loading) return data.text;
+                return $(`
+                    <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
+                `);
+            }
+        });
 
-    @isset(request()->nip)
-        @if($karyawan)
-            nipSelect.append(`
-                <option value="{{$karyawan->nip}}">{{$karyawan->nip}} - {{$karyawan->nama_karyawan}}</option>
-            `).trigger('change');
-        @endif
-    @endisset
+        @isset(request()->nip)
+            @if($karyawan)
+                nipSelect.append(`
+                    <option value="{{$karyawan->nip}}">{{$karyawan->nip}} - {{$karyawan->nama_karyawan}}</option>
+                `).trigger('change');
+            @endif
+        @endisset
+    }
+
+    $('#kategori').change(function() {
+        const value = $(this).val();
+
+        if(value == 'karyawan') {
+            $('#nip-wrapper').html(`
+                <div class="form-group">
+                    <label for="nip">Karyawan</label>
+                    <select name="nip" id="nip" class="form-control"></select>
+                </div>
+            `);
+
+            initNIP();
+            return;
+        }
+
+        $('#nip-wrapper').empty();
+    });
 
     $('#pjs-table').DataTable({
         dom : "Bfrtip",
@@ -230,5 +246,7 @@
     $(".buttons-excel").attr("class","btn btn-success mb-2");
     $(".buttons-pdf").attr("class","btn btn-success mb-2");
     $(".buttons-print").attr("class","btn btn-success mb-2");
+
+    $('#kategori').trigger('change');
 </script>
 @endpush

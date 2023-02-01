@@ -174,7 +174,6 @@
                                     <select name="status_jabatan" id="" class="@error('status_jabatan') is-invalid @enderror form-control">
                                         <option value="">--- Pilih ---</option>
                                         <option value="Definitif" {{ ($data->status_jabatan == 'Definitif') ? 'selected' : '' }}>Definitif</option>
-                                        <option value="Penjabat Sementara" {{ ($data->status_jabatan == 'Penjabat Sementara') ? 'selected' : '' }}>Penjabat Sementara</option>
                                         <option value="Penjabat" {{ ($data->status_jabatan == 'Penjabat') ? 'selected' : '' }}>Penjabat</option>
                                     </select>
                                 </div>
@@ -406,7 +405,7 @@
         $("#gj_pokok").val(formatRupiah($("#gj_pokok").val()));
         $("#gj_penyesuaian").val(formatRupiah($("#gj_penyesuaian").val()));
         $("#nominal").val(formatRupiah($("#nominal").val()));
-        
+
         $("#is_jml_anak").keyup(function(){
             $("#row_anak").empty();
             var angka = $(this).val()

@@ -63,15 +63,15 @@ class EntityService
     public static function getPosition(KaryawanModel|PjsModel $model)
     {
         $jabatan = $model->jabatan->nama_jabatan;
+        $bagian = $model->bagian?->nama_bagian;
         $entitas = $model->entitas;
 
         if (isset($entitas->subDiv))
-            return "{$jabatan} {$entitas->subDiv->nama_subdivisi}";
+            return "{$jabatan} {$bagian} {$entitas->subDiv->nama_subdivisi}";
 
         if (isset($entitas->div))
-            return "{$jabatan} {$entitas->div->nama_divisi}";
+            return "{$jabatan} {$bagian} {$entitas->div->nama_divisi}";
 
-        if (isset($entitas->cab))
-            return "{$jabatan} {$entitas->cab->nama_cabang}";
+        return "$jabatan $bagian";
     }
 }
