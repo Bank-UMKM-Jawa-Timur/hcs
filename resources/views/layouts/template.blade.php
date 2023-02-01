@@ -178,7 +178,7 @@ Coded by www.creative-tim.com
               </a>
               <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu3" aria-expanded="false">
                 <li style="margin-top: -15px">
-                  <a href="#">
+                  <a href="{{ route('history_jabatan.index') }}">
                     <i class="nc-icon nc-briefcase-24"></i>
                     <p>Jabatan</p>
                     <p></p>

@@ -4,6 +4,7 @@ use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
+use App\Http\Controllers\HistoryJabatanController;
 use App\Http\Controllers\JaminanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
@@ -127,6 +128,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pajak_penghasilan', PenghasilanTidakTeraturController::class);
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::resource('/backup', BackupController::class);
+    Route::resource('/history_jabatan', HistoryJabatanController::class);
 
     // Penonaktifan Karyawan
     Route::controller(KaryawanController::class)->group(function () {

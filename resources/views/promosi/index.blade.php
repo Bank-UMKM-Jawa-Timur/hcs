@@ -61,11 +61,11 @@
                                         <td>
                                             {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
                                         </td>
-                                        <td>
-                                            {{ $item?->status_jabatan_lama }} - {{ $item->jabatan_lama }}
+                                        <td class="text-nowrap">
+                                            {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{ $item->jabatan_lama }}
                                         </td>
-                                        <td>
-                                            {{ $item?->status_jabatan_baru }} - {{ $item->jabatan_baru }}
+                                        <td class="text-nowrap">
+                                            {{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }}{{ $item->jabatan_baru }}
                                         </td>
                                         <td>
                                             {{ $item->kantor_lama ?? '-' }}

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\MigrasiImport;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class BackupController extends Controller
+class MigrasiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class BackupController extends Controller
      */
     public function index()
     {
-        return view('backup.index');
+        return view('migrasi.index');
     }
 
     /**
@@ -25,7 +25,7 @@ class BackupController extends Controller
      */
     public function create()
     {
-        //
+        return view('migrasi.add');
     }
 
     /**
@@ -36,7 +36,12 @@ class BackupController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $file = $request->file('upload_csv');
+        $import = new MigrasiImport;
+        $import = $import->import($file);
+
+        Alert::success('Berhasil', 'Berhasil mengimport data excel');
+        return redirect()->route('migrasi.index');
     }
 
     /**
