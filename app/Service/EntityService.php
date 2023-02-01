@@ -73,5 +73,7 @@ class EntityService
 
         if (isset($entitas->cab))
             return "{$jabatan} {$entitas->cab->nama_cabang}";
+
+        return $jabatan;
     }
 }
