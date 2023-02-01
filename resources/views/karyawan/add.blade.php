@@ -175,7 +175,6 @@
                                     <select name="status_jabatan" id="" class="@error('status_jabatan') is-invalid @enderror form-control">
                                         <option {{ old('status_jabatan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                         <option {{ old('status_jabatan') == 'Definitif' ? 'selected' : '' }} value="Definitif">Definitif</option>
-                                        <option {{ old('status_jabatan') == 'Penjabat Sementara' ? 'selected' : '' }} value="Penjabat Sementara">Penjabat Sementara</option>
                                         <option {{ old('status_jabatan') == 'Penjabat' ? 'selected' : ''}} value="Penjabat">Penjabat</option>
                                     </select>
                                 </div>
@@ -288,7 +287,7 @@
                             </div>
                             <hr>
                             <div class="col-md-12 mt-3" id="row_anak">
-                                
+
                             </div>
                         </div>
                     </div>
@@ -611,7 +610,7 @@
         })
 
         $("#row_anak").on("click", "#btn_plus-anak", function(){
-            
+
             y++;
         });
 
