@@ -100,20 +100,20 @@ class KlasifikasiController extends Controller
         }
 
         if ($request->kategori == 6) {
-            $karyawan = KaryawanModel::with('tunjangan');
+            $karyawan = KaryawanModel::with('tunjangan', 'bagian');
 
             if ($kantor == 'Cabang') {
-                $karyawan = KaryawanModel::with('tunjangan')
+                $karyawan = KaryawanModel::with('tunjangan', 'bagian')
                     ->where('kd_entitas', $request->cabang);
-            } 
+            }
 
             if ($kantor == 'Pusat') {
                 $cbgs = DB::table('mst_cabang')->pluck('kd_cabang');
-                $karyawan = KaryawanModel::with('tunjangan')
+                $karyawan = KaryawanModel::with('tunjangan', 'bagian')
                     ->whereNotIn('kd_entitas', $cbgs)
                     ->orWhere('kd_entitas', null);
             }
-            
+
             $status = 6;
         }
 
@@ -125,12 +125,12 @@ class KlasifikasiController extends Controller
 
         if ($request->kategori == 8) {
             $umur->map(
-                function($usia) use(&$karyawan) {
+                function ($usia) use (&$karyawan) {
                     $karyawan->push(KaryawanModel::selectRaw("mst_karyawan.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(now(), tgl_lahir)), '%Y')+0 AS umurSkrg")
-                             ->havingBetween('umurSkrg', [$usia->u_awal, $usia->u_akhir])->get());
+                        ->havingBetween('umurSkrg', [$usia->u_awal, $usia->u_akhir])->get());
                 }
             );
-            
+
             $status = 8;
         }
 
@@ -139,7 +139,7 @@ class KlasifikasiController extends Controller
 
             $status = 9;
         }
-        
+
 
         if ($request->kategori == 10) {
             $karyawan = KaryawanModel::where('mst_karyawan.kd_panggol', $request->panggol);
