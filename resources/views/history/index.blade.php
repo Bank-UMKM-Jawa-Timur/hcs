@@ -15,57 +15,57 @@
     <div class="row m-0">
         <div class="col">
             <h5>Cari Karyawan</h5>
+            <form action="{{ route('history_jabatan.store') }}" method="post">
+                @csrf
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="">Karyawan:</label>
+                            <select name="nip" id="nip" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="">Status Jabatan</label>
+                            <input type="text" id="status_jabatan" class="form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="">Pangkat dan Golongan Sekarang</label>
+                            <input type="text" id="panggol" class="form-control" disabled>
+                            <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="hidden" id="bagian_lama" name="bagian_lama">
+                    <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
+                    <div class="" id="">
+        
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Jabatan Sekarang</label>
+                            <input type="text" class="form-control" disabled name="" id="jabatan_lama">
+                            <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Kantor Sekarang</label>
+                            <input type="text" class="form-control" disabled name="" id="kantor_lama">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-info">Tampilkan</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-    <form action="{{ route('history_jabatan.store') }}" method="post">
-        @csrf
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label for="">Karyawan:</label>
-                    <select name="nip" id="nip" class="form-control"></select>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="form-group">
-                    <label for="">Status Jabatan</label>
-                    <input type="text" id="status_jabatan" class="form-control" disabled>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="form-group">
-                    <label for="">Pangkat dan Golongan Sekarang</label>
-                    <input type="text" id="panggol" class="form-control" disabled>
-                    <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-control">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <input type="hidden" id="bagian_lama" name="bagian_lama">
-            <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
-            <div class="" id="">
-
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="">Jabatan Sekarang</label>
-                    <input type="text" class="form-control" disabled name="" id="jabatan_lama">
-                    <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="">Kantor Sekarang</label>
-                    <input type="text" class="form-control" disabled name="" id="kantor_lama">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <button type="submit" class="btn btn-info">Tampilkan</button>
-            </div>
-        </div>
-    </form>
 @endsection
 
 @push('script')

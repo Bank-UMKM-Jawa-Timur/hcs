@@ -15,164 +15,166 @@
     <div class="row m-0">
         <div class="col">
             <h5>Cari Karyawan</h5>
-        </div>
-    </div>
-    <form action="{{ route('history_jabatan.store') }}" method="post">
-        @csrf
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label for="">Karyawan:</label>
-                    <select name="nip" id="nip" class="form-control"></select>
+            <form action="{{ route('history_jabatan.store') }}" method="post">
+                @csrf
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="">Karyawan:</label>
+                            <select name="nip" id="nip" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="">Status Jabatan</label>
+                            <input type="text" id="status_jabatan" class="form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="">Pangkat dan Golongan Sekarang</label>
+                            <input type="text" id="panggol" class="form-control" disabled>
+                            <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-control">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="form-group">
-                    <label for="">Status Jabatan</label>
-                    <input type="text" id="status_jabatan" class="form-control" disabled>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="form-group">
-                    <label for="">Pangkat dan Golongan Sekarang</label>
-                    <input type="text" id="panggol" class="form-control" disabled>
-                    <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-control">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <input type="hidden" id="bagian_lama" name="bagian_lama">
-            <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
-            <div class="" id="">
-
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="">Jabatan Sekarang</label>
-                    <input type="text" class="form-control" disabled name="" id="jabatan_lama">
-                    <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="">Kantor Sekarang</label>
-                    <input type="text" class="form-control" disabled name="" id="kantor_lama">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <button type="submit" class="btn btn-info">Tampilkan</button>
-            </div>
-        </div>
-    </form>
-    <br>
-    <hr>
-    <h5 class="text-center">Data History Jabatan <b> {{ $data_karyawan->nama_karyawan }}</b></h5>
-    <div style="" class="table-responsive text-center">
-        <table class="table " id="table">
-            <thead class="sticky-top text-center">
-                <tr>
-                    <th>#</th>
-                    <th class="text-nowrap text-center">
-                        Tanggal Mulai
-                    </th>
-                    <th class="text-nowrap text-center">
-                        Lama Menjabat
-                    </th>
-                    <th class="text-nowrap text-center">
-                        Panggol Lama
-                    </th>
-                    <th class="text-nowrap text-center">
-                        Panggol Baru
-                    </th>
-                    <th class="text-nowrap text-center">
-                        Jabatan Lama
-                    </th>
-                    <th class="text-nowrap text-center">
-                        Jabatan Baru
-                    </th>
-                    <th class="text-nowrap text-center">
-                        Kantor Lama
-                    </th>
-                    <th class="text-nowrap text-center">
-                        Kantor Baru
-                    </th>
-                    <th class="text-nowrap text-center">
-                        Bukti SK
-                    </th>
-                    <th class="text-nowrap text-center">
-                        keterangan
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    $i = 1;
-                @endphp
-                @foreach ($karyawan as $key => $item)
-                    @php
-                        $masaKerja = '-';
-                        if ($key != 0) {
-                            $mulaKerja = new DateTime(date('d-M-Y', strtotime($item?->tanggal_pengesahan)));
-                            $waktuSekarang = new DateTime(date('d-M-Y', strtotime($karyawan[$key - 1]->tanggal_pengesahan)));
+                <div class="row">
+                    <input type="hidden" id="bagian_lama" name="bagian_lama">
+                    <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
+                    <div class="" id="">
         
-                            $hitung = $waktuSekarang->diff($mulaKerja);
-                            $masaKerja = $hitung->format('%y Tahun | %m Bulan | %d Hari');
-                        }
-                    @endphp
-                    <tr>
-                        <td>
-                            {{ $i++ }}
-                        </td>
-                        <td class="text-nowrap">
-                            {{ date('d M Y', strtotime($item?->tanggal_pengesahan)) }}
-                        </td>
-                        <td class="text-nowrap">
-                            {{ $masaKerja }}
-                        </td>
-                        <td class="text-nowrap">
-                            {{ $item?->kd_panggol_lama ?? '-' }}
-                        </td>
-                        <td class="text-nowrap">
-                            {{ $item?->kd_panggol_baru ?? '-' }}
-                        </td>
-                        <td class="text-nowrap">
-                            {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{ $item->jabatan_lama }}
-                        </td>
-                        <td class="text-nowrap">
-                            {{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }}{{ $item->jabatan_baru }}
-                        </td>
-                        <td class="text-nowrap">
-                            {{ $item->kantor_lama ?? '-' }}
-                        </td>
-                        <td class="text-nowrap">
-                            {{ $item->kantor_baru ?? '-' }}
-                        </td>
-                        <td class="text-nowrap">
-                            {{ $item->bukti_sk }}
-                        </td>
-                        <td class="text-nowrap">
-                            {{ $item?->keterangan }}
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Jabatan Sekarang</label>
+                            <input type="text" class="form-control" disabled name="" id="jabatan_lama">
+                            <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Kantor Sekarang</label>
+                            <input type="text" class="form-control" disabled name="" id="kantor_lama">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-info">Tampilkan</button>
+                    </div>
+                </div>
+            </form>
+            <br>
+            <hr>
+            <h5 class="text-center">Data History Jabatan <br> <b> {{ $data_karyawan->nama_karyawan }}</b></h5>
+            <div style="" class="table-responsive text-center">
+                <table class="table text-center cell-border table-striped" id="table" style="width: 100%; white-space: nowrap; overflow-y:hidden;">
+                    <thead class="sticky-top text-center">
+                        <tr>
+                            <th class="sticky-col">#</th>
+                            <th class="text-nowrap text-center">
+                                Tanggal Mulai
+                            </th>
+                            <th class="text-nowrap text-center">
+                                Lama Menjabat
+                            </th>
+                            <th class="text-nowrap text-center">
+                                Panggol Lama
+                            </th>
+                            <th class="text-nowrap text-center">
+                                Panggol Baru
+                            </th>
+                            <th class="text-nowrap text-center">
+                                Jabatan Lama
+                            </th>
+                            <th class="text-nowrap text-center">
+                                Jabatan Baru
+                            </th>
+                            <th class="text-nowrap text-center">
+                                Kantor Lama
+                            </th>
+                            <th class="text-nowrap text-center">
+                                Kantor Baru
+                            </th>
+                            <th class="text-nowrap text-center">
+                                Bukti SK
+                            </th>
+                            <th class="text-nowrap text-center">
+                                keterangan
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $i = 1;
+                        @endphp
+                        @foreach ($karyawan as $key => $item)
+                            @php
+                                $masaKerja = '-';
+                                if ($key != 0) {
+                                    $mulaKerja = new DateTime(date('d-M-Y', strtotime($item?->tanggal_pengesahan)));
+                                    $waktuSekarang = new DateTime(date('d-M-Y', strtotime($karyawan[$key - 1]->tanggal_pengesahan)));
+                
+                                    $hitung = $waktuSekarang->diff($mulaKerja);
+                                    $masaKerja = $hitung->format('%y Tahun | %m Bulan | %d Hari');
+                                }
+                            @endphp
+                            <tr>
+                                <td class="sticky-col">
+                                    {{ $i++ }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ date('d M Y', strtotime($item?->tanggal_pengesahan)) }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $masaKerja }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $item?->kd_panggol_lama ?? '-' }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $item?->kd_panggol_baru ?? '-' }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{ $item->jabatan_lama }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }}{{ $item->jabatan_baru }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $item->kantor_lama ?? '-' }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $item->kantor_baru ?? '-' }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $item->bukti_sk }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $item?->keterangan }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 @endsection
 
 @push('script')
 <script>
-// $(document).ready(function() {
-//     var table = $('#table').DataTable({
-//         'autoWidth': false,
-//         'dom': 'Rlfrtip',
-//         'colReorder': {
-//             'allowReorder': false
-//         }
-//     });
-// })
+    // $(document).ready(function() {
+    //     var table = $('#table').DataTable({
+    //         autoWidth: false,
+    //         scrollY: false,
+    //         scrollX: true,
+    //         dom: Rlfrtip,
+    //         colReorder: {
+    //             'allowReorder': false
+    //         }
+    //     });
+    // })
 
 const nipSelect = $('#nip').select2({
     ajax: {
