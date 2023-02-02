@@ -94,7 +94,7 @@ class PromosiController extends Controller
             if($typeLama == 1) {
                 $promosiLama->kantor_lama = isset($entityLama->subDiv) ?
                 $entityLama->subDiv->nama_subdivisi . " (Pusat)":
-                $entityLama->div->nama_divisi." (Pusat)";
+                "Pusat";
             }
 
             return $promosiLama;
