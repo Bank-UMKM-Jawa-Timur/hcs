@@ -56,6 +56,18 @@
             <hr>
             <div class="row align-content-center">
                 <div class="col-lg-12">
+                    <h6>Pembaruan NIP</h6>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="NIP Baru">
+                        NIP Baru
+                    </label>
+                    <input type="text" class="form-control" name="nip_baru" id="nip_baru">
+                </div>
+            </div>
+            <hr>
+            <div class="row align-content-center">
+                <div class="col-lg-12">
                     <h6>Pembaruan Data Jabatan</h6>
                 </div>
                 <div class="col-md-4">

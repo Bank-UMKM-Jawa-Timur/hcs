@@ -12,7 +12,7 @@
                     <a class="mb-3" href="{{ route('promosi.create') }}">
                         <button  class="btn btn-primary">Tambah Promosi</button>
                     </a>
-                    <div class="table">
+                    <div class="table-responsive">
                         <table class="table" id="table">
                             <thead class="text-primary">
                                 <th>
@@ -26,6 +26,12 @@
                                 </th>
                                 <th>
                                     Tanggal Promosi
+                                </th>
+                                <th>
+                                    NIP Lama
+                                </th>
+                                <th>
+                                    NIP Baru
                                 </th>
                                 <th>
                                     Jabatan Lama
@@ -60,6 +66,12 @@
                                         </td>
                                         <td>
                                             {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
+                                        </td>
+                                        <td>
+                                            {{ $item->nip_lama ?? '-' }}
+                                        </td>
+                                        <td>
+                                            {{ $item->nip_baru ?? '-' }}
                                         </td>
                                         <td class="text-nowrap">
                                             {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{ $item->jabatan_lama }}

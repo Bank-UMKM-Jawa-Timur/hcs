@@ -226,6 +226,8 @@ class PromosiController extends Controller
                 'kd_panggol_baru' => $request->panggol,
                 'status_jabatan_lama' => $request->status_jabatan_lama,
                 'status_jabatan_baru' => $request->status_jabatan,
+                'nip_lama' => $request->nip,
+                'nip_baru' => $request->nip_baru,
                 'created_at' => now(),
             ]);
 
@@ -237,6 +239,7 @@ class PromosiController extends Controller
         $officer = DB::table('mst_karyawan')
             ->where('nip', $request->nip)
             ->update([
+                'nip' => $request->nip_baru,
                 'kd_jabatan' => $request->id_jabatan_baru,
                 'ket_jabatan' => $request->ket_jabatan,
                 'kd_entitas' => $entity,
