@@ -20,6 +20,7 @@ class KaryawanResource extends JsonResource
             'nama' => $this->nama_karyawan,
             'jabatan' => $this->jabatan,
             'entitas' => EntityService::getEntity($this->kd_entitas),
+            'bagian' => $this->bagian,
         ];
     }
 }

@@ -11,7 +11,7 @@ class KaryawanController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $karyawan = KaryawanModel::with('jabatan');
+        $karyawan = KaryawanModel::with('jabatan', 'bagian');
 
         if ($request->nip) $karyawan->where('nip', $request->nip);
         if ($request->nama) $karyawan->where('nama', $request->nama);
