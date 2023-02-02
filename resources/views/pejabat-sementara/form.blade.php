@@ -116,7 +116,7 @@
                         return;
                     }
 
-                    $('#jb-entity').val(`${jabatan} ${bagian} Pusat`);
+                    $('#jb-entity').val(`${jabatan} ${bagian}`);
                 }
             });
         });
