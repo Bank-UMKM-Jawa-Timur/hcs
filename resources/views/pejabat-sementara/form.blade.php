@@ -101,6 +101,10 @@
                     const bagian = res.data.bagian?.nama_bagian || '';
                     jabatan = res.data.jabatan.nama_jabatan;
 
+                    console.log(bagian);
+                    console.log(entitas);
+                    console.log(jabatan);
+
                     if(Object.hasOwn(entitas, 'subDiv')) {
                         $('#jb-entity').val(`${jabatan} ${bagian} ${entitas.subDiv.nama_subdivisi}`);
                         return;
@@ -115,6 +119,8 @@
                         $('#jb-entity').val(`${jabatan} ${bagian} ${entitas.cab.nama_cabang}`);
                         return;
                     }
+
+                    $('#jb-entity').val(jabatan + ' Pusat');
                 }
             });
         });
