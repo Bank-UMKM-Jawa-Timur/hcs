@@ -386,13 +386,21 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $pjs = \App\Models\PjsModel::where('nip', $karyawan->nip)->get();
+                            @endphp
+
+                            @forelse ($pjs as $data)
                             <tr>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
+                                <td>{{ $data->no_sk }}</td>
+                                <td>{{ jabatanLengkap($data) }}</td>
+                                <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
+                                <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
+                                <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
                             </tr>
+                            @empty
+
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
