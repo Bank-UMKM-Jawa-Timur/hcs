@@ -369,6 +369,34 @@
                     @endforeach
                 @endif
             @endif
+            <br>
+            <hr>
+
+            <div class="row m-3">
+                <h6 class="mt-2">Histori Penjabat Sementara (PJS)</h6>
+                <div class="table-responsive overflow-hidden pt-2">
+                    <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
+                        <thead>
+                            <tr>
+                                <th style="background-color: #CCD6A6; text-align: center;">No SK</th>
+                                <th style="background-color: #CCD6A6; text-align: center;">Jabatan</th>
+                                <th style="background-color: #CCD6A6; text-align: center;">Mulai</th>
+                                <th style="background-color: #CCD6A6; text-align: center;">Berakhir</th>
+                                <th style="background-color: #CCD6A6; text-align: center;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             <div class="row m-3">
                 <a href="/karyawan">
@@ -377,4 +405,17 @@
             </div>
         </form>
     </div>
+@endsection
+
+@section('custom_script')
+    <script>
+        $("#table_export").DataTable({
+            dom : "Bfrtip",
+            iDisplayLength: -1,
+            ordering: false,
+            bFilter: false,
+            bInfo : false,
+            paging: false,
+        });
+    </script>
 @endsection
