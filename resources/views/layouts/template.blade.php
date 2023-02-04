@@ -88,20 +88,26 @@ Coded by www.creative-tim.com
       <div class="row row-offcanvas row-offcanvas-left vh-100" style="width: 1700px">
         <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar" role="navigation">
           <ul class="nav flex-column sticky-top pl-2 mt-0">
-            <li>
+            <li class="@active('home')">
                 <a href="/home" style="font-weight: bolder">
                     <i class="nc-icon nc-bank" style="font-weight: bolder"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
             {{-- Menu Manajemen Karyawan --}}
-            <li>
+            <li
+                class="@active('karyawan,klasifikasi,mutasi,demosi,promosi,penonaktifan,import,pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit,surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')"
+            >
                 <a class="nav-link" href="#submenu1" data-toggle="collapse" data-target="#submenu1" style="font-weight: bolder">
                   <i class="nc-icon nc-tile-56" style="font-weight: bolder"></i>
                   Manajemen Karyawan
                 </a>
-                <ul class="sub-menu list-unstyled flex-column collapse pl-2 " id="submenu1" aria-expanded="false">
-                  <li style="margin-top: -15px">
+                <ul
+                    class="sub-menu list-unstyled flex-column collapse pl-2
+                    @active('karyawan,klasifikasi,mutasi,demosi,promosi,penonaktifan,import,pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit,surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit', 'show')"
+                    id="submenu1"
+                >
+                  <li style="margin-top: -15px" class="@active('karyawan.index,karyawan.create,karyawan.edit,karyawan.show,import,klasifikasi')">
                     <a href="{{ route('karyawan.index') }}">
                       <i class="nc-icon nc-badge"></i>
                       <p>Karyawan </p>
@@ -115,7 +121,7 @@ Coded by www.creative-tim.com
                       <p></p>
                     </a>
                   </li>
-                  <li class="dropdown" style="margin-top: -15px">
+                  <li class="dropdown @active('mutasi,demosi,promosi,penonaktifan')" style="margin-top: -15px">
                       <a data-toggle="dropdown" aria-expanded="false">
                           <i class="nc-icon nc-chart-bar-32"></i>
                           <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
@@ -128,40 +134,40 @@ Coded by www.creative-tim.com
                           <a class="dropdown-item @active('karyawan.penonaktifan')" href="{{ route('karyawan.penonaktifan') }}">Penonaktifan</a>
                       </div>
                   </li>
-                  <li style="margin-top: -15px">
+                  <li style="margin-top: -15px" class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">
                     <a href="{{ route('pejabat-sementara.index') }}">
                       <i class="nc-icon nc-tie-bow"></i>
                       <p>Penjabat Sementara</p>
                       <p></p>
                     </a>
                   </li>
-                  <li class="dropdown" style="margin-top: -15px">
+                  <li class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" style="margin-top: -15px">
                     <a data-toggle="dropdown" aria-expanded="false">
                         <i class="nc-icon nc-bell-55"></i>
                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Reward & Punishment </p>
                         <p></p>
                     </a>
                     <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                        <a class="dropdown-item @active('surat-peringatan.index')" href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
+                        <a class="dropdown-item @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
                     </div>
                   </li>
                 </ul>
             </li>
             {{-- Menu Penghasilan  --}}
-            <li>
+            <li class="@active('gaji_perbulan,pajak_penghasilan')">
               <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2" style="font-weight: bolder">
                 <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
                 Penghasilan
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu2" aria-expanded="false">
-                <li style="margin-top: -15px">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('gaji_perbulan,pajak_penghasilan', 'show')" id="submenu2">
+                <li style="margin-top: -15px" class="@active('gaji_perbulan')">
                   <a href="/gaji_perbulan">
                     <i class="nc-icon nc-money-coins"></i>
                     <p>Proses Penghasilan</p>
                     <p></p>
                   </a>
                 </li>
-                <li style="margin-top: -15px">
+                <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
                   <a href="/pajak_penghasilan">
                     <i class="nc-icon nc-scissors"></i>
                     <p>Pajak Penghasilan</p>
@@ -171,27 +177,27 @@ Coded by www.creative-tim.com
               </ul>
             </li>
             {{-- Menu Histori --}}
-            <li>
+            <li class="@active('history')">
               <a class="nav-link" href="#submenu3" data-toggle="collapse" data-target="#submenu3" style="font-weight: bolder">
                 <i class="nc-icon nc-compass-05" style="font-weight: bolder"></i>
                 Histori
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu3" aria-expanded="false">
-                <li style="margin-top: -15px">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('history', 'show')" id="submenu3">
+                <li style="margin-top: -15px" class="@active('history_jabatan')">
                   <a href="{{ route('history_jabatan.index') }}">
                     <i class="nc-icon nc-briefcase-24"></i>
                     <p>Jabatan</p>
                     <p></p>
                   </a>
                 </li>
-                <li style="margin-top: -15px">
+                <li style="margin-top: -15px" class="@active('pejabat-sementara.history')">
                   <a href="{{ route('pejabat-sementara.history') }}">
                     <i class="nc-icon nc-tie-bow"></i>
                     <p>Penjabat Sementara</p>
                     <p></p>
                   </a>
                 </li>
-                <li style="margin-top: -15px">
+                <li style="margin-top: -15px" class="@active('surat-peringatan.history')">
                   <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}">
                     <i class="nc-icon nc-email-85"></i>
                     <p>Surat Peringatan</p>
@@ -201,12 +207,12 @@ Coded by www.creative-tim.com
               </ul>
             </li>
             {{-- Menu Laporan --}}
-            <li >
+            <li class="@active('laporan,index_dpp')">
               <a class="nav-link" href="#submenu4" data-toggle="collapse" data-target="#submenu4" style="font-weight: bolder">
                 <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
                 Laporan
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu4" aria-expanded="false">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('laporan,index_dpp', 'show')" id="submenu4">
                 <li class="dropdown" style="margin-top: -15px">
                   <a data-toggle="dropdown" aria-expanded="false">
                     <i class="nc-icon nc-single-copy-04"></i>
@@ -219,14 +225,14 @@ Coded by www.creative-tim.com
                       <a class="dropdown-item" href="#">Laporan Promosi</a>
                   </div>
                 </li>
-                <li style="margin-top: -15px">
+                <li style="margin-top: -15px" class="@active('laporan_jamsostek')">
                   <a href="{{ route('laporan_jamsostek.index') }}">
                     <i class="nc-icon nc-single-copy-04"></i>
                     <p>Laporan Jamsostek</p>
                     <p></p>
                   </a>
                 </li>
-                <li style="margin-top: -15px">
+                <li style="margin-top: -15px" class="@active('index_dpp')">
                   <a href="{{ route('index_dpp') }}">
                     <i class="nc-icon nc-single-copy-04"></i>
                     <p>Laporan DPP</p>
@@ -252,13 +258,16 @@ Coded by www.creative-tim.com
               </ul>
             </li>
             {{-- Menu Setting --}}
-            <li>
+            <li class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur')">
               <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu6" style="font-weight: bolder">
                 <i class="nc-icon nc-settings" style="font-weight: bolder"></i>
                 Setting
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6" aria-expanded="false">
-                <li class="dropdown" style="margin-top: -15px">
+              <ul
+                class="sub-menu list-unstyled flex-column collapse pl-2 @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')"
+                id="submenu6"
+                >
+                <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
                     <a data-toggle="dropdown" aria-expanded="false">
                         <i class="nc-icon nc-box"></i>
                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Master </p>
@@ -417,18 +426,18 @@ Coded by www.creative-tim.com
     var url = window.location;
 
     // for sidebar menu entirely but not cover treeview
-    $('ul.nav>li>a').filter(function() {
-      return this.href == url;
-    }).parent().addClass('active');
+    // $('ul.nav>li>a').filter(function() {
+    //   return this.href == url;
+    // }).parent().addClass('active');
 
-    // for treeview
-    $('ul.sub-menu>li>a').filter(function() {
-      return this.href == url;
-    }).parentsUntil(".nav > .sub-menu").addClass('active show');
+    // // for treeview
+    // $('ul.sub-menu>li>a').filter(function() {
+    //   return this.href == url;
+    // }).parentsUntil(".nav > .sub-menu").addClass('active show');
 
-    $('ul.sub-menu>li.dropdown>div.dropdown-menu>a').filter(function() {
-      return this.href == url;
-    }).parentsUntil(".nav > .sub-menu").addClass('active');
+    // $('ul.sub-menu>li.dropdown>div.dropdown-menu>a').filter(function() {
+    //   return this.href == url;
+    // }).parentsUntil(".nav > .sub-menu").addClass('active');
 
     function formatRupiah(angka, prefix){
 			var number_string = angka.replace(/[^,\d]/g, '').toString(),
