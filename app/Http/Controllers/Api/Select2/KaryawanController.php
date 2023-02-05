@@ -4,18 +4,21 @@ namespace App\Http\Controllers\Api\Select2;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\select2\KaryawanResource;
-use Illuminate\Database\Query\Builder;
+use App\Models\KaryawanModel;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 
 class KaryawanController extends Controller
 {
-    public function __invoke(Request $request)
+    public function karyawan(Request $request)
     {
         $query = $request->q ?? $request->search;
-        $karyawan = DB::table('mst_karyawan')
-            ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
-            ->where(function(Builder $builder) use($query) {;
+
+        $karyawan = KaryawanModel::with('jabatan')
+            ->where(function (Builder $builder) use ($query) {
                 $builder->orWhere('nip', 'LIKE', "%{$query}%");
                 $builder->orWhere('nama_karyawan', 'LIKE', "%{$query}%");
             })
@@ -23,8 +26,34 @@ class KaryawanController extends Controller
             ->orderBy('nama_karyawan', 'ASC')
             ->simplePaginate();
 
+        return $this->response($karyawan);
+    }
+
+    public function karyawanPjs(Request $request)
+    {
+        $query = $request->q ?? $request->search;
+
+        $karyawan = KaryawanModel::with('jabatan')
+            ->where(function (Builder $builder) use ($query) {
+                $builder->orWhere('nip', 'LIKE', "%{$query}%");
+                $builder->orWhere('nama_karyawan', 'LIKE', "%{$query}%");
+            })
+            ->whereNotIn('nip', function (QueryBuilder $builder) {
+                $builder->select('nip')
+                    ->from('pejabat_sementara')
+                    ->whereNull('tanggal_berakhir');
+            })
+            ->where('status_karyawan', '!=', 'Nonaktif')
+            ->orderBy('nama_karyawan', 'ASC')
+            ->simplePaginate();
+
+        return $this->response($karyawan);
+    }
+
+    private function response(Paginator $karyawan)
+    {
         return [
-            'results' => KaryawanResource::collection($karyawan)->toArray($request),
+            'results' => KaryawanResource::collection($karyawan),
             'pagination' => [
                 'more' => !empty($karyawan->nextPageUrl())
             ]

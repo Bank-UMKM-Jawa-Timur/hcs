@@ -21,7 +21,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth')->prefix('select2')->name('api.select2.')->group(function () {
-    Route::get('employees', KaryawanController::class)->name('karyawan');
+    Route::controller(KaryawanController::class)->group(function () {
+        Route::get('employees', 'karyawan')->name('karyawan');
+        Route::get('employees/pjs', 'karyawanPjs')->name('karyawan.pjs');
+    });
 });
 
 Route::middleware('auth')->name('api.')->group(function () {

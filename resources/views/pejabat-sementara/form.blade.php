@@ -71,7 +71,7 @@
 
         const nipSelect = $('#nip').select2({
             ajax: {
-                url: '{{ route('api.select2.karyawan') }}',
+                url: '{{ route('api.select2.karyawan.pjs') }}',
                 data: function(params) {
                     return {
                         search: params.term || '',
