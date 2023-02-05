@@ -16,9 +16,22 @@ use Illuminate\Support\Facades\DB;
 
 class KlasifikasiController extends Controller
 {
+    private String $orderRaw;
+
     public function __construct()
     {
         $this->middleware('auth');
+        $this->orderRaw = "
+            CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 3
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 7
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 8
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
+        ";
     }
 
     /**
@@ -156,6 +169,7 @@ class KlasifikasiController extends Controller
         if ($karyawan instanceof Builder) {
             $karyawan->with('keluarga');
             $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
+            $karyawan->orderByRaw($this->orderRaw);
             $karyawan = $karyawan->get();
         }
 

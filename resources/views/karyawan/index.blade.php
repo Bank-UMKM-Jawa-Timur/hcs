@@ -60,6 +60,8 @@
                                             default => '',
                                         };
 
+                                        $jabatan = $krywn->jabatan->nama_jabatan;
+
                                         $ket = $krywn->ket_jabatan ? "({$krywn->ket_jabatan})" : "";
 
                                         if(isset($krywn->entitas->subDiv)) {
@@ -69,8 +71,18 @@
                                         } else {
                                             $entitas = '';
                                         }
+
+                                        if ($jabatan == "Pemimpin Sub Divisi") {
+                                          $jabatan = 'PSD';
+                                        } else if ($jabatan == "Pemimpin Bidang Operasional") {
+                                          $jabatan = 'PBO';
+                                        } else if ($jabatan == "Pemimpin Bidang Pemasaran") {
+                                          $jabatan = 'PBP';
+                                        } else {
+                                          $jabatan = $krywn->jabatan->nama_jabatan;
+                                        }
                                     @endphp
-                                    <td>{{ $prefix . $krywn->jabatan->nama_jabatan }} {{ $entitas }} {{ $krywn?->bagian?->nama_bagian }} {{ $ket }}</td>
+                                    <td>{{ $prefix . $jabatan }} {{ $entitas }} {{ $krywn?->bagian?->nama_bagian }} {{ $ket }}</td>
                                     <td style="min-width: 130px">
                                       <div class="container">
                                         <div class="row">

@@ -19,12 +19,12 @@ class KaryawanRepository
             CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
             WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
             WHEN mst_karyawan.kd_jabatan='PC' THEN 3
-            WHEN mst_karyawan.kd_jabatan='PBO' THEN 4
-            WHEN mst_karyawan.kd_jabatan='PBP' THEN 5
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
             WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
             WHEN mst_karyawan.kd_jabatan='ST' THEN 7
-            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 8
-            WHEN mst_karyawan.kd_jabatan='NST' THEN 9 END ASC
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 8
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
         ";
     }
 
