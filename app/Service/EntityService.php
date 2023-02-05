@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\DB;
 
 class EntityService
 {
+    private static $posAbbrevs = [
+        'Pemimpin Sub Divisi' => 'PSD',
+        'Pemimpin Bidang Operasional' => 'PBO',
+        'Pemimpin Bidang Pemasaran' => 'PBP',
+    ];
+
     public static function getEntity($entity)
     {
         if (!$entity) return (object) [
@@ -62,16 +68,22 @@ class EntityService
 
     public static function getPosition(KaryawanModel|PjsModel $model)
     {
-        $jabatan = $model->jabatan->nama_jabatan;
+        $prefix = ($model instanceof PjsModel) ? 'Pjs. ' : '';
         $bagian = $model->bagian?->nama_bagian;
         $entitas = $model->entitas;
 
+        $jabatan = str_replace(
+            array_keys(static::$posAbbrevs),
+            array_values(static::$posAbbrevs),
+            $model->jabatan->nama_jabatan
+        );
+
         if (isset($entitas->subDiv))
-            return "{$jabatan} {$bagian} {$entitas->subDiv->nama_subdivisi}";
+            return "{$prefix}{$jabatan} {$bagian} {$entitas->subDiv->nama_subdivisi}";
 
         if (isset($entitas->div))
-            return "{$jabatan} {$bagian} {$entitas->div->nama_divisi}";
+            return "{$prefix}{$jabatan} {$bagian} {$entitas->div->nama_divisi}";
 
-        return "$jabatan $bagian";
+        return "{$prefix}$jabatan $bagian";
     }
 }
