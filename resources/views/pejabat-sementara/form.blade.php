@@ -30,9 +30,6 @@
             <label for="jabatan">Jabatan</label>
             <select name="kd_jabatan" id="jabatan" class="form-control @error('kd_jabatan') is-invalid @enderror">
                 <option value="">-- Pilih Jabatan --</option>
-                @foreach ($jabatan as $data)
-                    <option value="{{ $data->kd_jabatan }}">{{ $data->nama_jabatan }}</option>
-                @endforeach
             </select>
             @error('kd_jabatan')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -70,6 +67,8 @@
 
 @push('script')
     <script>
+        const posArray = JSON.parse('@php echo json_encode($jabatan) @endphp');
+
         const nipSelect = $('#nip').select2({
             ajax: {
                 url: '{{ route('api.select2.karyawan') }}',
@@ -100,6 +99,8 @@
                     const entitas = res.data.entitas;
                     const bagian = res.data.bagian?.nama_bagian || '';
                     jabatan = res.data?.jabatan?.nama_jabatan || '';
+
+                    managePositions(res.data.jabatan);
 
                     if(Object.hasOwn(entitas, 'subDiv')) {
                         $('#jb-entity').val(`${jabatan} ${bagian} ${entitas.subDiv.nama_subdivisi}`);
@@ -133,6 +134,29 @@
                 $('#kantor').val('pusat').trigger('change').attr('disabled', true);
             }
         });
+
+        function managePositions(jabatan) {
+            let skippedPos = [];
+
+            if(jabatan.kd_jabatan == 'PSD')
+                skippedPos = ['PEN', 'PBP', 'PBO'];
+
+            if(jabatan.kd_jabatan == 'PIMDIV')
+                skippedPos = ['PEN', 'PSD', 'PBP', 'PBO'];
+
+            generateJabatan(
+                posArray.filter((data) => !skippedPos.includes(data.kd_jabatan))
+            );
+        }
+
+        function generateJabatan(jabatan)
+        {
+            $('#jabatan').html('<option>-- Pilih Jabatan--</option>');
+
+            jabatan.map(function(data) {
+                $('#jabatan').append(`<option value="${data.kd_jabatan}">${data.nama_jabatan}</option>`);
+            });
+        }
 
         function generateKantor()
         {

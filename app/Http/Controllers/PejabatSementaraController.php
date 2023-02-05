@@ -28,7 +28,10 @@ class PejabatSementaraController extends Controller
 
     public function create()
     {
-        $jabatan = JabatanModel::all();
+        $jabatan = JabatanModel::whereNotIn('kd_jabatan', [
+            'IKJP', 'NST', 'ST',
+        ])->get();
+
         return view('pejabat-sementara.add', compact('jabatan'));
     }
 
