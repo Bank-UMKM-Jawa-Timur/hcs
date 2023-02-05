@@ -994,12 +994,24 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $umur[$loop->index]->u_awal}} - {{ $umur[$loop->index]->u_akhir}}</td>
-                                        <td>{{ $IKJP->count() }}</td>
-                                        <td>{{ $Tetap->count() }}</td>
-                                        <td>{{ $KP->count() }}</td>
+                                        <td>{{ count($IKJP) }}</td>
+                                        <td>{{ count($Tetap) }}</td>
+                                        <td>{{ count($KP) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2" style="text-align: center; font-size: 11px;">Sub Total</td>
+                                    <td id="total_IKJP" style="text-align: center; font-size: 11px;">-</td>
+                                    <td id="total_Tetap" style="text-align: center; font-size: 11px;">-</td>
+                                    <td id="total_KP" style="text-align: center; font-size: 11px;">-</td>
+                                </tr>
+                                <tr style="font-weight: bolder">
+                                    <td colspan="2" style="text-align: center; font-size: 11px;">Total</td>
+                                    <td id="total" colspan="3" style="text-align: center; font-size: 11px;">-</td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 @elseif ($status == 9)
@@ -1416,11 +1428,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.19/api/sum().js"></script>
     <script>
         $("#table_export").DataTable({
             dom : "Bfrtip",
             pageLength: 25,
             ordering: false,
+            drawCallback: function () {
+                var ikjp = $('#table_export').DataTable().column(2).data().sum();
+                var tetap = $('#table_export').DataTable().column(3).data().sum();
+                var kp = $('#table_export').DataTable().column(4).data().sum();
+                $('#total_IKJP').html(ikjp);
+                $('#total_Tetap').html(tetap);
+                $('#total_KP').html(kp);
+
+                $('#total').html((kp + tetap + ikjp));
+            },
             buttons: [
                 {
                     extend: 'excelHtml5',
