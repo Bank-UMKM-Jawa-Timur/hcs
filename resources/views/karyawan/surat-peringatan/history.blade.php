@@ -54,7 +54,9 @@
                         <tr>
                             <th class="text-center">No. SP</th>
                             <th class="text-center">Tanggal SP</th>
-                            <th class="text-center">Karyawan</th>
+                            <th class="text-center">NIP</th>
+                            <th class="text-center">Nama Karyawan</th>
+                            <th class="text-center">Kantor</th>
                             <th class="text-center">Pelanggaran</th>
                             <th class="text-center">Sanksi</th>
                         </tr>
@@ -64,7 +66,12 @@
                         <tr>
                             <td>{{ $sp->no_sp }}</td>
                             <td>{{ $sp->tanggal_sp->format('d/m/Y') }}</td>
+                            <td>{{ $sp->nip }}</td>
                             <td>{{ $sp->karyawan->nama_karyawan }}</td>
+                            @php
+                                $cab = isset($sp->karyawan->entitas->cab);
+                            @endphp
+                            <td>{{ $cab ? $sp->karyawan->entitas->cab->nama_cabang : 'Pusat' }}</td>
                             <td>{{ $sp->pelanggaran }}</td>
                             <td>{{ $sp->sanksi }}</td>
                         </tr>

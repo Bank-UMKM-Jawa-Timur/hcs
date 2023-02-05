@@ -36,7 +36,6 @@
                                         <td>{{ $sp->tanggal_sp->format('d M Y') }}</td>
                                         <td>{{ $sp->pelanggaran }}</td>
                                         <td class="d-flex">
-                                            <a href="{{ route('surat-peringatan.edit', $sp) }}" class="btn btn-outline-warning p-1 mr-1" style="min-width: 60px;">Edit</a>
                                             <a href="{{ route('surat-peringatan.show', $sp) }}" class="btn btn-outline-info p-1" style="min-width: 60px;">Detail</a>
                                         </td>
                                     </tr>
