@@ -71,12 +71,7 @@ class EntityService
         $prefix = ($model instanceof PjsModel) ? 'Pjs. ' : '';
         $bagian = $model->bagian?->nama_bagian;
         $entitas = $model->entitas;
-
-        $jabatan = str_replace(
-            array_keys(static::$posAbbrevs),
-            array_values(static::$posAbbrevs),
-            $model->jabatan->nama_jabatan
-        );
+        $jabatan = static::abbrevPos($model->jabatan->nama_jabatan);
 
         if (isset($entitas->subDiv))
             return "{$prefix}{$jabatan} {$bagian} {$entitas->subDiv->nama_subdivisi}";
@@ -94,5 +89,14 @@ class EntityService
             ->first();
 
         return $entity->kd_entitas;
+    }
+
+    public static function abbrevPos(String $name): string
+    {
+        return str_replace(
+            array_keys(static::$posAbbrevs),
+            array_values(static::$posAbbrevs),
+            $name
+        );
     }
 }

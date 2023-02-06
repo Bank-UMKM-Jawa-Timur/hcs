@@ -97,7 +97,7 @@
             success(res) {
                 const entitas = res.data.entitas;
                 const bagian = res.data.bagian?.nama_bagian || '';
-                jabatan = res.data?.jabatan?.nama_jabatan || '';
+                jabatan = res.data?.nama_jabatan || '';
 
                 $('#kantor').val('Pusat');
 
