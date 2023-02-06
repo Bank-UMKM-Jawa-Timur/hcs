@@ -146,8 +146,8 @@
             @if ($mode == 1)
             <div class="card-body ml-0 mr-0 mt-0 mb-2">
                 <div class="row m-0 mt-1">
-                    <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold">BUKTI PEMBAYARAN GAJI PAJAK {{ $tahun }}</p>
-                    <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold; margin-top: -15px">{{ $karyawan->nama_karyawan }}</p>
+                    <p class="col-sm-12 text-center" style="font-size: 1 8px; font-weight: bold">BUKTI PEMBAYARAN GAJI PAJAK {{ $tahun }}</p>
+                    <p class="col-sm-12 text-center" style="font-size: 1 8px; font-weight: bold; margin-top: -15px">{{ $karyawan->nama_karyawan }}</p>
                     <div class="col-sm-12 text-right">
                         <input type="button" class="btn btn-success" style="margin-top: -5px" value="Print" onClick="printReport()">
                     </div>
@@ -550,8 +550,8 @@
                 </div>
             </div>
             @else
-                <div class="table-responsive">
-                    <table class="table cell-border" id="table_export" style="width: 100%; white-space: nowrap; table-layout: fixed;">
+                <div class="table-responsive ml-2">
+                    <table class="table cell-border" id="table_export" style="width: 100%; white-space: nowrap;">
                         <tr>
                             <td class="p-0">
                                 <h5 class="card-title mt-3" style="text-align: start">PENGHASILAN TERATUR</h5>
@@ -574,66 +574,77 @@
                                             $total_tj_transport = null;
                                         @endphp
                                         <tr>
-                                            <th class="sticky-col" rowspan="2" style="background-color: #CCD6A6; min-width: 100px;">Bulan</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 100px; ">Gaji Pokok</th>
-                                            <th colspan="8" style="background-color: #CCD6A6; ">Tunjangan</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">Penambah <br>Bruto Jamsostek</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">T. Uang Makan</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">T. Uang Pulsa</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">T. Uang Vitamin</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 120px; ">T. Uang Transport</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Bulan</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Gaji<br>Pokok</th>
+                                            <th colspan="8" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Tunjangan</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; max-width: 30px; font-size: 8px;">Total<br>Gaji</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Penambah<br>Bruto<br>Jamsostek</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Tunjangan<br>Uang<br>Makan</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Tunjangan<br>Uang<br>Pulsa</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Tunjangan<br>Uang<br>Vitamin</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Tunjangan<br>Uang<br>Transport</th>
                                         </tr>
                                         <tr style="background-color: #DAE2B6">
-                                            <th>Keluarga</th>
-                                            <th>Jabatan</th>
-                                            <th>penyesuaian</th>
-                                            <th>Perumahan</th>
-                                            <th style="min-width: 100px">Listrik & Air</th>
-                                            <th>Pelaksana</th>
-                                            <th>Kemahalan</th>
-                                            <th>Kesejahteraan</th>
+                                            <th style="font-size: 8px; min-width: 20px;">Keluarga</th>
+                                            <th style="font-size: 8px; min-width: 20px;">Jabatan</th>
+                                            <th style="font-size: 8px; min-width: 20px;">penyesuaian</th>
+                                            <th style="font-size: 8px; min-width: 20px;">Perumahan</th>
+                                            <th style="font-size: 8px; min-width: 20px;">Listrik & Air</th>
+                                            <th style="font-size: 8px; min-width: 20px;">Pelaksana</th>
+                                            <th style="font-size: 8px; min-width: 20px;">Kemahalan</th>
+                                            <th style="font-size: 8px; min-width: 20px;">Kesejahteraan</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody style="font-size: 11px;">
                                         @for ($i = 0; $i < 12; $i++)
+                                        @php
+                                            $total_gj_pokok += $gj[$i]['gj_pokok'];
+                                            $total_tj_keluarga += $gj[$i]['tj_keluarga'];
+                                            $total_tj_jabatan += $gj[$i]['tj_jabatan'];
+                                            $total_gj_penyesuaian += $gj[$i]['gj_penyesuaian'];
+                                            $total_tj_perumahan += $gj[$i]['tj_perumahan'];
+                                            $total_tj_telepon += $gj[$i]['tj_telepon'];
+                                            $total_tj_pelaksana += $gj[$i]['tj_pelaksana'];
+                                            $total_tj_kemahalan += $gj[$i]['tj_kemahalan'];
+                                            $total_tj_kesejahteraan += $gj[$i]['tj_kesejahteraan'];
+
+                                            $total_jamsostek += $jamsostek[$i];
+                                            $total_uang_makan += $gj[$i]['uang_makan'];
+                                            $total_tj_pulsa += $gj[$i]['tj_pulsa'];
+                                            $total_tj_vitamin += $gj[$i]['tj_vitamin'];
+                                            $total_tj_transport += $gj[$i]['tj_transport'];
+
+                                            $total_gaji =  $total_gj_pokok + $total_tj_keluarga + $total_tj_jabatan + $total_gj_penyesuaian 
+                                                           + $total_tj_perumahan + $total_tj_telepon + $total_tj_pelaksana + $total_tj_kemahalan
+                                                           + $total_tj_kesejahteraan;
+
+                                            $total_gaji_bln = ($gj[$i]['gj_pokok']) + ($gj[$i]['tj_keluarga']) + ($gj[$i]['tj_jabatan']) + ($gj[$i]['gj_penyesuaian'])
+                                                              + ($gj[$i]['tj_perumahan']) + ($gj[$i]['tj_telepon']) + ($gj[$i]['tj_pelaksana']) + ( $gj[$i]['tj_kemahalan'])
+                                                              + ($gj[$i]['tj_kesejahteraan']);
+                                        @endphp             
                                             <tr>
-                                                <td class="sticky-col">{{ $bulan[$i] }}</td>
+                                                <td>{{ $bulan[$i] }}</td>
                                                 <td>{{ ($gj[$i]['gj_pokok'] != 0) ? rupiah($gj[$i]['gj_pokok']) : '-' }}</td>
-                                                <td >{{ ($gj[$i]['tj_keluarga'] != 0) ? rupiah($gj[$i]['tj_keluarga']) : '-' }}</td>
-                                                <td  >{{ ($gj[$i]['tj_jabatan'] != 0) ? rupiah($gj[$i]['tj_jabatan']) : '-' }}</td>
-                                                <td  >{{ ($gj[$i]['gj_penyesuaian'] != 0) ? rupiah($gj[$i]['gj_penyesuaian']) : '-' }}</td>
-                                                <td  >{{ ($gj[$i]['tj_perumahan'] != 0) ? rupiah($gj[$i]['tj_perumahan']) : '-' }}</td>
-                                                <td  >{{ ($gj[$i]['tj_telepon'] != 0) ? rupiah($gj[$i]['tj_telepon']) : '-' }}</td>
-                                                <td  >{{ ($gj[$i]['tj_pelaksana'] != 0) ? rupiah($gj[$i]['tj_pelaksana']) : '-' }}</td>
-                                                <td  >{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
-                                                <td  >{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['tj_keluarga'] != 0) ? rupiah($gj[$i]['tj_keluarga']) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['tj_jabatan'] != 0) ? rupiah($gj[$i]['tj_jabatan']) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['gj_penyesuaian'] != 0) ? rupiah($gj[$i]['gj_penyesuaian']) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['tj_perumahan'] != 0) ? rupiah($gj[$i]['tj_perumahan']) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['tj_telepon'] != 0) ? rupiah($gj[$i]['tj_telepon']) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['tj_pelaksana'] != 0) ? rupiah($gj[$i]['tj_pelaksana']) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
+                                                <td>{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
+                                                <td>{{ ($total_gaji_bln != 0 ) ? rupiah($total_gaji_bln) : '-' }}</td>
                                                 <td>-</td>
                                                 <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_pulsa'] != 0) ? rupiah($gj[$i]['tj_pulsa']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_vitamin'] != 0) ? rupiah($gj[$i]['tj_vitamin']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_transport'] != 0) ? rupiah($gj[$i]['tj_transport']) : '-' }}</td>
-                                                @php
-                                                    $total_gj_pokok += $gj[$i]['gj_pokok'];
-                                                    $total_tj_keluarga += $gj[$i]['tj_keluarga'];
-                                                    $total_tj_jabatan += $gj[$i]['tj_jabatan'];
-                                                    $total_gj_penyesuaian += $gj[$i]['gj_penyesuaian'];
-                                                    $total_tj_perumahan += $gj[$i]['tj_perumahan'];
-                                                    $total_tj_telepon += $gj[$i]['tj_telepon'];
-                                                    $total_tj_pelaksana += $gj[$i]['tj_pelaksana'];
-                                                    $total_tj_kemahalan += $gj[$i]['tj_kemahalan'];
-                                                    $total_tj_kesejahteraan += $gj[$i]['tj_kesejahteraan'];
-                                                    $total_jamsostek += $jamsostek[$i];
-                                                    $total_uang_makan += $gj[$i]['uang_makan'];
-                                                    $total_tj_pulsa += $gj[$i]['tj_pulsa'];
-                                                    $total_tj_vitamin += $gj[$i]['tj_vitamin'];
-                                                    $total_tj_transport += $gj[$i]['tj_transport'];
-                                            @endphp
-                                        </tr>
+                                            </tr>
                                         @endfor
                                     </tbody>
-                                    <tfoot style="font-weight: bold">
+                                    <tfoot style="font-weight: bold; font-size: 11px;">
                                         <tr>
-                                            <td class="sticky-col" colspan="1">
+                                            <td colspan="1">
                                                 Total
                                             </td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_gj_pokok) }}</td>
@@ -645,6 +656,7 @@
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_pelaksana) }}</td>
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_kemahalan) }}</td>
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_kesejahteraan) }}</td>
+                                            <td style="background-color: #cecece; ">{{ rupiah($total_gaji) }}</td>
                                             <td style="background-color: #54B435; ">-</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_uang_makan) }}</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_tj_pulsa) }}</td>
