@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Karyawan\SuratPeringatanRequest;
+use App\Http\Requests\SuratPeringatan\HistoryRequest;
 use App\Models\KaryawanModel;
 use App\Models\SpModel;
 use App\Repository\SuratPeringatanRepository;
@@ -60,10 +61,10 @@ class SuratPeringatanController extends Controller
         return redirect()->route('surat-peringatan.index');
     }
 
-    public function history(Request $request)
+    public function history(HistoryRequest $request)
     {
         return view('karyawan.surat-peringatan.history', [
-            'history' => $this->repo->report($request->only(['tahun', 'nip'])),
+            'history' => $this->repo->report($request->only(['tahun', 'nip', 'tanggal'])),
             'firstData' => SpModel::oldest('tanggal_sp')->first(),
             'karyawan' => KaryawanModel::find($request->nip),
             'request' => $request,

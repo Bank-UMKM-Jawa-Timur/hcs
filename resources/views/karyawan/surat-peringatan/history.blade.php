@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@include('vendor.select2')
 
 @php
     $firstYear = $firstData?->date?->format('Y') ?? date('Y');
@@ -32,16 +33,17 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="year">Tahun</label>
-                        <select name="tahun" id="year" class="form-control">
-                            <option value="">-- Semua --</option>
-                            @for ($year = $firstYear; $year <= date('Y'); $year++)
-                                <option value="{{ $year }}" @selected($year == $request->tahun)>{{ $year }}</option>
-                            @endfor
+                        <label for="kategori">Kategori</label>
+                        <select id="kategori" class="form-control">
+                            <option value="">Semua Data</option>
+                            <option value="nip" @selected($request->nip)>Karyawan</option>
+                            <option value="tanggal">Tanggal</option>
+                            <option value="tahun" @selected($request->tahun)>Tahun</option>
                         </select>
                     </div>
                 </div>
             </div>
+            <div class="row" id="kategori-wrapper"></div>
             <button type="submit" class="btn btn-primary">Tampilkan</button>
         </form>
     </div>
@@ -83,115 +85,180 @@
     </div>
 @endsection
 
-@section('custom_script')
-    <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
-    <script>
-        $("#sp-table").DataTable({
-            dom : "Bfrtip",
-            pageLength: 25,
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur',
-                    filename : 'Bank UMKM Jawa Timur Laporan Surat Peringatan',
-                    message: 'Laporan Surat Peringatan\n ',
-                    text:'Excel',
-                    header: true,
-                    footer: true,
-                    customize: function( xlsx, row ) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    title: 'Bank UMKM Jawa Timur\n Laporan Surat Peringatan ',
-                    filename : 'Bank UMKM Jawa Timur Laporan Surat Peringatan',
-                    text:'PDF',
-                    footer: true,
-                    paperSize: 'A4',
-                    orientation: 'landscape',
-                    customize: function (doc) {
-                        var now = new Date();
-                        var jsDate = now.getDate()+' / '+(now.getMonth()+1)+' / '+now.getFullYear();
+@push('script')
+<script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+<script>
+function generateKategori(kategori) {
+    if(kategori == 'tahun') {
+        return `
+        <div class="form-group col-md-4">
+            <label for="year">Tahun</label>
+            <select name="tahun" id="year" class="form-control">
+                @for ($year = $firstYear; $year <= date('Y'); $year++)
+                    <option value="{{ $year }}" @selected($year == $request->tahun)>{{ $year }}</option>
+                @endfor
+            </select>
+        </div>
+        `;
+    }
 
-                        doc.styles.tableHeader.fontSize = 10;
-                        doc.defaultStyle.fontSize = 9;
-                        doc.defaultStyle.alignment = 'center';
-                        doc.styles.tableHeader.alignment = 'center';
+    if(kategori == 'nip') {
+        return `
+        <div class="form-group col-md-4">
+            <label for="nip">Karyawan</label>
+            <select class="form-control" id="nip" name="nip"></select>
+        </div>
+        `;
+    }
+}
 
-                        doc.content[1].margin = [0, 0, 0, 0];
-                        doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-
-                        doc['footer']=(function(page, pages) {
-                            return {
-                                columns: [
-                                    {
-                                        alignment: 'left',
-                                        text: ['Created on: ', { text: jsDate.toString() }]
-                                    },
-                                    {
-                                        alignment: 'right',
-                                        text: ['Page ', { text: page.toString() },	' of ',	{ text: pages.toString() }]
-                                    }
-                                ],
-                                margin: 20
-                            }
-                        });
-
-                    }
-                },
-                {
-                    extend: 'print',
-                    title: 'Bank UMKM Jawa Timur Laporan Surat Peringatan ',
-                    text:'print',
-                    footer: true,
-                    paperSize: 'A4',
-                    customize: function (win) {
-                        var last = null;
-                        var current = null;
-                        var bod = [];
-
-                        var css = '@page { size: landscape; }',
-                            head = win.document.head || win.document.getElementsByTagName('head')[0],
-                            style = win.document.createElement('style');
-
-                        style.type = 'text/css';
-                        style.media = 'print';
-
-                        if (style.styleSheet) {
-                            style.styleSheet.cssText = css;
-                        } else {
-                            style.appendChild(win.document.createTextNode(css));
-                        }
-
-                        head.appendChild(style);
-
-                        $(win.document.body).find('h1')
-                            .css('text-align', 'center')
-                            .css( 'font-size', '16pt' )
-                            .css('margin-top', '20px');
-                        $(win.document.body).find('table')
-                            .addClass('compact')
-                            .css('font-size', '10pt')
-                            .css('width', '1000px')
-                            .css('border', '#bbbbbb solid 1px');
-                        $(win.document.body).find('tr:nth-child(odd) th').each(function(index){
-                            $(this).css('text-align','center');
-                        });
-                    }
+function initNIP() {
+    const nipSelect = $('#nip').select2({
+        ajax: {
+            url: '{{ route('api.select2.karyawan') }}',
+            data: function(params) {
+                return {
+                    search: params.term || '',
+                    page: params.page || 1
                 }
-            ]
-        });
+            },
+            cache: true,
+        },
+        templateResult: function(data) {
+            if(data.loading) return data.text;
+            return $(`
+                <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
+            `);
+        }
+    });
 
-        $(".buttons-excel").attr("class","btn btn-success mb-2");
-        $(".buttons-pdf").attr("class","btn btn-success mb-2");
-        $(".buttons-print").attr("class","btn btn-success mb-2");
-    </script>
-@endsection
+    @isset(request()->nip)
+        @if($karyawan)
+            nipSelect.append(`
+                <option value="{{$karyawan->nip}}">{{$karyawan->nip}} - {{$karyawan->nama_karyawan}}</option>
+            `).trigger('change');
+        @endif
+    @endisset
+}
+
+$('#kategori').change(function() {
+    const wrapper = $('#kategori-wrapper');
+    const kategori = $(this).val();
+
+    wrapper.html('');
+    wrapper.append(generateKategori(kategori));
+
+    if(kategori == 'nip') initNIP();
+});
+
+$("#sp-table").DataTable({
+    dom : "Bfrtip",
+    pageLength: 25,
+    buttons: [
+        {
+            extend: 'excelHtml5',
+            title: 'Bank UMKM Jawa Timur',
+            filename : 'Bank UMKM Jawa Timur Laporan Surat Peringatan',
+            message: 'Laporan Surat Peringatan\n ',
+            text:'Excel',
+            header: true,
+            footer: true,
+            customize: function( xlsx, row ) {
+                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+            }
+        },
+        {
+            extend: 'pdfHtml5',
+            title: 'Bank UMKM Jawa Timur\n Laporan Surat Peringatan ',
+            filename : 'Bank UMKM Jawa Timur Laporan Surat Peringatan',
+            text:'PDF',
+            footer: true,
+            paperSize: 'A4',
+            orientation: 'landscape',
+            customize: function (doc) {
+                var now = new Date();
+                var jsDate = now.getDate()+' / '+(now.getMonth()+1)+' / '+now.getFullYear();
+
+                doc.styles.tableHeader.fontSize = 10;
+                doc.defaultStyle.fontSize = 9;
+                doc.defaultStyle.alignment = 'center';
+                doc.styles.tableHeader.alignment = 'center';
+
+                doc.content[1].margin = [0, 0, 0, 0];
+                doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+                doc['footer']=(function(page, pages) {
+                    return {
+                        columns: [
+                            {
+                                alignment: 'left',
+                                text: ['Created on: ', { text: jsDate.toString() }]
+                            },
+                            {
+                                alignment: 'right',
+                                text: ['Page ', { text: page.toString() },	' of ',	{ text: pages.toString() }]
+                            }
+                        ],
+                        margin: 20
+                    }
+                });
+
+            }
+        },
+        {
+            extend: 'print',
+            title: 'Bank UMKM Jawa Timur Laporan Surat Peringatan ',
+            text:'print',
+            footer: true,
+            paperSize: 'A4',
+            customize: function (win) {
+                var last = null;
+                var current = null;
+                var bod = [];
+
+                var css = '@page { size: landscape; }',
+                    head = win.document.head || win.document.getElementsByTagName('head')[0],
+                    style = win.document.createElement('style');
+
+                style.type = 'text/css';
+                style.media = 'print';
+
+                if (style.styleSheet) {
+                    style.styleSheet.cssText = css;
+                } else {
+                    style.appendChild(win.document.createTextNode(css));
+                }
+
+                head.appendChild(style);
+
+                $(win.document.body).find('h1')
+                    .css('text-align', 'center')
+                    .css( 'font-size', '16pt' )
+                    .css('margin-top', '20px');
+                $(win.document.body).find('table')
+                    .addClass('compact')
+                    .css('font-size', '10pt')
+                    .css('width', '1000px')
+                    .css('border', '#bbbbbb solid 1px');
+                $(win.document.body).find('tr:nth-child(odd) th').each(function(index){
+                    $(this).css('text-align','center');
+                });
+            }
+        }
+    ]
+});
+
+$(".buttons-excel").attr("class","btn btn-success mb-2");
+$(".buttons-pdf").attr("class","btn btn-success mb-2");
+$(".buttons-print").attr("class","btn btn-success mb-2");
+
+$('#kategori').trigger('change');
+</script>
+@endpush
