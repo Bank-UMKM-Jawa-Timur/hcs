@@ -64,7 +64,7 @@ class SuratPeringatanController extends Controller
     public function history(HistoryRequest $request)
     {
         return view('karyawan.surat-peringatan.history', [
-            'history' => $this->repo->report($request->only(['tahun', 'nip', 'tanggal'])),
+            'history' => $this->repo->report($request->only(['tahun', 'nip', 'first_date', 'end_date'])),
             'firstData' => SpModel::oldest('tanggal_sp')->first(),
             'karyawan' => KaryawanModel::find($request->nip),
             'request' => $request,

@@ -27,7 +27,9 @@ class HistoryRequest extends FormRequest
             'tanggal' => 'array'
         ];
 
-        if ($this->tanggal) {
+        if ($this->first_date || $this->end_date) {
+            $rules['first_date'] = 'required|date';
+            $rules['end_date'] = 'required|date|after:first_date';
         }
 
         return $rules;

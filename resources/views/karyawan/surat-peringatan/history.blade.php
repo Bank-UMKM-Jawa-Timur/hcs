@@ -37,7 +37,7 @@
                         <select id="kategori" class="form-control">
                             <option value="">Semua Data</option>
                             <option value="nip" @selected($request->nip)>Karyawan</option>
-                            <option value="tanggal">Tanggal</option>
+                            <option value="tanggal" @selected($request->first_date || $request->end_date)>Tanggal</option>
                             <option value="tahun" @selected($request->tahun)>Tahun</option>
                         </select>
                     </div>
@@ -114,6 +114,22 @@ function generateKategori(kategori) {
         <div class="form-group col-md-4">
             <label for="nip">Karyawan</label>
             <select class="form-control" id="nip" name="nip"></select>
+        </div>
+        `;
+    }
+
+    if(kategori == 'tanggal') {
+        return `
+        <div class="form-group col-md-4">
+            <label for="first-date">Tanggal Awal</label>
+            <input class="form-control @error('first_date') is-invalid @enderror" type="date" id="first-date" name="first_date" value="{{ $request->first_date }}">
+            @error('first_date')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group col-md-4">
+            <label for="end-date">Tanggal Akhir</label>
+            <input class="form-control" type="date" id="end-date" name="end_date" value="{{ $request->end_date }}">
         </div>
         `;
     }
