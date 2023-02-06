@@ -60,6 +60,7 @@ class PromosiController extends Controller
     public function index()
     {
         $data = DB::table('demosi_promosi_pangkat')
+            ->where('keterangan', 'Promosi Jabatan')
             ->select(
                 'demosi_promosi_pangkat.*',
                 'karyawan.*',

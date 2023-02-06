@@ -28,12 +28,6 @@
                                     Tanggal Promosi
                                 </th>
                                 <th>
-                                    NIP Lama
-                                </th>
-                                <th>
-                                    NIP Baru
-                                </th>
-                                <th>
                                     Jabatan Lama
                                 </th>
                                 <th>
@@ -66,12 +60,6 @@
                                         </td>
                                         <td>
                                             {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
-                                        </td>
-                                        <td>
-                                            {{ $item->nip_lama ?? '-' }}
-                                        </td>
-                                        <td>
-                                            {{ $item->nip_baru ?? '-' }}
                                         </td>
                                         <td class="text-nowrap">
                                             {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{ $item->jabatan_lama }}

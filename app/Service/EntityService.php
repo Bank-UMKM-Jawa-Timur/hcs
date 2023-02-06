@@ -86,4 +86,13 @@ class EntityService
 
         return "{$prefix}$jabatan $bagian";
     }
+
+    public static function getFromBranch($branch)
+    {
+        $entity = DB::table('mst_bagian')
+            ->where('kd_bagian', $branch)
+            ->first();
+
+        return $entity->kd_entitas;
+    }
 }
