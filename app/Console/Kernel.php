@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,7 +16,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('backup:run --only-db')->everyMinute();
+        $endDate = Carbon::now()->daysInMonth;
+
+        // Backup the database on every 26 or end of day in month
+        $schedule->command('db:backup')->monthlyOn(26, '01:00');
+        $schedule->command('db:backup')->monthlyOn($endDate, '01:00');
     }
 
     /**
@@ -25,7 +30,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
