@@ -134,17 +134,47 @@ $status = isset($status) ? $status : null;
                                                 ->where('kd_entitas', $item->kd_entitas)
                                                 ->whereNotIn('status_karyawan', ['Kontrak Perpanjangan', 'IKJP'])
                                                 ->get();
-                                            foreach($karyawan as $i){
-                                                if($i->status_karyawan == 'Tetap'){
-                                                    $data_gaji = DB::table('gaji_per_bulan')
-                                                        ->where('nip', $i->nip)
-                                                        ->where('bulan', $bulan)
-                                                        ->where('tahun', $tahun)
-                                                        ->first();
-
-                                                    array_push($total_tunjangan_keluarga, ($data_gaji != null) ? $data_gaji->tj_keluarga : 0);
-                                                    array_push($total_tunjangan_kesejahteraan, ($data_gaji != null) ? $data_gaji->tj_kesejahteraan : 0);
-                                                    array_push($total_gj_cabang, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
+                                            // Cek Data Di Table Gaji Perbulan
+                                            $cek_data = DB::table('gaji_per_bulan')
+                                                ->where('bulan', $bulan)
+                                                ->where('tahun', $tahun)
+                                                ->count('*');
+                                            
+                                            // Jika Data Tidak Tersedia Di Gaji Perbulan
+                                            if($cek_data == 0){
+                                                foreach($karyawan as $i){
+                                                    if($i->status_karyawan == 'Tetap'){
+                                                        $data_gaji = DB::table('mst_karyawan')
+                                                            ->where('nip', $i->nip)
+                                                            ->select('gj_pokok', 'gj_penyesuaian')
+                                                            ->first();
+                                                        $data_tj_keluarga = DB::table('tunjangan_karyawan')
+                                                            ->where('nip', $i->nip)
+                                                            ->where('id', 1)
+                                                            ->first();
+                                                        $data_tj_kesejahteraan = DB::table('tunjangan_karyawan')
+                                                            ->where('nip', $i->nip)
+                                                            ->where('id', 8)
+                                                            ->first();
+                                                        
+                                                        array_push($total_gj_cabang, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
+                                                        array_push($total_tunjangan_keluarga, ($data_tj_keluarga != null) ? $data_tj_keluarga->nominal : 0);
+                                                        array_push($total_tunjangan_kesejahteraan, ($data_tj_kesejahteraan != null) ? $data_tj_kesejahteraan->nominal : 0);
+                                                    }
+                                                }
+                                            } else{
+                                                foreach($karyawan as $i){
+                                                    if($i->status_karyawan == 'Tetap'){
+                                                        $data_gaji = DB::table('gaji_per_bulan')
+                                                            ->where('nip', $i->nip)
+                                                            ->where('bulan', $bulan)
+                                                            ->where('tahun', $tahun)
+                                                            ->first();
+    
+                                                        array_push($total_tunjangan_keluarga, ($data_gaji != null) ? $data_gaji->tj_keluarga : 0);
+                                                        array_push($total_tunjangan_kesejahteraan, ($data_gaji != null) ? $data_gaji->tj_kesejahteraan : 0);
+                                                        array_push($total_gj_cabang, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
+                                                    }
                                                 }
                                             }
 

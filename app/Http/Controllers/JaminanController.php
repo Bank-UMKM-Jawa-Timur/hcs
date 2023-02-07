@@ -304,6 +304,11 @@ class JaminanController extends Controller
 
         // If yang dipilih kategori keseluruhan
         if($kategori == 1){
+            // Cek Data Di Table Gaji Perbulan
+            $cek_data =  DB::table('gaji_per_bulan')
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->count('*');
             $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
             $cbg = array();
             foreach($cabang as $item){
@@ -320,6 +325,58 @@ class JaminanController extends Controller
             $total_tunjangan_kesejahteraan = array();
             $total_gj_pusat = array();
             $s = array();
+            // Jika Data Belum Tersedia Di Table Gaji Perbulan
+            if($cek_data == 0){
+                foreach($karyawan_pusat as $i){
+                    if($i->status_karyawan == 'Tetap'){
+                        $data_gaji = DB::table('mst_karyawan')
+                            ->where('nip', $i->nip)
+                            ->select('gj_pokok', 'gj_penyesuaian')
+                            ->first();
+                        $data_tj_keluarga = DB::table('tunjangan_karyawan')
+                            ->where('nip', $i->nip)
+                            ->where('id', 1)
+                            ->first();
+                        $data_tj_kesejahteraan = DB::table('tunjangan_karyawan')
+                            ->where('nip', $i->nip)
+                            ->where('id', 8)
+                            ->first();
+                        
+                        array_push($total_gj_pusat, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
+                        array_push($total_tunjangan_keluarga, ($data_tj_keluarga != null) ? $data_tj_keluarga->nominal : 0);
+                        array_push($total_tunjangan_kesejahteraan, ($data_tj_kesejahteraan != null) ? $data_tj_kesejahteraan->nominal : 0);
+                    }
+                }
+                $dpp_pusat = round((array_sum($total_gj_pusat) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13);
+                
+                $data_pusat = DB::table('tunjangan_karyawan')
+                    ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
+                    ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+                    ->where('mst_tunjangan.status', 1)
+                    ->whereNotIn('kd_entitas', $cbg)
+                    ->get();
+
+                // Get Data keseluruhan cabang
+                $data_cabang = DB::table('tunjangan_karyawan')
+                    ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
+                    ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+                    ->where('mst_tunjangan.status', 1)
+                    ->whereIn('kd_entitas', $cbg)
+                    ->selectRaw('kd_entitas, sum(nominal) as nominal')
+                    ->groupBy('mst_karyawan.kd_entitas')
+                    ->get();
+
+                return view('jaminan.dpp_index', [
+                    'status' => 1,
+                    'dpp_pusat' => $dpp_pusat,
+                    'data_pusat' => $data_pusat,
+                    'data_cabang' => $data_cabang,
+                    'tahun' => $tahun,
+                    'bulan' => $bulan,
+                    'request' => $request,
+                ]);
+            }
+
             foreach($karyawan_pusat as $i){
                 if($i->status_karyawan == 'Tetap'){
                     $data_gaji = DB::table('gaji_per_bulan')
@@ -385,16 +442,32 @@ class JaminanController extends Controller
                 ->orWhere('kd_entitas', null)
                 ->where('status_karyawan', 'Tetap')
                 ->get();
-            foreach($karyawan as $i){
-                if ($i->status_karyawan == 'Tetap') {
-                    $data_gaji = DB::table('gaji_per_bulan')
-                        ->where('nip', $i->nip)
-                        ->where('bulan', $bulan)
-                        ->where('tahun', $tahun)
-                        ->first();
-                    array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
+            
+            $cek_data = DB::table('gaji_per_bulan')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan)
+                ->count('*');
+            if($cek_data == 0){
+                foreach($karyawan as $i){
+                    if ($i->status_karyawan == 'Tetap') {
+                        $data_gaji = DB::table('tunjangan_karyawan')
+                            ->where('id_tunjangan', 15)
+                            ->where('nip', $i->nip)
+                            ->first();
+                        array_push($dpp, ($data_gaji != null) ? $data_gaji->nominal : 0);
+                    }
                 }
-
+            } else{
+                foreach($karyawan as $i){
+                    if ($i->status_karyawan == 'Tetap') {
+                        $data_gaji = DB::table('gaji_per_bulan')
+                            ->where('nip', $i->nip)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->first();
+                        array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
+                    }
+                }
             }
         } else {
             $cabang = $request->get('cabang');
@@ -405,14 +478,31 @@ class JaminanController extends Controller
             $cab = DB::table('mst_cabang')
                 ->where('kd_cabang', $cabang)
                 ->first();
-            foreach($karyawan as $i){
-                if ($i->status_karyawan == 'Tetap') {
-                    $data_gaji = DB::table('gaji_per_bulan')
+            
+            $cek_data = DB::table('gaji_per_bulan')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan)
+                ->count('*');
+            if($cek_data == 0){
+                foreach($karyawan as $i){
+                    if ($i->status_karyawan == 'Tetap') {
+                        $data_gaji = DB::table('tunjangan_karyawan')
+                        ->where('id_tunjangan', 15)
                         ->where('nip', $i->nip)
-                        ->where('bulan', $bulan)
-                        ->where('tahun', $tahun)
                         ->first();
-                    array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
+                        array_push($dpp, ($data_gaji != null) ? $data_gaji->nominal : 0);
+                    }
+                }
+            } else{
+                foreach($karyawan as $i){
+                    if ($i->status_karyawan == 'Tetap') {
+                        $data_gaji = DB::table('gaji_per_bulan')
+                            ->where('nip', $i->nip)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->first();
+                        array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
+                    }
                 }
             }
         }
