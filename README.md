@@ -26,3 +26,8 @@
         ```bash
         php artisan serve
         ```
+- Setup cron\
+    Setup cron ini digunakan untuk membackup database pada setiap tanggal 26 dan akhir dari setiap bulan\
+        ``
+        0 1 * * * /usr/bin/php /path/to/project/artisan schedule:run >> /dev/null 2>&1
+        ``
