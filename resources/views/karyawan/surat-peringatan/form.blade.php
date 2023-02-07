@@ -9,6 +9,14 @@
             @enderror
         </div>
         <div class="col-md-4 form-group">
+            <label for="jabatan">Jabatan</label>
+            <input type="text" class="form-control" id="jabatan" disabled>
+        </div>
+        <div class="col-md-4 form-group">
+            <label for="kantor">Kantor</label>
+            <input type="text" class="form-control" id="kantor" disabled>
+        </div>
+        <div class="col-md-4 form-group">
             <label for="no_sp">No. SP</label>
             <input type="text" name="no_sp" id="no_sp" class="form-control @error('no_sp') is-invalid @enderror" value="{{ $sp?->no_sp }}" @disabled($ro ?? null) autofocus>
 
@@ -78,5 +86,40 @@
             <option value="{{$sp->karyawan?->nip}}">{{$sp->karyawan?->nip}} - {{$sp->karyawan?->nama_karyawan}}</option>
         `).trigger('change');
     @endisset
+
+    $('#nip').on('select2:select', function() {
+        const nip = $(this).val();
+        let jabatan = '';
+
+        $.ajax({
+            url: `{{ route('api.karyawan') }}?nip=${nip}`,
+            dataType: 'JSON',
+            success(res) {
+                const entitas = res.data.entitas;
+                const bagian = res.data.bagian?.nama_bagian || '';
+                jabatan = res.data?.nama_jabatan || '';
+
+                $('#kantor').val('Pusat');
+
+                if(Object.hasOwn(entitas, 'subDiv')) {
+                    $('#jabatan').val(`${jabatan} ${bagian} ${entitas.subDiv.nama_subdivisi}`);
+                    return;
+                }
+
+                if(Object.hasOwn(entitas, 'div')) {
+                    $('#jabatan').val(`${jabatan} ${bagian} ${entitas.div.nama_divisi}`);
+                    return;
+                }
+
+                if(Object.hasOwn(entitas, 'cab')) {
+                    $('#jabatan').val(`${jabatan} ${bagian}`);
+                    $('#kantor').val(entitas.cab.nama_cabang);
+                    return;
+                }
+
+                $('#jabatan').val(`${jabatan} ${bagian}`);
+            }
+        });
+    });
 </script>
 @endpush

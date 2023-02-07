@@ -34,6 +34,13 @@ if (!function_exists('toRupiah')) {
     }
 }
 
+if (!function_exists('abbrevPos')) {
+    function abbrevPos($name)
+    {
+        return EntityService::abbrevPos($name);
+    }
+}
+
 if (!function_exists('jabatanLengkap')) {
     function jabatanLengkap(KaryawanModel|PjsModel $model)
     {

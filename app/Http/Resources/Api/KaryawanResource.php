@@ -19,6 +19,7 @@ class KaryawanResource extends JsonResource
             'nip' => $this->nip,
             'nama' => $this->nama_karyawan,
             'jabatan' => $this->jabatan,
+            'nama_jabatan' => EntityService::abbrevPos($this->jabatan->nama_jabatan),
             'entitas' => EntityService::getEntity($this->kd_entitas),
             'bagian' => $this->bagian,
         ];
