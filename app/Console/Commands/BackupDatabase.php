@@ -26,10 +26,10 @@ class BackupDatabase extends Command
         $backupType = BackupType::from($this->option('type'));
         $dbDriver = config('database.default');
         $path = 'backup/db/' . date('Y') . '/' . date('M');
-        $name = date('Y-m-d_H_i') . '.sql';
 
         if ($dbDriver == 'mysql') {
             $config = config('database.connections.mysql');
+            $name = date('Y-m-d_H_i_') . time() . '.sql';
             $sPath = Storage::path("{$path}/{$name}");
 
             Storage::makeDirectory($path);
