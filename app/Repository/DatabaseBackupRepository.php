@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Enum\BackupType;
+use Carbon\Carbon;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,6 +18,37 @@ class DatabaseBackupRepository
         $this->initFile();
     }
 
+    public function get()
+    {
+        $data = [];
+        $options = $this->options();
+
+        $data['backups'] = array_map(function ($opt) {
+            $opt['time'] = new Carbon($opt['time']);
+            return $opt;
+        }, $options['backups']);
+
+        $data['rollbacks'] = array_map(function ($opt) {
+            $opt['time'] = new Carbon($opt['time']);
+            return $opt;
+        }, $options['rollbacks']);
+
+        $data['position'] = empty($options['position']) ? null : $options['position'];
+
+        return (object) $data;
+    }
+
+    public function getById(string $id, BackupType $type)
+    {
+        $options = $this->options();
+        $options = array_filter($options[$type->value], fn ($opt) => $opt['id'] == $id);
+
+        if (empty($options)) return null;
+
+        $options[0]['time'] = new Carbon($options[0]['time']);
+        return $options[0];
+    }
+
     public function add(string $name, string $path, BackupType $type)
     {
         $options = $this->options();
@@ -25,9 +57,22 @@ class DatabaseBackupRepository
         if (!empty($duplicated)) return false;
 
         $options[$type->value][] = [
+            'id' => uniqid("{$type->value}_"),
             'name' => $name,
             'path' => $path,
             'time' => date('Y-m-d H:i:s'),
+        ];
+
+        $this->storeOptions($options);
+        return true;
+    }
+
+    public function changePosition(string $pos, BackupType $type)
+    {
+        $options = $this->options();
+        $options['position'] = [
+            'name' => $pos,
+            'type' => $type,
         ];
 
         $this->storeOptions($options);
@@ -56,7 +101,10 @@ class DatabaseBackupRepository
         $notation = [
             'backups' => [],
             'rollbacks' => [],
-            'position' => '',
+            'position' => [
+                'name' => null,
+                'type' => null,
+            ],
         ];
 
         $this->storage->put($this->backupFilename, json_encode($notation));

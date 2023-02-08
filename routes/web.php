@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
 use App\Http\Controllers\HistoryJabatanController;
@@ -140,6 +141,16 @@ Route::group(['middleware' => 'auth'], function () {
         ->name('surat-peringatan.history');
     Route::resource('surat-peringatan', SuratPeringatanController::class)
         ->except('destroy');
+
+    // Database
+    Route::prefix('database')
+        ->name('database.')
+        ->controller(DatabaseController::class)
+        ->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::get('restore/{id}', 'restore')->name('restore');
+            Route::get('rollback/{id}', 'rollback')->name('rollback');
+        });
 
     // Pejabat Sementara
     Route::match(['GET', 'POST'], 'pejabat-sementara/history', [PejabatSementaraController::class, 'history'])
