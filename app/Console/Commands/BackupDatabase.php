@@ -37,6 +37,8 @@ class BackupDatabase extends Command
                 ->setDbName($config['database'])
                 ->setUserName($config['username'])
                 ->setPassword($config['password'])
+                ->setHost($config['host'])
+                ->setPort($config['port'])
                 ->dumpToFile($sPath);
 
             $this->repo->add($name, $sPath, $backupType);
