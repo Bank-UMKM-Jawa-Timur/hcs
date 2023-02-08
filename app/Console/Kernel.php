@@ -19,8 +19,9 @@ class Kernel extends ConsoleKernel
         $endDate = Carbon::now()->daysInMonth;
 
         // Backup the database on every 26 or end of day in month
-        $schedule->command('db:backup')->monthlyOn(26, '01:00');
-        $schedule->command('db:backup')->monthlyOn($endDate, '01:00');
+        $schedule->command('db:backup')->monthlyOn(26, '00:01');
+        $schedule->command('db:backup')->monthlyOn(9, '00:01');
+        $schedule->command('db:backup')->monthlyOn($endDate, '00:01');
     }
 
     /**
