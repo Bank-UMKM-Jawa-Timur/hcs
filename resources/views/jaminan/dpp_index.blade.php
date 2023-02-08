@@ -88,7 +88,14 @@ $status = isset($status) ? $status : null;
                         $hasil_rupiah = number_format($angka, 0, ".", ",");
                         return $hasil_rupiah;
                     }
+                    $cek_data = DB::table('gaji_per_bulan')
+                        ->where('bulan', $bulan)
+                        ->where('tahun', $tahun)
+                        ->count('*');
                 @endphp
+                @if ($cek_data == 0)
+                    <h5 class="text-center align-item-center"><b>Data Ini Masih Belum Diproses ({{ getMonth($bulan) }} {{ $tahun }})</b></h5>
+                @endif
                 @if ($status == 1)
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
@@ -135,10 +142,6 @@ $status = isset($status) ? $status : null;
                                                 ->whereNotIn('status_karyawan', ['Kontrak Perpanjangan', 'IKJP'])
                                                 ->get();
                                             // Cek Data Di Table Gaji Perbulan
-                                            $cek_data = DB::table('gaji_per_bulan')
-                                                ->where('bulan', $bulan)
-                                                ->where('tahun', $tahun)
-                                                ->count('*');
                                             
                                             // Jika Data Tidak Tersedia Di Gaji Perbulan
                                             if($cek_data == 0){
@@ -150,11 +153,11 @@ $status = isset($status) ? $status : null;
                                                             ->first();
                                                         $data_tj_keluarga = DB::table('tunjangan_karyawan')
                                                             ->where('nip', $i->nip)
-                                                            ->where('id', 1)
+                                                            ->where('id_tunjangan', 1)
                                                             ->first();
                                                         $data_tj_kesejahteraan = DB::table('tunjangan_karyawan')
                                                             ->where('nip', $i->nip)
-                                                            ->where('id', 8)
+                                                            ->where('id_tunjangan', 8)
                                                             ->first();
                                                         
                                                         array_push($total_gj_cabang, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);

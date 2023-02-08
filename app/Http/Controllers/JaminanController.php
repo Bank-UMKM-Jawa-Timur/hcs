@@ -149,16 +149,43 @@ class JaminanController extends Controller
             $jp2_pusat = array();
             $total_gaji_pusat = array();
             $jkk_pusat = array();
-            foreach($karyawan_pusat as $i){
-                if($i->status_karyawan != 'Nonaktif'){
-                    $data_gaji = DB::table('gaji_per_bulan')
-                        ->where('nip', $i->nip)
-                        ->where('bulan', $bulan)
-                        ->where('tahun', $tahun)
-                        ->first();
-                    array_push($total_gaji_pusat, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
+            
+            // Cek Data di table gaji perbulan
+            $cek_data = DB::table('gaji_per_bulan')
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->count('*');
+            // Jika Data tidak tersedia di table gaji perbulan
+            if($cek_data == 0){
+                foreach($karyawan_pusat as $i){
+                    if($i->status_karyawan != 'Nonaktif'){
+                        $data_gaji = DB::table('mst_karyawan')
+                            ->where('nip', $i->nip)
+                            ->select('gj_pokok', 'gj_penyesuaian')
+                            ->first();
+                        $total_gj = $data_gaji->gj_pokok + $data_gaji->gj_penyesuaian;
+                        for($j = 0; $j <= 8; $j++){
+                            $tj = DB::table('tunjangan_karyawan')
+                                ->where('nip', $i->nip)
+                                ->where('id_tunjangan', $j)
+                                ->first('nominal');
+                            $total_gj += ($tj != null) ? $tj->nominal : 0;
+                        }
+                        array_push($total_gaji_pusat, $total_gj);
+                    }
                 }
-            }
+            } else{
+                foreach($karyawan_pusat as $i){
+                    if($i->status_karyawan != 'Nonaktif'){
+                        $data_gaji = DB::table('gaji_per_bulan')
+                            ->where('nip', $i->nip)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->first();
+                        array_push($total_gaji_pusat, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
+                    }
+                }
+            } 
 
             // dd($total_gaji_pusat);
             foreach($total_gaji_pusat as $i){
@@ -203,9 +230,12 @@ class JaminanController extends Controller
 
         // Get data per kantor/cabang
         // if kantor = pusat
-
         $total_gaji = array();
         $cab = null;
+        $cek_data = DB::table('gaji_per_bulan')
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->count('*');
         if($kantor == 'Pusat'){
             $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
             $cbg = array();
@@ -217,21 +247,36 @@ class JaminanController extends Controller
                 ->whereNotIn('kd_entitas', $cbg)
                 ->orWhere('kd_entitas', null)
                 ->get();
-            foreach($karyawan as $i){
-                if($i->status_karyawan != 'Nonaktif'){
-                    $data_gaji = DB::table('gaji_per_bulan')
-                        ->where('nip', $i->nip)
-                        ->where('bulan', $bulan)
-                        ->where('tahun', $tahun)
-                        ->first();
-                    array_push($total_gaji, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
+                
+            if($cek_data == 0){
+                foreach($karyawan as $i){
+                    if($i->status_karyawan != 'Nonaktif'){
+                        $data_gaji = DB::table('mst_karyawan')
+                            ->where('nip', $i->nip)
+                            ->select('gj_pokok', 'gj_penyesuaian')
+                            ->first();
+                        $total_gj = $data_gaji->gj_pokok + $data_gaji->gj_penyesuaian;
+                        for($j = 0; $j <= 8; $j++){
+                            $tj = DB::table('tunjangan_karyawan')
+                                ->where('nip', $i->nip)
+                                ->where('id_tunjangan', $j)
+                                ->first('nominal');
+                            $total_gj += ($tj != null) ? $tj->nominal : 0;
+                        }
+                        array_push($total_gaji, $total_gj);
+                    }
                 }
-                // dd($i->nama_karyawan. ' '.$data_gaji.' '.  $i->gj_pokok);
-                // if($i->gj_penyesuaian != null){
-                //     array_push($total_gaji, ($data_gaji + $i->gj_pokok + $i->gj_penyesuaian));
-                // } else {
-                //     array_push($total_gaji, ($data_gaji + $i->gj_pokok));
-                // }
+            } else{
+                foreach($karyawan as $i){
+                    if($i->status_karyawan != 'Nonaktif'){
+                        $data_gaji = DB::table('gaji_per_bulan')
+                            ->where('nip', $i->nip)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->first();
+                        array_push($total_gaji, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
+                    }
+                }
             }
         } elseif ($kantor == 'Cabang') {
             $tahun = $request->tahun;
@@ -243,16 +288,36 @@ class JaminanController extends Controller
             $cab = DB::table('mst_cabang')
                 ->where('kd_cabang', $cabang)
                 ->first();
-            foreach($karyawan as $i){
-                if($i->status_karyawan != 'Nonaktif'){
-                    $data_gaji = DB::table('gaji_per_bulan')
-                        ->where('nip', $i->nip)
-                        ->where('bulan', $bulan)
-                        ->where('tahun', $tahun)
-                        ->first();
-                    array_push($total_gaji, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
+                if($cek_data == 0){
+                    foreach($karyawan as $i){
+                        if($i->status_karyawan != 'Nonaktif'){
+                            $data_gaji = DB::table('mst_karyawan')
+                                ->where('nip', $i->nip)
+                                ->select('gj_pokok', 'gj_penyesuaian')
+                                ->first();
+                            $total_gj = $data_gaji->gj_pokok + $data_gaji->gj_penyesuaian;
+                            for($j = 0; $j <= 8; $j++){
+                                $tj = DB::table('tunjangan_karyawan')
+                                    ->where('nip', $i->nip)
+                                    ->where('id_tunjangan', $j)
+                                    ->first('nominal');
+                                $total_gj += ($tj != null) ? $tj->nominal : 0;
+                            }
+                            array_push($total_gaji, $total_gj);
+                        }
+                    }
+                } else{
+                    foreach($karyawan as $i){
+                        if($i->status_karyawan != 'Nonaktif'){
+                            $data_gaji = DB::table('gaji_per_bulan')
+                                ->where('nip', $i->nip)
+                                ->where('bulan', $bulan)
+                                ->where('tahun', $tahun)
+                                ->first();
+                            array_push($total_gaji, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
+                        }
+                    }
                 }
-            }
         }
 
         $jkk = array();
@@ -335,11 +400,11 @@ class JaminanController extends Controller
                             ->first();
                         $data_tj_keluarga = DB::table('tunjangan_karyawan')
                             ->where('nip', $i->nip)
-                            ->where('id', 1)
+                            ->where('id_tunjangan', 1)
                             ->first();
                         $data_tj_kesejahteraan = DB::table('tunjangan_karyawan')
                             ->where('nip', $i->nip)
-                            ->where('id', 8)
+                            ->where('id_tunjangan', 8)
                             ->first();
                         
                         array_push($total_gj_pusat, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);

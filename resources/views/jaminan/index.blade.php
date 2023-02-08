@@ -49,6 +49,11 @@ $request = isset($request) ? $request : null;
                 @php
                     $already_selected_value = date('y');
                     $earliest_year = 2022;
+
+                    $cek_data = DB::table('gaji_per_bulan')
+                        ->where('bulan', $bulan)
+                        ->where('tahun', $tahun)
+                        ->count('*');
                 @endphp
                 <div class="col-md-4">
                     <label for="tahun">Tahun</label>
@@ -100,6 +105,9 @@ $request = isset($request) ? $request : null;
                         return $hasil_rupiah;
                     }
                 @endphp
+                @if ($cek_data == 0)
+                    <h5 class="text-center align-item-center"><b>Data Ini Masih Belum Diproses ({{ getMonth($bulan) }} {{ $tahun }})</b></h5>
+                @endif
                 @if ($status == 1)
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
@@ -171,14 +179,34 @@ $request = isset($request) ? $request : null;
                                             $karyawan = DB::table('mst_karyawan')
                                                 ->where('kd_entitas', $item->kd_entitas)
                                                 ->get();
-                                            foreach($karyawan as $i){
-                                                if ($i->status_karyawan != 'Nonaktif') {
-                                                    $data_gaji = DB::table('gaji_per_bulan')
-                                                        ->where('nip', $i->nip)
-                                                        ->where('bulan', $bulan)
-                                                        ->where('tahun', $tahun)
-                                                        ->first();
-                                                    array_push($total_gaji_cabang, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
+                                            if($cek_data == 0){
+                                                foreach($karyawan as $i){
+                                                    if($i->status_karyawan != 'Nonaktif'){
+                                                        $data_gaji = DB::table('mst_karyawan')
+                                                            ->where('nip', $i->nip)
+                                                            ->select('gj_pokok', 'gj_penyesuaian')
+                                                            ->first();
+                                                        $total_gj = $data_gaji->gj_pokok + $data_gaji->gj_penyesuaian;
+                                                        for($j = 0; $j <= 8; $j++){
+                                                            $tj = DB::table('tunjangan_karyawan')
+                                                                ->where('nip', $i->nip)
+                                                                ->where('id_tunjangan', $j)
+                                                                ->first('nominal');
+                                                            $total_gj += ($tj != null) ? $tj->nominal : 0;
+                                                        }
+                                                        array_push($total_gaji_cabang, $total_gj);
+                                                    }
+                                                }
+                                            } else{
+                                                foreach($karyawan as $i){
+                                                    if ($i->status_karyawan != 'Nonaktif') {
+                                                        $data_gaji = DB::table('gaji_per_bulan')
+                                                            ->where('nip', $i->nip)
+                                                            ->where('bulan', $bulan)
+                                                            ->where('tahun', $tahun)
+                                                            ->first();
+                                                        array_push($total_gaji_cabang, ($data_gaji != null) ? ($data_gaji->gj_pokok + $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan + $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan + $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan + $data_gaji->tj_multilevel) : 0);
+                                                    }
                                                 }
                                             }
                                             foreach($total_gaji_cabang as $i){
