@@ -258,13 +258,13 @@ Coded by www.creative-tim.com
               </ul>
             </li>
             {{-- Menu Setting --}}
-            <li class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur')">
+            <li class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database')">
               <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu6" style="font-weight: bolder">
                 <i class="nc-icon nc-settings" style="font-weight: bolder"></i>
                 Setting
               </a>
               <ul
-                class="sub-menu list-unstyled flex-column collapse pl-2 @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')"
+                class="sub-menu list-unstyled flex-column collapse pl-2 @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show')"
                 id="submenu6"
                 >
                 <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
@@ -291,8 +291,8 @@ Coded by www.creative-tim.com
                     <p></p>
                   </a>
                 </li>
-                <li style="margin-top: -15px">
-                  <a href="#">
+                <li style="margin-top: -15px" class="@active('database')">
+                  <a href="{{ route('database.index') }}">
                     <i class="nc-icon nc-vector"></i>
                     <p>Database</p>
                     <p></p>
