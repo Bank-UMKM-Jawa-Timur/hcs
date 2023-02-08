@@ -2,46 +2,44 @@
 
 namespace App\Console\Commands;
 
+use App\Enum\BackupType;
+use App\Repository\DatabaseBackupRepository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Spatie\DbDumper\Databases\MySql;
 
 class BackupDatabase extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'db:backup';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    protected $signature = 'db:backup {--type=backups : Backup Type (backups, rollbacks)}';
     protected $description = 'Backup the database';
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
+    private DatabaseBackupRepository $repo;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->repo = new DatabaseBackupRepository;
+    }
+
     public function handle()
     {
+        $backupType = BackupType::from($this->option('type'));
         $dbDriver = config('database.default');
         $path = 'backup/db/' . date('Y') . '/' . date('M');
-        $name = date('Y-m-d_H_i') . '.sql';
 
         if ($dbDriver == 'mysql') {
             $config = config('database.connections.mysql');
+            $name = date('Y-m-d_H_i_') . time() . '.sql';
+            $sPath = Storage::path("{$path}/{$name}");
 
             Storage::makeDirectory($path);
             MySql::create()
                 ->setDbName($config['database'])
                 ->setUserName($config['username'])
                 ->setPassword($config['password'])
-                ->dumpToFile(Storage::path("{$path}/{$name}"));
+                ->dumpToFile($sPath);
+
+            $this->repo->add($name, $sPath, $backupType);
         }
 
         $this->info("Successfully backed up the database to {$path}/{$name}...");
