@@ -50,10 +50,12 @@ $request = isset($request) ? $request : null;
                     $already_selected_value = date('y');
                     $earliest_year = 2022;
 
-                    $cek_data = DB::table('gaji_per_bulan')
-                        ->where('bulan', $bulan)
-                        ->where('tahun', $tahun)
-                        ->count('*');
+                    if($status != null){
+                        $cek_data = DB::table('gaji_per_bulan')
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->count('*');
+                    }
                 @endphp
                 <div class="col-md-4">
                     <label for="tahun">Tahun</label>
