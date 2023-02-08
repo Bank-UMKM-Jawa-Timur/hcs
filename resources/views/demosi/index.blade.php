@@ -12,9 +12,12 @@
                     <a class="mb-3" href="{{ route('demosi.create') }}">
                         <button  class="btn btn-primary">Tambah Demosi</button>
                     </a>
-                    <div class="table">
+                    <div class="table-responsive">
                         <table class="table" id="table">
                             <thead class="text-primary">
+                                <th>
+                                    #
+                                </th>
                                 <th>
                                     NIP
                                 </th>
@@ -22,7 +25,7 @@
                                     Nama Karyawan
                                 </th>
                                 <th>
-                                    Tanggal Demosi
+                                    Tanggal Promosi
                                 </th>
                                 <th>
                                     Jabatan Lama
@@ -31,12 +34,24 @@
                                     Jabatan Baru
                                 </th>
                                 <th>
+                                    Kantor Lama
+                                </th>
+                                <th>
+                                    Kantor Baru
+                                </th>
+                                <th>
                                     Bukti SK
                                 </th>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
                                 @foreach ($data as $item)
                                     <tr>
+                                        <td>
+                                            {{ $i++ }}
+                                        </td>
                                         <td>
                                             {{ $item->nip }}
                                         </td>
@@ -46,11 +61,17 @@
                                         <td>
                                             {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
                                         </td>
-                                        <td>
-                                            {{ $item->jabatan_lama }}
+                                        <td class="text-nowrap">
+                                            {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{ $item->jabatan_lama }}
+                                        </td>
+                                        <td class="text-nowrap">
+                                            {{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }}{{ $item->jabatan_baru }}
                                         </td>
                                         <td>
-                                            {{ $item->jabatan_baru }}
+                                            {{ $item->kantor_lama ?? '-' }}
+                                        </td>
+                                        <td>
+                                            {{ $item->kantor_baru ?? '-' }}
                                         </td>
                                         <td>
                                             {{ $item->bukti_sk }}

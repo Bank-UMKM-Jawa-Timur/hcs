@@ -240,7 +240,7 @@ class PromosiController extends Controller
         $officer = DB::table('mst_karyawan')
             ->where('nip', $request->nip)
             ->update([
-                'nip' => $request->nip_baru,
+                'nip' => $request->nip_baru ?? $request->nip,
                 'kd_jabatan' => $request->id_jabatan_baru,
                 'ket_jabatan' => $request->ket_jabatan,
                 'kd_entitas' => $entity,
