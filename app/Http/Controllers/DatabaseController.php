@@ -6,9 +6,6 @@ use App\Enum\BackupType;
 use App\Exceptions\DatabaseBackupException;
 use App\Repository\DatabaseBackupRepository;
 use App\Service\DatabaseService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class DatabaseController extends Controller
@@ -37,6 +34,21 @@ class DatabaseController extends Controller
         try {
             $this->service->restore($backup);
             Alert::success('Restore Database Berhasil');
+        } catch (DatabaseBackupException $e) {
+            Alert::error($e->getMessage());
+        }
+
+        return back();
+    }
+
+    public function rollback($id)
+    {
+        $backup = $this->repo->getById($id, BackupType::ROLLBACKS);
+        if (!$backup) return abort(404);
+
+        try {
+            $this->service->rollback($backup);
+            Alert::success('Rollback Database Berhasil');
         } catch (DatabaseBackupException $e) {
             Alert::error($e->getMessage());
         }
