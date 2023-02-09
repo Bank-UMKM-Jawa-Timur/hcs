@@ -44,7 +44,8 @@ class EntityService
 
         if ($div) return (object) [
             'type' => 1,
-            'div' => $div
+            'div' => $div,
+            'subDiv' => null
         ];
 
         return (object) [
