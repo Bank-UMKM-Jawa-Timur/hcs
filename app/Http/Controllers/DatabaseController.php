@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enum\BackupType;
+use App\Exceptions\DatabaseBackupException;
 use App\Repository\DatabaseBackupRepository;
 use App\Service\DatabaseService;
 use Illuminate\Http\Request;
@@ -33,8 +34,12 @@ class DatabaseController extends Controller
         $backup = $this->repo->getById($id, BackupType::BACKUPS);
         if (!$backup) return abort(404);
 
-        $this->service->restore($backup);
-        Alert::success('Restore Database Berhasil');
+        try {
+            $this->service->restore($backup);
+            Alert::success('Restore Database Berhasil');
+        } catch (DatabaseBackupException $e) {
+            Alert::error($e->getMessage());
+        }
 
         return back();
     }

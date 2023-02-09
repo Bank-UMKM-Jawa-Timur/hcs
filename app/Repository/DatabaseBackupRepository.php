@@ -43,10 +43,10 @@ class DatabaseBackupRepository
         $options = $this->options();
         $options = array_filter($options[$type->value], fn ($opt) => $opt['id'] == $id);
 
-        if (empty($options)) return null;
+        if (!$opt = reset($options)) return null;
+        $opt['time'] = new Carbon($opt['time']);
 
-        $options[0]['time'] = new Carbon($options[0]['time']);
-        return $options[0];
+        return $opt;
     }
 
     public function add(string $name, string $path, BackupType $type)
@@ -64,6 +64,19 @@ class DatabaseBackupRepository
         ];
 
         $this->storeOptions($options);
+        return true;
+    }
+
+    public function remove(string $id, BackupType $type)
+    {
+        $options = $this->options();
+        $ids = array_map(fn ($opt) => $opt['id'], $options[$type->value]);
+        $index = array_search($id, $ids);
+
+        if (!$index) return false;
+        array_splice($options[$type->value], $index, 1);
+        $this->storeOptions($options);
+
         return true;
     }
 
