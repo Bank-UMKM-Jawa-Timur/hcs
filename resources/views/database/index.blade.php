@@ -3,12 +3,12 @@
 @section('content')
 <div class="card-header">
     <h5 class="card-title">Database</h5>
-    <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('database.index') }}">Database</a>
+    <p class="card-title"><a href="/">Setting </a> > <a href="{{ route('database.index') }}">Database</a>
 </div>
 
 <div class="card-body">
     <div class="row">
-        <div class="col-md-9">
+        <div class="col">
             <div class="card">
                 <div class="card-body">
                     <h6 class="mb-4">Daftar Backup Database</h6>
@@ -48,6 +48,32 @@
                 </div>
             </div>
         </div>
+        @isset($database->position['type'])
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="mb-4">Informasi Database</h6>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            @php
+                                $type = $database->position['type'];
+                                $stClass = $type == 'backups' ? 'primary' : 'success';
+                                $stWord = $type == 'backups' ? 'backup' : 'rollback';
+                            @endphp
+
+                            Status: <span class="badge badge-{{ $stClass }}">{{ $stWord }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            Nama: <small class="text-muted">{{ $database->position['name'] }}</small>
+                        </li>
+                        <div class="list-group-item text-center">
+                            <a href="" class="btn btn-sm btn-success">Checkout</a>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @endisset
     </div>
 </div>
 

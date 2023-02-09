@@ -143,7 +143,7 @@ Route::group(['middleware' => 'auth'], function () {
         ->except('destroy');
 
     // Database
-    Route::prefix('database')
+    Route::prefix('manage-database')
         ->name('database.')
         ->controller(DatabaseController::class)
         ->group(function () {
