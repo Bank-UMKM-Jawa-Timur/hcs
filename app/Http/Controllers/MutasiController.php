@@ -12,35 +12,41 @@ class MutasiController extends Controller
 {
     public function getDataKaryawan(Request $request)
     {
+        $cabang = DB::table('mst_cabang')
+            ->get();
+        $cbg = array();
+        foreach($cabang as $i){
+            array_push($cbg, $i->kd_cabang);
+        }
         $officer = DB::table('mst_karyawan')
             ->where('nip', $request->nip)
-            ->join('mst_pangkat_golongan', 'mst_pangkat_golongan.golongan', '=', 'mst_karyawan.kd_panggol')
+            // ->join('mst_pangkat_golongan', 'mst_pangkat_golongan.golongan', '=', 'mst_karyawan.kd_panggol')
             ->first();
 
         if(!$officer) return response()->json([
             'success' => false,
             'message' => 'Data karyawan tidak ditemukan',
         ]);
-
-        if($officer->kd_bagian != null){
-            $officer = DB::table('mst_karyawan')
-            ->where('nip', $request->nip)
-            ->join('mst_pangkat_golongan', 'mst_pangkat_golongan.golongan', '=', 'mst_karyawan.kd_panggol')
-            ->join('mst_bagian', 'mst_bagian.kd_bagian', '=', 'mst_karyawan.kd_bagian')
-            ->first();
-        }
-
-        if($officer->kd_entitas == null && $officer->kd_bagian != null){
-            $entity = DB::table('mst_bagian')
-                ->where('kd_bagian', $officer->kd_bagian)
-                ->select('kd_entitas')
-                ->first();
-            $officer->entitas = EntityService::getEntity($entity->kd_entitas);
+        
+        if(isset($officer->kd_bagian)){
+            if($officer->kd_entitas != null && !in_array($officer->kd_entitas, $cbg)){
+                $entity = DB::table('mst_bagian')
+                    ->where('kd_bagian', $officer->kd_bagian)
+                    ->select('kd_entitas')
+                    ->first();
+                $officer->entitas = EntityService::getEntity($entity->kd_entitas);
+            } else{
+                $officer->entitas = EntityService::getEntity($officer->kd_entitas);
+            }
+        } else if($officer->kd_entitas == null){
+            $officer->entitas = EntityService::getEntity($officer->kd_entitas);
         } else{
             $officer->entitas = EntityService::getEntity($officer->kd_entitas);
         }
 
         $officer->jabatan = DB::table('mst_jabatan')->where('kd_jabatan', $officer->kd_jabatan)->first();
+        $officer->panggol = ($officer->kd_panggol != null) ? DB::table('mst_pangkat_golongan')->where('golongan', $officer->kd_panggol)->first() : null;
+        $officer->bagian = ($officer->kd_bagian != null) ? DB::table('mst_bagian')->where('kd_bagian', $officer->kd_bagian)->first() : null;
 
         return response()->json([
             'success' => true,

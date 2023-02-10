@@ -375,6 +375,7 @@ $('#nip').select2({
                 success: (data) => {
                     if(!data.success) return;
                     var jabatan = ""
+                    var bag = ""
                     if(data.karyawan.entitas.type == 1){
                         $('#kantor_lama').val("Pusat");
                         if(data.karyawan.entitas.subDiv != null){
@@ -387,16 +388,20 @@ $('#nip').select2({
                         jabatan =  " " + data.karyawan.entitas.cab.nama_cabang
                         $('#kantor_lama').val(data.karyawan.kd_entitas + " - Cab. " + data.karyawan.entitas.cab.nama_cabang);
                     }
-                    if(data.karyawan.kd_bagian != null){
-                        jabatan = " - " + data.karyawan.nama_bagian
-                    } 
+
+                    if(data.karyawan.bagian != null){
+                        jabatan = ""
+                        bag = " Bagian " + data.karyawan.bagian.nama_bagian
+                    } else {
+                        bag = ""
+                    }
 
                     $('input[name=kd_entity]').val(data.karyawan.kd_entitas);
-                    $('#jabatan_lama').val(data.karyawan.jabatan.nama_jabatan + jabatan || '');
+                    $('#jabatan_lama').val(data.karyawan.jabatan.nama_jabatan + jabatan + bag || '');
                     $('#id_jabatan_lama').val(data.karyawan.jabatan.kd_jabatan);
                     $("#status_jabatan").val(data.karyawan.status_jabatan)
                     $("#bagian_lama").val(data.karyawan.kd_bagian)
-                    $("#panggol").val(data.karyawan.kd_panggol + " - " + data.karyawan.pangkat)
+                    $("#panggol").val(data.karyawan.panggol.golongan + " - " + data.karyawan.panggol.pangkat)
                     $("#panggol_lama").val(data.karyawan.kd_panggol)
                     $("#status_jabatan_lama").val(data.karyawan.status_jabatan)
                 }
