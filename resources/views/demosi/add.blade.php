@@ -375,10 +375,25 @@ $('#nip').select2({
                 dataType: 'JSON',
                 success: (data) => {
                     if(!data.success) return;
+                    var jabatan = ""
+                    if(data.karyawan.entitas.type == 1){
+                        $('#kantor_lama').val("Pusat");
+                        if(data.karyawan.entitas.subDiv != null){
+                            jabatan = " " + data.karyawan.entitas.subDiv.nama_subdivisi
+                        }  
+                        if(data.karyawan.entitas.div != null && data.karyawan.entitas.subDiv == null){
+                            jabatan = " " + data.karyawan.entitas.div.nama_divisi
+                        }
+                    } else if(data.karyawan.entitas.type == 2){
+                        jabatan =  " " + data.karyawan.entitas.cab.nama_cabang
+                        $('#kantor_lama').val(data.karyawan.kd_entitas + " - Cab. " + data.karyawan.entitas.cab.nama_cabang);
+                    }
+                    if(data.karyawan.kd_bagian != null){
+                        jabatan = " - " + data.karyawan.nama_bagian
+                    } 
 
                     $('input[name=kd_entity]').val(data.karyawan.kd_entitas);
-                    $('#jabatan_lama').val(data.karyawan.jabatan.nama_jabatan || '');
-                    $('#kantor_lama').val(data.karyawan.kd_entitas);
+                    $('#jabatan_lama').val(data.karyawan.jabatan.nama_jabatan + jabatan || '');
                     $('#id_jabatan_lama').val(data.karyawan.jabatan.kd_jabatan);
                     $("#status_jabatan").val(data.karyawan.status_jabatan)
                     $("#bagian_lama").val(data.karyawan.kd_bagian)

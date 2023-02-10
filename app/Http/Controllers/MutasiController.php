@@ -22,7 +22,24 @@ class MutasiController extends Controller
             'message' => 'Data karyawan tidak ditemukan',
         ]);
 
-        $officer->entitas = EntityService::getEntity($officer->kd_entitas);
+        if($officer->kd_bagian != null){
+            $officer = DB::table('mst_karyawan')
+            ->where('nip', $request->nip)
+            ->join('mst_pangkat_golongan', 'mst_pangkat_golongan.golongan', '=', 'mst_karyawan.kd_panggol')
+            ->join('mst_bagian', 'mst_bagian.kd_bagian', '=', 'mst_karyawan.kd_bagian')
+            ->first();
+        }
+
+        if($officer->kd_entitas == null && $officer->kd_bagian != null){
+            $entity = DB::table('mst_bagian')
+                ->where('kd_bagian', $officer->kd_bagian)
+                ->select('kd_entitas')
+                ->first();
+            $officer->entitas = EntityService::getEntity($entity->kd_entitas);
+        } else{
+            $officer->entitas = EntityService::getEntity($officer->kd_entitas);
+        }
+
         $officer->jabatan = DB::table('mst_jabatan')->where('kd_jabatan', $officer->kd_jabatan)->first();
 
         return response()->json([
