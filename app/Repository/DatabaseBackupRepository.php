@@ -148,6 +148,6 @@ class DatabaseBackupRepository
             ],
         ];
 
-        $this->storage->put($this->backupFilename, json_encode($notation));
+        $this->storage->put($this->backupFilename, json_encode($notation), 0777);
     }
 }

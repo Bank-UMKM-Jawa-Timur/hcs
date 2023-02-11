@@ -32,7 +32,7 @@ class BackupDatabase extends Command
             $name = date('Y-m-d_H_i_') . time() . '.sql';
             $sPath = Storage::path("{$path}/{$name}");
 
-            Storage::makeDirectory($path);
+            Storage::makeDirectory($path, 0777);
             MySql::create()
                 ->setDbName($config['database'])
                 ->setUserName($config['username'])
