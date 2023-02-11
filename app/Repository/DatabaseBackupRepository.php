@@ -94,6 +94,17 @@ class DatabaseBackupRepository
         return true;
     }
 
+    public function checkout()
+    {
+        $options = $this->options();
+
+        $options['position']['name'] = null;
+        $options['position']['type'] = null;
+
+        $this->storeOptions($options);
+        return true;
+    }
+
     private function options()
     {
         $content = $this->storage->get($this->backupFilename);

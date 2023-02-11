@@ -150,6 +150,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('', 'index')->name('index');
             Route::get('restore/{id}', 'restore')->name('restore');
             Route::get('rollback/{id}', 'rollback')->name('rollback');
+            Route::post('checkout', 'checkout')->name('checkout');
         });
 
     // Pejabat Sementara

@@ -67,7 +67,10 @@
                             Nama: <small class="text-muted">{{ $database->position['name'] }}</small>
                         </li>
                         <div class="list-group-item text-center">
-                            <a href="" class="btn btn-sm btn-success">Checkout</a>
+                            <form action="{{ route('database.checkout') }}" method="post">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-success" id="checkout-btn">Checkout</button>
+                            </form>
                         </div>
                     </ul>
                 </div>
@@ -96,6 +99,20 @@
         })
         .then((result) => {
             if(result.isConfirmed) window.location.href = url;
+        });
+    });
+
+    $('#checkout-btn').click(function(e) {
+        e.preventDefault();
+        const form = $(this).parent();
+
+        Swal.fire({
+            icon: 'question',
+            title: 'Apakah anda yakin?',
+            text: 'Aksi akan melakukan checkout permanen pada database',
+        })
+        .then((result) => {
+            if(result.isConfirmed) form.submit();
         });
     });
 </script>
