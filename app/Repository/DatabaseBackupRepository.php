@@ -57,13 +57,14 @@ class DatabaseBackupRepository
 
         if (!empty($duplicated) || $isSameContent) return false;
 
-        $options[$type->value][] = [
+        array_unshift($options[$type->value], [
             'id' => uniqid("{$type->value}_"),
             'name' => $name,
             'path' => $path,
             'time' => date('Y-m-d H:i:s'),
-        ];
+        ]);
 
+        chmod($path, 0777);
         $this->storeOptions($options);
         return true;
     }
