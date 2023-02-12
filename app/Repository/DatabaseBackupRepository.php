@@ -57,13 +57,14 @@ class DatabaseBackupRepository
 
         if (!empty($duplicated) || $isSameContent) return false;
 
-        $options[$type->value][] = [
+        array_unshift($options[$type->value], [
             'id' => uniqid("{$type->value}_"),
             'name' => $name,
             'path' => $path,
             'time' => date('Y-m-d H:i:s'),
-        ];
+        ]);
 
+        chmod($path, 0777);
         $this->storeOptions($options);
         return true;
     }
@@ -88,6 +89,17 @@ class DatabaseBackupRepository
             'name' => $pos,
             'type' => $type,
         ];
+
+        $this->storeOptions($options);
+        return true;
+    }
+
+    public function checkout()
+    {
+        $options = $this->options();
+
+        $options['position']['name'] = null;
+        $options['position']['type'] = null;
 
         $this->storeOptions($options);
         return true;
@@ -136,6 +148,6 @@ class DatabaseBackupRepository
             ],
         ];
 
-        $this->storage->put($this->backupFilename, json_encode($notation));
+        $this->storage->put($this->backupFilename, json_encode($notation), 0777);
     }
 }

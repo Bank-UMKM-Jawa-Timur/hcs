@@ -55,4 +55,12 @@ class DatabaseController extends Controller
 
         return back();
     }
+
+    public function checkout()
+    {
+        $this->repo->checkout();
+
+        Alert::success('Berhasil checkout database');
+        return back();
+    }
 }
