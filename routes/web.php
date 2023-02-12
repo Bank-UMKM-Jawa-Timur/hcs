@@ -13,6 +13,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PromosiController;
+use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\SuratPeringatanController;
 use App\Http\Controllers\TunjanganKaryawanController;
 use App\Imports\ImportNpwpRekening;
@@ -130,6 +131,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::resource('/backup', BackupController::class);
     Route::resource('/history_jabatan', HistoryJabatanController::class);
+    Route::resource('/laporan_gaji', SlipGajiController::class);
 
     // Penonaktifan Karyawan
     Route::controller(KaryawanController::class)->group(function () {
@@ -216,6 +218,9 @@ Route::group(['middleware' => 'auth'], function () {
     // Import Status
     Route::get('import_update_status', [KaryawanController::class, 'importStatusIndex'])->name('import-status-index');
     Route::post('import_update-status', [KaryawanController::class, 'importStatus'])->name('import_status');
+
+    // Get Laporan Gaji
+    Route::post('/laporan_gaji/getLaporan', [SlipGajiController::class, 'getLaporan'])->name('getLaporanGaji');
 });
 Auth::routes();
 

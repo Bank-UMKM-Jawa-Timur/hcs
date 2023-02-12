@@ -1,0 +1,178 @@
+@extends('layouts.template')
+@section('content')
+    <div class="card-header">
+        <div class="card-header">
+            <h5 class="card-title">Laporan Gaji</h5>
+            <p class="card-title"><a href="">Laporan</a> > Laporan Gaji</p>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row m-0">
+            <div class="col-lg-12">
+                <form action="{{ route('getLaporanGaji') }}" method="post" class="form-group">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Kategori</label>
+                                <select name="kategori" class="form-control" id="">
+                                    <option value="">--- Pilih Kategori ---</option>
+                                    <option value="1">Laporan Gaji Kesuluruhan</option>
+                                    <option value="2">Gaji Masuk Tabungan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Kantor</label>
+                                <select name="kantor" id="kantor" class="form-control">
+                                    <option value="">--- Pilih Kantor ---</option>
+                                    <option value="pusat">Pusat</option>
+                                    <option value="cabang">Cabang</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4" id="cabang_col">
+                            
+                        </div>
+                    </div>
+                    <button class="btn btn-info">Tampilkan</button>
+                </form>
+            </div>
+            @php
+                $i = 1;
+                $total_gj = 0;
+                $total_penyesuaian = 0;
+                $totalTj = [];
+
+                function rupiah($angka)
+                {
+                    $hasil_rupiah = number_format($angka, 0, ",", ".");
+                    return $hasil_rupiah;
+                }
+            @endphp
+            @if ($data != null)
+                @if ($kategori == 1)
+                    <div class="table-responsive">
+                        <table class="table" id="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama</th>
+                                    <th>Gaji Pokok</th>
+                                    <th>Tj. Keluarga</th>
+                                    <th>Tj. Listrik & Air</th>
+                                    <th>Tj. Jabatan</th>
+                                    <th>Tj. Perumahan</th>
+                                    <th>Tj. Kemahalan</th>
+                                    <th>Tj. Pelaksana</th>
+                                    <th>Tj. Kesejahteraan</th>
+                                    <th>Penyesuaian</th>
+                                    <th>Total</th>
+                                    <th>PPH 21</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $item)
+                                    <tr>
+                                        <td>{{ $i++ }}</td>
+                                        <td>{{ $item['nama'] }}</td>
+                                        <td>{{ rupiah($item['gj_pokok']) }}</td>
+                                        @foreach ($item['tunjangan'] as $j => $itemTj)
+                                            <td>{{ ($itemTj != null) ? rupiah($itemTj) : '-' }}</td>
+                                        @endforeach
+                                        <td>{{ ($item['gj_penyesuaian'] != null) ? rupiah($item['gj_penyesuaian']) : '-' }}</td>
+                                        <td>{{ rupiah($item['total']) }}</td>
+                                        <td>0</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="table-responsive">
+                        <table class="table" id="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama</th>
+                                    <th>Gaji</th>
+                                    <th>No Rek</th>
+                                    <th>JP BPJS TK 1%</th>
+                                    <th>DPP 5%</th>
+                                    <th>Kredit Koperasi</th>
+                                    <th>Iuran Koperasi</th>
+                                    <th>Iuran Pegawai</th>
+                                    <th>Iuran</th>
+                                    <th>Total Potongan</th>
+                                    <th>Total yang Diterima</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $item)
+                                    <tr>
+                                        <td>
+                                            {{ $i++ }}
+                                        </td>
+                                        <td>{{ $item['nama'] }}</td>
+                                        <td>{{ rupiah($item['total']) }}</td>
+                                        <td>{{ $item['norek'] }}</td>
+                                        @foreach ($item['potongan'] as $j => $itemPotongan)
+                                            <td>{{ ($itemPotongan != 0) ? rupiah($itemPotongan) : '-' }}</td>
+                                        @endforeach
+                                        <td>{{ (array_sum($item['potongan']) > 0) ? rupiah(array_sum($item['potongan'])) : '-' }}</td>
+                                        <td>{{ rupiah($item['total'] - array_sum($item['potongan'])) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            @endif
+        </div>
+    </div>
+@endsection
+
+@section('custom_script')
+    <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+    <script>
+        $("#table").DataTable({
+
+        })
+        $("#kantor").change(function(){
+            var value = $(this).val()
+            $("#cabang_col").empty()
+            if(value == 'cabang'){
+                $.ajax({
+                    type: 'GET',
+                    url: '/getcabang',
+                    dataType: 'JSON',
+                    success: (res) => {
+                        $('#cabang_col').append(`
+                            <div class="form-group">
+                                <label for="Cabang">Cabang</label>
+                                <select name="cabang" id="cabang" class="form-control">
+                                    <option value="">--- Pilih Cabang ---</option>
+                                </select>
+                            </div>
+                        `);
+
+                        $.each(res[0], function(i, item){
+                            $("#cabang").append(`
+                                <option value="`+ item.kd_cabang +`">`+ item.kd_cabang +` - `+ item.nama_cabang +`</option>
+                            `)
+                        })
+                    }
+                });
+            }
+        })
+    </script>
+@endsection
