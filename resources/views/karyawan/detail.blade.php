@@ -380,7 +380,7 @@
 
             <div class="row m-0 mt-2">
                 <div class="col-12">
-                    <p class="m-0 mt-2 text-muted">History Penjabat Sementara</p>
+                    <p class="m-0 mt-2 text-muted">Histori Penjabat Sementara</p>
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="pjs-table" style="width: 100%; word-break: break-all;">
                             <thead>
