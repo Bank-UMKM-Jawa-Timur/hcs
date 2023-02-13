@@ -372,37 +372,39 @@
             <br>
             <hr>
 
-            <div class="row m-3">
-                <h6 class="mt-2">Histori Penjabat Sementara (PJS)</h6>
-                <div class="table-responsive overflow-hidden pt-2">
-                    <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
-                        <thead>
-                            <tr>
-                                <th style="background-color: #CCD6A6; text-align: center;">No SK</th>
-                                <th style="background-color: #CCD6A6; text-align: center;">Jabatan</th>
-                                <th style="background-color: #CCD6A6; text-align: center;">Mulai</th>
-                                <th style="background-color: #CCD6A6; text-align: center;">Berakhir</th>
-                                <th style="background-color: #CCD6A6; text-align: center;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $pjs = \App\Models\PjsModel::where('nip', $karyawan->nip)->get();
-                            @endphp
+            <div class="row m-0 mt-3">
+                <div class="col-lg-12">
+                    <h6 class="mt-2">Histori</h6>
+                </div>
+            </div>
 
-                            @forelse ($pjs as $data)
-                            <tr>
-                                <td>{{ $data->no_sk }}</td>
-                                <td>{{ jabatanLengkap($data) }}</td>
-                                <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
-                                <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
-                                <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
-                            </tr>
-                            @empty
-
-                            @endforelse
-                        </tbody>
-                    </table>
+            <div class="row m-0 mt-2">
+                <div class="col-12">
+                    <p class="m-0 mt-2 text-muted">History Penjabat Sementara</p>
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table text-center cell-border stripe" id="pjs-table" style="width: 100%; word-break: break-all;">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #CCD6A6; text-align: center;">No SK</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Jabatan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Mulai</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Berakhir</th>
+                                    <th style="background-color: #CCD6A6; text-align: center;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pjs as $data)
+                                <tr>
+                                    <td>{{ $data->no_sk }}</td>
+                                    <td>{{ jabatanLengkap($data) }}</td>
+                                    <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
+                                    <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
+                                    <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -415,15 +417,8 @@
     </div>
 @endsection
 
-@section('custom_script')
-    <script>
-        $("#table_export").DataTable({
-            dom : "Bfrtip",
-            iDisplayLength: -1,
-            ordering: false,
-            bFilter: false,
-            bInfo : false,
-            paging: false,
-        });
-    </script>
-@endsection
+@push('script')
+<script>
+    $('#pjs-table').DataTable();
+</script>
+@endpush

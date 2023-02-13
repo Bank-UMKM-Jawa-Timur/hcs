@@ -8,6 +8,7 @@ use App\Imports\ImportNpwpRekening;
 use App\Imports\UpdateStatusImport;
 use App\Imports\UpdateTunjanganImport;
 use App\Models\KaryawanModel;
+use App\Models\PjsModel;
 use App\Repository\KaryawanRepository;
 use App\Service\EmployeeService;
 use Exception;
@@ -358,8 +359,8 @@ class KaryawanController extends Controller
                         'created_at' => now()
                     ]);
 
-                if($request->get('nama_anak')[0] != null){
-                    foreach($request->get('nama_anak') as $key => $item){
+                if ($request->get('nama_anak')[0] != null) {
+                    foreach ($request->get('nama_anak') as $key => $item) {
                         DB::table('keluarga')
                             ->insert([
                                 'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
@@ -424,11 +425,15 @@ class KaryawanController extends Controller
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
 
+        $pjs = PjsModel::where('nip', $id)
+            ->get();
+
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,
             'tunjangan' => $data_tunjangan,
-            'data_anak' => $data_anak
+            'data_anak' => $data_anak,
+            'pjs' => $pjs,
         ]);
     }
 
@@ -514,7 +519,7 @@ class KaryawanController extends Controller
         try {
             $id_is = $request->get('id_pasangan');
             if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
-                if($request->get('id_pasangan') == null){
+                if ($request->get('id_pasangan') == null) {
                     DB::table('keluarga')
                         ->insert([
                             'enum' => $request->get('is'),
@@ -527,7 +532,7 @@ class KaryawanController extends Controller
                             'nip' => $request->get('nip'),
                             'created_at' => now()
                         ]);
-                } else{
+                } else {
                     DB::table('keluarga')
                         ->where('id', $id_is)
                         ->update([
@@ -586,10 +591,10 @@ class KaryawanController extends Controller
                     'no_rekening' => $request->get('no_rek'),
                     'created_at' => now(),
                 ]);
-            
-            if($request->get('nama_anak')[0] != null){
-                foreach($request->get('nama_anak') as $key => $item){
-                    if($request->get('id_anak')[$key] != null){
+
+            if ($request->get('nama_anak')[0] != null) {
+                foreach ($request->get('nama_anak') as $key => $item) {
+                    if ($request->get('id_anak')[$key] != null) {
                         DB::table('keluarga')
                             ->where('id', $request->get('id_anak')[$key])
                             ->update([
