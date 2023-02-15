@@ -9,7 +9,16 @@
 
     <div class="card-body">
         <div class="row m-0">
+            <div class="col-lg-4">
+                <a href="{{ route('laporan_gaji.create') }}">
+                    <button class="btn btn-info">import potongan</button>
+                </a>
+            </div>
             <div class="col-lg-12">
+                @php
+                    $already_selected_value = date('y');
+                    $earliest_year = 2022;
+                @endphp
                 <form action="{{ route('getLaporanGaji') }}" method="post" class="form-group">
                     @csrf
                     <div class="row">
@@ -18,8 +27,8 @@
                                 <label for="">Kategori</label>
                                 <select name="kategori" class="form-control" id="">
                                     <option value="">--- Pilih Kategori ---</option>
-                                    <option value="1">Laporan Gaji Kesuluruhan</option>
-                                    <option value="2">Gaji Masuk Tabungan</option>
+                                    <option value="1" @selected($request?->kategori == 1)>Laporan Gaji Kesuluruhan</option>
+                                    <option value="2" @selected($request?->kategori == 2)>Gaji Masuk Tabungan</option>
                                 </select>
                             </div>
                         </div>
@@ -35,6 +44,28 @@
                         </div>
                         <div class="col-md-4" id="cabang_col">
                             
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tahun">Tahun</label>
+                            <div class="form-group">
+                                <select name="tahun" id="tahun" class="form-control">
+                                    <option value="">--- Pilih Tahun ---</option>
+                                    @foreach (range(date('Y'), $earliest_year) as $x)
+                                        <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Bulan">Bulan</label>
+                                <select name="bulan" id="bulan" class="form-control">
+                                    <option value="-">--- Pilih Bulan ---</option>
+                                    @for($i = 1; $i <= 12; $i++)
+                                        <option @selected($request?->bulan == $i) value="{{ $i }}">{{ getMonth($i) }}</option>
+                                    @endfor
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <button class="btn btn-info">Tampilkan</button>
