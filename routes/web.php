@@ -222,6 +222,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Get Laporan Gaji
     Route::post('/laporan_gaji/getLaporan', [SlipGajiController::class, 'getLaporan'])->name('getLaporanGaji');
+
+    // SlipJurnal
+    Route::get('/slip_jurnal', [SlipGajiController::class, 'slipJurnalIndex']);
+    Route::post('/slip_jurnal/getSlip', [SlipGajiController::class, 'slipJurnal'])->name('getSlip');
 });
 Auth::routes();
 
