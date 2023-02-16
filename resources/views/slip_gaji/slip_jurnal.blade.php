@@ -2,18 +2,13 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Gaji</h5>
+            <h5 class="card-title">Slip Jurnal</h5>
             <p class="card-title"><a href="">Gaji</a> > Slip Jurnal</p>
         </div>
     </div>
 
     <div class="card-body">
         <div class="row m-0">
-            <div class="col-lg-4">
-                <a href="{{ route('gaji.create') }}">
-                    <button class="btn btn-info">import potongan</button>
-                </a>
-            </div>
             <div class="col-lg-12">
                 @php
                     $already_selected_value = date('y');

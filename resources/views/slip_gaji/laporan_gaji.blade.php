@@ -2,7 +2,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Gaji</h5>
+            <h5 class="card-title">Lampiran Gaji</h5>
             <p class="card-title"><a href="">Gaji</a> > Lampiran Gaji</p>
         </div>
     </div>
