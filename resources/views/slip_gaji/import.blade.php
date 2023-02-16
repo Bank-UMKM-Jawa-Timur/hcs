@@ -17,7 +17,7 @@
                     </a>
                 </div>
 
-                <form action="{{ route('laporan_gaji.store') }}" enctype="multipart/form-data" method="POST" class="form-group">
+                <form action="{{ route('gaji.store') }}" enctype="multipart/form-data" method="POST" class="form-group">
                     @csrf
                     <div class="row">
                         <div class="container ml-3">

@@ -131,7 +131,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::resource('/backup', BackupController::class);
     Route::resource('/history_jabatan', HistoryJabatanController::class);
-    Route::resource('/laporan_gaji', SlipGajiController::class);
+    Route::resource('/gaji', SlipGajiController::class);
 
     // Penonaktifan Karyawan
     Route::controller(KaryawanController::class)->group(function () {

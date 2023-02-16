@@ -225,17 +225,6 @@ Coded by www.creative-tim.com
                       <a class="dropdown-item" href="#">Laporan Promosi</a>
                   </div>
                 </li>
-                <li class="dropdown" style="margin-top: -15px">
-                  <a data-toggle="dropdown" aria-expanded="false">
-                    <i class="nc-icon nc-single-copy-04"></i>
-                    <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan Gaji </p>
-                    <p></p>
-                  </a>
-                  <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                      <a class="dropdown-item" href="{{ route('laporan_gaji.index') }}">Slip Gaji</a>
-                      <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
-                  </div>
-                </li>
                 <li style="margin-top: -15px" class="@active('laporan_jamsostek')">
                   <a href="{{ route('laporan_jamsostek.index') }}">
                     <i class="nc-icon nc-single-copy-04"></i>
@@ -247,6 +236,29 @@ Coded by www.creative-tim.com
                   <a href="{{ route('index_dpp') }}">
                     <i class="nc-icon nc-single-copy-04"></i>
                     <p>Laporan DPP</p>
+                    <p></p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {{-- Menu Gaji --}}
+            <li class="@active('gaji, slipIndex')">
+              <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5" style="font-weight: bolder">
+                <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
+                Gaji
+              </a>
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu5" aria-expanded="false">
+                <li style="margin-top: -15px" class="@active('gaji.index')">
+                  <a href="{{ route('gaji.index') }}">
+                    <i class="nc-icon nc-money-coins"></i>
+                    <p>Lampiran Gaji</p>
+                    <p></p>
+                  </a>
+                </li>
+                <li style="margin-top: -15px" class="@active('slipIndex')">
+                  <a href="{{ route('slipIndex') }}">
+                    <i class="nc-icon nc-money-coins"></i>
+                    <p>Slip Jurnal</p>
                     <p></p>
                   </a>
                 </li>
