@@ -57,47 +57,47 @@
             <hr>
         </div>
     </div>
-  <form action="{{ route('get-penghasilan') }}" method="post">
-      @csrf
-        <div class="row m-0">
+    <form action="{{ route('get-penghasilan') }}" method="post">
+        @csrf
+            <div class="row m-0">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">Karyawan:</label>
+                        <select name="nip" id="nip" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <label for="mode">Mode Lihat Data</label>
+                    <div class="form-group">
+                        <select name="mode" class="form-control">
+                            <option value="">--- Pilih Mode ---</option>
+                            <option value="1" {{ ($request->mode == 1) ? 'selected' : '' }}>Bukti Pembayaran Gaji Pajak</option>
+                            <option value="2" {{ ($request->mode == 2) ? 'selected' : '' }}>Detail Gaji Pajak</option>
+                        </select>
+                    </div>
+                </div>
+                @php
+                $already_selected_value = date('y');
+                $earliest_year = 2022;
+                @endphp
+                <div class="col-md-4">
+                    <label for="tahun">Tahun:</label>
+                    <div class="form-group">
+                        <select name="tahun" class="form-control">
+                            <option value="">--- Pilih Tahun ---</option>
+                            @foreach (range(date('Y'), $earliest_year) as $x)
+                                <option value="{{ $x }}" @selected($request->tahun == $x)>{{ $x }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-4">
-                <div class="form-group">
-                    <label for="">Karyawan:</label>
-                    <select name="nip" id="nip" class="form-control"></select>
-                </div>
+                <a href="penghasilan/gajipajak">
+                    <button class="btn btn-info" type="submit">Tampilkan</button>
+                </a>
             </div>
-            <div class="col-lg-4">
-                <label for="mode">Mode Lihat Data</label>
-                <div class="form-group">
-                    <select name="mode" class="form-control">
-                        <option value="">--- Pilih Mode ---</option>
-                        <option value="1" {{ ($request->mode == 1) ? 'selected' : '' }}>Bukti Pembayaran Gaji Pajak</option>
-                        <option value="2" {{ ($request->mode == 2) ? 'selected' : '' }}>Detail Gaji Pajak</option>
-                    </select>
-                </div>
-            </div>
-            @php
-            $already_selected_value = date('y');
-            $earliest_year = 2022;
-            @endphp
-            <div class="col-md-4">
-                <label for="tahun">Tahun:</label>
-                <div class="form-group">
-                    <select name="tahun" class="form-control">
-                        <option value="">--- Pilih Tahun ---</option>
-                        @foreach (range(date('Y'), $earliest_year) as $x)
-                            <option value="{{ $x }}" @selected($request->tahun == $x)>{{ $x }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <a href="penghasilan/gajipajak">
-                <button class="btn btn-info" type="submit">Tampilkan</button>
-            </a>
-        </div>
-  </form>
+    </form>
     <div class="card ml-3 mr-3 mb-3 mt-4 shadow" id="reportPrinting">
         <div class="col-md-12">
             @php
@@ -146,8 +146,8 @@
             @if ($mode == 1)
             <div class="card-body ml-0 mr-0 mt-0 mb-2">
                 <div class="row m-0 mt-1">
-                    <p class="col-sm-12 text-center" style="font-size: 1 8px; font-weight: bold">BUKTI PEMBAYARAN GAJI PAJAK {{ $tahun }}</p>
-                    <p class="col-sm-12 text-center" style="font-size: 1 8px; font-weight: bold; margin-top: -15px">{{ $karyawan->nama_karyawan }}</p>
+                    <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold">BUKTI PEMBAYARAN GAJI PAJAK {{ $tahun }}</p>
+                    <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold; margin-top: -15px">{{ $karyawan->nama_karyawan }}</p>
                     <div class="col-sm-12 text-right">
                         <input type="button" class="btn btn-success" style="margin-top: -5px" value="Print" onClick="printReport()">
                     </div>

@@ -247,8 +247,8 @@ Coded by www.creative-tim.com
                 <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
                 Gaji
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu5" aria-expanded="false">
-                <li style="margin-top: -15px" class="@active('gaji.index')">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('gaji, slipIndex', 'show')" id="submenu5">
+                <li style="margin-top: -15px" class="@active('gaji')">
                   <a href="{{ route('gaji.index') }}">
                     <i class="nc-icon nc-money-coins"></i>
                     <p>Lampiran Gaji</p>
@@ -266,11 +266,11 @@ Coded by www.creative-tim.com
             </li>
             {{-- Menu Log Aktivitas --}}
             <li >
-              <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5" style="font-weight: bolder">
+              <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu6" style="font-weight: bolder">
                 <i class="nc-icon nc-tap-01" style="font-weight: bolder"></i>
                 Log
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu5" aria-expanded="false">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6" aria-expanded="false">
                 <li style="margin-top: -15px">
                   <a href="#">
                     <i class="nc-icon nc-refresh-69"></i>
@@ -282,14 +282,13 @@ Coded by www.creative-tim.com
             </li>
             {{-- Menu Setting --}}
             <li class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database')">
-              <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu6" style="font-weight: bolder">
+              <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu7" style="font-weight: bolder">
                 <i class="nc-icon nc-settings" style="font-weight: bolder"></i>
                 Setting
               </a>
               <ul
                 class="sub-menu list-unstyled flex-column collapse pl-2 @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show')"
-                id="submenu6"
-                >
+                id="submenu7">
                 <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
                     <a data-toggle="dropdown" aria-expanded="false">
                         <i class="nc-icon nc-box"></i>
