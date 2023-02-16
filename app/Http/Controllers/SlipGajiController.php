@@ -145,7 +145,7 @@ class SlipGajiController extends Controller
         $kantor = $request->kantor;
         $kategori = $request->kategori;
         
-        if($kantor == 'pusat'){
+        // if($kantor == 'pusat'){
             $cabang = DB::table('mst_cabang')
                 ->select('kd_cabang')
                 ->get();
@@ -157,11 +157,11 @@ class SlipGajiController extends Controller
                 ->whereNotIn('kd_entitas', $cbg)
                 ->orWhere('kd_entitas', null)
                 ->get();
-        } else{
-            $karyawan = DB::table('mst_karyawan')
-                ->where('kd_entitas', $request->cabang)
-                ->get();
-        }
+        // } else{
+        //     $karyawan = DB::table('mst_karyawan')
+        //         ->where('kd_entitas', $request->cabang)
+        //         ->get();
+        // }
 
         $data = $this->getSlipJurnal($request, $kategori, $karyawan);
         // dd($data);
@@ -266,11 +266,11 @@ class SlipGajiController extends Controller
         $kantor = $request->kantor;
         $kategori = $request->kategori;
         $data = [];
-        if($kantor == 'cabang'){
-            $karyawan = DB::table('mst_karyawan')
-                ->where('kd_entitas', $request->cabang)
-                ->get();
-        } else if($kantor == 'pusat'){
+        // if($kantor == 'cabang'){
+        //     $karyawan = DB::table('mst_karyawan')
+        //         ->where('kd_entitas', $request->cabang)
+        //         ->get();
+        // } else if($kantor == 'pusat'){
             $cabang = DB::table('mst_cabang')
                 ->select('kd_cabang')
                 ->get();
@@ -282,7 +282,7 @@ class SlipGajiController extends Controller
                 ->whereNotIn('kd_entitas', $cbg)
                 ->orWhere('kd_entitas', null)
                 ->get();
-        }
+        // }
         $data = $this->getLaporanGaji($karyawan, $kategori, $request);
         return view('slip_gaji.laporan_gaji', compact('data', 'kategori', 'request'));
     }

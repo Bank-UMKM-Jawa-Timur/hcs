@@ -28,7 +28,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Kantor</label>
                                 <select name="kantor" id="kantor" class="form-control">
@@ -37,10 +37,10 @@
                                     <option value="cabang">Cabang</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-4" id="cabang_col">
+                        </div> --}}
+                        {{-- <div class="col-md-4" id="cabang_col">
                             
-                        </div>
+                        </div> --}}
                         <div class="col-md-4">
                             <label for="tahun">Tahun</label>
                             <div class="form-group">
@@ -198,32 +198,32 @@
         $("#table").DataTable({
 
         })
-        $("#kantor").change(function(){
-            var value = $(this).val()
-            $("#cabang_col").empty()
-            if(value == 'cabang'){
-                $.ajax({
-                    type: 'GET',
-                    url: '/getcabang',
-                    dataType: 'JSON',
-                    success: (res) => {
-                        $('#cabang_col').append(`
-                            <div class="form-group">
-                                <label for="Cabang">Cabang</label>
-                                <select name="cabang" id="cabang" class="form-control">
-                                    <option value="">--- Pilih Cabang ---</option>
-                                </select>
-                            </div>
-                        `);
+        // $("#kantor").change(function(){
+        //     var value = $(this).val()
+        //     $("#cabang_col").empty()
+        //     if(value == 'cabang'){
+        //         $.ajax({
+        //             type: 'GET',
+        //             url: '/getcabang',
+        //             dataType: 'JSON',
+        //             success: (res) => {
+        //                 $('#cabang_col').append(`
+        //                     <div class="form-group">
+        //                         <label for="Cabang">Cabang</label>
+        //                         <select name="cabang" id="cabang" class="form-control">
+        //                             <option value="">--- Pilih Cabang ---</option>
+        //                         </select>
+        //                     </div>
+        //                 `);
 
-                        $.each(res[0], function(i, item){
-                            $("#cabang").append(`
-                                <option value="`+ item.kd_cabang +`">`+ item.kd_cabang +` - `+ item.nama_cabang +`</option>
-                            `)
-                        })
-                    }
-                });
-            }
-        })
+        //                 $.each(res[0], function(i, item){
+        //                     $("#cabang").append(`
+        //                         <option value="`+ item.kd_cabang +`">`+ item.kd_cabang +` - `+ item.nama_cabang +`</option>
+        //                     `)
+        //                 })
+        //             }
+        //         });
+        //     }
+        // })
     </script>
 @endsection
