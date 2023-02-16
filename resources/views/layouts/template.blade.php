@@ -225,6 +225,17 @@ Coded by www.creative-tim.com
                       <a class="dropdown-item" href="#">Laporan Promosi</a>
                   </div>
                 </li>
+                <li class="dropdown" style="margin-top: -15px">
+                  <a data-toggle="dropdown" aria-expanded="false">
+                    <i class="nc-icon nc-single-copy-04"></i>
+                    <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan Gaji </p>
+                    <p></p>
+                  </a>
+                  <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                      <a class="dropdown-item" href="{{ route('laporan_gaji.index') }}">Slip Gaji</a>
+                      <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
+                  </div>
+                </li>
                 <li style="margin-top: -15px" class="@active('laporan_jamsostek')">
                   <a href="{{ route('laporan_jamsostek.index') }}">
                     <i class="nc-icon nc-single-copy-04"></i>

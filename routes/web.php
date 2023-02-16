@@ -224,7 +224,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/laporan_gaji/getLaporan', [SlipGajiController::class, 'getLaporan'])->name('getLaporanGaji');
 
     // SlipJurnal
-    Route::get('/slip_jurnal', [SlipGajiController::class, 'slipJurnalIndex']);
+    Route::get('/slip_jurnal', [SlipGajiController::class, 'slipJurnalIndex'])->name('slipIndex');
     Route::post('/slip_jurnal/getSlip', [SlipGajiController::class, 'slipJurnal'])->name('getSlip');
 });
 Auth::routes();
