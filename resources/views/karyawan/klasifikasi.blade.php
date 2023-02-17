@@ -99,6 +99,7 @@
                             <thead>
                                 <tr>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
