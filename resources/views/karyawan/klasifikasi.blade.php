@@ -99,6 +99,7 @@
                             <thead>
                                 <tr>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
@@ -117,6 +118,7 @@
                                 @foreach ($karyawan as $item)
                                     <tr>
                                         <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nik }}</td>
                                         <td>{{ $item->nama_karyawan  }}</td>
                                         <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                                         @php
@@ -232,6 +234,7 @@
                             <thead>
                                 <tr>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
@@ -250,6 +253,7 @@
                                 @foreach ($karyawan as $item)
                                     <tr>
                                         <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nik }}</td>
                                         <td>{{ $item->nama_karyawan  }}</td>
                                         <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                                         @php
@@ -365,6 +369,7 @@
                             <thead>
                                 <tr>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIK</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
@@ -383,6 +388,7 @@
                                 @foreach ($karyawan as $item)
                                     <tr>
                                         <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nik }}</td>
                                         <td>{{ $item->nama_karyawan  }}</td>
                                         <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                                         @php
@@ -1453,6 +1459,9 @@
                     text:'Excel',
                     header: true,
                     footer: true,
+                    exportOptions: {
+                        orthogonal: 'sort'
+                    },
                     customize: function( xlsx, row ) {
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
                     }
@@ -1535,7 +1544,19 @@
                         });
                     }
                 }
-            ]
+            ], 
+            columnDefs: [{
+                targets:[1],
+                render: function(data, type, row, meta){
+                    if(type === 'sort'){
+                        //data = ' ' + data ;
+                        return "\u200C" + data ; 
+                    }
+                    
+                    return data ;   
+                    
+                }
+            }]
         });
 
         $(".buttons-excel").attr("class","btn btn-success mb-2");
