@@ -118,6 +118,7 @@
                                 @foreach ($karyawan as $item)
                                     <tr>
                                         <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nik }}</td>
                                         <td>{{ $item->nama_karyawan  }}</td>
                                         <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                                         @php
