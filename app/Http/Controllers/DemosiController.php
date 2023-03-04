@@ -30,7 +30,7 @@ class DemosiController extends Controller
     public function index()
     {
         $data = DB::table('demosi_promosi_pangkat')
-            ->where('keterangan', 'Demosi Jabatan')
+            ->where('keterangan', 'Demosi')
             ->select(
                 'demosi_promosi_pangkat.*',
                 'karyawan.*',
@@ -187,7 +187,7 @@ class DemosiController extends Controller
                 'nip' => $request->nip,
                 'tanggal_pengesahan' => $request->tanggal_pengesahan,
                 'bukti_sk' => $request->bukti_sk,
-                'keterangan' => 'Demosi Jabatan',
+                'keterangan' => 'Demosi',
                 'kd_entitas_lama' => $entityLama,
                 'kd_entitas_baru' => $entity,
                 'kd_jabatan_lama' => $request->id_jabatan_lama,

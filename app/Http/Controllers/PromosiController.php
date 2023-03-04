@@ -60,7 +60,7 @@ class PromosiController extends Controller
     public function index()
     {
         $data = DB::table('demosi_promosi_pangkat')
-            ->where('keterangan', 'Promosi Jabatan')
+            ->where('keterangan', 'Promosi')
             ->select(
                 'demosi_promosi_pangkat.*',
                 'karyawan.*',
@@ -216,7 +216,7 @@ class PromosiController extends Controller
                 'nip' => $request->nip,
                 'tanggal_pengesahan' => $request->tanggal_pengesahan,
                 'bukti_sk' => $request->bukti_sk,
-                'keterangan' => 'Promosi Jabatan',
+                'keterangan' => 'Promosi',
                 'kd_entitas_lama' => $request->kd_entity,
                 'kd_entitas_baru' => $entity,
                 'kd_jabatan_lama' => $request->id_jabatan_lama,
