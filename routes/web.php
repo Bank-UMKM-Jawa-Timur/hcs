@@ -10,6 +10,7 @@ use App\Http\Controllers\JaminanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PromosiController;
@@ -226,6 +227,13 @@ Route::group(['middleware' => 'auth'], function () {
     // SlipJurnal
     Route::get('/slip_jurnal', [SlipGajiController::class, 'slipJurnalIndex'])->name('slipIndex');
     Route::post('/slip_jurnal/getSlip', [SlipGajiController::class, 'slipJurnal'])->name('getSlip');
+
+    Route::prefix('/migrasi')->group(function(){
+        Route::get('/jabatan', [MigrasiController::class, 'migrasiJabatan'])->name('migrasiJabatan');
+        Route::get('/pjs', [MigrasiController::class, 'migrasiPJS'])->name('migrasiPJS');
+        Route::get('/sp', [MigrasiController::class, 'migrasiSP'])->name('migrasiSP');
+        Route::get('/store', [MigrasiController::class, 'store'])->name('migrasiStore');
+    });
 });
 Auth::routes();
 

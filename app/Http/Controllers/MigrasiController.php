@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Imports\MigrasiImport;
+use App\Imports\MigrasiJabatanImport;
+use App\Imports\MigrasiSPImport;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -28,6 +30,21 @@ class MigrasiController extends Controller
         return view('migrasi.add');
     }
 
+    public function migrasiJabatan()
+    {
+        return view('migrasi.jabatan');
+    }
+
+    public function migrasiPJS()
+    {
+        return view('migrasi.pjs');
+    }
+
+    public function migrasiSP()
+    {
+        return view('migrasi.sp');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -37,7 +54,16 @@ class MigrasiController extends Controller
     public function store(Request $request)
     {
         $file = $request->file('upload_csv');
-        $import = new MigrasiImport;
+        $tipe = $request->tipe;
+
+        if($tipe == 'jabatan'){
+            $import = new MigrasiJabatanImport;
+        } else if($tipe == 'pjs'){
+            $import = new MigrasiJabatanImport;
+        } else if($tipe == 'sp'){
+            $import = new MigrasiSPImport;
+        }
+        
         $import = $import->import($file);
 
         Alert::success('Berhasil', 'Berhasil mengimport data excel');

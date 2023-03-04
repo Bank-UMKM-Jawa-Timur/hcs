@@ -264,6 +264,35 @@ Coded by www.creative-tim.com
                 </li>
               </ul>
             </li>
+            <li class="@active('migrasi')">
+              <a class="nav-link" href="#submenu7" data-toggle="collapse" data-target="#submenu7" style="font-weight: bolder">
+                <i class="nc-icon nc-cloud-upload-94" style="font-weight: bolder"></i>
+                Migrasi
+              </a>
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('migrasi')" id="submenu7">
+                <li style="margin-top: -15px" class="@active('migrasiJabatan')">
+                  <a href="{{ route('migrasiJabatan') }}">
+                    <i class="nc-icon nc-cloud-upload-94"></i>
+                    <p>Jabatan</p>
+                    <p></p>
+                  </a>
+                </li>
+                <li style="margin-top: -15px" class="@active('migrasiPJS')">
+                  <a href="{{ route('migrasiPJS') }}">
+                    <i class="nc-icon nc-cloud-upload-94"></i>
+                    <p>Penjabat Sementara</p>
+                    <p></p>
+                  </a>
+                </li>
+                <li style="margin-top: -15px" class="@active('migrasiSP')">
+                  <a href="{{ route('migrasiSP') }}">
+                    <i class="nc-icon nc-cloud-upload-94"></i>
+                    <p>Surat Peringatan</p>
+                    <p></p>
+                  </a>
+                </li>
+              </ul>
+            </li>
             {{-- Menu Log Aktivitas --}}
             <li >
               <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu6" style="font-weight: bolder">
