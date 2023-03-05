@@ -22,17 +22,14 @@ class MigrasiPJSImport implements ToCollection, WithHeadingRow, SkipsOnError, Sk
     {
         try{
             foreach($collection as $item){
-                DB::table('migrasi')
+                DB::table('penjabat_sementara')
                     ->insert([
                         'nip' => $item['nip'],
-                        'pjs_mulai' => $item['tanggal_mulai'],
-                        'pjs_berakhir' => $item['tanggal_berakhir'],
-                        'pjs_jabatan_asli' => $item['jabatan_asli'],
-                        'pjs_jabatan' => $item['jabatan'],
-                        'pjs_entitas' => $item['entitas'],
-                        'pjs_bagian' => $item['bagian'],
+                        'tanggal_mulai' => $item['tanggal_mulai'],
+                        'tanggal_berakhir' => $item['tanggal_berakhir'],
+                        'kd_jabatan' => $item['jabatan_asli'],
+                        'kd_bagian' => $item['bagian'],
                         'no_sk' => $item['no_sk'],
-                        'tipe' => 'pjs'
                     ]);
             }
         } catch(Exception $e){

@@ -22,7 +22,7 @@ class MigrasiJabatanImport implements ToCollection, WithHeadingRow, SkipsOnError
     {
         try{
             foreach($collection as $i => $item){
-                DB::table('migrasi')
+                DB::table('demosi_promosi_pangkat')
                     ->insert([
                         'nip' => $item['nip'],
                         'jabatan_tanggal' => $item['tanggal_pengesahan'],
@@ -40,7 +40,6 @@ class MigrasiJabatanImport implements ToCollection, WithHeadingRow, SkipsOnError
                         'status_jabatan_baru' => $item['status_jabatan_baru'],
                         'nip_lama' => $item['nip_lama'],
                         'nip_baru' => $item['nip_baru'],
-                        'tipe' => 'Jabatan'
                     ]);
             }
         } catch(Exception $e){

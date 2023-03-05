@@ -22,13 +22,13 @@ class MigrasiSPImport implements ToCollection, WithHeadingRow, SkipsOnError, Ski
     {
         try{
             foreach($collection as $item){
-                DB::table('migrasi')
+                DB::table('surat_peringatan')
                     ->insert([
                         'nip' => $item['nip'],
                         'no_sp' => $item['no_sp'],
-                        'sp_pelanggaran' => $item['pelanggaran'],
-                        'sp_sanksi' => $item['sanksi'],
-                        'sp_tanggal' => $item['tanggal_sp']
+                        'pelanggaran' => $item['pelanggaran'],
+                        'sanksi' => $item['sanksi'],
+                        'tanggal' => $item['tanggal_sp']
                     ]);
             }
         } catch(Exception $e){
