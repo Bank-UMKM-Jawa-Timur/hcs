@@ -264,12 +264,13 @@ Coded by www.creative-tim.com
                 </li>
               </ul>
             </li>
+            {{-- Menu Migrasi Data --}}
             <li class="@active('migrasi')">
-              <a class="nav-link" href="#submenu7" data-toggle="collapse" data-target="#submenu7" style="font-weight: bolder">
+              <a class="nav-link" href="#submenu8" data-toggle="collapse" data-target="#submenu8" style="font-weight: bolder">
                 <i class="nc-icon nc-cloud-upload-94" style="font-weight: bolder"></i>
                 Migrasi
               </a>
-              <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('migrasi')" id="submenu7">
+              <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('migrasi')" id="submenu8">
                 <li style="margin-top: -15px" class="@active('migrasiJabatan')">
                   <a href="{{ route('migrasiJabatan') }}">
                     <i class="nc-icon nc-cloud-upload-94"></i>
