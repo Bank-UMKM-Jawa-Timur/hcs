@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\MigrasiImport;
 use App\Imports\MigrasiJabatanImport;
+use App\Imports\MigrasiPJSImport;
 use App\Imports\MigrasiSPImport;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -59,7 +60,7 @@ class MigrasiController extends Controller
         if($tipe == 'jabatan'){
             $import = new MigrasiJabatanImport;
         } else if($tipe == 'pjs'){
-            $import = new MigrasiJabatanImport;
+            $import = new MigrasiPJSImport;
         } else if($tipe == 'sp'){
             $import = new MigrasiSPImport;
         }
@@ -67,7 +68,13 @@ class MigrasiController extends Controller
         $import = $import->import($file);
 
         Alert::success('Berhasil', 'Berhasil mengimport data excel');
-        return redirect()->route('migrasi.index');
+        if($tipe == 'jabatan'){
+            return redirect()->route('migrasiJabatan');
+        } else if($tipe == 'pjs'){
+            return redirect()->route('migrasiPJS');
+        } else if($tipe == 'sp'){
+            return redirect()->route('migrasiSP');
+        }
     }
 
     /**

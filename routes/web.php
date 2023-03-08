@@ -232,7 +232,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/jabatan', [MigrasiController::class, 'migrasiJabatan'])->name('migrasiJabatan');
         Route::get('/pjs', [MigrasiController::class, 'migrasiPJS'])->name('migrasiPJS');
         Route::get('/sp', [MigrasiController::class, 'migrasiSP'])->name('migrasiSP');
-        Route::get('/store', [MigrasiController::class, 'store'])->name('migrasiStore');
+        Route::post('/store', [MigrasiController::class, 'store'])->name('migrasiStore');
     });
 });
 Auth::routes();

@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class MigrasiSPImport implements ToCollection, WithHeadingRow, SkipsOnError, SkipsEmptyRows
 {
@@ -28,7 +29,7 @@ class MigrasiSPImport implements ToCollection, WithHeadingRow, SkipsOnError, Ski
                         'no_sp' => $item['no_sp'],
                         'pelanggaran' => $item['pelanggaran'],
                         'sanksi' => $item['sanksi'],
-                        'tanggal' => $item['tanggal_sp']
+                        'tanggal_sp' => ($item['tanggal_sp'] != null) ? Date::excelToDateTimeObject($item['tanggal_sp']) : null
                     ]);
             }
         } catch(Exception $e){
