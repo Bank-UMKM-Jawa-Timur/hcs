@@ -13,9 +13,9 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class MigrasiSPImport implements ToCollection, WithHeadingRow, SkipsOnError, SkipsEmptyRows
+class MigrasiSPImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
 {
-    use Importable, SkipsErrors;
+    use Importable;
     /**
     * @param Collection $collection
     */
@@ -23,17 +23,22 @@ class MigrasiSPImport implements ToCollection, WithHeadingRow, SkipsOnError, Ski
     {
         try{
             foreach($collection as $item){
-                DB::table('surat_peringatan')
-                    ->insert([
-                        'nip' => $item['nip'],
-                        'no_sp' => $item['no_sp'],
-                        'pelanggaran' => $item['pelanggaran'],
-                        'sanksi' => $item['sanksi'],
-                        'tanggal_sp' => ($item['tanggal_sp'] != null) ? Date::excelToDateTimeObject($item['tanggal_sp']) : null
-                    ]);
+                $count = DB::table('mst_karyawan')
+                    ->where('nip', $item['nip'])
+                    ->count();
+                if($count > 0){
+                    DB::table('surat_peringatan')
+                        ->insert([
+                            'nip' => $item['nip'],
+                            'no_sp' => $item['no_sp'],
+                            'pelanggaran' => $item['pelanggaran'],
+                            'sanksi' => $item['sanksi'],
+                            'tanggal_sp' => ($item['tanggal_sp'] != null) ? Date::excelToDateTimeObject($item['tanggal_sp']) : null
+                        ]);
+                }
             }
         } catch(Exception $e){
-
+            dd($e);
         }
     }
 }
