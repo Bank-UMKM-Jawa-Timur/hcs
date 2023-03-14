@@ -25,17 +25,22 @@ class MigrasiPJSImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
         try{
             foreach($collection as $i => $item){
                 // dd($item);
-                DB::table('pejabat_sementara')
-                    ->insert([
-                        'nip' => $item['nip'],
-                        'tanggal_mulai' => ($item['tanggal_mulai'] != null) ? Date::excelToDateTimeObject($item['tanggal_mulai']) : null,
-                        'tanggal_berakhir' => ($item['tanggal_berakhir'] != null) ? Date::excelToDateTimeObject($item['tanggal_berakhir']) : null,
-                        'kd_jabatan' => $item['kd_jabatan'],
-                        'kd_entitas' => ($item['kd_entitas'] != null) ? $item['kd_entitas'] : null,
-                        'kd_bagian' => ($item['kd_bagian'] != null) ? $item['kd_bagian'] : null,
-                        'no_sk' => $item['no_sk'],
-                        'created_at' => now()
-                    ]);
+                $count = DB::table('mst_karyawan')
+                    ->where('nip', $item['nip'])
+                    ->count();
+                if($count > 0){
+                    DB::table('pejabat_sementara')
+                        ->insert([
+                            'nip' => $item['nip'],
+                            'tanggal_mulai' => ($item['tanggal_mulai'] != null) ? Date::excelToDateTimeObject($item['tanggal_mulai']) : null,
+                            'tanggal_berakhir' => ($item['tanggal_berakhir'] != null) ? Date::excelToDateTimeObject($item['tanggal_berakhir']) : null,
+                            'kd_jabatan' => $item['kd_jabatan'],
+                            'kd_entitas' => ($item['kd_entitas'] != null) ? $item['kd_entitas'] : null,
+                            'kd_bagian' => ($item['kd_bagian'] != null) ? $item['kd_bagian'] : null,
+                            'no_sk' => $item['no_sk'],
+                            'created_at' => now()
+                        ]);
+                }
             }
         } catch(Exception $e){
             dd($e);
