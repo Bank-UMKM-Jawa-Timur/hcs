@@ -21,8 +21,9 @@ class MigrasiJabatanImport implements ToCollection, WithHeadingRow, SkipsEmptyRo
     */
     public function collection(Collection $collection)
     {
+        $arr = $collection->toArray();
         try{
-            if(count($collection) == 5){
+            if(array_key_exists('baru', $arr[0]) && array_key_exists('lama', $arr[0])){
                 foreach($collection as $i => $item){
                     // dd($item);
                     $count = DB::table('mst_karyawan')
@@ -34,7 +35,6 @@ class MigrasiJabatanImport implements ToCollection, WithHeadingRow, SkipsEmptyRo
                                 'nip' => $item['nip'],
                                 'tgl' => ($item['tgl'] != null) ? Date::excelToDateTimeObject($item['tgl']) : null,
                                 'no_sk' => $item['no_sk'],
-                                'keterangan' => $item['keterangan'],
                                 'lama' => $item['lama'],
                                 'baru' => $item['baru'],
                                 'created_at' => now()
