@@ -79,22 +79,10 @@
                                 Lama Menjabat
                             </th>
                             <th class="text-nowrap text-center">
-                                Panggol Lama
-                            </th>
-                            <th class="text-nowrap text-center">
-                                Panggol Baru
-                            </th>
-                            <th class="text-nowrap text-center">
                                 Jabatan Lama
                             </th>
                             <th class="text-nowrap text-center">
                                 Jabatan Baru
-                            </th>
-                            <th class="text-nowrap text-center">
-                                Kantor Lama
-                            </th>
-                            <th class="text-nowrap text-center">
-                                Kantor Baru
                             </th>
                             <th class="text-nowrap text-center">
                                 Bukti SK
@@ -129,29 +117,52 @@
                                 <td class="text-nowrap">
                                     {{ $masaKerja }}
                                 </td>
-                                <td class="text-nowrap">
-                                    {{ $item?->kd_panggol_lama ?? '-' }}
+                                <td class="">
+                                    {{ $item?->kd_panggol_lama ?? '-' }} {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }} {{ $item->jabatan_lama }} {{ $item->kantor_lama ?? '-' }}
                                 </td>
-                                <td class="text-nowrap">
-                                    {{ $item?->kd_panggol_baru ?? '-' }}
-                                </td>
-                                <td class="text-nowrap">
-                                    {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{ $item->jabatan_lama }}
-                                </td>
-                                <td class="text-nowrap">
-                                    {{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }}{{ $item->jabatan_baru }}
-                                </td>
-                                <td class="text-nowrap">
-                                    {{ $item->kantor_lama ?? '-' }}
-                                </td>
-                                <td class="text-nowrap">
-                                    {{ $item->kantor_baru ?? '-' }}
+                                <td class="">
+                                    {{ $item?->kd_panggol_baru ?? '-' }} {{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }} {{ $item->jabatan_baru }} {{ $item->kantor_baru ?? '-' }}
                                 </td>
                                 <td class="text-nowrap">
                                     {{ $item->bukti_sk }}
                                 </td>
                                 <td class="text-nowrap">
                                     {{ $item?->keterangan }}
+                                </td>
+                            </tr>
+                        @endforeach
+                        @foreach ($data_migrasi as $key => $item)
+                            @php
+                                $masaKerja = '-';
+                                if ($key != 0) {
+                                    $mulaKerja = new DateTime(date('d-M-Y', strtotime($item?->tgl)));
+                                    $waktuSekarang = new DateTime(date('d-M-Y', strtotime($data_migrasi[$key - 1]->tgl)));
+                
+                                    $hitung = $waktuSekarang->diff($mulaKerja);
+                                    $masaKerja = $hitung->format('%y Tahun | %m Bulan | %d Hari');
+                                }
+                            @endphp
+                            <tr>
+                                <td class="sticky-col">
+                                    {{ $i++ }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ date('d M Y', strtotime($item?->tgl)) }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $masaKerja }}
+                                </td>
+                                <td>
+                                    {{ $item->lama }}
+                                </td>
+                                <td>
+                                    {{ $item->baru }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $item->no_sk }}
+                                </td>
+                                <td class="text-nowrap">
+                                    -
                                 </td>
                             </tr>
                         @endforeach

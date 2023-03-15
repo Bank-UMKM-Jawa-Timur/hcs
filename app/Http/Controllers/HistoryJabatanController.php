@@ -81,7 +81,11 @@ class HistoryJabatanController extends Controller
             return $dataLama;
         });
 
-        return view('history.history', ['karyawan' => $karyawan, 'data_karyawan' => $data_karyawan]);
+        $data_migrasi = DB::table('migrasi_jabatan')
+            ->where('nip', $nip)
+            ->get();
+
+        return view('history.history', ['karyawan' => $karyawan, 'data_karyawan' => $data_karyawan, 'data_migrasi' => $data_migrasi]);
     }
 
     /**
