@@ -35,9 +35,9 @@ class GajiPerBulanController extends Controller
     public function index()
     {
         $data = DB::table('gaji_per_bulan')
-            ->distinct('tahun')
             ->select('bulan', 'tahun')
             ->orderBy('created_at', 'desc')
+            ->groupBy('tahun')
             ->get();
         return view('gaji_perbulan.index', ['data_gaji' => $data]);
     }
