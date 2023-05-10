@@ -96,7 +96,7 @@ Coded by www.creative-tim.com
             </li>
             {{-- Menu Manajemen Karyawan --}}
             <li
-                class="@active('karyawan,klasifikasi,mutasi,demosi,promosi,penonaktifan,import,pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit,surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')"
+                class="@active('karyawan,pengkinian_data,klasifikasi,mutasi,demosi,promosi,penonaktifan,import,pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit,surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')"
             >
                 <a class="nav-link" href="#submenu1" data-toggle="collapse" data-target="#submenu1" style="font-weight: bolder">
                   <i class="nc-icon nc-tile-56" style="font-weight: bolder"></i>
@@ -114,8 +114,8 @@ Coded by www.creative-tim.com
                       <p></p>
                     </a>
                   </li>
-                  <li style="margin-top: -15px">
-                    <a href="#">
+                  <li style="margin-top: -15px" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
+                    <a href="/pengkinian_data">
                       <i class="nc-icon nc-ruler-pencil"></i>
                       <p>Pengkinian Data </p>
                       <p></p>

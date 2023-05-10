@@ -108,6 +108,29 @@ use Illuminate\Support\Facades\Auth;
 //     return view('karyawan/klasifikasi');
 // });
 
+Route::get('pengkinian_data', function() {
+    return view('pengkinian_data/index');
+});
+
+Route::get('pengkinian_data/add', function() {
+    return view('pengkinian_data/add');
+});
+
+Route::get('pengkinian_data/update', function() {
+    return view('pengkinian_data/edit');
+});
+
+Route::get('pengkinian_data/detail', function() {
+    return view('pengkinian_data/detail');
+});
+
+Route::get('pengkinian_data/import', function() {
+    return view('pengkinian_data/import');
+});
+
+Route::get('pengkinian_data/history', function() {
+    return view('pengkinian_data/history');
+});
 
 Route::get('/', function () {
     return redirect()->route('login');
