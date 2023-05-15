@@ -3,11 +3,11 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Detail Data Karyawan</h5>
-            <p class="card-title"><a href="">Pengkinian Data</a> > <a href="/karyawan">Karyawan</a> > Detail</p>
+            <p class="card-title"><a href="/pengkinian_data">Pengkinian Data</a> > <a href="">Karyawan</a> > Detail</p>
         </div>
     </div>
     <div class="card-body">
-        <form action="{{ route('karyawan.show', $karyawan->nip) }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
+        <form action="{{ route('pengkinian_data.show', $karyawan->nip_baru) }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
             @csrf
             @method('PUT')
             <div class="row m-0 ">
@@ -21,15 +21,15 @@
                     $hasil_rupiah = number_format($angka, 0, ",", ".");
                     return $hasil_rupiah;
                 }
-                $tj = DB::table('tunjangan_karyawan')
-                    ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-                    ->where('nip', $karyawan->nip)
+                $tj = DB::table('history_pengkinian_tunjangan_karyawan')
+                    ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'history_pengkinian_tunjangan_karyawan.id_tunjangan')
+                    ->where('nip', $karyawan->nip_baru)
                     ->get();
             @endphp
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">NIP</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $karyawan->nip }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->nip_baru }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
@@ -396,7 +396,7 @@
                                 @foreach ($pjs as $data)
                                 <tr>
                                     <td>{{ $data->no_sk }}</td>
-                                    <td>{{ jabatanLengkap($data) }}</td>
+                                    <td>{{ jabatanLengkapPengkinian($data) }}</td>
                                     <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
                                     <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
                                     <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>

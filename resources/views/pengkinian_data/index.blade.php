@@ -4,7 +4,7 @@
       <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Pengkinian Data Karyawan</h5>
-            <p class="card-title"><a href="">Pengkinian Data</a> > <a href="">Karyawan</a></p>
+            <p class="card-title"><a href="/pengkinian_data">Pengkinian Data</a> > <a href="">Karyawan</a></p>
         </div>
 
         <div class="card-body">
@@ -99,7 +99,7 @@
                                   </td>
                                   <td style="min-width: 130px">
                                     <div class="container">
-                                        <a href="{{ route('pengkinian_data.show', $item->id) }}">
+                                        <a href="{{ route('pengkinian_data.show', $item->nip_baru) }}">
                                           <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                             Detail
                                           </button>
@@ -167,7 +167,7 @@
                                     <td style="min-width: 105px">
                                       <div class="container">
                                         <div class="row">
-                                          <a href="{{ route('pengkinian_data.show', $i->id) }}">
+                                          <a href="{{ route('pengkinian_data.show', $i->nip_baru) }}">
                                             <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                               Detail
                                             </button>

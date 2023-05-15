@@ -6,6 +6,8 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\PengkinianKaryawanModel;
+use App\Models\PengkinianPjsModel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PengkinianDataController extends Controller
@@ -293,7 +295,38 @@ class PengkinianDataController extends Controller
      */
     public function show($id)
     {
-        //
+        $data_suis = null;
+        
+        $karyawan = PengkinianKaryawanModel::findOrFail($id);
+        $data_suis = DB::table('history_pengkinian_data_keluarga')
+            ->where('nip', $karyawan->nip_baru)
+            ->whereIn('enum', ['Suami', 'Istri'])
+            ->first();
+        $data_anak = DB::table('history_pengkinian_data_keluarga')
+            ->where('nip', $karyawan->nip_baru)
+            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->get();
+        $karyawan->tunjangan = DB::table('history_pengkinian_tunjangan_karyawan')
+            ->where('nip', $id)
+            ->select('history_pengkinian_tunjangan_karyawan.*')
+            ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'history_pengkinian_tunjangan_karyawan.id')
+            ->get();
+        $karyawan->count_tj = DB::table('history_pengkinian_tunjangan_karyawan')
+            ->where('nip', $id)
+            ->count('*');
+        $data_tunjangan = DB::table('mst_tunjangan')
+            ->get();
+
+        $pjs = PengkinianPjsModel::where('nip', $id)
+            ->get();
+
+        return view('pengkinian_data.detail', [
+            'karyawan' => $karyawan,
+            'suis' => $data_suis,
+            'tunjangan' => $data_tunjangan,
+            'data_anak' => $data_anak,
+            'pjs' => $pjs,
+        ]);
     }
 
     /**

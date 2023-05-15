@@ -2,6 +2,8 @@
 
 use App\Models\KaryawanModel;
 use App\Models\PjsModel;
+use App\Models\PengkinianKaryawanModel;
+use App\Models\PengkinianPjsModel;
 use App\Service\EntityService;
 
 if (!function_exists('getMonth()')) {
@@ -45,5 +47,12 @@ if (!function_exists('jabatanLengkap')) {
     function jabatanLengkap(KaryawanModel|PjsModel $model)
     {
         return EntityService::getPosition($model);
+    }
+}
+
+if (!function_exists('jabatanLengkapPengkinian')) {
+    function jabatanLengkapPengkinian(PengkinianKaryawanModel|PengkinianPjsModel $model)
+    {
+        return EntityService::getPositionPengkinian($model);
     }
 }
