@@ -13,6 +13,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
+use App\Http\Controllers\PengkinianDataController;
 use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\SuratPeringatanController;
@@ -108,30 +109,6 @@ use Illuminate\Support\Facades\Auth;
 //     return view('karyawan/klasifikasi');
 // });
 
-Route::get('pengkinian_data', function() {
-    return view('pengkinian_data/index');
-});
-
-Route::get('pengkinian_data/add', function() {
-    return view('pengkinian_data/add');
-});
-
-Route::get('pengkinian_data/update', function() {
-    return view('pengkinian_data/edit');
-});
-
-Route::get('pengkinian_data/detail', function() {
-    return view('pengkinian_data/detail');
-});
-
-Route::get('pengkinian_data/import', function() {
-    return view('pengkinian_data/import');
-});
-
-Route::get('pengkinian_data/history', function() {
-    return view('pengkinian_data/history');
-});
-
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -156,6 +133,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/backup', BackupController::class);
     Route::resource('/history_jabatan', HistoryJabatanController::class);
     Route::resource('/gaji', SlipGajiController::class);
+    Route::resource('/pengkinian_data', PengkinianDataController::class);
 
     // Penonaktifan Karyawan
     Route::controller(KaryawanController::class)->group(function () {
@@ -257,6 +235,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/sp', [MigrasiController::class, 'migrasiSP'])->name('migrasiSP');
         Route::post('/store', [MigrasiController::class, 'store'])->name('migrasiStore');
     });
+
+    Route::get('/get-data-karyawan-by-nip', [PengkinianDataController::class, 'getDataKaryawanByNIP'])->name('get-data-karyawan-by-nip');
 });
 Auth::routes();
 

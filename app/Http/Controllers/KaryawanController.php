@@ -116,9 +116,7 @@ class KaryawanController extends Controller
 
     public function get_is(Request $request)
     {
-        $data = DB::table('is')
-            ->join('mst_karyawan', 'mst_karyawan.id_is', '=', 'is.id')
-            ->select('is.*')
+        $data = DB::table('keluarga')
             ->where('nip', $request->nip)
             ->orderBy('id', 'desc')
             ->first();

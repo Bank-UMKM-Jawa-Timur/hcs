@@ -10,7 +10,7 @@
         <div class="card-body">
             <div class="col">
                 <div class="row">
-                    <a class="mb-3" href="/pengkinian_data/add">
+                    <a class="mb-3" href="{{ route('pengkinian_data.create') }}">
                       <button class="btn btn-primary">Pengkinian Data</button>
                     </a>
                     <a class="ml-3" href="/pengkinian_data/import">
