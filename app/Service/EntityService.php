@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Models\KaryawanModel;
 use App\Models\PjsModel;
+use App\Models\PengkinianKaryawanModel;
+use App\Models\PengkinianPjsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -68,6 +70,22 @@ class EntityService
     }
 
     public static function getPosition(KaryawanModel|PjsModel $model)
+    {
+        $prefix = ($model instanceof PjsModel) ? 'Pjs. ' : '';
+        $bagian = $model->bagian?->nama_bagian;
+        $entitas = $model->entitas;
+        $jabatan = static::abbrevPos($model->jabatan->nama_jabatan);
+
+        if (isset($entitas->subDiv))
+            return "{$prefix}{$jabatan} {$bagian} {$entitas->subDiv->nama_subdivisi}";
+
+        if (isset($entitas->div))
+            return "{$prefix}{$jabatan} {$bagian} {$entitas->div->nama_divisi}";
+
+        return "{$prefix}$jabatan $bagian";
+    }
+
+    public static function getPositionPengkinian(PengkinianKaryawanModel|PengkinianPjsModel $model)
     {
         $prefix = ($model instanceof PjsModel) ? 'Pjs. ' : '';
         $bagian = $model->bagian?->nama_bagian;
