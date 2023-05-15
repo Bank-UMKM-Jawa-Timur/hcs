@@ -17,7 +17,18 @@ class PengkinianDataController extends Controller
      */
     public function index()
     {
-        return view('pengkinian_data.index');
+        $cbg = array();
+        $cabang = DB::table('mst_cabang')
+            ->get();
+        foreach($cabang as $i){
+            array_push($cbg, $i->kd_cabang);
+        }
+        $data_pusat = DB::select("SELECT history_pengkinian_data_karyawan.id, history_pengkinian_data_karyawan.nip_baru, history_pengkinian_data_karyawan.nik, history_pengkinian_data_karyawan.nama_karyawan, history_pengkinian_data_karyawan.kd_entitas, history_pengkinian_data_karyawan.kd_jabatan, history_pengkinian_data_karyawan.kd_bagian, history_pengkinian_data_karyawan.ket_jabatan, history_pengkinian_data_karyawan.status_karyawan, mst_jabatan.nama_jabatan, history_pengkinian_data_karyawan.status_jabatan FROM `history_pengkinian_data_karyawan` JOIN mst_jabatan ON mst_jabatan.kd_jabatan = history_pengkinian_data_karyawan.kd_jabatan WHERE history_pengkinian_data_karyawan.kd_entitas NOT IN('".implode("', '", $cbg)."') or history_pengkinian_data_karyawan.kd_entitas IS NULL ORDER BY CASE WHEN history_pengkinian_data_karyawan.kd_jabatan='PIMDIV' THEN 1 WHEN history_pengkinian_data_karyawan.kd_jabatan='PSD' THEN 2 WHEN history_pengkinian_data_karyawan.kd_jabatan='PC' THEN 3 WHEN history_pengkinian_data_karyawan.kd_jabatan='PBO' THEN 4 WHEN history_pengkinian_data_karyawan.kd_jabatan='PBP' THEN 5 WHEN history_pengkinian_data_karyawan.kd_jabatan='PEN' THEN 6 WHEN history_pengkinian_data_karyawan.kd_jabatan='ST' THEN 7 WHEN history_pengkinian_data_karyawan.kd_jabatan='IKJP' THEN 8 WHEN history_pengkinian_data_karyawan.kd_jabatan='NST' THEN 9 END ASC");
+        // dd($data_pusat);
+        return view('pengkinian_data.index', [
+            'data_pusat' => $data_pusat,
+            'cabang' => $cabang
+        ]);
     }
 
     /**
