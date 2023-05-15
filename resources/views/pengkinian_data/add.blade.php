@@ -303,6 +303,7 @@
 
                     <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
                         <div class="row m-0 pb-3 col-md-12">
+                            <input type="hidden" name="id_tk[]" id="id_tk" value="">
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is">Tunjangan</label>
@@ -683,6 +684,7 @@
                         $.each(res.data.tunjangan, (i, val) => {
                             $('#collapseFour').append(`
                                 <div class="row m-0 pb-3 col-md-12">
+                                <input type="hidden" name="id_tk[]" id="id_tk" value="${val.id}">
                                                 <div class="col-md-5">
                                                     <div class="form-group">
                                                         <label for="is">Tunjangan</label>
@@ -717,6 +719,7 @@
                         $("#collapseFour").empty()
                         $('#collapseFour').append(`
                             <div class="row m-0 pb-3 col-md-12">
+                                    <input type="hidden" name="id_tk[]" id="id_tk" value="">
                                             <div class="col-md-5">
                                                 <div class="form-group">
                                                     <label for="is">Tunjangan</label>
