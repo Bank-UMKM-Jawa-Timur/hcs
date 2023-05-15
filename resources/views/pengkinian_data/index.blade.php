@@ -16,9 +16,6 @@
                     <a class="ml-3" href="/pengkinian_data/import">
                       <button class="btn btn-primary">Import Karyawan</button>
                     </a>
-                    <a class="ml-3" href="/pengkinian_data/history">
-                      <button class="btn btn-primary">History Pengkinian Data</button>
-                    </a>
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
                         <thead class="text-primary">
