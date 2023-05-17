@@ -279,8 +279,9 @@ class SlipGajiController extends Controller
                 array_push($cbg, $i->kd_cabang);
             }
             $karyawan = DB::table('mst_karyawan')
-                ->whereNotIn('kd_entitas', $cbg)
-                ->orWhere('kd_entitas', null)
+                // ->whereNotIn('kd_entitas', $cbg)
+                // ->orWhere('kd_entitas', null)
+                // Comment by arsyad entitas terdapat pilihan untuk memilih cabang tertentu di kategori
                 ->get();
         // }
         $data = $this->getLaporanGaji($karyawan, $kategori, $request);
