@@ -38,7 +38,7 @@ class PengkinianPjsModel extends Model
 
     public function karyawan()
     {
-        return $this->belongsTo(PengkinianKaryawanModel::class, 'nip_baru', 'nip_baru');
+        return $this->belongsTo(PengkinianKaryawanModel::class, 'nip_baru', 'nip');
     }
 
     public function jabatan()

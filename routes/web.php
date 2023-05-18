@@ -181,7 +181,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Get komponen untuk CRUD master karyawan
     Route::get('getdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_divisi']);
-    Route::get('getcabang', [\App\Http\Controllers\KaryawanController::class, 'get_cabang']);
+    Route::get('getcabang', [\App\Http\Controllers\KaryawanController::class, 'get_cabang'])->name('get_cabang');
     Route::get('getsubdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_subdivisi']);
     Route::get('getbagian', [KaryawanController::class, 'getbagian']);
     Route::get('deleteEditTunjangan', [KaryawanController::class, 'deleteEditTunjangan'])->name('deleteEditTunjangan');

@@ -32,19 +32,19 @@
                                 </select>
                             </div>
                         </div>
-                        {{-- <div class="col-md-4">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Kantor</label>
                                 <select name="kantor" id="kantor" class="form-control">
                                     <option value="">--- Pilih Kantor ---</option>
-                                    <option value="pusat">Pusat</option>
-                                    <option value="cabang">Cabang</option>
+                                    <option value="pusat" {{ $request?->kantor == "pusat" ? 'selected' : '' }}>Pusat</option>
+                                    <option value="cabang" {{ $request?->kantor == "cabang" ? 'selected' : '' }}>Cabang</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4" id="cabang_col">
                             
-                        </div> --}}
+                        </div>
                         <div class="col-md-4">
                             <label for="tahun">Tahun</label>
                             <div class="form-group">
@@ -93,6 +93,7 @@
                                     <th>Nama</th>
                                     <th>Gaji Pokok</th>
                                     <th>Tj. Keluarga</th>
+                                    <th>Tj. Teller</th>
                                     <th>Tj. Listrik & Air</th>
                                     <th>Tj. Jabatan</th>
                                     <th>Tj. Perumahan</th>
@@ -177,33 +178,40 @@
     <script>
         $("#table").DataTable({
 
-        })
-        // $("#kantor").change(function(){
-        //     var value = $(this).val()
-        //     $("#cabang_col").empty()
-        //     if(value == 'cabang'){
-        //         $.ajax({
-        //             type: 'GET',
-        //             url: '/getcabang',
-        //             dataType: 'JSON',
-        //             success: (res) => {
-        //                 $('#cabang_col').append(`
-        //                     <div class="form-group">
-        //                         <label for="Cabang">Cabang</label>
-        //                         <select name="cabang" id="cabang" class="form-control">
-        //                             <option value="">--- Pilih Cabang ---</option>
-        //                         </select>
-        //                     </div>
-        //                 `);
+        });
 
-        //                 $.each(res[0], function(i, item){
-        //                     $("#cabang").append(`
-        //                         <option value="`+ item.kd_cabang +`">`+ item.kd_cabang +` - `+ item.nama_cabang +`</option>
-        //                     `)
-        //                 })
-        //             }
-        //         });
-        //     }
-        // })
+        $(document).ready(function() {
+            function getCabang() {
+                var value = $("#kantor").val();
+                $("#cabang_col").empty();
+                if (value === 'cabang') {
+                    const kd_cabang = '<?php echo $request?->cabang; ?>';
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('get_cabang') }}",
+                        dataType: 'JSON',
+                        success: (res) => {
+                            $('#cabang_col').append(`
+                                <div class="form-group">
+                                    <label for="Cabang">Cabang</label>
+                                    <select name="cabang" id="cabang" class="form-control">
+                                        <option value="">--- Pilih Cabang ---</option>
+                                    </select>
+                                </div>
+                            `);
+
+                            $.each(res[0], function(i, item){
+                                $("#cabang").append(`
+                                    <option ${item.kd_cabang == kd_cabang ? 'selected' : ''} value="${item.kd_cabang}">${item.kd_cabang} - ${item.nama_cabang}</option>
+                                `);
+                            });
+                        }
+                    });
+                }
+            }
+
+            $("#kantor").change(getCabang).trigger("change");
+        });
     </script>
 @endsection

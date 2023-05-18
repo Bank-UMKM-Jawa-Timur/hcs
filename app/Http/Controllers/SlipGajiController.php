@@ -58,17 +58,18 @@ class SlipGajiController extends Controller
     
                     $data[$i]['tunjangan'][1] = $gaji->tj_keluarga;
                     $data[$i]['tunjangan'][2] = $gaji->tj_telepon;
-                    $data[$i]['tunjangan'][3] = $gaji->tj_jabatan;
-                    $data[$i]['tunjangan'][4] = $gaji->tj_perumahan;
-                    $data[$i]['tunjangan'][5] = $gaji->tj_pelaksana;
-                    $data[$i]['tunjangan'][6] = $gaji->tj_kemahalan;
-                    $data[$i]['tunjangan'][7] = $gaji->tj_kesejahteraan;
-    
+                    $data[$i]['tunjangan'][3] = $gaji->tj_teller;
+                    $data[$i]['tunjangan'][4] = $gaji->tj_jabatan;
+                    $data[$i]['tunjangan'][5] = $gaji->tj_perumahan;
+                    $data[$i]['tunjangan'][6] = $gaji->tj_pelaksana;
+                    $data[$i]['tunjangan'][7] = $gaji->tj_kemahalan;
+                    $data[$i]['tunjangan'][8] = $gaji->tj_kesejahteraan;
+        
                     $totalGaji = $gaji->gj_pokok + $gaji->gj_penyesuaian + array_sum($data[$i]['tunjangan']);
                 }
                 else{
                     $totalGaji = $item->gj_pokok + $item->gj_penyesuaian;
-                    for($j = 1; $j <=8; $j++){
+                    for($j = 1; $j <=9; $j++){
                         if($j != 4){
                             $tunjangan = DB::table('tunjangan_karyawan')
                                 ->where('nip', $item->nip)
@@ -211,7 +212,8 @@ class SlipGajiController extends Controller
                 $data[$i]['gj_pokok'] = $gaji->gj_pokok;
                 $data[$i]['gj_penyesuaian'] = $gaji->gj_penyesuaian;
 
-                $data[$i]['tunjangan'][1] = $gaji->tj_keluarga;
+                $data[$i]['tunjangan'][0] = $gaji->tj_keluarga;
+                $data[$i]['tunjangan'][1] = $gaji->tj_teller;
                 $data[$i]['tunjangan'][2] = $gaji->tj_telepon;
                 $data[$i]['tunjangan'][3] = $gaji->tj_jabatan;
                 $data[$i]['tunjangan'][4] = $gaji->tj_perumahan;
@@ -225,7 +227,7 @@ class SlipGajiController extends Controller
                 $data[$i]['gj_pokok'] = $item->gj_pokok;
                 $data[$i]['gj_penyesuaian'] = $item->gj_penyesuaian;
                 $totalGaji = $item->gj_pokok + $item->gj_penyesuaian;
-                for($j = 1; $j <=8; $j++){
+                for($j = 1; $j <=9; $j++){
                     if($j != 4){
                         $tunjangan = DB::table('tunjangan_karyawan')
                             ->where('nip', $item->nip)
@@ -264,13 +266,15 @@ class SlipGajiController extends Controller
     public function getLaporan(Request $request)
     {
         $kantor = $request->kantor;
+        $Opsicabang = $request->cabang;
         $kategori = $request->kategori;
         $data = [];
-        // if($kantor == 'cabang'){
-        //     $karyawan = DB::table('mst_karyawan')
-        //         ->where('kd_entitas', $request->cabang)
-        //         ->get();
-        // } else if($kantor == 'pusat'){
+
+        if($kantor == 'cabang'){
+            $karyawan = DB::table('mst_karyawan')
+                ->where('kd_entitas', $Opsicabang)
+                ->get();
+        } else if($kantor == 'pusat'){
             $cabang = DB::table('mst_cabang')
                 ->select('kd_cabang')
                 ->get();
@@ -279,11 +283,11 @@ class SlipGajiController extends Controller
                 array_push($cbg, $i->kd_cabang);
             }
             $karyawan = DB::table('mst_karyawan')
-                // ->whereNotIn('kd_entitas', $cbg)
-                // ->orWhere('kd_entitas', null)
+                ->whereNotIn('kd_entitas', $cbg)
+                ->orWhere('kd_entitas', null)
                 // Comment by arsyad entitas terdapat pilihan untuk memilih cabang tertentu di kategori
                 ->get();
-        // }
+        }
         $data = $this->getLaporanGaji($karyawan, $kategori, $request);
         return view('slip_gaji.laporan_gaji', compact('data', 'kategori', 'request'));
     }
