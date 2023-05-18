@@ -115,7 +115,7 @@ Coded by www.creative-tim.com
                     </a>
                   </li>
                   <li style="margin-top: -15px" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
-                    <a href="/pengkinian_data">
+                    <a href="{{ route('pengkinian_data.index') }}">
                       <i class="nc-icon nc-ruler-pencil"></i>
                       <p>Pengkinian Data </p>
                       <p></p>
@@ -161,14 +161,14 @@ Coded by www.creative-tim.com
               </a>
               <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('gaji_perbulan,pajak_penghasilan', 'show')" id="submenu2">
                 <li style="margin-top: -15px" class="@active('gaji_perbulan')">
-                  <a href="/gaji_perbulan">
+                  <a href="{{ route('gaji_perbulan.index') }}">
                     <i class="nc-icon nc-money-coins"></i>
                     <p>Proses Penghasilan</p>
                     <p></p>
                   </a>
                 </li>
                 <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
-                  <a href="/pajak_penghasilan">
+                  <a href="{{ route('pajak_penghasilan.index') }}">
                     <i class="nc-icon nc-scissors"></i>
                     <p>Pajak Penghasilan</p>
                     <p></p>
