@@ -89,6 +89,7 @@ class PengkinianDataController extends Controller
      */
     public function store(Request $request)
     {
+        // dd(intval($request->is_jml_anak));
         $nip = $request->nip;
         $request->validate([
             'nip' => 'required',
@@ -231,7 +232,7 @@ class PengkinianDataController extends Controller
                         'created_at' => now(),
                     ]);
 
-            if ($request->is_jml_anak != null) {
+            if ($request->is_jml_anak != null && intval($request->is_jml_anak) > 0) {
                 foreach ($request->get('nama_anak') as $key => $item) {
                     if ($request->get('id_anak')[$key] != null) {
                         DB::table('keluarga')

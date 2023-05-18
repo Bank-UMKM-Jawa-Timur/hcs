@@ -280,7 +280,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="is_pekerjaan">Pekerjaan</label>
-                                <input type="text" class="form-control" name="is_pekerjaan" value="{{ old('is_pekerjaan') }}">
+                                <input type="text" class="form-control" name="is_pekerjaan" value="{{ old('is_pekerjaan') }}" id="is_pekerjaan">
                             </div>
                             <div class="col-md-6">
                                 <label for="is_jumlah_anak">Jumlah Anak</label>
@@ -985,6 +985,7 @@
                             $('#is_alamat').val(res.alamat);
                             $('#is_pekerjaan').val(res.pekerjaan);
                             $('#is_jml_anak').val(res.jml_anak);
+                            $('#sk_tunjangan_is').val(res.sk_tunjangan);
                             $("#is_jml_anak").trigger('keyup')
                         }
                     }
