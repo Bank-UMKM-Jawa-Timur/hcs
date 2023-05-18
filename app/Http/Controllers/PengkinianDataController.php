@@ -160,7 +160,10 @@ class PengkinianDataController extends Controller
                 }
             }
             $entitas = null;
-            if ($request->get('subdiv') != null) {
+            if($request->get('bagian') != null){
+                $entitas = null;
+            } 
+            else if ($request->get('subdiv') != null) {
                 $entitas = $request->get('subdiv');
             } else if ($request->get('cabang') != null) {
                 $entitas = $request->get('cabang');
