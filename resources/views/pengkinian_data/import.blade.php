@@ -17,7 +17,7 @@
                     </a>
                 </div>
 
-                <form action="" enctype="multipart/form-data" method="POST" class="form-group">
+                <form action="{{ route('post-pengkinian-import') }}" enctype="multipart/form-data" method="POST" class="form-group">
                     @csrf
                     <div class="row">
                         <div class="container ml-3">

@@ -13,8 +13,8 @@
                     <a class="mb-3" href="{{ route('pengkinian_data.create') }}">
                       <button class="btn btn-primary">Pengkinian Data</button>
                     </a>
-                    <a class="ml-3" href="/pengkinian_data/import">
-                      <button class="btn btn-primary">Import Karyawan</button>
+                    <a class="ml-3" href="{{ route('pengkinian-data-import-index') }}">
+                      <button class="btn btn-primary">Import Pengkinian</button>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
@@ -55,7 +55,7 @@
                                     @endphp
                                     {{ $num }}
                                   </td>
-                                  <td>{{ $item->nip_baru }}</td>
+                                  <td>{{ $item->nip }}</td>
                                   <td>{{ $item->nik }}</td>
                                   <td>
                                     {{ $item->nama_karyawan }}
@@ -96,7 +96,7 @@
                                   </td>
                                   <td style="min-width: 130px">
                                     <div class="container">
-                                        <a href="{{ route('pengkinian_data.show', $item->nip_baru) }}">
+                                        <a href="{{ route('pengkinian_data.show', $item->id) }}">
                                           <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                             Detail
                                           </button>
@@ -109,13 +109,13 @@
                           {{-- Foreach Data selain Pusat --}}
                           @foreach ($cabang as $item)
                               @php
-                                  $data_cabang =  DB::select("SELECT history_pengkinian_data_karyawan.id, history_pengkinian_data_karyawan.nip_baru, history_pengkinian_data_karyawan.nik, history_pengkinian_data_karyawan.nama_karyawan, history_pengkinian_data_karyawan.kd_entitas, history_pengkinian_data_karyawan.kd_jabatan, history_pengkinian_data_karyawan.kd_bagian, history_pengkinian_data_karyawan.ket_jabatan, history_pengkinian_data_karyawan.status_karyawan, mst_jabatan.nama_jabatan, history_pengkinian_data_karyawan.status_jabatan FROM `history_pengkinian_data_karyawan` JOIN mst_jabatan ON mst_jabatan.kd_jabatan = history_pengkinian_data_karyawan.kd_jabatan WHERE history_pengkinian_data_karyawan.kd_entitas = '".$item->kd_cabang."' ORDER BY CASE WHEN history_pengkinian_data_karyawan.kd_jabatan='PIMDIV' THEN 1 WHEN history_pengkinian_data_karyawan.kd_jabatan='PSD' THEN 2 WHEN history_pengkinian_data_karyawan.kd_jabatan='PC' THEN 3 WHEN history_pengkinian_data_karyawan.kd_jabatan='PBO' THEN 4 WHEN history_pengkinian_data_karyawan.kd_jabatan='PBP' THEN 5 WHEN history_pengkinian_data_karyawan.kd_jabatan='PEN' THEN 6 WHEN history_pengkinian_data_karyawan.kd_jabatan='ST' THEN 7 WHEN history_pengkinian_data_karyawan.kd_jabatan='IKJP' THEN 8 WHEN history_pengkinian_data_karyawan.kd_jabatan='NST' THEN 9 END ASC");
+                                  $data_cabang =  DB::select("SELECT history_pengkinian_data_karyawan.id, history_pengkinian_data_karyawan.nip, history_pengkinian_data_karyawan.nik, history_pengkinian_data_karyawan.nama_karyawan, history_pengkinian_data_karyawan.kd_entitas, history_pengkinian_data_karyawan.kd_jabatan, history_pengkinian_data_karyawan.kd_bagian, history_pengkinian_data_karyawan.ket_jabatan, history_pengkinian_data_karyawan.status_karyawan, mst_jabatan.nama_jabatan, history_pengkinian_data_karyawan.status_jabatan FROM `history_pengkinian_data_karyawan` JOIN mst_jabatan ON mst_jabatan.kd_jabatan = history_pengkinian_data_karyawan.kd_jabatan WHERE history_pengkinian_data_karyawan.kd_entitas = '".$item->kd_cabang."' ORDER BY CASE WHEN history_pengkinian_data_karyawan.kd_jabatan='PIMDIV' THEN 1 WHEN history_pengkinian_data_karyawan.kd_jabatan='PSD' THEN 2 WHEN history_pengkinian_data_karyawan.kd_jabatan='PC' THEN 3 WHEN history_pengkinian_data_karyawan.kd_jabatan='PBO' THEN 4 WHEN history_pengkinian_data_karyawan.kd_jabatan='PBP' THEN 5 WHEN history_pengkinian_data_karyawan.kd_jabatan='PEN' THEN 6 WHEN history_pengkinian_data_karyawan.kd_jabatan='ST' THEN 7 WHEN history_pengkinian_data_karyawan.kd_jabatan='IKJP' THEN 8 WHEN history_pengkinian_data_karyawan.kd_jabatan='NST' THEN 9 END ASC");
                               @endphp
 
                               @foreach ($data_cabang as $i)
                                   <tr>
                                     <td>{{ $num++ }}</td>
-                                    <td>{{ $i->nip_baru }}</td>
+                                    <td>{{ $i->nip }}</td>
                                     <td>{{ $i->nik }}</td>
                                     <td>{{ $i->nama_karyawan }}</td>
                                     <td>
@@ -164,7 +164,7 @@
                                     <td style="min-width: 105px">
                                       <div class="container">
                                         <div class="row">
-                                          <a href="{{ route('pengkinian_data.show', $i->nip_baru) }}">
+                                          <a href="{{ route('pengkinian_data.show', $i->nip) }}">
                                             <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                               Detail
                                             </button>

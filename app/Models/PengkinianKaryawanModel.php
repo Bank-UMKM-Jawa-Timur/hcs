@@ -13,13 +13,12 @@ class PengkinianKaryawanModel extends Model
     use HasFactory;
 
     protected $table = 'history_pengkinian_data_karyawan';
-    protected $primaryKey = 'nip_baru';
+    protected $primaryKey = 'nip';
     protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [
-        'nip_baru',
-        'nip_lama',
+        'nip',
         'nama_karyawan',
         'nik',
         'ket_jabatan',

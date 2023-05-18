@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="card-body">
-        <form action="{{ route('pengkinian_data.show', $karyawan->nip_baru) }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
+        <form action="{{ route('pengkinian_data.show', $karyawan->id) }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
             @csrf
             @method('PUT')
             <div class="row m-0 ">
@@ -23,13 +23,13 @@
                 }
                 $tj = DB::table('history_pengkinian_tunjangan_karyawan')
                     ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'history_pengkinian_tunjangan_karyawan.id_tunjangan')
-                    ->where('nip', $karyawan->nip_baru)
+                    ->where('nip', $karyawan->nip)
                     ->get();
             @endphp
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">NIP</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $karyawan->nip_baru }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->nip }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">

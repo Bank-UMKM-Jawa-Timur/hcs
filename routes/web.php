@@ -237,6 +237,9 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::get('/get-data-karyawan-by-nip', [PengkinianDataController::class, 'getDataKaryawanByNIP'])->name('get-data-karyawan-by-nip');
+
+    Route::get('/import_pengkinian', [PengkinianDataController::class, 'pengkinian_data_index'])->name('pengkinian-data-import-index');
+    Route::post('/post-import-pengkinian', [PengkinianDataController::class, 'postPengkinianImport'])->name('post-pengkinian-import');
 });
 Auth::routes();
 
