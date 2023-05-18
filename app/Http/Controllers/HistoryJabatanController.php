@@ -54,10 +54,16 @@ class HistoryJabatanController extends Controller
             ->get();
 
         $karyawan->map(function($data) {
+            if(!$data->kd_entitas_baru) {
+                $data->kantor_baru = "";
+                return;
+            }
+
             $entity = EntityService::getEntity($data->kd_entitas_baru);
             $type = $entity->type;
 
             if($type == 2) $data->kantor_baru = "Cab. " . $entity->cab->nama_cabang;
+
             if($type == 1) {
                 $data->kantor_baru = isset($entity->subDiv) ?
                 $entity->subDiv->nama_subdivisi . " (Pusat)":
@@ -68,6 +74,11 @@ class HistoryJabatanController extends Controller
         });
 
         $karyawan->map(function($dataLama) {
+            if(!$dataLama->kd_entitas_lama) {
+                $dataLama->kantor_lama = "";
+                return;
+            }
+
             $entityLama = EntityService::getEntity($dataLama->kd_entitas_lama);
             $typeLama = $entityLama->type;
 
