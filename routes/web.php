@@ -180,27 +180,27 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     // Get komponen untuk CRUD master karyawan
-    Route::get('getdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_divisi']);
+    Route::get('getdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_divisi'])->name('get_divisi');
     Route::get('getcabang', [\App\Http\Controllers\KaryawanController::class, 'get_cabang'])->name('get_cabang');
-    Route::get('getsubdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_subdivisi']);
-    Route::get('getbagian', [KaryawanController::class, 'getbagian']);
+    Route::get('getsubdivisi', [\App\Http\Controllers\KaryawanController::class, 'get_subdivisi'])->name('get_subdivisi');
+    Route::get('getbagian', [KaryawanController::class, 'getbagian'])->name('get_bagian');
     Route::get('deleteEditTunjangan', [KaryawanController::class, 'deleteEditTunjangan'])->name('deleteEditTunjangan');
 
     // Get komponen untuk mutasi
-    Route::get('getdatakaryawan', [\App\Http\Controllers\MutasiController::class, 'getdatakaryawan']);
+    Route::get('getdatakaryawan', [\App\Http\Controllers\MutasiController::class, 'getdatakaryawan'])->name('getDataKaryawan');
     Route::get('getdatakantor', [KaryawanController::class, 'getKantorKaryawan'])->name('getKantorKaryawan');
-    Route::get('getdatapromosi', [\App\Http\Controllers\PromosiController::class, 'getdatapromosi']);
+    Route::get('getdatapromosi', [\App\Http\Controllers\PromosiController::class, 'getdatapromosi'])->name('getDataPromosi');
 
     // Get komponen untuk demosi dan promosi
-    Route::get('getgolongan', [DemosiController::class, 'getgolongan']);
+    Route::get('getgolongan', [DemosiController::class, 'getgolongan'])->name('getGolongan');
     Route::get('getDataGjPromosi', [PromosiController::class, 'getDataGajiPromosi'])->name('getDataGjPromosi');
 
     // Get data untuk tunjangan karyawan
-    Route::get('getdatatunjangan', [TunjanganKaryawanController::class, 'getdatatunjangan']);
+    Route::get('getdatatunjangan', [TunjanganKaryawanController::class, 'getdatatunjangan'])->name('getDataTunjangan');
 
-    Route::get('getis', [KaryawanController::class, 'get_is']);
+    Route::get('getis', [KaryawanController::class, 'get_is'])->name('getIs');
 
-    Route::get('/getbagian', [KaryawanController::class, 'get_bagian']);
+    Route::get('/getbagian', [KaryawanController::class, 'get_bagian'])->name('getBagian');
 
     Route::post('/laporan_jaminan', [JaminanController::class, 'filter'])->name('filter-laporan');
 

@@ -405,7 +405,7 @@
             if(kantor_id == 1){
                 $.ajax({
                     type: "GET",
-                    url: '/getdivisi',
+                    url: "{{ route('get_divisi') }}",
                     datatype: 'JSON',
                     success: function(res){
                         $("#kantor_row1").empty();
@@ -438,7 +438,7 @@
                             if(divisi){
                                 $.ajax({
                                     type: "GET",
-                                    url: "/getsubdivisi?divisiID="+divisi,
+                                    url: "{{ route('get_subdivisi') }}?divisiID="+divisi,
                                     datatype: "JSON",
                                     success: function(res1){
                                         console.log(res1);
@@ -463,7 +463,7 @@
                                         $("#sub_divisi").change(function(){
                                             $.ajax({
                                                 type: "GET",
-                                                url: "/getbagian?kd_entitas="+$(this).val(),
+                                                url: "{{ route('getBagian') }}?kd_entitas="+$(this).val(),
                                                 datatype: "JSON",
                                                 success: function(res2){
                                                     $('#bagian').empty();
@@ -483,7 +483,7 @@
             } else if(kantor_id == 2){
                 $.ajax({
                     type: "GET",
-                    url: '/getcabang',
+                    url: "{{ route('get_cabang') }}",
                     datatype: 'JSON',
                     success: function(res){
                         $("#kantor_row1").empty();
@@ -787,7 +787,7 @@
             if(kantor_id == 1){
                 $.ajax({
                     type: "GET",
-                    url: '/getdivisi',
+                    url: "{{ route('get_divisi') }}",
                     datatype: 'JSON',
                     success: function(res){
                         $("#kantor_row1").empty();
@@ -825,7 +825,7 @@
             } else if(kantor_id == 2){
                 $.ajax({
                     type: "GET",
-                    url: '/getcabang',
+                    url: "{{ route('get_cabang') }}",
                     datatype: 'JSON',
                     success: function(res){
                         $("#kantor_row1").empty();
@@ -868,7 +868,7 @@
             if(divisi){
                 $.ajax({
                     type: "GET",
-                    url: "/getsubdivisi?divisiID="+divisi,
+                    url: "{{ route('get_subdivisi') }}?divisiID="+divisi,
                     datatype: "JSON",
                     success: function(res1){
                         $('#kantor_row2').show();
@@ -916,7 +916,7 @@
 
             $.ajax({
                 type: "GET",
-                url: "/getbagian?kd_entitas="+kd_subdiv,
+                url: "{{ route('getBagian') }}?kd_entitas="+kd_subdiv,
                 datatype: "JSON",
                 success: function(res2){
                     $('#bagian').empty();
@@ -974,7 +974,7 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "/getis?nip="+nip,
+                    url: "{{ route('getIs') }}?nip="+nip,
                     datatype: "json",
                     success: function(res){
                         if(res == null){

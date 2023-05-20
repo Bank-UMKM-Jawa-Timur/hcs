@@ -271,7 +271,7 @@ $('#nip').select2({
 
             $('#divisi').change(function(e) {
                 $.ajax({
-                    url: `/getsubdivisi?divisiID=${this.value}`,
+                    url: `{{ route('get_subdivisi') }}?divisiID=${this.value}`,
                     dataType: 'JSON',
                     success: (res) => fillSubDivision(res)
                 });
@@ -309,7 +309,7 @@ $('#nip').select2({
             if(skips.includes(jabVal)) return;
             $('#sub_divisi').change(function(e) {
                 $.ajax({
-                    url: `/getbagian?kd_entitas=${this.value}`,
+                    url: `{{ route('getBagian') }}?kd_entitas=${this.value}`,
                     dataType: 'JSON',
                     success: (res) => fillBagian(res)
                 });
@@ -370,7 +370,7 @@ $('#nip').select2({
             const nip = $(this).val();
 
             $.ajax({
-                url: '/getdatakaryawan',
+                url: "{{ route('getDataKaryawan') }}",
                 data: {nip},
                 dataType: 'JSON',
                 success: (data) => {
@@ -503,7 +503,7 @@ $('#nip').select2({
                 if(value != null){
                     $.ajax({
                         type: "GET",
-                        url: "/deleteEditTunjangan?id_tk="+value,
+                        url: "{{ route('deleteEditTunjangan') }}?id_tk="+value,
                         datatype: "json",
                         success: function(res){
                             if(res == "sukses"){
@@ -540,7 +540,7 @@ $('#nip').select2({
 
             if(office == 1) {
                 $.ajax({
-                    url: '/getdivisi',
+                    url: "{{ route('get_divisi') }}",
                     dataType: 'JSON',
                     success: (res) => fillDivision(res)
                 });
@@ -548,7 +548,7 @@ $('#nip').select2({
 
             if(office == 2) {
                 $.ajax({
-                    url: '/getcabang',
+                    url: "{{ route('get_cabang') }}",
                     dataType: 'JSON',
                     success: (res) => {
                         fillBranches(res[0]);
