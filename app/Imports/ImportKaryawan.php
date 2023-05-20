@@ -30,24 +30,6 @@ class ImportKaryawan implements ToCollection, WithHeadingRow, SkipsOnError, With
         foreach($rows as $row){
             $id_is = null;
             // dd($row);
-            if($row['status_pernikahan'] == 'Kawin' && $row['pasangan'] != null){
-                DB::table('is')->insert([
-                    'enum' => $row['pasangan'],
-                    'is_nama' => $row['nama_pasangan'],
-                    'is_tgl_lahir' => ($row['tgl_lahir_pasangan'] != null) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_lahir_pasangan']) : null,
-                    'is_alamat' => $row['alamat_pasangan'],
-                    'is_pekerjaan' => $row['pekerjaan_pasangan'],
-                    'is_jml_anak' => $row['jumlah_anak'],
-                    'created_at' => now()
-                ]);
-
-                $id_is = DB::table('is')
-                    ->orderBy('id', 'DESC')
-                    ->first();
-
-                $id_is = $id_is->id;
-            }
-
             $jk = null;
 
             if($row['jenis_kelamin'] == 'L'){
@@ -72,7 +54,6 @@ class ImportKaryawan implements ToCollection, WithHeadingRow, SkipsOnError, With
                     'status_jabatan' => $row['status_jabatan'],
                     'kd_bagian' => $row['kd_bagian'],
                     'kd_panggol' => ($row['kd_pangkat_golongan'] != '') ? $row['kd_pangkat_golongan'] : null,
-                    'id_is' => $id_is,
                     'kd_agama' => $row['agama'],
                     'tmp_lahir' => $row['tmp_lahir'],
                     'tgl_lahir' => ($row['tgl_lahir'] != null) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_lahir']) : null,
