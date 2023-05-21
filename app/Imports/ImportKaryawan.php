@@ -30,13 +30,6 @@ class ImportKaryawan implements ToCollection, WithHeadingRow, SkipsOnError, With
         foreach($rows as $row){
             $id_is = null;
             // dd($row);
-            $jk = null;
-
-            if($row['jenis_kelamin'] == 'L'){
-                $jk = 'Laki-laki';
-            } else if($row['jenis_kelamin'] == 'P'){
-                $jk = 'Perempuan';
-            }
             
             $status_pernikahan = $row['status_pernikahan'];
             if($status_pernikahan == null || $status_pernikahan == ''){
@@ -58,7 +51,7 @@ class ImportKaryawan implements ToCollection, WithHeadingRow, SkipsOnError, With
                     'tmp_lahir' => $row['tmp_lahir'],
                     'tgl_lahir' => ($row['tgl_lahir'] != null) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_lahir']) : null,
                     'kewarganegaraan' => $row['kewarganegaraan'],
-                    'jk' => $jk,
+                    'jk' => $row['jk'],
                     'status' => $status_pernikahan,
                     'alamat_ktp' => $row['alamat_ktp'],
                     'alamat_sek' => $row['alamat_sekarang'],
@@ -69,8 +62,11 @@ class ImportKaryawan implements ToCollection, WithHeadingRow, SkipsOnError, With
                     'status_karyawan' => $row['status_karyawan'],
                     'skangkat' => $row['skangkat'],
                     'tanggal_pengangkat' => ($row['tanggal_pengangkat'] != null) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tanggal_pengangkat']) : null,
-                    'no_rekening' => $row['no_rekening'],
-                    'npwp' => $row['npwp'],
+                    'no_rekening' => $row['no_rekening'] ?? null,
+                    'npwp' => $row['npwp'] ?? null,
+                    'pendidikan' => $row['pendidikan'],
+                    'pendidikan_major' => $row['pendidikan_major'],
+                    'tgl_mulai' => ($row['tgl_mulai'] != null) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_mulai']) : null,
                     'created_at' => now(),
                 ]);
 
