@@ -49,7 +49,7 @@ class ImportKaryawan implements ToCollection, WithHeadingRow, SkipsOnError, With
                     'nama_karyawan' => $row['nama_karyawan'],
                     'nik' => $row['nik'],
                     'ket_jabatan' => $row['ket_jabatan'], 
-                    'kd_entitas' => $row['kd_kantor'],
+                    'kd_entitas' => $row['kd_entitas'],
                     'kd_jabatan' => $row['kd_jabatan'],
                     'status_jabatan' => $row['status_jabatan'],
                     'kd_bagian' => $row['kd_bagian'],
