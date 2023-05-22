@@ -67,6 +67,8 @@ class ImportKaryawan implements ToCollection, WithHeadingRow, SkipsOnError, With
                     'pendidikan' => $row['pendidikan'],
                     'pendidikan_major' => $row['pendidikan_major'],
                     'tgl_mulai' => ($row['tgl_mulai'] != null) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tgl_mulai']) : null,
+                    'tanggal_penonaktifan' => ($row['tanggal_penonaktifan'] != null) ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tanggal_penonaktifan']) : null,
+                    'sk_penonaktifan' => $row['sk_penonaktifan'],
                     'created_at' => now(),
                 ]);
 
