@@ -116,114 +116,116 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
-                                    <tr>
-                                        <td>{{ $item->nip }}</td>
-                                        <td>{{ $item->nik }}</td>
-                                        <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
-                                        @php
-                                            $nama_cabang = DB::table('mst_cabang')
-                                                ->where('kd_cabang', $item->kd_entitas)
-                                                ->first();
-                                        @endphp
-                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
-                                        <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
-                                        @php
-                                            $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
-                                        @php
-                                            $umur = Carbon\Carbon::create($item->tgl_lahir);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                    @if ($item->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $item->nip }}</td>
+                                            <td>{{ $item->nik }}</td>
+                                            <td>{{ $item->nama_karyawan  }}</td>
+                                            <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                            @php
+                                                $nama_cabang = DB::table('mst_cabang')
+                                                    ->where('kd_cabang', $item->kd_entitas)
+                                                    ->first();
+                                            @endphp
+                                            <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                            <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
+                                            @php
+                                                $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
+                                            @php
+                                                $umur = Carbon\Carbon::create($item->tgl_lahir);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($umur);
-                                            $umurSkrg = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
-                                        @php
-                                            if ($item->jk == 'Laki-laki') {
-                                                $jk = 'L';
-                                            } else {
-                                                $jk = 'P';
-                                            }
+                                                $hitung = $waktuSekarang->diff($umur);
+                                                $umurSkrg = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
+                                            @php
+                                                if ($item->jk == 'Laki-laki') {
+                                                    $jk = 'L';
+                                                } else {
+                                                    $jk = 'P';
+                                                }
 
-                                        @endphp
-                                        <td>{{ $jk }}</td>
-                                        @php
-                                            if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'K';
-                                                    $anak = $item->keluarga?->jml_anak;
+                                            @endphp
+                                            <td>{{ $jk }}</td>
+                                            @php
+                                                if ($item->status == 'Kawin' || $item->status == 'K') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'K';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'K';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TK';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TK';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Tidak Diketahui') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai Mati') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CM';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CM';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CR';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CR';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Janda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'JD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'JD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Duda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'DA';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'DA';
+                                                        $anak = 0;
+                                                    }
                                                 } else {
-                                                    $status = 'K';
-                                                    $anak = 0;
+                                                    $status = '-';
+                                                    $anak = '-';
                                                 }
-                                            } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TK';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TK';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CM';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CM';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CR';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CR';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Janda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'JD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'JD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Duda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'DA';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'DA';
-                                                    $anak = 0;
-                                                }
-                                            } else {
-                                                $status = '-';
-                                                $anak = '-';
-                                            }
-                                        @endphp
-                                        <td>{{ $status }}/{{ $anak }}</td>
-                                        <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
-                                        <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
-                                        @php
-                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                            @endphp
+                                            <td>{{ $status }}/{{ $anak }}</td>
+                                            <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
+                                            @php
+                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($mulaKerja);
-                                            $masaKerja = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ $item->pendidikan ?? '-' }}</td>
-                                    </tr>
+                                                $hitung = $waktuSekarang->diff($mulaKerja);
+                                                $masaKerja = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ $item->pendidikan ?? '-' }}</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -251,114 +253,116 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
-                                    <tr>
-                                        <td>{{ $item->nip }}</td>
-                                        <td>{{ $item->nik }}</td>
-                                        <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
-                                        @php
-                                            $nama_cabang = DB::table('mst_cabang')
-                                                ->where('kd_cabang', $item->kd_entitas)
-                                                ->first();
-                                        @endphp
-                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
-                                        <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
-                                        @php
-                                            $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
-                                        @php
-                                            $umur = Carbon\Carbon::create($item->tgl_lahir);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                    @if ($item->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $item->nip }}</td>
+                                            <td>{{ $item->nik }}</td>
+                                            <td>{{ $item->nama_karyawan  }}</td>
+                                            <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                            @php
+                                                $nama_cabang = DB::table('mst_cabang')
+                                                    ->where('kd_cabang', $item->kd_entitas)
+                                                    ->first();
+                                            @endphp
+                                            <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                            <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
+                                            @php
+                                                $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
+                                            @php
+                                                $umur = Carbon\Carbon::create($item->tgl_lahir);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($umur);
-                                            $umurSkrg = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
-                                        @php
-                                            if ($item->jk == 'Laki-laki') {
-                                                $jk = 'L';
-                                            } else {
-                                                $jk = 'P';
-                                            }
+                                                $hitung = $waktuSekarang->diff($umur);
+                                                $umurSkrg = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
+                                            @php
+                                                if ($item->jk == 'Laki-laki') {
+                                                    $jk = 'L';
+                                                } else {
+                                                    $jk = 'P';
+                                                }
 
-                                        @endphp
-                                        <td>{{ $jk }}</td>
-                                        @php
-                                            if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'K';
-                                                    $anak = $item->keluarga?->jml_anak;
+                                            @endphp
+                                            <td>{{ $jk }}</td>
+                                            @php
+                                                if ($item->status == 'Kawin' || $item->status == 'K') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'K';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'K';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TK';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TK';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Tidak Diketahui') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai Mati') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CM';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CM';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CR';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CR';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Janda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'JD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'JD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Duda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'DA';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'DA';
+                                                        $anak = 0;
+                                                    }
                                                 } else {
-                                                    $status = 'K';
-                                                    $anak = 0;
+                                                    $status = '-';
+                                                    $anak = '-';
                                                 }
-                                            } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TK';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TK';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CM';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CM';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CR';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CR';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Janda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'JD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'JD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Duda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'DA';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'DA';
-                                                    $anak = 0;
-                                                }
-                                            } else {
-                                                $status = '-';
-                                                $anak = '-';
-                                            }
-                                        @endphp
-                                        <td>{{ $status }}/{{ $anak }}</td>
-                                        <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
-                                        <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
-                                        @php
-                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                            @endphp
+                                            <td>{{ $status }}/{{ $anak }}</td>
+                                            <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
+                                            @php
+                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($mulaKerja);
-                                            $masaKerja = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ $item->pendidikan ?? '-' }}</td>
-                                    </tr>
+                                                $hitung = $waktuSekarang->diff($mulaKerja);
+                                                $masaKerja = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ $item->pendidikan ?? '-' }}</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -386,114 +390,116 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
-                                    <tr>
-                                        <td>{{ $item->nip }}</td>
-                                        <td>{{ $item->nik }}</td>
-                                        <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
-                                        @php
-                                            $nama_cabang = DB::table('mst_cabang')
-                                                ->where('kd_cabang', $item->kd_entitas)
-                                                ->first();
-                                        @endphp
-                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
-                                        <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
-                                        @php
-                                            $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
-                                        @php
-                                            $umur = Carbon\Carbon::create($item->tgl_lahir);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                    @if ($item->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $item->nip }}</td>
+                                            <td>{{ $item->nik }}</td>
+                                            <td>{{ $item->nama_karyawan  }}</td>
+                                            <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                            @php
+                                                $nama_cabang = DB::table('mst_cabang')
+                                                    ->where('kd_cabang', $item->kd_entitas)
+                                                    ->first();
+                                            @endphp
+                                            <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                            <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
+                                            @php
+                                                $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
+                                            @php
+                                                $umur = Carbon\Carbon::create($item->tgl_lahir);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($umur);
-                                            $umurSkrg = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
-                                        @php
-                                            if ($item->jk == 'Laki-laki') {
-                                                $jk = 'L';
-                                            } else {
-                                                $jk = 'P';
-                                            }
+                                                $hitung = $waktuSekarang->diff($umur);
+                                                $umurSkrg = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
+                                            @php
+                                                if ($item->jk == 'Laki-laki') {
+                                                    $jk = 'L';
+                                                } else {
+                                                    $jk = 'P';
+                                                }
 
-                                        @endphp
-                                        <td>{{ $jk }}</td>
-                                        @php
-                                            if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'K';
-                                                    $anak = $item->keluarga?->jml_anak;
+                                            @endphp
+                                            <td>{{ $jk }}</td>
+                                            @php
+                                                if ($item->status == 'Kawin' || $item->status == 'K') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'K';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'K';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TK';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TK';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Tidak Diketahui') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai Mati') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CM';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CM';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CR';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CR';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Janda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'JD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'JD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Duda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'DA';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'DA';
+                                                        $anak = 0;
+                                                    }
                                                 } else {
-                                                    $status = 'K';
-                                                    $anak = 0;
+                                                    $status = '-';
+                                                    $anak = '-';
                                                 }
-                                            } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TK';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TK';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CM';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CM';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CR';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CR';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Janda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'JD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'JD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Duda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'DA';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'DA';
-                                                    $anak = 0;
-                                                }
-                                            } else {
-                                                $status = '-';
-                                                $anak = '-';
-                                            }
-                                        @endphp
-                                        <td>{{ $status }}/{{ $anak }}</td>
-                                        <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
-                                        <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
-                                        @php
-                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                            @endphp
+                                            <td>{{ $status }}/{{ $anak }}</td>
+                                            <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
+                                            @php
+                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($mulaKerja);
-                                            $masaKerja = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ $item->pendidikan ?? '-' }}</td>
-                                    </tr>
+                                                $hitung = $waktuSekarang->diff($mulaKerja);
+                                                $masaKerja = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ $item->pendidikan ?? '-' }}</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -520,113 +526,115 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
-                                    <tr>
-                                        <td>{{ $item->nip }}</td>
-                                        <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
-                                        @php
-                                            $nama_cabang = DB::table('mst_cabang')
-                                                ->where('kd_cabang', $item->kd_entitas)
-                                                ->first();
-                                        @endphp
-                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
-                                        <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
-                                        @php
-                                            $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
-                                        @php
-                                            $umur = Carbon\Carbon::create($item->tgl_lahir);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                    @if ($item->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $item->nip }}</td>
+                                            <td>{{ $item->nama_karyawan  }}</td>
+                                            <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                            @php
+                                                $nama_cabang = DB::table('mst_cabang')
+                                                    ->where('kd_cabang', $item->kd_entitas)
+                                                    ->first();
+                                            @endphp
+                                            <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                            <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
+                                            @php
+                                                $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
+                                            @php
+                                                $umur = Carbon\Carbon::create($item->tgl_lahir);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($umur);
-                                            $umurSkrg = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
-                                        @php
-                                            if ($item->jk == 'Laki-laki') {
-                                                $jk = 'L';
-                                            } else {
-                                                $jk = 'P';
-                                            }
+                                                $hitung = $waktuSekarang->diff($umur);
+                                                $umurSkrg = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
+                                            @php
+                                                if ($item->jk == 'Laki-laki') {
+                                                    $jk = 'L';
+                                                } else {
+                                                    $jk = 'P';
+                                                }
 
-                                        @endphp
-                                        <td>{{ $jk }}</td>
-                                        @php
-                                            if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'K';
-                                                    $anak = $item->keluarga?->jml_anak;
+                                            @endphp
+                                            <td>{{ $jk }}</td>
+                                            @php
+                                                if ($item->status == 'Kawin' || $item->status == 'K') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'K';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'K';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TK';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TK';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Tidak Diketahui') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai Mati') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CM';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CM';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CR';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CR';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Janda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'JD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'JD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Duda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'DA';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'DA';
+                                                        $anak = 0;
+                                                    }
                                                 } else {
-                                                    $status = 'K';
-                                                    $anak = 0;
+                                                    $status = '-';
+                                                    $anak = '-';
                                                 }
-                                            } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TK';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TK';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CM';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CM';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CR';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CR';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Janda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'JD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'JD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Duda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'DA';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'DA';
-                                                    $anak = 0;
-                                                }
-                                            } else {
-                                                $status = '-';
-                                                $anak = '-';
-                                            }
-                                        @endphp
-                                        <td>{{ $status }}/{{ $anak }}</td>
-                                        <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
-                                        <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
-                                        @php
-                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                            @endphp
+                                            <td>{{ $status }}/{{ $anak }}</td>
+                                            <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
+                                            @php
+                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($mulaKerja);
-                                            $masaKerja = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ $item->pendidikan ?? '-' }}</td>
-                                    </tr>
+                                                $hitung = $waktuSekarang->diff($mulaKerja);
+                                                $masaKerja = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ $item->pendidikan ?? '-' }}</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -653,113 +661,115 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
-                                    <tr>
-                                        <td>{{ $item->nip }}</td>
-                                        <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
-                                        @php
-                                            $nama_cabang = DB::table('mst_cabang')
-                                                ->where('kd_cabang', $item->kd_entitas)
-                                                ->first();
-                                        @endphp
-                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
-                                        <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
-                                        @php
-                                            $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
-                                        @php
-                                            $umur = Carbon\Carbon::create($item->tgl_lahir);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                    @if ($item->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $item->nip }}</td>
+                                            <td>{{ $item->nama_karyawan  }}</td>
+                                            <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                            @php
+                                                $nama_cabang = DB::table('mst_cabang')
+                                                    ->where('kd_cabang', $item->kd_entitas)
+                                                    ->first();
+                                            @endphp
+                                            <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                            <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
+                                            @php
+                                                $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
+                                            @php
+                                                $umur = Carbon\Carbon::create($item->tgl_lahir);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($umur);
-                                            $umurSkrg = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
-                                        @php
-                                            if ($item->jk == 'Laki-laki') {
-                                                $jk = 'L';
-                                            } else {
-                                                $jk = 'P';
-                                            }
+                                                $hitung = $waktuSekarang->diff($umur);
+                                                $umurSkrg = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
+                                            @php
+                                                if ($item->jk == 'Laki-laki') {
+                                                    $jk = 'L';
+                                                } else {
+                                                    $jk = 'P';
+                                                }
 
-                                        @endphp
-                                        <td>{{ $jk }}</td>
-                                        @php
-                                            if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'K';
-                                                    $anak = $item->keluarga?->jml_anak;
+                                            @endphp
+                                            <td>{{ $jk }}</td>
+                                            @php
+                                                if ($item->status == 'Kawin' || $item->status == 'K') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'K';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'K';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TK';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TK';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Tidak Diketahui') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai Mati') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CM';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CM';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CR';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CR';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Janda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'JD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'JD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Duda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'DA';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'DA';
+                                                        $anak = 0;
+                                                    }
                                                 } else {
-                                                    $status = 'K';
-                                                    $anak = 0;
+                                                    $status = '-';
+                                                    $anak = '-';
                                                 }
-                                            } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TK';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TK';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CM';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CM';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CR';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CR';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Janda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'JD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'JD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Duda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'DA';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'DA';
-                                                    $anak = 0;
-                                                }
-                                            } else {
-                                                $status = '-';
-                                                $anak = '-';
-                                            }
-                                        @endphp
-                                        <td>{{ $status }}/{{ $anak }}</td>
-                                        <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
-                                        <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
-                                        @php
-                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                            @endphp
+                                            <td>{{ $status }}/{{ $anak }}</td>
+                                            <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
+                                            @php
+                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($mulaKerja);
-                                            $masaKerja = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ $item->pendidikan ?? '-' }}</td>
-                                    </tr>
+                                                $hitung = $waktuSekarang->diff($mulaKerja);
+                                                $masaKerja = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ $item->pendidikan ?? '-' }}</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -790,57 +800,59 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
-                                    @php
-                                        $tKeluarga = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Keluarga'))->first();
-
-                                        $tListrik = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Telpon, Air dan Listrik'))->first();
-
-                                        $tJabatan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Jabatan'))->first();
-
-                                        $tTeller = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Teller'))->first();
-
-                                        $tPerumahan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Perumahan'))->first();
-
-                                        $tKesejahteraan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kesejahteraan'))->first();
-
-                                        $tKemahalan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kemahalan'))->first();
-
-                                        $tPelaksana = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Pelaksana'))->first();
-                                    @endphp
-                                    <tr>
-                                        <td>{{ $item->nip }}</td>
-                                        <td>{{ $item->nama_karyawan }}</td>
-                                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                    @if ($item->tanggal_penonaktifan === null)
                                         @php
-                                            $nama_cabang = DB::table('mst_cabang')
-                                                ->where('kd_cabang', $item->kd_entitas)
-                                                ->first();
-                                        @endphp
-                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
-                                        @php
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                            $tKeluarga = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Keluarga'))->first();
 
-                                            $hitung = $waktuSekarang->diff($item->tgl_mulai);
-                                            $masaKerja = $hitung->format('%y,%m');
+                                            $tListrik = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Telpon, Air dan Listrik'))->first();
+
+                                            $tJabatan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Jabatan'))->first();
+
+                                            $tTeller = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Teller'))->first();
+
+                                            $tPerumahan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Perumahan'))->first();
+
+                                            $tKesejahteraan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kesejahteraan'))->first();
+
+                                            $tKemahalan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kemahalan'))->first();
+
+                                            $tPelaksana = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Pelaksana'))->first();
                                         @endphp
-                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ toRupiah($item->gj_pokok) }}</td>
-                                        <td>{{ toRupiah($tKeluarga?->pivot->nominal) }}</td>
-                                        <td>{{ toRupiah($tListrik?->pivot->nominal) }}</td>
-                                        <td>{{ toRupiah($tJabatan?->pivot->nominal) }}</td>
-                                        <td>{{ toRupiah($tTeller?->pivot->nominal) }}</td>
-                                        <td>{{ toRupiah($tPerumahan?->pivot->nominal) }}</td>
-                                        <td>{{ toRupiah($tKesejahteraan?->pivot->nominal) }}</td>
-                                        <td>{{ toRupiah($tKemahalan?->pivot->nominal) }}</td>
-                                        <td>{{ toRupiah($tPelaksana?->pivot->nominal) }}</td>
-                                        <td>{{ toRupiah($item->gj_penyesuaian) }}</td>
-                                        @php
-                                            $totalGaji = (($item->gj_pokok) + ($tKeluarga?->pivot->nominal) + ($tListrik?->pivot->nominal) + 
-                                                          ($tJabatan?->pivot->nominal) + ($tTeller?->pivot->nominal) + ($tPerumahan?->pivot->nominal) +
-                                                          ($tKesejahteraan?->pivot->nominal) + ($tKemahalan?->pivot->nominal) + ($tPelaksana?->pivot->nominal) + ($item->gj_penyesuaian));
-                                        @endphp
-                                        <td>{{ toRupiah($totalGaji) }}</td>
-                                    </tr>
+                                        <tr>
+                                            <td>{{ $item->nip }}</td>
+                                            <td>{{ $item->nama_karyawan }}</td>
+                                            <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                            @php
+                                                $nama_cabang = DB::table('mst_cabang')
+                                                    ->where('kd_cabang', $item->kd_entitas)
+                                                    ->first();
+                                            @endphp
+                                            <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                            @php
+                                                $waktuSekarang = Carbon\Carbon::now();
+
+                                                $hitung = $waktuSekarang->diff($item->tgl_mulai);
+                                                $masaKerja = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ toRupiah($item->gj_pokok) }}</td>
+                                            <td>{{ toRupiah($tKeluarga?->pivot->nominal) }}</td>
+                                            <td>{{ toRupiah($tListrik?->pivot->nominal) }}</td>
+                                            <td>{{ toRupiah($tJabatan?->pivot->nominal) }}</td>
+                                            <td>{{ toRupiah($tTeller?->pivot->nominal) }}</td>
+                                            <td>{{ toRupiah($tPerumahan?->pivot->nominal) }}</td>
+                                            <td>{{ toRupiah($tKesejahteraan?->pivot->nominal) }}</td>
+                                            <td>{{ toRupiah($tKemahalan?->pivot->nominal) }}</td>
+                                            <td>{{ toRupiah($tPelaksana?->pivot->nominal) }}</td>
+                                            <td>{{ toRupiah($item->gj_penyesuaian) }}</td>
+                                            @php
+                                                $totalGaji = (($item->gj_pokok) + ($tKeluarga?->pivot->nominal) + ($tListrik?->pivot->nominal) + 
+                                                            ($tJabatan?->pivot->nominal) + ($tTeller?->pivot->nominal) + ($tPerumahan?->pivot->nominal) +
+                                                            ($tKesejahteraan?->pivot->nominal) + ($tKemahalan?->pivot->nominal) + ($tPelaksana?->pivot->nominal) + ($item->gj_penyesuaian));
+                                            @endphp
+                                            <td>{{ toRupiah($totalGaji) }}</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -867,113 +879,115 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
-                                    <tr>
-                                        <td>{{ $item->nip }}</td>
-                                        <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
-                                        @php
-                                            $nama_cabang = DB::table('mst_cabang')
-                                                ->where('kd_cabang', $item->kd_entitas)
-                                                ->first();
-                                        @endphp
-                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
-                                        <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
-                                        @php
-                                            $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
-                                        @php
-                                            $umur = Carbon\Carbon::create($item->tgl_lahir);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                    @if ($item->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $item->nip }}</td>
+                                            <td>{{ $item->nama_karyawan  }}</td>
+                                            <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                            @php
+                                                $nama_cabang = DB::table('mst_cabang')
+                                                    ->where('kd_cabang', $item->kd_entitas)
+                                                    ->first();
+                                            @endphp
+                                            <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                            <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
+                                            @php
+                                                $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
+                                            @php
+                                                $umur = Carbon\Carbon::create($item->tgl_lahir);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($umur);
-                                            $umurSkrg = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
-                                        @php
-                                            if ($item->jk == 'Laki-laki') {
-                                                $jk = 'L';
-                                            } else {
-                                                $jk = 'P';
-                                            }
+                                                $hitung = $waktuSekarang->diff($umur);
+                                                $umurSkrg = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
+                                            @php
+                                                if ($item->jk == 'Laki-laki') {
+                                                    $jk = 'L';
+                                                } else {
+                                                    $jk = 'P';
+                                                }
 
-                                        @endphp
-                                        <td>{{ $jk }}</td>
-                                        @php
-                                            if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'K';
-                                                    $anak = $item->keluarga?->jml_anak;
+                                            @endphp
+                                            <td>{{ $jk }}</td>
+                                            @php
+                                                if ($item->status == 'Kawin' || $item->status == 'K') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'K';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'K';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TK';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TK';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Tidak Diketahui') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai Mati') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CM';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CM';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CR';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CR';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Janda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'JD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'JD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Duda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'DA';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'DA';
+                                                        $anak = 0;
+                                                    }
                                                 } else {
-                                                    $status = 'K';
-                                                    $anak = 0;
+                                                    $status = '-';
+                                                    $anak = '-';
                                                 }
-                                            } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TK';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TK';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CM';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CM';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CR';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CR';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Janda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'JD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'JD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Duda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'DA';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'DA';
-                                                    $anak = 0;
-                                                }
-                                            } else {
-                                                $status = '-';
-                                                $anak = '-';
-                                            }
-                                        @endphp
-                                        <td>{{ $status }}/{{ $anak }}</td>
-                                        <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
-                                        <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
-                                        @php
-                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                            @endphp
+                                            <td>{{ $status }}/{{ $anak }}</td>
+                                            <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
+                                            @php
+                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($mulaKerja);
-                                            $masaKerja = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ $item->pendidikan ?? '-' }}</td>
-                                    </tr>
+                                                $hitung = $waktuSekarang->diff($mulaKerja);
+                                                $masaKerja = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ $item->pendidikan ?? '-' }}</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -992,18 +1006,18 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
-                                @php
-                                    $IKJP = $item->filter(fn($k)=> $k->status_karyawan == 'IKJP');
-                                    $Tetap = $item->filter(fn($k)=> $k->status_karyawan == 'Tetap');
-                                    $KP = $item->filter(fn($k)=> $k->status_karyawan == 'Kontrak Perpanjangan');
-                                @endphp
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $umur[$loop->index]->u_awal}} - {{ $umur[$loop->index]->u_akhir}}</td>
-                                        <td>{{ count($IKJP) }}</td>
-                                        <td>{{ count($Tetap) }}</td>
-                                        <td>{{ count($KP) }}</td>
-                                    </tr>
+                                        @php
+                                            $IKJP = $item->filter(fn($k)=> $k->status_karyawan == 'IKJP');
+                                            $Tetap = $item->filter(fn($k)=> $k->status_karyawan == 'Tetap');
+                                            $KP = $item->filter(fn($k)=> $k->status_karyawan == 'Kontrak Perpanjangan');
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $umur[$loop->index]->u_awal}} - {{ $umur[$loop->index]->u_akhir}}</td>
+                                            <td>{{ count($IKJP) }}</td>
+                                            <td>{{ count($Tetap) }}</td>
+                                            <td>{{ count($KP) }}</td>
+                                        </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
@@ -1042,113 +1056,115 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
-                                    <tr>
-                                        <td>{{ $item->nip }}</td>
-                                        <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
-                                        @php
-                                            $nama_cabang = DB::table('mst_cabang')
-                                                ->where('kd_cabang', $item->kd_entitas)
-                                                ->first();
-                                        @endphp
-                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
-                                        <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
-                                        @php
-                                            $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
-                                        @php
-                                            $umur = Carbon\Carbon::create($item->tgl_lahir);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                    @if ($item->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $item->nip }}</td>
+                                            <td>{{ $item->nama_karyawan  }}</td>
+                                            <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                            @php
+                                                $nama_cabang = DB::table('mst_cabang')
+                                                    ->where('kd_cabang', $item->kd_entitas)
+                                                    ->first();
+                                            @endphp
+                                            <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                            <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
+                                            @php
+                                                $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
+                                            @php
+                                                $umur = Carbon\Carbon::create($item->tgl_lahir);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($umur);
-                                            $umurSkrg = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
-                                        @php
-                                            if ($item->jk == 'Laki-laki') {
-                                                $jk = 'L';
-                                            } else {
-                                                $jk = 'P';
-                                            }
+                                                $hitung = $waktuSekarang->diff($umur);
+                                                $umurSkrg = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
+                                            @php
+                                                if ($item->jk == 'Laki-laki') {
+                                                    $jk = 'L';
+                                                } else {
+                                                    $jk = 'P';
+                                                }
 
-                                        @endphp
-                                        <td>{{ $jk }}</td>
-                                        @php
-                                            if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'K';
-                                                    $anak = $item->keluarga?->jml_anak;
+                                            @endphp
+                                            <td>{{ $jk }}</td>
+                                            @php
+                                                if ($item->status == 'Kawin' || $item->status == 'K') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'K';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'K';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TK';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TK';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Tidak Diketahui') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai Mati') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CM';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CM';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CR';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CR';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Janda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'JD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'JD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Duda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'DA';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'DA';
+                                                        $anak = 0;
+                                                    }
                                                 } else {
-                                                    $status = 'K';
-                                                    $anak = 0;
+                                                    $status = '-';
+                                                    $anak = '-';
                                                 }
-                                            } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TK';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TK';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CM';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CM';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CR';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CR';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Janda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'JD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'JD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Duda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'DA';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'DA';
-                                                    $anak = 0;
-                                                }
-                                            } else {
-                                                $status = '-';
-                                                $anak = '-';
-                                            }
-                                        @endphp
-                                        <td>{{ $status }}/{{ $anak }}</td>
-                                        <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
-                                        <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
-                                        @php
-                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                            @endphp
+                                            <td>{{ $status }}/{{ $anak }}</td>
+                                            <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
+                                            @php
+                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($mulaKerja);
-                                            $masaKerja = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ $item->pendidikan ?? '-' }}</td>
-                                    </tr>
+                                                $hitung = $waktuSekarang->diff($mulaKerja);
+                                                $masaKerja = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ $item->pendidikan ?? '-' }}</td>
+                                        </tr>\
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -1175,113 +1191,115 @@
                             </thead>
                             <tbody>
                                 @foreach ($karyawan as $item)
-                                    <tr>
-                                        <td>{{ $item->nip }}</td>
-                                        <td>{{ $item->nama_karyawan  }}</td>
-                                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
-                                        @php
-                                            $nama_cabang = DB::table('mst_cabang')
-                                                ->where('kd_cabang', $item->kd_entitas)
-                                                ->first();
-                                        @endphp
-                                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
-                                        <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
-                                        @php
-                                            $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
-                                        @php
-                                            $umur = Carbon\Carbon::create($item->tgl_lahir);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                    @if ($item->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $item->nip }}</td>
+                                            <td>{{ $item->nama_karyawan  }}</td>
+                                            <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                            @php
+                                                $nama_cabang = DB::table('mst_cabang')
+                                                    ->where('kd_cabang', $item->kd_entitas)
+                                                    ->first();
+                                            @endphp
+                                            <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                                            <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
+                                            @php
+                                                $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
+                                            @php
+                                                $umur = Carbon\Carbon::create($item->tgl_lahir);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($umur);
-                                            $umurSkrg = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
-                                        @php
-                                            if ($item->jk == 'Laki-laki') {
-                                                $jk = 'L';
-                                            } else {
-                                                $jk = 'P';
-                                            }
+                                                $hitung = $waktuSekarang->diff($umur);
+                                                $umurSkrg = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
+                                            @php
+                                                if ($item->jk == 'Laki-laki') {
+                                                    $jk = 'L';
+                                                } else {
+                                                    $jk = 'P';
+                                                }
 
-                                        @endphp
-                                        <td>{{ $jk }}</td>
-                                        @php
-                                            if ($item->status == 'Kawin' || $item->status == 'K') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'K';
-                                                    $anak = $item->keluarga?->jml_anak;
+                                            @endphp
+                                            <td>{{ $jk }}</td>
+                                            @php
+                                                if ($item->status == 'Kawin' || $item->status == 'K') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'K';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'K';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TK';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TK';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Tidak Diketahui') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'TD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'TD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai Mati') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CM';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CM';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Cerai') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'CR';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'CR';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Janda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'JD';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'JD';
+                                                        $anak = 0;
+                                                    }
+                                                } elseif ($item->status == 'Duda') {
+                                                    if ($item->keluarga?->jml_anak != null) {
+                                                        $status = 'DA';
+                                                        $anak = $item->keluarga?->jml_anak;
+                                                    } else {
+                                                        $status = 'DA';
+                                                        $anak = 0;
+                                                    }
                                                 } else {
-                                                    $status = 'K';
-                                                    $anak = 0;
+                                                    $status = '-';
+                                                    $anak = '-';
                                                 }
-                                            } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TK';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TK';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Tidak Diketahui') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'TD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'TD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai Mati') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CM';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CM';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Cerai') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'CR';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'CR';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Janda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'JD';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'JD';
-                                                    $anak = 0;
-                                                }
-                                            } elseif ($item->status == 'Duda') {
-                                                if ($item->keluarga?->jml_anak != null) {
-                                                    $status = 'DA';
-                                                    $anak = $item->keluarga?->jml_anak;
-                                                } else {
-                                                    $status = 'DA';
-                                                    $anak = 0;
-                                                }
-                                            } else {
-                                                $status = '-';
-                                                $anak = '-';
-                                            }
-                                        @endphp
-                                        <td>{{ $status }}/{{ $anak }}</td>
-                                        <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
-                                        <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
-                                        @php
-                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
-                                            $waktuSekarang = Carbon\Carbon::now();
+                                            @endphp
+                                            <td>{{ $status }}/{{ $anak }}</td>
+                                            <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
+                                            @php
+                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($mulaKerja);
-                                            $masaKerja = $hitung->format('%y,%m');
-                                        @endphp
-                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ $item->pendidikan ?? '-' }}</td>
-                                    </tr>
+                                                $hitung = $waktuSekarang->diff($mulaKerja);
+                                                $masaKerja = $hitung->format('%y,%m');
+                                            @endphp
+                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ $item->pendidikan ?? '-' }}</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>

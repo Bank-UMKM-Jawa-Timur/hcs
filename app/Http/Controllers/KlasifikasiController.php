@@ -137,12 +137,15 @@ class KlasifikasiController extends Controller
         }
 
         if ($request->kategori == 8) {
-            $umur->map(
-                function ($usia) use (&$karyawan) {
-                    $karyawan->push(KaryawanModel::selectRaw("mst_karyawan.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(now(), tgl_lahir)), '%Y')+0 AS umurSkrg")
-                        ->havingBetween('umurSkrg', [$usia->u_awal, $usia->u_akhir])->get());
-                }
-            );
+            $umur->map(function ($usia) use (&$karyawan) {
+                $karyawan->push(
+                    KaryawanModel::selectRaw("mst_karyawan.*, IF(tgl_lahir IS NULL, 0, DATE_FORMAT(FROM_DAYS(DATEDIFF(now(), tgl_lahir)), '%Y')) AS umurSkrg")
+                        ->havingBetween('umurSkrg', [$usia->u_awal, $usia->u_akhir])
+                        ->whereNull('tgl_lahir')
+                        ->orWhereNotNull('tgl_lahir')
+                        ->get()
+                );
+            });
 
             $status = 8;
         }

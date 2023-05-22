@@ -43,10 +43,13 @@
                             </th>
                           </thead>
                           <tbody>
+                            @php
+                                $i = 1;
+                            @endphp
                             @foreach ($karyawan as $krywn)
                               @if ($krywn->tanggal_penonaktifan === null)
                                   <tr>
-                                      <td>{{ $loop->iteration }}</td>
+                                      <td>{{ $i++ }}</td>
                                       <td>{{ $krywn->nip }}</td>
                                       <td>{{ $krywn->nik }}</td>
                                       <td>{{ $krywn->nama_karyawan }}</td>
