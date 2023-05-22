@@ -38,6 +38,7 @@ class KaryawanRepository
     {
         $karyawan = KaryawanModel::with('jabatan')
             ->with('bagian')
+            ->whereNull('tanggal_penonaktifan')
             ->whereNotIn('kd_entitas', $this->cabang)
             ->orWhere('kd_entitas', null)
             ->orderByRaw($this->orderRaw)
@@ -51,6 +52,7 @@ class KaryawanRepository
     {
         $karyawan = KaryawanModel::with('jabatan')
             ->with('bagian')
+            ->whereNull('tanggal_penonaktifan')
             ->whereIn('kd_entitas', $this->cabang)
             ->orderByRaw($this->orderRaw)
             ->get();
