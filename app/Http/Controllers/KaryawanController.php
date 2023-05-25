@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Karyawan\PenonaktifanRequest;
+use App\Imports\ImportDataKeluarga;
 use App\Imports\ImportKaryawan;
 use App\Imports\ImportNpwpRekening;
 use App\Imports\UpdateStatusImport;
@@ -673,5 +674,20 @@ class KaryawanController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function importKeluargaIndex()
+    {
+        return view('karyawan.import_data_keluarga');
+    }
+
+    public function importKeluarga(Request $request)
+    {
+        $file = $request->file('upload_csv');
+        $import = new ImportDataKeluarga;
+        $import = $import->import($file);
+
+        Alert::success('Berhasil', 'Berhasil mengimport data keluarga');
+        return redirect()->route('karyawan.index');
     }
 }

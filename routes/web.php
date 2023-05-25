@@ -240,6 +240,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/import_pengkinian', [PengkinianDataController::class, 'pengkinian_data_index'])->name('pengkinian-data-import-index');
     Route::post('/post-import-pengkinian', [PengkinianDataController::class, 'postPengkinianImport'])->name('post-pengkinian-import');
+
+    Route::get('/import-data_keluarga', [KaryawanController::class, 'importKeluargaIndex']);
+    Route::post('import-keluarga-post', [KaryawanController::class, 'importKeluarga'])->name('import-data_keluarga');
 });
 Auth::routes();
 
