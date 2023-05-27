@@ -216,7 +216,7 @@ nipSelect.append(`
             const nip = $(this).val();
 
             $.ajax({
-                url: '/getdatakaryawan',
+                url: "{{ route('getDataKaryawan') }}",
                 data: {nip},
                 dataType: 'JSON',
                 success: (data) => {

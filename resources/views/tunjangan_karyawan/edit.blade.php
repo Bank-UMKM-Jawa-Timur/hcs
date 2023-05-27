@@ -60,7 +60,7 @@
             var nip = $(this).val();
            $.ajax({
             type: "GET",
-            url: "/getdatatunjangan?nip="+nip,
+            url: "{{ route('getDataTunjangan') }}?nip="+nip,
             datatype: "json",
             success: function(res){
                 $("#nama_karyawan").val(res.nama_karyawan)

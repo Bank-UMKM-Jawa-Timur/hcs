@@ -194,7 +194,7 @@
             let divisiOption = '';
 
             $.ajax({
-                url: '/getdivisi',
+                url: "{{ route('get_divisi') }}",
                 dataType: 'JSON',
                 success: (res) => {
                     $.each(res, (i, item) => {
@@ -225,7 +225,7 @@
             let cabangOption = '';
 
             $.ajax({
-                url: '/getcabang',
+                url: "{{ route('get_cabang') }}",
                 dateType: 'JSON',
                 success: (res) => {
                     $.each(res[0], (i, item) => {
@@ -258,7 +258,7 @@
             $('#bagian').parent().remove();
 
             $.ajax({
-                url: `/getsubdivisi?divisiID=${divisi}`,
+                url: `{{ get_subdivisi }}?divisiID=${divisi}`,
                 dataType: 'JSON',
                 success: (res) => {
                     if(res.length < 1) return;
@@ -317,7 +317,7 @@
             }
 
             $.ajax({
-                url: `/getbagian?kd_entitas=${entitas}`,
+                url: `{{ route('get_bagian') }}?kd_entitas=${entitas}`,
                 dataType: 'JSON',
                 success: (res) => {
                     if(res.length < 1) return;

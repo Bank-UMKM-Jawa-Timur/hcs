@@ -1888,7 +1888,7 @@
             const division = '{{ $request?->divisi }}';
             $.ajax({
                 type: 'GET',
-                url: '/getdivisi',
+                url: "{{ route('get_divisi') }}",
                 dataType: 'JSON',
                 success: (res) => {
                     $('#divisi_col').empty();
@@ -1924,7 +1924,7 @@
 
                             $.ajax({
                                 type: 'GET',
-                                url: '/getsubdivisi?divisiID='+divisi,
+                                url: "{{ get_divisi }}?divisiID="+divisi,
                                 dataType: 'JSON',
                                 success: (res) => {
                                     $('#subDivisi').empty();
@@ -1949,7 +1949,7 @@
                                         const bagian = '{{ $request?->bagian}}';
                                         $.ajax({
                                             type: "GET",
-                                            url: "/getbagian?kd_entitas="+$(this).val(),
+                                            url: "{{ route('get_subdivisi') }}?kd_entitas="+$(this).val(),
                                             datatype: "JSON",
                                             success: function(res){
                                                 $('#bagian').empty();
@@ -1999,7 +1999,7 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: '/getcabang',
+                    url: "{{ route('get_cabang') }}",
                     dataType: 'JSON',
                     success: (res) => {
                         $('#cabang_col').append(`
@@ -2046,7 +2046,7 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: '/getcabang',
+                    url: "{{ route('get_cabang') }}",
                     dataType: 'JSON',
                     success: (res) => {
                         $('#cabang_col').append(`

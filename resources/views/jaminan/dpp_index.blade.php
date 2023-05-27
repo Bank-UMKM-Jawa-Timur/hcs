@@ -385,7 +385,7 @@ $status = isset($status) ? $status : null;
 
                 $.ajax({
                     type: 'GET',
-                    url: '/getcabang',
+                    url: "{{ route('get_cabang') }}",
                     dataType: 'JSON',
                     success: (res) => {
                         $('#cabang_col').append(`
