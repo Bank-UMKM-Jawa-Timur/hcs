@@ -21,6 +21,7 @@
                     $hasil_rupiah = number_format($angka, 0, ",", ".");
                     return $hasil_rupiah;
                 }
+                $totalGaji = $karyawan->gaji_pokok + $karyawan->gaji_penyesuaian;
                 $tj = DB::table('tunjangan_karyawan')
                     ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
                     ->where('nip', $karyawan->nip)
@@ -264,9 +265,20 @@
                                 <input type="text" disabled class="form-control" value="Rp. {{ rupiah($item->nominal) }}">
                             </div>
                         </div>
+                        @php
+                            if($item->nama_tunjangan != 'DPP'){
+                                $totalGaji += $item->nominal;
+                            }
+                        @endphp
                     @endforeach
                 @endif
             <br>
+            <div class="row m-0 mt-2">
+                <label for="" class="col-sm-2 mt-2">Total Gaji</label>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" value="Rp. {{ rupiah($totalGaji) }}">
+                </div>
+            </div>
 
             @if ($karyawan->status == 'Kawin' && $suis != null)
                 <hr>
