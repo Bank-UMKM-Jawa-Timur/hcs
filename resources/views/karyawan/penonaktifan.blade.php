@@ -5,7 +5,7 @@
         <div class="card-header">
             <div class="card-title">
                 <h5 class="card-title">Penonaktifan Karyawan</h5>
-                <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="/penonaktifan">Penonaktifan Karyawan</a></p>
+                <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="{{ route('penonaktifan') }}">Penonaktifan Karyawan</a></p>
             </div>
         </div>
 

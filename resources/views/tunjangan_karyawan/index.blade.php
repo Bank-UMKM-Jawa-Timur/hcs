@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
           <h5 class="card-title">Data Tunjangan Karyawan</h5>
-          <p class="card-title"><a href="/">Dashboard </a> > <a href="/tunjangan_karyawan">Tunjangan Karyawan</a></p>
+          <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('tunjangan_karyawan') }}">Tunjangan Karyawan</a></p>
         </div>
 
         <div class="card-body">

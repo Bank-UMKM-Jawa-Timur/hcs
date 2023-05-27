@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Tambah Sub Divisi</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="/sub_divisi">Sub Divisi</a> > <a>Tambah</a></p>
+            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('sub_divisi.index') }}">Sub Divisi</a> > <a>Tambah</a></p>
         </div>
     </div>
     

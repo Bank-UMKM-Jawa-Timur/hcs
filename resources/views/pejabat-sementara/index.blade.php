@@ -5,7 +5,7 @@
     <div class="card-header">
         <div class="card-title">
             <h5 class="card-title">Penjabat Sementara</h5>
-            <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="/pejabat-sementara ">Penjabat Sementara</a></p>
+            <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="{{ route('pejabat-sementara.index') }}">Penjabat Sementara</a></p>
         </div>
     </div>
     <div class="card-body">

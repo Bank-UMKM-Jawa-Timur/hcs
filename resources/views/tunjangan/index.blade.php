@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Data Tunjangan</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="/tunjangan">Tunjangan</a></p>
+            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('tunjangan.index') }}">Tunjangan</a></p>
         </div>
 
         <div class="card-body">

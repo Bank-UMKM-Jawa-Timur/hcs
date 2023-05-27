@@ -3,7 +3,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Tambah Divisi</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="/divisi">Divisi</a> > <a>Tambah</a></p>
+            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('divisi.index') }}">Divisi</a> > <a>Tambah</a></p>
         </div>
     </div>   
     <div class="card-body ml-3 mr-3">

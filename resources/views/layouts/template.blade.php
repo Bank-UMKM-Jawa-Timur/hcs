@@ -89,7 +89,7 @@ Coded by www.creative-tim.com
         <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar" role="navigation">
           <ul class="nav flex-column sticky-top pl-2 mt-0">
             <li class="@active('home')">
-                <a href="/home" style="font-weight: bolder">
+                <a href="{{ route('home') }}" style="font-weight: bolder">
                     <i class="nc-icon nc-bank" style="font-weight: bolder"></i>
                     <p>Dashboard</p>
                 </a>

@@ -3,7 +3,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Edit Promosi</h5>
-            <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="/promosi">Promosi</a> > Edit</p>
+            <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="{{ route('promosi.index') }}">Promosi</a> > Edit</p>
         </div>
     </div>
 

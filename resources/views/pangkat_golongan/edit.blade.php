@@ -5,7 +5,7 @@
         <div class="card-header">
             <div class="card-title">
                 <h5 class="card-title">Edit Pangkat Dan Golongan</h5>
-                <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="/pangkat_golongan">Pangkat Dan Golongan</a> > <a>Edit</a></p>
+                <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('pangkat_golongan.index') }}">Pangkat Dan Golongan</a> > <a>Edit</a></p>
             </div>
         </div>
     </div>

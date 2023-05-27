@@ -6,7 +6,7 @@
     <div class="card-header">
         <div class="card-title">
             <h5 class="card-title">History Jabatan</h5>
-            <p class="card-title"><a href="">History </a> > <a href="/history_jabatan">Jabatan</a></p>
+            <p class="card-title"><a href="">History </a> > <a href="{{ route('history_jabatan.index') }}">Jabatan</a></p>
         </div>
     </div>
 </div>
