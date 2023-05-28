@@ -191,6 +191,16 @@
                 </div>
             </div>
             <div class="row m-0 mt-2">
+                <label class="col-sm-2 mt-0">Pendidikan Terakhir</label>
+                <div class="col-sm-10">
+                    @if ($karyawan->pendidikan_major != null)
+                        <input type="text" disabled class="form-control" value="{{ ($karyawan->pendidikan_major) }}">
+                    @else
+                        <input type="text" disabled class="form-control" value="{{ ($karyawan->pendidikan ?? '-') }}">
+                    @endif
+                </div>
+            </div>
+            <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">SK Pengangkatan</label>
                 <div class="col-sm-10">
                     <input type="text" disabled class="form-control" value="{{ $karyawan->skangkat ?? '-' }}">
