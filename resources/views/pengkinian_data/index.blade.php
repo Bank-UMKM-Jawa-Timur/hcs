@@ -96,7 +96,7 @@
                                   </td>
                                   <td style="min-width: 130px">
                                     <div class="container">
-                                        <a href="{{ route('pengkinian_data.show', $item->id) }}">
+                                        <a href="{{ route('pengkinian_data.show', $item->nip) }}">
                                           <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                             Detail
                                           </button>
@@ -161,9 +161,8 @@
                                       {{ $i->nama_jabatan . ' ' . $bagian.$ket }} 
                                       @endif
                                     </td>
-                                    <td style="min-width: 105px">
+                                    <td style="min-width: 130px">
                                       <div class="container">
-                                        <div class="row">
                                           <a href="{{ route('pengkinian_data.show', $i->nip) }}">
                                             <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                               Detail
@@ -171,13 +170,6 @@
                                           </a>
                                         </div>
                                       </div>
-
-                                        {{-- <form action="{{ route('karyawan.destroy', $item->nip) }}" method="POST">
-                                          @csrf
-                                          @method('DELETE')
-                                      
-                                          <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                                        </form> --}}
                                     </td>
                                   </tr>
                               @endforeach
