@@ -342,6 +342,8 @@ class KaryawanController extends Controller
                     'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
                     'no_rekening' => $request->get('no_rek'),
                     'created_at' => now(),
+                    'pendidikan' => $request->get('pendidikan'),
+                    'pendidikan_major' => $request->get('pendidikan_major')
                 ]);
 
             if ($request->get('status_pernikahan') == 'Kawin') {

@@ -1,3 +1,6 @@
+@php
+    $arrayPendidikan = array('SD', 'SMP', 'SLTP', 'SLTA', 'SMK', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3');
+@endphp
 @extends('layouts.template')
 @section('content')
     <div class="card-header">
@@ -230,6 +233,23 @@
                                 <div class="form-group">
                                     <label for="">Tanggal Pengangkatan</label>
                                     <input type="date" class="@error('tanggal_pengangkat') is-invalid @enderror form-control" name="tanggal_pengangkat" value="{{ old('tanggal_pengangkat') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="pendidikan">Pendidikan</label>
+                                    <select name="pendidikan" class="form-control" id="">
+                                        <option value="">--- Pilih ---</option>
+                                        @foreach ($arrayPendidikan as $item)
+                                            <option value="{{ $item }}">{{ $item }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="pendidikan_major">Pendidikan Major</label>
+                                    <input type="text" class="@error('pendidikan_major') is-invalid @enderror form-control" name="pendidikan_major" value="{{ old('pendidikan_major') }}">
                                 </div>
                             </div>
                         </div>
