@@ -48,6 +48,34 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
+        @if ($ro)
+            <div class="col-md-12">
+                <label for="file_sk">Dokumen SK</label>
+                @if ($sp->file_sk != null)
+                    @php
+                        $fileparts = pathinfo(asset('..') . '/upload/sp/' . $sp->id . '/' . $sp->file_sk);
+                    @endphp
+                    @if ($fileparts['extension'] == 'pdf')
+                        <iframe src="{{ asset('..') . '/upload/sp/' . $sp->id . '/' . $sp->file_sk }}" width="100%" height="650px"></iframe>
+                    @else
+                        <img src="{{ asset('..') . '/upload/sp/' . $sp->id . '/' . $sp->file_sk }}" alt="" width="100%">
+                    @endif
+                @else
+                    <input type="text" class="form-control" disabled value="-">
+                @endif
+            </div>
+        @else
+            <div class="col-md-4 form-group">
+                <label for="file_sk">Dokumen SK</label>
+                <div class="custom-file col-md-12">
+                    <input type="file" name="file_sk" class="custom-file-input" id="validatedCustomFile">
+                    <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
+                </div>  
+                @error('file_sk')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        @endif
     </div>
 
     <div class="row m-0">
@@ -121,5 +149,10 @@
             }
         });
     });
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+            var name = document.getElementById("validatedCustomFile").files[0].name;
+            var nextSibling = e.target.nextElementSibling
+            nextSibling.innerText = name
+        });
 </script>
 @endpush

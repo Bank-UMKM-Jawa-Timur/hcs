@@ -12,7 +12,7 @@ class SpModel extends Model
     protected $table = 'surat_peringatan';
 
     protected $fillable = [
-        'nip', 'tanggal_sp', 'no_sp', 'pelanggaran', 'sanksi',
+        'nip', 'tanggal_sp', 'no_sp', 'pelanggaran', 'sanksi', 'file_sk'
     ];
 
     protected $casts = [

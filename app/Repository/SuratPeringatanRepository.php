@@ -9,12 +9,29 @@ class SuratPeringatanRepository
 {
     public function store(array $data)
     {
+        $filename = null;
+        if($data['file_sk'] != null){
+            $sp = new SpModel();
+            $file = $data['file_sk'];
+            $idSP = $sp->orderBy('id', 'desc')->first();
+            $id = intval($idSP->id) + 1;
+            $folderPath = public_path() . '/upload/sp/' . $id;
+            $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
+            $path = realpath($folderPath);
+    
+            if(!($path !== true AND is_dir($path))){
+                mkdir($folderPath, 0755, true);
+            }
+            $file->move($folderPath, $filename);
+        }
+
         return SpModel::create([
             'nip' => $data['nip'],
             'tanggal_sp' => $data['tanggal_sp'],
             'no_sp' => $data['no_sp'],
             'pelanggaran' => $data['pelanggaran'],
-            'sanksi' => $data['sanksi']
+            'sanksi' => $data['sanksi'],
+            'file_sk' => $filename
         ]);
     }
 

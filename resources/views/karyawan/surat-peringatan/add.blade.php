@@ -10,8 +10,8 @@
     </div>
 </div>
 <div class="card-body">
-    <form action="{{ route('surat-peringatan.store') }}" method="post">
-        @include('karyawan.surat-peringatan.form', ['sp' => null])
+    <form action="{{ route('surat-peringatan.store') }}" enctype="multipart/form-data" method="post">
+        @include('karyawan.surat-peringatan.form', ['sp' => null, 'ro' => false])
     </form>
 </div>
 @endsection
