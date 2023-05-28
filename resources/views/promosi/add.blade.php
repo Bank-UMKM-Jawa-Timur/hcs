@@ -308,7 +308,7 @@ $('#nip').select2({
             if(skips.includes(jabVal)) return;
             $('#sub_divisi').change(function(e) {
                 $.ajax({
-                    url: `{{ rpute('getBagian') }}?kd_entitas=${this.value}`,
+                    url: `{{ route('getBagian') }}?kd_entitas=${this.value}`,
                     dataType: 'JSON',
                     success: (res) => fillBagian(res)
                 });
@@ -369,7 +369,7 @@ $('#nip').select2({
             const nip = $(this).val();
 
             $.ajax({
-                url: "{{ route('getDataKaryawanMutasi') }}",
+                url: "{{ route('getDataKaryawan') }}",
                 data: {nip},
                 dataType: 'JSON',
                 success: (data) => {
