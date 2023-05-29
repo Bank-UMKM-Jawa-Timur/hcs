@@ -193,11 +193,13 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Pendidikan Terakhir</label>
                 <div class="col-sm-10">
-                    @if ($karyawan->pendidikan_major != null)
-                        <input type="text" disabled class="form-control" value="{{ ($karyawan->pendidikan_major) }}">
-                    @else
                         <input type="text" disabled class="form-control" value="{{ ($karyawan->pendidikan ?? '-') }}">
-                    @endif
+                </div>
+            </div>
+            <div class="row m-0 mt-2">
+                <label class="col-sm-2 mt-0">Pendidikan Major</label>
+                <div class="col-sm-10">
+                        <input type="text" disabled class="form-control" value="{{ ($karyawan->pendidikan_terakhir ?? '-') }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
@@ -267,7 +269,7 @@
                 @if (isset($tj))
                     @foreach ($tj as $item)
                         <div class="row m-0 mt-2">
-                            <label class="col-sm-2 mt-2">Tunjangan {{ $no++ }}</label>
+                            <label class="col-sm-2 mt-2"> {{ ($item->nama_tunjangan != 'DPP') ? 'Tunjangan ' . $no++ : 'Iuran'  }}</label>
                             <div class="col-sm-5">
                                 <input type="text" disabled class="form-control" value="{{ $item->nama_tunjangan }}">
                             </div>
