@@ -189,7 +189,7 @@
                 <div class="col-lg-12">
                     <h6>Pengesahan</h6>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="">Tanggal Pengesahan</label>
                         <input type="date" class="form-control" name="@error('tanggal_pengesahan') @enderror tanggal_pengesahan" id="" value="{{ old('tanggal_pengesahan') }}">
@@ -198,7 +198,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class= "col-md-6">
+                <div class= "col-md-4">
                     <div class="form-group">
                         <label for="">Surat Keputusan</label>
                         <input type="text" class="@error('bukti_sk') @enderror form-control" name="bukti_sk" id="inputGroupFile01" value="{{ old('bukti_sk') }}">
@@ -206,6 +206,16 @@
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="file_sk">Dokumen SK</label>
+                    <div class="custom-file col-md-12">
+                        <input type="file" name="file_sk" class="custom-file-input" id="validatedCustomFile">
+                        <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
+                    </div>  
+                    @error('file_sk')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="col-md-12">
                     <div class="form-group">
@@ -222,6 +232,11 @@
 
 @push('script')
 <script>
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+            var name = document.getElementById("validatedCustomFile").files[0].name;
+            var nextSibling = e.target.nextElementSibling
+            nextSibling.innerText = name
+        });
 // $(document).ready(function() {
 //     var table = $('#table').DataTable({
 //         'autoWidth': false,

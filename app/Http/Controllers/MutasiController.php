@@ -139,47 +139,62 @@ class MutasiController extends Controller
      */
     public function store(MutasiRequest $request)
     {
-        if(count($request->tunjangan) > 0){
-            foreach($request->tunjangan as $key => $item){
-                $tj = DB::table('mst_tunjangan')
-                    ->where('id', $request->tunjangan[$key])
-                    ->first('nama_tunjangan');
-    
-                if($request->id_tk[$key] != 0){
-                    DB::table('history_penyesuaian')
-                        ->insert([
-                            'nip' => $request->nip,
-                            'keterangan' => "Penyesuaian Tunjangan ".$tj->nama_tunjangan,
-                            'nominal_lama' => $request->nominal_lama[$key],
-                            'nominal_baru' => str_replace('.', '',$request->nominal_tunjangan[$key]),
-                            'id_tunjangan' => $item,
-                            'created_at' => now()
-                        ]);
-                    DB::table('tunjangan_karyawan')
-                        ->where('id', $request->id_tk[$key])
-                        ->update([
-                            'nominal' => str_replace('.', '',$request->nominal_tunjangan[$key]),
-                            'updated_at' => now()
-                        ]);
-                } else{
-                    DB::table('tunjangan_karyawan')
-                        ->insert([
-                            'nip' => $request->nip,
-                            'id_Tunjangan' => ($request->tunjangan[$key] != null) ? $request->tunjangan[$key] : null,
-                            'nominal' => ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
-                            'created_at' => now()
-                        ]);
-                    DB::table('history_penyesuaian')
-                        ->insert([
-                            'nip' => $request->nip,
-                            'keterangan' => "Penambahan Tunjangan ".$tj->nama_tunjangan,
-                            'nominal_lama' => $request->nominal_lama[$key],
-                            'nominal_baru' =>  ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
-                            'id_tunjangan' => $item,
-                            'created_at' => now()
-                        ]);
+        if($request->tunjangan != null){
+            if(count($request->tunjangan) > 0){
+                foreach($request->tunjangan as $key => $item){
+                    $tj = DB::table('mst_tunjangan')
+                        ->where('id', $request->tunjangan[$key])
+                        ->first('nama_tunjangan');
+        
+                    if($request->id_tk[$key] != 0){
+                        DB::table('history_penyesuaian')
+                            ->insert([
+                                'nip' => $request->nip,
+                                'keterangan' => "Penyesuaian Tunjangan ".$tj->nama_tunjangan,
+                                'nominal_lama' => $request->nominal_lama[$key],
+                                'nominal_baru' => str_replace('.', '',$request->nominal_tunjangan[$key]),
+                                'id_tunjangan' => $item,
+                                'created_at' => now()
+                            ]);
+                        DB::table('tunjangan_karyawan')
+                            ->where('id', $request->id_tk[$key])
+                            ->update([
+                                'nominal' => str_replace('.', '',$request->nominal_tunjangan[$key]),
+                                'updated_at' => now()
+                            ]);
+                    } else{
+                        DB::table('tunjangan_karyawan')
+                            ->insert([
+                                'nip' => $request->nip,
+                                'id_Tunjangan' => ($request->tunjangan[$key] != null) ? $request->tunjangan[$key] : null,
+                                'nominal' => ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
+                                'created_at' => now()
+                            ]);
+                        DB::table('history_penyesuaian')
+                            ->insert([
+                                'nip' => $request->nip,
+                                'keterangan' => "Penambahan Tunjangan ".$tj->nama_tunjangan,
+                                'nominal_lama' => $request->nominal_lama[$key],
+                                'nominal_baru' =>  ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
+                                'id_tunjangan' => $item,
+                                'created_at' => now()
+                            ]);
+                    }
                 }
             }
+        }
+        
+        $filename = null;
+        if($request->file_sk != null){
+            $file = $request->file_sk;
+            $folderPath = public_path() . '/upload/pergerakan_karir/';
+            $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
+            $path = realpath($folderPath);
+    
+            if(!($path !== true AND is_dir($path))){
+                mkdir($folderPath, 0755, true);
+            }
+            $file->move($folderPath, $filename);
         }
         $karyawan = DB::table('mst_karyawan')
             ->select('gj_pokok', 'gj_penyesuaian')
@@ -231,6 +246,7 @@ class MutasiController extends Controller
                 'status_jabatan_baru' => $request->status_jabatan,
                 'nip_lama' => $request->nip,
                 'nip_baru' => $request->nip_baru,
+                'file_sk' => $filename,
                 'created_at' => now(),
             ]);
 
