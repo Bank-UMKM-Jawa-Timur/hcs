@@ -258,7 +258,7 @@
             $('#bagian').parent().remove();
 
             $.ajax({
-                url: `{{ get_subdivisi }}?divisiID=${divisi}`,
+                url: `{{ route('get_subdivisi') }}?divisiID=${divisi}`,
                 dataType: 'JSON',
                 success: (res) => {
                     if(res.length < 1) return;
