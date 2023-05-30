@@ -1924,7 +1924,7 @@
 
                             $.ajax({
                                 type: 'GET',
-                                url: "{{ get_divisi }}?divisiID="+divisi,
+                                url: "{{ route('get_divisi') }}?divisiID="+divisi,
                                 dataType: 'JSON',
                                 success: (res) => {
                                     $('#subDivisi').empty();
