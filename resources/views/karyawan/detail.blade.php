@@ -229,7 +229,7 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">SK Pengangkatan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $karyawan->skangkat ?? '-' }}">
+                    <input type="text" disabled class="form-control" value="{{ (!$karyawan->skangkat || $karyawan->skangkat == '') ? '-' : $karyawan->skangkat }}">
                 </div>
             </div>
             @php
@@ -345,7 +345,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-0">SK Tunjangan</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" disabled value="{{ $suis->sk_tunjangan }}">
+                        <input type="text" class="form-control" disabled value="{{ $suis->sk_tunjangan ?? '-' }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
