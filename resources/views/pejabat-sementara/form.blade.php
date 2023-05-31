@@ -317,7 +317,7 @@
             }
 
             $.ajax({
-                url: `{{ route('get_bagian') }}?kd_entitas=${entitas}`,
+                url: `{{ route('getBagian') }}?kd_entitas=${entitas}`,
                 dataType: 'JSON',
                 success: (res) => {
                     if(res.length < 1) return;
