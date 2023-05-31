@@ -7,6 +7,15 @@
         </div>
     </div>
     <div class="card-body">
+        @php
+            $status = 'TK';
+            if ($karyawan->status == 'Kawin' && $suis) {
+                $jml_anak = ($suis->jml_anak > 2) ? 2 : $suis->jml_anak;
+                $status = 'K/'.$jml_anak ?? '0';
+            } else if($karyawan->status == 'Kawin' && !$suis){
+                $status = 'K/0';
+            }
+        @endphp
         <form action="{{ route('karyawan.show', $karyawan->nip) }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
             @csrf
             @method('PUT')
@@ -78,13 +87,6 @@
                     <input type="text" disabled class="form-control" value="{{ $karyawan->jk }}">
                 </div>
             </div>
-            @php
-                if ($karyawan->status == 'K' || $karyawan->status == 'Kawin') {
-                    $status = 'Kawin';
-                } elseif ($karyawan->status == 'TK' || $karyawan->status == 'Belum Kawin') {
-                    $status = 'Belum Kawin';
-                }
-            @endphp
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Status Pernikahan</label>
                 <div class="col-sm-10">
@@ -106,7 +108,14 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Alamat Sekarang</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $karyawan->alamat_sek ?? '-' }}">
+                    @php
+                        if (!$karyawan->alamat_sek || $karyawan->alamat_sek == '') {
+                            $alamatSek = '-';
+                        } else {
+                            $alamatSek = $karyawan->alamat_sek;
+                        }
+                    @endphp
+                    <input type="text" disabled class="form-control" value="{{ $alamatSek }}">
                 </div>
             </div>
             <hr>
