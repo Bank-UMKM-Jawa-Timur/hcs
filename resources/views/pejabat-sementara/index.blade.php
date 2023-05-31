@@ -36,13 +36,7 @@
                             <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
                             <td class="d-flex justify-content-center">
                                 @if(!$data->tanggal_berakhir)
-                                <form action="{{ route('pejabat-sementara.destroy', $data) }}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-outline-info p-1 mr-1 btn-nonaktif" style="min-width: 60px;">
-                                        nonaktifkan
-                                    </button>
-                                </form>
+                                    <a href="#" data-toggle="modal" data-id="{{ $data->id }}" data-target="#exampleModal-{{ $data->id }}" class="btn btn-info">nonaktifkan</a>
                                 @else
                                 -
                                 @endif
@@ -54,6 +48,7 @@
         </div>
     </div>
 </div>
+@include('pejabat-sementara.popup-tgl_berakhir')
 @endsection
 
 @push('script')

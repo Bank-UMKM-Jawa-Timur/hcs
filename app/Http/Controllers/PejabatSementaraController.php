@@ -10,6 +10,7 @@ use App\Repository\PejabatSementaraRepository;
 use App\Service\EntityService;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
+use Carbon\Carbon;
 
 class PejabatSementaraController extends Controller
 {
@@ -76,8 +77,12 @@ class PejabatSementaraController extends Controller
     public function destroy(Request $request, $id)
     {
         $pjs = PjsModel::findOrFail($id);
-        $this->repo->deactivate($pjs, $request->tanggal_berakhir);
-        Alert::success('Berhasil menonaktifkan PJS');
+        if($pjs->tanggal_mulai < $request->tgl_berakhir){
+            $this->repo->deactivate($pjs, $request->tgl_berakhir);
+            Alert::success('Berhasil menonaktifkan PJS');
+        } else{
+            Alert::error('Tanggal penonaktifan harus lebih dari tanggal mulai.');
+        }
 
         return redirect()->back();
     }
