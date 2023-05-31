@@ -51,6 +51,21 @@
                     <input type="text" disabled class="form-control" value="{{ $karyawan->tmp_lahir }}, {{ $karyawan->tgl_lahir->format('d F Y') }}">
                 </div>
             </div>
+            @php
+                use Carbon\Carbon;
+                $tanggalLahir = Carbon::create($karyawan->tgl_lahir);
+                $waktuSekarang = Carbon::now();
+
+                $hitung = $waktuSekarang->diff($tanggalLahir);
+                $umur = $hitung->format('%y Tahun | %m Bulan | %d Hari');
+
+            @endphp
+            <div class="row m-0 mt-2">
+                <label class="col-sm-2 mt-2">Umur</label>
+                <div class="col-sm-10">
+                    <input type="text" disabled class="form-control" value="{{ $umur }}">
+                </div>
+            </div>
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Agama</label>
                 <div class="col-sm-10">
@@ -209,7 +224,6 @@
                 </div>
             </div>
             @php
-                use Carbon\Carbon;
                 $mulaKerja = Carbon::create($karyawan->tgl_mulai);
                 $waktuSekarang = Carbon::now();
 
