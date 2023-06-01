@@ -223,6 +223,7 @@ Coded by www.creative-tim.com
                       <a class="dropdown-item" href="#">Laporan Mutasi</a>
                       <a class="dropdown-item" href="#">Laporan Demosi</a>
                       <a class="dropdown-item" href="#">Laporan Promosi</a>
+                      <a class="dropdown-item" href="#">Laporan Penonaktifan</a>
                   </div>
                 </li>
                 <li style="margin-top: -15px" class="@active('laporan_jamsostek')">
