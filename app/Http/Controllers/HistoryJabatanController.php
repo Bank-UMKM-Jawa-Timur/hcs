@@ -96,7 +96,31 @@ class HistoryJabatanController extends Controller
             ->where('nip', $nip)
             ->get();
 
-        return view('history.history', ['karyawan' => $karyawan, 'data_karyawan' => $data_karyawan, 'data_migrasi' => $data_migrasi]);
+        $dataHistory = array();
+        foreach($karyawan as $item){
+            array_push($dataHistory, [
+                'tanggal_pengesahan' => $item?->tanggal_pengesahan,
+                'lama' =>  $item?->kd_panggol_lama . ' ' . (($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '') . ' ' . $item->jabatan_lama . ' ' . $item->kantor_lama ?? '-',
+                'baru' => $item?->kd_panggol_baru . ' ' . (($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '') . ' ' . $item->jabatan_baru . ' ' . $item->kantor_baru ?? '-',
+                'bukti_sk' => $item?->bukti_sk,
+                'keterangan' => $item?->keterangan
+            ]);
+        }
+
+        if($data_migrasi){
+            foreach($data_migrasi as $item){
+                array_push($dataHistory, [
+                    'tanggal_pengesahan' => $item?->tgl,
+                    'lama' => $item?->lama,
+                    'baru' => $item?->baru,
+                    'bukti_sk' => $item?->no_sk,
+                    'keterangan' => $item?->keterangan
+                ]);
+            }
+        }
+        usort($dataHistory, fn($a, $b) => strtotime($a["tanggal_pengesahan"]) - strtotime($b["tanggal_pengesahan"]));
+        // dd($dataHistory[0]['tanggal_pengesahan']);
+        return view('history.history', ['karyawan' => $dataHistory, 'data_karyawan' => $data_karyawan, 'data_migrasi' => $data_migrasi]);
     }
 
     /**

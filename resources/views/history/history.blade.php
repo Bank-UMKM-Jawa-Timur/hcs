@@ -100,8 +100,8 @@
                             @php
                                 $masaKerja = '-';
                                 if ($key != 0) {
-                                    $mulaKerja = new DateTime(date('d-M-Y', strtotime($item?->tanggal_pengesahan)));
-                                    $waktuSekarang = new DateTime(date('d-M-Y', strtotime($karyawan[$key - 1]->tanggal_pengesahan)));
+                                    $mulaKerja = new DateTime(date('d-M-Y', strtotime($item['tanggal_pengesahan'])));
+                                    $waktuSekarang = new DateTime(date('d-M-Y', strtotime($karyawan[$key - 1]['tanggal_pengesahan'])));
                 
                                     $hitung = $waktuSekarang->diff($mulaKerja);
                                     $masaKerja = $hitung->format('%y Tahun | %m Bulan | %d Hari');
@@ -112,57 +112,22 @@
                                     {{ $i++ }}
                                 </td>
                                 <td class="text-nowrap">
-                                    {{ date('d M Y', strtotime($item?->tanggal_pengesahan)) }}
+                                    {{ date('d M Y', strtotime($item['tanggal_pengesahan'])) }}
                                 </td>
                                 <td class="text-nowrap">
                                     {{ $masaKerja }}
                                 </td>
                                 <td class="">
-                                    {{ $item?->kd_panggol_lama ?? '-' }} {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }} {{ $item->jabatan_lama }} {{ $item->kantor_lama ?? '-' }}
+                                    {{ $item['lama'] }}
                                 </td>
                                 <td class="">
-                                    {{ $item?->kd_panggol_baru ?? '-' }} {{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }} {{ $item->jabatan_baru }} {{ $item->kantor_baru ?? '-' }}
+                                    {{ $item['baru'] }}
                                 </td>
                                 <td class="text-nowrap">
-                                    {{ $item->bukti_sk }}
+                                    {{ $item['bukti_sk'] }}
                                 </td>
                                 <td class="text-nowrap">
-                                    {{ $item?->keterangan }}
-                                </td>
-                            </tr>
-                        @endforeach
-                        @foreach ($data_migrasi as $key => $item)
-                            @php
-                                $masaKerja = '-';
-                                if ($key != 0) {
-                                    $mulaKerja = new DateTime(date('d-M-Y', strtotime($item?->tgl)));
-                                    $waktuSekarang = new DateTime(date('d-M-Y', strtotime($data_migrasi[$key - 1]->tgl)));
-                
-                                    $hitung = $waktuSekarang->diff($mulaKerja);
-                                    $masaKerja = $hitung->format('%y Tahun | %m Bulan | %d Hari');
-                                }
-                            @endphp
-                            <tr>
-                                <td class="sticky-col">
-                                    {{ $i++ }}
-                                </td>
-                                <td class="text-nowrap">
-                                    {{ date('d M Y', strtotime($item?->tgl)) }}
-                                </td>
-                                <td class="text-nowrap">
-                                    {{ $masaKerja }}
-                                </td>
-                                <td>
-                                    {{ $item->lama }}
-                                </td>
-                                <td>
-                                    {{ $item->baru }}
-                                </td>
-                                <td class="text-nowrap">
-                                    {{ $item->no_sk }}
-                                </td>
-                                <td class="text-nowrap">
-                                    -
+                                    {{ $item['keterangan'] }}
                                 </td>
                             </tr>
                         @endforeach
