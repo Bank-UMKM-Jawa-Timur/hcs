@@ -456,7 +456,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row m-0 mt-2">
                 <div class="col-12">
                     <p class="m-0 mt-2 text-muted">Histori Surat Peringatan</p>
@@ -465,10 +465,10 @@
                             <thead>
                                 <tr>
                                     <th style="background-color: #CCD6A6; text-align: center;">#</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">No SP</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Tanggal</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; min-width: 75px;">No SP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; min-width: 100px;">Tanggal</th>
                                     <th style="background-color: #CCD6A6; text-align: center;">Pelanggaran</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Sanksi</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; min-width: 125px;">Sanksi</th>
                                 </tr>
                             </thead>
                             <tbody>
