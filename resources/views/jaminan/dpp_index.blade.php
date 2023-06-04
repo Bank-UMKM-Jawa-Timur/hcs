@@ -21,7 +21,7 @@ $status = isset($status) ? $status : null;
         <div class="card-header">
             <div class="card-title">
                 <h5 class="card-title">Laporan DPP</h5>
-                <p class="card-title"><a href="">Laporan </a> > <a href="{{ route('index-dpp') }}">Laporan DPP</a></p>
+                <p class="card-title"><a href="">Laporan </a> > <a href="{{ route('index_dpp') }}">Laporan DPP</a></p>
             </div>
         </div>
     </div>
