@@ -17,7 +17,8 @@
                         <th>No</th>
                         <th>NIP</th>
                         <th>Nama</th>
-                        <th>Jabatan</th>
+                        {{-- <th>Jabatan Asli</th> --}}
+                        <th>Jabatan PJS</th>
                         <th>Mulai</th>
                         <th>Berakhir</th>
                         <th>Status</th>
@@ -30,6 +31,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $data->nip }}</td>
                             <td>{{ $data->karyawan->nama_karyawan }}</td>
+                            {{-- <td>{{ jabatanLengkap($data->karyawan) }}</td> --}}
                             <td>{{ jabatanLengkap($data) }}</td>
                             <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
                             <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
