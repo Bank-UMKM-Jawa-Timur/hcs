@@ -24,8 +24,8 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title @active('klasifikasi')">Data Pensiun</h5>
-                <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="{{ route('karyawan.index') }}">Karyawan</a> > Data Pensiun</p>
+                <h5 class="card-title @active('klasifikasi')">Data Masa Pensiun</h5>
+                <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="{{ route('karyawan.index') }}">Karyawan</a> > Data Masa Pensiun</p>
             </div>
         </div>
     </div>

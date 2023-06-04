@@ -96,7 +96,7 @@ Coded by www.creative-tim.com
             </li>
             {{-- Menu Manajemen Karyawan --}}
             <li
-                class="@active('karyawan,pengkinian_data,klasifikasi,mutasi,demosi,promosi,penonaktifan,import,pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit,surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')"
+                class="@active('karyawan,pengkinian_data,klasifikasi,mutasi,demosi,promosi,penonaktifan,import,pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit,surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit,reminder-pensiun.index,reminder-pensiun.show')"
             >
                 <a class="nav-link" href="#submenu1" data-toggle="collapse" data-target="#submenu1" style="font-weight: bolder">
                   <i class="nc-icon nc-tile-56" style="font-weight: bolder"></i>
@@ -111,6 +111,13 @@ Coded by www.creative-tim.com
                     <a href="{{ route('karyawan.index') }}">
                       <i class="nc-icon nc-badge"></i>
                       <p>Karyawan </p>
+                      <p></p>
+                    </a>
+                  </li>
+                  <li style="margin-top: -15px" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
+                    <a href="{{ route('reminder-pensiun.index') }}">
+                      <i class="nc-icon nc-badge"></i>
+                      <p>Data Masa Pensiun</p>
                       <p></p>
                     </a>
                   </li>
@@ -150,13 +157,6 @@ Coded by www.creative-tim.com
                     <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                         <a class="dropdown-item @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
                     </div>
-                  </li>
-                  <li style="margin-top: -15px" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
-                    <a href="{{ route('reminder-pensiun.index') }}">
-                      <i class="nc-icon nc-badge"></i>
-                      <p>Data Pensiun</p>
-                      <p></p>
-                    </a>
                   </li>
                 </ul>
             </li>
