@@ -8,13 +8,17 @@ use App\Imports\ImportKaryawan;
 use App\Imports\ImportNpwpRekening;
 use App\Imports\UpdateStatusImport;
 use App\Imports\UpdateTunjanganImport;
+use App\Models\JabatanModel;
 use App\Models\KaryawanModel;
+use App\Models\PanggolModel;
 use App\Models\PjsModel;
 use App\Models\SpModel;
+use App\Models\UmurModel;
 use App\Repository\KaryawanRepository;
 use App\Service\EmployeeService;
 use App\Service\EntityService;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -780,5 +784,107 @@ class KaryawanController extends Controller
 
         Alert::success('Berhasil', 'Berhasil mengimport data keluarga');
         return redirect()->route('karyawan.index');
+    }
+
+    public function reminderPensiunIndex()
+    {
+        $jabatan = JabatanModel::all();
+        $panggol = PanggolModel::all();
+
+        return view('karyawan.reminder-pensiun', [
+            'karyawan' => null,
+            'status' => null,
+            'jabatan' => $jabatan,
+            'panggol' => $panggol,
+        ]);
+    }
+
+    public function reminderPensiunShow(Request $request)
+    {
+        $kantor = $request->kantor;
+        $karyawan = collect();
+        $status = 0;
+
+        $jabatan = JabatanModel::all();
+        $panggol = PanggolModel::all();
+        $umur = UmurModel::all();
+
+        if ($request->kategori == 1) {
+            $karyawan = KaryawanModel::query();
+
+            $status = 1;
+        }
+
+        if ($request->kategori == 2) {
+            $subDivs = DB::table('mst_sub_divisi')->where('kd_divisi', $request->divisi)
+                ->pluck('kd_subdiv');
+
+            $bagians = DB::table('mst_bagian')->whereIn('kd_entitas', $subDivs)
+                ->orWhere('kd_entitas', $request->divisi)
+                ->pluck('kd_bagian');
+
+            $karyawan = KaryawanModel::where('kd_entitas', $request->divisi)
+                ->orWhereIn('kd_entitas', $subDivs)
+                ->orWhereIn('kd_bagian', $bagians);
+
+            $status = 2;
+        }
+
+        if ($request->kategori == 3) {
+            $entitas = $request->subDivisi ?? $request->divisi;
+
+            $bagian = DB::table('mst_bagian')->where('kd_entitas', $entitas)
+                ->pluck('kd_bagian');
+
+            $karyawan = KaryawanModel::where('kd_entitas', $entitas)
+                ->orWhereIn('kd_bagian', $bagian);
+
+            $status = 3;
+        }
+
+        if ($request->kategori == 4) {
+            $karyawan = KaryawanModel::where('kd_bagian', $request->bagian)->whereNotNull('kd_bagian');
+            $status = 4;
+        }
+
+        if ($request->kategori == 5) {
+            if ($kantor == 'Cabang') $karyawan = KaryawanModel::where('kd_entitas', $request->cabang);
+
+            if ($kantor == 'Pusat') {
+                $cbgs = DB::table('mst_cabang')->pluck('kd_cabang');
+                $karyawan = KaryawanModel::whereNotIn('kd_entitas', $cbgs)
+                    ->orWhere('kd_entitas', null);
+            }
+
+            $status = 5;
+        }
+
+        if ($karyawan instanceof Builder) {
+            $karyawan->with('keluarga');
+            $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
+            $karyawan->orderByRaw("
+                CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
+                WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
+                WHEN mst_karyawan.kd_jabatan='PC' THEN 3
+                WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
+                WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
+                WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
+                WHEN mst_karyawan.kd_jabatan='ST' THEN 7
+                WHEN mst_karyawan.kd_jabatan='NST' THEN 8
+                WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
+            ");
+            $karyawan = $karyawan->get();
+        }
+        // $date = date('Y-m-d', strtotime($karyawan[4]->tgl_lahir. ' + 56 years'));
+        // dd($date);
+        // dd($karyawan);
+        return view('karyawan.reminder-pensiun', [
+            'status' => $status,
+            'karyawan' => $karyawan,
+            'jabatan' => $jabatan,
+            'panggol' => $panggol,
+            'request' => $request,
+            'umur' => $umur,
+        ]);
     }
 }

@@ -151,6 +151,13 @@ Coded by www.creative-tim.com
                         <a class="dropdown-item @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
                     </div>
                   </li>
+                  <li style="margin-top: -15px" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
+                    <a href="{{ route('reminder-pensiun.index') }}">
+                      <i class="nc-icon nc-badge"></i>
+                      <p>Data Pensiun</p>
+                      <p></p>
+                    </a>
+                  </li>
                 </ul>
             </li>
             {{-- Menu Penghasilan  --}}

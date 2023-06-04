@@ -20,6 +20,7 @@ use App\Http\Controllers\SuratPeringatanController;
 use App\Http\Controllers\TunjanganKaryawanController;
 use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Row;
 
 /*
 |--------------------------------------------------------------------------
@@ -243,6 +244,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/import-data_keluarga', [KaryawanController::class, 'importKeluargaIndex']);
     Route::post('import-keluarga-post', [KaryawanController::class, 'importKeluarga'])->name('import-data_keluarga');
+
+    Route::get('/reminder_pensiun', [KaryawanController::class, 'reminderPensiunIndex'])->name('reminder-pensiun.index');
+    Route::post('/reminder_pensiun-show', [KaryawanController::class, 'reminderPensiunShow'])->name('reminder-pensiun.show');
 });
 Auth::routes();
 

@@ -1924,7 +1924,7 @@
 
                             $.ajax({
                                 type: 'GET',
-                                url: "{{ route('get_divisi') }}?divisiID="+divisi,
+                                url: "{{ route('get_subdivisi') }}?divisiID="+divisi,
                                 dataType: 'JSON',
                                 success: (res) => {
                                     $('#subDivisi').empty();
@@ -1949,7 +1949,7 @@
                                         const bagian = '{{ $request?->bagian}}';
                                         $.ajax({
                                             type: "GET",
-                                            url: "{{ route('get_subdivisi') }}?kd_entitas="+$(this).val(),
+                                            url: "{{ route('getBagian') }}?kd_entitas="+$(this).val(),
                                             datatype: "JSON",
                                             success: function(res){
                                                 $('#bagian').empty();
