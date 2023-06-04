@@ -113,7 +113,7 @@
                                     $umur = Carbon\Carbon::create($item->tgl_lahir);
                                     $waktuSekarang = Carbon\Carbon::now();
                                     $hitung = $waktuSekarang->diff($umur);
-                                    $tampilUmur = $hitung->format('%y Tahun | %m Bulan | %d Hari');
+                                    $tampilUmur = $hitung->format('%y,%m');
 
                                     $tglLahir = $item->tgl_lahir;
                                     $lahir = Carbon\Carbon::create($tglLahir);
@@ -225,7 +225,7 @@
                                         $masaKerja = $hitung->format('%y,%m');
                                     @endphp
                                     <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                    <td>{{ $item->pendidikan_terakhir ?? '-' }}</td>
+                                    <td>{{ $item->pendidikan ?? '-' }}</td>
                                     <td style="font-size: 8px">{{ $tampilPensiun ?? '-' }}</td>
                                 </tr>
                             @endforeach
