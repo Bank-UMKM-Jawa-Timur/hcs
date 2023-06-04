@@ -26,20 +26,11 @@
                 </thead>
                 <tbody>
                     @foreach ($pjs as $data)
-                        @php
-                            $bagian = null;
-                            if ($data->kd_bagian) {
-                                $bag = DB::table('mst_bagian')
-                                    ->where('kd_bagian', $data->kd_bagian)
-                                    ->first();
-                                $bagian = ' bagian ' . $bag->nama_bagian;
-                            }
-                        @endphp
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $data->nip }}</td>
                             <td>{{ $data->karyawan->nama_karyawan }}</td>
-                            <td>{{ jabatanLengkap($data) . $bagian }}</td>
+                            <td>{{ jabatanLengkap($data) }}</td>
                             <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
                             <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
                             <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
