@@ -30,7 +30,7 @@
                     $hasil_rupiah = number_format($angka, 0, ",", ".");
                     return $hasil_rupiah;
                 }
-                $totalGaji = $karyawan->gaji_pokok + $karyawan->gaji_penyesuaian;
+                $totalGaji = $karyawan->gj_pokok + $karyawan->gj_penyesuaian;
                 $tj = DB::table('tunjangan_karyawan')
                     ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
                     ->where('nip', $karyawan->nip)
@@ -289,6 +289,8 @@
                 </div>
             </div>
             <br>
+                {{-- {{$totalGaji}} --}}
+                {{-- {{$karyawan->gj_pokok + $karyawan->gj_penyesuaian}} --}}
                 @if (isset($tj))
                     @foreach ($tj as $item)
                         <div class="row m-0 mt-2">
