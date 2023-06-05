@@ -223,7 +223,7 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-0">Pendidikan Major</label>
                 <div class="col-sm-10">
-                        <input type="text" disabled class="form-control" value="{{ ($karyawan->pendidikan_terakhir ?? '-') }}">
+                        <input type="text" disabled class="form-control" value="{{ ($karyawan->pendidikan_major ?? '-') }}">
                 </div>
             </div>
             <div class="row m-0 mt-2">
