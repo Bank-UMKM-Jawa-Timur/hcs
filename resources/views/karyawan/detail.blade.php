@@ -235,8 +235,8 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Tanggal Pengangkatan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $karyawan?->tanggal_pengangkat?->format('d F Y') ?? '-' }}">
-                    {{-- <input type="text" disabled class="form-control" value="{{ (!$karyawan->tanggal_pengangkat || $karyawan->tanggal_pengangkat == '') ? '-' : $karyawan->tanggal_pengangkat }}"> --}}
+                    {{-- <input type="text" disabled class="form-control" value="{{ $karyawan?->tanggal_pengangkat?->format('d F Y') ?? '-' }}"> --}}
+                    <input type="text" disabled class="form-control" value="{{ (!$karyawan->tanggal_pengangkat || $karyawan->tanggal_pengangkat == '') ? '-' : $karyawan->tanggal_pengangkat }}">
                 </div>
             </div>
             @php
