@@ -80,11 +80,11 @@
 
     <div class="row m-0">
         <div class="col-md-12 text-left">
-            @isset($ro)
+            @if($ro)
                 <a href="{{ route('surat-peringatan.index') }}" class="btn btn-primary">Kembali</a>
             @else
                 <button type="submit" class="btn btn-primary">Simpan</button>
-            @endisset
+            @endif
         </div>
     </div>
 
