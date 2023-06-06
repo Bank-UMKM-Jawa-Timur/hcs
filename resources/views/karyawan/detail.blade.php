@@ -413,7 +413,7 @@
                         <div class="row m-0 mt-2">
                             <label class="col-sm-2 mt-0">Tanggal Lahir Anak {{ $index }}</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" disabled value="{{ $item->tgl_lahir }}">
+                                <input type="text" class="form-control" disabled value="{{ date('d F Y', strtotime($item->tgl_lahir)) }}">
                             </div>
                         </div>
                         <div class="row m-0 mt-2">

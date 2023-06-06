@@ -123,10 +123,16 @@ class KaryawanController extends Controller
 
     public function get_is(Request $request)
     {
-        $data = DB::table('keluarga')
+        $data['is'] = DB::table('keluarga')
             ->where('nip', $request->nip)
+            ->whereIn('enum', ['Suami', 'Istri'])
             ->orderBy('id', 'desc')
             ->first();
+        $data['anak'] = DB::table('keluarga')
+            ->where('nip', $request->nip)
+            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->orderBy('id', 'desc')
+            ->get();
         if (!isset($data)) {
             $data = null;
         }
@@ -176,8 +182,9 @@ class KaryawanController extends Controller
         $kd_kantor = null;
         $div = null;
         $subdiv = null;
+        $bag1 = null;
 
-        if ($karyawan->kd_bagian != null || $karyawan->kd_bagian == '') {
+        if ($karyawan->kd_bagian != null || $karyawan->kd_bagian != '') {
             $bag1 = DB::table('mst_bagian')
                 ->where('kd_bagian', $karyawan->kd_bagian)
                 ->first();
@@ -416,6 +423,7 @@ class KaryawanController extends Controller
         $data_suis = DB::table('keluarga')
             ->where('nip', $karyawan->nip)
             ->whereIn('enum', ['Suami', 'Istri'])
+            ->orderByDesc('id')
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $karyawan->nip)

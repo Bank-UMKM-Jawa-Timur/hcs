@@ -92,7 +92,7 @@ class PengkinianDataController extends Controller
      */
     public function store(Request $request)
     {
-        // dd(intval($request->is_jml_anak));
+        // dd($request->all());
         $nip = $request->nip;
         $request->validate([
             'nip' => 'required',
@@ -163,15 +163,28 @@ class PengkinianDataController extends Controller
                 }
             }
             $entitas = null;
-            if($request->get('bagian') != null){
-                $entitas = null;
-            } 
-            else if ($request->get('subdiv') != null) {
+            $bagian = null;
+            if ($request->get('subdiv') != null) {
                 $entitas = $request->get('subdiv');
+                if($request->get('jabatan') == 'PSD'){
+                    $bagian = null;
+                } else{
+                    $bagian =  $request->get('bagian');
+                }
             } else if ($request->get('cabang') != null) {
                 $entitas = $request->get('cabang');
+                if($request->get('jabatan') == 'PC' || $request->get('jabatan') == 'PBO'){
+                    $bagian = null;
+                } else {
+                    $bagian = $request->get('bagian');
+                }
             } else {
                 $entitas = $request->get('divisi');
+                if($request->get('jabatan') == 'PIMDIV' || $request->get('jabatan') == 'PBO'){
+                    $bagian = null;
+                } else{
+                    $bagian = $request->get('bagian');
+                }
             }
 
             $karyawan = DB::table('mst_karyawan')
@@ -186,7 +199,7 @@ class PengkinianDataController extends Controller
                     'nik' => $request->get('nik'),
                     'ket_jabatan' => $request->get('ket_jabatan'),
                     'kd_entitas' => $entitas,
-                    'kd_bagian' => $request->get('bagian'),
+                    'kd_bagian' => $bagian,
                     'kd_jabatan' => $request->get('jabatan'),
                     'kd_panggol' => $request->get('panggol'),
                     'kd_agama' => $request->get('agama'),
@@ -306,10 +319,12 @@ class PengkinianDataController extends Controller
             return redirect()->route('pengkinian_data.index');
         } catch (Exception $e) {
             DB::rollBack();
+            dd($e);
             Alert::error('Tejadi kesalahan', '' . $e);
             return redirect()->route('pengkinian_data.index');
         } catch (QueryException $e) {
             DB::rollBack();
+            dd($e);
             Alert::error('Tejadi kesalahan', '' . $e);
             return redirect()->route('pengkinian_data.index');
         }

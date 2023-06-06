@@ -162,7 +162,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Pangkat Dan Golongan</label>
-                                    <select name="panggol" id="kd_panggol" class="@error('panggol') is-invalid @enderror form-control">
+                                    <select name="panggol" id="kd_panggol" class="@error('panggol') is-invalid @enderror form-control" required>
                                         <option value="-">--- Pilih ---</option>
                                         @foreach ($panggol as $item)
                                             <option {{ old('panggol') == $item->golongan ? 'selected' : '--- Pilih ---' }} value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
@@ -530,8 +530,8 @@
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
                 $("kantor_row2").removeClass("col-md-6")
-                $("#kantor_row2").hide();
-                $("#kantor_row3").hide()
+                $("#kantor_row2").empty();
+                $("#kantor_row3").empty()
             } else if(value == "PSD"){
                 $("#kantor").val("1")
                 kantorChange();
@@ -540,13 +540,13 @@
                 $("#kantor").val("2")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
-                $("#kantor_row2").hide();
+                $("#kantor_row2").empty();
             } else if(value == "PBO"){
                 kantorChange();
                 $('#kantor').removeAttr("disabled")
                 $("kantor_row2").removeClass("col-md-6")
-                $("#kantor_row2").hide();
-                $("#kantor_row3").hide()
+                $("#kantor_row2").empty();
+                $("#kantor_row3").empty()
             } else if(value == "-"){
                 kantorChange();
             }else {
@@ -576,6 +576,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is">Tunjangan</label>
+                                    <input type="hidden" name="id_tk[]" id="id_tk" value="">
                                     <select name="tunjangan[]" id="tunjangan" class="form-control">
                                         <option value="">--- Pilih ---</option>
                                         @foreach ($tunjangan as $item)
@@ -926,6 +927,7 @@
                     });
                 }
             })
+            valJabatan();
         }
 
         function jabatanChange(){
@@ -935,24 +937,24 @@
                 $("#kantor").val("1")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
-                $("kantor_row2").removeClass("col-md-6")
-                $("#kantor_row2").hide();
-                $("#kantor_row3").hide()
+                $("#kantor_row2 div").empty();
+                $("#kantor_row3").empty()
             } else if(value == "PSD"){
                 $("#kantor").val("1")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
+                $("#kantor_row3").empty();
             } else if(value == "PC" || value == "PBP"){
                 $("#kantor").val("2")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
-                $("#kantor_row2").hide();
+                $("#kantor_row2").empty();
             } else if(value == "PBO"){
                 kantorChange();
                 $('#kantor').removeAttr("disabled")
                 $("kantor_row2").removeClass("col-md-6")
-                $("#kantor_row2").hide();
-                $("#kantor_row3").hide()
+                $("#kantor_row2").empty();
+                $("#kantor_row3").empty()
             } else if(value == ""){
                 kantorChange();
             }else {
@@ -979,14 +981,16 @@
                     success: function(res){
                         if(res == null){
                         } else{
-                            $('#is').val(res.enum);
-                            $('#is_nama').val(res.nama);
-                            $('#is_tgl_lahir').val(res.tgl_lahir);
-                            $('#is_alamat').val(res.alamat);
-                            $('#is_pekerjaan').val(res.pekerjaan);
-                            $('#is_jml_anak').val(res.jml_anak);
-                            $('#sk_tunjangan_is').val(res.sk_tunjangan);
-                            $("#is_jml_anak").trigger('keyup')
+                            if(res.is){
+                                $('#is').val(res.is.enum);
+                                $('#is_nama').val(res.is.nama);
+                                $('#is_tgl_lahir').val(res.is.tgl_lahir);
+                                $('#is_alamat').val(res.is.alamat);
+                                $('#is_pekerjaan').val(res.is.pekerjaan);
+                                $('#is_jml_anak').val(res.is.jml_anak);
+                                $('#sk_tunjangan_is').val(res.is.sk_tunjangan);
+                                $("#is_jml_anak").trigger('keyup')
+                            }
                         }
                     }
                 })
