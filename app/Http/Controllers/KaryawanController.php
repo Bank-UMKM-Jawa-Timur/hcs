@@ -748,6 +748,10 @@ class KaryawanController extends Controller
 
     public function penonaktifan(PenonaktifanRequest $request)
     {
+        if($request->get('tanggal_penonaktifan') > now()) {
+            Alert::error('Tanggal penonaktifan tidak boleh lebih dari hari ini.');
+            return redirect()->route('penonaktifan.create');
+        }
         EmployeeService::deactivate($request->only([
             'nip',
             'tanggal_penonaktifan',
@@ -874,17 +878,7 @@ class KaryawanController extends Controller
         if ($karyawan instanceof Builder) {
             $karyawan->with('keluarga');
             $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
-            $karyawan->orderByRaw("
-                CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
-                WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
-                WHEN mst_karyawan.kd_jabatan='PC' THEN 3
-                WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
-                WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
-                WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
-                WHEN mst_karyawan.kd_jabatan='ST' THEN 7
-                WHEN mst_karyawan.kd_jabatan='NST' THEN 8
-                WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
-            ");
+            $karyawan->orderBy('tgl_lahir', 'asc');
             $karyawan = $karyawan->get();
         }
         // $date = date('Y-m-d', strtotime($karyawan[4]->tgl_lahir. ' + 56 years'));

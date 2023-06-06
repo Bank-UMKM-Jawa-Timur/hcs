@@ -30,7 +30,7 @@
                                 @foreach ($sps as $sp)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $sp->no_sp }}</td>
+                                        <td>{{ $sp->no_sp ?? '-' }}</td>
                                         <td>{{ $sp->nip }}</td>
                                         <td>{{ $sp->karyawan->nama_karyawan }}</td>
                                         <td>{{ $sp->tanggal_sp->format('d M Y') }}</td>

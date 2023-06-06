@@ -26,7 +26,11 @@
         </div>
         <div class="col-md-4 form-group">
             <label for="tanggal_sp">Tanggal SP</label>
-            <input type="date" name="tanggal_sp" id="tanggal_sp" class="form-control @error('tanggal_sp') is-invalid @enderror" value="{{ $sp?->tanggal_sp?->format('Y-m-d') }}" @disabled($ro ?? null)>
+            @if (!$ro)
+                <input type="date" name="tanggal_sp" id="tanggal_sp" class="form-control @error('tanggal_sp') is-invalid @enderror" >
+            @else
+                <input type="text" class="form-control" value="{{ $sp?->tanggal_sp?->format('d M Y') }}" disabled>
+            @endif
 
             @error('tanggal_sp')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -113,6 +117,9 @@
         nipSelect.append(`
             <option value="{{$sp->karyawan?->nip}}">{{$sp->karyawan?->nip}} - {{$sp->karyawan?->nama_karyawan}}</option>
         `).trigger('change');
+        $(window).on('load', function(){
+            nipSelect.trigger('select2:select')
+        })
     @endisset
 
     $('#nip').on('select2:select', function() {

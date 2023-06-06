@@ -63,7 +63,7 @@ class KaryawanRepository
 
     public function getAllKaryawanNonaktif(): Collection
     {
-        return $this->getKaryawanPusatNonaktif()->push(...$this->getKaryawanCabangnNonaktif());
+        return $this->getKaryawanPusatNonaktif();
     }
 
     public function getKaryawanPusatNonaktif(): Collection
@@ -71,24 +71,9 @@ class KaryawanRepository
         $karyawan = KaryawanModel::with('jabatan')
             ->with('bagian')
             ->whereNotNull('tanggal_penonaktifan')
-            ->whereNotIn('kd_entitas', $this->cabang)
-            ->orWhere('kd_entitas', null)
-            ->orderByRaw($this->orderRaw)
+            ->orderBy('tanggal_penonaktifan', 'DESC')
             ->get();
-
-        $this->addEntity($karyawan);
-        return $karyawan;
-    }
-
-    public function getKaryawanCabangnNonaktif(): Collection
-    {
-        $karyawan = KaryawanModel::with('jabatan')
-            ->with('bagian')
-            ->whereNotNull('tanggal_penonaktifan')
-            ->whereIn('kd_entitas', $this->cabang)
-            ->orderByRaw($this->orderRaw)
-            ->get();
-
+        
         $this->addEntity($karyawan);
         return $karyawan;
     }

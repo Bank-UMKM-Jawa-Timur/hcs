@@ -137,7 +137,7 @@
                                 <tr>
                                     <td>{{ $item->nip }}</td>
                                     <td>{{ $item->nama_karyawan }}</td>
-                                    <td>{{ jabatanLengkap($item) ?? '-' }}</td>
+                                    <td>{{ jabatanLengkap($item) . ' ' . $item->ket_jabatan ?? '-' }}</td>
                                     @php
                                         $nama_cabang = DB::table('mst_cabang')
                                             ->where('kd_cabang', $item->kd_entitas)

@@ -21,7 +21,7 @@ class SuratPeringatanController extends Controller
 
     public function index()
     {
-        $sps = SpModel::with('karyawan')->get();
+        $sps = SpModel::with('karyawan')->orderBy('tanggal_sp', 'DESC')->get();
 
         return view('karyawan.surat-peringatan.index', compact('sps'));
     }
