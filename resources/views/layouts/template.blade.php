@@ -138,7 +138,7 @@ Coded by www.creative-tim.com
                           <a class="dropdown-item @active('mutasi.index')" href="{{ route('mutasi.index') }}">Mutasi</a>
                           <a class="dropdown-item @active('demosi.index')" href="{{ route('demosi.index') }}">Demosi</a>
                           <a class="dropdown-item @active('promosi.index')" href="{{ route('promosi.index') }}">Promosi</a>
-                          <a class="dropdown-item @active('karyawan.penonaktifan')" href="{{ route('karyawan.penonaktifan') }}">Penonaktifan</a>
+                          <a class="dropdown-item @active('karyawan.penonaktifan')" href="{{ route('penonaktifan.index') }}">Penonaktifan</a>
                       </div>
                   </li>
                   <li style="margin-top: -15px" class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">

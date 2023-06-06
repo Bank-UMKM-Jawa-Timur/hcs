@@ -748,8 +748,6 @@ class KaryawanController extends Controller
 
     public function penonaktifan(PenonaktifanRequest $request)
     {
-        if ($request->isMethod('GET')) return view('karyawan.penonaktifan');
-
         EmployeeService::deactivate($request->only([
             'nip',
             'tanggal_penonaktifan',
@@ -757,7 +755,21 @@ class KaryawanController extends Controller
         ]), $request->file('sk_pemberhentian'));
 
         Alert::success('Berhasil menonaktifkan karyawan');
-        return back();
+        return redirect()->route('penonaktifan.index');
+    }
+
+    public function penonaktifanAdd()
+    {
+        return view('karyawan.penonaktifan.penonaktifan');
+    }
+
+    public function indexPenonaktifan()
+    {
+        $karyawanRepo = new KaryawanRepository();
+
+        return view('karyawan.penonaktifan.index', [
+            'karyawan' => $karyawanRepo->getAllKaryawanNonaktif()
+        ]);
     }
 
     /**

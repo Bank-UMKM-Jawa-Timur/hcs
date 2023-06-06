@@ -5,12 +5,12 @@
         <div class="card-header">
             <div class="card-title">
                 <h5 class="card-title">Penonaktifan Karyawan</h5>
-                <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="{{ route('karyawan.penonaktifan') }}">Penonaktifan Karyawan</a></p>
+                <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="{{ route('penonaktifan.index') }}">Penonaktifan Karyawan</a></p>
             </div>
         </div>
 
         <div class="card-body">
-        <form action="{{ route('karyawan.penonaktifan') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('penonaktifan.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-md-4">
@@ -56,8 +56,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-md-4 text-center">
+            <div class="row">
+                <div class="col-md-4">
                     <button class="btn btn-info" type="submit">Proses</button>
                 </div>
             </div>

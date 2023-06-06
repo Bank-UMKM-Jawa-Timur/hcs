@@ -137,9 +137,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pengkinian_data', PengkinianDataController::class);
 
     // Penonaktifan Karyawan
-    Route::controller(KaryawanController::class)->group(function () {
-        Route::match(['get', 'post'], 'penonaktifan', 'penonaktifan')->name('karyawan.penonaktifan');
-    });
+    Route::prefix('penonaktifan')
+        ->name('penonaktifan.')
+        ->controller(KaryawanController::class)
+        ->group(function(){
+            Route::get('/', 'indexPenonaktifan')->name('index');
+            Route::get('/add', 'penonaktifanAdd')->name('create');
+            Route::post('/store', 'penonaktifan')->name('store');
+        });
 
     // Surat Peringatan
     Route::get('surat-peringatan/history', [SuratPeringatanController::class, 'history'])
