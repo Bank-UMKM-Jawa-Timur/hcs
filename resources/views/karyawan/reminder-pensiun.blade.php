@@ -120,11 +120,18 @@
                                     $pensiun = Carbon\Carbon::create(date('Y-m-d', strtotime($tglLahir. ' + 56 years')));
                                     $hitungPensiun = $pensiun->diff($waktuSekarang);
                                     $tampilPensiun = null;
+                                    $textColor = null;
                                     if ($waktuSekarang->diffInYears($umur) >= 54) {
                                         $tampilPensiun = 'Persiapan pensiun dalam ' . $hitungPensiun->format('%y Tahun, %m Bulan, %d Hari');
+                                        if ($waktuSekarang->diffInYears($umur ) >= 55) {
+                                            $textColor = 'text-warning';
+                                        } else {
+                                            $textColor = 'text-success';
+                                        }
                                     } 
-                                    if ($waktuSekarang->diffInYears($umur) > 56) {
+                                    if ($waktuSekarang->diffInYears($umur) >= 56) {
                                         $tampilPensiun = 'Sudah melebihi batas pensiun';
+                                        $textColor = 'text-danger';
                                     }
                                 @endphp
                                 <tr>
@@ -226,7 +233,7 @@
                                     @endphp
                                     <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                     <td>{{ $item->pendidikan ?? '-' }}</td>
-                                    <td style="font-size: 8px">{{ $tampilPensiun ?? '-' }}</td>
+                                    <td style="font-size: 8px" class="{{ $textColor }}">{{ $tampilPensiun ?? '-' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
