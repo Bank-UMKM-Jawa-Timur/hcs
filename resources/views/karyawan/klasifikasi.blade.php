@@ -2,6 +2,10 @@
 
 @php
     $request = isset($request) ? $request : null;
+    function formatRupiah($value){
+        if($value == null) return '-';
+        return number_format($value, 0, '.', ',');
+    }
 @endphp
 
 @section('content')
@@ -138,7 +142,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($umur);
-                                                $umurSkrg = $hitung->format('%y,%m');
+                                                $umurSkrg = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
                                             @php
@@ -220,7 +224,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
-                                                $masaKerja = $hitung->format('%y,%m');
+                                                $masaKerja = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
@@ -275,7 +279,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($umur);
-                                                $umurSkrg = $hitung->format('%y,%m');
+                                                $umurSkrg = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
                                             @php
@@ -357,7 +361,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
-                                                $masaKerja = $hitung->format('%y,%m');
+                                                $masaKerja = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
@@ -412,7 +416,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($umur);
-                                                $umurSkrg = $hitung->format('%y,%m');
+                                                $umurSkrg = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
                                             @php
@@ -494,7 +498,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
-                                                $masaKerja = $hitung->format('%y,%m');
+                                                $masaKerja = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
@@ -547,7 +551,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($umur);
-                                                $umurSkrg = $hitung->format('%y,%m');
+                                                $umurSkrg = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
                                             @php
@@ -629,7 +633,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
-                                                $masaKerja = $hitung->format('%y,%m');
+                                                $masaKerja = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
@@ -682,7 +686,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($umur);
-                                                $umurSkrg = $hitung->format('%y,%m');
+                                                $umurSkrg = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
                                             @php
@@ -764,7 +768,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
-                                                $masaKerja = $hitung->format('%y,%m');
+                                                $masaKerja = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
@@ -832,25 +836,25 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($item->tgl_mulai);
-                                                $masaKerja = $hitung->format('%y,%m');
+                                                $masaKerja = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                            <td>{{ toRupiah($item->gj_pokok) }}</td>
-                                            <td>{{ toRupiah($tKeluarga?->pivot->nominal) }}</td>
-                                            <td>{{ toRupiah($tListrik?->pivot->nominal) }}</td>
-                                            <td>{{ toRupiah($tJabatan?->pivot->nominal) }}</td>
-                                            <td>{{ toRupiah($tTeller?->pivot->nominal) }}</td>
-                                            <td>{{ toRupiah($tPerumahan?->pivot->nominal) }}</td>
-                                            <td>{{ toRupiah($tKesejahteraan?->pivot->nominal) }}</td>
-                                            <td>{{ toRupiah($tKemahalan?->pivot->nominal) }}</td>
-                                            <td>{{ toRupiah($tPelaksana?->pivot->nominal) }}</td>
-                                            <td>{{ toRupiah($item->gj_penyesuaian) }}</td>
+                                            <td>{{ formatRupiah($item->gj_pokok) }}</td>
+                                            <td>{{ formatRupiah($tKeluarga?->pivot->nominal) }}</td>
+                                            <td>{{ formatRupiah($tListrik?->pivot->nominal) }}</td>
+                                            <td>{{ formatRupiah($tJabatan?->pivot->nominal) }}</td>
+                                            <td>{{ formatRupiah($tTeller?->pivot->nominal) }}</td>
+                                            <td>{{ formatRupiah($tPerumahan?->pivot->nominal) }}</td>
+                                            <td>{{ formatRupiah($tKesejahteraan?->pivot->nominal) }}</td>
+                                            <td>{{ formatRupiah($tKemahalan?->pivot->nominal) }}</td>
+                                            <td>{{ formatRupiah($tPelaksana?->pivot->nominal) }}</td>
+                                            <td>{{ formatRupiah($item->gj_penyesuaian) }}</td>
                                             @php
                                                 $totalGaji = (($item->gj_pokok) + ($tKeluarga?->pivot->nominal) + ($tListrik?->pivot->nominal) + 
                                                             ($tJabatan?->pivot->nominal) + ($tTeller?->pivot->nominal) + ($tPerumahan?->pivot->nominal) +
                                                             ($tKesejahteraan?->pivot->nominal) + ($tKemahalan?->pivot->nominal) + ($tPelaksana?->pivot->nominal) + ($item->gj_penyesuaian));
                                             @endphp
-                                            <td>{{ toRupiah($totalGaji) }}</td>
+                                            <td>{{ formatRupiah($totalGaji) }}</td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -900,7 +904,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($umur);
-                                                $umurSkrg = $hitung->format('%y,%m');
+                                                $umurSkrg = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
                                             @php
@@ -982,7 +986,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
-                                                $masaKerja = $hitung->format('%y,%m');
+                                                $masaKerja = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
@@ -1077,7 +1081,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($umur);
-                                                $umurSkrg = $hitung->format('%y,%m');
+                                                $umurSkrg = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
                                             @php
@@ -1159,7 +1163,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
-                                                $masaKerja = $hitung->format('%y,%m');
+                                                $masaKerja = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
@@ -1212,7 +1216,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($umur);
-                                                $umurSkrg = $hitung->format('%y,%m');
+                                                $umurSkrg = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
                                             @php
@@ -1294,7 +1298,7 @@
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
-                                                $masaKerja = $hitung->format('%y,%m');
+                                                $masaKerja = $hitung->format('%y.%m');
                                             @endphp
                                             <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
@@ -1346,7 +1350,7 @@
                                             $waktuSekarang = Carbon\Carbon::now();
 
                                             $hitung = $waktuSekarang->diff($umur);
-                                            $umurSkrg = $hitung->format('%y,%m');
+                                            $umurSkrg = $hitung->format('%y.%m');
                                         @endphp
                                         <td>{{ ($item->tgl_lahir != null) ? $umurSkrg : '-' }}</td>
                                         @php
@@ -1428,7 +1432,7 @@
                                             $waktuSekarang = Carbon\Carbon::now();
 
                                             $hitung = $waktuSekarang->diff($mulaKerja);
-                                            $masaKerja = $hitung->format('%y,%m');
+                                            $masaKerja = $hitung->format('%y.%m');
                                         @endphp
                                         <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                                         <td>{{ $item->pendidikan ?? '-' }}</td>
@@ -1482,6 +1486,7 @@
                     },
                     customize: function( xlsx, row ) {
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        $('row c[r^="C"]', sheet).attr( 's', '50' );
                     }
                 },
                 {
