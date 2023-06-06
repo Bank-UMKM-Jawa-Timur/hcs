@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Tambah Pengkinian Data Karyawan</h5>
-            <p class="card-title"><a href="{{ route('pengkinian_data.index') }}">Pengkinian Data</a> > <a href="">Karyawan</a> > Tambah</p>
+            <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > <a href="{{ route('pengkinian_data.index') }}">Pengkinian Data</a> > Tambah</p>
         </div>
     </div>
 

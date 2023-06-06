@@ -3,7 +3,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Detail Data Karyawan</h5>
-            <p class="card-title"><a href="{{ route('pengkinian_data.index') }}">Pengkinian Data</a> > <a href="">Karyawan</a> > Detail</p>
+            <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > <a href="{{ route('pengkinian_data.index') }}">Pengkinian Data</a> > Detail</p>
         </div>
     </div>
     <div class="card-body">
@@ -380,11 +380,12 @@
 
             <div class="row m-0 mt-2">
                 <div class="col-12">
-                    <p class="m-0 mt-2 text-muted">Histori Penjabat Sementara</p>
+                    <p class="m-0 mt-2 text-muted">Histori Jabatan</p>
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table text-center cell-border stripe" id="pjs-table" style="width: 100%; word-break: break-all;">
                             <thead>
                                 <tr>
+                                    <th style="background-color: #CCD6A6; text-align: center;">#</th>
                                     <th style="background-color: #CCD6A6; text-align: center;">No SK</th>
                                     <th style="background-color: #CCD6A6; text-align: center;">Jabatan</th>
                                     <th style="background-color: #CCD6A6; text-align: center;">Mulai</th>
@@ -395,11 +396,12 @@
                             <tbody>
                                 @foreach ($pjs as $data)
                                 <tr>
-                                    <td>{{ $data->no_sk }}</td>
-                                    <td>{{ jabatanLengkapPengkinian($data) }}</td>
-                                    <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
-                                    <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
-                                    <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $data['no_sk'] }}</td>
+                                    <td>{{ $data['jabatan'] }}</td>
+                                    <td>{{ date('d M Y', strtotime($data['mulai'])) ?? '-' }}</td>
+                                    <td>{{ ($data['berakhir'] != null) ? date('d M Y', strtotime($data['berakhir'])) : '-' }}</td>
+                                    <td>{{ !$data['berakhir'] ? 'Aktif' : 'Nonaktif' }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -409,7 +411,7 @@
             </div>
 
             <div class="row m-3">
-                <a href="/karyawan">
+                <a href="{{ route('pengkinian_data.index') }}">
                     <button type="button" class="btn btn-info">Kembali</button>
                 </a>
             </div>
