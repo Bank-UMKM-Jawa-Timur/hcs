@@ -57,12 +57,12 @@
                 <label for="file_sk">Dokumen SK</label>
                 @if ($sp->file_sk != null)
                     @php
-                        $fileparts = pathinfo(asset('..') . '/upload/sp/' . $sp->id . '/' . $sp->file_sk);
+                        $fileparts = pathinfo(asset('..') . '/upload/sp/'. $sp->file_sk);
                     @endphp
                     @if ($fileparts['extension'] == 'pdf')
-                        <iframe src="{{ asset('..') . '/upload/sp/' . $sp->id . '/' . $sp->file_sk }}" width="100%" height="650px"></iframe>
+                        <iframe src="{{ asset('..') . '/upload/sp/'. $sp->file_sk }}" width="100%" height="650px"></iframe>
                     @else
-                        <img src="{{ asset('..') . '/upload/sp/' . $sp->id . '/' . $sp->file_sk }}" alt="" width="100%">
+                        <img src="{{ asset('..') . '/upload/sp/' . $sp->file_sk }}" alt="" width="100%">
                     @endif
                 @else
                     <input type="text" class="form-control" disabled value="-">

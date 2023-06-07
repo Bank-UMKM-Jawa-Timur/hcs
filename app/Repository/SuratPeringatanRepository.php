@@ -13,9 +13,7 @@ class SuratPeringatanRepository
         $filename = null;
         if($data['file_sk'] != null){
             $file = $data['file_sk'];
-            $idSP = DB::table('surat_peringatan')->orderBy('id', 'desc')->first();
-            $id = intval($idSP->id) + 1;
-            $folderPath = public_path() . '/upload/sp/' . $id;
+            $folderPath = public_path() . '/upload/sp/';
             $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
             $path = realpath($folderPath);
     
