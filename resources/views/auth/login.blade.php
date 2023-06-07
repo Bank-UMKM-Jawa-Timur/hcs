@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="{{ asset('style/assets/img/logo.png') }}">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    Bio Interface | BANK UMKM JATIM
+    Human Capital System | BANK UMKM JATIM
   </title>  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +34,7 @@
                 <img src="{{ asset('style/assets/img/logo.png') }}" alt="logo" class="logo">
               </div>
               <p class="login-card-description">Welcome !</p>
-              <p class="login-card-sub-description">BIO INTERFACE</p>
+              <p class="login-card-sub-description">Human Capital System</p>
                 <div class="container">
                   <div class="row justify-content-center align-items-center">
                     <div class="formulir col-6 col-md-7 col-6">
