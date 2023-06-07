@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Models\SpModel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SuratPeringatanRepository
 {
@@ -11,9 +12,8 @@ class SuratPeringatanRepository
     {
         $filename = null;
         if($data['file_sk'] != null){
-            $sp = new SpModel();
             $file = $data['file_sk'];
-            $idSP = $sp->orderBy('id', 'desc')->first();
+            $idSP = DB::table('surat_peringatan')->orderBy('id', 'desc')->first();
             $id = intval($idSP->id) + 1;
             $folderPath = public_path() . '/upload/sp/' . $id;
             $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
