@@ -240,7 +240,7 @@
                 </div>
             </div>
             @php
-                $mulaKerja = Carbon::create($karyawan->tgl_mulai);
+                $mulaKerja = Carbon::create($karyawan->tanggal_pengangkat);
                 $waktuSekarang = Carbon::now();
 
                 $hitung = $waktuSekarang->diff($mulaKerja);
@@ -250,7 +250,7 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Masa Kerja</label>
                 <div class="col-sm-10">
-                    @if (isset($karyawan->tgl_mulai) != null)
+                    @if (isset($karyawan->tanggal_pengangkat) != null)
                         <input type="text" disabled class="form-control" value="{{ $masaKerja }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">

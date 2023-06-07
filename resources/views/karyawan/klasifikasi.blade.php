@@ -116,6 +116,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan<br>Terakhir</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -220,14 +221,15 @@
                                             <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                                             <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
                                             @php
-                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $mulaKerja = Carbon\Carbon::create($item->tanggal_pengangkat);
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
                                                 $masaKerja = $hitung->format('%y.%m');
                                             @endphp
-                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
+                                            <td>{{ $item->pendidikan_major ?? '-' }}</td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -253,6 +255,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan<br>Terakhir</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -357,14 +360,15 @@
                                             <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                                             <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
                                             @php
-                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $mulaKerja = Carbon\Carbon::create($item->tanggal_pengangkat);
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
                                                 $masaKerja = $hitung->format('%y.%m');
                                             @endphp
-                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
+                                            <td>{{ $item->pendidikan_major ?? '-' }}</td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -390,6 +394,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan<br>Terakhir</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -494,14 +499,15 @@
                                             <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                                             <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
                                             @php
-                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $mulaKerja = Carbon\Carbon::create($item->tanggal_pengangkat);
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
                                                 $masaKerja = $hitung->format('%y.%m');
                                             @endphp
-                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
+                                            <td>{{ $item->pendidikan_major ?? '-' }}</td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -526,6 +532,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan<br>Terakhir</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -629,14 +636,15 @@
                                             <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                                             <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
                                             @php
-                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $mulaKerja = Carbon\Carbon::create($item->tanggal_pengangkat);
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
                                                 $masaKerja = $hitung->format('%y.%m');
                                             @endphp
-                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
+                                            <td>{{ $item->pendidikan_major ?? '-' }}</td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -661,6 +669,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan<br>Terakhir</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -764,14 +773,15 @@
                                             <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                                             <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
                                             @php
-                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $mulaKerja = Carbon\Carbon::create($item->tanggal_pengangkat);
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
                                                 $masaKerja = $hitung->format('%y.%m');
                                             @endphp
-                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
+                                            <td>{{ $item->pendidikan_major ?? '-' }}</td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -835,10 +845,10 @@
                                             @php
                                                 $waktuSekarang = Carbon\Carbon::now();
 
-                                                $hitung = $waktuSekarang->diff($item->tgl_mulai);
+                                                $hitung = $waktuSekarang->diff($item->tanggal_pengangkat);
                                                 $masaKerja = $hitung->format('%y.%m');
                                             @endphp
-                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ formatRupiah($item->gj_pokok) }}</td>
                                             <td>{{ formatRupiah($tKeluarga?->pivot->nominal) }}</td>
                                             <td>{{ formatRupiah($tListrik?->pivot->nominal) }}</td>
@@ -879,6 +889,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan<br>Terakhir</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -982,14 +993,15 @@
                                             <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                                             <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
                                             @php
-                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $mulaKerja = Carbon\Carbon::create($item->tanggal_pengangkat);
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
                                                 $masaKerja = $hitung->format('%y.%m');
                                             @endphp
-                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
+                                            <td>{{ $item->pendidikan_major ?? '-' }}</td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -1056,6 +1068,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan<br>Terakhir</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1159,15 +1172,16 @@
                                             <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                                             <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
                                             @php
-                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $mulaKerja = Carbon\Carbon::create($item->tanggal_pengangkat);
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
                                                 $masaKerja = $hitung->format('%y.%m');
                                             @endphp
-                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
-                                        </tr>\
+                                            <td>{{ $item->pendidikan_major ?? '-' }}</td>
+                                        </tr>
                                     @endif
                                 @endforeach
                             </tbody>
@@ -1191,6 +1205,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan<br>Terakhir</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1294,14 +1309,15 @@
                                             <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                                             <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
                                             @php
-                                                $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                                $mulaKerja = Carbon\Carbon::create($item->tanggal_pengangkat);
                                                 $waktuSekarang = Carbon\Carbon::now();
 
                                                 $hitung = $waktuSekarang->diff($mulaKerja);
                                                 $masaKerja = $hitung->format('%y.%m');
                                             @endphp
-                                            <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                            <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                                             <td>{{ $item->pendidikan ?? '-' }}</td>
+                                            <td>{{ $item->pendidikan_major ?? '-' }}</td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -1326,6 +1342,7 @@
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
                                     <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Pendidikan<br>Terakhir</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1428,14 +1445,15 @@
                                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
                                         @php
-                                            $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                                            $mulaKerja = Carbon\Carbon::create($item->tanggal_pengangkat);
                                             $waktuSekarang = Carbon\Carbon::now();
 
                                             $hitung = $waktuSekarang->diff($mulaKerja);
                                             $masaKerja = $hitung->format('%y.%m');
                                         @endphp
-                                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                                        <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                                         <td>{{ $item->pendidikan ?? '-' }}</td>
+                                        <td>{{ $item->pendidikan_major ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
