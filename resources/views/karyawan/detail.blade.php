@@ -7,6 +7,11 @@
         </div>
     </div>
     <div class="card-body">
+        <div class="row m-0">
+            <div class="col-md-12">
+                <a target="__blank" class="btn btn-primary" href="{{ route('export-cv', $karyawan->nip) }}">Export cv</a>
+            </div>
+        </div>
         @php
             $status = 'TK';
             if ($karyawan->status == 'Kawin' && $suis) {
@@ -19,7 +24,7 @@
         <form action="{{ route('karyawan.show', $karyawan->nip) }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
             @csrf
             @method('PUT')
-            <div class="row m-0 ">
+            <div class="row m-0 mt-3">
                 <div class="col-lg-12">
                     <h6>Biodata Diri Karyawan</h6>
                 </div>

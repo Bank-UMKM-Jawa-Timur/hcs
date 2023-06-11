@@ -902,4 +902,127 @@ class KaryawanController extends Controller
             'umur' => $umur,
         ]);
     }
+
+    public function exportCV($id)
+    {
+        $data_suis = null;
+        $karyawan = KaryawanModel::findOrFail($id);
+        $data_suis = DB::table('keluarga')
+            ->where('nip', $karyawan->nip)
+            ->whereIn('enum', ['Suami', 'Istri'])
+            ->orderByDesc('id')
+            ->first();
+        $data_anak = DB::table('keluarga')
+            ->where('nip', $karyawan->nip)
+            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->get();
+        $karyawan->tunjangan = DB::table('tunjangan_karyawan')
+            ->where('nip', $id)
+            ->select('tunjangan_karyawan.*')
+            ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id')
+            ->get();
+        $karyawan->count_tj = DB::table('tunjangan_karyawan')
+            ->where('nip', $id)
+            ->count('*');
+        $data_tunjangan = DB::table('mst_tunjangan')
+            ->get();
+
+        $pjs = PjsModel::where('nip', $id)
+            ->get();
+
+        // Get Pergerakan Karir Detail
+        $pergerakanKarir = DB::table('demosi_promosi_pangkat')
+            ->where('demosi_promosi_pangkat.nip', $id)
+            ->select(
+                'demosi_promosi_pangkat.*',
+                'karyawan.*',
+                'newPos.nama_jabatan as jabatan_baru',
+                'oldPos.nama_jabatan as jabatan_lama'
+            )
+            ->join('mst_karyawan as karyawan', 'karyawan.nip', '=', 'demosi_promosi_pangkat.nip')
+            ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
+            ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
+            ->orderBy('id', 'desc')
+            ->get();
+        $pergerakanKarir->map(function($data) {
+            if(!$data->kd_entitas_baru) {
+                $data->kantor_baru = "";
+                return;
+            }
+
+            $entity = EntityService::getEntity($data->kd_entitas_baru);
+            $type = $entity->type;
+
+            if($type == 2) $data->kantor_baru = "Cab. " . $entity->cab->nama_cabang;
+
+            if($type == 1) {
+                $data->kantor_baru = isset($entity->subDiv) ?
+                $entity->subDiv->nama_subdivisi . " (Pusat)":
+                $entity->div->nama_divisi . " (Pusat)";
+            }
+
+            return $data;
+        });
+        $pergerakanKarir->map(function($dataLama) {
+            if(!$dataLama->kd_entitas_lama) {
+                $dataLama->kantor_lama = "";
+                return;
+            }
+
+            $entityLama = EntityService::getEntity($dataLama->kd_entitas_lama);
+            $typeLama = $entityLama->type;
+
+            if($typeLama == 2) $dataLama->kantor_lama = "Cab. " . $entityLama->cab->nama_cabang;
+            if($typeLama == 1) {
+                $dataLama->kantor_lama = isset($entityLama->subDiv) ?
+                $entityLama->subDiv->nama_subdivisi . " (Pusat)":
+                $entityLama->div->nama_divisi." (Pusat)";
+            }
+
+            return $dataLama;
+        });
+        $historyJabatan = array();
+        $dataHistory = array();
+        foreach($pergerakanKarir as $item){
+            array_push($dataHistory, [
+                'tanggal_pengesahan' => $item?->tanggal_pengesahan,
+                'lama' =>  $item?->kd_panggol_lama . ' ' . (($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '') . ' ' . $item->jabatan_lama . ' ' . $item->kantor_lama ?? '-',
+                'baru' => $item?->kd_panggol_baru . ' ' . (($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '') . ' ' . $item->jabatan_baru . ' ' . $item->kantor_baru ?? '-',
+                'bukti_sk' => $item?->bukti_sk,
+                'keterangan' => $item?->keterangan
+            ]);
+        }
+        foreach($pjs as $item){
+            array_push($historyJabatan, [
+                'mulai' => $item?->tanggal_mulai,
+                'berakhir' => $item?->tanggal_berakhir,
+                'jabatan' => jabatanLengkap($item),
+                'no_sk' => $item?->no_sk,
+                'keterangan' => null
+            ]);
+        }
+        usort($dataHistory, fn($a, $b) => strtotime($a["tanggal_pengesahan"]) - strtotime($b["tanggal_pengesahan"]));
+        foreach($dataHistory as $key => $item){
+            array_push($historyJabatan, [
+                'mulai' => $item['tanggal_pengesahan'],
+                'berakhir' => ($key + 1 == count($dataHistory)) ? null : $dataHistory[$key + 1]['tanggal_pengesahan'],
+                'jabatan' => $item['baru'],
+                'status' => null,
+                'no_sk' => $item['bukti_sk']
+            ]);
+        }
+        usort($historyJabatan, fn($a, $b) => strtotime($a["mulai"]) - strtotime($b["mulai"]));
+
+        // Get SP
+        $sp = SpModel::where('nip', $id)->get();
+        // dd($sp);
+        return view('karyawan.cv', [
+            'karyawan' => $karyawan,
+            'suis' => $data_suis,
+            'tunjangan' => $data_tunjangan,
+            'data_anak' => $data_anak,
+            'pjs' => $historyJabatan,
+            'sp' => $sp
+        ]);
+    }
 }
