@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Api\Select2;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\select2\KaryawanResource;
 use App\Models\KaryawanModel;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class KaryawanController extends Controller
 {
@@ -58,5 +61,42 @@ class KaryawanController extends Controller
                 'more' => !empty($karyawan->nextPageUrl())
             ]
         ];
+    }
+
+    function getDetail($nip)
+    {
+        $data = '';
+        $status = '';
+        $req_status = 0;
+        $message = '';
+
+        try {
+            $data = KaryawanModel::with('jabatan')->where('nip', $nip)->first();
+            if (count($data) != 0) {
+                $req_status = HttpFoundationResponse::HTTP_OK;
+                $status = 'success';
+                $message = 'Berhasil';
+                $data = $data;
+            } else {
+                $req_status = HttpFoundationResponse::HTTP_NOT_FOUND;
+                $status = 'failed';
+                $message = 'Tidak Ada Data';
+                $data = null;
+            }
+        } catch (Exception $e) {
+            $req_status = HttpFoundationResponse::HTTP_INTERNAL_SERVER_ERROR;
+            $status = 'failed';
+            $message = 'Terjadi kesalahan : ' . $e->getMessage();
+        } catch (QueryException $e) {
+            $req_status = HttpFoundationResponse::HTTP_INTERNAL_SERVER_ERROR;
+            $status = 'failed';
+            $message = 'Terjadi kesalahan pada database: ' . $e->getMessage();
+        } finally {
+            return response()->json([
+                'status' => $status,
+                'message' => $message,
+                'data' => $data,
+            ], $req_status);
+        }
     }
 }
