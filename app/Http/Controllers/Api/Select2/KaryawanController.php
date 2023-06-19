@@ -72,17 +72,10 @@ class KaryawanController extends Controller
 
         try {
             $data = KaryawanModel::with('jabatan')->where('nip', $nip)->first();
-            if (count($data) != 0) {
-                $req_status = HttpFoundationResponse::HTTP_OK;
-                $status = 'success';
-                $message = 'Berhasil';
-                $data = $data;
-            } else {
-                $req_status = HttpFoundationResponse::HTTP_NOT_FOUND;
-                $status = 'failed';
-                $message = 'Tidak Ada Data';
-                $data = null;
-            }
+            $req_status = HttpFoundationResponse::HTTP_OK;
+            $status = 'success';
+            $message = 'Berhasil';
+            $data = $data;
         } catch (Exception $e) {
             $req_status = HttpFoundationResponse::HTTP_INTERNAL_SERVER_ERROR;
             $status = 'failed';
