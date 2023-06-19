@@ -30,4 +30,4 @@ Route::prefix('select2')->name('api.select2.')->group(function () {
 Route::name('api.')->group(function () {
     Route::get('karyawan', ApiKaryawanController::class)->name('karyawan');
 });
-Route::get('api/v1/karyawan/{nip}', [KaryawanController::class, 'getDetail'])->name('karyawan.detail');
+Route::get('v1/karyawan/{nip}', [KaryawanController::class, 'getDetail'])->name('karyawan.detail');
