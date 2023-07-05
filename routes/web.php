@@ -10,6 +10,7 @@ use App\Http\Controllers\JaminanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\LaporanPergerakanKarir\LaporanDemosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanMutasiController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\PejabatSementaraController;
@@ -260,6 +261,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::prefix('laporan-pergerakan-karir')->group(function() {
         Route::get('laporan-mutasi', [LaporanMutasiController::class, 'index'])->name('laporan-mutasi.index');
+        Route::get('laporan-demosi', [LaporanDemosiController::class, 'index'])->name('laporan-demosi.index');
     });
 });
 Auth::routes();

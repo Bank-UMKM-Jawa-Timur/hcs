@@ -220,15 +220,15 @@ Coded by www.creative-tim.com
                 Laporan
               </a>
               <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('laporan,index_dpp', 'show')" id="submenu4">
-                <li class="dropdown" style="margin-top: -15px">
+                <li class="dropdown @active('laporan-demosi.index,laporan-mutasi.index')" style="margin-top: -15px">
                   <a data-toggle="dropdown" aria-expanded="false">
                     <i class="nc-icon nc-single-copy-04"></i>
                     <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan Pergerakan Karir </p>
                     <p></p>
                   </a>
                   <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                      <a class="dropdown-item" href="{{ route('laporan-mutasi.index') }}">Laporan Mutasi</a>
-                      <a class="dropdown-item" href="#">Laporan Demosi</a>
+                      <a class="dropdown-item @active('laporan-mutasi.index')" href="{{ route('laporan-mutasi.index') }}">Laporan Mutasi</a>
+                      <a class="dropdown-item @active('laporan-demosi.index')" href="{{ route('laporan-demosi.index') }}">Laporan Demosi</a>
                       <a class="dropdown-item" href="#">Laporan Promosi</a>
                       <a class="dropdown-item" href="#">Laporan Penonaktifan</a>
                   </div>

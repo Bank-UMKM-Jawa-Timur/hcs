@@ -45,7 +45,7 @@
                                 Nama Karyawan
                             </th>
                             <th>
-                                Tanggal Promosi
+                                Tanggal Mutasi
                             </th>
                             <th>
                                 Jabatan Lama
