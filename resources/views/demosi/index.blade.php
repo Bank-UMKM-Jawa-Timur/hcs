@@ -25,7 +25,7 @@
                                     Nama Karyawan
                                 </th>
                                 <th>
-                                    Tanggal Promosi
+                                    Tanggal Demosi
                                 </th>
                                 <th>
                                     Jabatan Lama
@@ -59,6 +59,7 @@
                                             {{ $item->nama_karyawan }}
                                         </td>
                                         <td>
+                                            <span style="display: none;">{{ date('Ymd', strtotime($item->tanggal_pengesahan)) }}</span>
                                             {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
                                         </td>
                                         <td class="text-nowrap">
