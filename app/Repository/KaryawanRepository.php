@@ -65,6 +65,19 @@ class KaryawanRepository
     {
         return $this->getKaryawanPusatNonaktif();
     }
+    
+    public function filterKaryawanPusatNonaktif($start_date, $end_date): Collection
+    {
+        $karyawan = KaryawanModel::with('jabatan')
+            ->with('bagian')
+            ->whereNotNull('tanggal_penonaktifan')
+            ->orderBy('tanggal_penonaktifan', 'DESC')
+            ->whereBetween('tanggal_penonaktifan', [$start_date, $end_date])
+            ->get();
+
+        $this->addEntity($karyawan);
+        return $karyawan;
+    }
 
     public function getKaryawanPusatNonaktif(): Collection
     {
@@ -73,7 +86,7 @@ class KaryawanRepository
             ->whereNotNull('tanggal_penonaktifan')
             ->orderBy('tanggal_penonaktifan', 'DESC')
             ->get();
-        
+
         $this->addEntity($karyawan);
         return $karyawan;
     }
