@@ -13,6 +13,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanDemosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanMutasiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanPromosiController;
+use App\Http\Controllers\LaporanPergerakanKarir\LaporanPenonaktifanController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
@@ -253,7 +254,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/import-data_keluarga', [KaryawanController::class, 'importKeluargaIndex']);
     Route::post('import-keluarga-post', [KaryawanController::class, 'importKeluarga'])->name('import-data_keluarga');
 
-    // Reminder Pensiun 
+    // Reminder Pensiun
     Route::get('/reminder_pensiun', [KaryawanController::class, 'reminderPensiunIndex'])->name('reminder-pensiun.index');
     Route::post('/reminder_pensiun-show', [KaryawanController::class, 'reminderPensiunShow'])->name('reminder-pensiun.show');
 
@@ -264,6 +265,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('laporan-mutasi', [LaporanMutasiController::class, 'index'])->name('laporan-mutasi.index');
         Route::get('laporan-demosi', [LaporanDemosiController::class, 'index'])->name('laporan-demosi.index');
         Route::get('laporan-promosi', [LaporanPromosiController::class, 'index'])->name('laporan-promosi.index');
+        Route::get('laporan-penonaktifan', [LaporanPenonaktifanController::class, 'index'])->name('laporan-penonaktifan.index');
     });
 });
 Auth::routes();
