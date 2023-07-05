@@ -109,17 +109,23 @@ class HistoryJabatanController extends Controller
 
         if($data_migrasi){
             foreach($data_migrasi as $item){
+                if(empty($item?->keterangan)){
+                    $keterangan = '-';
+                }else{
+                    $keterangan = $item?->keterangan;
+                }
                 array_push($dataHistory, [
                     'tanggal_pengesahan' => $item?->tgl,
                     'lama' => $item?->lama,
                     'baru' => $item?->baru,
                     'bukti_sk' => $item?->no_sk,
-                    'keterangan' => $item?->keterangan
+                    'keterangan' => $keterangan
                 ]);
             }
         }
         usort($dataHistory, fn($a, $b) => strtotime($a["tanggal_pengesahan"]) - strtotime($b["tanggal_pengesahan"]));
         // dd($dataHistory[0]['tanggal_pengesahan']);
+
         return view('history.history', ['karyawan' => $dataHistory, 'data_karyawan' => $data_karyawan, 'data_migrasi' => $data_migrasi]);
     }
 
