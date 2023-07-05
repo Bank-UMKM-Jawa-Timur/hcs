@@ -274,7 +274,7 @@ Coded by www.creative-tim.com
                                     <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                                         <a class="dropdown-item" href="{{ route('laporan-mutasi.index') }}">Laporan
                                             Mutasi</a>
-                                        <a class="dropdown-item" href="#">Laporan Demosi</a>
+                                        <a class="dropdown-item" href="{{ route('laporan-demosi.index') }}">Laporan Demosi</a>
                                         <a class="dropdown-item" href="#">Laporan Promosi</a>
                                         <a class="dropdown-item" href="#">Laporan Penonaktifan</a>
                                     </div>
