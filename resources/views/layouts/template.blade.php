@@ -148,7 +148,19 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                <li class="dropdown @active('mutasi,demosi,promosi,penonaktifan')" style="margin-top: -15px">
+                                <li class="dropdown {{ request()->is(
+                                    'mutasi',
+                                    'mutasi/*',
+                                    'demosi',
+                                    'demosi/*',
+                                    'promosi',
+                                    'promosi/*',
+                                    'penonaktifan',
+                                    'penonaktifan/*',
+                                )
+                                    ? 'active'
+                                    : '' }}"
+                                    style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-chart-bar-32"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
