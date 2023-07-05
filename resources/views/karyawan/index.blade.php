@@ -64,7 +64,10 @@
                                               default => '',
                                           };
 
-                                          $jabatan = $krywn->jabatan->nama_jabatan;
+                                          if ($krywn->jabatan)
+                                            $jabatan = $krywn->jabatan->nama_jabatan;
+                                          else
+                                            $jabatan = 'undifined';
 
                                           $ket = $krywn->ket_jabatan ? "({$krywn->ket_jabatan})" : "";
 
@@ -83,7 +86,7 @@
                                           } else if ($jabatan == "Pemimpin Bidang Pemasaran") {
                                             $jabatan = 'PBP';
                                           } else {
-                                            $jabatan = $krywn->jabatan->nama_jabatan;
+                                            $jabatan = $krywn->jabatan ? $krywn->jabatan->nama_jabatan : 'undifined';
                                           }
                                       @endphp
                                       <td>{{ $prefix . $jabatan }} {{ $entitas }} {{ $krywn?->bagian?->nama_bagian }} {{ $ket }}</td>

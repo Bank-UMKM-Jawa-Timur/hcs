@@ -315,7 +315,8 @@ class KaryawanController extends Controller
             'gj_pokok' => 'required',
             'status_karyawan' => 'required|not_in:-',
             'skangkat' => 'required|not_in:-',
-            'tanggal_pengangkat' => 'required|not_in:-'
+            'tanggal_pengangkat' => 'required|not_in:-',
+            'jabatan' => 'required|not_in:-'
         ]);
 
         try {
