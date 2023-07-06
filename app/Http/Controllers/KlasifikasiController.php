@@ -188,6 +188,49 @@ class KlasifikasiController extends Controller
             $karyawan = $karyawan->get();
         }
 
+        foreach ($karyawan as $key => $value) {
+            // $getTunjangan = DB::table('tunjangan_karyawan AS tj')
+            //                     ->select(
+            //                         DB::raw('SUM(tj.nominal) AS total_tunjangan')
+            //                     )
+            //                     ->join('mst_tunjangan AS mtj', 'mtj.id', 'tj.id_tunjangan')
+            //                     ->where('tj.nip', $value->nip)
+            //                     ->where('mtj.nama_tunjangan', '!=', 'DPP')
+            //                     ->groupBy('tj.nip')
+            //                     ->first();
+            // $value->total_tunjangan = $getTunjangan ? $getTunjangan->total_tunjangan : 0;
+            // $value->result_gaji = $value->gj_pokok + $value->gj_penyesuaian + $value->total_tunjangan;
+            $arrIdTunjangan = [
+                1, //keluarga
+                4, //teller
+                2, //telepon
+                3, //jabatan
+                5, //perumahan
+                7, //pelaksana
+                6, //kemahalan
+                8, //kesejahteraan
+            ];
+            $arrTotalTunjangan = [];
+
+            for ($i=0; $i < count($arrIdTunjangan); $i++) { 
+                $getTunjangan = DB::table('tunjangan_karyawan AS tj')
+                                    ->select(
+                                        DB::raw('SUM(tj.nominal) AS total_tunjangan')
+                                    )
+                                    ->join('mst_tunjangan AS mtj', 'mtj.id', 'tj.id_tunjangan')
+                                    ->where('tj.nip', $value->nip)
+                                    ->where('mtj.id', $arrIdTunjangan[$i])
+                                    ->groupBy('tj.nip')
+                                    ->first();
+
+                array_push($arrTotalTunjangan, $getTunjangan ? (int)$getTunjangan->total_tunjangan : 0);
+            }
+            $value->all_tunjangan = $arrTotalTunjangan;
+
+            $value->gaji_total = $value->gj_pokok + $value->gj_penyesuaian + array_sum($arrTotalTunjangan);
+        }
+        // return $karyawan;
+
         return view('karyawan.klasifikasi', [
             'status' => $status,
             'karyawan' => $karyawan,

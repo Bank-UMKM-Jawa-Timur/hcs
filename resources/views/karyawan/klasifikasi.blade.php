@@ -127,7 +127,7 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -136,6 +136,28 @@ return number_format($value, 0, '.', ',');
                             Pendidikan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            G.Pokok</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            G.Penyesuaian</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Keluarga</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Teller</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Telepon</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Jabatan</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Perumahan</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Pelaksana</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Kemahalan</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Kesejahteraan</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            G.Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -250,10 +272,62 @@ return number_format($value, 0, '.', ',');
                         <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                         <td>{{ $item->pendidikan ?? '-' }}</td>
                         <td>{{ $item->pendidikan_major ?? '-' }}</td>
+                        <td class="text-right">
+                            {{ $item->gj_pokok ? formatRupiah($item->gj_pokok) : 0 }}
+                        </td>
+                        <td class="text-right">
+                            {{ $item->gj_penyesuaian ? formatRupiah($item->gj_penyesuaian) : 0 }}
+                        </td>
+                        @foreach ($item->all_tunjangan as $tunjangan)
+                        <td class="text-right">
+                            {{ $tunjangan > 0 ? formatRupiah($tunjangan) : 0 }}
+                        </td>
+                        @endforeach
+                        <td class="text-right">
+                            {{ $item->gaji_total ? formatRupiah($item->gaji_total) : 0 }}
+                        </td>
                     </tr>
                     @endif
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="15" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                            <span class="total_gaji">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_gaji_penyesuaian">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_keluarga">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_teller">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_telepon">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_jabatan">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_perumahan">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_pelaksana">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_kemahalan">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_kesejahteraan">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_gaji_total">0</span>
+                        </th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         @elseif ($status == 2)
@@ -1682,6 +1756,201 @@ return number_format($value, 0, '.', ',');
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/plug-ins/1.10.19/api/sum().js"></script>
 <script>
+    var totalGajiSpan = $('.total_gaji');
+    var totalGajiPenyesuaianSpan = $('.total_gaji_penyesuaian');
+    var totalTKeluargaSpan = $('.total_tunjangan_keluarga');
+    var totalTTellerSpan = $('.total_tunjangan_teller');
+    var totalTTeleponSpan = $('.total_tunjangan_telepon');
+    var totalTJabatanSpan = $('.total_tunjangan_jabatan');
+    var totalTPerumahanSpan = $('.total_tunjangan_perumahan');
+    var totalTPelaksanaSpan = $('.total_tunjangan_pelaksana');
+    var totalTKemahalanSpan = $('.total_tunjangan_kemahalan');
+    var totalTKesejahteraanSpan = $('.total_tunjangan_kesejahteraan');
+    var totalGajiTotalSpan = $('.total_gaji_total');
+    $(document).ready(function() {
+        hitungTotalGaji();
+        var total_gaji_pokok = 0;
+        var total_gaji_penyesuaian = 0;
+        var total_tunjangan_keluarga = 0;
+        var total_tunjangan_teller = 0;
+        var total_tunjangan_telepon = 0;
+        var total_tunjangan_jabatan = 0;
+        var total_tunjangan_perumahan = 0;
+        var total_tunjangan_pelaksana = 0;
+        var total_tunjangan_kemahalan = 0;
+        var total_tunjangan_kesejahteraan = 0;
+        var total_gaji_total = 0;
+        var table = $('#table_export').DataTable();
+
+        // Initial sum calculation
+        table.rows().every(function() {
+            var rowData = this.data();
+            // console.log(row);
+            var amount = parseFloat(rowData[15].replaceAll(',',''));
+            var amountPenyesuaian = parseFloat(rowData[16].replaceAll(',',''));
+            var amountTKeluarga = parseFloat(rowData[17].replaceAll(',',''));
+            var amountTTeller = parseFloat(rowData[18].replaceAll(',',''));
+            var amountTTelepon = parseFloat(rowData[19].replaceAll(',',''));
+            var amountTJabatan = parseFloat(rowData[20].replaceAll(',',''));
+            var amountTPerumahan = parseFloat(rowData[21].replaceAll(',',''));
+            var amountTPelaksana = parseFloat(rowData[22].replaceAll(',',''));
+            var amountTKemahalan = parseFloat(rowData[23].replaceAll(',',''));
+            var amountTKesejahteraan = parseFloat(rowData[24].replaceAll(',',''));
+            var amountGajiTotal= parseFloat(rowData[25].replaceAll(',',''));
+            total_gaji_pokok += amount;
+            total_gaji_penyesuaian += amountPenyesuaian;
+            total_tunjangan_keluarga += amountTKeluarga;
+            total_tunjangan_teller += amountTTeller;
+            total_tunjangan_telepon += amountTTelepon;
+            total_tunjangan_jabatan += amountTJabatan;
+            total_tunjangan_perumahan += amountTPerumahan;
+            total_tunjangan_pelaksana += amountTPelaksana;
+            total_tunjangan_kemahalan += amountTKemahalan;
+            total_tunjangan_kesejahteraan += amountTKesejahteraan;
+            total_gaji_total += amountGajiTotal;
+        });
+
+        // Update sum on pagination click
+        $('#table_export').on('page.dt', function() {
+            total_gaji_pokok = 0;
+            total_gaji_penyesuaian = 0;
+            total_tunjangan_keluarga = 0;
+            total_tunjangan_teller = 0;
+            total_tunjangan_telepon = 0;
+            total_tunjangan_jabatan = 0;
+            total_tunjangan_perumahan = 0;
+            total_tunjangan_pelaksana = 0;
+            total_tunjangan_kemahalan = 0;
+            total_tunjangan_kesejahteraan = 0;
+            total_gaji_total = 0;
+            table.rows({ page: 'current' }).every(function() {
+                var rowData = this.data();
+                var amount = parseFloat(rowData[15].replaceAll(',',''));
+                var amountPenyesuaian = parseFloat(rowData[16].replaceAll(',',''));
+                var amountTKeluarga = parseFloat(rowData[17].replaceAll(',',''));
+                var amountTTeller = parseFloat(rowData[18].replaceAll(',',''));
+                var amountTTelepon = parseFloat(rowData[19].replaceAll(',',''));
+                var amountTJabatan = parseFloat(rowData[20].replaceAll(',',''));
+                var amountTPerumahan = parseFloat(rowData[21].replaceAll(',',''));
+                var amountTPelaksana = parseFloat(rowData[22].replaceAll(',',''));
+                var amountTKemahalan = parseFloat(rowData[23].replaceAll(',',''));
+                var amountTKesejahteraan = parseFloat(rowData[24].replaceAll(',',''));
+                var amountGajiTotal = parseFloat(rowData[25].replaceAll(',',''));
+                total_gaji_pokok += amount;
+                total_gaji_penyesuaian += amountPenyesuaian;
+                total_tunjangan_keluarga += amountTKeluarga;
+                total_tunjangan_teller += amountTTeller;
+                total_tunjangan_telepon += amountTTelepon;
+                total_tunjangan_jabatan += amountTJabatan;
+                total_tunjangan_perumahan += amountTPerumahan;
+                total_tunjangan_pelaksana += amountTPelaksana;
+                total_tunjangan_kemahalan += amountTKemahalan;
+                total_tunjangan_kesejahteraan += amountTKesejahteraan;
+                total_gaji_total += amountGajiTotal;
+            });
+
+            totalGajiSpan.html(formatRupiah(total_gaji_pokok.toString(),0))
+            totalGajiPenyesuaianSpan.html(formatRupiah(total_gaji_penyesuaian.toString(),0))
+            totalTKeluargaSpan.html(formatRupiah(total_tunjangan_keluarga.toString(),0))
+            totalTTellerSpan.html(formatRupiah(total_tunjangan_teller.toString(),0))
+            totalTTeleponSpan.html(formatRupiah(total_tunjangan_telepon.toString(),0))
+            totalTJabatanSpan.html(formatRupiah(total_tunjangan_jabatan.toString(),0))
+            totalTPerumahanSpan.html(formatRupiah(total_tunjangan_perumahan.toString(),0))
+            totalTPelaksanaSpan.html(formatRupiah(total_tunjangan_pelaksana.toString(),0))
+            totalTKemahalanSpan.html(formatRupiah(total_tunjangan_kemahalan.toString(),0))
+            totalTKesejahteraanSpan.html(formatRupiah(total_tunjangan_kesejahteraan.toString(),0))
+            totalGajiTotalSpan.html(formatRupiah(total_gaji_total.toString(),0))
+        });
+    })
+    function hitungTotalGaji() {
+        var totalGajiPokok = 0;
+        var tGaji = $('#table_export').DataTable().column(15, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalGajiPokok += parseInt(gaji);
+        }
+        totalGajiSpan.html(formatRupiah(totalGajiPokok.toString(),0))
+
+        var totalGajiPenyesuaian = 0;
+        var tGaji = $('#table_export').DataTable().column(16, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalGajiPenyesuaian += parseInt(gaji);
+        }
+        totalGajiPenyesuaianSpan.html(formatRupiah(totalGajiPenyesuaian.toString(),0))
+
+        var totalTKeluarga = 0;
+        var tGaji = $('#table_export').DataTable().column(17, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalTKeluarga += parseInt(gaji);
+        }
+        totalTKeluargaSpan.html(formatRupiah(totalTKeluarga.toString(),0))
+
+        var totalTTeller = 0;
+        var tGaji = $('#table_export').DataTable().column(18, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalTTeller += parseInt(gaji);
+        }
+        totalTTellerSpan.html(formatRupiah(totalTTeller.toString(),0))
+
+        var totalTTelepon = 0;
+        var tGaji = $('#table_export').DataTable().column(19, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalTTelepon += parseInt(gaji);
+        }
+        totalTTeleponSpan.html(formatRupiah(totalTTelepon.toString(),0))
+
+        var totalTJabatan = 0;
+        var tGaji = $('#table_export').DataTable().column(20, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalTJabatan += parseInt(gaji);
+        }
+        totalTJabatanSpan.html(formatRupiah(totalTJabatan.toString(),0))
+
+        var totalTPerumahan = 0;
+        var tGaji = $('#table_export').DataTable().column(21, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalTPerumahan += parseInt(gaji);
+        }
+        totalTPerumahanSpan.html(formatRupiah(totalTPerumahan.toString(),0))
+
+        var totalTPelaksana = 0;
+        var tGaji = $('#table_export').DataTable().column(22, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalTPelaksana += parseInt(gaji);
+        }
+        totalTPelaksanaSpan.html(formatRupiah(totalTPelaksana.toString(),0))
+
+        var totalTKemahalan = 0;
+        var tGaji = $('#table_export').DataTable().column(23, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalTKemahalan += parseInt(gaji);
+        }
+        totalTKemahalanSpan.html(formatRupiah(totalTKemahalan.toString(),0))
+
+        var totalTKesejahteraan = 0;
+        var tGaji = $('#table_export').DataTable().column(24, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalTKesejahteraan += parseInt(gaji);
+        }
+        totalTKesejahteraanSpan.html(formatRupiah(totalTKesejahteraan.toString(),0))
+
+        var totalGajiTotal = 0;
+        var tGaji = $('#table_export').DataTable().column(25, { page: 'current'} ).data()
+        for (let i = 0; i < tGaji.length; i++) {
+            const gaji = tGaji[i].replaceAll(',','');
+            totalGajiTotal += parseInt(gaji);
+        }
+        totalGajiTotalSpan.html(formatRupiah(totalGajiTotal.toString(),0))
+    }
     // Pengambilan Kategori
     var category = $('#kategori').val();
     var namaCategory;
@@ -1716,6 +1985,7 @@ return number_format($value, 0, '.', ',');
             dom : "Bfrtip",
             pageLength: 25,
             ordering: false,
+            scrollX: true,
             drawCallback: function () {
                 var ikjp = $('#table_export').DataTable().column(2).data().sum();
                 var tetap = $('#table_export').DataTable().column(3).data().sum();
@@ -1729,8 +1999,8 @@ return number_format($value, 0, '.', ',');
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur',
-                    filename : 'Bank UMKM Jawa Timur Klasifikasi Data Karyawan',
+                    title: 'Bank UMKM Jawa Timur - '+namaCategory,
+                    filename : 'Bank UMKM Jawa Timur Klasifikasi Data Karyawan - '+namaCategory,
                     message: 'Klasifikasi Data Karyawan\n ',
                     text:'Excel',
                     header: true,
@@ -1745,8 +2015,8 @@ return number_format($value, 0, '.', ',');
                 },
                 {
                     extend: 'pdfHtml5',
-                    title: 'Bank UMKM Jawa Timur\n Klasifikasi Data Karyawan ',
-                    filename : 'Bank UMKM Jawa Timur Klasifikasi Data Karyawan',
+                    title: 'Bank UMKM Jawa Timur\n Klasifikasi Data Karyawan - ' + namaCategory,
+                    filename : 'Bank UMKM Jawa Timur Klasifikasi Data Karyawan - '+namaCategory,
                     text:'PDF',
                     footer: true,
                     paperSize: 'A4',

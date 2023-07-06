@@ -75,7 +75,7 @@ class EntityService
         $prefix = ($model instanceof PjsModel) ? 'Pjs. ' : '';
         $bagian = $model->bagian?->nama_bagian;
         $entitas = $model->entitas;
-        $jabatan = static::abbrevPos($model->jabatan->nama_jabatan);
+        $jabatan = $model->jabatan ? static::abbrevPos($model->jabatan->nama_jabatan) : '';
 
         if (isset($entitas->subDiv))
             return "{$prefix}{$jabatan} {$bagian} {$entitas->subDiv->nama_subdivisi}";
