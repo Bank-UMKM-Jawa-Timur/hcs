@@ -12,6 +12,7 @@ use App\Service\EntityService;
 use Doctrine\DBAL\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Mail\PendingMail;
 use Illuminate\Support\Facades\DB;
 
 class KlasifikasiController extends Controller
@@ -61,6 +62,7 @@ class KlasifikasiController extends Controller
         $jabatan = JabatanModel::all();
         $panggol = PanggolModel::all();
         $umur = UmurModel::all();
+        $pendidikan = array('SD', 'SMP', 'SLTP', 'SLTA', 'SMK', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3');
 
         if ($request->kategori == 1) {
             $karyawan = KaryawanModel::query();
@@ -169,6 +171,17 @@ class KlasifikasiController extends Controller
             $status = 11;
         }
 
+        if ($request->kategori == 12){
+            foreach($pendidikan as $pend){
+                $karyawan->push(
+                    KaryawanModel::where('pendidikan', $pend)
+                        ->whereNull('tanggal_penonaktifan')
+                        ->get()
+                );
+            }
+            $status = 12;
+        }
+
         if ($karyawan instanceof Builder) {
             $karyawan->with('keluarga');
             $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
@@ -183,6 +196,7 @@ class KlasifikasiController extends Controller
             'panggol' => $panggol,
             'request' => $request,
             'umur' => $umur,
+            'pendidikan' => $pendidikan
         ]);
     }
 
