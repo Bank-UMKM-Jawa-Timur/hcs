@@ -12,6 +12,8 @@ use App\Http\Controllers\KantorController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanDemosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanMutasiController;
+use App\Http\Controllers\LaporanPergerakanKarir\LaporanPromosiController;
+use App\Http\Controllers\LaporanPergerakanKarir\LaporanPenonaktifanController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
@@ -142,7 +144,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::prefix('penonaktifan')
         ->name('penonaktifan.')
         ->controller(KaryawanController::class)
-        ->group(function(){
+        ->group(function () {
             Route::get('/', 'indexPenonaktifan')->name('index');
             Route::get('/add', 'penonaktifanAdd')->name('create');
             Route::post('/store', 'penonaktifan')->name('store');
@@ -237,7 +239,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/slip_jurnal', [SlipGajiController::class, 'slipJurnalIndex'])->name('slipIndex');
     Route::post('/slip_jurnal/getSlip', [SlipGajiController::class, 'slipJurnal'])->name('getSlip');
 
-    Route::prefix('/migrasi')->group(function(){
+    Route::prefix('/migrasi')->group(function () {
         Route::get('/jabatan', [MigrasiController::class, 'migrasiJabatan'])->name('migrasiJabatan');
         Route::get('/pjs', [MigrasiController::class, 'migrasiPJS'])->name('migrasiPJS');
         Route::get('/sp', [MigrasiController::class, 'migrasiSP'])->name('migrasiSP');
@@ -252,16 +254,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/import-data_keluarga', [KaryawanController::class, 'importKeluargaIndex']);
     Route::post('import-keluarga-post', [KaryawanController::class, 'importKeluarga'])->name('import-data_keluarga');
 
-    // Reminder Pensiun 
+    // Reminder Pensiun
     Route::get('/reminder_pensiun', [KaryawanController::class, 'reminderPensiunIndex'])->name('reminder-pensiun.index');
     Route::post('/reminder_pensiun-show', [KaryawanController::class, 'reminderPensiunShow'])->name('reminder-pensiun.show');
 
     // Export CV
     Route::get('/export-cv/{id}', [KaryawanController::class, 'exportCV'])->name('export-cv');
 
-    Route::prefix('laporan-pergerakan-karir')->group(function() {
+    Route::prefix('laporan-pergerakan-karir')->group(function () {
         Route::get('laporan-mutasi', [LaporanMutasiController::class, 'index'])->name('laporan-mutasi.index');
         Route::get('laporan-demosi', [LaporanDemosiController::class, 'index'])->name('laporan-demosi.index');
+        Route::get('laporan-promosi', [LaporanPromosiController::class, 'index'])->name('laporan-promosi.index');
+        Route::get('laporan-penonaktifan', [LaporanPenonaktifanController::class, 'index'])->name('laporan-penonaktifan.index');
     });
 });
 Auth::routes();

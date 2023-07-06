@@ -5,7 +5,8 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Laporan Mutasi</h5>
-            <p class="card-title"><a href="#">Laporan</a> > <a href="#">Laporan Pergerakan Karir</a> > <a href="{{ route('laporan-mutasi.index') }}">Laporan Mutasi</a></p>
+            <p class="card-title"><a href="#">Laporan</a> > <a href="#">Laporan Pergerakan Karir</a> > <a
+                    href="{{ route('laporan-mutasi.index') }}">Laporan Mutasi</a></p>
         </div>
 
         <div class="card-body">
@@ -14,13 +15,15 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="">Dari</label>
-                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ old('start_date', Request::get('start_date')) }}" required>
+                            <input type="date" name="start_date" id="start_date" class="form-control"
+                                value="{{ old('start_date', Request::get('start_date')) }}" required>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="">Sampai</label>
-                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ old('end_date', Request::get('end_date')) }}" required>
+                            <input type="date" name="end_date" id="end_date" class="form-control"
+                                value="{{ old('end_date', Request::get('end_date')) }}" required>
                         </div>
                     </div>
                 </div>
@@ -65,39 +68,41 @@
                         </thead>
                         <tbody>
                             @php
-                                $i = 1;
+                            $i = 1;
                             @endphp
                             @foreach ($data as $item)
-                                <tr>
-                                    <td>
-                                        {{ $i++ }}
-                                    </td>
-                                    <td>
-                                        {{ $item->nip }}
-                                    </td>
-                                    <td>
-                                        {{ $item->nama_karyawan }}
-                                    </td>
-                                    <td>
-                                        {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
-                                    </td>
-                                    <td class="text-nowrap">
-                                        {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{ $item->jabatan_lama }}
-                                    </td>
-                                    <td class="text-nowrap">
-                                        {{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }}{{ $item->jabatan_baru }}
-                                    </td>
-                                    <td>
-                                        {{ $item->kantor_lama ?? '-' }}
-                                    </td>
-                                    <td>
-                                        {{ $item->kantor_baru ?? '-' }}
-                                    </td>
-                                    <td>
-                                        {{ $item->bukti_sk }}
-                                    </td>
+                            <tr>
+                                <td>
+                                    {{ $i++ }}
+                                </td>
+                                <td>
+                                    {{ $item->nip }}
+                                </td>
+                                <td>
+                                    {{ $item->nama_karyawan }}
+                                </td>
+                                <td>
+                                    {{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{
+                                    $item->jabatan_lama }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }}{{
+                                    $item->jabatan_baru }}
+                                </td>
+                                <td>
+                                    {{ $item->kantor_lama ?? '-' }}
+                                </td>
+                                <td>
+                                    {{ $item->kantor_baru ?? '-' }}
+                                </td>
+                                <td>
+                                    {{ $item->bukti_sk }}
+                                </td>
 
-                                </tr>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -111,16 +116,16 @@
 @endsection
 
 @section('custom_script')
-    <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
-    <script>
-        var start_date = document.getElementById("start_date").value;
+<script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+<script>
+    var start_date = document.getElementById("start_date").value;
         var end_date = document.getElementById("end_date").value;
         
         $("#table_export").DataTable({
@@ -226,5 +231,5 @@
         $(".buttons-pdf").attr("class","btn btn-success mb-2");
         $(".buttons-print").attr("class","btn btn-success mb-2");
 
-    </script>
+</script>
 @endsection
