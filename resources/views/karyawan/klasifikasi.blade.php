@@ -133,7 +133,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -298,49 +299,73 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 80px;">
+                        <th colspan="4" class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                            Total Gaji</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 80px;">
                             <span class="total_gaji">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_gaji_penyesuaian">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_keluarga">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_teller">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_telepon">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_jabatan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_perumahan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_pelaksana">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_kemahalan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_kesejahteraan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_gaji_total">0</span>
                         </th>
                     </tr>
@@ -373,7 +398,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -538,49 +564,73 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                        <th colspan="4" class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                            Total Gaji</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_penyesuaian">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_keluarga">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_teller">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_telepon">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_jabatan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_perumahan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_pelaksana">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kemahalan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kesejahteraan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_total">0</span>
                         </th>
                     </tr>
@@ -613,7 +663,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -778,49 +829,84 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                        <th colspan="4" class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                            Total Gaji</th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_penyesuaian">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_keluarga">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_teller">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_telepon">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_jabatan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_perumahan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_pelaksana">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kemahalan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kesejahteraan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_total">0</span>
                         </th>
                     </tr>
@@ -851,7 +937,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -1015,46 +1102,75 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                        <th colspan="4" class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                            Total Gaji</th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_penyesuaian">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_keluarga">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_teller">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_telepon">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_jabatan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_perumahan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_pelaksana">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kemahalan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kesejahteraan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_total">0</span>
                         </th>
                     </tr>
@@ -1085,7 +1201,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -1249,48 +1366,81 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                        <th colspan="4" class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                            Total Gaji</th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_penyesuaian">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_keluarga">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_teller">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_telepon">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_jabatan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_perumahan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_pelaksana">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kemahalan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kesejahteraan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_total">0</span>
                         </th>
                     </tr>
@@ -1420,7 +1570,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -1584,48 +1735,81 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                        <th colspan="4" class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                            Total Gaji</th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_penyesuaian">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_keluarga">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_teller">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_telepon">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_jabatan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_perumahan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_pelaksana">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kemahalan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kesejahteraan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_total">0</span>
                         </th>
                     </tr>
@@ -1704,7 +1888,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -1868,48 +2053,81 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                        <th colspan="4" class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                            Total Gaji</th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_penyesuaian">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_keluarga">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_teller">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_telepon">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_jabatan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_perumahan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_pelaksana">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kemahalan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kesejahteraan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_total">0</span>
                         </th>
                     </tr>
@@ -1940,7 +2158,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -2104,48 +2323,81 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                        <th colspan="4" class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                            Total Gaji</th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_penyesuaian">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_keluarga">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_teller">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_telepon">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_jabatan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_perumahan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_pelaksana">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kemahalan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kesejahteraan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_total">0</span>
                         </th>
                     </tr>
@@ -2176,7 +2428,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -2338,48 +2591,81 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                        <th colspan="4" class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                            Total Gaji</th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-center"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                        </th>
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_penyesuaian">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_keluarga">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_teller">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_telepon">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_jabatan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_perumahan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_pelaksana">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kemahalan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_tunjangan_kesejahteraan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right"
+                            style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
                             <span class="total_gaji_total">0</span>
                         </th>
                     </tr>
@@ -2450,7 +2736,8 @@ return number_format($value, 0, '.', ',');
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/plug-ins/1.10.19/api/sum().js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js">
+</script>
 <script>
     var totalGajiSpan = $('.total_gaji');
     var totalGajiPenyesuaianSpan = $('.total_gaji_penyesuaian');
@@ -3507,7 +3794,7 @@ return number_format($value, 0, '.', ',');
                         <div class="form-group">
                             <label for="divisi">Divisi</label>
                             <select name="divisi" id="divisi" class="form-control">
-                                <option value="">--- Pilih Divisi ---</option>
+                                <option value="-">--- Pilih Divisi ---</option>
                             </select>
                         </div>
                     `);
@@ -3527,7 +3814,7 @@ return number_format($value, 0, '.', ',');
                     <div class="form-group">
                         <label for="subDivisi">Sub Divisi</label>
                         <select name="subDivisi" id="subDivisi" class="form-control">
-                            <option value="">--- Pilih Sub Divisi ---</option>
+                            <option value="-">--- Pilih Sub Divisi ---</option>
                             </select>
                             </div>
                             `);
@@ -3557,7 +3844,7 @@ return number_format($value, 0, '.', ',');
                                         <div class="form-group">
                                             <label for="bagian">Bagian</label>
                                             <select name="bagian" id="bagian" class="form-control">
-                                                <option value="">--- Pilih Bagian ---</option>
+                                                <option value="-">--- Pilih Bagian ---</option>
                                             </select>
                                         </div>
                                     `);
@@ -3623,7 +3910,7 @@ return number_format($value, 0, '.', ',');
                             <div class="form-group">
                                 <label for="cabang">Cabang</label>
                                 <select name="cabang" id="cabang" class="form-control">
-                                    <option value="">--- Pilih Cabang ---</option>
+                                    <option value="-">--- Pilih Cabang ---</option>
                                 </select>
                             </div>
                         `);
@@ -3642,8 +3929,8 @@ return number_format($value, 0, '.', ',');
             $('#kantor_col').append(`
                 <div class="form-group">
                     <label for="kantor">Kantor</label>
-                    <select name="kantor" class="form-control" id="kantor">
-                        <option value="-">--- Pilih Kantor ---</option>
+                    <select name="kantor" class="form-control" id="kantor" required>
+                        <option value="">--- Pilih Kantor ---</option>
                         <option ${ office == "Keseluruhan" ? 'selected' : '' } value="Keseluruhan">Keseluruhan</option>
                         <option ${ office == "Pusat" ? 'selected' : '' } value="Pusat">Pusat</option>
                         <option ${ office == "Cabang" ? 'selected' : '' } value="Cabang">Cabang</option>
@@ -3670,7 +3957,7 @@ return number_format($value, 0, '.', ',');
                             <div class="form-group">
                                 <label for="cabang">Cabang</label>
                                 <select name="cabang" id="cabang" class="form-control">
-                                    <option value="">--- Pilih Cabang ---</option>
+                                    <option value="-">--- Pilih Cabang ---</option>
                                 </select>
                             </div>
                         `);

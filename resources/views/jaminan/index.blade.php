@@ -34,8 +34,8 @@ $request = isset($request) ? $request : null;
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="">Kategori {{ old('kategori') }}</label>
-                    <select name="kategori" class="form-control" id="kategori">
-                        <option value="-">--- Pilih Kategori ---</option>
+                    <select name="kategori" class="form-control" id="kategori" required>
+                        <option value="">--- Pilih Kategori ---</option>
                         <option @selected($request?->kategori == 1) value="1">Rekap Keseluruhan</option>
                         <option @selected($request?->kategori == 2) value="2">Rekap Kantor / Cabang</option>
                     </select>
@@ -62,7 +62,7 @@ $request = isset($request) ? $request : null;
             <div class="col-md-4">
                 <label for="tahun">Tahun</label>
                 <div class="form-group">
-                    <select name="tahun" id="tahun" class="form-control">
+                    <select name="tahun" id="tahun" class="form-control" required>
                         <option value="">--- Pilih Tahun ---</option>
                         @foreach (range(date('Y'), $earliest_year) as $x)
                         <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
@@ -73,8 +73,8 @@ $request = isset($request) ? $request : null;
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="Bulan">Bulan</label>
-                    <select name="bulan" id="bulan" class="form-control">
-                        <option value="-">--- Pilih Bulan ---</option>
+                    <select name="bulan" id="bulan" class="form-control" required>
+                        <option value="">--- Pilih Bulan ---</option>
                         @for($i = 1; $i <= 12; $i++) <option @selected($request?->bulan == $i) value="{{ $i }}">{{
                             getMonth($i) }}</option>
                             @endfor
@@ -547,8 +547,8 @@ $request = isset($request) ? $request : null;
             $('#kantor_col').append(`
                 <div class="form-group">
                     <label for="kantor">Kantor</label>
-                    <select name="kantor" class="form-control" id="kantor">
-                        <option value="-">--- Pilih Kantor ---</option>
+                    <select name="kantor" class="form-control" id="kantor" required>
+                        <option value="">--- Pilih Kantor ---</option>
                         <option ${ office == "Pusat" ? 'selected' : '' } value="Pusat">Pusat</option>
                         <option ${ office == "Cabang" ? 'selected' : '' } value="Cabang">Cabang</option>
                     </select>
@@ -576,7 +576,7 @@ $request = isset($request) ? $request : null;
                         $('#cabang_col').append(`
                             <div class="form-group">
                                 <label for="Cabang">Cabang</label>
-                                <select name="cabang" id="cabang" class="form-control">
+                                <select name="cabang" id="cabang" class="form-control" required>
                                     <option value="">--- Pilih Cabang ---</option>
                                 </select>
                             </div>

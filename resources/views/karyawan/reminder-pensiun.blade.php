@@ -40,8 +40,8 @@ $request = isset($request) ? $request : null;
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="">Kategori {{ old('kategori') }}</label>
-                    <select name="kategori" class="form-control" id="kategori">
-                        <option value="-">--- Pilih Kategori ---</option>
+                    <select name="kategori" class="form-control" id="kategori" required>
+                        <option value="">--- Pilih Kategori ---</option>
                         <option @selected($request?->kategori == 1) value="1">Keseluruhan</option>
                         <option @selected($request?->kategori == 2) value="2">Divisi</option>
                         <option @selected($request?->kategori == 3) value="3">Sub Divisi</option>
@@ -920,7 +920,7 @@ $request = isset($request) ? $request : null;
                         <div class="form-group">
                             <label for="divisi">Divisi</label>
                             <select name="divisi" id="divisi" class="form-control">
-                                <option value="">--- Pilih Divisi ---</option>
+                                <option value="-">--- Pilih Divisi ---</option>
                             </select>
                         </div>
                     `);
@@ -935,7 +935,7 @@ $request = isset($request) ? $request : null;
                         <div class="form-group">
                             <label for="subDivisi">Sub Divisi</label>
                             <select name="subDivisi" id="subDivisi" class="form-control">
-                                <option value="">--- Pilih Sub Divisi ---</option>
+                                <option value="-">--- Pilih Sub Divisi ---</option>
                             </select>
                         </div>
                     `);
@@ -964,7 +964,7 @@ $request = isset($request) ? $request : null;
                                         <div class="form-group">
                                             <label for="bagian">Bagian</label>
                                             <select name="bagian" id="bagian" class="form-control">
-                                                <option value="">--- Pilih Bagian ---</option>
+                                                <option value="-">--- Pilih Bagian ---</option>
                                             </select>
                                         </div>
                                     `);
@@ -1030,7 +1030,7 @@ $request = isset($request) ? $request : null;
                             <div class="form-group">
                                 <label for="cabang">Cabang</label>
                                 <select name="cabang" id="cabang" class="form-control">
-                                    <option value="">--- Pilih Cabang ---</option>
+                                    <option value="-">--- Pilih Cabang ---</option>
                                 </select>
                             </div>
                         `);
@@ -1077,7 +1077,7 @@ $request = isset($request) ? $request : null;
                             <div class="form-group">
                                 <label for="cabang">Cabang</label>
                                 <select name="cabang" id="cabang" class="form-control">
-                                    <option value="">--- Pilih Cabang ---</option>
+                                    <option value="-">--- Pilih Cabang ---</option>
                                 </select>
                             </div>
                         `);
