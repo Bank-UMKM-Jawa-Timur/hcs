@@ -3108,58 +3108,175 @@ return number_format($value, 0, '.', ',');
                     message: 'Klasifikasi Data Karyawan\n ',
                     text:'Excel',
                     header: true,
-                    footer: true,
+                    footer: false,
                     exportOptions: {
                         orthogonal: 'sort'
                     },
-                    footerCallback: function (row, data, start, end, display) {
-                        let api = this.api();
-                
-                        // Remove the formatting to get integer data for summation
-                        let intVal = function (i) {
-                            return typeof i === 'string'
-                                ? i.replace(/[\$,]/g, '') * 1
-                                : typeof i === 'number'
-                                ? i
-                                : 0;
-                        };
-                
-                        // Total over all pages
-                        total = api
-                            .column(15)
-                            .data()
-                            .reduce((a, b) => intVal(a) + intVal(b), 0);
-                        console.log('totoal : '+total)
-                        // Update footer
-                        api.column(15).footer().innerHTML =
-                            '$' + pageTotal + ' ( $' + total + ' total)';
-                    }
-                    // customize: function( xlsx, row ) {
-                    //     var gaji_pokok = $('#table_export').DataTable().column(15).data().sum();
-                    //     var gaji_penyesuaian = $('#table_export').DataTable().column(16).data().sum();
-                    //     var t_keluarga = $('#table_export').DataTable().column(17).data().sum();
-                    //     var t_teller = $('#table_export').DataTable().column(18).data().sum();
-                    //     var t_telepon = $('#table_export').DataTable().column(19).data().sum();
-                    //     var t_jabatan = $('#table_export').DataTable().column(20).data().sum();
-                    //     var t_perumahan = $('#table_export').DataTable().column(21).data().sum();
-                    //     var t_pelaksana = $('#table_export').DataTable().column(22).data().sum();
-                    //     var t_kemahalan = $('#table_export').DataTable().column(23).data().sum();
-                    //     var t_kesejahteraan = $('#table_export').DataTable().column(24).data().sum();
-                    //     var total_gaji = $('#table_export').DataTable().column(25).data().sum();
+                    customize: function( xlsx, row ) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'],
+                        gaji_pokok = 0;
+                        gaji_penyesuaian = 0;
+                        t_keluarga = 0;
+                        t_teller = 0;
+                        t_telepon = 0;
+                        t_jabatan = 0;
+                        t_perumahan = 0;
+                        t_pelaksana = 0;
+                        t_kemahalan = 0;
+                        t_kesejahteraan = 0;
+                        gaji_total = 0;
 
-                    //     totalGajiSpan.html(formatRupiahKoma(gaji_pokok.toString(),0))
-                    //     totalGajiPenyesuaianSpan.html(formatRupiahKoma(gaji_penyesuaian.toString(),0))
-                    //     totalTKeluargaSpan.html(formatRupiahKoma(t_keluarga.toString(),0))
-                    //     totalTTellerSpan.html(formatRupiahKoma(t_teller.toString(),0))
-                    //     totalTTeleponSpan.html(formatRupiahKoma(t_telepon.toString(),0))
-                    //     totalTJabatanSpan.html(formatRupiahKoma(t_jabatan.toString(),0))
-                    //     totalTPerumahanSpan.html(formatRupiahKoma(t_perumahan.toString(),0))
-                    //     totalTPelaksanaSpan.html(formatRupiahKoma(t_pelaksana.toString(),0))
-                    //     totalTKemahalanSpan.html(formatRupiahKoma(t_kemahalan.toString(),0))
-                    //     totalTKesejahteraanSpan.html(formatRupiahKoma(t_kesejahteraan.toString(),0))
-                    //     totalGajiTotalSpan.html(formatRupiahKoma(total_gaji.toString(),0))
-                    //     var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    // }
+                        // read each row
+                        // Loop over the cells in column `B`
+                        var rowIndexTotal = 3;
+                        $('row c[r^="P"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            gaji_pokok += Number(value.replace(/[^0-9\.-]+/g, ""));
+                            rowIndexTotal++;
+                        });
+                        $('row c[r^="Q"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            gaji_penyesuaian += Number(value.replace(/[^0-9\.-]+/g, ""));
+                        });
+                        $('row c[r^="R"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            t_keluarga += Number(value.replace(/[^0-9\.-]+/g, ""));
+                        });
+                        $('row c[r^="S"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            t_teller += Number(value.replace(/[^0-9\.-]+/g, ""));
+                        });
+                        $('row c[r^="T"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            t_telepon += Number(value.replace(/[^0-9\.-]+/g, ""));
+                        });
+                        $('row c[r^="U"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            t_jabatan += Number(value.replace(/[^0-9\.-]+/g, ""));
+                        });
+                        $('row c[r^="V"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            t_perumahan += Number(value.replace(/[^0-9\.-]+/g, ""));
+                        });
+                        $('row c[r^="W"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            t_pelaksana += Number(value.replace(/[^0-9\.-]+/g, ""));
+                        });
+                        $('row c[r^="X"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            t_kemahalan += Number(value.replace(/[^0-9\.-]+/g, ""));
+                        });
+                        $('row c[r^="Y"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            t_kesejahteraan += Number(value.replace(/[^0-9\.-]+/g, ""));
+                        });
+                        $('row c[r^="Z"]', sheet).each(function(i) {
+                            // Get the value and strip the non numeric characters
+                            var value = $(this).text();
+                            gaji_total += Number(value.replace(/[^0-9\.-]+/g, ""));
+                        });
+                        console.log(rowIndexTotal)
+
+                        function addTotal(index, data) {
+                            msg = '<row r="' + index + '">';
+                            for (i = 0; i < data.length; i++) {
+                                var key = data[i].k;
+                                var value = data[i].v;
+                                // text total
+                                msg += '<c t="inlineStr" r="' + 'O' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>Total Gaji</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                // gaji pokok
+                                msg += '<c t="inlineStr" r="' + 'P' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + gaji_pokok + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                /// gaji penyesuaian
+                                msg += '<c t="inlineStr" r="' + 'Q' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + gaji_penyesuaian + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                /// tunjangan keluarga
+                                msg += '<c t="inlineStr" r="' + 'R' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + t_keluarga + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                /// tunjangan teller
+                                msg += '<c t="inlineStr" r="' + 'S' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + t_teller + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                /// tunjangan telepon
+                                msg += '<c t="inlineStr" r="' + 'T' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + t_telepon + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                /// tunjangan jabatan
+                                msg += '<c t="inlineStr" r="' + 'U' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + t_jabatan + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                /// tunjangan perumahan
+                                msg += '<c t="inlineStr" r="' + 'V' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + t_perumahan + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                /// tunjangan pelaksana
+                                msg += '<c t="inlineStr" r="' + 'W' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + t_pelaksana + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                /// tunjangan kemahalan
+                                msg += '<c t="inlineStr" r="' + 'X' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + t_kemahalan + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                /// tunjangan kesejahteraan
+                                msg += '<c t="inlineStr" r="' + 'Y' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + t_kesejahteraan + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                                /// gaji total
+                                msg += '<c t="inlineStr" r="' + 'Z' + rowIndexTotal.toString() + '" s="2">';
+                                msg += '<is>';
+                                msg += '<t>' + gaji_total + '</t>';
+                                msg += '</is>';
+                                msg += '</c>';
+                            }
+                            msg += '</row>';
+                            return msg;
+                        }
+
+                        //insert
+                        var r1 = addTotal(1, [{
+                            k: 'A',
+                            v: 'ColA'
+                        }]);
+
+                        sheet.childNodes[0].childNodes[1].innerHTML = r1 + sheet.childNodes[0].childNodes[1].innerHTML;
+                    }
                 },
                 {
                     extend: 'pdfHtml5',
