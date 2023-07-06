@@ -350,7 +350,7 @@
                         <input type="text" disabled class="form-control" value="{{ $karyawan->jkn ?? '-' }}">
                     </div>
                 </div>
-                <div class="row m-0 mt-2">
+                <!-- <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">Gaji Pokok</label>
                     <div class="col-sm-10">
                         @if (isset($karyawan->gj_pokok) != null)
@@ -395,7 +395,7 @@
                     <div class="col-sm-10">
                         <input type="text" disabled class="form-control" value="Rp. {{ rupiah($totalGaji) }}">
                     </div>
-                </div>
+                </div> -->
     
                 @if ($karyawan->status == 'Kawin' && $suis != null)
                     <hr>
