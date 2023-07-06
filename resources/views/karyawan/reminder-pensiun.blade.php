@@ -1,260 +1,281 @@
 @extends('layouts.template')
 
 @php
-    $request = isset($request) ? $request : null;
+$request = isset($request) ? $request : null;
 @endphp
 
 @section('content')
-    <style>
-        .dataTables_wrapper .dataTables_filter{
-            float: right;
-        }
-        .dataTables_wrapper .dataTables_length{
-            float: left;
-        }
+<style>
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+    }
 
-        div.dataTables_wrapper div.dataTables_filter input {
-            width: 90%;
-        }
-        table.dataTable td {
-            font-size: 9px;
-        }
-    </style>
+    .dataTables_wrapper .dataTables_length {
+        float: left;
+    }
 
+    div.dataTables_wrapper div.dataTables_filter input {
+        width: 90%;
+    }
+
+    table.dataTable td {
+        font-size: 9px;
+    }
+</style>
+
+<div class="card-header">
     <div class="card-header">
-        <div class="card-header">
-            <div class="card-title">
-                <h5 class="card-title @active('klasifikasi')">Data Masa Pensiun</h5>
-                <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="{{ route('karyawan.index') }}">Karyawan</a> > Data Masa Pensiun</p>
-            </div>
+        <div class="card-title">
+            <h5 class="card-title @active('klasifikasi')">Data Masa Pensiun</h5>
+            <p class="card-title"><a href="">Manajemen Karyawan</a> > <a
+                    href="{{ route('karyawan.index') }}">Karyawan</a> > Data Masa Pensiun</p>
         </div>
     </div>
+</div>
 
-    <div class="card-body ml-3 mr-3">
-        <form action="{{ route('reminder-pensiun.show') }}" method="post">
-            @csrf
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="">Kategori {{ old('kategori') }}</label>
-                        <select name="kategori" class="form-control" id="kategori">
-                            <option value="-">--- Pilih Kategori ---</option>
-                            <option @selected($request?->kategori == 1) value="1">Keseluruhan</option>
-                            <option @selected($request?->kategori == 2) value="2">Divisi</option>
-                            <option @selected($request?->kategori == 3) value="3">Sub Divisi</option>
-                            <option @selected($request?->kategori == 4) value="4">Bagian</option>
-                            <option @selected($request?->kategori == 5) value="5">Kantor</option>
-                        </select>
-                    </div>
+<div class="card-body ml-3 mr-3">
+    <form action="{{ route('reminder-pensiun.show') }}" method="post">
+        @csrf
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">Kategori {{ old('kategori') }}</label>
+                    <select name="kategori" class="form-control" id="kategori">
+                        <option value="-">--- Pilih Kategori ---</option>
+                        <option @selected($request?->kategori == 1) value="1">Keseluruhan</option>
+                        <option @selected($request?->kategori == 2) value="2">Divisi</option>
+                        <option @selected($request?->kategori == 3) value="3">Sub Divisi</option>
+                        <option @selected($request?->kategori == 4) value="4">Bagian</option>
+                        <option @selected($request?->kategori == 5) value="5">Kantor</option>
+                    </select>
                 </div>
             </div>
-
-            <div class="row">
-                <div id="kantor_col" class="col-md-4">
-                </div>
-
-                <div id="cabang_col" class="col-md-4">
-                </div>
-
-                <div id="divisi_col" class="col-md-4">
-                </div>
-
-                <div id="subDivisi_col" class="col-md-4">
-                </div>
-
-                <div id="bagian_col" class="col-md-4">
-                </div>
-
-                <div id="jabatan_col" class="col-md-4">
-                </div>
-
-                <div id="panggol_col" class="col-md-4">
-                </div>
-
-                <div id="status_col" class="col-md-4">
-                </div>
-
-                <div id="pendidikan_col" class="col-md-4">
-                </div>
-
-                <div class="col-md-12">
-                    <button class="btn btn-info" type="submit">Tampilkan</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="card ml-3 mr-3 mb-3 mt-3 shadow">
-        <div class="col-md-12">
-            @if ($karyawan != null)
-                <div class="table-responsive table overflow-hidden pt-2">
-                    <table class="table cell-border stripe" style="width: 100%; word-break: break-all;" id="table_export">
-                        <thead>
-                            <tr>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Nama</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">Jabatan</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">Kantor</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">Gol</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Lahir</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Umur</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Status</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Tanggal<br>Angkat</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">Masa<br>Kerja</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 9px; min-width: 40px;">Pendidikan<br>Terakhir</th>
-                                <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($karyawan as $item)
-                                @php
-                                    $umur = Carbon\Carbon::create($item->tgl_lahir);
-                                    $waktuSekarang = Carbon\Carbon::now();
-                                    $hitung = $waktuSekarang->diff($umur);
-                                    $tampilUmur = $hitung->format('%y,%m');
-
-                                    $tglLahir = $item->tgl_lahir;
-                                    $lahir = Carbon\Carbon::create($tglLahir);
-                                    $pensiun = Carbon\Carbon::create(date('Y-m-d', strtotime($tglLahir. ' + 56 years')));
-                                    $hitungPensiun = $pensiun->diff($waktuSekarang);
-                                    $tampilPensiun = null;
-                                    $textColor = null;
-                                    if ($waktuSekarang->diffInYears($umur) >= 54) {
-                                        $tampilPensiun = 'Persiapan pensiun dalam ' . $hitungPensiun->format('%y Tahun, %m Bulan, %d Hari');
-                                        if ($waktuSekarang->diffInYears($umur ) >= 55) {
-                                            $textColor = 'text-warning';
-                                        } else {
-                                            $textColor = 'text-success';
-                                        }
-                                    } 
-                                    if ($waktuSekarang->diffInYears($umur) >= 56) {
-                                        $tampilPensiun = 'Sudah melebihi batas pensiun';
-                                        $textColor = 'text-danger';
-                                    }
-                                @endphp
-                                <tr>
-                                    <td>{{ $item->nip }}</td>
-                                    <td>{{ $item->nama_karyawan }}</td>
-                                    <td>{{ jabatanLengkap($item) . ' ' . $item->ket_jabatan ?? '-' }}</td>
-                                    @php
-                                        $nama_cabang = DB::table('mst_cabang')
-                                            ->where('kd_cabang', $item->kd_entitas)
-                                            ->first();
-                                    @endphp
-                                    <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
-                                    <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
-                                    @php
-                                        $tglLahir =  date('d M Y', strtotime($item->tgl_lahir));
-                                    @endphp
-                                    <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
-                                    <td>{{ $tampilUmur }}</td>
-                                    @php
-                                        if ($item->jk == 'Laki-laki') {
-                                            $jk = 'L';
-                                        } else {
-                                            $jk = 'P';
-                                        }
-
-                                    @endphp
-                                    <td>{{ $jk }}</td>
-                                    @php
-                                        if ($item->status == 'Kawin' || $item->status == 'K') {
-                                            if ($item->keluarga?->jml_anak != null) {
-                                                $status = 'K';
-                                                $anak = $item->keluarga?->jml_anak;
-                                            } else {
-                                                $status = 'K';
-                                                $anak = 0;
-                                            }
-                                        } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
-                                            if ($item->keluarga?->jml_anak != null) {
-                                                $status = 'TK';
-                                                $anak = $item->keluarga?->jml_anak;
-                                            } else {
-                                                $status = 'TK';
-                                                $anak = 0;
-                                            }
-                                        } elseif ($item->status == 'Tidak Diketahui') {
-                                            if ($item->keluarga?->jml_anak != null) {
-                                                $status = 'TD';
-                                                $anak = $item->keluarga?->jml_anak;
-                                            } else {
-                                                $status = 'TD';
-                                                $anak = 0;
-                                            }
-                                        } elseif ($item->status == 'Cerai Mati') {
-                                            if ($item->keluarga?->jml_anak != null) {
-                                                $status = 'CM';
-                                                $anak = $item->keluarga?->jml_anak;
-                                            } else {
-                                                $status = 'CM';
-                                                $anak = 0;
-                                            }
-                                        } elseif ($item->status == 'Cerai') {
-                                            if ($item->keluarga?->jml_anak != null) {
-                                                $status = 'CR';
-                                                $anak = $item->keluarga?->jml_anak;
-                                            } else {
-                                                $status = 'CR';
-                                                $anak = 0;
-                                            }
-                                        } elseif ($item->status == 'Janda') {
-                                            if ($item->keluarga?->jml_anak != null) {
-                                                $status = 'JD';
-                                                $anak = $item->keluarga?->jml_anak;
-                                            } else {
-                                                $status = 'JD';
-                                                $anak = 0;
-                                            }
-                                        } elseif ($item->status == 'Duda') {
-                                            if ($item->keluarga?->jml_anak != null) {
-                                                $status = 'DA';
-                                                $anak = $item->keluarga?->jml_anak;
-                                            } else {
-                                                $status = 'DA';
-                                                $anak = 0;
-                                            }
-                                        } else {
-                                            $status = '-';
-                                            $anak = '-';
-                                        }
-                                    @endphp
-                                    <td>{{ $status }}/{{ $anak }}</td>
-                                    <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
-                                    <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat)) : '-' }}</td>
-                                    @php
-                                        $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
-                                        $waktuSekarang = Carbon\Carbon::now();
-
-                                        $hitung = $waktuSekarang->diff($mulaKerja);
-                                        $masaKerja = $hitung->format('%y,%m');
-                                    @endphp
-                                    <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
-                                    <td>{{ $item->pendidikan ?? '-' }}</td>
-                                    <td style="font-size: 8px" class="{{ $textColor }}">{{ $tampilPensiun ?? '-' }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
         </div>
+
+        <div class="row">
+            <div id="kantor_col" class="col-md-4">
+            </div>
+
+            <div id="cabang_col" class="col-md-4">
+            </div>
+
+            <div id="divisi_col" class="col-md-4">
+            </div>
+
+            <div id="subDivisi_col" class="col-md-4">
+            </div>
+
+            <div id="bagian_col" class="col-md-4">
+            </div>
+
+            <div id="jabatan_col" class="col-md-4">
+            </div>
+
+            <div id="panggol_col" class="col-md-4">
+            </div>
+
+            <div id="status_col" class="col-md-4">
+            </div>
+
+            <div id="pendidikan_col" class="col-md-4">
+            </div>
+
+            <div class="col-md-12">
+                <button class="btn btn-info" type="submit">Tampilkan</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="card ml-3 mr-3 mb-3 mt-3 shadow">
+    <div class="col-md-12">
+        @if ($karyawan != null)
+        <div class="table-responsive table overflow-hidden pt-2">
+            <table class="table cell-border stripe" style="width: 100%; word-break: break-all;" id="table_export">
+                <thead>
+                    <tr>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIP
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">
+                            Nama</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            Jabatan</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            Kantor</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">Gol
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            Tanggal<br>Lahir</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">
+                            Umur</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 25px;">JK
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
+                            Status</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br>Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            Tanggal<br>Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
+                            Masa<br>Kerja</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 9px; min-width: 40px;">
+                            Pendidikan<br>Terakhir</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($karyawan as $item)
+                    @php
+                    $umur = Carbon\Carbon::create($item->tgl_lahir);
+                    $waktuSekarang = Carbon\Carbon::now();
+                    $hitung = $waktuSekarang->diff($umur);
+                    $tampilUmur = $hitung->format('%y,%m');
+
+                    $tglLahir = $item->tgl_lahir;
+                    $lahir = Carbon\Carbon::create($tglLahir);
+                    $pensiun = Carbon\Carbon::create(date('Y-m-d', strtotime($tglLahir. ' + 56 years')));
+                    $hitungPensiun = $pensiun->diff($waktuSekarang);
+                    $tampilPensiun = null;
+                    $textColor = null;
+                    if ($waktuSekarang->diffInYears($umur) >= 54) {
+                    $tampilPensiun = 'Persiapan pensiun dalam ' . $hitungPensiun->format('%y Tahun, %m Bulan, %d Hari');
+                    if ($waktuSekarang->diffInYears($umur ) >= 55) {
+                    $textColor = 'text-warning';
+                    } else {
+                    $textColor = 'text-success';
+                    }
+                    }
+                    if ($waktuSekarang->diffInYears($umur) >= 56) {
+                    $tampilPensiun = 'Sudah melebihi batas pensiun';
+                    $textColor = 'text-danger';
+                    }
+                    @endphp
+                    <tr>
+                        <td>{{ $item->nip }}</td>
+                        <td>{{ $item->nama_karyawan }}</td>
+                        <td>{{ jabatanLengkap($item) . ' ' . $item->ket_jabatan ?? '-' }}</td>
+                        @php
+                        $nama_cabang = DB::table('mst_cabang')
+                        ->where('kd_cabang', $item->kd_entitas)
+                        ->first();
+                        @endphp
+                        <td>{{ ($nama_cabang != null) ? $nama_cabang->nama_cabang : 'Pusat' }}</td>
+                        <td>{{ ($item->kd_panggol != null) ? $item->kd_panggol : '-' }}</td>
+                        @php
+                        $tglLahir = date('d M Y', strtotime($item->tgl_lahir));
+                        @endphp
+                        <td>{{ ($item->tgl_lahir != null) ? $tglLahir : '-' }}</td>
+                        <td>{{ $tampilUmur }}</td>
+                        @php
+                        if ($item->jk == 'Laki-laki') {
+                        $jk = 'L';
+                        } else {
+                        $jk = 'P';
+                        }
+
+                        @endphp
+                        <td>{{ $jk }}</td>
+                        @php
+                        if ($item->status == 'Kawin' || $item->status == 'K') {
+                        if ($item->keluarga?->jml_anak != null) {
+                        $status = 'K';
+                        $anak = $item->keluarga?->jml_anak;
+                        } else {
+                        $status = 'K';
+                        $anak = 0;
+                        }
+                        } elseif ($item->status == 'Belum Kawin' || $item->status == 'TK') {
+                        if ($item->keluarga?->jml_anak != null) {
+                        $status = 'TK';
+                        $anak = $item->keluarga?->jml_anak;
+                        } else {
+                        $status = 'TK';
+                        $anak = 0;
+                        }
+                        } elseif ($item->status == 'Tidak Diketahui') {
+                        if ($item->keluarga?->jml_anak != null) {
+                        $status = 'TD';
+                        $anak = $item->keluarga?->jml_anak;
+                        } else {
+                        $status = 'TD';
+                        $anak = 0;
+                        }
+                        } elseif ($item->status == 'Cerai Mati') {
+                        if ($item->keluarga?->jml_anak != null) {
+                        $status = 'CM';
+                        $anak = $item->keluarga?->jml_anak;
+                        } else {
+                        $status = 'CM';
+                        $anak = 0;
+                        }
+                        } elseif ($item->status == 'Cerai') {
+                        if ($item->keluarga?->jml_anak != null) {
+                        $status = 'CR';
+                        $anak = $item->keluarga?->jml_anak;
+                        } else {
+                        $status = 'CR';
+                        $anak = 0;
+                        }
+                        } elseif ($item->status == 'Janda') {
+                        if ($item->keluarga?->jml_anak != null) {
+                        $status = 'JD';
+                        $anak = $item->keluarga?->jml_anak;
+                        } else {
+                        $status = 'JD';
+                        $anak = 0;
+                        }
+                        } elseif ($item->status == 'Duda') {
+                        if ($item->keluarga?->jml_anak != null) {
+                        $status = 'DA';
+                        $anak = $item->keluarga?->jml_anak;
+                        } else {
+                        $status = 'DA';
+                        $anak = 0;
+                        }
+                        } else {
+                        $status = '-';
+                        $anak = '-';
+                        }
+                        @endphp
+                        <td>{{ $status }}/{{ $anak }}</td>
+                        <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
+                        <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
+                            : '-' }}</td>
+                        @php
+                        $mulaKerja = Carbon\Carbon::create($item->tgl_mulai);
+                        $waktuSekarang = Carbon\Carbon::now();
+
+                        $hitung = $waktuSekarang->diff($mulaKerja);
+                        $masaKerja = $hitung->format('%y,%m');
+                        @endphp
+                        <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
+                        <td>{{ $item->pendidikan ?? '-' }}</td>
+                        <td style="font-size: 8px" class="{{ $textColor }}">{{ $tampilPensiun ?? '-' }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
     </div>
+</div>
 @endsection
 
 @section('custom_script')
-    <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/plug-ins/1.10.19/api/sum().js"></script>
-    <script>
+<script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/api/sum().js"></script>
+<script>
+    // Pengambilan Kategori
+        var k = document.getElementById("kategori");
+        var category = k.options[k.selectedIndex].text;
+
         $("#table_export").DataTable({
             dom : "Bfrtip",
             pageLength: 25,
@@ -272,8 +293,88 @@
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur',
-                    filename : 'Bank UMKM Jawa Timur Klasifikasi Data Karyawan',
+                    title : function(){
+                        var selectedValueKantor = $('#kantor').val();
+                        var selectedValueCategory = $('#kategori').find('option:selected').text();
+                        var selectedValueDivisi = $('#divisi').find('option:selected').text();
+                        var selectedValueSubDivisi = $('#subDivisi').find('option:selected').text();
+                        var selectedValueBagian = $('#bagian').find('option:selected').text();
+                        var selectedValueCabang = $('#cabang').find('option:selected').text();
+
+                        if (selectedValueCategory === "Keseluruhan") {
+                            return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '';
+                        }else{
+                            // Kategori divisi, sub divisi, bagian
+                            if (selectedValueCategory === "Divisi" || selectedValueCategory === "Sub Divisi" || selectedValueCategory === "Bagian") {
+                                if (selectedValueDivisi === null || selectedValueDivisi === undefined) {
+                                    return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '';
+                                }else{
+                                    if (selectedValueSubDivisi === null || selectedValueSubDivisi === undefined || selectedValueSubDivisi === "--- Pilih Sub Divisi ---") {
+                                        return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori Divisi_'+selectedValueDivisi+'';
+                                    }else{
+                                        if (selectedValueBagian === null || selectedValueBagian === undefined || selectedValueBagian === "--- Pilih Bagian ---") {
+                                            return 'Bank UMKM Jawa Timur Data Masa Pensiun kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+'';
+                                        }else{
+                                            return 'Bank UMKM Jawa Timur Data Masa Pensiun kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+', Bagian_'+selectedValueBagian+'';
+                                        }
+                                    }
+                                }
+                            }else if(selectedValueCategory === "Kantor"){
+                                // kategori kantor, cabang
+                                if (selectedValueKantor === null || selectedValueKantor === undefined) {
+                                    return 'Bank UMKM Jawa Timur Data Masa Pensiun kategori_' + category + '';
+                                } else {
+                                    if(selectedValueCabang === null || selectedValueCabang === undefined || selectedValueCabang === "--- Pilih Cabang ---" || selectedValueCabang === ""){
+                                        return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '_'+selectedValueKantor+'';
+                                    }else{
+                                        return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category +' '+selectedValueKantor+'_'+selectedValueCabang+'';
+                                    }
+                                }
+
+                            }
+                        }
+                    },
+                    filename : function(){
+                        var selectedValueKantor = $('#kantor').val();
+                        var selectedValueCategory = $('#kategori').find('option:selected').text();
+                        var selectedValueDivisi = $('#divisi').find('option:selected').text();
+                        var selectedValueSubDivisi = $('#subDivisi').find('option:selected').text();
+                        var selectedValueBagian = $('#bagian').find('option:selected').text();
+                        var selectedValueCabang = $('#cabang').find('option:selected').text();
+
+                        if (selectedValueCategory === "Keseluruhan") {
+                            return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '';
+                        }else{
+                            // Kategori divisi, sub divisi, bagian
+                            if (selectedValueCategory === "Divisi" || selectedValueCategory === "Sub Divisi" || selectedValueCategory === "Bagian") {
+                                if (selectedValueDivisi === null || selectedValueDivisi === undefined) {
+                                    return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '';
+                                }else{
+                                    if (selectedValueSubDivisi === null || selectedValueSubDivisi === undefined || selectedValueSubDivisi === "--- Pilih Sub Divisi ---") {
+                                        return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori Divisi_'+selectedValueDivisi+'';
+                                    }else{
+                                        if (selectedValueBagian === null || selectedValueBagian === undefined || selectedValueBagian === "--- Pilih Bagian ---") {
+                                            return 'Bank UMKM Jawa Timur Data Masa Pensiun kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+'';
+                                        }else{
+                                            return 'Bank UMKM Jawa Timur Data Masa Pensiun kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+', Bagian_'+selectedValueBagian+'';
+                                        }
+                                    }
+                                }
+                            }else if(selectedValueCategory === "Kantor"){
+                                // kategori kantor, cabang
+                                if (selectedValueKantor === null || selectedValueKantor === undefined) {
+                                    return 'Bank UMKM Jawa Timur Data Masa Pensiun kategori_' + category + '';
+                                } else {
+                                    if(selectedValueCabang === null || selectedValueCabang === undefined || selectedValueCabang === "--- Pilih Cabang ---" || selectedValueCabang === ""){
+                                        return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '_'+selectedValueKantor+'';
+                                    }else{
+                                        return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category +' '+selectedValueKantor+'_'+selectedValueCabang+'';
+                                    }
+                                }
+
+                            }
+                        }
+                    },
                     message: 'Klasifikasi Data Karyawan\n ',
                     text:'Excel',
                     header: true,
@@ -288,7 +389,47 @@
                 {
                     extend: 'pdfHtml5',
                     title: 'Bank UMKM Jawa Timur\n Klasifikasi Data Karyawan ',
-                    filename : 'Bank UMKM Jawa Timur Klasifikasi Data Karyawan',
+                    filename : function(){
+                        var selectedValueKantor = $('#kantor').val();
+                        var selectedValueCategory = $('#kategori').find('option:selected').text();
+                        var selectedValueDivisi = $('#divisi').find('option:selected').text();
+                        var selectedValueSubDivisi = $('#subDivisi').find('option:selected').text();
+                        var selectedValueBagian = $('#bagian').find('option:selected').text();
+                        var selectedValueCabang = $('#cabang').find('option:selected').text();
+
+                        if (selectedValueCategory === "Keseluruhan") {
+                            return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '';
+                        }else{
+                            // Kategori divisi, sub divisi, bagian
+                            if (selectedValueCategory === "Divisi" || selectedValueCategory === "Sub Divisi" || selectedValueCategory === "Bagian") {
+                                if (selectedValueDivisi === null || selectedValueDivisi === undefined) {
+                                    return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '';
+                                }else{
+                                    if (selectedValueSubDivisi === null || selectedValueSubDivisi === undefined || selectedValueSubDivisi === "--- Pilih Sub Divisi ---") {
+                                        return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori Divisi_'+selectedValueDivisi+'';
+                                    }else{
+                                        if (selectedValueBagian === null || selectedValueBagian === undefined || selectedValueBagian === "--- Pilih Bagian ---") {
+                                            return 'Bank UMKM Jawa Timur Data Masa Pensiun kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+'';
+                                        }else{
+                                            return 'Bank UMKM Jawa Timur Data Masa Pensiun kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+', Bagian_'+selectedValueBagian+'';
+                                        }
+                                    }
+                                }
+                            }else if(selectedValueCategory === "Kantor"){
+                                // kategori kantor, cabang
+                                if (selectedValueKantor === null || selectedValueKantor === undefined) {
+                                    return 'Bank UMKM Jawa Timur Data Masa Pensiun kategori_' + category + '';
+                                } else {
+                                    if(selectedValueCabang === null || selectedValueCabang === undefined || selectedValueCabang === "--- Pilih Cabang ---" || selectedValueCabang === ""){
+                                        return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '_'+selectedValueKantor+'';
+                                    }else{
+                                        return 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category +' '+selectedValueKantor+'_'+selectedValueCabang+'';
+                                    }
+                                }
+
+                            }
+                        }
+                    },
                     text:'PDF',
                     footer: true,
                     paperSize: 'A4',
@@ -296,6 +437,46 @@
                     customize: function (doc) {
                         var now = new Date();
                         var jsDate = now.getDate()+' / '+(now.getMonth()+1)+' / '+now.getFullYear();
+
+                        var selectedValueKantor = $('#kantor').val();
+                        var selectedValueCategory = $('#kategori').find('option:selected').text();
+                        var selectedValueDivisi = $('#divisi').find('option:selected').text();
+                        var selectedValueSubDivisi = $('#subDivisi').find('option:selected').text();
+                        var selectedValueBagian = $('#bagian').find('option:selected').text();
+                        var selectedValueCabang = $('#cabang').find('option:selected').text();
+
+                        if (selectedValueCategory === "Keseluruhan") {
+                            doc.content[0].text = 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '';
+                        }else{
+                            // Kategori divisi, sub divisi, bagian
+                            if (selectedValueCategory === "Divisi" || selectedValueCategory === "Sub Divisi" || selectedValueCategory === "Bagian") {
+                                if (selectedValueDivisi === null || selectedValueDivisi === undefined) {
+                                    doc.content[0].text = 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '';
+                                }else{
+                                    if (selectedValueSubDivisi === null || selectedValueSubDivisi === undefined || selectedValueSubDivisi === "--- Pilih Sub Divisi ---") {
+                                        doc.content[0].text = 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori Divisi_'+selectedValueDivisi+'';
+                                    }else{
+                                        if (selectedValueBagian === null || selectedValueBagian === undefined || selectedValueBagian === "--- Pilih Bagian ---") {
+                                            doc.content[0].text = 'Bank UMKM Jawa Timur Data Masa Pensiun kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+'';
+                                        }else{
+                                            doc.content[0].text = 'Bank UMKM Jawa Timur Data Masa Pensiun kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+', Bagian_'+selectedValueBagian+'';
+                                        }
+                                    }
+                                }
+                            }else if(selectedValueCategory === "Kantor"){
+                                // kategori kantor, cabang
+                                if (selectedValueKantor === null || selectedValueKantor === undefined) {
+                                    doc.content[0].text = 'Bank UMKM Jawa Timur Data Masa Pensiun kategori_' + category + '';
+                                } else {
+                                    if(selectedValueCabang === null || selectedValueCabang === undefined || selectedValueCabang === "--- Pilih Cabang ---" || selectedValueCabang === ""){
+                                        doc.content[0].text = 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '_'+selectedValueKantor+'';
+                                    }else{
+                                        doc.content[0].text = 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category +' '+selectedValueKantor+'_'+selectedValueCabang+'';
+                                    }
+                                }
+
+                            }
+                        }
 
                         doc.styles.tableHeader.fontSize = 10;
                         doc.defaultStyle.fontSize = 9;
@@ -325,7 +506,7 @@
                 },
                 {
                     extend: 'print',
-                    title: 'Bank UMKM Jawa Timur Klasifikasi Data Karyawan ',
+                    title: '',
                     text:'print',
                     footer: true,
                     paperSize: 'A4',
@@ -333,6 +514,48 @@
                         var last = null;
                         var current = null;
                         var bod = [];
+
+                        var selectedValueKantor = $('#kantor').val();
+                        var selectedValueCategory = $('#kategori').find('option:selected').text();
+                        var selectedValueDivisi = $('#divisi').find('option:selected').text();
+                        var selectedValueSubDivisi = $('#subDivisi').find('option:selected').text();
+                        var selectedValueBagian = $('#bagian').find('option:selected').text();
+                        var selectedValueCabang = $('#cabang').find('option:selected').text();
+
+                        var header = document.createElement('h1');
+                        if (selectedValueCategory === "Keseluruhan") {
+                            header.textContent = 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '';
+                        }else{
+                            // Kategori divisi, sub divisi, bagian
+                            if (selectedValueCategory === "Divisi" || selectedValueCategory === "Sub Divisi" || selectedValueCategory === "Bagian") {
+                                if (selectedValueDivisi === null || selectedValueDivisi === undefined) {
+                                    header.textContent = 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '';
+                                }else{
+                                    if (selectedValueSubDivisi === null || selectedValueSubDivisi === undefined || selectedValueSubDivisi === "--- Pilih Sub Divisi ---") {
+                                        header.textContent = 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori Divisi_'+selectedValueDivisi+'';
+                                    }else{
+                                        if (selectedValueBagian === null || selectedValueBagian === undefined || selectedValueBagian === "--- Pilih Bagian ---") {
+                                            header.textContent = 'Bank UMKM Jawa Timur Data Masa Pensiun kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+'';
+                                        }else{
+                                            header.textContent = 'Bank UMKM Jawa Timur Data Masa Pensiun kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+', Bagian_'+selectedValueBagian+'';
+                                        }
+                                    }
+                                }
+                            }else if(selectedValueCategory === "Kantor"){
+                                // kategori kantor, cabang
+                                if (selectedValueKantor === null || selectedValueKantor === undefined) {
+                                    header.textContent = 'Bank UMKM Jawa Timur Data Masa Pensiun kategori_' + category + '';
+                                } else {
+                                    if(selectedValueCabang === null || selectedValueCabang === undefined || selectedValueCabang === "--- Pilih Cabang ---" || selectedValueCabang === ""){
+                                        header.textContent = 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category + '_'+selectedValueKantor+'';
+                                    }else{
+                                        header.textContent = 'Bank UMKM Jawa Timur Data Masa Pensiun Kategori_' + category +' '+selectedValueKantor+'_'+selectedValueCabang+'';
+                                    }
+                                }
+
+                            }
+                        }
+                        win.document.body.insertBefore(header, win.document.body.firstChild);
 
                         var css = '@page { size: landscape; }',
                             head = win.document.head || win.document.getElementsByTagName('head')[0],
@@ -930,5 +1153,5 @@
 
         $('#kategori').trigger('change');
         $('#kantor').trigger('change');
-    </script>
+</script>
 @endsection
