@@ -9,7 +9,9 @@ return number_format($value, 0, '.', ',');
 @endphp
 
 @push('style')
+@if ($status != 8 && $status != 12)
 <link href="{{ asset('style/assets/css/freeze-column-table.css') }}" rel="stylesheet" />
+@endif
 @endpush
 
 @section('content')
@@ -141,27 +143,27 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Pokok</th>
+                            Gaji<br>Pokok</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Penyesuaian</th>
+                            Gaji<br>Penyesuaian</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Keluarga</th>
+                            Tunjangan<br>Keluarga</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Teller</th>
+                            Tunjangan<br>Teller</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Telepon</th>
+                            Tunjangan<br>Telepon</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Jabatan</th>
+                            Tunjangan<br>Jabatan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Perumahan</th>
+                            Tunjangan<br>Perumahan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Pelaksana</th>
+                            Tunjangan<br>Pelaksana</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kemahalan</th>
+                            Tunjangan<br>Kemahalan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kesejahteraan</th>
+                            Tunjangan<br>Kesejahteraan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Total</th>
+                            Gaji<br>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -296,7 +298,18 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="15" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
                         <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 80px;">
                             <span class="total_gaji">0</span>
                         </th>
@@ -370,27 +383,27 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Pokok</th>
+                            Gaji<br>Pokok</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Penyesuaian</th>
+                            Gaji<br>Penyesuaian</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Keluarga</th>
+                            Tunjangan<br>Keluarga</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Teller</th>
+                            Tunjangan<br>Teller</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Telepon</th>
+                            Tunjangan<br>Telepon</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Jabatan</th>
+                            Tunjangan<br>Jabatan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Perumahan</th>
+                            Tunjangan<br>Perumahan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Pelaksana</th>
+                            Tunjangan<br>Pelaksana</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kemahalan</th>
+                            Tunjangan<br>Kemahalan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kesejahteraan</th>
+                            Tunjangan<br>Kesejahteraan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Total</th>
+                            Gaji<br>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -525,7 +538,18 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="15" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
                         <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
@@ -599,27 +623,27 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Pokok</th>
+                            Gaji<br>Pokok</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Penyesuaian</th>
+                            Gaji<br>Penyesuaian</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Keluarga</th>
+                            Tunjangan<br>Keluarga</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Teller</th>
+                            Tunjangan<br>Teller</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Telepon</th>
+                            Tunjangan<br>Telepon</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Jabatan</th>
+                            Tunjangan<br>Jabatan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Perumahan</th>
+                            Tunjangan<br>Perumahan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Pelaksana</th>
+                            Tunjangan<br>Pelaksana</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kemahalan</th>
+                            Tunjangan<br>Kemahalan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kesejahteraan</th>
+                            Tunjangan<br>Kesejahteraan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Total</th>
+                            Gaji<br>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -754,7 +778,18 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="15" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
                         <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
@@ -826,27 +861,27 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Pokok</th>
+                            Gaji<br>Pokok</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Penyesuaian</th>
+                            Gaji<br>Penyesuaian</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Keluarga</th>
+                            Tunjangan<br>Keluarga</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Teller</th>
+                            Tunjangan<br>Teller</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Telepon</th>
+                            Tunjangan<br>Telepon</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Jabatan</th>
+                            Tunjangan<br>Jabatan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Perumahan</th>
+                            Tunjangan<br>Perumahan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Pelaksana</th>
+                            Tunjangan<br>Pelaksana</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kemahalan</th>
+                            Tunjangan<br>Kemahalan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kesejahteraan</th>
+                            Tunjangan<br>Kesejahteraan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Total</th>
+                            Gaji<br>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -980,7 +1015,15 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="13" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
                         <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
@@ -1052,27 +1095,27 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Pokok</th>
+                            Gaji<br>Pokok</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Penyesuaian</th>
+                            Gaji<br>Penyesuaian</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Keluarga</th>
+                            Tunjangan<br>Keluarga</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Teller</th>
+                            Tunjangan<br>Teller</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Telepon</th>
+                            Tunjangan<br>Telepon</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Jabatan</th>
+                            Tunjangan<br>Jabatan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Perumahan</th>
+                            Tunjangan<br>Perumahan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Pelaksana</th>
+                            Tunjangan<br>Pelaksana</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kemahalan</th>
+                            Tunjangan<br>Kemahalan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kesejahteraan</th>
+                            Tunjangan<br>Kesejahteraan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Total</th>
+                            Gaji<br>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1206,7 +1249,17 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="14" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
                         <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
@@ -1377,27 +1430,27 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Pokok</th>
+                            Gaji<br>Pokok</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Penyesuaian</th>
+                            Gaji<br>Penyesuaian</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Keluarga</th>
+                            Tunjangan<br>Keluarga</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Teller</th>
+                            Tunjangan<br>Teller</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Telepon</th>
+                            Tunjangan<br>Telepon</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Jabatan</th>
+                            Tunjangan<br>Jabatan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Perumahan</th>
+                            Tunjangan<br>Perumahan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Pelaksana</th>
+                            Tunjangan<br>Pelaksana</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kemahalan</th>
+                            Tunjangan<br>Kemahalan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kesejahteraan</th>
+                            Tunjangan<br>Kesejahteraan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Total</th>
+                            Gaji<br>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1531,7 +1584,17 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="14" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
                         <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
@@ -1651,27 +1714,27 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Pokok</th>
+                            Gaji<br>Pokok</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Penyesuaian</th>
+                            Gaji<br>Penyesuaian</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Keluarga</th>
+                            Tunjangan<br>Keluarga</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Teller</th>
+                            Tunjangan<br>Teller</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Telepon</th>
+                            Tunjangan<br>Telepon</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Jabatan</th>
+                            Tunjangan<br>Jabatan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Perumahan</th>
+                            Tunjangan<br>Perumahan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Pelaksana</th>
+                            Tunjangan<br>Pelaksana</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kemahalan</th>
+                            Tunjangan<br>Kemahalan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kesejahteraan</th>
+                            Tunjangan<br>Kesejahteraan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Total</th>
+                            Gaji<br>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1805,7 +1868,17 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="14" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
                         <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
@@ -1877,27 +1950,27 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Pokok</th>
+                            Gaji<br>Pokok</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Penyesuaian</th>
+                            Gaji<br>Penyesuaian</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Keluarga</th>
+                            Tunjangan<br>Keluarga</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Teller</th>
+                            Tunjangan<br>Teller</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Telepon</th>
+                            Tunjangan<br>Telepon</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Jabatan</th>
+                            Tunjangan<br>Jabatan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Perumahan</th>
+                            Tunjangan<br>Perumahan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Pelaksana</th>
+                            Tunjangan<br>Pelaksana</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kemahalan</th>
+                            Tunjangan<br>Kemahalan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kesejahteraan</th>
+                            Tunjangan<br>Kesejahteraan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Total</th>
+                            Gaji<br>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -2031,7 +2104,17 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="14" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
                         <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
@@ -2103,27 +2186,27 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Pokok</th>
+                            Gaji<br>Pokok</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Penyesuaian</th>
+                            Gaji<br>Penyesuaian</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Keluarga</th>
+                            Tunjangan<br>Keluarga</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Teller</th>
+                            Tunjangan<br>Teller</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Telepon</th>
+                            Tunjangan<br>Telepon</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Jabatan</th>
+                            Tunjangan<br>Jabatan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Perumahan</th>
+                            Tunjangan<br>Perumahan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Pelaksana</th>
+                            Tunjangan<br>Pelaksana</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kemahalan</th>
+                            Tunjangan<br>Kemahalan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            T.Kesejahteraan</th>
+                            Tunjangan<br>Kesejahteraan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
-                            G.Total</th>
+                            Gaji<br>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -2255,7 +2338,17 @@ return number_format($value, 0, '.', ',');
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="14" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th colspan="4" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
+                        <th class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;"></th>
                         <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
                             <span class="total_gaji">0</span>
                         </th>
@@ -2357,6 +2450,7 @@ return number_format($value, 0, '.', ',');
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/plug-ins/1.10.19/api/sum().js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js"></script>
 <script>
     var totalGajiSpan = $('.total_gaji');
     var totalGajiPenyesuaianSpan = $('.total_gaji_penyesuaian');
@@ -2562,8 +2656,7 @@ return number_format($value, 0, '.', ',');
             ordering: false,
             scrollX: true,
             fixedColumns: {
-                left: 1,
-                right: 1,
+                leftColumns: 4,
             },
             scrollCollapse: true,
             drawCallback: function () {
@@ -2732,33 +2825,54 @@ return number_format($value, 0, '.', ',');
                     exportOptions: {
                         orthogonal: 'sort'
                     },
-                    customize: function( xlsx, row ) {
-                        var gaji_pokok = $('#table_export').DataTable().column(15).data().sum();
-                        var gaji_penyesuaian = $('#table_export').DataTable().column(16).data().sum();
-                        var t_keluarga = $('#table_export').DataTable().column(17).data().sum();
-                        var t_teller = $('#table_export').DataTable().column(18).data().sum();
-                        var t_telepon = $('#table_export').DataTable().column(19).data().sum();
-                        var t_jabatan = $('#table_export').DataTable().column(20).data().sum();
-                        var t_perumahan = $('#table_export').DataTable().column(21).data().sum();
-                        var t_pelaksana = $('#table_export').DataTable().column(22).data().sum();
-                        var t_kemahalan = $('#table_export').DataTable().column(23).data().sum();
-                        var t_kesejahteraan = $('#table_export').DataTable().column(24).data().sum();
-                        var total_gaji = $('#table_export').DataTable().column(25).data().sum();
-
-                        totalGajiSpan.html(formatRupiahKoma(gaji_pokok.toString(),0))
-                        totalGajiPenyesuaianSpan.html(formatRupiahKoma(gaji_penyesuaian.toString(),0))
-                        totalTKeluargaSpan.html(formatRupiahKoma(t_keluarga.toString(),0))
-                        totalTTellerSpan.html(formatRupiahKoma(t_teller.toString(),0))
-                        totalTTeleponSpan.html(formatRupiahKoma(t_telepon.toString(),0))
-                        totalTJabatanSpan.html(formatRupiahKoma(t_jabatan.toString(),0))
-                        totalTPerumahanSpan.html(formatRupiahKoma(t_perumahan.toString(),0))
-                        totalTPelaksanaSpan.html(formatRupiahKoma(t_pelaksana.toString(),0))
-                        totalTKemahalanSpan.html(formatRupiahKoma(t_kemahalan.toString(),0))
-                        totalTKesejahteraanSpan.html(formatRupiahKoma(t_kesejahteraan.toString(),0))
-                        totalGajiTotalSpan.html(formatRupiahKoma(total_gaji.toString(),0))
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                        // $('row c[r^="C"]', sheet).attr( 's', '50' );
+                    footerCallback: function (row, data, start, end, display) {
+                        let api = this.api();
+                
+                        // Remove the formatting to get integer data for summation
+                        let intVal = function (i) {
+                            return typeof i === 'string'
+                                ? i.replace(/[\$,]/g, '') * 1
+                                : typeof i === 'number'
+                                ? i
+                                : 0;
+                        };
+                
+                        // Total over all pages
+                        total = api
+                            .column(15)
+                            .data()
+                            .reduce((a, b) => intVal(a) + intVal(b), 0);
+                        console.log('totoal : '+total)
+                        // Update footer
+                        api.column(15).footer().innerHTML =
+                            '$' + pageTotal + ' ( $' + total + ' total)';
                     }
+                    // customize: function( xlsx, row ) {
+                    //     var gaji_pokok = $('#table_export').DataTable().column(15).data().sum();
+                    //     var gaji_penyesuaian = $('#table_export').DataTable().column(16).data().sum();
+                    //     var t_keluarga = $('#table_export').DataTable().column(17).data().sum();
+                    //     var t_teller = $('#table_export').DataTable().column(18).data().sum();
+                    //     var t_telepon = $('#table_export').DataTable().column(19).data().sum();
+                    //     var t_jabatan = $('#table_export').DataTable().column(20).data().sum();
+                    //     var t_perumahan = $('#table_export').DataTable().column(21).data().sum();
+                    //     var t_pelaksana = $('#table_export').DataTable().column(22).data().sum();
+                    //     var t_kemahalan = $('#table_export').DataTable().column(23).data().sum();
+                    //     var t_kesejahteraan = $('#table_export').DataTable().column(24).data().sum();
+                    //     var total_gaji = $('#table_export').DataTable().column(25).data().sum();
+
+                    //     totalGajiSpan.html(formatRupiahKoma(gaji_pokok.toString(),0))
+                    //     totalGajiPenyesuaianSpan.html(formatRupiahKoma(gaji_penyesuaian.toString(),0))
+                    //     totalTKeluargaSpan.html(formatRupiahKoma(t_keluarga.toString(),0))
+                    //     totalTTellerSpan.html(formatRupiahKoma(t_teller.toString(),0))
+                    //     totalTTeleponSpan.html(formatRupiahKoma(t_telepon.toString(),0))
+                    //     totalTJabatanSpan.html(formatRupiahKoma(t_jabatan.toString(),0))
+                    //     totalTPerumahanSpan.html(formatRupiahKoma(t_perumahan.toString(),0))
+                    //     totalTPelaksanaSpan.html(formatRupiahKoma(t_pelaksana.toString(),0))
+                    //     totalTKemahalanSpan.html(formatRupiahKoma(t_kemahalan.toString(),0))
+                    //     totalTKesejahteraanSpan.html(formatRupiahKoma(t_kesejahteraan.toString(),0))
+                    //     totalGajiTotalSpan.html(formatRupiahKoma(total_gaji.toString(),0))
+                    //     var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    // }
                 },
                 {
                     extend: 'pdfHtml5',

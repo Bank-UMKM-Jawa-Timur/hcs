@@ -1,27 +1,27 @@
 .table-responsive th:nth-child(1),
 .table-responsive td:nth-child(1) {
-    position: sticky;
+    /* position: sticky; */
     left: 0;
     background: #ffebb5;
 }
 
 .table-responsive th:nth-child(2),
 .table-responsive td:nth-child(2) {
-    position: sticky;
+    /* position: sticky; */
     left: 55px;
     background: #ffebb5;
 }
 
 .table-responsive th:nth-child(3),
 .table-responsive td:nth-child(3) {
-    position: sticky;
+    /* position: sticky; */
     left: 110px;
     background: #ffebb5;
 }
 
 .table-responsive th:nth-child(4),
 .table-responsive td:nth-child(4) {
-    position: sticky;
+    /* position: sticky; */
     left: 190px;
     background: #ffebb5;
 }
