@@ -1710,13 +1710,8 @@ return number_format($value, 0, '.', ',');
         namaCategory = "Status";
     }
 
-    var getdivisi;
-    function getdivisiPdf(value) {
-        // console.log("CONSOLE SAYA "+ value);
-        getdivisi = value;
-    }
+    let dataDivisi;
 
-    //
     $("#table_export").DataTable({
             dom : "Bfrtip",
             pageLength: 25,
@@ -1789,7 +1784,7 @@ return number_format($value, 0, '.', ',');
                 },
                 {
                     extend: 'print',
-                    title: 'Data Karyawan Kategori - '+namaCategory+' - '+getdivisi+'',
+                    title: 'Data Karyawan (Berdasarkan '+namaCategory+' ',
                     text:'print',
                     footer: true,
                     paperSize: 'A4',
@@ -2151,7 +2146,6 @@ return number_format($value, 0, '.', ',');
 
         function generateDivision() {
             const division = '{{ $request?->divisi }}';
-
             $.ajax({
                 type: 'GET',
                 url: "{{ route('get_divisi') }}",
@@ -2170,7 +2164,12 @@ return number_format($value, 0, '.', ',');
                     $.each(res, (i, item) => {
                         const kd_divisi = item.kd_divisi;
                         $('#divisi').append(`<option ${division == kd_divisi ? 'selected' : ''} value="${kd_divisi}">${item.kd_divisi} - ${item.nama_divisi}</option>`);
+
+                        if ($('#divisi').val() == kd_divisi) {
+                            dataDivisi = item.nama_divisi;
+                        }
                     });
+
                     
                     $('#subDivisi_col').empty();
                     $('#subDivisi_col').append(`
@@ -2184,10 +2183,6 @@ return number_format($value, 0, '.', ',');
                             
                     $('#divisi').change(function(e) {
                         var divisi = $(this).val();
-
-                        // get name divisi
-                        var getNameDivisi = $(this).find('option:selected').text();
-                        getdivisiPdf(getNameDivisi);
 
                         if (divisi) {
                             const subDivision = '{{ $request?->subDivisi }}';
