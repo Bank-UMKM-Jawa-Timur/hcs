@@ -1637,7 +1637,7 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; ">SK<br> Angkat</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
@@ -1646,6 +1646,28 @@ return number_format($value, 0, '.', ',');
                             Pendidikan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Pendidikan<br> Terakhir</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            G.Pokok</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            G.Penyesuaian</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Keluarga</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Teller</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Telepon</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Jabatan</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Perumahan</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Pelaksana</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Kemahalan</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            T.Kesejahteraan</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            G.Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1759,10 +1781,62 @@ return number_format($value, 0, '.', ',');
                         <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
                         <td>{{ $item->pendidikan ?? '-' }}</td>
                         <td>{{ $item->pendidikan_major ?? '-' }}</td>
+                        <td class="text-right">
+                            {{ $item->gj_pokok ? formatRupiah($item->gj_pokok) : 0 }}
+                        </td>
+                        <td class="text-right">
+                            {{ $item->gj_penyesuaian ? formatRupiah($item->gj_penyesuaian) : 0 }}
+                        </td>
+                        @foreach ($item->all_tunjangan as $tunjangan)
+                        <td class="text-right">
+                            {{ $tunjangan > 0 ? formatRupiah($tunjangan) : 0 }}
+                        </td>
+                        @endforeach
+                        <td class="text-right">
+                            {{ $item->gaji_total ? formatRupiah($item->gaji_total) : 0 }}
+                        </td>
                     </tr>
                     @endif
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="14" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                            <span class="total_gaji">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_gaji_penyesuaian">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_keluarga">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_teller">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_telepon">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_jabatan">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_perumahan">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_pelaksana">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_kemahalan">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_tunjangan_kesejahteraan">0</span>
+                        </th>
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                            <span class="total_gaji_total">0</span>
+                        </th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         @elseif ($status == 10)
