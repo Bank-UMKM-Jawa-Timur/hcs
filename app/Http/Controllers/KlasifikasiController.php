@@ -12,7 +12,6 @@ use App\Service\EntityService;
 use Doctrine\DBAL\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Mail\PendingMail;
 use Illuminate\Support\Facades\DB;
 
 class KlasifikasiController extends Controller

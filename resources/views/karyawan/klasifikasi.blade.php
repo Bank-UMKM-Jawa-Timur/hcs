@@ -57,6 +57,7 @@ return number_format($value, 0, '.', ',');
                             <option @selected($request?->kategori == 9) value="9">Jabatan</option>
                             <option @selected($request?->kategori == 10) value="10">Golongan</option>
                             <option @selected($request?->kategori == 11) value="11">Status</option>
+                            <option @selected($request?->kategori == 12) value="12">Jenjang Pendidikan</option>
                         </select>
                     </div>
                 </div>
@@ -1620,6 +1621,48 @@ return number_format($value, 0, '.', ',');
                                     </tr>
                                 @endforeach
                             </tbody>
+                        </table>
+                    </div>
+                @elseif($status == 12)
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">No</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Jenjang Pendidikan</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">IKJP</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">Tetap</th>
+                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">Kontrak Perpanjangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($karyawan as $item)
+                                        @php
+                                            $IKJP = $item->filter(fn($k)=> $k->status_karyawan == 'IKJP');
+                                            $Tetap = $item->filter(fn($k)=> $k->status_karyawan == 'Tetap');
+                                            $KP = $item->filter(fn($k)=> $k->status_karyawan == 'Kontrak Perpanjangan');
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $pendidikan[$loop->index] }}</td>
+                                            <td>{{ count($IKJP) }}</td>
+                                            <td>{{ count($Tetap) }}</td>
+                                            <td>{{ count($KP) }}</td>
+                                        </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2" style="text-align: center; font-size: 11px;">Sub Total</td>
+                                    <td id="total_IKJP" style="text-align: center; font-size: 11px;">-</td>
+                                    <td id="total_Tetap" style="text-align: center; font-size: 11px;">-</td>
+                                    <td id="total_KP" style="text-align: center; font-size: 11px;">-</td>
+                                </tr>
+                                <tr style="font-weight: bolder">
+                                    <td colspan="2" style="text-align: center; font-size: 11px;">Total</td>
+                                    <td id="total" colspan="3" style="text-align: center; font-size: 11px;">-</td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 @endif
