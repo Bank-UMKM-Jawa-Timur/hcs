@@ -8,6 +8,10 @@ return number_format($value, 0, '.', ',');
 }
 @endphp
 
+@push('style')
+<link href="{{ asset('style/assets/css/freeze-column-table.css') }}" rel="stylesheet" />
+@endpush
+
 @section('content')
 <style>
     .dataTables_wrapper .dataTables_filter {
@@ -111,9 +115,9 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">NIK
                         </th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 60px;">
                             Nama</th>
-                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 60px;">
                             Jabatan</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             Kantor</th>
@@ -293,37 +297,37 @@ return number_format($value, 0, '.', ',');
                 <tfoot>
                     <tr>
                         <th colspan="15" class="text-center" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">Total Gaji</th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 10px; min-width: 80px;">
                             <span class="total_gaji">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_gaji_penyesuaian">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_keluarga">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_teller">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_telepon">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_jabatan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_perumahan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_pelaksana">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_kemahalan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_tunjangan_kesejahteraan">0</span>
                         </th>
-                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 90px;">
+                        <th class="text-right" style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
                             <span class="total_gaji_total">0</span>
                         </th>
                     </tr>
@@ -2383,7 +2387,6 @@ return number_format($value, 0, '.', ',');
         // Initial sum calculation
         table.rows().every(function() {
             var rowData = this.data();
-            // console.log(row);
             var amount = parseFloat(rowData[15].replaceAll(',',''));
             var amountPenyesuaian = parseFloat(rowData[16].replaceAll(',',''));
             var amountTKeluarga = parseFloat(rowData[17].replaceAll(',',''));
@@ -2558,6 +2561,11 @@ return number_format($value, 0, '.', ',');
             pageLength: 25,
             ordering: false,
             scrollX: true,
+            fixedColumns: {
+                left: 1,
+                right: 1,
+            },
+            scrollCollapse: true,
             drawCallback: function () {
                 var ikjp = $('#table_export').DataTable().column(2).data().sum();
                 var tetap = $('#table_export').DataTable().column(3).data().sum();
@@ -2725,8 +2733,31 @@ return number_format($value, 0, '.', ',');
                         orthogonal: 'sort'
                     },
                     customize: function( xlsx, row ) {
+                        var gaji_pokok = $('#table_export').DataTable().column(15).data().sum();
+                        var gaji_penyesuaian = $('#table_export').DataTable().column(16).data().sum();
+                        var t_keluarga = $('#table_export').DataTable().column(17).data().sum();
+                        var t_teller = $('#table_export').DataTable().column(18).data().sum();
+                        var t_telepon = $('#table_export').DataTable().column(19).data().sum();
+                        var t_jabatan = $('#table_export').DataTable().column(20).data().sum();
+                        var t_perumahan = $('#table_export').DataTable().column(21).data().sum();
+                        var t_pelaksana = $('#table_export').DataTable().column(22).data().sum();
+                        var t_kemahalan = $('#table_export').DataTable().column(23).data().sum();
+                        var t_kesejahteraan = $('#table_export').DataTable().column(24).data().sum();
+                        var total_gaji = $('#table_export').DataTable().column(25).data().sum();
+
+                        totalGajiSpan.html(formatRupiahKoma(gaji_pokok.toString(),0))
+                        totalGajiPenyesuaianSpan.html(formatRupiahKoma(gaji_penyesuaian.toString(),0))
+                        totalTKeluargaSpan.html(formatRupiahKoma(t_keluarga.toString(),0))
+                        totalTTellerSpan.html(formatRupiahKoma(t_teller.toString(),0))
+                        totalTTeleponSpan.html(formatRupiahKoma(t_telepon.toString(),0))
+                        totalTJabatanSpan.html(formatRupiahKoma(t_jabatan.toString(),0))
+                        totalTPerumahanSpan.html(formatRupiahKoma(t_perumahan.toString(),0))
+                        totalTPelaksanaSpan.html(formatRupiahKoma(t_pelaksana.toString(),0))
+                        totalTKemahalanSpan.html(formatRupiahKoma(t_kemahalan.toString(),0))
+                        totalTKesejahteraanSpan.html(formatRupiahKoma(t_kesejahteraan.toString(),0))
+                        totalGajiTotalSpan.html(formatRupiahKoma(total_gaji.toString(),0))
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                        $('row c[r^="C"]', sheet).attr( 's', '50' );
+                        // $('row c[r^="C"]', sheet).attr( 's', '50' );
                     }
                 },
                 {

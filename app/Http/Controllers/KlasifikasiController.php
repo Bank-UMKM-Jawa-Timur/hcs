@@ -188,7 +188,8 @@ class KlasifikasiController extends Controller
             $karyawan = $karyawan->get();
         }
 
-        if ($request->kategori != 8) {
+        if ($request->kategori != 8 && $request->kategori != 12) {
+            // not umur & jenjang pendidikan category
             foreach ($karyawan as $key => $value) {
                 $arrIdTunjangan = [
                     1, //keluarga

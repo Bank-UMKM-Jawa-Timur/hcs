@@ -591,7 +591,6 @@ Coded by www.creative-tim.com
         }
 
         function formatRupiahKoma(angka, prefix) {
-            console.log(angka)
             var number_string = angka.replace(/[^.\d]/g, '').toString(),
                 split = number_string.split(','),
                 sisa = split[0].length % 3,
