@@ -115,7 +115,9 @@
                                             <td>{{ $prefix . $jabatan }} {{ $entitas }}
                                                 {{ $item?->bagian?->nama_bagian }} {{ $ket }}</td>
                                             <td>{{ $item->kategori_penonaktifan ?? '-' }}</td>
-                                            <td>{{ $item->tanggal_penonaktifan != null ? date('d M Y', strtotime($item->tanggal_penonaktifan)) : '-' }}
+                                            <td>
+                                                <span style="display: none;">{{ date('Ymd', strtotime($item->tanggal_penonaktifan)) }}</span>
+                                                {{ $item->tanggal_penonaktifan != null ? date('d M Y', strtotime($item->tanggal_penonaktifan)) : '-' }}
                                             </td>
                                         </tr>
                                     @endforeach
