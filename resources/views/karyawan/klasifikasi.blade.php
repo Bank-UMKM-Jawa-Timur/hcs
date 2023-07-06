@@ -37,31 +37,31 @@ return number_format($value, 0, '.', ',');
     </div>
 </div>
 
-    <div class="card-body ml-3 mr-3">
-        <form action="{{ route('klasifikasi-data') }}" method="post">
-            @csrf
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="">Kategori {{ old('kategori') }}</label>
-                        <select name="kategori" class="form-control" id="kategori">
-                            <option value="-">--- Pilih Kategori ---</option>
-                            <option @selected($request?->kategori == 1) value="1">Keseluruhan</option>
-                            <option @selected($request?->kategori == 2) value="2">Divisi</option>
-                            <option @selected($request?->kategori == 3) value="3">Sub Divisi</option>
-                            <option @selected($request?->kategori == 4) value="4">Bagian</option>
-                            <option @selected($request?->kategori == 5) value="5">Kantor</option>
-                            <option @selected($request?->kategori == 6) value="6">Gaji</option>
-                            <option @selected($request?->kategori == 7) value="7">Pendidikan</option>
-                            <option @selected($request?->kategori == 8) value="8">Umur</option>
-                            <option @selected($request?->kategori == 9) value="9">Jabatan</option>
-                            <option @selected($request?->kategori == 10) value="10">Golongan</option>
-                            <option @selected($request?->kategori == 11) value="11">Status</option>
-                            <option @selected($request?->kategori == 12) value="12">Jenjang Pendidikan</option>
-                        </select>
-                    </div>
+<div class="card-body ml-3 mr-3">
+    <form action="{{ route('klasifikasi-data') }}" method="post">
+        @csrf
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">Kategori {{ old('kategori') }}</label>
+                    <select name="kategori" class="form-control" id="kategori">
+                        <option value="-">--- Pilih Kategori ---</option>
+                        <option @selected($request?->kategori == 1) value="1">Keseluruhan</option>
+                        <option @selected($request?->kategori == 2) value="2">Divisi</option>
+                        <option @selected($request?->kategori == 3) value="3">Sub Divisi</option>
+                        <option @selected($request?->kategori == 4) value="4">Bagian</option>
+                        <option @selected($request?->kategori == 5) value="5">Kantor</option>
+                        <option @selected($request?->kategori == 6) value="6">Gaji</option>
+                        <option @selected($request?->kategori == 7) value="7">Pendidikan</option>
+                        <option @selected($request?->kategori == 8) value="8">Umur</option>
+                        <option @selected($request?->kategori == 9) value="9">Jabatan</option>
+                        <option @selected($request?->kategori == 10) value="10">Golongan</option>
+                        <option @selected($request?->kategori == 11) value="11">Status</option>
+                        <option @selected($request?->kategori == 12) value="12">Jenjang Pendidikan</option>
+                    </select>
                 </div>
             </div>
+        </div>
 
         <div class="row">
             <div id="kantor_col" class="col-md-4">
@@ -1686,63 +1686,69 @@ return number_format($value, 0, '.', ',');
                         $mulaKerja = Carbon\Carbon::create($item->tanggal_pengangkat);
                         $waktuSekarang = Carbon\Carbon::now();
 
-                                            $hitung = $waktuSekarang->diff($mulaKerja);
-                                            $masaKerja = $hitung->format('%y.%m');
-                                        @endphp
-                                        <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
-                                        <td>{{ $item->pendidikan ?? '-' }}</td>
-                                        <td>{{ $item->pendidikan_major ?? '-' }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @elseif($status == 12)
-                    <div class="table-responsive overflow-hidden pt-2">
-                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%; word-break: break-all;">
-                            <thead>
-                                <tr>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">No</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">Jenjang Pendidikan</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">IKJP</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">Tetap</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">Kontrak Perpanjangan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($karyawan as $item)
-                                        @php
-                                            $IKJP = $item->filter(fn($k)=> $k->status_karyawan == 'IKJP');
-                                            $Tetap = $item->filter(fn($k)=> $k->status_karyawan == 'Tetap');
-                                            $KP = $item->filter(fn($k)=> $k->status_karyawan == 'Kontrak Perpanjangan');
-                                        @endphp
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $pendidikan[$loop->index] }}</td>
-                                            <td>{{ count($IKJP) }}</td>
-                                            <td>{{ count($Tetap) }}</td>
-                                            <td>{{ count($KP) }}</td>
-                                        </tr>
-                                @endforeach
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="2" style="text-align: center; font-size: 11px;">Sub Total</td>
-                                    <td id="total_IKJP" style="text-align: center; font-size: 11px;">-</td>
-                                    <td id="total_Tetap" style="text-align: center; font-size: 11px;">-</td>
-                                    <td id="total_KP" style="text-align: center; font-size: 11px;">-</td>
-                                </tr>
-                                <tr style="font-weight: bolder">
-                                    <td colspan="2" style="text-align: center; font-size: 11px;">Total</td>
-                                    <td id="total" colspan="3" style="text-align: center; font-size: 11px;">-</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                @endif
-            @endif
+                        $hitung = $waktuSekarang->diff($mulaKerja);
+                        $masaKerja = $hitung->format('%y.%m');
+                        @endphp
+                        <td>{{ ($item->tanggal_pengangkat != null) ? $masaKerja : '-' }}</td>
+                        <td>{{ $item->pendidikan ?? '-' }}</td>
+                        <td>{{ $item->pendidikan_major ?? '-' }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
+        @elseif($status == 12)
+        <div class="table-responsive overflow-hidden pt-2">
+            <table class="table text-center cell-border stripe" id="table_export"
+                style="width: 100%; word-break: break-all;">
+                <thead>
+                    <tr>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 35px;">No
+                        </th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 100px;">
+                            Jenjang Pendidikan</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                            IKJP</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                            Tetap</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 80px;">
+                            Kontrak Perpanjangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($karyawan as $item)
+                    @php
+                    $IKJP = $item->filter(fn($k)=> $k->status_karyawan == 'IKJP');
+                    $Tetap = $item->filter(fn($k)=> $k->status_karyawan == 'Tetap');
+                    $KP = $item->filter(fn($k)=> $k->status_karyawan == 'Kontrak Perpanjangan');
+                    @endphp
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $pendidikan[$loop->index] }}</td>
+                        <td>{{ count($IKJP) }}</td>
+                        <td>{{ count($Tetap) }}</td>
+                        <td>{{ count($KP) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2" style="text-align: center; font-size: 11px;">Sub Total</td>
+                        <td id="total_IKJP" style="text-align: center; font-size: 11px;">-</td>
+                        <td id="total_Tetap" style="text-align: center; font-size: 11px;">-</td>
+                        <td id="total_KP" style="text-align: center; font-size: 11px;">-</td>
+                    </tr>
+                    <tr style="font-weight: bolder">
+                        <td colspan="2" style="text-align: center; font-size: 11px;">Total</td>
+                        <td id="total" colspan="3" style="text-align: center; font-size: 11px;">-</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        @endif
+        @endif
     </div>
+</div>
 @endsection
 
 @section('custom_script')
@@ -1952,34 +1958,8 @@ return number_format($value, 0, '.', ',');
         totalGajiTotalSpan.html(formatRupiah(totalGajiTotal.toString(),0))
     }
     // Pengambilan Kategori
-    var category = $('#kategori').val();
-    var namaCategory;
-
-    if (category == 1) {
-        namaCategory = "Keseluruhan";
-    }else if(category == 2){
-        namaCategory = "Devisi";
-    }else if(category == 3){
-        namaCategory = "Sub Devisi";
-    }else if(category == 4){
-        namaCategory = "Bagian";
-    }else if(category == 5){
-        namaCategory = "Kantor";
-    }else if(category == 6){
-        namaCategory = "Gaji";
-    }else if(category == 7){
-        namaCategory = "Pendidikan";
-    }else if(category == 8){
-        namaCategory = "Umur";
-    }else if(category == 9){
-        namaCategory = "Jabatan";
-    }else if(category == 10){
-        namaCategory = "Golongan";
-    }else if(category == 11){
-        namaCategory = "Status";
-    }
-
-    let dataDivisi;
+    var k = document.getElementById("kategori");
+    var category = k.options[k.selectedIndex].text;
 
     $("#table_export").DataTable({
             dom : "Bfrtip",
@@ -1999,8 +1979,152 @@ return number_format($value, 0, '.', ',');
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    title: 'Bank UMKM Jawa Timur - '+namaCategory,
-                    filename : 'Bank UMKM Jawa Timur Klasifikasi Data Karyawan - '+namaCategory,
+                    title : function() {
+                        var selectedValueKantor = $('#kantor').val();
+                        var selectedValueCategory = $('#kategori').find('option:selected').text();
+                        var selectedValueCabang = $('#cabang').find('option:selected').text();
+                        var selectedValueDivisi = $('#divisi').find('option:selected').text();
+                        var selectedValueSubDivisi = $('#subDivisi').find('option:selected').text();
+                        var selectedValueBagian = $('#bagian').find('option:selected').text();
+                        var selectedValuePendidikan = $('#pendidikan').find('option:selected').text();
+                        var selectedValueJabatan = $('#jabatan').find('option:selected').text();
+                        var selectedValuePanggol = $('#panggol').find('option:selected').text();
+                        var selectedValueStatus = $('#status').find('option:selected').text();
+
+                        if (selectedValueCategory === "Keseluruhan" || selectedValueCategory === "Umur" || selectedValueCategory === "Jenjang Pendidikan") {
+                            return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category;
+                        }else{
+                            // Kategori divisi, sub divisi, bagian
+                            if (selectedValueCategory === "Divisi" || selectedValueCategory === "Sub Divisi" || selectedValueCategory === "Bagian") {
+                                if (selectedValueDivisi === null || selectedValueDivisi === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan Kategori_' + category + '';
+                                }else{
+                                    if (selectedValueSubDivisi === null || selectedValueSubDivisi === undefined || selectedValueSubDivisi === "--- Pilih Sub Divisi ---") {
+                                        return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan Kategori Divisi_'+selectedValueDivisi+'';
+                                    }else{
+                                        if (selectedValueBagian === null || selectedValueBagian === undefined || selectedValueBagian === "--- Pilih Bagian ---") {
+                                            return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+'';
+                                        }else{
+                                            return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+', Bagian_'+selectedValueBagian+'';
+                                        }
+                                    }
+                                }
+                            }else if(selectedValueCategory === "Kantor" || selectedValueCategory === "Gaji"){
+                                // kategori kantor, cabang
+                                if (selectedValueKantor === null || selectedValueKantor === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    if(selectedValueCabang === null || selectedValueCabang === undefined || selectedValueCabang === "--- Pilih Cabang ---" || selectedValueCabang === ""){
+                                        return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueKantor+'';
+                                    }else{
+                                        return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueCabang+'';
+                                    }
+                                }
+
+                            }else if(selectedValueCategory === "Pendidikan"){
+                                // Kategori Pendidikan 
+                                if (selectedValuePendidikan === null || selectedValuePendidikan === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValuePendidikan+'';
+                                }
+                            }else if(selectedValueCategory === "Jabatan"){
+                                // // Kategori jabatan 
+                                if (selectedValueJabatan === null || selectedValueJabatan === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueJabatan+'';
+                                }
+                            }else if(selectedValueCategory === "Golongan"){
+                                // // Kategori Golongan 
+                                if (selectedValuePanggol === null || selectedValuePanggol === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValuePanggol+'';
+                                }
+                            }else{
+                                // // Kategori Status 
+                                if (selectedValueStatus === null || selectedValueStatus === undefined ) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueStatus+'';
+                                }
+                            }
+                        }
+                    },
+                    filename : function() {
+                        var selectedValueKantor = $('#kantor').val();
+                        var selectedValueCategory = $('#kategori').find('option:selected').text();
+                        var selectedValueCabang = $('#cabang').find('option:selected').text();
+                        var selectedValueDivisi = $('#divisi').find('option:selected').text();
+                        var selectedValueSubDivisi = $('#subDivisi').find('option:selected').text();
+                        var selectedValueBagian = $('#bagian').find('option:selected').text();
+                        var selectedValuePendidikan = $('#pendidikan').find('option:selected').text();
+                        var selectedValueJabatan = $('#jabatan').find('option:selected').text();
+                        var selectedValuePanggol = $('#panggol').find('option:selected').text();
+                        var selectedValueStatus = $('#status').find('option:selected').text();
+
+                        if (selectedValueCategory === "Keseluruhan" || selectedValueCategory === "Umur" || selectedValueCategory === "Jenjang Pendidikan") {
+                            return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category;
+                        }else{
+                            // Kategori divisi, sub divisi, bagian
+                            if (selectedValueCategory === "Divisi" || selectedValueCategory === "Sub Divisi" || selectedValueCategory === "Bagian") {
+                                if (selectedValueDivisi === null || selectedValueDivisi === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan Kategori_' + category + '';
+                                }else{
+                                    if (selectedValueSubDivisi === null || selectedValueSubDivisi === undefined || selectedValueSubDivisi === "--- Pilih Sub Divisi ---") {
+                                        return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan Kategori Divisi_'+selectedValueDivisi+'';
+                                    }else{
+                                        if (selectedValueBagian === null || selectedValueBagian === undefined || selectedValueBagian === "--- Pilih Bagian ---") {
+                                            return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+'';
+                                        }else{
+                                            return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+', Bagian_'+selectedValueBagian+'';
+                                        }
+                                    }
+                                }
+                            }else if(selectedValueCategory === "Kantor" || selectedValueCategory === "Gaji"){
+                                // kategori kantor, cabang
+                                if (selectedValueKantor === null || selectedValueKantor === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    if(selectedValueCabang === null || selectedValueCabang === undefined || selectedValueCabang === "--- Pilih Cabang ---" || selectedValueCabang === ""){
+                                        return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueKantor+'';
+                                    }else{
+                                        return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueCabang+'';
+                                    }
+                                }
+
+                            }else if(selectedValueCategory === "Pendidikan"){
+                                // Kategori Pendidikan 
+                                if (selectedValuePendidikan === null || selectedValuePendidikan === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValuePendidikan+'';
+                                }
+                            }else if(selectedValueCategory === "Jabatan"){
+                                // // Kategori jabatan 
+                                if (selectedValueJabatan === null || selectedValueJabatan === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueJabatan+'';
+                                }
+                            }else if(selectedValueCategory === "Golongan"){
+                                // // Kategori Golongan 
+                                if (selectedValuePanggol === null || selectedValuePanggol === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValuePanggol+'';
+                                }
+                            }else{
+                                // // Kategori Status 
+                                if (selectedValueStatus === null || selectedValueStatus === undefined ) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueStatus+'';
+                                }
+                            }
+                        }
+                    },
                     message: 'Klasifikasi Data Karyawan\n ',
                     text:'Excel',
                     header: true,
@@ -2015,8 +2139,82 @@ return number_format($value, 0, '.', ',');
                 },
                 {
                     extend: 'pdfHtml5',
-                    title: 'Bank UMKM Jawa Timur\n Klasifikasi Data Karyawan - ' + namaCategory,
-                    filename : 'Bank UMKM Jawa Timur Klasifikasi Data Karyawan - '+namaCategory,
+                    title: 'BANK UMKM Jawa Timur\n Klasifikasi Data Karyawan ',
+                    filename : function() {
+                        var selectedValueKantor = $('#kantor').val();
+                        var selectedValueCategory = $('#kategori').find('option:selected').text();
+                        var selectedValueCabang = $('#cabang').find('option:selected').text();
+                        var selectedValueDivisi = $('#divisi').find('option:selected').text();
+                        var selectedValueSubDivisi = $('#subDivisi').find('option:selected').text();
+                        var selectedValueBagian = $('#bagian').find('option:selected').text();
+                        var selectedValuePendidikan = $('#pendidikan').find('option:selected').text();
+                        var selectedValueJabatan = $('#jabatan').find('option:selected').text();
+                        var selectedValuePanggol = $('#panggol').find('option:selected').text();
+                        var selectedValueStatus = $('#status').find('option:selected').text();
+
+                        if (selectedValueCategory === "Keseluruhan" || selectedValueCategory === "Umur" || selectedValueCategory === "Jenjang Pendidikan") {
+                            return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category;
+                        }else{
+                            // Kategori divisi, sub divisi, bagian
+                            if (selectedValueCategory === "Divisi" || selectedValueCategory === "Sub Divisi" || selectedValueCategory === "Bagian") {
+                                if (selectedValueDivisi === null || selectedValueDivisi === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan Kategori_' + category + '';
+                                }else{
+                                    if (selectedValueSubDivisi === null || selectedValueSubDivisi === undefined || selectedValueSubDivisi === "--- Pilih Sub Divisi ---") {
+                                        return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan Kategori Divisi_'+selectedValueDivisi+'';
+                                    }else{
+                                        if (selectedValueBagian === null || selectedValueBagian === undefined || selectedValueBagian === "--- Pilih Bagian ---") {
+                                            return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+'';
+                                        }else{
+                                            return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+', Bagian_'+selectedValueBagian+'';
+                                        }
+                                    }
+
+                                }
+                            }else if(selectedValueCategory === "Kantor" || selectedValueCategory === "Gaji"){
+                                // kategori kantor, cabang
+                                if (selectedValueKantor === null || selectedValueKantor === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    if(selectedValueCabang === null || selectedValueCabang === undefined || selectedValueCabang === "--- Pilih Cabang ---" || selectedValueCabang === ""){
+                                        return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueKantor+'';
+                                    }else{
+                                        return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueCabang+'';
+                                    }
+
+                                }
+
+                            }else if(selectedValueCategory === "Pendidikan"){
+                                // Kategori Pendidikan 
+                                if (selectedValuePendidikan === null || selectedValuePendidikan === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValuePendidikan+'';
+                                }
+                            }else if(selectedValueCategory === "Jabatan"){
+                                // // Kategori jabatan 
+                                if (selectedValueJabatan === null || selectedValueJabatan === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueJabatan+'';
+                                }
+                            }else if(selectedValueCategory === "Golongan"){
+                                // // Kategori Golongan 
+                                if (selectedValuePanggol === null || selectedValuePanggol === undefined) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValuePanggol+'';
+                                }
+                            }else{
+                                // // Kategori Status 
+                                if (selectedValueStatus === null || selectedValueStatus === undefined ) {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    return 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueStatus+'';
+                                }
+                            }
+                        }
+                    },
                     text:'PDF',
                     footer: true,
                     paperSize: 'A4',
@@ -2025,6 +2223,78 @@ return number_format($value, 0, '.', ',');
                     customize: function (doc) {
                         var now = new Date();
                         var jsDate = now.getDate()+' / '+(now.getMonth()+1)+' / '+now.getFullYear();
+
+                        var selectedValueKantor = $('#kantor').val();
+                        var selectedValueCategory = $('#kategori').find('option:selected').text();
+                        var selectedValueCabang = $('#cabang').find('option:selected').text();
+                        var selectedValueDivisi = $('#divisi').find('option:selected').text();
+                        var selectedValueSubDivisi = $('#subDivisi').find('option:selected').text();
+                        var selectedValueBagian = $('#bagian').find('option:selected').text();
+                        var selectedValuePendidikan = $('#pendidikan').find('option:selected').text();
+                        var selectedValueJabatan = $('#jabatan').find('option:selected').text();
+                        var selectedValuePanggol = $('#panggol').find('option:selected').text();
+                        var selectedValueStatus = $('#status').find('option:selected').text();
+
+                        if (selectedValueCategory === "Keseluruhan" || selectedValueCategory === "Umur" || selectedValueCategory === "Jenjang Pendidikan") {
+                            doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                        }else{
+                            // Kategori divisi, sub divisi, bagian
+                            if (selectedValueCategory === "Divisi" || selectedValueCategory === "Sub Divisi" || selectedValueCategory === "Bagian") {
+                                if (selectedValueDivisi === null || selectedValueDivisi === undefined) {
+                                    doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan Kategori_' + category + '';
+                                }else{
+                                    if (selectedValueSubDivisi === null || selectedValueSubDivisi === undefined || selectedValueSubDivisi === "--- Pilih Sub Divisi ---") {
+                                        doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan Kategori Divisi_'+selectedValueDivisi+'';
+                                    }else{
+                                        if (selectedValueBagian === null || selectedValueBagian === undefined || selectedValueBagian === "--- Pilih Bagian ---") {
+                                            doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+'';
+                                        }else{
+                                            doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori Divisi_'+selectedValueDivisi+', Sub Divisi_'+selectedValueSubDivisi+', Bagian_'+selectedValueBagian+'';
+                                        }
+                                    }
+                                }
+                            }else if(selectedValueCategory === "Kantor" || selectedValueCategory === "Gaji"){
+                                // kategori kantor, cabang
+                                if (selectedValueKantor === null || selectedValueKantor === undefined) {
+                                    doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    if(selectedValueCabang === null || selectedValueCabang === undefined || selectedValueCabang === "--- Pilih Cabang ---" || selectedValueCabang === ""){
+                                        doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueKantor+'';
+                                    }else{
+                                        doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueCabang+'';
+                                    }
+                                }
+
+                            }else if(selectedValueCategory === "Pendidikan"){
+                                // Kategori Pendidikan 
+                                if (selectedValuePendidikan === null || selectedValuePendidikan === undefined) {
+                                    doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValuePendidikan+'';
+                                }
+                            }else if(selectedValueCategory === "Jabatan"){
+                                // // Kategori jabatan 
+                                if (selectedValueJabatan === null || selectedValueJabatan === undefined) {
+                                    doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueJabatan+'';
+                                }
+                            }else if(selectedValueCategory === "Golongan"){
+                                // // Kategori Golongan 
+                                if (selectedValuePanggol === null || selectedValuePanggol === undefined) {
+                                    doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValuePanggol+'';
+                                }
+                            }else{
+                                // // Kategori Status 
+                                if (selectedValueStatus === null || selectedValueStatus === undefined ) {
+                                    doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    doc.content[0].text = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueStatus+'';
+                                }
+                            }
+                        }
 
                         doc.styles.tableHeader.fontSize = 10;
                         doc.defaultStyle.fontSize = 9;
@@ -2054,7 +2324,7 @@ return number_format($value, 0, '.', ',');
                 },
                 {
                     extend: 'print',
-                    title: 'Data Karyawan (Berdasarkan '+namaCategory+' ',
+                    title: '',
                     text:'print',
                     footer: true,
                     paperSize: 'A4',
@@ -2062,6 +2332,80 @@ return number_format($value, 0, '.', ',');
                         var last = null;
                         var current = null;
                         var bod = [];
+
+                        var selectedValueKantor = $('#kantor').val();
+                        var selectedValueCategory = $('#kategori').find('option:selected').text();
+                        var selectedValueCabang = $('#cabang').find('option:selected').text();
+                        var selectedValueDivisi = $('#divisi').find('option:selected').text();
+                        var selectedValueSubDivisi = $('#subDivisi').find('option:selected').text();
+                        var selectedValueBagian = $('#bagian').find('option:selected').text();
+                        var selectedValuePendidikan = $('#pendidikan').find('option:selected').text();
+                        var selectedValueJabatan = $('#jabatan').find('option:selected').text();
+                        var selectedValuePanggol = $('#panggol').find('option:selected').text();
+                        var selectedValueStatus = $('#status').find('option:selected').text();
+
+                        var header = document.createElement('h1');
+                        if (selectedValueCategory === "Keseluruhan" || selectedValueCategory === "Umur" || selectedValueCategory === "Jenjang Pendidikan") {
+                            header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                        }else{
+                            // Kategori divisi, sub divisi, bagian
+                            if (selectedValueCategory === "Divisi" || selectedValueCategory === "Sub Divisi" || selectedValueCategory === "Bagian") {
+                                if (selectedValueDivisi === null || selectedValueDivisi === undefined) {
+                                    header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                }else{
+                                    if (selectedValueSubDivisi === null || selectedValueSubDivisi === undefined || selectedValueSubDivisi === "--- Pilih Sub Divisi ---") {
+                                        header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan Kategori Divisi_'+selectedValueDivisi+'';
+                                    }else{
+                                        if (selectedValueBagian === null || selectedValueBagian === undefined || selectedValueBagian === "--- Pilih Bagian ---") {
+                                            header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori divisi '+selectedValueDivisi+'_'+selectedValueSubDivisi+'';
+                                        }else{
+                                            header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori divisi '+selectedValueDivisi+'_'+selectedValueSubDivisi+', bagian_'+selectedValueBagian+'';
+                                        }
+                                    }
+                                }
+                            }else if(selectedValueCategory === "Kantor" || selectedValueCategory === "Gaji"){
+                                // kategori kantor, cabang
+                                if (selectedValueKantor === null || selectedValueKantor === undefined) {
+                                    header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    if(selectedValueCabang === null || selectedValueCabang === undefined || selectedValueCabang === "--- Pilih Cabang ---" || selectedValueCabang === ""){
+                                        header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueKantor+'';
+                                    }else{
+                                        header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueCabang+'';
+                                    }
+                                }
+
+                            }else if(selectedValueCategory === "Pendidikan"){
+                                // Kategori Pendidikan 
+                                if (selectedValuePendidikan === null || selectedValuePendidikan === undefined) {
+                                    header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValuePendidikan+'';
+                                }
+                            }else if(selectedValueCategory === "Jabatan"){
+                                // // Kategori jabatan 
+                                if (selectedValueJabatan === null || selectedValueJabatan === undefined) {
+                                    header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueJabatan+'';
+                                }
+                            }else if(selectedValueCategory === "Golongan"){
+                                // // Kategori Golongan 
+                                if (selectedValuePanggol === null || selectedValuePanggol === undefined) {
+                                    header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValuePanggol+'';
+                                }
+                            }else{
+                                // // Kategori Status 
+                                if (selectedValueStatus === null || selectedValueStatus === undefined ) {
+                                    header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori_' + category + '';
+                                } else {
+                                    header.textContent = 'BANK UMKM Jawa Timur Klasifikasi Data Karyawan kategori ' + category + '_'+selectedValueStatus+'';
+                                }
+                            }
+                        }
+                        win.document.body.insertBefore(header, win.document.body.firstChild);
 
                         var css = '@page { size: landscape; }',
                             head = win.document.head || win.document.getElementsByTagName('head')[0],
