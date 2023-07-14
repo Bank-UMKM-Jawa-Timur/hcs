@@ -140,7 +140,7 @@
 
                 function rupiah($angka){
                     $hasil_rupiah = number_format($angka, 0, ",", ".");
-                    return $hasil_rupiah;
+                    return $hasil_rupiah > 0 ? $hasil_rupiah : '-';
                 }
             @endphp
             @if ($mode == 1)
