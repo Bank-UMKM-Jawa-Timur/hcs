@@ -46,7 +46,7 @@ class PenghasilanTidakTeraturController extends Controller
         // dd(count($row[0]));
         $import = $import->import($file);
         Alert::success('Berhasil', 'Berhasil mengimport '.count($row[0]).' data');
-        return redirect()->route('penghasilan.index');
+        return redirect()->route('pajak_penghasilan.index');
     }
 
     public function filter(Request $request)
@@ -141,26 +141,32 @@ class PenghasilanTidakTeraturController extends Controller
            array_push($gaji, $gj[$i-1]);
            array_push($total_gaji, array_sum($total_gj[$i-1]));
         // Get Penghasilan tidak teratur karyawan
-            for($j = 16; $j <= 21; $j++){
-                $penghasilan = DB::table('penghasilan_tidak_teratur')
-                    ->where('nip', $nip)
-                    ->where('id_tunjangan', $j)
-                    ->where('tahun', $tahun)
-                    ->where('bulan', $i)
-                    ->first();
-                $peng[$j-16] = ($penghasilan != null) ? $penghasilan->nominal : 0;
+           $k = 0;
+            for($j = 16; $j <= 26; $j++){
+                if($j != 22 && $j != 23 && $j != 24){
+                    $penghasilan = DB::table('penghasilan_tidak_teratur')
+                        ->where('nip', $nip)
+                        ->where('id_tunjangan', $j)
+                        ->where('tahun', $tahun)
+                        ->where('bulan', $i)
+                        ->first();
+                    $peng[$k] = ($penghasilan != null) ? $penghasilan->nominal : 0;
+                    $k++;
+                }
             }
             array_push($ptt, $peng);
 
             // Get Bonus Karyawan
-            for($j = 21; $j <= 24; $j++){
+            $l = 0;
+            for($j = 22; $j <= 24; $j++){
                 $bns = DB::table('penghasilan_tidak_teratur')
                     ->where('nip', $nip)
                     ->where('id_tunjangan', $j)
                     ->where('tahun', $tahun)
                     ->where('bulan', $i)
                     ->first();
-                $bon[$j-21] = ($bns != null) ? $bns->nominal : 0;
+                $bon[$l] = ($bns != null) ? $bns->nominal : 0;
+                $l++;
             }
             array_push($bonus, $bon);
         }
@@ -169,7 +175,6 @@ class PenghasilanTidakTeraturController extends Controller
         foreach($total_gaji as $item){
             array_push($jamsostek, 0.03 * $item);
         }
-        // dd($gj);
 
         return view('penghasilan.gajipajak', [
             'gj' => $gj,
