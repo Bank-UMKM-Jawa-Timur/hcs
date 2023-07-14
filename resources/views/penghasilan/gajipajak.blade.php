@@ -102,7 +102,7 @@
         <div class="col-md-12">
             @php
                 $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
-                $total_ket = 0;
+                $total_ket = 1;
                 $status = 'TK';
                 if ($karyawan->status == 'K') {
                     $anak = DB::table('mst_karyawan')
