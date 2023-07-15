@@ -46,7 +46,7 @@ class PenghasilanTidakTeraturController extends Controller
         // dd(count($row[0]));
         $import = $import->import($file);
         Alert::success('Berhasil', 'Berhasil mengimport '.count($row[0]).' data');
-        return redirect()->route('penghasilan.index');
+        return redirect()->route('pajak_penghasilan.index');
     }
 
     public function filter(Request $request)
