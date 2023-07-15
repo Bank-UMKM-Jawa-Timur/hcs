@@ -267,6 +267,7 @@
                                     @php
                                         $total_rutin += array_sum($gj[$i]);
                                         $total_tidak_rutin += array_sum($penghasilan[$i]);
+                                        $total_tidak_rutin += array_sum($bonus[$i]);
                                         $total_gaji += $gj[$i]['gj_pokok'] + $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] +$gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] + $gj[$i]['tj_kesejahteraan'];
                                         $total_tj_lainnya += $gj[$i]['uang_makan'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_vitamin'] + $gj[$i]['tj_transport'] + $total_tidak_rutin;
                                         $total_penghasilan_bruto += array_sum($gj[$i]) + array_sum($penghasilan[$i]);
