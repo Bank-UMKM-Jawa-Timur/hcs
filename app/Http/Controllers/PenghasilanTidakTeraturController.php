@@ -143,7 +143,7 @@ class PenghasilanTidakTeraturController extends Controller
         // Get Penghasilan tidak teratur karyawan
            $k = 0;
             for($j = 16; $j <= 26; $j++){
-                if($j != 22 && $j != 23 && $j != 24){
+                if($j != 22 && $j != 23 && $j != 24 && $j != 26){
                     $penghasilan = DB::table('penghasilan_tidak_teratur')
                         ->where('nip', $nip)
                         ->where('id_tunjangan', $j)
@@ -168,6 +168,14 @@ class PenghasilanTidakTeraturController extends Controller
                 $bon[$l] = ($bns != null) ? $bns->nominal : 0;
                 $l++;
             }
+            $bns = DB::table('penghasilan_tidak_teratur')
+                    ->where('nip', $nip)
+                    ->where('id_tunjangan', 26)
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $i)
+                    ->first();
+            $bon[$l] = ($bns != null) ? $bns->nominal : 0;
+            $l++;
             array_push($bonus, $bon);
         }
 

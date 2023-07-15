@@ -140,7 +140,7 @@
 
                 function rupiah($angka){
                     $hasil_rupiah = number_format($angka, 0, ",", ".");
-                    return $hasil_rupiah;
+                    return $hasil_rupiah > 0 ? $hasil_rupiah : '-';
                 }
             @endphp
             @if ($mode == 1)
@@ -682,7 +682,6 @@
                                             <th rowspan="2" style="background-color: #CCD6A6; ">SPD Pendidikan </th>
                                             <th rowspan="2" style="background-color: #CCD6A6; ">SPD Pindah Tugas</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; ">Pengganti <br>Uang Seragam</th>
-                                            <th rowspan="2" style="background-color: #CCD6A6; ">Tambahan <br>Penghasilan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -699,7 +698,7 @@
                                         @for ($i = 0; $i < 12; $i++)
                                             <tr>
                                                 <td>{{ $bulan[$i] }}</td>
-                                                @for ($j = 0; $j < 8; $j++)
+                                                @for ($j = 0; $j < 7; $j++)
                                                     <td>{{ ($penghasilan[$i][$j] != 0) ? rupiah($penghasilan[$i][$j]) : '-' }}</td>
                                                 @endfor
                                                 @php
@@ -710,7 +709,6 @@
                                                     $total_spd_pendidikan += $penghasilan[$i][4];
                                                     $total_spd_pindah_tugas += $penghasilan[$i][5];
                                                     $total_pengganti_seragam += $penghasilan[$i][6];
-                                                    $total_tambahan += $penghasilan[$i][7];
                                                 @endphp
                                             </tr>
                                         @endfor
@@ -727,7 +725,6 @@
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_spd_pendidikan) }}</td>
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_spd_pindah_tugas) }}</td>
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_pengganti_seragam) }}</td>
-                                            <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_tambahan) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -743,6 +740,7 @@
                                             <th rowspan="2" style="background-color: #CCD6A6; ">Tunjangan Hari Raya</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; ">Jasa Produksi</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; ">Dana Pendidikan</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; ">Tambahan <br>Penghasilan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -750,17 +748,19 @@
                                             $total_thr = null;
                                             $total_jasa_produksi = null;
                                             $total_dana_pendidikan = null;
+                                            $total_tambahan_penghasilan = null;
                                         @endphp
                                         @for ($i = 0; $i < 12; $i++)
                                             <tr>
                                                 <td>{{ $bulan[$i] }}</td>
-                                                @for ($j = 0; $j < 3; $j++)
+                                                @for ($j = 0; $j < 4; $j++)
                                                     <td>{{ ($bonus[$i][$j] != 0) ? rupiah($bonus[$i][$j]) : '-' }}</td>
                                                 @endfor
                                                 @php
                                                     $total_thr += $bonus[$i][0];
                                                     $total_jasa_produksi += $bonus[$i][1];
                                                     $total_dana_pendidikan += $bonus[$i][2];
+                                                    $total_tambahan_penghasilan += $bonus[$i][3];
                                                 @endphp
                                             </tr>
                                         @endfor
@@ -773,6 +773,7 @@
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_thr) }}</td>
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_jasa_produksi) }}</td>
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_dana_pendidikan) }}</td>
+                                            <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_tambahan_penghasilan) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
