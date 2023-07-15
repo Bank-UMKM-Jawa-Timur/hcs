@@ -680,6 +680,8 @@
                                             <th rowspan="2" style="background-color: #CCD6A6; ">SPD</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; ">SPD Pendidikan </th>
                                             <th rowspan="2" style="background-color: #CCD6A6; ">SPD Pindah Tugas</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; ">Pengganti <br>Uang Seragam</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; ">Tambahan <br>Penghasilan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -690,11 +692,13 @@
                                             $total_spd = null;
                                             $total_spd_pendidikan = null;
                                             $total_spd_pindah_tugas = null;
+                                            $total_pengganti_seragam = null;
+                                            $total_tambahan = null;
                                         @endphp
                                         @for ($i = 0; $i < 12; $i++)
                                             <tr>
                                                 <td>{{ $bulan[$i] }}</td>
-                                                @for ($j = 0; $j < 6; $j++)
+                                                @for ($j = 0; $j < 8; $j++)
                                                     <td>{{ ($penghasilan[$i][$j] != 0) ? rupiah($penghasilan[$i][$j]) : '-' }}</td>
                                                 @endfor
                                                 @php
@@ -704,6 +708,8 @@
                                                     $total_spd += $penghasilan[$i][3];
                                                     $total_spd_pendidikan += $penghasilan[$i][4];
                                                     $total_spd_pindah_tugas += $penghasilan[$i][5];
+                                                    $total_pengganti_seragam += $penghasilan[$i][6];
+                                                    $total_tambahan += $penghasilan[$i][7];
                                                 @endphp
                                             </tr>
                                         @endfor
@@ -719,6 +725,8 @@
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_spd) }}</td>
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_spd_pendidikan) }}</td>
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_spd_pindah_tugas) }}</td>
+                                            <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_pengganti_seragam) }}</td>
+                                            <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_tambahan) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
