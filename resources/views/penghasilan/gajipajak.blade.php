@@ -331,7 +331,7 @@
                         *   $F$11 = Masa kerja
                         *   $I$49 = Biaya Jabatan/Biaya Pensiun (no 9)
                         */
-                        // $no_14 = (($total_rutin + $total_tj_lainnya + $total_tidak_rutin) - $bonus_sum - $rumus_14 - 0) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
+                        $no_14 = (($total_rutin + $total_tj_lainnya + $total_tidak_rutin) - $bonus_sum - $rumus_14 - 0) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
                         
                         // $masa_kerja = $karyawan->masa_kerja; // bulan
                         // $no_7 = $bonus_sum;
