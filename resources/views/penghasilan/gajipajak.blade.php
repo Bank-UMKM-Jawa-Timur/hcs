@@ -253,7 +253,7 @@
                                 $total_tidak_rutin = 0;
                                 $total_tj_lainnya = 0;
                                 $jaminan = array_sum($jamsostek);
-                                $bonus_sum = array_sum($bonus);
+                                $bonus_sum = 0;
                                 $total_pph = 0;
                                 $total_honorium = 0;
                                 $total_pph_21 = 0;
@@ -274,6 +274,7 @@
                                         $total_pengganti_seragam += $penghasilan[$i][6];
                                     @endphp  --}}
                                     @php
+                                        $bonus_sum += array_sum($bonus[$i]);
                                         $total_rutin += array_sum($gj[$i]);
                                         $total_tidak_rutin += (array_sum($penghasilan[$i]) + array_sum($bonus[$i]));
                                         $total_gaji += $gj[$i]['gj_pokok'] + $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] +$gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] + $gj[$i]['tj_kesejahteraan'];
