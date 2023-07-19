@@ -264,13 +264,21 @@
                                     <td>{{ $bulan[$i] }}</td>
                                     <td>{{ (array_sum($gj[$i]) != 0) ? rupiah(array_sum($gj[$i])) : '-' }}</td>
                                     <td>{{ (array_sum($penghasilan[$i]) + array_sum($bonus[$i]) > 0) ? rupiah(array_sum($penghasilan[$i]) + array_sum($bonus[$i])) : '-' }}</td>
+                                    {{--  @php
+                                        $total_uang_lembur += $penghasilan[$i][0];
+                                        $total_pengganti_kesehatan += $penghasilan[$i][1];
+                                        $total_uang_duka += $penghasilan[$i][2];
+                                        $total_spd += $penghasilan[$i][3];
+                                        $total_spd_pendidikan += $penghasilan[$i][4];
+                                        $total_spd_pindah_tugas += $penghasilan[$i][5];
+                                        $total_pengganti_seragam += $penghasilan[$i][6];
+                                    @endphp  --}}
                                     @php
                                         $total_rutin += array_sum($gj[$i]);
-                                        $total_tidak_rutin += array_sum($penghasilan[$i]);
-                                        $total_tidak_rutin += array_sum($bonus[$i]);
+                                        $total_tidak_rutin += (array_sum($penghasilan[$i]) + array_sum($bonus[$i]));
                                         $total_gaji += $gj[$i]['gj_pokok'] + $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] +$gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] + $gj[$i]['tj_kesejahteraan'];
-                                        $total_tj_lainnya += $gj[$i]['uang_makan'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_vitamin'] + $gj[$i]['tj_transport'] + $total_tidak_rutin;
-                                        $total_penghasilan_bruto += array_sum($gj[$i]) + array_sum($penghasilan[$i]);
+                                        $total_tj_lainnya += $gj[$i]['uang_makan'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_vitamin'] + $gj[$i]['tj_transport'] + array_sum($penghasilan[$i]);
+                                        $total_penghasilan_bruto += array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]);
                                     @endphp
                                     <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) > 0) ? rupiah(array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i])) : '-' }}</td>
                                     <td>-</td>
