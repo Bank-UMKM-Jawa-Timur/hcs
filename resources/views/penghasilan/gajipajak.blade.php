@@ -263,7 +263,7 @@
                                 <tr>
                                     <td>{{ $bulan[$i] }}</td>
                                     <td>{{ (array_sum($gj[$i]) != 0) ? rupiah(array_sum($gj[$i])) : '-' }}</td>
-                                    <td>{{ (array_sum($penghasilan[$i]) != 0) ? rupiah(array_sum($penghasilan[$i])) : '-' }}</td>
+                                    <td>{{ (array_sum($penghasilan[$i]) + array_sum($bonus[$i]) > 0) ? rupiah(array_sum($penghasilan[$i]) + array_sum($bonus[$i])) : '-' }}</td>
                                     @php
                                         $total_rutin += array_sum($gj[$i]);
                                         $total_tidak_rutin += array_sum($penghasilan[$i]);
@@ -272,9 +272,9 @@
                                         $total_tj_lainnya += $gj[$i]['uang_makan'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_vitamin'] + $gj[$i]['tj_transport'] + $total_tidak_rutin;
                                         $total_penghasilan_bruto += array_sum($gj[$i]) + array_sum($penghasilan[$i]);
                                     @endphp
-                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) != 0) ? rupiah(array_sum($gj[$i]) + array_sum($penghasilan[$i])) : '-' }}</td>
+                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) > 0) ? rupiah(array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i])) : '-' }}</td>
                                     <td>-</td>
-                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) != 0) ? 1 : 0 }}</td>
+                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) > 0) ? 1 : 0 }}</td>
                                 </tr>
                             @endfor
                         </tbody>
