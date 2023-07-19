@@ -61,6 +61,7 @@ class PenghasilanTidakTeraturController extends Controller
         $bonus = array();
         $total_gj = array();
         $jamsostek = array();
+        $pengurang = array();
         $tj = [];
         $peng = [];
         $bon = [];
@@ -177,8 +178,8 @@ class PenghasilanTidakTeraturController extends Controller
             array_push($bonus, $bon);
         }
 
-        // Get Jamsostek
-        foreach($total_gaji as $item){
+        foreach($total_gaji as $key => $item){
+            // Get Jamsostek
             $jkk = 0;
             $jht = 0;
             $jkm = 0;
@@ -199,6 +200,23 @@ class PenghasilanTidakTeraturController extends Controller
                 }
             }
             array_push($jamsostek, ($jkk + $jht + $jkm + $kesehatan));
+
+            // Get Pengurang Bruto
+            if($karyawan->status_karyawan == 'IKJP') {
+                array_push($pengurang, round(0.01 * $item));
+            } else{
+                $gj_pokok = $gj[$key]['gj_pokok'];
+                $tj_keluarga = $gj[$key]['tj_keluarga'];
+                $tj_kesejahteraan = $gj[$key]['tj_kesejahteraan'];
+
+                $dpp = ((($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * 0.05);
+                if($item >= 8754600){
+                    $dppExtra = 8754600 * 0.01;
+                } else {
+                    $dppExtra = $item * 0.01;
+                }
+                array_push($pengurang, round($dpp + $dppExtra));
+            }
         }
 
         return view('penghasilan.gajipajak', [
@@ -210,7 +228,8 @@ class PenghasilanTidakTeraturController extends Controller
             'tahun' => $tahun,
             'karyawan' => $karyawan,
             'request' => $request,
-            'mode' => $mode
+            'mode' => $mode,
+            'pengurang' => array_sum($pengurang)
         ]);
     }
 

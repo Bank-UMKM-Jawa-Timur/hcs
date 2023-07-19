@@ -476,13 +476,13 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">10. Iuran Pensiun atau Iuran THT/JHT</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($pengurang) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">11. Jumlah Pengurangan (9 + 10)</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="{{ rupiah($biaya_jabatan) }}">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($biaya_jabatan + $pengurang) }}">
                     </div>
                 </div>
 
