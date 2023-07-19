@@ -262,7 +262,7 @@
                             @for ($i = 0; $i < 12; $i++)
                                 <tr>
                                     <td>{{ $bulan[$i] }}</td>
-                                    <td>{{ (array_sum($gj[$i]) != 0) ? rupiah(array_sum($gj[$i])) : '-' }}</td>
+                                    <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] > 0) ? rupiah(array_sum($gj[$i]) + $jamsostek[$i]) : '-' }}</td>
                                     <td>{{ (array_sum($penghasilan[$i]) + array_sum($bonus[$i]) > 0) ? rupiah(array_sum($penghasilan[$i]) + array_sum($bonus[$i])) : '-' }}</td>
                                     {{--  @php
                                         $total_uang_lembur += $penghasilan[$i][0];
@@ -275,7 +275,7 @@
                                     @endphp  --}}
                                     @php
                                         $bonus_sum += array_sum($bonus[$i]);
-                                        $total_rutin += array_sum($gj[$i]);
+                                        $total_rutin += array_sum($gj[$i]) + $jamsostek[$i];
                                         $total_tidak_rutin += (array_sum($penghasilan[$i]) + array_sum($bonus[$i]));
                                         $total_gaji += $gj[$i]['gj_pokok'] + $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] +$gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] + $gj[$i]['tj_kesejahteraan'];
                                         $total_tj_lainnya += $gj[$i]['uang_makan'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_vitamin'] + $gj[$i]['tj_transport'] + array_sum($penghasilan[$i]);
