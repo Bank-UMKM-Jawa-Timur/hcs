@@ -100,7 +100,8 @@ Coded by www.creative-tim.com
                         {{-- <li
                             class="@active('karyawan,pengkinian_data,klasifikasi,mutasi,demosi,promosi,penonaktifan,import,pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit,surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit,reminder-pensiun.index,reminder-pensiun.show')">
                             --}}
-                        <li class="{{ request()->is(
+                        <li
+                            class="{{ request()->is(
                                 'karyawan',
                                 'karyawan/*',
                                 'reminder_pensiun',
@@ -125,27 +126,42 @@ Coded by www.creative-tim.com
                                 <i class="nc-icon nc-tile-56" style="font-weight: bolder"></i>
                                 Manajemen Karyawan
                             </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2
-                    @active('pengkinian_data,reminder-pensiun.index,reminder-pensiun.show,karyawan,klasifikasi,mutasi,demosi,promosi,penonaktifan,import,pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit,surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit', 'show')"
+                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is(
+                                'karyawan',
+                                'karyawan/*',
+                                'reminder_pensiun',
+                                'reminder_pensiun/*',
+                                'pengkinian_data',
+                                'pengkinian_data/*',
+                                'mutasi',
+                                'mutasi/*',
+                                'demosi',
+                                'demosi/*',
+                                'promosi',
+                                'promosi/*',
+                                'penonaktifan',
+                                'penonaktifan/*',
+                                'pejabat-sementara',
+                                'surat-peringatan',
+                            )
+                                ? 'show'
+                                : '' }}"
                                 id="submenu1">
-                                <li style="margin-top: -15px"
-                                    class="@active('karyawan.index,karyawan.create,karyawan.edit,karyawan.show,import,klasifikasi')">
+                                <li style="margin-top: -15px" class="@active('karyawan.index,karyawan.create,karyawan.edit,karyawan.show,import,klasifikasi')">
                                     <a href="{{ route('karyawan.index') }}">
                                         <i class="nc-icon nc-badge"></i>
                                         <p>Karyawan </p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px"
-                                    class="@active('reminder-pensiun.index,reminder-pensiun.show')">
+                                <li style="margin-top: -15px" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
                                     <a href="{{ route('reminder-pensiun.index') }}">
                                         <i class="nc-icon nc-badge"></i>
                                         <p>Data Masa Pensiun</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px"
-                                    class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
+                                <li style="margin-top: -15px" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
                                     <a href="{{ route('pengkinian_data.index') }}">
                                         <i class="nc-icon nc-ruler-pencil"></i>
                                         <p>Pengkinian Data </p>
@@ -163,7 +179,8 @@ Coded by www.creative-tim.com
                                     'penonaktifan/*',
                                 )
                                     ? 'active'
-                                    : '' }}" style="margin-top: -15px">
+                                    : '' }}"
+                                    style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-chart-bar-32"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
@@ -180,16 +197,14 @@ Coded by www.creative-tim.com
                                             href="{{ route('penonaktifan.index') }}">Penonaktifan</a>
                                     </div>
                                 </li>
-                                <li style="margin-top: -15px"
-                                    class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">
+                                <li style="margin-top: -15px" class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">
                                     <a href="{{ route('pejabat-sementara.index') }}">
                                         <i class="nc-icon nc-tie-bow"></i>
                                         <p>Penjabat Sementara</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')"
-                                    style="margin-top: -15px">
+                                <li class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-bell-55"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Reward & Punishment
@@ -204,13 +219,14 @@ Coded by www.creative-tim.com
                             </ul>
                         </li>
                         {{-- Menu Penghasilan --}}
-                        <li class="@active('gaji_perbulan,pajak_penghasilan')">
+                        <li
+                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
                                 Penghasilan
                             </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('gaji_perbulan,pajak_penghasilan', 'show')"
+                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
                                 id="submenu2">
                                 <li style="margin-top: -15px" class="@active('gaji_perbulan')">
                                     <a href="{{ route('gaji_perbulan.index') }}">
@@ -261,7 +277,8 @@ Coded by www.creative-tim.com
                             </ul>
                         </li>
                         {{-- Menu Laporan --}}
-                        <li class="{{ request()->is('laporan-pergerakan-karir/*') ? 'active' : '' }}">
+                        <li
+                            class="{{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek') ? 'active' : '' }}">
                             <a class="nav-link" href="#submenu4" data-toggle="collapse" data-target="#submenu4"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
@@ -269,7 +286,15 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('laporan,index_dpp', 'show')"
                                 id="submenu4">
-                                <li class="dropdown" style="margin-top: -15px">
+                                <li class="dropdown {{ request()->is(
+                                    'laporan-pergerakan-karir/laporan-mutasi',
+                                    'laporan-pergerakan-karir/laporan-demosi',
+                                    'laporan-pergerakan-karir/laporan-promosi',
+                                    'laporan-pergerakan-karir/laporan-penonaktifan',
+                                )
+                                    ? 'active'
+                                    : '' }}"
+                                    style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-single-copy-04"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan Pergerakan
@@ -304,15 +329,16 @@ Coded by www.creative-tim.com
                             </ul>
                         </li>
                         {{-- Menu Gaji --}}
-                        <li class="@active('gaji, slipIndex')">
+                        <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
                                 Gaji
                             </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('gaji, slipIndex', 'show')"
+                            <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
                                 id="submenu5">
-                                <li style="margin-top: -15px" class="@active('gaji')">
+                                <li style="margin-top: -15px"
+                                    class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                                     <a href="{{ route('gaji.index') }}">
                                         <i class="nc-icon nc-money-coins"></i>
                                         <p>Lampiran Gaji</p>
@@ -379,8 +405,7 @@ Coded by www.creative-tim.com
                             </ul>
                         </li>
                         {{-- Menu Setting --}}
-                        <li
-                            class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database')">
+                        <li class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database')">
                             <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu7"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-settings" style="font-weight: bolder"></i>
@@ -388,8 +413,7 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show')"
                                 id="submenu7">
-                                <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')"
-                                    style="margin-top: -15px">
+                                <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-box"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Master </p>
@@ -475,12 +499,14 @@ Coded by www.creative-tim.com
                                 </a>
                                 <div class="dropdown-menu dropdown-primary dropdown-menu-right"
                                     aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        class="d-none">
                                         @csrf
                                     </form>
 
