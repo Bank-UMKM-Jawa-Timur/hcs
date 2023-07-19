@@ -184,18 +184,18 @@ class PenghasilanTidakTeraturController extends Controller
             $jkm = 0;
             $kesehatan = 0;
             if($karyawan->tanggal_penonaktifan == null){
-                $jkk = 0.0024 * $item;
-                $jht = 0.0 * $item;
-                $jkm = 0.0030 * $item;
+                $jkk = round(0.0024 * $item);
+                $jht = round(0.0 * $item);
+                $jkm = round(0.0030 * $item);
             }
 
             if($karyawan->jkn != null){
                 if($item > 12000000){
-                    $kesehatan = 12000000 * 0.05;
+                    $kesehatan = round(12000000 * 0.05);
                 } else if($item < 4375479){
-                    $kesehatan = 4375479 * 0.05;
+                    $kesehatan = round(4375479 * 0.05);
                 } else{
-                    $kesehatan = $item * 0.05;
+                    $kesehatan = round($item * 0.05);
                 }
             }
             array_push($jamsostek, ($jkk + $jht + $jkm + $kesehatan));
