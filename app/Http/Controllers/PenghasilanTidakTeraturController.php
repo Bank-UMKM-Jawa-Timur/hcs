@@ -203,7 +203,7 @@ class PenghasilanTidakTeraturController extends Controller
 
             // Get Pengurang Bruto
             if($karyawan->status_karyawan == 'IKJP') {
-                array_push($pengurang, round(0.01 * $item));
+                array_push($pengurang, 0.01 * $item);
             } else{
                 $gj_pokok = $gj[$key]['gj_pokok'];
                 $tj_keluarga = $gj[$key]['tj_keluarga'];
@@ -218,6 +218,8 @@ class PenghasilanTidakTeraturController extends Controller
                 array_push($pengurang, round($dpp + $dppExtra));
             }
         }
+        $karyawanController = new KaryawanController;
+        $karyawan->masa_kerja = $karyawanController->countAge($karyawan->tanggal_pengangkat);
 
         return view('penghasilan.gajipajak', [
             'gj' => $gj,

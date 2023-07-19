@@ -322,7 +322,23 @@
                         } else{
                             $rumus_14 = 0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum);
                         }
-                        $no_14 = (($total_rutin + $total_tj_lainnya + $total_tidak_rutin) - $bonus_sum - $rumus_14 - 0) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
+                        // ((($J$44-$J$43-$H$49-$K$50)/$F$11*12)+$J$43-$I$49)
+                        /**
+                        *   $J$44 = Jumlah Penghasilan Bruto (no 8)
+                        *   $J$43 = Tantiem, Bonus, Gratifikasi, Jaspro dan THR (no 7)
+                        *   $H$49 = Biaya Jabatan/Biaya Pensiun (no 9)
+                        *   $K$50 = Iuran Pensiun atau Iuran THT/JHT (no 10)
+                        *   $F$11 = Masa kerja
+                        *   $I$49 = Biaya Jabatan/Biaya Pensiun (no 9)
+                        */
+                        // $no_14 = (($total_rutin + $total_tj_lainnya + $total_tidak_rutin) - $bonus_sum - $rumus_14 - 0) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
+                        
+                        // $masa_kerja = $karyawan->masa_kerja; // bulan
+                        // $no_7 = $bonus_sum;
+                        // $no_8 = $total_gaji + $total_pph + $total_tj_lainnya + $total_honorium + $jaminan + $total_pph_21 + $bonus_sum;
+                        // $no_9 = $biaya_jabatan;
+                        // $no_10 = $pengurang;
+                        // $no_14 = (($no_8 - $no_7 - $no_9 - $no_10) / (12)) + ($no_7 - 0);
                     }
 
                     $no_16 = 0;
@@ -494,7 +510,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">12. Jumlah Penghasilan Neto (8 - 11)</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="{{ rupiah(($total_rutin + $total_tidak_rutin) - $biaya_jabatan) }}">
+                        <input type="text" disabled class="form-control" value="{{ rupiah(($total_rutin + $total_tidak_rutin) - ($biaya_jabatan + $pengurang)) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -506,7 +522,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2" style="font-weight: bold; text-align: center;">Total Penghasilan Neto</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" style="font-weight: bold;" value="{{ rupiah(($total_rutin + $total_tidak_rutin) - $biaya_jabatan) }}">
+                        <input type="text" disabled class="form-control" style="font-weight: bold;" value="{{ rupiah(($total_rutin + $total_tidak_rutin) - ($biaya_jabatan + $pengurang)) }}">
                     </div>
                 </div>
 
