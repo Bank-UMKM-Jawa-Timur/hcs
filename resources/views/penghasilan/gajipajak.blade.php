@@ -643,7 +643,7 @@
                                                 <td>{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
                                                 <td>{{ ($total_gaji_bln != 0 ) ? rupiah($total_gaji_bln) : '-' }}</td>
-                                                <td>-</td>
+                                                <td>{{ ($jamsostek[$i] != 0) ? rupiah($jamsostek[$i]) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_pulsa'] != 0) ? rupiah($gj[$i]['tj_pulsa']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_vitamin'] != 0) ? rupiah($gj[$i]['tj_vitamin']) : '-' }}</td>
@@ -666,7 +666,7 @@
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_kemahalan) }}</td>
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_kesejahteraan) }}</td>
                                             <td style="background-color: #cecece; ">{{ rupiah($total_gaji) }}</td>
-                                            <td style="background-color: #54B435; ">-</td>
+                                            <td style="background-color: #54B435; ">{{ rupiah($total_jamsostek) }}</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_uang_makan) }}</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_tj_pulsa) }}</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_tj_vitamin) }}</td>

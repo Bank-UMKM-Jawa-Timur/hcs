@@ -127,16 +127,14 @@ class PenghasilanTidakTeraturController extends Controller
 
            $total_gj[$i-1] = [
             'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
-            'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
             'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
-            'tj_telepon' => ($data != null) ? $data->gj_pokok : 0,
             'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
-            'tj_teller' => ($data != null) ? $data->tj_teller : 0,
+            'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
             'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
-            'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
+            'tj_telepon' => ($data != null) ? $data->tj_telepon : 0,
             'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
+            'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
             'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
-            'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
            ];
            array_push($gaji, $gj[$i-1]);
            array_push($total_gaji, array_sum($total_gj[$i-1]));
@@ -181,7 +179,26 @@ class PenghasilanTidakTeraturController extends Controller
 
         // Get Jamsostek
         foreach($total_gaji as $item){
-            array_push($jamsostek, 0.03 * $item);
+            $jkk = 0;
+            $jht = 0;
+            $jkm = 0;
+            $kesehatan = 0;
+            if($karyawan->tanggal_penonaktifan == null){
+                $jkk = 0.0024 * $item;
+                $jht = 0.0 * $item;
+                $jkm = 0.0030 * $item;
+            }
+
+            if($karyawan->jkn != null){
+                if($item > 12000000){
+                    $kesehatan = 12000000 * 0.05;
+                } else if($item < 4375479){
+                    $kesehatan = 4375479 * 0.05;
+                } else{
+                    $kesehatan = $item * 0.05;
+                }
+            }
+            array_push($jamsostek, ($jkk + $jht + $jkm + $kesehatan));
         }
 
         return view('penghasilan.gajipajak', [
