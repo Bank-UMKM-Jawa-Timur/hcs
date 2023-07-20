@@ -303,7 +303,7 @@
                 </div>
 
                 @php
-                    $lima_persen = 0.05 * $total_penghasilan_bruto;
+                    $lima_persen = round(0.05 * $total_penghasilan_bruto);
                     $keterangan = 500000 * $total_ket;
                     $biaya_jabatan = 0;
                     $no_14 = 0;
@@ -318,9 +318,9 @@
                     } else {
                         $rumus_14 = 0;
                         if (0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum) > $keterangan) {
-                            $rumus_14 = $keterangan;
+                            $rumus_14 = round($keterangan);
                         } else{
-                            $rumus_14 = 0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum);
+                            $rumus_14 = round(0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum));
                         }
                         // ((($J$44-$J$43-$H$49-$K$50)/$F$11*12)+$J$43-$I$49)
                         /**
@@ -331,7 +331,7 @@
                         *   $F$11 = Masa kerja
                         *   $I$49 = Biaya Jabatan/Biaya Pensiun (no 9)
                         */
-                        $no_14 = (($total_rutin + $total_tj_lainnya + $total_tidak_rutin) - $bonus_sum - $rumus_14 - 0) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
+                        $no_14 = (($total_rutin + $total_tidak_rutin) - $bonus_sum - $pengurang - $biaya_jabatan) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
                         
                         // $masa_kerja = $karyawan->masa_kerja; // bulan
                         // $no_7 = $bonus_sum;
