@@ -399,6 +399,8 @@
                     }
 
                     $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
+
+                    $no19 = ($no17 / 12) * $total_ket;
                 @endphp
 
                 <div class="row m-0 ">
@@ -559,7 +561,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">19. PPh Pasal 21 Terutang</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($no19) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
