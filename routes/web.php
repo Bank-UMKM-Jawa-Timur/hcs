@@ -215,6 +215,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/laporan_jaminan', [JaminanController::class, 'filter'])->name('filter-laporan');
 
     Route::post('/upload_penghasilan', [PenghasilanTidakTeraturController::class, 'upload'])->name('upload_penghasilan');
+    Route::get('/import-penghasilan', [PenghasilanTidakTeraturController::class, 'import'])->name('import-penghasilan-index');
+    Route::post('/insert-penghasilan', [PenghasilanTidakTeraturController::class, 'insertPenghasilan'])->name('insert-penghasilan');
     Route::get('/getKaryawanByNama', [PenghasilanTidakTeraturController::class, 'cariNama'])->name('getKaryawanByNama');
     Route::get('/getKaryawanByNip', [\App\Http\Controllers\PenghasilanTidakTeraturController::class, 'getDataKaryawan'])->name('getKaryawanByNip');
     Route::post('/laporan_jamsostek', [JaminanController::class, 'filter'])->name('filter-laporan');

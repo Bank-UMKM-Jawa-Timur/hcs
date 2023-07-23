@@ -235,6 +235,38 @@ class PenghasilanTidakTeraturController extends Controller
         ]);
     }
 
+    public function import() {
+        return view('penghasilan.import');
+    }
+
+    public function insertPenghasilan(Request $request) {
+        try{
+            DB::beginTransaction();
+
+            DB::table('penghasilan_tidak_teratur')
+                ->insert([
+                    'nip' => $request->nip,
+                    'id_tunjangan' => $request->id_tunjangan,
+                    'nominal' => str_replace('.', '', $request->nominal),
+                    'bulan' => $request->bulan,
+                    'tahun' => $request->tahun,
+                    'created_at' => now()
+                ]);
+
+            DB::commit();
+            Alert::success('Berhasil', 'Berhasil menambahkan data.');
+            return redirect()->route('pajak_penghasilan.index');
+        } catch(Exception $e){
+            DB::rollBack();
+            Alert::error('Gagal', 'Terjadi kesalahan.'.$e->getMessage());
+            return redirect()->route('pajak_penghasilan.index');
+        } catch(QueryException $e){
+            DB::rollBack();
+            Alert::error('Gagal', 'Terjadi kesalahan.'.$e->getMessage());
+            return redirect()->route('pajak_penghasilan.index');
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -252,21 +284,11 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function create()
     {
-        $tj = DB::table('mst_tunjangan')
-            ->whereIn('id', [11, 12, 13, 14])
-            ->get();
-        $tidak_teratur = DB::table('mst_tunjangan')
-            ->whereIn('id', [16, 17, 18, 19, 20, 21])
-            ->get();
-        $bonus = DB::table('mst_tunjangan')
-            ->whereIn('id', [22, 23, 24])
+        $data = DB::table('mst_tunjangan')
+            ->where('id', '>', '15')
             ->get();
 
-        return view('penghasilan.add', [
-            'tj' => $tj,
-            'tidak_teratur' => $tidak_teratur,
-            'bonus' => $bonus
-        ]);
+        return view('penghasilan.add', compact('data'));
     }
 
     /**
