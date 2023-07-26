@@ -295,7 +295,7 @@
                 </div>
 
                 @php
-                    $lima_persen = round(0.05 * $total_penghasilan_bruto);
+                    $lima_persen = ceil(0.05 * $total_penghasilan_bruto);
                     $keterangan = 500000 * $total_ket;
                     $biaya_jabatan = 0;
                     $no_14 = 0;
@@ -310,9 +310,9 @@
                     } else {
                         $rumus_14 = 0;
                         if (0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum) > $keterangan) {
-                            $rumus_14 = round($keterangan);
+                            $rumus_14 = ceil($keterangan);
                         } else{
-                            $rumus_14 = round(0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum));
+                            $rumus_14 = ceil(0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum));
                         }
                         $no_14 = (($total_rutin + $total_tidak_rutin) - $bonus_sum - $pengurang - $biaya_jabatan) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
                     }
@@ -376,7 +376,7 @@
 
                     $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
 
-                    $no19 = ($no17 / 12) * $total_ket;
+                    $no19 = ceil(($no17 / 12) * $total_ket);
                 @endphp
 
                 <div class="row m-0 ">

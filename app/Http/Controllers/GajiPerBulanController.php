@@ -359,7 +359,14 @@ class GajiPerBulanController extends Controller
                         ->where('tahun', $request->get('tahun'))
                         ->where('nip', $item->nip)
                         ->first();
-                    $no19 = (float)$no19 + ((float)$no19_lama - (float)$pph_lama->total_pph);
+                    $cek_ptt = DB::table('penghasilan_tidak_teratur')
+                        ->where('nip', $item->nip)
+                        ->where('bulan', $request->get('bulan') - 1)
+                        ->where('tahun', $request->get('tahun'))
+                        ->whereDate('created_at', '>', '25')
+                        ->sum('nominal');
+                    
+                    $no19 = ($cek_ptt > 0) ? (float)$no19 + ((float)$no19_lama - (float)$pph_lama->total_pph) : $no19;
                 }
 
                 array_push($employee, [
@@ -402,11 +409,11 @@ class GajiPerBulanController extends Controller
             return redirect()->route('gaji_perbulan.index');
         }catch(Exception $e){
             DB::rollBack();
-            Alert::error('Terjadi Kesalahan', $e);
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('gaji_perbulan.index');
         }catch(QueryException $e){
             DB::rollBack();
-            Alert::error('Terjadi Kesalahan', $e);
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('gaji_perbulan.index');
         }
     }
