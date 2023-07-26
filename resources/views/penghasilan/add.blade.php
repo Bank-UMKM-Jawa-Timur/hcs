@@ -21,11 +21,15 @@
         <form action="{{ route('insert-penghasilan') }}" method="POST" enctype="multipart/form-data">
             <div class="row m-0">
                 @csrf
-                <div class="col-md-4 form-group">
+                <div class="col-md-6 form-group">
                     <label for="nip">Karyawan:</label>
                     <select name="nip" id="nip" class="form-control" required></select>
                 </div>
-                <div class="col-md-4 form-group">
+                <div class="col-md-6 form-group">
+                    <label for="tanggal">Tanggal:</label>
+                    <input type="date" name="tanggal" id="" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
                     <label for="id_tunjangan">Penghasilan:</label>
                     <select name="id_tunjangan" id="" class="form-control" required>
                         <option value="">--- Pilih Penghasilan ---</option>
@@ -34,31 +38,9 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-4 form-group">
+                <div class="col-md-6 form-group">
                     <label for="nominal">Nominal:</label>
                     <input type="text" name="nominal" class="form-control rupiah">
-                </div>
-                <div class="col-md-4 form-group">
-                    <label for="bulan">Bulan:</label>
-                    <select name="bulan" id="" class="form-control" required>
-                        <option value="">--- Pilih Bulan ---</option>
-                        @foreach ($bulan as $key => $item)
-                            <option value="{{ $key + 1 }}">{{ $item }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                @php
-                $already_selected_value = date('y');
-                $earliest_year = 2022;
-                @endphp
-                <div class="col-md-4 form-group">
-                    <label for="tahun">Tahun:</label>
-                    <select name="tahun" class="form-control" required>
-                        <option value="">--- Pilih Tahun ---</option>
-                        @foreach (range(date('Y'), $earliest_year) as $x)
-                            <option value="{{ $x }}">{{ $x }}</option>
-                        @endforeach
-                    </select>
                 </div>
             </div>
 

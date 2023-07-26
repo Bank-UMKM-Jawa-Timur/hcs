@@ -48,7 +48,7 @@
     <div class="row m-0">
         <div class="col">
             <a class="mb-3" href="{{ route('pajak_penghasilan.create') }}">
-                <button class="btn btn-primary">Import penghasilan</button>
+                <button class="btn btn-primary">Tambah penghasilan</button>
             </a>
         </div>
     </div>
@@ -258,21 +258,13 @@
                                 $total_honorium = 0;
                                 $total_pph_21 = 0;
                                 $total_penghasilan_bruto = 0;
+                                $total_pph_lunas = array_sum($pph);
                             @endphp
                             @for ($i = 0; $i < 12; $i++)
                                 <tr>
                                     <td>{{ $bulan[$i] }}</td>
                                     <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] > 0) ? rupiah(array_sum($gj[$i]) + $jamsostek[$i]) : '-' }}</td>
                                     <td>{{ (array_sum($penghasilan[$i]) + array_sum($bonus[$i]) > 0) ? rupiah(array_sum($penghasilan[$i]) + array_sum($bonus[$i])) : '-' }}</td>
-                                    {{--  @php
-                                        $total_uang_lembur += $penghasilan[$i][0];
-                                        $total_pengganti_kesehatan += $penghasilan[$i][1];
-                                        $total_uang_duka += $penghasilan[$i][2];
-                                        $total_spd += $penghasilan[$i][3];
-                                        $total_spd_pendidikan += $penghasilan[$i][4];
-                                        $total_spd_pindah_tugas += $penghasilan[$i][5];
-                                        $total_pengganti_seragam += $penghasilan[$i][6];
-                                    @endphp  --}}
                                     @php
                                         $bonus_sum += array_sum($bonus[$i]);
                                         $total_rutin += array_sum($gj[$i]) + $jamsostek[$i];
@@ -282,7 +274,7 @@
                                         $total_penghasilan_bruto += array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i];
                                     @endphp
                                     <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i] > 0) ? rupiah(array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i]) : '-' }}</td>
-                                    <td>-</td>
+                                    <td>{{ ($pph[$i] > 0) ? rupiah($pph[$i]) : '-' }}</td>
                                     <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i] > 0) ? 1 : 0 }}</td>
                                 </tr>
                             @endfor
@@ -295,7 +287,7 @@
                                 <td style="background-color: #54B435; ">{{ ($total_rutin != 0) ? rupiah($total_rutin) : '-' }}</td>
                                 <td style="background-color: #54B435; ">{{ ($total_tidak_rutin != 0) ? rupiah($total_tidak_rutin) : '-' }}</td>
                                 <td style="background-color: #54B435; ">{{ ($total_penghasilan_bruto) ? rupiah($total_penghasilan_bruto) : '-' }}</td>
-                                <td style="background-color: #54B435; ">-</td>
+                                <td style="background-color: #54B435; ">{{ $total_pph_lunas > 0 ? rupiah($total_pph_lunas) : '-' }}</td>
                                 <td style="background-color: #54B435; ">{{ $total_ket }}</td>
                             </tr>
                         </tfoot>
@@ -322,23 +314,7 @@
                         } else{
                             $rumus_14 = round(0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum));
                         }
-                        // ((($J$44-$J$43-$H$49-$K$50)/$F$11*12)+$J$43-$I$49)
-                        /**
-                        *   $J$44 = Jumlah Penghasilan Bruto (no 8)
-                        *   $J$43 = Tantiem, Bonus, Gratifikasi, Jaspro dan THR (no 7)
-                        *   $H$49 = Biaya Jabatan/Biaya Pensiun (no 9)
-                        *   $K$50 = Iuran Pensiun atau Iuran THT/JHT (no 10)
-                        *   $F$11 = Masa kerja
-                        *   $I$49 = Biaya Jabatan/Biaya Pensiun (no 9)
-                        */
                         $no_14 = (($total_rutin + $total_tidak_rutin) - $bonus_sum - $pengurang - $biaya_jabatan) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
-                        
-                        // $masa_kerja = $karyawan->masa_kerja; // bulan
-                        // $no_7 = $bonus_sum;
-                        // $no_8 = $total_gaji + $total_pph + $total_tj_lainnya + $total_honorium + $jaminan + $total_pph_21 + $bonus_sum;
-                        // $no_9 = $biaya_jabatan;
-                        // $no_10 = $pengurang;
-                        // $no_14 = (($no_8 - $no_7 - $no_9 - $no_10) / (12)) + ($no_7 - 0);
                     }
 
                     $no_16 = 0;
@@ -433,7 +409,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-1">2. Tunjangan PPh</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="0">
+                        <input type="text" disabled class="form-control" value="-">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -445,7 +421,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-1">4. Honorarium dan Imbalan Lainnya</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="0">
+                        <input type="text" disabled class="form-control" value="-">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -457,7 +433,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 ">6. Penerimaan dalam Bentuk Natura atau Kenikmatan Lainnya yang dikenakan Pemotongan PPh Pasal 21</label>
                     <div class="col-sm-3 mt-1 ">
-                        <input type="text" disabled class="form-control" value="0">
+                        <input type="text" disabled class="form-control" value="-">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -567,13 +543,13 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">20. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($total_pph_lunas) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">U. PPh Pasal 21 yang masih harus dibayar</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($no19 - $total_pph_lunas) }}">
                     </div>
                 </div>
             </div>

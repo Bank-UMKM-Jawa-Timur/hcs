@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\PenghasilanImport;
+use App\Models\PPHModel;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -62,6 +63,7 @@ class PenghasilanTidakTeraturController extends Controller
         $total_gj = array();
         $jamsostek = array();
         $pengurang = array();
+        $pph_yang_dilunasi = array();
         $tj = [];
         $peng = [];
         $bon = [];
@@ -78,6 +80,11 @@ class PenghasilanTidakTeraturController extends Controller
 
         // Get gaji secara bulanan
         for($i = 1; $i <= 12; $i++){
+            $pph = PPHModel::where('nip', $nip)
+                ->where('bulan', $i)
+                ->where('tahun', $tahun)
+                ->first();
+            array_push($pph_yang_dilunasi, ($pph != null) ? $pph->total_pph : 0);
             $data = DB::table('gaji_per_bulan')
                 ->where('nip', $nip)
                 ->where('bulan', $i)
@@ -180,42 +187,51 @@ class PenghasilanTidakTeraturController extends Controller
 
         foreach($total_gaji as $key => $item){
             // Get Jamsostek
-            $jkk = 0;
-            $jht = 0;
-            $jkm = 0;
-            $kesehatan = 0;
-            if($karyawan->tanggal_penonaktifan == null){
-                $jkk = round(0.0024 * $item);
-                $jht = round(0.0 * $item);
-                $jkm = round(0.0030 * $item);
-            }
-
-            if($karyawan->jkn != null){
-                if($item > 12000000){
-                    $kesehatan = round(12000000 * 0.05);
-                } else if($item < 4375479){
-                    $kesehatan = round(4375479 * 0.05);
-                } else{
-                    $kesehatan = round($item * 0.05);
+            if($item > 0){
+                $jkk = 0;
+                $jht = 0;
+                $jkm = 0;
+                $kesehatan = 0;
+                if($karyawan->tanggal_penonaktifan == null){
+                    $jkk = round(0.0024 * $item);
+                    $jht = round(0.0 * $item);
+                    $jkm = round(0.0030 * $item);
                 }
+    
+                if($karyawan->jkn != null){
+                    if($item > 12000000){
+                        $kesehatan = round(12000000 * 0.05);
+                    } else if($item < 4375479){
+                        $kesehatan = round(4375479 * 0.05);
+                    } else{
+                        $kesehatan = round($item * 0.05);
+                    }
+                }
+                array_push($jamsostek, ($jkk + $jht + $jkm + $kesehatan));
+            } else {
+                array_push($jamsostek, 0);
             }
-            array_push($jamsostek, ($jkk + $jht + $jkm + $kesehatan));
 
             // Get Pengurang Bruto
-            if($karyawan->status_karyawan == 'IKJP') {
-                array_push($pengurang, 0.01 * $item);
-            } else{
-                $gj_pokok = $gj[$key]['gj_pokok'];
-                $tj_keluarga = $gj[$key]['tj_keluarga'];
-                $tj_kesejahteraan = $gj[$key]['tj_kesejahteraan'];
+            if($item > 0){
+                if($karyawan->status_karyawan == 'IKJP') {
+                    array_push($pengurang, 0.01 * $item);
+                } else{
+                    $gj_pokok = $gj[$key]['gj_pokok'];
+                    $tj_keluarga = $gj[$key]['tj_keluarga'];
+                    $tj_kesejahteraan = $gj[$key]['tj_kesejahteraan'];
 
-                $dpp = ((($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * 0.05);
-                if($item >= 8754600){
-                    $dppExtra = 8754600 * 0.01;
-                } else {
-                    $dppExtra = $item * 0.01;
+                    $dpp = ((($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * 0.05);
+                    if($item >= 8754600){
+                        $dppExtra = 8754600 * 0.01;
+                    } else {
+                        $dppExtra = $item * 0.01;
+                    }
+                    // dd($gj_pokok, $tj_keluarga, $tj_kesejahteraan, $dpp, $dppExtra, $dpp + $dppExtra);
+                    array_push($pengurang, round($dpp + $dppExtra));
                 }
-                array_push($pengurang, round($dpp + $dppExtra));
+            } else {
+                array_push($pengurang, 0);
             }
         }
         $karyawanController = new KaryawanController;
@@ -231,7 +247,8 @@ class PenghasilanTidakTeraturController extends Controller
             'karyawan' => $karyawan,
             'request' => $request,
             'mode' => $mode,
-            'pengurang' => array_sum($pengurang)
+            'pengurang' => array_sum($pengurang),
+            'pph' => $pph_yang_dilunasi
         ]);
     }
 
@@ -242,15 +259,17 @@ class PenghasilanTidakTeraturController extends Controller
     public function insertPenghasilan(Request $request) {
         try{
             DB::beginTransaction();
+            $bulan = date('m', strtotime($request->tanggal));
+            $tahun = date('Y', strtotime($request->tanggal));
 
             DB::table('penghasilan_tidak_teratur')
                 ->insert([
                     'nip' => $request->nip,
                     'id_tunjangan' => $request->id_tunjangan,
                     'nominal' => str_replace('.', '', $request->nominal),
-                    'bulan' => $request->bulan,
-                    'tahun' => $request->tahun,
-                    'created_at' => now()
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                    'created_at' => $request->tanggal
                 ]);
 
             DB::commit();
