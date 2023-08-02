@@ -47,7 +47,7 @@ class PenghasilanTidakTeraturController extends Controller
         // dd(count($row[0]));
         $import = $import->import($file);
         Alert::success('Berhasil', 'Berhasil mengimport '.count($row[0]).' data');
-        return redirect()->route('pajak_penghasilan.index');
+        return redirect()->route('import-penghasilan-index');
     }
 
     public function filter(Request $request)
@@ -274,15 +274,15 @@ class PenghasilanTidakTeraturController extends Controller
 
             DB::commit();
             Alert::success('Berhasil', 'Berhasil menambahkan data.');
-            return redirect()->route('pajak_penghasilan.index');
+            return redirect()->route('pajak_penghasilan.create');
         } catch(Exception $e){
             DB::rollBack();
             Alert::error('Gagal', 'Terjadi kesalahan.'.$e->getMessage());
-            return redirect()->route('pajak_penghasilan.index');
+            return redirect()->route('pajak_penghasilan.create');
         } catch(QueryException $e){
             DB::rollBack();
             Alert::error('Gagal', 'Terjadi kesalahan.'.$e->getMessage());
-            return redirect()->route('pajak_penghasilan.index');
+            return redirect()->route('pajak_penghasilan.create');
         }
     }
 
