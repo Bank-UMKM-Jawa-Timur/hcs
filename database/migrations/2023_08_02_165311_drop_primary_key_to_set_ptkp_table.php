@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('set_ptkp', function (Blueprint $table) {
-            $table->id();
+        Schema::table('set_ptkp', function (Blueprint $table) {
+            $table->dropPrimary('kode');
         });
     }
 
@@ -25,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('set_ptkp', function (Blueprint $table) {
+            //
+        });
     }
 };
