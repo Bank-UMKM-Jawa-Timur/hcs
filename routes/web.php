@@ -142,6 +142,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/history_jabatan', HistoryJabatanController::class);
     Route::resource('/gaji', SlipGajiController::class);
     Route::resource('/pengkinian_data', PengkinianDataController::class);
+    Route::resource('/ptkp', PtkpController::class);
     Route::resource('/penambahan-bruto', MstPenambahanBrutoController::class);
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
 
