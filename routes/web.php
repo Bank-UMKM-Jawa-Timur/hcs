@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
