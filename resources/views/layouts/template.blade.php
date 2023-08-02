@@ -242,6 +242,13 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
+                                <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
+                                    <a href="{{ route('pajak_penghasilan.create') }}">
+                                        <i class="nc-icon nc-ruler-pencil"></i>
+                                        <p>Tambah Penghasilan</p>
+                                        <p></p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         {{-- Menu Histori --}}
