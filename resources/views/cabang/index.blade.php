@@ -48,7 +48,7 @@
                                       {{-- <div class="row"> --}}
                                         <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
                                           <button class="btn btn-warning">
-                                            Edit
+                                            @if ($item->kode_cabang_profil) Edit @else Lengkapi Profil Kantor @endif
                                           </button>
                                         </a>
                                         
