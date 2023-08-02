@@ -45,18 +45,6 @@
 </div>
 
 <div class="card-body">
-    <div class="row m-0">
-        <div class="col">
-            <a class="mb-3" href="{{ route('pajak_penghasilan.create') }}">
-                <button class="btn btn-primary">Tambah penghasilan</button>
-            </a>
-        </div>
-    </div>
-    <div class="row m-0">
-        <div class="col">
-            <hr>
-        </div>
-    </div>
     <form action="{{ route('get-penghasilan') }}" method="post">
         @csrf
             <div class="row m-0">
