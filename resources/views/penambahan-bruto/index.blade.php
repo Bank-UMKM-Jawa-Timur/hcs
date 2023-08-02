@@ -5,7 +5,7 @@
             <h5 class="card-title">Data Penambahan Bruto</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang > <a href="" class="text-secondary">Penambahan Bruto</a></p>
         </div>
-        
+
         <div class="card-body">
             <div class="col">
                 <div class="row">
@@ -42,8 +42,8 @@
                                     <td>{{ $item->jht }}</td>
                                     <td>{{ $item->jkm }}</td>
                                     <td class="text-center">{{ $item->kesehatan }}</td>
-                                    <td class="text-center">{{ $item->kesehatan_batas_atas }}</td>
-                                    <td class="text-center">{{ $item->kesehatan_batas_bawah }}</td>
+                                    <td class="text-center">{{ number_format($item->kesehatan_batas_atas, 0, '.', '.') }}</td>
+                                    <td class="text-center">{{ number_format($item->kesehatan_batas_bawah, 0, '.', '.') }}</td>
                                     <td>{{ $item->jp }}</td>
                                     <td>{{ $item->total }}</td>
                                     <td>
@@ -82,6 +82,9 @@
                 'allowReorder': false
             }
         });
+        $("[data-toggle='switch']").bootstrapSwitch();
+
     });
+
 </script>
-@endsection 
+@endsection
