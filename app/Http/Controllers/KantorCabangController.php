@@ -25,7 +25,8 @@ class KantorCabangController extends Controller
         $data = DB::table('mst_cabang')
                 ->select(
                     'mst_cabang.*',
-                    'p.kd_cabang AS kode_cabang_profil'
+                    'p.id AS profil_id',
+                    'p.kd_cabang AS kode_cabang_profil',
                 )
                 ->leftJoin('mst_profil_kantor AS p', 'mst_cabang.kd_cabang', 'p.kd_cabang')
                 ->get();
