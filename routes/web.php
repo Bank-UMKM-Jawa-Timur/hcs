@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
@@ -139,6 +140,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/history_jabatan', HistoryJabatanController::class);
     Route::resource('/gaji', SlipGajiController::class);
     Route::resource('/pengkinian_data', PengkinianDataController::class);
+    Route::resource('/ptkp', \App\Http\Controllers\PtkpController::class);
 
     // Penonaktifan Karyawan
     Route::prefix('penonaktifan')

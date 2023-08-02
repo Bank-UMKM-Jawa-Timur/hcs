@@ -436,6 +436,8 @@ Coded by www.creative-tim.com
                                             href="{{ route('tunjangan.index') }}">Tunjangan</a>
                                         <a class="dropdown-item @active('umur.index')"
                                             href="{{ route('umur.index') }}">Rentang Umur</a>
+                                        <a class="dropdown-item @active('umur.index')"
+                                            href="{{ route('ptkp.index') }}">Penghasilan tanpa Pajak</a>
                                     </div>
                                 </li>
                                 <li style="margin-top: -15px">
