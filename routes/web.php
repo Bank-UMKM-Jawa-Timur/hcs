@@ -16,6 +16,7 @@ use App\Http\Controllers\LaporanPergerakanKarir\LaporanPromosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanPenonaktifanController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\MstPenambahanBrutoController;
+use App\Http\Controllers\MstPenguranganBrutoController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PengkinianDataController;
@@ -141,6 +142,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/gaji', SlipGajiController::class);
     Route::resource('/pengkinian_data', PengkinianDataController::class);
     Route::resource('/penambahan-bruto', MstPenambahanBrutoController::class);
+    Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
 
     // Penonaktifan Karyawan
     Route::prefix('penonaktifan')

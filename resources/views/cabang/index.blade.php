@@ -59,7 +59,7 @@
                                               Master Penambahan Bruto
                                             </button>
                                           </a>
-                                          <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
+                                          <a href="{{ route('pengurangan-bruto.index') }}?profil_kantor={{$item->profil_id}}">
                                             <button class="btn btn-info">
                                               Master Pengurangan Bruto
                                             </button>

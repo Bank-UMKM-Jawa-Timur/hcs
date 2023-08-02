@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\MstProfilKantorModel;
-use App\Models\PemotongPajakTambahanModel;
+use App\Models\PemotongPajakPenguranganModel;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class MstPenambahanBrutoController extends Controller
+class MstPenguranganBrutoController extends Controller
 {
     public function __construct()
     {
@@ -22,18 +22,18 @@ class MstPenambahanBrutoController extends Controller
      */
     public function index(Request $request)
     {
-        $data = PemotongPajakTambahanModel::where('pemotong_pajak_tambahan.id_profil_kantor', $request->profil_kantor)
+        $data = PemotongPajakPenguranganModel::where('pemotong_pajak_pengurangan.id_profil_kantor', $request->profil_kantor)
                                         ->select(
-                                            'pemotong_pajak_tambahan.*',
+                                            'pemotong_pajak_pengurangan.*',
                                             'c.nama_cabang'
                                         )
-                                        ->join('mst_profil_kantor AS p', 'p.id', 'pemotong_pajak_tambahan.id_profil_kantor')
+                                        ->join('mst_profil_kantor AS p', 'p.id', 'pemotong_pajak_pengurangan.id_profil_kantor')
                                         ->join('mst_cabang AS c', 'c.kd_cabang', 'p.kd_cabang')
                                         ->orderBy('active', 'DESC')
                                         ->orderBy('id', 'DESC')
                                         ->get();
 
-        return view('penambahan-bruto.index', ['data' => $data]);
+        return view('pengurangan-bruto.index', ['data' => $data]);
     }
 
     /**
@@ -48,7 +48,7 @@ class MstPenambahanBrutoController extends Controller
         if ($kantor)
             $kd_cabang = $kantor->kd_cabang;
 
-        return view('penambahan-bruto.add', ['kd_cabang'=>$kd_cabang]);
+        return view('pengurangan-bruto.add', ['kd_cabang'=>$kd_cabang]);
     }
 
     /**
@@ -59,45 +59,35 @@ class MstPenambahanBrutoController extends Controller
      */
     public function store(Request $request)
     {
-        $url = route('penambahan-bruto.index').'?profil_kantor='.$request->id_profil_kantor;
+        $url = route('pengurangan-bruto.index').'?profil_kantor='.$request->id_profil_kantor;
         try{
             $this->validate($request, [
-                'jkk' => 'required',
-                'jht' => 'required',
-                'jkm' => 'required',
-                'kesehatan' => 'required',
-                'kesehatan_batas_atas' => 'required',
-                'kesehatan_batas_bawah' => 'required',
+                'dpp' => 'required',
                 'jp' => 'required',
+                'jp_jan_feb' => 'required',
+                'jp_mar_des' => 'required',
             ], [
                 'required' => ':attribute harus diisi.',
                 'decimal' => ':attribute harus berupa angka.',
             ], [
-                'jkk' => 'JKK',
-                'jht' => 'JHT',
-                'jkm' => 'JKM',
-                'kesehatan' => 'Kesehatan',
-                'kesehatan_batas_atas' => 'Batas Atas',
-                'kesehatan_batas_bawah' => 'Batas Bawah',
+                'dpp' => 'DPP',
                 'jp' => 'JP',
+                'jp_jan_feb' => 'JP Januari - Februari',
+                'jp_mar_des' => 'JP Maret - Desember',
             ]);
 
             $update = false;
-            $checkCurrent = PemotongPajakTambahanModel::select('id')->where('id_profil_kantor', $request->id_profil_kantor)->count();
+            $checkCurrent = PemotongPajakPenguranganModel::select('id')->where('id_profil_kantor', $request->id_profil_kantor)->count();
             if ($checkCurrent > 0) {
-                PemotongPajakTambahanModel::where('id_profil_kantor', $request->id_profil_kantor)->update(['active'=>0]);
+                PemotongPajakPenguranganModel::where('id_profil_kantor', $request->id_profil_kantor)->update(['active'=>0]);
             }
 
-            $createPemotong = new PemotongPajakTambahanModel;
+            $createPemotong = new PemotongPajakPenguranganModel;
             $createPemotong->id_profil_kantor = $request->id_profil_kantor;
-            $createPemotong->jkk = $request->jkk;
-            $createPemotong->jht = $request->jht;
-            $createPemotong->jkm = $request->jkm;
-            $createPemotong->kesehatan = $request->kesehatan;
-            $createPemotong->kesehatan_batas_atas = $request->kesehatan_batas_atas;
-            $createPemotong->kesehatan_batas_bawah = $request->kesehatan_batas_bawah;
+            $createPemotong->dpp = $request->dpp;
             $createPemotong->jp = $request->jp;
-            $createPemotong->total = $request->total;
+            $createPemotong->jp_jan_feb = $request->jp_jan_feb;
+            $createPemotong->jp_mar_des = $request->jp_mar_des;
             $createPemotong->save();
 
             Alert::success('Berhasil', 'Berhasil menyimpan data.');
@@ -133,7 +123,7 @@ class MstPenambahanBrutoController extends Controller
      */
     public function edit($id)
     {
-        $data = PemotongPajakTambahanModel::find($id);
+        $data = PemotongPajakPenguranganModel::find($id);
         $kd_cabang = '';
         $kantor = MstProfilKantorModel::select('kd_cabang')->where('id', $data->id_profil_kantor)->first();
         if ($kantor)
@@ -143,7 +133,7 @@ class MstPenambahanBrutoController extends Controller
             'kd_cabang' => $kd_cabang,
             'data' => $data,
         ];
-        return view('penambahan-bruto.edit', $data);
+        return view('pengurangan-bruto.edit', $data);
     }
 
     /**
@@ -155,39 +145,29 @@ class MstPenambahanBrutoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $url = route('penambahan-bruto.index').'?profil_kantor='.$request->id_profil_kantor;
+        $url = route('pengurangan-bruto.index').'?profil_kantor='.$request->id_profil_kantor;
         try{
             $this->validate($request, [
-                'jkk' => 'required',
-                'jht' => 'required',
-                'jkm' => 'required',
-                'kesehatan' => 'required',
-                'kesehatan_batas_atas' => 'required',
-                'kesehatan_batas_bawah' => 'required',
+                'dpp' => 'required',
                 'jp' => 'required',
+                'jp_jan_feb' => 'required',
+                'jp_mar_des' => 'required',
             ], [
                 'required' => ':attribute harus diisi.',
                 'decimal' => ':attribute harus berupa angka.',
             ], [
-                'jkk' => 'JKK',
-                'jht' => 'JHT',
-                'jkm' => 'JKM',
-                'kesehatan' => 'Kesehatan',
-                'kesehatan_batas_atas' => 'Batas Atas',
-                'kesehatan_batas_bawah' => 'Batas Bawah',
+                'dpp' => 'DPP',
                 'jp' => 'JP',
+                'jp_jan_feb' => 'JP Januari - Februari',
+                'jp_mar_des' => 'JP Maret - Desember',
             ]);
 
-            $currentPemotong = PemotongPajakTambahanModel::find($id);
+            $currentPemotong = PemotongPajakPenguranganModel::find($id);
             $currentPemotong->id_profil_kantor = $request->id_profil_kantor;
-            $currentPemotong->jkk = $request->jkk;
-            $currentPemotong->jht = $request->jht;
-            $currentPemotong->jkm = $request->jkm;
-            $currentPemotong->kesehatan = $request->kesehatan;
-            $currentPemotong->kesehatan_batas_atas = $request->kesehatan_batas_atas;
-            $currentPemotong->kesehatan_batas_bawah = $request->kesehatan_batas_bawah;
+            $currentPemotong->dpp = $request->dpp;
             $currentPemotong->jp = $request->jp;
-            $currentPemotong->total = $request->total;
+            $currentPemotong->jp_jan_feb = $request->jp_jan_feb;
+            $currentPemotong->jp_mar_des = $request->jp_mar_des;
             $currentPemotong->save();
 
             Alert::success('Berhasil', 'Berhasil menyimpan data.');
@@ -210,18 +190,18 @@ class MstPenambahanBrutoController extends Controller
     public function destroy($id, Request $request)
     {
         try{
-            $url = route('penambahan-bruto.index').'?profil_kantor='.$request->id_profil_kantor;
+            $url = route('pengurangan-bruto.index').'?profil_kantor='.$request->id_profil_kantor;
 
-            PemotongPajakTambahanModel::findOrFail($id)->delete();
+            PemotongPajakPenguranganModel::findOrFail($id)->delete();
 
             Alert::success('Berhasil', 'Berhasil menghapus data.');
             return redirect($url);
         } catch(Exception $e){
             Alert::error('Terjadi kesalahan', ''.$e->getMessage());
-            return redirect()->route('penambahan-bruto.index')->withStatus($e->getMessage());
+            return redirect()->route('pengurangan-bruto.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
             Alert::error('Terjadi kesalahan pada database', ''.$e->getMessage());
-            return redirect()->route('penambahan-bruto.index')->withStatus($e->getMessage());
+            return redirect()->route('pengurangan-bruto.index')->withStatus($e->getMessage());
         }
     }
 }
