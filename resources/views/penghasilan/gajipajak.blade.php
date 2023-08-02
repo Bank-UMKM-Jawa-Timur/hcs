@@ -104,7 +104,7 @@
                 $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
                 $total_ket = 1;
                 $status = 'TK';
-                if ($karyawan->status == 'K') {
+                if ($karyawan->status == 'K' || $karyawan->status == 'Kawin') {
                     $anak = DB::table('mst_karyawan')
                         ->where('keluarga.nip', $karyawan->nip)
                         ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')

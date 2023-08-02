@@ -97,7 +97,7 @@ class GajiPerBulanController extends Controller
                 // Gaji Untuk Jamsostek
                 $gj_jamsostek = $item->gj_pokok + $item->gj_penyesuaian + array_sum($tj_jamsostek);
                 $status = 'TK';
-                if ($item->status == 'K') {
+                if ($item->status == 'K' || $item->status == 'Kawin') {
                     $anak = DB::table('mst_karyawan')
                         ->where('keluarga.nip', $item->nip)
                         ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
