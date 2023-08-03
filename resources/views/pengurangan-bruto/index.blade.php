@@ -1,9 +1,18 @@
 @extends('layouts.template')
 @section('content')
+@php
+$profilKantor = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->find($_GET['profil_kantor']);
+@endphp
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Data Pengurangan Bruto</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang > <a href="" class="text-secondary">Pengurangan Bruto</a></p>
+            @if ($profilKantor)
+                @if ($profilKantor->kd_cabang == '000')
+                    <p class="card-title"><a href="">Setting </a> > <a href="">Kantor Pusat</a> > <a href="" class="text-secondary">Pengurangan Bruto</a></p>
+                @else
+                    <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang > <a href="" class="text-secondary">Pengurangan Bruto</a></p>
+                @endif
+            @endif
         </div>
 
         <div class="card-body">

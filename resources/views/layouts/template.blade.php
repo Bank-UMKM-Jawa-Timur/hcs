@@ -447,6 +447,9 @@ Coded by www.creative-tim.com
                                             href="{{ route('ptkp.index') }}">Penghasilan tanpa Pajak</a>
                                     </div>
                                 </li>
+                                @php
+                                    $profilKantorPusat = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->where('kd_cabang', '000')->first();
+                                @endphp
                                 <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-bank"></i>
@@ -457,9 +460,9 @@ Coded by www.creative-tim.com
                                         <a class="dropdown-item @active('cabang.index')"
                                             href="{{ route('profil-kantor-pusat.index') }}">Profil</a>
                                         <a class="dropdown-item @active('divisi.index')"
-                                            href="{{ route('divisi.index') }}">Divisi</a>
+                                            href="{{ route('penambahan-bruto.index') }}?profil_kantor={{$profilKantorPusat ? $profilKantorPusat->id : ''}}">Penambahan Bruto</a>
                                         <a class="dropdown-item @active('sub_divisi.index')"
-                                            href="{{ route('sub_divisi.index') }}">Sub Divisi</a>
+                                            href="{{ route('pengurangan-bruto.index') }}?profil_kantor={{$profilKantorPusat ? $profilKantorPusat->id : ''}}">Pengurangan Bruto</a>
                                     </div>
                                 </li>
                                 <li style="margin-top: -15px">
