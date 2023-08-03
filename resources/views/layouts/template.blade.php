@@ -447,6 +447,13 @@ Coded by www.creative-tim.com
                                             href="{{ route('ptkp.index') }}">Penghasilan tanpa Pajak</a>
                                     </div>
                                 </li>
+                                <li style="margin-top: -15px" class="@active('database')">
+                                    <a href="{{ route('database.index') }}">
+                                        <i class="nc-icon nc-vector"></i>
+                                        <p>Profil Kantor Pusat</p>
+                                        <p></p>
+                                    </a>
+                                </li>
                                 <li style="margin-top: -15px">
                                     <a href="#">
                                         <i class="nc-icon nc-single-02"></i>
