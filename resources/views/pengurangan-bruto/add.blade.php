@@ -15,7 +15,7 @@
 
                     <label for="kode_cabang">Kode Kantor Cabang</label>
                     <input type="text" class="form-control" name="kode_cabang" id="kode_cabang"
-                        value="{{ old('kode_cabang', $kd_cabang) }}" readonly> 
+                        value="{{ old('kode_cabang', $kd_cabang) }}" readonly>
                     @error('kode_cabang')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -23,8 +23,8 @@
                     <label for="dpp" class="mt-2">
                         DPP(%)<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="@error('dpp') is-invalid @enderror form-control" name="dpp" id="dpp"
-                        value="{{ old('dpp') }}" onkeyup="hitungTotal()" required>
+                    <input type="text" class="@error('dpp') is-invalid @enderror only-angka form-control" name="dpp" id="dpp"
+                        value="{{ old('dpp') }}" onkeyup="hitungTotal()" required maxlength="5">
                     @error('dpp')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -32,7 +32,7 @@
                     <label for="jp" class="mt-2">
                         JP(%)<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="@error('jp') is-invalid @enderror form-control" name="jp" id="jp" value="{{ old('jp') }}" required>
+                    <input type="text" class="@error('jp') is-invalid @enderror only-angka form-control" name="jp" id="jp" value="{{ old('jp') }}" required maxlength="5">
                     @error('jp')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -40,7 +40,7 @@
                     <label for="jp_jan_feb" class="mt-2">
                         Januari - Februari(Rp)<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="@error('jp_jan_feb') is-invalid @enderror form-control" name="jp_jan_feb" id="jp_jan_feb" value="{{ old('jp_jan_feb') }}" required>
+                    <input type="text" class="@error('jp_jan_feb') is-invalid @enderror rupiah form-control" name="jp_jan_feb" id="jp_jan_feb" value="{{ old('jp_jan_feb') }}" required maxlength="9">
                     @error('jp_jan_feb')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -48,7 +48,7 @@
                     <label for="jp_mar_des" class="mt-2">
                         Maret - Desember(Rp)<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="@error('jp_mar_des') is-invalid @enderror form-control" name="jp_mar_des" id="jp_mar_des" value="{{ old('jp_mar_des') }}" required>
+                    <input type="text" class="@error('jp_mar_des') is-invalid @enderror rupiah form-control" name="jp_mar_des" id="jp_mar_des" value="{{ old('jp_mar_des') }}" required maxlength="9">
                     @error('jp_mar_des')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -59,3 +59,24 @@
         </div>
     </div>
 @endsection
+@push('script')
+    <script>
+        $('.rupiah').keyup(function(){
+            var angka = $(this).val();
+            $(this).val(formatRupiah(angka));
+        })
+
+        $(document).ready(function() {
+                // Selector untuk input dengan kelas "angka-saja"
+            var inputElement = $('.only-angka');
+
+            // Tambahkan event listener untuk memfilter input
+            inputElement.on('input', function() {
+                // Hapus semua karakter non-digit
+                var sanitizedValue = $(this).val().replace(/[^\d.]/g, '');
+                // Perbarui nilai input dengan angka yang telah difilter
+                $(this).val(sanitizedValue);
+            });
+        });
+    </script>
+@endpush

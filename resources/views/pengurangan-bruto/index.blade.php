@@ -5,7 +5,7 @@
             <h5 class="card-title">Data Pengurangan Bruto</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang > <a href="" class="text-secondary">Pengurangan Bruto</a></p>
         </div>
-        
+
         <div class="card-body">
             <div class="col">
                 <div class="row">
@@ -38,8 +38,8 @@
                                     <td>{{ $item->nama_cabang }}</td>
                                     <td>{{ $item->dpp }}</td>
                                     <td class="text-center">{{ $item->jp }}</td>
-                                    <td class="text-center">{{ $item->jp_jan_feb }}</td>
-                                    <td class="text-center">{{ $item->jp_mar_des }}</td>
+                                    <td class="text-center">{{ number_format($item->jp_jan_feb, 0, '.', '.') }}</td>
+                                    <td class="text-center">{{ number_format($item->jp_mar_des, 0, '.', '.') }}</td>
                                     <td class="text-center">
                                         <input type="checkbox" name="check" id="check" @if($item->active) checked @endif>
                                     </td>
@@ -64,6 +64,7 @@
             </div>
         </div>
     </div>
+
 @endsection
 
 @section('custom_script')
@@ -77,5 +78,23 @@
             }
         });
     });
+
+    function formatRupiah(angka, prefix){
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            // tambahkan titik jika yang di input sudah menjadi angka satuan ribuan
+            if(ribuan){
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+        }
+
 </script>
-@endsection 
+@endsection

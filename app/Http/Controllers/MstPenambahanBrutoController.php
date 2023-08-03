@@ -94,12 +94,11 @@ class MstPenambahanBrutoController extends Controller
             $createPemotong->jht = $request->jht;
             $createPemotong->jkm = $request->jkm;
             $createPemotong->kesehatan = $request->kesehatan;
-            $createPemotong->kesehatan_batas_atas = $request->kesehatan_batas_atas;
-            $createPemotong->kesehatan_batas_bawah = $request->kesehatan_batas_bawah;
+            $createPemotong->kesehatan_batas_atas = str_replace('.', "", $request->kesehatan_batas_atas);
+            $createPemotong->kesehatan_batas_bawah = str_replace('.', "", $request->kesehatan_batas_bawah);
             $createPemotong->jp = $request->jp;
             $createPemotong->total = $request->total;
             $createPemotong->save();
-
             Alert::success('Berhasil', 'Berhasil menyimpan data.');
 
             return redirect($url);

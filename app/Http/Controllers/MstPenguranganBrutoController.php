@@ -86,8 +86,8 @@ class MstPenguranganBrutoController extends Controller
             $createPemotong->id_profil_kantor = $request->id_profil_kantor;
             $createPemotong->dpp = $request->dpp;
             $createPemotong->jp = $request->jp;
-            $createPemotong->jp_jan_feb = $request->jp_jan_feb;
-            $createPemotong->jp_mar_des = $request->jp_mar_des;
+            $createPemotong->jp_jan_feb = str_replace('.', "", $request->jp_jan_feb);
+            $createPemotong->jp_mar_des = str_replace('.', "", $request->jp_mar_des);
             $createPemotong->save();
 
             Alert::success('Berhasil', 'Berhasil menyimpan data.');
