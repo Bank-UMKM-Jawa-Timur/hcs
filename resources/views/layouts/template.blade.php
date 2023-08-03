@@ -447,12 +447,20 @@ Coded by www.creative-tim.com
                                             href="{{ route('ptkp.index') }}">Penghasilan tanpa Pajak</a>
                                     </div>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('database')">
-                                    <a href="{{ route('database.index') }}">
-                                        <i class="nc-icon nc-vector"></i>
-                                        <p>Profil Kantor Pusat</p>
+                                <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
+                                    <a data-toggle="dropdown" aria-expanded="false">
+                                        <i class="nc-icon nc-bank"></i>
+                                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Kantor Pusat </p>
                                         <p></p>
                                     </a>
+                                    <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                                        <a class="dropdown-item @active('cabang.index')"
+                                            href="{{ route('profil-kantor-pusat.index') }}">Profil</a>
+                                        <a class="dropdown-item @active('divisi.index')"
+                                            href="{{ route('divisi.index') }}">Divisi</a>
+                                        <a class="dropdown-item @active('sub_divisi.index')"
+                                            href="{{ route('sub_divisi.index') }}">Sub Divisi</a>
+                                    </div>
                                 </li>
                                 <li style="margin-top: -15px">
                                     <a href="#">

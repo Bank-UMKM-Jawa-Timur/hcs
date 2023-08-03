@@ -21,6 +21,7 @@ use App\Http\Controllers\MstPenguranganBrutoController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PengkinianDataController;
+use App\Http\Controllers\ProfilKantorPusatController;
 use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\SuratPeringatanController;
@@ -145,6 +146,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/ptkp', PtkpController::class);
     Route::resource('/penambahan-bruto', MstPenambahanBrutoController::class);
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
+    Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
+    Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
 
     // Penonaktifan Karyawan
     Route::prefix('penonaktifan')
