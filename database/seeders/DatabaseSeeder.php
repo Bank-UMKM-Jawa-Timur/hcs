@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder
             BagianSeeder::class,
             PanggolSeeder::class,
             AgamaSeeder::class,
-            TunjanganSeeder::class
+            TunjanganSeeder::class,
+            KantorPusatSeeder::class,
         ]);
     }
 }
