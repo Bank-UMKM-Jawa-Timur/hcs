@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Tambah Penghasilan Tanpa Pajak</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('ptkp.index') }}">Rentang Umur</a></p>
+            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('ptkp.index') }}">Penghasilan Tanpa Pajak</a></p>
         </div>
 
         <div class="card-body">
