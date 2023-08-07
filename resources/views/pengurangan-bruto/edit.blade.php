@@ -41,7 +41,7 @@
                     <label for="jp_jan_feb" class="mt-2">
                         Januari - Februari(Rp)<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="@error('jp_jan_feb') is-invalid @enderror form-control" name="jp_jan_feb" id="jp_jan_feb" value="{{ old('jp_jan_feb', $data->jp_jan_feb) }}" required>
+                    <input type="text" class="@error('jp_jan_feb') is-invalid @enderror form-control" name="jp_jan_feb" id="jp_jan_feb" value="{{ old('jp_jan_feb', $data->jp_jan_feb) }}" maxlength="10" required>
                     @error('jp_jan_feb')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -49,7 +49,7 @@
                     <label for="jp_mar_des" class="mt-2">
                         Maret - Desember(Rp)<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="@error('jp_mar_des') is-invalid @enderror form-control" name="jp_mar_des" id="jp_mar_des" value="{{ old('jp_mar_des', $data->jp_mar_des) }}" required>
+                    <input type="text" class="@error('jp_mar_des') is-invalid @enderror form-control" name="jp_mar_des" id="jp_mar_des" value="{{ old('jp_mar_des', $data->jp_mar_des) }}" maxlength="10" required>
                     @error('jp_mar_des')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
