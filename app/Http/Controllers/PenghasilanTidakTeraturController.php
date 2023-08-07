@@ -101,13 +101,13 @@ class PenghasilanTidakTeraturController extends Controller
                 ->first();
         } else {
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
-                ->whereNull('kd_cabang')
+                ->where('kd_cabang', '000')
                 ->where('active', 1)
                 ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
                 ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
                 ->first();
             $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
-                ->whereNull('kd_cabang')
+                ->where('kd_cabang', '000')
                 ->where('active', 1)
                 ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
                 ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
