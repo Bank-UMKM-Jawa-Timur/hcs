@@ -61,7 +61,7 @@ class GajiPerBulanController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        // try{
             $cabang = array();
             $cbg = DB::table('mst_cabang')
                 ->select('kd_cabang')
@@ -77,6 +77,8 @@ class GajiPerBulanController extends Controller
             $tunjangan = array();
             $karyawan = DB::table('mst_karyawan')
                 ->whereNull('tanggal_penonaktifan')
+                ->whereNotIn('kd_entitas', $cabang)
+                ->orWhere('kd_entitas', null)
                 ->get();
 
             foreach($karyawan as $item){
@@ -155,13 +157,13 @@ class GajiPerBulanController extends Controller
                         ->first();
                 } else {
                     $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
-                        ->whereNull('kd_cabang')
+                        ->where('kd_cabang', '000')
                         ->where('active', 1)
                         ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
                         ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
                         ->first();
                     $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
-                        ->whereNull('kd_cabang')
+                        ->where('kd_cabang', '000')
                         ->where('active', 1)
                         ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
                         ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
@@ -466,15 +468,15 @@ class GajiPerBulanController extends Controller
             DB::commit();
             Alert::success('Berhasil', 'Berhasil Melakukan Pembayaran Gaji Karyawan.');
             return redirect()->route('gaji_perbulan.index');
-        }catch(Exception $e){
-            DB::rollBack();
-            Alert::error('Terjadi Kesalahan', $e->getMessage());
-            return redirect()->route('gaji_perbulan.index');
-        }catch(QueryException $e){
-            DB::rollBack();
-            Alert::error('Terjadi Kesalahan', $e->getMessage());
-            return redirect()->route('gaji_perbulan.index');
-        }
+        // }catch(Exception $e){
+        //     DB::rollBack();
+        //     Alert::error('Terjadi Kesalahan', $e->getMessage());
+        //     return redirect()->route('gaji_perbulan.index');
+        // }catch(QueryException $e){
+        //     DB::rollBack();
+        //     Alert::error('Terjadi Kesalahan', $e->getMessage());
+        //     return redirect()->route('gaji_perbulan.index');
+        // }
     }
 
     /**
