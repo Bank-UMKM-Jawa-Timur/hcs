@@ -40,7 +40,7 @@
                     @enderror
                     
                     <label for="npwp_pemotong" class="mt-2">
-                        NPWP Pemotong<span class="text-danger">*</span>
+                        NPWP Perusahaan Pemotong<span class="text-danger">*</span>
                     </label>
                     <input type="text" class="@error('npwp_pemotong') is_invalid @enderror form-control" value="{{ old('npwp_pemotong', $data->npwp_pemotong) }}" name="npwp_pemotong" id="npwp_pemotong" required>
                     @error('npwp_pemotong')
@@ -48,7 +48,7 @@
                     @enderror
 
                     <label for="nama_pemotong" class="mt-2">
-                        Nama Pemotong<span class="text-danger">*</span>
+                        Nama Perusahaan Pemotong<span class="text-danger">*</span>
                     </label>
                     <input type="text" class="@error('nama_pemotong') is_invalid @enderror form-control" value="{{ old('nama_pemotong', $data->nama_pemotong) }}" name="nama_pemotong" id="nama_pemotong" required>
                     @error('nama_pemotong')
@@ -70,7 +70,7 @@
                     @enderror
 
                     <label for="npwp_pemimpin_cabang" class="mt-2">
-                        NPWP Pemimpin Cabang<span class="text-danger">*</span>
+                        NPWP Pemotong<span class="text-danger">*</span>
                     </label>
                     <input type="text" class="@error('npwp_pemimpin_cabang') is_invalid @enderror form-control" value="{{ old('npwp_pemimpin_cabang', $data->npwp_pemimpin_cabang) }}" name="npwp_pemimpin_cabang" id="npwp_pemimpin_cabang" required>
                     @error('npwp_pemimpin_cabang')
@@ -78,7 +78,7 @@
                     @enderror
 
                     <label for="nama_pemimpin_cabang" class="mt-2">
-                        Nama Pemimpin Cabang<span class="text-danger">*</span>
+                        Nama Pemotong<span class="text-danger">*</span>
                     </label>
                     <input type="text" class="@error('nama_pemimpin_cabang') is_invalid @enderror form-control" value="{{ old('nama_pemimpin_cabang', $data->nama_pemimpin_cabang) }}" name="nama_pemimpin_cabang" id="nama_pemimpin_cabang" required>
                     @error('nama_pemimpin_cabang')

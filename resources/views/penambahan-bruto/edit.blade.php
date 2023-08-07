@@ -59,7 +59,7 @@
                     <label for="kesehatan_batas_atas" class="mt-2">
                         Batas Atas(Rp)<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="@error('kesehatan_batas_atas') is-invalid @enderror rupiah form-control" name="kesehatan_batas_atas" id="kesehatan_batas_atas" value="{{ old('kesehatan_batas_atas', $data->kesehatan_batas_atas) }}" required>
+                    <input type="text" class="@error('kesehatan_batas_atas') is-invalid @enderror rupiah form-control" name="kesehatan_batas_atas" id="kesehatan_batas_atas" value="{{ old('kesehatan_batas_atas', $data->kesehatan_batas_atas) }}" maxlength="10" required>
                     @error('kesehatan_batas_atas')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -67,7 +67,7 @@
                     <label for="kesehatan_batas_bawah" class="mt-2">
                         Batas Bawah(Rp)<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="@error('kesehatan_batas_bawah') is-invalid @enderror rupiah form-control" name="kesehatan_batas_bawah" id="kesehatan_batas_bawah" value="{{ old('kesehatan_batas_bawah', $data->kesehatan_batas_bawah) }}" required>
+                    <input type="text" class="@error('kesehatan_batas_bawah') is-invalid @enderror rupiah form-control" name="kesehatan_batas_bawah" id="kesehatan_batas_bawah" value="{{ old('kesehatan_batas_bawah', $data->kesehatan_batas_bawah) }}" maxlength="10" required>
                     @error('kesehatan_batas_bawah')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror

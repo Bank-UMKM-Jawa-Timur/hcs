@@ -29,6 +29,7 @@ class KantorCabangController extends Controller
                     'p.kd_cabang AS kode_cabang_profil',
                 )
                 ->leftJoin('mst_profil_kantor AS p', 'mst_cabang.kd_cabang', 'p.kd_cabang')
+                ->where('mst_cabang.kd_cabang', '!=', '000')
                 ->get();
 
         return view('cabang.index', ['data' => $data]);
