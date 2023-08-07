@@ -52,6 +52,14 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function filter(Request $request)
     {
+        $cabang = array();
+        $cbg = DB::table('mst_cabang')
+            ->select('kd_cabang')
+            ->get();
+        foreach($cbg as $item){
+            array_push($cabang, $item->kd_cabang);
+        }
+        
         $tahun = $request->get('tahun');
         $mode = $request->get('mode');
         $nip = $request->get('nip');
@@ -78,6 +86,45 @@ class PenghasilanTidakTeraturController extends Controller
             ->select('mst_karyawan.*', 'mst_jabatan.nama_jabatan')
             ->first();
 
+        if(in_array($karyawan->kd_entitas, $cabang)){
+            $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
+                ->where('kd_cabang', $karyawan->kd_entitas)
+                ->where('active', 1)
+                ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
+                ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
+                ->first();
+            $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
+                ->where('kd_cabang', $karyawan->kd_entitas)
+                ->where('active', 1)
+                ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
+                ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
+                ->first();
+        } else {
+            $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
+                ->whereNull('kd_cabang')
+                ->where('active', 1)
+                ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
+                ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
+                ->first();
+            $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
+                ->whereNull('kd_cabang')
+                ->where('active', 1)
+                ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
+                ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
+                ->first();
+        }
+        $persen_jkk = $hitungan_penambah->jkk;
+        $persen_jht = $hitungan_penambah->jht;
+        $persen_jkm = $hitungan_penambah->jkm;
+        $persen_kesehatan = $hitungan_penambah->kesehatan;
+        $persen_jp_penambah = $hitungan_penambah->jp;
+        $persen_dpp = $hitungan_pengurang->dpp;
+        $persen_jp_pengurang = $hitungan_pengurang->jp;
+        $batas_atas = $hitungan_penambah->kesehatan_batas_atas;
+        $batas_bawah = $hitungan_penambah->kesehatan_batas_bawah;
+        $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
+        $jp_mar_des = $hitungan_pengurang->jp_mar_des;
+        // $nominal_jp = ($request->get('bulan') < 3) ? $jp_jan_feb : $jp_mar_des;
         // Get gaji secara bulanan
         for($i = 1; $i <= 12; $i++){
             $pph = PPHModel::where('nip', $nip)
@@ -186,28 +233,31 @@ class PenghasilanTidakTeraturController extends Controller
         }
 
         foreach($total_gaji as $key => $item){
+            $nominal_jp = ($key > 2) ? $jp_mar_des : $jp_jan_feb;
             // Get Jamsostek
             if($item > 0){
                 $jkk = 0;
                 $jht = 0;
                 $jkm = 0;
                 $kesehatan = 0;
+                $jp_penambah = 0;
                 if($karyawan->tanggal_penonaktifan == null){
-                    $jkk = round(0.0024 * $item);
-                    $jht = round(0.0 * $item);
-                    $jkm = round(0.0030 * $item);
+                    $jkk = round(($persen_jkk / 100) * $item);
+                    $jht = round(($persen_jht / 100) * $item);
+                    $jkm = round(($persen_jkm / 100) * $item);
+                    $jp_penambah = round(($persen_jp_penambah / 100) * $item);
                 }
     
                 if($karyawan->jkn != null){
-                    if($item > 12000000){
-                        $kesehatan = round(12000000 * 0.05);
-                    } else if($item < 4375479){
-                        $kesehatan = round(4375479 * 0.05);
+                    if($item > $batas_atas){
+                        $kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                    } else if($item < $batas_bawah){
+                        $kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
                     } else{
-                        $kesehatan = round($item * 0.05);
+                        $kesehatan = round($item * ($persen_kesehatan / 100));
                     }
                 }
-                array_push($jamsostek, ($jkk + $jht + $jkm + $kesehatan));
+                array_push($jamsostek, ($jkk + $jht + $jkm + $kesehatan + $jp_penambah));
             } else {
                 array_push($jamsostek, 0);
             }
@@ -215,17 +265,17 @@ class PenghasilanTidakTeraturController extends Controller
             // Get Pengurang Bruto
             if($item > 0){
                 if($karyawan->status_karyawan == 'IKJP') {
-                    array_push($pengurang, 0.01 * $item);
+                    array_push($pengurang, ($persen_jp_pengurang / 100) * $item);
                 } else{
                     $gj_pokok = $gj[$key]['gj_pokok'];
                     $tj_keluarga = $gj[$key]['tj_keluarga'];
                     $tj_kesejahteraan = $gj[$key]['tj_kesejahteraan'];
 
-                    $dpp = ((($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * 0.05);
-                    if($item >= 8754600){
-                        $dppExtra = 8754600 * 0.01;
+                    $dpp = ((($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100));
+                    if($item >= $nominal_jp){
+                        $dppExtra = $nominal_jp * ($persen_jp_pengurang / 100);
                     } else {
-                        $dppExtra = $item * 0.01;
+                        $dppExtra = $item * ($persen_jp_pengurang / 100);
                     }
                     // dd($gj_pokok, $tj_keluarga, $tj_kesejahteraan, $dpp, $dppExtra, $dpp + $dppExtra);
                     array_push($pengurang, round($dpp + $dppExtra));
