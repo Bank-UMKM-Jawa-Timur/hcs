@@ -278,6 +278,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('laporan-promosi', [LaporanPromosiController::class, 'index'])->name('laporan-promosi.index');
         Route::get('laporan-penonaktifan', [LaporanPenonaktifanController::class, 'index'])->name('laporan-penonaktifan.index');
     });
+
+    Route::get('/import-pph', function(){
+        return view('gaji_perbulan.import');
+    });
+    Route::post('post-import-pph', [GajiPerBulanController::class, 'importPPH'])->name('import-pph');
 });
 Auth::routes();
 
