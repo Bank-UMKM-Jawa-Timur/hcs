@@ -174,10 +174,10 @@ class PenghasilanTidakTeraturController extends Controller
             'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
             'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
             'tj_ti' => ($data != null) ? $data->tj_ti : 0,
-            'tj_transport' => ($tj_trans != null && $data != null) ? $tj_trans->nominal : 0,
-            'tj_pulsa' => ($tj_pulsa != null && $data != null) ? $tj_pulsa->nominal : 0,
-            'tj_vitamin' => ($tj_vitamin != null && $data != null) ? $tj_vitamin->nominal : 0,
-            'uang_makan' => ($tj_uang_makan != null && $data != null) ? $tj_uang_makan->nominal : 0,
+            'tj_transport' => ($data != null) ? $data->tj_transport : 0,
+            'tj_pulsa' => ($data != null) ? $data->tj_pulsa : 0,
+            'tj_vitamin' => ($data != null) ? $data->tj_vitamin : 0,
+            'uang_makan' => ($data != null) ? $data->uang_makan : 0,
            ];
 
            $total_gj[$i-1] = [
@@ -233,7 +233,7 @@ class PenghasilanTidakTeraturController extends Controller
         }
 
         foreach($total_gaji as $key => $item){
-            $nominal_jp = ($key > 2) ? $jp_mar_des : $jp_jan_feb;
+            $nominal_jp = ($key > 1) ? $jp_mar_des : $jp_jan_feb;
             // Get Jamsostek
             if($item > 0){
                 $jkk = 0;

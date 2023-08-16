@@ -330,34 +330,34 @@
                         if (($no_14 - $ptkp?->ptkp_tahun) <= 250000000) {
                             $persen15 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 60000000) * 0.15 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000- 60000000) * 0.18;
                         } else {
-                            $persen15 = 190000000;
+                            $persen15 = 190000000 * 0.15;
                         }
                     } else {
-                        $persen20 = 0;
+                        $persen15 = 0;
                     }
                     $persen25 = 0;
                     if (($no_14 - $ptkp?->ptkp_tahun) > 250000000) {
                         if (($no_14 - $ptkp?->ptkp_tahun) <= 500000000) {
                             $persen25 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.25 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.3;
                         } else {
-                            $persen25 = 250000000;
+                            $persen25 = 250000000 * 0.25;
                         }
                     } else {
                         $persen25 = 0;
                     }
                     $persen30 = 0;
-                    if (($no_14 - $ptkp?->ptkp_tahun) > 250000000) {
-                        if (($no_14 - $ptkp?->ptkp_tahun) <= 500000000) {
+                    if (($no_14 - $ptkp?->ptkp_tahun) > 500000000) {
+                        if (($no_14 - $ptkp?->ptkp_tahun) <= 5000000000) {
                             $persen30 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.3 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.36;
                         } else {
-                            $persen30 = 4500000000;
+                            $persen30 = 4500000000 * 0.30;
                         }
                     } else {
                         $persen30 = 0;
                     }
                     $persen35 = 0;
-                    if (($no_14 - $ptkp?->ptkp_tahun) > 500000000) {
-                            $persen35 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.35 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.42;
+                    if (($no_14 - $ptkp?->ptkp_tahun) > 5000000000) {
+                            $persen35 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 5000000000) * 0.35 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 5000000000) * 0.42;
                     } else {
                         $persen35 = 0;
                     }
@@ -482,7 +482,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">13. Penghasilan Neto Masa sebelumnya</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="-">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -519,7 +519,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">18. PPh Pasal 21 yang telah dipotong Masa Sebelumnya</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="-">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
