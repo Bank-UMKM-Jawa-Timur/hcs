@@ -232,7 +232,7 @@ class KaryawanController extends Controller
                     ->first();
                 $div = DB::table('mst_divisi')
                     ->where('kd_divisi', $karyawan->kd_entitas)
-                    ->select('kd_div')
+                    ->select('kd_divisi')
                     ->first();
             }
         }
@@ -692,6 +692,7 @@ class KaryawanController extends Controller
                     'skangkat' => $request->get('skangkat'),
                     'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
                     'no_rekening' => $request->get('no_rek'),
+                    'npwp' => $request->get('npwp'),
                     'created_at' => now(),
                 ]);
 
