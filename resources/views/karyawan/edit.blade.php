@@ -123,10 +123,16 @@
                     </div>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                         <div class="row m-0 pb-3 col-md-12">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Nomor Rekening</label>
-                                    <input type="number" class="form-control" name="no_rek" value="{{ old('no_rek') }}">
+                                    <input type="number" class="form-control" name="no_rek" value="{{ old('no_rek', $data->no_rekening) }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">NPWP</label>
+                                    <input type="number" class="form-control" name="npwp" value="{{ old('npwp', $data->npwp) }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -418,6 +424,7 @@
         var x = {{ $data->count_tj }};
         var subdiv;
         var bag;
+        let kd_divisi;
         kantorChange();
         getKantor();
         cekStatus();
@@ -481,9 +488,14 @@
                     console.log(res.kantor);
                     if(res.kantor == "Pusat"){
                         $("#kantor").val(1)
+                        kd_divisi = res.div.kd_divisi
                         kantorChange(res.div.kd_divisi)
                         if(res.subdiv != null){
                             subdiv = res.subdiv;
+                        } else {
+                            console.log('test');
+                            $("#kantor_row2").hide();
+                            $("#kantor_row2").empty();
                         }
                         if(res.bag != null){
                             bag = res.bag.kd_bagian
@@ -521,23 +533,25 @@
                             $('#divisi').append('<option value="'+item.kd_divisi+'" '+ (kd_div === item.kd_divisi ? 'selected' : '') +'>'+item.nama_divisi+'</option>')
                         });
                         var value = $('#divisi').val();
-                        divisiChange(value);
-
-                        $("#kantor_row2").empty();
-
-                        $("#kantor_row2").append(`
-                                <div class="form-group">
-                                    <label for="subdiv">Sub divisi</label>
-                                    <select name="subdiv" id="sub_divisi" class="form-control">
-                                        <option value="">--- Pilih sub divisi ---</option>
-                                    </select>
-                                </div>`
-                        );
-
-                        $("#divisi").change(function(){
-                            var value = $(this).val();
+                        if($("#jabatan").val() != 'PIMDIV') {
                             divisiChange(value);
-                        })
+    
+                            $("#kantor_row2").empty();
+    
+                            $("#kantor_row2").append(`
+                                    <div class="form-group">
+                                        <label for="subdiv">Sub divisi</label>
+                                        <select name="subdiv" id="sub_divisi" class="form-control">
+                                            <option value="">--- Pilih sub divisi ---</option>
+                                        </select>
+                                    </div>`
+                            );
+    
+                            $("#divisi").change(function(){
+                                var value = $(this).val();
+                                divisiChange(value);
+                            })
+                        }
                     }
                 })
             } else if(kantor_id == 2){
@@ -671,7 +685,7 @@
                 $("kantor_row2").removeClass("col-md-6")
                 $("#kantor_row2").hide();
                 $("#kantor_row3").hide()
-            } else if(value == ""){
+            } else if(value == "-"){
                 kantorChange();
             }else {
                 $('#kantor').removeAttr("disabled")
@@ -697,12 +711,38 @@
                     success: function(res){
                         if(res == null){
                         } else{
-                            $('#is').val(res.enum);
-                            $('#is_nama').val(res.is_nama);
-                            $('#is_tgl_lahir').val(res.is_tgl_lahir);
-                            $('#is_alamat').val(res.is_alamat);
-                            $('#is_pekerjaan').val(res.is_pekerjaan);
-                            $('#is_jml_anak').val(res.is_jml_anak);
+                            $('#is').val(res.is.enum);
+                            $('#is_nama').val(res.is.nama);
+                            $('#is_tgl_lahir').val(res.is.tgl_lahir);
+                            $('#is_alamat').val(res.is.alamat);
+                            $('#is_pekerjaan').val(res.is.pekerjaan);
+                            $('#is_jml_anak').val(res.is.jml_anak);
+
+                            $("#row_anak").empty();
+                            var angka = res.is.jml_anak
+                            if(angka > 2) angka = 2;
+
+                            for(var i = 0; i < angka; i++){
+                                var ket = (i == 0) ? 'Pertama' : 'Kedua';
+                                $("#row_anak").append(`
+                                <h6 class="">Data Anak `+ ket +`</h6>
+                                <div class="row">
+                                    <input type="hidden" name="id_anak[]" value="">
+                                    <div class="col-md-6 form-group">
+                                        <label for="nama_anak">Nama Anak</label>
+                                        <input type="text" class="form-control" name="nama_anak[]">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                        <input type="date" class="form-control" name="tgl_lahir_anak[]">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                        <input type="text" class="form-control" name="sk_tunjangan_anak[]">
+                                    </div>
+                                </div>
+                            `);
+                            }
                         }
                     }
                 })

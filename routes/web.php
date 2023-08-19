@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
@@ -15,9 +16,12 @@ use App\Http\Controllers\LaporanPergerakanKarir\LaporanMutasiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanPromosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanPenonaktifanController;
 use App\Http\Controllers\MigrasiController;
+use App\Http\Controllers\MstPenambahanBrutoController;
+use App\Http\Controllers\MstPenguranganBrutoController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PengkinianDataController;
+use App\Http\Controllers\ProfilKantorPusatController;
 use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\SuratPeringatanController;
@@ -139,6 +143,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/history_jabatan', HistoryJabatanController::class);
     Route::resource('/gaji', SlipGajiController::class);
     Route::resource('/pengkinian_data', PengkinianDataController::class);
+    Route::resource('/ptkp', PtkpController::class);
+    Route::resource('/penambahan-bruto', MstPenambahanBrutoController::class);
+    Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
+    Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
+    Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
 
     // Penonaktifan Karyawan
     Route::prefix('penonaktifan')
@@ -215,6 +224,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/laporan_jaminan', [JaminanController::class, 'filter'])->name('filter-laporan');
 
     Route::post('/upload_penghasilan', [PenghasilanTidakTeraturController::class, 'upload'])->name('upload_penghasilan');
+    Route::get('/import-penghasilan', [PenghasilanTidakTeraturController::class, 'import'])->name('import-penghasilan-index');
+    Route::post('/insert-penghasilan', [PenghasilanTidakTeraturController::class, 'insertPenghasilan'])->name('insert-penghasilan');
     Route::get('/getKaryawanByNama', [PenghasilanTidakTeraturController::class, 'cariNama'])->name('getKaryawanByNama');
     Route::get('/getKaryawanByNip', [\App\Http\Controllers\PenghasilanTidakTeraturController::class, 'getDataKaryawan'])->name('getKaryawanByNip');
     Route::post('/laporan_jamsostek', [JaminanController::class, 'filter'])->name('filter-laporan');
@@ -267,6 +278,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('laporan-promosi', [LaporanPromosiController::class, 'index'])->name('laporan-promosi.index');
         Route::get('laporan-penonaktifan', [LaporanPenonaktifanController::class, 'index'])->name('laporan-penonaktifan.index');
     });
+
+    Route::get('/import-pph', function(){
+        return view('gaji_perbulan.import');
+    });
+    Route::post('post-import-pph', [GajiPerBulanController::class, 'importPPH'])->name('import-pph');
 });
 Auth::routes();
 

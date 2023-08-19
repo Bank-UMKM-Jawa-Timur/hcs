@@ -45,18 +45,6 @@
 </div>
 
 <div class="card-body">
-    <div class="row m-0">
-        <div class="col">
-            <a class="mb-3" href="{{ route('pajak_penghasilan.create') }}">
-                <button class="btn btn-primary">Import penghasilan</button>
-            </a>
-        </div>
-    </div>
-    <div class="row m-0">
-        <div class="col">
-            <hr>
-        </div>
-    </div>
     <form action="{{ route('get-penghasilan') }}" method="post">
         @csrf
             <div class="row m-0">
@@ -102,9 +90,9 @@
         <div class="col-md-12">
             @php
                 $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
-                $total_ket = 0;
+                $total_ket = 1;
                 $status = 'TK';
-                if ($karyawan->status == 'K') {
+                if ($karyawan->status == 'K' || $karyawan->status == 'Kawin') {
                     $anak = DB::table('mst_karyawan')
                         ->where('keluarga.nip', $karyawan->nip)
                         ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
@@ -140,7 +128,7 @@
 
                 function rupiah($angka){
                     $hasil_rupiah = number_format($angka, 0, ",", ".");
-                    return $hasil_rupiah;
+                    return $hasil_rupiah > 0 ? $hasil_rupiah : '-';
                 }
             @endphp
             @if ($mode == 1)
@@ -253,27 +241,29 @@
                                 $total_tidak_rutin = 0;
                                 $total_tj_lainnya = 0;
                                 $jaminan = array_sum($jamsostek);
-                                $bonus_sum = array_sum($bonus);
+                                $bonus_sum = 0;
                                 $total_pph = 0;
                                 $total_honorium = 0;
                                 $total_pph_21 = 0;
                                 $total_penghasilan_bruto = 0;
+                                $total_pph_lunas = array_sum($pph);
                             @endphp
                             @for ($i = 0; $i < 12; $i++)
                                 <tr>
                                     <td>{{ $bulan[$i] }}</td>
-                                    <td>{{ (array_sum($gj[$i]) != 0) ? rupiah(array_sum($gj[$i])) : '-' }}</td>
-                                    <td>{{ (array_sum($penghasilan[$i]) != 0) ? rupiah(array_sum($penghasilan[$i])) : '-' }}</td>
+                                    <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] > 0) ? rupiah(array_sum($gj[$i]) + $jamsostek[$i]) : '-' }}</td>
+                                    <td>{{ (array_sum($penghasilan[$i]) + array_sum($bonus[$i]) > 0) ? rupiah(array_sum($penghasilan[$i]) + array_sum($bonus[$i])) : '-' }}</td>
                                     @php
-                                        $total_rutin += array_sum($gj[$i]);
-                                        $total_tidak_rutin += array_sum($penghasilan[$i]);
+                                        $bonus_sum += array_sum($bonus[$i]);
+                                        $total_rutin += array_sum($gj[$i]) + $jamsostek[$i];
+                                        $total_tidak_rutin += (array_sum($penghasilan[$i]) + array_sum($bonus[$i]));
                                         $total_gaji += $gj[$i]['gj_pokok'] + $gj[$i]['tj_keluarga'] + $gj[$i]['tj_jabatan'] +$gj[$i]['gj_penyesuaian'] + $gj[$i]['tj_perumahan'] + $gj[$i]['tj_telepon'] + $gj[$i]['tj_pelaksana'] + $gj[$i]['tj_kemahalan'] + $gj[$i]['tj_kesejahteraan'];
-                                        $total_tj_lainnya += $gj[$i]['uang_makan'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_vitamin'] + $gj[$i]['tj_transport'] + $total_tidak_rutin;
-                                        $total_penghasilan_bruto += array_sum($gj[$i]) + array_sum($penghasilan[$i]);
+                                        $total_tj_lainnya += $gj[$i]['uang_makan'] + $gj[$i]['tj_pulsa'] + $gj[$i]['tj_vitamin'] + $gj[$i]['tj_transport'] + array_sum($penghasilan[$i]);
+                                        $total_penghasilan_bruto += array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i];
                                     @endphp
-                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) != 0) ? rupiah(array_sum($gj[$i]) + array_sum($penghasilan[$i])) : '-' }}</td>
-                                    <td>-</td>
-                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) != 0) ? 1 : 0 }}</td>
+                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i] > 0) ? rupiah(array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i]) : '-' }}</td>
+                                    <td>{{ ($pph[$i] > 0) ? rupiah($pph[$i]) : '-' }}</td>
+                                    <td>{{ (array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i] > 0) ? 1 : 0 }}</td>
                                 </tr>
                             @endfor
                         </tbody>
@@ -285,7 +275,7 @@
                                 <td style="background-color: #54B435; ">{{ ($total_rutin != 0) ? rupiah($total_rutin) : '-' }}</td>
                                 <td style="background-color: #54B435; ">{{ ($total_tidak_rutin != 0) ? rupiah($total_tidak_rutin) : '-' }}</td>
                                 <td style="background-color: #54B435; ">{{ ($total_penghasilan_bruto) ? rupiah($total_penghasilan_bruto) : '-' }}</td>
-                                <td style="background-color: #54B435; ">-</td>
+                                <td style="background-color: #54B435; ">{{ $total_pph_lunas > 0 ? rupiah($total_pph_lunas) : '-' }}</td>
                                 <td style="background-color: #54B435; ">{{ $total_ket }}</td>
                             </tr>
                         </tfoot>
@@ -293,7 +283,7 @@
                 </div>
 
                 @php
-                    $lima_persen = 0.05 * $total_penghasilan_bruto;
+                    $lima_persen = ceil(0.05 * $total_penghasilan_bruto);
                     $keterangan = 500000 * $total_ket;
                     $biaya_jabatan = 0;
                     $no_14 = 0;
@@ -308,11 +298,11 @@
                     } else {
                         $rumus_14 = 0;
                         if (0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum) > $keterangan) {
-                            $rumus_14 = $keterangan;
+                            $rumus_14 = ceil($keterangan);
                         } else{
-                            $rumus_14 = 0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum);
+                            $rumus_14 = ceil(0.05 * ($total_gaji + $total_tj_lainnya + $jaminan + $bonus_sum));
                         }
-                        $no_14 = (($total_rutin + $total_tj_lainnya + $total_tidak_rutin) - $bonus_sum - $rumus_14 - 0) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
+                        $no_14 = (($total_rutin + $total_tidak_rutin) - $bonus_sum - $pengurang - $biaya_jabatan) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
                     }
 
                     $no_16 = 0;
@@ -340,39 +330,41 @@
                         if (($no_14 - $ptkp?->ptkp_tahun) <= 250000000) {
                             $persen15 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 60000000) * 0.15 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000- 60000000) * 0.18;
                         } else {
-                            $persen15 = 190000000;
+                            $persen15 = 190000000 * 0.15;
                         }
                     } else {
-                        $persen20 = 0;
+                        $persen15 = 0;
                     }
                     $persen25 = 0;
                     if (($no_14 - $ptkp?->ptkp_tahun) > 250000000) {
                         if (($no_14 - $ptkp?->ptkp_tahun) <= 500000000) {
                             $persen25 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.25 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.3;
                         } else {
-                            $persen25 = 250000000;
+                            $persen25 = 250000000 * 0.25;
                         }
                     } else {
                         $persen25 = 0;
                     }
                     $persen30 = 0;
-                    if (($no_14 - $ptkp?->ptkp_tahun) > 250000000) {
-                        if (($no_14 - $ptkp?->ptkp_tahun) <= 500000000) {
+                    if (($no_14 - $ptkp?->ptkp_tahun) > 500000000) {
+                        if (($no_14 - $ptkp?->ptkp_tahun) <= 5000000000) {
                             $persen30 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.3 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.36;
                         } else {
-                            $persen30 = 4500000000;
+                            $persen30 = 4500000000 * 0.30;
                         }
                     } else {
                         $persen30 = 0;
                     }
                     $persen35 = 0;
-                    if (($no_14 - $ptkp?->ptkp_tahun) > 500000000) {
-                            $persen35 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.35 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.42;
+                    if (($no_14 - $ptkp?->ptkp_tahun) > 5000000000) {
+                            $persen35 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 5000000000) * 0.35 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 5000000000) * 0.42;
                     } else {
                         $persen35 = 0;
                     }
 
                     $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
+
+                    $no19 = ceil(($no17 / 12) * $total_ket);
                 @endphp
 
                 <div class="row m-0 ">
@@ -405,7 +397,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-1">2. Tunjangan PPh</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="0">
+                        <input type="text" disabled class="form-control" value="-">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -417,7 +409,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-1">4. Honorarium dan Imbalan Lainnya</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="0">
+                        <input type="text" disabled class="form-control" value="-">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -429,7 +421,7 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 ">6. Penerimaan dalam Bentuk Natura atau Kenikmatan Lainnya yang dikenakan Pemotongan PPh Pasal 21</label>
                     <div class="col-sm-3 mt-1 ">
-                        <input type="text" disabled class="form-control" value="0">
+                        <input type="text" disabled class="form-control" value="-">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -466,13 +458,13 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">10. Iuran Pensiun atau Iuran THT/JHT</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($pengurang) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">11. Jumlah Pengurangan (9 + 10)</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="{{ rupiah($biaya_jabatan) }}">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($biaya_jabatan + $pengurang) }}">
                     </div>
                 </div>
 
@@ -484,19 +476,19 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">12. Jumlah Penghasilan Neto (8 - 11)</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="{{ rupiah(($total_rutin + $total_tidak_rutin) - $biaya_jabatan) }}">
+                        <input type="text" disabled class="form-control" value="{{ rupiah(($total_rutin + $total_tidak_rutin) - ($biaya_jabatan + $pengurang)) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">13. Penghasilan Neto Masa sebelumnya</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="-">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2" style="font-weight: bold; text-align: center;">Total Penghasilan Neto</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" style="font-weight: bold;" value="{{ rupiah(($total_rutin + $total_tidak_rutin) - $biaya_jabatan) }}">
+                        <input type="text" disabled class="form-control" style="font-weight: bold;" value="{{ rupiah(($total_rutin + $total_tidak_rutin) - ($biaya_jabatan + $pengurang)) }}">
                     </div>
                 </div>
 
@@ -527,25 +519,25 @@
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">18. PPh Pasal 21 yang telah dipotong Masa Sebelumnya</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="-">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">19. PPh Pasal 21 Terutang</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($no19) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">20. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($total_pph_lunas) }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-5 mt-2">U. PPh Pasal 21 yang masih harus dibayar</label>
                     <div class="col-sm-3 ">
-                        <input type="text" disabled class="form-control" value="">
+                        <input type="text" disabled class="form-control" value="{{ rupiah($no19 - $total_pph_lunas) }}">
                     </div>
                 </div>
             </div>
@@ -634,7 +626,7 @@
                                                 <td>{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
                                                 <td>{{ ($total_gaji_bln != 0 ) ? rupiah($total_gaji_bln) : '-' }}</td>
-                                                <td>-</td>
+                                                <td>{{ ($jamsostek[$i] != 0) ? rupiah($jamsostek[$i]) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_pulsa'] != 0) ? rupiah($gj[$i]['tj_pulsa']) : '-' }}</td>
                                                 <td>{{ ($gj[$i]['tj_vitamin'] != 0) ? rupiah($gj[$i]['tj_vitamin']) : '-' }}</td>
@@ -657,7 +649,7 @@
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_kemahalan) }}</td>
                                             <td style="background-color: #FED049; ">{{ rupiah($total_tj_kesejahteraan) }}</td>
                                             <td style="background-color: #cecece; ">{{ rupiah($total_gaji) }}</td>
-                                            <td style="background-color: #54B435; ">-</td>
+                                            <td style="background-color: #54B435; ">{{ rupiah($total_jamsostek) }}</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_uang_makan) }}</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_tj_pulsa) }}</td>
                                             <td style="background-color: #54B435; ">{{ rupiah($total_tj_vitamin) }}</td>
@@ -680,6 +672,7 @@
                                             <th rowspan="2" style="background-color: #CCD6A6; ">SPD</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; ">SPD Pendidikan </th>
                                             <th rowspan="2" style="background-color: #CCD6A6; ">SPD Pindah Tugas</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; ">Pengganti <br>Uang Seragam</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -690,11 +683,13 @@
                                             $total_spd = null;
                                             $total_spd_pendidikan = null;
                                             $total_spd_pindah_tugas = null;
+                                            $total_pengganti_seragam = null;
+                                            $total_tambahan = null;
                                         @endphp
                                         @for ($i = 0; $i < 12; $i++)
                                             <tr>
                                                 <td>{{ $bulan[$i] }}</td>
-                                                @for ($j = 0; $j < 6; $j++)
+                                                @for ($j = 0; $j < 7; $j++)
                                                     <td>{{ ($penghasilan[$i][$j] != 0) ? rupiah($penghasilan[$i][$j]) : '-' }}</td>
                                                 @endfor
                                                 @php
@@ -704,6 +699,7 @@
                                                     $total_spd += $penghasilan[$i][3];
                                                     $total_spd_pendidikan += $penghasilan[$i][4];
                                                     $total_spd_pindah_tugas += $penghasilan[$i][5];
+                                                    $total_pengganti_seragam += $penghasilan[$i][6];
                                                 @endphp
                                             </tr>
                                         @endfor
@@ -719,6 +715,7 @@
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_spd) }}</td>
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_spd_pendidikan) }}</td>
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_spd_pindah_tugas) }}</td>
+                                            <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_pengganti_seragam) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -734,6 +731,7 @@
                                             <th rowspan="2" style="background-color: #CCD6A6; ">Tunjangan Hari Raya</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; ">Jasa Produksi</th>
                                             <th rowspan="2" style="background-color: #CCD6A6; ">Dana Pendidikan</th>
+                                            <th rowspan="2" style="background-color: #CCD6A6; ">Tambahan <br>Penghasilan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -741,17 +739,19 @@
                                             $total_thr = null;
                                             $total_jasa_produksi = null;
                                             $total_dana_pendidikan = null;
+                                            $total_tambahan_penghasilan = null;
                                         @endphp
                                         @for ($i = 0; $i < 12; $i++)
                                             <tr>
                                                 <td>{{ $bulan[$i] }}</td>
-                                                @for ($j = 0; $j < 3; $j++)
+                                                @for ($j = 0; $j < 4; $j++)
                                                     <td>{{ ($bonus[$i][$j] != 0) ? rupiah($bonus[$i][$j]) : '-' }}</td>
                                                 @endfor
                                                 @php
                                                     $total_thr += $bonus[$i][0];
                                                     $total_jasa_produksi += $bonus[$i][1];
                                                     $total_dana_pendidikan += $bonus[$i][2];
+                                                    $total_tambahan_penghasilan += $bonus[$i][3];
                                                 @endphp
                                             </tr>
                                         @endfor
@@ -764,6 +764,7 @@
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_thr) }}</td>
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_jasa_produksi) }}</td>
                                             <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_dana_pendidikan) }}</td>
+                                            <td style="background-color: #54B435; " colspan="1">{{ rupiah($total_tambahan_penghasilan) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>

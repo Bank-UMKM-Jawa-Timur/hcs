@@ -25,7 +25,7 @@
                             <th>
                                 Alamat
                             </th>
-                            <th>
+                            <th class="text-center">
                                 Aksi
                             </th>
                           </thead>
@@ -44,14 +44,27 @@
                                     <td>
                                         {{ $item->alamat_cabang }}
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                       {{-- <div class="row"> --}}
-                                        <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
-                                          <button class="btn btn-warning">
-                                            Edit
-                                          </button>
-                                        </a>
-                                        
+                                        <p style="margin-bottom: 0.4rem !important;">
+                                          <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
+                                            <button class="btn btn-warning">
+                                              @if ($item->kode_cabang_profil) Edit @else Lengkapi Profil Kantor @endif
+                                            </button>
+                                          </a>
+                                        </p>
+                                        @if ($item->kode_cabang_profil)
+                                          <a href="{{ route('penambahan-bruto.index') }}?profil_kantor={{$item->profil_id}}" class="mt-2">
+                                            <button class="btn btn-info">
+                                              Master Penambahan Bruto
+                                            </button>
+                                          </a>
+                                          <a href="{{ route('pengurangan-bruto.index') }}?profil_kantor={{$item->profil_id}}">
+                                            <button class="btn btn-info">
+                                              Master Pengurangan Bruto
+                                            </button>
+                                          </a>
+                                        @endif
                                         {{-- <form action="{{ route('cabang.destroy', $item->id) }}" method="POST">
                                           @csrf
                                           @method('DELETE')

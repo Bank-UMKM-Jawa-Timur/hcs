@@ -62,7 +62,7 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Tempat, Tanggal Lahir</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $karyawan->tmp_lahir }}, {{ $karyawan->tgl_lahir->format('d F Y') }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->tmp_lahir }}, {{ ($karyawan->tgl_lahir != null) ? $karyawan->tgl_lahir->format('d F Y') : '-' }}">
                 </div>
             </div>
             @php

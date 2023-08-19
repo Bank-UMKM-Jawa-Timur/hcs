@@ -6,7 +6,7 @@
     <div class="card-header">
         <div class="card-title">
             <h5 class="card-title">Pajak Penghasilan</h5>
-            <p class="card-title"><a href="">Penghasilan </a> > <a href="/pajak_penghasilan">Pajak Penghasilan</a></p>
+            <p class="card-title"><a href="">Penghasilan </a> > Pajak Penghasilan</p>
         </div>
     </div>
 </div>
@@ -14,14 +14,6 @@
 <div class="card-body">
     <div class="row m-0">
         <div class="col">
-            <a class="mb-3" href="{{ route('pajak_penghasilan.create') }}">
-                <button class="btn btn-primary">Import penghasilan</button>
-            </a>
-        </div>
-    </div>
-    <div class="row m-0">
-        <div class="col">
-            <hr>
             <h5>Cari Karyawan</h5>
         </div>
     </div>

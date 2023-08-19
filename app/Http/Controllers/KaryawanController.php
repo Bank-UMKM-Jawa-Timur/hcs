@@ -232,7 +232,7 @@ class KaryawanController extends Controller
                     ->first();
                 $div = DB::table('mst_divisi')
                     ->where('kd_divisi', $karyawan->kd_entitas)
-                    ->select('kd_div')
+                    ->select('kd_divisi')
                     ->first();
             }
         }
@@ -692,6 +692,7 @@ class KaryawanController extends Controller
                     'skangkat' => $request->get('skangkat'),
                     'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
                     'no_rekening' => $request->get('no_rek'),
+                    'npwp' => $request->get('npwp'),
                     'created_at' => now(),
                 ]);
 
@@ -1025,5 +1026,25 @@ class KaryawanController extends Controller
             'pjs' => $historyJabatan,
             'sp' => $sp
         ]);
+    }
+
+    public function countAge($date_of_birth)
+    {
+        // PHP program to calculate age in years
+        // Define the date of birth
+        $dateOfBirth = '14-02-2022';
+        
+        // Get today's date
+        $now = date("Y-m-d");
+        
+        // Calculate the time difference between the two dates
+        $diff = date_diff(date_create($dateOfBirth), date_create($now));
+        $year = $diff->format('%y');
+        $month = $diff->format('%m');
+        if ($year > 0) {
+            $month += ($year * 12);
+        }
+        
+        return $month;
     }
 }

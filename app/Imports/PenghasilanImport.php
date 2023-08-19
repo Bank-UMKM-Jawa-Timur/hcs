@@ -38,6 +38,8 @@ class PenghasilanImport implements ToCollection, WithHeadingRow, SkipsOnError, S
             $tunjangan_hari_raya = ($row['tunjangan_hari_raya'] != null || $row['tunjangan_hari_raya'] != 0 || $row['tunjangan_hari_raya'] != "" ) ? $row['tunjangan_hari_raya'] : 0;
             $jasa_produksi = ($row['jasa_produksi'] != null || $row['jasa_produksi'] != 0 || $row['jasa_produksi'] != "" ) ? $row['jasa_produksi'] : 0;
             $dana_pendidikan = ($row['dana_pendidikan'] != null || $row['dana_pendidikan'] != 0 || $row['dana_pendidikan'] != "" ) ? $row['dana_pendidikan'] : 0;
+            $pengganti_seragam = ($row['pengganti_seragam'] != null || $row['pengganti_seragam'] != 0 || $row['pengganti_seragam'] != "" ) ? $row['pengganti_seragam'] : 0;
+            $tambahan_penghasilan = ($row['tambahan_penghasilan'] != null || $row['tambahan_penghasilan'] != 0 || $row['tambahan_penghasilan'] != "" ) ? $row['tambahan_penghasilan'] : 0;
 
             try{
                 DB::table('penghasilan_tidak_teratur')
@@ -153,6 +155,24 @@ class PenghasilanImport implements ToCollection, WithHeadingRow, SkipsOnError, S
                         'nip' => $nip,
                         'id_tunjangan' => 24,
                         'nominal' => $dana_pendidikan,
+                        'tahun' => $tahun,
+                        'bulan' => $bulan,
+                        'created_at' => now()
+                    ]);
+                DB::table('penghasilan_tidak_teratur')
+                    ->insert([
+                        'nip' => $nip,
+                        'id_tunjangan' => 25,
+                        'nominal' => $pengganti_seragam,
+                        'tahun' => $tahun,
+                        'bulan' => $bulan,
+                        'created_at' => now()
+                    ]);
+                DB::table('penghasilan_tidak_teratur')
+                    ->insert([
+                        'nip' => $nip,
+                        'id_tunjangan' => 26,
+                        'nominal' => $tambahan_penghasilan,
                         'tahun' => $tahun,
                         'bulan' => $bulan,
                         'created_at' => now()
