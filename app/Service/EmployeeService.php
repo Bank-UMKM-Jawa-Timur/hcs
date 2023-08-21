@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Models\KaryawanModel;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class EmployeeService
