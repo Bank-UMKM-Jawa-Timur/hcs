@@ -696,28 +696,30 @@ class KaryawanController extends Controller
                     'created_at' => now(),
                 ]);
 
-            if ($request->get('nama_anak')[0] != null) {
-                foreach ($request->get('nama_anak') as $key => $item) {
-                    if ($request->get('id_anak')[$key] != null) {
-                        DB::table('keluarga')
-                            ->where('id', $request->get('id_anak')[$key])
-                            ->update([
-                                'nama' => $item,
-                                'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
-                                'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
-                                'nip' => $request->get('nip'),
-                                'updated_at' => now()
-                            ]);
-                    } else {
-                        DB::table('keluarga')
-                            ->insert([
-                                'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
-                                'nama' => $item,
-                                'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
-                                'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
-                                'nip' => $request->get('nip'),
-                                'created_at' => now()
-                            ]);
+            if($request->get('status_pernikahan') == 'Kawin' && $request->get('is_jml_anak') > 0){
+                if ($request->get('nama_anak')[0] != null) {
+                    foreach ($request->get('nama_anak') as $key => $item) {
+                        if ($request->get('id_anak')[$key] != null) {
+                            DB::table('keluarga')
+                                ->where('id', $request->get('id_anak')[$key])
+                                ->update([
+                                    'nama' => $item,
+                                    'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
+                                    'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
+                                    'nip' => $request->get('nip'),
+                                    'updated_at' => now()
+                                ]);
+                        } else {
+                            DB::table('keluarga')
+                                ->insert([
+                                    'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+                                    'nama' => $item,
+                                    'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
+                                    'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
+                                    'nip' => $request->get('nip'),
+                                    'created_at' => now()
+                                ]);
+                        }
                     }
                 }
             }
@@ -748,11 +750,11 @@ class KaryawanController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             Alert::error('Tejadi kesalahan', '' . $e);
-            return $e->getMessage();
+            dd($e);
         } catch (QueryException $e) {
             DB::rollBack();
             Alert::error('Tejadi kesalahan', '' . $e);
-            return $e->getMessage();
+            dd($e);
         }
     }
 
