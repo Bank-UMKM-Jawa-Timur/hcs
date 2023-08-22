@@ -129,7 +129,7 @@ class GajiPerBulanController extends Controller
                 $anak = DB::table('mst_karyawan')
                     ->where('keluarga.nip', $item->nip)
                     ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
-                    ->whereIn('enum', ['Suami', 'Istri'])
+                    ->orderByDesc('id')
                     ->first('jml_anak');
                 if ($anak != null && $anak->jml_anak > 3) {
                     $status = 'K/3';

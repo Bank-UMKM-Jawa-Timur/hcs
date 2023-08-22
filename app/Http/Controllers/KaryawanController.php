@@ -423,7 +423,6 @@ class KaryawanController extends Controller
         $karyawan = KaryawanModel::findOrFail($id);
         $data_suis = DB::table('keluarga')
             ->where('nip', $karyawan->nip)
-            ->whereIn('enum', ['Suami', 'Istri'])
             ->orderByDesc('id')
             ->first();
         $data_anak = DB::table('keluarga')

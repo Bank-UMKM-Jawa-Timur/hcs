@@ -39,11 +39,47 @@ class ImportNpwpRekening implements ToCollection, WithHeadingRow, SkipsOnError, 
                             'npwp' => $row['npwp']
                         ]);
                 }
+
+                if($row['status'] != null || $row['status'] != ''){
+                    $status = 'Belum Kawin';
+                    $jumlahAnak = 0;
+                    if($row['status'] != 'TK'){
+                        $status = 'Kawin';
+                        $jmlAnak = explode('/', $row['status']);
+                        $jumlahAnak = $jmlAnak[1];
+                    }
+
+                    DB::table('mst_karyawan')
+                        ->where('nip', $nip)
+                        ->update([
+                            'status' => $status
+                        ]);
+
+                    // Cek data di table keluarga
+                    $countData = DB::table('keluarga')
+                        ->where('nip', $nip)
+                        ->count();
+                    if($countData < 1) {
+                        DB::table('keluarga')
+                            ->insert([
+                                'jml_anak' => $jumlahAnak,
+                                'nip' => $nip
+                            ]);
+                    } else {
+                        DB::table('keluarga')
+                            ->where('nip', $nip)
+                            ->update([
+                                'jml_anak' => $jumlahAnak
+                            ]);
+                    }
+                }
             }
         } catch(Exception $e){
             DB::rollBack();
+            dd($e);
         } catch(QueryException $e){
             DB::rollBack();
+            dd($e);
         }
     }
 }
