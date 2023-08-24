@@ -134,6 +134,8 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Terakhir</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
@@ -266,6 +268,7 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>{{ getSKTerakhir($item->nip) ?? $item->skangkat }}</td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
                             : '-' }}</td>
@@ -399,6 +402,8 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Terakhir</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
@@ -531,6 +536,7 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>{{ getSKTerakhir($item->nip) ?? $item->skangkat }}</td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
                             : '-' }}</td>
@@ -664,6 +670,8 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Terakhir</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
@@ -796,6 +804,7 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>{{ getSKTerakhir($item->nip) ?? $item->skangkat }}</td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
                             : '-' }}</td>
@@ -938,6 +947,8 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Terakhirt</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
@@ -1069,6 +1080,7 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>{{ getSKTerakhir($item->nip) ?? $item->skangkat }}</td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
                             : '-' }}</td>
@@ -1202,6 +1214,8 @@ return number_format($value, 0, '.', ',');
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
+                            SK<br> Terakhir</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
                             Tanggal<br> Angkat</th>
@@ -1333,6 +1347,7 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>{{ getSKTerakhir($item->nip) ?? $item->skangkat }}</td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
                             : '-' }}</td>
@@ -1490,8 +1505,7 @@ return number_format($value, 0, '.', ',');
                     @php
                     $tKeluarga = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Keluarga'))->first();
 
-                    $tListrik = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Telpon, Air dan
-                    Listrik'))->first();
+                    $tListrik = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Telpon, Air dan Listrik'))->first();
 
                     $tJabatan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Jabatan'))->first();
 
@@ -1499,8 +1513,7 @@ return number_format($value, 0, '.', ',');
 
                     $tPerumahan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Perumahan'))->first();
 
-                    $tKesejahteraan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan ==
-                    'Kesejahteraan'))->first();
+                    $tKesejahteraan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kesejahteraan'))->first();
 
                     $tKemahalan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kemahalan'))->first();
 

@@ -15,7 +15,7 @@
         @php
             $status = 'TK';
             if ($karyawan->status == 'Kawin' && $suis) {
-                $jml_anak = ($suis->jml_anak > 2) ? 2 : $suis->jml_anak;
+                $jml_anak = ($suis->jml_anak > 3) ? 3 : $suis->jml_anak;
                 $status = 'K/'.$jml_anak ?? '0';
             } else if($karyawan->status == 'Kawin' && !$suis){
                 $status = 'K/0';
@@ -340,7 +340,7 @@
                     <label class="col-sm-2 mt-0">Status Pasangan</label>
                     <div class="col-sm-10">
                         @if (isset($suis) != null)
-                            <input type="text" disabled class="form-control" value="{{ $suis->enum }}">
+                            <input type="text" disabled class="form-control" value="{{ $suis->enum ?? '-' }}">
                         @else
                             <input type="text" disabled class="form-control" value="-">
                         @endif
@@ -350,7 +350,7 @@
                     <label class="col-sm-2 mt-0">Nama</label>
                     <div class="col-sm-10">
                         @if (isset($suis) != null)
-                            <input type="text" disabled class="form-control" value="{{ $suis->nama }}">
+                            <input type="text" disabled class="form-control" value="{{ $suis->nama ?? '-' }}">
                         @else
                             <input type="text" disabled class="form-control" value="-">
                         @endif
@@ -366,7 +366,7 @@
                     <label class="col-sm-2 mt-0">Tanggal Lahir</label>
                     <div class="col-sm-10">
                         @if (isset($suis) != null)
-                            <input type="text" disabled class="form-control" value="{{ date('d F Y' ,strtotime($suis->tgl_lahir)) }}">
+                            <input type="text" disabled class="form-control" value="{{ $suis->tgl_lahir != null ? date('d F Y' ,strtotime($suis->tgl_lahir)) : '-' }}">
                         @else
                             <input type="text" disabled class="form-control" value="-">
                         @endif
@@ -376,7 +376,7 @@
                     <label class="col-sm-2 mt-0">Alamat</label>
                     <div class="col-sm-10">
                         @if (isset($suis) != null)
-                            <input type="text" disabled class="form-control" value="{{ $suis->alamat }}">
+                            <input type="text" disabled class="form-control" value="{{ $suis->alamat ?? '-' }}">
                         @else
                             <input type="text" disabled class="form-control" value="-">
                         @endif
@@ -386,7 +386,7 @@
                     <label class="col-sm-2 mt-0">Pekerjaan</label>
                     <div class="col-sm-10">
                         @if (isset($suis) != null)
-                            <input type="text" disabled class="form-control" value="{{ $suis->pekerjaan }}">
+                            <input type="text" disabled class="form-control" value="{{ $suis->pekerjaan ?? '-' }}">
                         @else
                             <input type="text" disabled class="form-control" value="-">
                         @endif
