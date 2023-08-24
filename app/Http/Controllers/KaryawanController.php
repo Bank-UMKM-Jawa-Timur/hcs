@@ -529,6 +529,7 @@ class KaryawanController extends Controller
         // Get SP
         $sp = SpModel::where('nip', $id)->get();
         // dd($sp);
+        // dd($karyawan->bagian);
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,

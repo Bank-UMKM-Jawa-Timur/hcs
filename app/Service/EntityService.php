@@ -73,6 +73,15 @@ class EntityService
     public static function getPosition(KaryawanModel|PjsModel $model)
     {
         $prefix = ($model instanceof PjsModel) ? 'Pjs. ' : '';
+        if($model instanceof PjsModel){
+            $prefix = 'Pjs. ';
+        } else if($model instanceof KaryawanModel) {
+            if($model->status_jabatan == 'Penjabat'){
+                $prefix = 'Pj. ';
+            } else {
+                $prefix = '';
+            }
+        }
         $bagian = $model->bagian?->nama_bagian;
         $entitas = $model->entitas;
         $jabatan = $model->jabatan ? static::abbrevPos($model->jabatan->nama_jabatan) : '';
