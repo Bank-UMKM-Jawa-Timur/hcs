@@ -50,30 +50,45 @@
                                         <td>
                                             {{-- <div class="row"> --}}
                                             <div class="d-flex ">
-                                                <div class="col">
-                                                <a href="{{ route('ptkp.edit', $item->id) }}">
-                                                    <button class="btn btn-warning">Edit</button>
+                                                <div class="m-2">
+                                                    <a class="btn btn-warning" href="{{ route('ptkp.edit', $item->id) }}">
+                                                    Edit
                                                 </a>
-
+                                                </div>
+                                            <div class="m-2">
+                                                <a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                        Hapus
+                                                </a>
                                             </div>
-                                            {{-- <div class="col">
-                                                @if ($item->deleted_at == null)
-                                                <form action="{{ route('ptkp.destroy', $item->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button class="btn btn-danger">Delete</button>
-                                                </form>
-                                                @else
-                                                <form action="{{ route('ptkp.destroy', $item->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button class="btn btn-danger">Delete</button>
-                                                </form>
-                                                @endif
-                                            </div> --}}
                                             </div>
                                         </td>
                                     </tr>
+
+                                    {{-- modal hapus --}}
+                            <div class="modal fade" id="confirmHapusModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Hapus Data</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Apakah Anda Yakin Ingin Menghapus penghasilan Tanpa Pajak, Kode <b>{{$item->kode}}</b>?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                            <form action="{{ route('ptkp.destroy', $item->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                                <input type="hidden" name="idPengajuan" value="{{$item->id}}">
+                                                <button type="submit" class="btn btn-danger">Hapus</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                                 @endforeach
                             </tbody>
                         </table>

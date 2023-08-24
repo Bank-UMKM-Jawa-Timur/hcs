@@ -70,10 +70,10 @@ class PtkpController extends Controller
             return redirect()->route('ptkp.index');
         } catch (Exception $e) {
             Alert::error('Terjadi Kesalahan', 'Gagal Menambah Penghasilan Tanpa Pajak.');
-            return redirect()->route('umur.index')->withStatus($e->getMessage());
+            return redirect()->route('ptkp.index')->withStatus($e->getMessage());
         } catch (QueryException $e) {
             Alert::error('Terjadi Kesalahan', 'Gagal Menambah Penghasilan Tanpa Pajak.');
-            return redirect()->route('umur.index')->withStatus($e->getMessage());
+            return redirect()->route('ptkp.index')->withStatus($e->getMessage());
         }
 
 
@@ -143,10 +143,10 @@ class PtkpController extends Controller
             return redirect()->route('ptkp.index');
         } catch (Exception $e) {
             Alert::error('Terjadi Kesalahan', 'Gagal Menambah Penghasilan Tanpa Pajak.');
-            return redirect()->route('umur.index')->withStatus($e->getMessage());
+            return redirect()->route('ptkp.index')->withStatus($e->getMessage());
         } catch (QueryException $e) {
             Alert::error('Terjadi Kesalahan', 'Gagal Menambah Penghasilan Tanpa Pajak.');
-            return redirect()->route('umur.index')->withStatus($e->getMessage());
+            return redirect()->route('ptkp.index')->withStatus($e->getMessage());
         }
     }
 
@@ -158,22 +158,19 @@ class PtkpController extends Controller
      */
     public function destroy($id)
     {
-        dd('s');
-        $data = [
-            'deleted_at' => now()
-        ];
-        PtkpModel::where('id', $id)->update($data);
+        try {
+            PtkpModel::find($id)
+                ->delete();
 
-        Alert::success('Berhasil', 'Berhasil Hapus Penghasilan Tanpa Pajak.');
-        return redirect()->route('ptkp.index');
+            Alert::success('Berhasil', 'Berhasil Hapus Penghasilan Tanpa Pajak.');
+            return redirect()->route('ptkp.index');
+        } catch (Exception $e) {
+            Alert::error('Terjadi Kesalahan', '' . $e);
+            return redirect()->route('ptkp.index')->withStatus($e->getMessage());
+        } catch (QueryException $e) {
+            Alert::error('Terjadi Kesalahan', '' . $e);
+            return redirect()->route('ptkp.index')->withStatus($e->getMessage());
+        }
     }
 
-    public function restore($id){
-        $data = [
-            'deleted_at' => null
-        ];
-        PtkpModel::where('id', $id)->update($data);
-        Alert::success('Berhasil', 'Berhasil Restore Penghasilan Tanpa Pajak.');
-        return redirect()->route('ptkp.index');
-    }
 }
