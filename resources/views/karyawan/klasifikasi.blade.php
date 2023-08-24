@@ -1505,8 +1505,7 @@ return number_format($value, 0, '.', ',');
                     @php
                     $tKeluarga = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Keluarga'))->first();
 
-                    $tListrik = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Telpon, Air dan
-                    Listrik'))->first();
+                    $tListrik = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Telpon, Air dan Listrik'))->first();
 
                     $tJabatan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Jabatan'))->first();
 
@@ -1514,8 +1513,7 @@ return number_format($value, 0, '.', ',');
 
                     $tPerumahan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Perumahan'))->first();
 
-                    $tKesejahteraan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan ==
-                    'Kesejahteraan'))->first();
+                    $tKesejahteraan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kesejahteraan'))->first();
 
                     $tKemahalan = ($item->tunjangan->filter(fn($t) => $t->nama_tunjangan == 'Kemahalan'))->first();
 
