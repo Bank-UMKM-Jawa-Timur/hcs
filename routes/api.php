@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\KaryawanController as ApiKaryawanController;
+use App\Http\Controllers\Api\ProfilKantorController;
 use App\Http\Controllers\Api\Select2\KaryawanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,4 +31,11 @@ Route::prefix('select2')->name('api.select2.')->group(function () {
 Route::name('api.')->group(function () {
     Route::get('karyawan', ApiKaryawanController::class)->name('karyawan');
 });
-Route::get('v1/karyawan/{nip}', [KaryawanController::class, 'getDetail'])->name('karyawan.detail');
+
+Route::prefix('v1')->group(function() {
+    Route::get('karyawan/{nip}', [KaryawanController::class, 'getDetail'])->name('karyawan.detail');
+    Route::prefix('cabang')->group(function() {
+        Route::get('list', [ProfilKantorController::class, 'list']);
+        Route::get('/{kode}', [ProfilKantorController::class, 'getByKode']);
+    });
+});
