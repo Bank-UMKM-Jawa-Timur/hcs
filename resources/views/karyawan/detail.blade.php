@@ -188,6 +188,30 @@
                 </div>
             </div>
             @if($karyawan->bagian)
+                @if ($karyawan->kd_entitas == null)
+                    @php
+                        $subDiv = DB::table('mst_sub_divisi')
+                            ->where('kd_subdiv', $karyawan->bagian->kd_entitas)
+                            ->first();
+                        $divisi = DB::table('mst_divisi')
+                            ->where('kd_divisi', $subDiv ? $subDiv->kd_divisi : $karyawan->bagian->kd_entitas)
+                            ->first();
+                    @endphp
+                    <div class="row m-0 mt-2">
+                        <label class="col-sm-2 mt-2">Divisi</label>
+                        <div class="col-sm-10">
+                            <input type="text" disabled class="form-control" value="{{ $divisi->nama_divisi }}">
+                        </div>
+                    </div>
+                    @if ($subDiv)
+                        <div class="row m-0 mt-2">
+                            <label class="col-sm-2 mt-2">Sub Divisi</label>
+                            <div class="col-sm-10">
+                                <input type="text" disabled class="form-control" value="{{ $subDiv->nama_subdivisi }}">
+                            </div>
+                        </div>
+                    @endif
+                @endif
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Bagian</label>
                 <div class="col-sm-10">
@@ -281,7 +305,7 @@
                 </div>
             </div>
             <div class="row m-0 mt-2">
-                <label class="col-sm-2 mt-2">Gaji Pokok</label>
+                <label class="col-sm-2 mt-2">Honorarium</label>
                 <div class="col-sm-10">
                     @if (isset($karyawan->gj_pokok) != null)
                         <input type="text" disabled class="form-control" value="{{ rupiah($karyawan->gj_pokok) }}">
@@ -291,7 +315,7 @@
                 </div>
             </div>
             <div class="row m-0 mt-2">
-                <label class="col-sm-2 mt-2">Gaji Penyesuaian</label>
+                <label class="col-sm-2 mt-2">Honorarium Penyesuaian</label>
                 <div class="col-sm-10">
                     @if (isset($karyawan->gj_penyesuaian) != null)
                         <input type="text" disabled class="form-control" value="{{ rupiah($karyawan->gj_penyesuaian) }}">

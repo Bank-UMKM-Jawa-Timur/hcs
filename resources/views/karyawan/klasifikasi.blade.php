@@ -175,15 +175,8 @@ return number_format($value, 0, '.', ',');
                     <tr>
                         <td>{{ $item->nip }}</td>
                         <td>{{ $item->nik }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        @php
-                            if ($item->status_jabatan == 'Penjabat') {
-                                $prefix = "Pj. ";
-                            } else {
-                                $prefix = "";
-                            }
-                        @endphp
-                        <td>{{$prefix}}{{ jabatanLengkap($item) ?? '-' }}</td>
+                        <td>{{ $item->nama_karyawan }}</td> 
+                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                         @php
                         $nama_cabang = DB::table('mst_cabang')
                         ->where('kd_cabang', $item->kd_entitas)
@@ -450,15 +443,8 @@ return number_format($value, 0, '.', ',');
                     <tr>
                         <td>{{ $item->nip }}</td>
                         <td>{{ $item->nik }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        @php
-                            if ($item->status_jabatan == 'Penjabat') {
-                                $prefix = "Pj. ";
-                            } else {
-                                $prefix = "";
-                            }
-                        @endphp
-                        <td>{{$prefix}}{{ jabatanLengkap($item) ?? '-' }}</td>
+                        <td>{{ $item->nama_karyawan }}</td> 
+                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                         @php
                         $nama_cabang = DB::table('mst_cabang')
                         ->where('kd_cabang', $item->kd_entitas)
@@ -725,15 +711,8 @@ return number_format($value, 0, '.', ',');
                     <tr>
                         <td>{{ $item->nip }}</td>
                         <td>{{ $item->nik }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        @php
-                            if ($item->status_jabatan == 'Penjabat') {
-                                $prefix = "Pj. ";
-                            } else {
-                                $prefix = "";
-                            }
-                        @endphp
-                        <td>{{$prefix}}{{ jabatanLengkap($item) ?? '-' }}</td>
+                        <td>{{ $item->nama_karyawan }}</td> 
+                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                         @php
                         $nama_cabang = DB::table('mst_cabang')
                         ->where('kd_cabang', $item->kd_entitas)
@@ -1008,15 +987,8 @@ return number_format($value, 0, '.', ',');
                     @if ($item->tanggal_penonaktifan === null)
                     <tr>
                         <td>{{ $item->nip }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        @php
-                            if ($item->status_jabatan == 'Penjabat') {
-                                $prefix = "Pj. ";
-                            } else {
-                                $prefix = "";
-                            }
-                        @endphp
-                        <td>{{$prefix}}{{ jabatanLengkap($item) ?? '-' }}</td>
+                        <td>{{ $item->nama_karyawan }}</td> 
+                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                         @php
                         $nama_cabang = DB::table('mst_cabang')
                         ->where('kd_cabang', $item->kd_entitas)
@@ -1282,15 +1254,8 @@ return number_format($value, 0, '.', ',');
                     @if ($item->tanggal_penonaktifan === null)
                     <tr>
                         <td>{{ $item->nip }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        @php
-                            if ($item->status_jabatan == 'Penjabat') {
-                                $prefix = "Pj. ";
-                            } else {
-                                $prefix = "";
-                            }
-                        @endphp
-                        <td>{{$prefix}}{{ jabatanLengkap($item) ?? '-' }}</td>
+                        <td>{{ $item->nama_karyawan }}</td> 
+                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                         @php
                         $nama_cabang = DB::table('mst_cabang')
                         ->where('kd_cabang', $item->kd_entitas)
@@ -1556,15 +1521,8 @@ return number_format($value, 0, '.', ',');
                     @endphp
                     <tr>
                         <td>{{ $item->nip }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        @php
-                            if ($item->status_jabatan == 'Penjabat') {
-                                $prefix = "Pj. ";
-                            } else {
-                                $prefix = "";
-                            }
-                        @endphp
-                        <td>{{$prefix}}{{ jabatanLengkap($item) ?? '-' }}</td>
+                        <td>{{ $item->nama_karyawan }}</td> 
+                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                         @php
                         $nama_cabang = DB::table('mst_cabang')
                         ->where('kd_cabang', $item->kd_entitas)
@@ -1664,15 +1622,8 @@ return number_format($value, 0, '.', ',');
                     @if ($item->tanggal_penonaktifan === null)
                     <tr>
                         <td>{{ $item->nip }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        @php
-                            if ($item->status_jabatan == 'Penjabat') {
-                                $prefix = "Pj. ";
-                            } else {
-                                $prefix = "";
-                            }
-                        @endphp
-                        <td>{{$prefix}}{{ jabatanLengkap($item) ?? '-' }}</td>
+                        <td>{{ $item->nama_karyawan }}</td> 
+                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                         @php
                         $nama_cabang = DB::table('mst_cabang')
                         ->where('kd_cabang', $item->kd_entitas)
@@ -1989,15 +1940,8 @@ return number_format($value, 0, '.', ',');
                     @if ($item->tanggal_penonaktifan === null)
                     <tr>
                         <td>{{ $item->nip }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        @php
-                            if ($item->status_jabatan == 'Penjabat') {
-                                $prefix = "Pj. ";
-                            } else {
-                                $prefix = "";
-                            }
-                        @endphp
-                        <td>{{$prefix}}{{ jabatanLengkap($item) ?? '-' }}</td>
+                        <td>{{ $item->nama_karyawan }}</td> 
+                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                         @php
                         $nama_cabang = DB::table('mst_cabang')
                         ->where('kd_cabang', $item->kd_entitas)
@@ -2266,15 +2210,8 @@ return number_format($value, 0, '.', ',');
                     @if ($item->tanggal_penonaktifan === null)
                     <tr>
                         <td>{{ $item->nip }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        @php
-                            if ($item->status_jabatan == 'Penjabat') {
-                                $prefix = "Pj. ";
-                            } else {
-                                $prefix = "";
-                            }
-                        @endphp
-                        <td>{{$prefix}}{{ jabatanLengkap($item) ?? '-' }}</td>
+                        <td>{{ $item->nama_karyawan }}</td> 
+                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                         @php
                         $nama_cabang = DB::table('mst_cabang')
                         ->where('kd_cabang', $item->kd_entitas)
@@ -2542,15 +2479,8 @@ return number_format($value, 0, '.', ',');
                     @foreach ($karyawan as $item)
                     <tr>
                         <td>{{ $item->nip }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        @php
-                            if ($item->status_jabatan == 'Penjabat') {
-                                $prefix = "Pj. ";
-                            } else {
-                                $prefix = "";
-                            }
-                        @endphp
-                        <td>{{$prefix}}{{ jabatanLengkap($item) ?? '-' }}</td>
+                        <td>{{ $item->nama_karyawan }}</td> 
+                        <td>{{ jabatanLengkap($item) ?? '-' }}</td>
                         @php
                         $nama_cabang = DB::table('mst_cabang')
                         ->where('kd_cabang', $item->kd_entitas)

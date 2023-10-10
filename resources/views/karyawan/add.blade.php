@@ -124,10 +124,16 @@
 
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                         <div class="row m-0 pb-3 col-md-12" id="#kantor_row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Nomor Rekening</label>
                                     <input type="number" class="form-control" name="no_rek" value="{{ old('no_rek') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">NPWP</label>
+                                    <input type="number" class="form-control" name="npwp" value="{{ old('npwp') }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -202,13 +208,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Gaji Pokok</label>
+                                    <label for="">Honorarium</label>
                                     <input type="text" id="gj_pokok" class="@error('gj_pokok') is-invalid @enderror form-control" name="gj_pokok" value="{{ old('gj_pokok') }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Gaji Penyesuaian</label>
+                                    <label for="">Honorarium Penyesuaian</label>
                                     <input type="text" id="gj_penyesuaian" class="form-control" name="gj_penyesuaian" value="{{ old('gj_penyesuaian') }}">
                                 </div>
                             </div>
