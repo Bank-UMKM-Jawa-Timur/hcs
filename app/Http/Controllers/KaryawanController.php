@@ -308,14 +308,10 @@ class KaryawanController extends Controller
             'status_pernikahan' => 'required|not_in:-',
             'kewarganegaraan' => 'required|not_in:-',
             'alamat_ktp' => 'required',
-            'panggol' => 'required|not_in:-',
-            'status_jabatan' => 'required|not_in:-',
             'kpj' => 'required',
             'jkn' => 'required',
             'gj_pokok' => 'required',
             'status_karyawan' => 'required|not_in:-',
-            'skangkat' => 'required|not_in:-',
-            'tanggal_pengangkat' => 'required|not_in:-',
             'jabatan' => 'required|not_in:-'
         ]);
 
@@ -357,7 +353,8 @@ class KaryawanController extends Controller
                     'no_rekening' => $request->get('no_rek'),
                     'created_at' => now(),
                     'pendidikan' => $request->get('pendidikan'),
-                    'pendidikan_major' => $request->get('pendidikan_major')
+                    'pendidikan_major' => $request->get('pendidikan_major'),
+                    'npwp' => $request->get('npwp')
                 ]);
 
             if ($request->get('status_pernikahan') == 'Kawin') {
@@ -609,14 +606,10 @@ class KaryawanController extends Controller
             'status_pernikahan' => 'required|not_in:-',
             'kewarganegaraan' => 'required|not_in:-',
             'alamat_ktp' => 'required',
-            'panggol' => 'required|not_in:-',
-            'status_jabatan' => 'required|not_in:-',
             'kpj' => 'required',
             'jkn' => 'required',
             'gj_pokok' => 'required',
             'status_karyawan' => 'required|not_in:-',
-            'skangkat' => 'required|not_in:-',
-            'tanggal_pengangkat' => 'required|not_in:-'
         ]);
 
         try {

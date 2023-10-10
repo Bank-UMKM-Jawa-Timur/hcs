@@ -305,7 +305,7 @@
                 </div>
             </div>
             <div class="row m-0 mt-2">
-                <label class="col-sm-2 mt-2">Gaji Pokok</label>
+                <label class="col-sm-2 mt-2">Honorarium</label>
                 <div class="col-sm-10">
                     @if (isset($karyawan->gj_pokok) != null)
                         <input type="text" disabled class="form-control" value="{{ rupiah($karyawan->gj_pokok) }}">
@@ -315,7 +315,7 @@
                 </div>
             </div>
             <div class="row m-0 mt-2">
-                <label class="col-sm-2 mt-2">Gaji Penyesuaian</label>
+                <label class="col-sm-2 mt-2">Honorarium Penyesuaian</label>
                 <div class="col-sm-10">
                     @if (isset($karyawan->gj_penyesuaian) != null)
                         <input type="text" disabled class="form-control" value="{{ rupiah($karyawan->gj_penyesuaian) }}">

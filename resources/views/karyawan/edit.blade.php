@@ -207,13 +207,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Gaji Pokok</label>
+                                    <label for="">Honorarium</label>
                                     <input type="text" id="gj_pokok" class="@error('gj_pokok') is-invalid @enderror form-control" name="gj_pokok" value="{{ old('gj_pokok', $data->gj_pokok) }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Gaji Penyesuaian</label>
+                                    <label for="">Honorarium Penyesuaian</label>
                                     <input type="text" class="form-control" id="gj_penyesuaian" name="gj_penyesuaian" value="{{ old('gj_penyesuaian', $data->gj_penyesuaian) }}">
                                 </div>
                             </div>
