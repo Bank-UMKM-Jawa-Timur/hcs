@@ -159,6 +159,7 @@ class MutasiController extends Controller
                         DB::table('tunjangan_karyawan')
                             ->where('id', $request->id_tk[$key])
                             ->update([
+                                'id_tunjangan' => $item,
                                 'nominal' => str_replace('.', '',$request->nominal_tunjangan[$key]),
                                 'updated_at' => now()
                             ]);
