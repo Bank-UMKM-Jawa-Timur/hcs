@@ -317,7 +317,10 @@ class KaryawanController extends Controller
 
         try {
             $entitas = null;
-            if ($request->get('subdiv') != null) {
+            if($request->kd_bagian && !isset($request->kd_cabang)){
+                $entitas = null;
+            }
+            else if ($request->get('subdiv') != null) {
                 $entitas = $request->get('subdiv');
             } else if ($request->get('cabang') != null) {
                 $entitas = $request->get('cabang');
@@ -645,7 +648,10 @@ class KaryawanController extends Controller
                 }
             }
             $entitas = null;
-            if ($request->get('subdiv') != null) {
+            if($request->kd_bagian && !isset($request->kd_cabang)){
+                $entitas = null;
+            }
+            else if ($request->get('subdiv') != null) {
                 $entitas = $request->get('subdiv');
             } else if ($request->get('cabang') != null) {
                 $entitas = $request->get('cabang');
