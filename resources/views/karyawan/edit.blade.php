@@ -217,7 +217,7 @@
                                     <input type="text" class="form-control" id="gj_penyesuaian" name="gj_penyesuaian" value="{{ old('gj_penyesuaian', $data->gj_penyesuaian) }}">
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Status Karyawan</label>
                                     <select name="status_karyawan" id="" class="@error('status_karyawan') is-invalid @enderror form-control">
@@ -226,6 +226,12 @@
                                         <option value="IKJP" {{ ($data->status_karyawan == 'IKJP') ? 'selected' : ''}}>IKJP</option>
                                         <option value="Kontrak Perpanjangan" {{ ($data->status_karyawan == 'Kontrak Perpanjangan') ? 'selected' : ''}}>Kontrak Perpanjangan</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Tanggal Mulai</label>
+                                    <input type="date" class="@error('tgl_mulai') is-invalid @enderror form-control" name="tgl_mulai" value="{{ old('tgl_mulai', $data->tgl_mulai ?? null) }}">
                                 </div>
                             </div>
                             <div class="col-md-6">

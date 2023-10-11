@@ -312,7 +312,8 @@ class KaryawanController extends Controller
             'jkn' => 'required',
             'gj_pokok' => 'required',
             'status_karyawan' => 'required|not_in:-',
-            'jabatan' => 'required|not_in:-'
+            'jabatan' => 'required|not_in:-',
+            'tgl_mulai' => 'required'
         ]);
 
         try {
@@ -357,7 +358,8 @@ class KaryawanController extends Controller
                     'created_at' => now(),
                     'pendidikan' => $request->get('pendidikan'),
                     'pendidikan_major' => $request->get('pendidikan_major'),
-                    'npwp' => $request->get('npwp')
+                    'npwp' => $request->get('npwp'),
+                    'tgl_mulai' => $request->get('tgl_mulai')
                 ]);
 
             if ($request->get('status_pernikahan') == 'Kawin') {
@@ -613,6 +615,7 @@ class KaryawanController extends Controller
             'jkn' => 'required',
             'gj_pokok' => 'required',
             'status_karyawan' => 'required|not_in:-',
+            'tgl_mulai' => 'required'
         ]);
 
         try {
@@ -692,6 +695,7 @@ class KaryawanController extends Controller
                     'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
                     'no_rekening' => $request->get('no_rek'),
                     'npwp' => $request->get('npwp'),
+                    'tgl_mulai' => $request->get('tgl_mulai'),
                     'created_at' => now(),
                 ]);
 
