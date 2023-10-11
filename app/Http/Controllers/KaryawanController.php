@@ -312,12 +312,16 @@ class KaryawanController extends Controller
             'jkn' => 'required',
             'gj_pokok' => 'required',
             'status_karyawan' => 'required|not_in:-',
-            'jabatan' => 'required|not_in:-'
+            'jabatan' => 'required|not_in:-',
+            'tgl_mulai' => 'required'
         ]);
 
         try {
             $entitas = null;
-            if ($request->get('subdiv') != null) {
+            if($request->kd_bagian && !isset($request->kd_cabang)){
+                $entitas = null;
+            }
+            else if ($request->get('subdiv') != null) {
                 $entitas = $request->get('subdiv');
             } else if ($request->get('cabang') != null) {
                 $entitas = $request->get('cabang');
@@ -354,7 +358,8 @@ class KaryawanController extends Controller
                     'created_at' => now(),
                     'pendidikan' => $request->get('pendidikan'),
                     'pendidikan_major' => $request->get('pendidikan_major'),
-                    'npwp' => $request->get('npwp')
+                    'npwp' => $request->get('npwp'),
+                    'tgl_mulai' => $request->get('tgl_mulai')
                 ]);
 
             if ($request->get('status_pernikahan') == 'Kawin') {
@@ -610,6 +615,7 @@ class KaryawanController extends Controller
             'jkn' => 'required',
             'gj_pokok' => 'required',
             'status_karyawan' => 'required|not_in:-',
+            'tgl_mulai' => 'required'
         ]);
 
         try {
@@ -645,7 +651,10 @@ class KaryawanController extends Controller
                 }
             }
             $entitas = null;
-            if ($request->get('subdiv') != null) {
+            if($request->kd_bagian && !isset($request->kd_cabang)){
+                $entitas = null;
+            }
+            else if ($request->get('subdiv') != null) {
                 $entitas = $request->get('subdiv');
             } else if ($request->get('cabang') != null) {
                 $entitas = $request->get('cabang');
@@ -686,6 +695,7 @@ class KaryawanController extends Controller
                     'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
                     'no_rekening' => $request->get('no_rek'),
                     'npwp' => $request->get('npwp'),
+                    'tgl_mulai' => $request->get('tgl_mulai'),
                     'created_at' => now(),
                 ]);
 

@@ -415,9 +415,9 @@ $('#nip').select2({
                     $('input[name=kd_entity]').val(data.karyawan.kd_entitas);
                     $('#jabatan_lama').val(data.karyawan.jabatan.nama_jabatan + jabatan + bag || '');
                     $('#id_jabatan_lama').val(data.karyawan.jabatan.kd_jabatan);
-                    $("#status_jabatan").val(data.karyawan.status_jabatan)
+                    $("#status_jabatan").val(data.karyawan.status_jabatan.length > 0 ? data.karyawan.status_jabatan : '-')
                     $("#bagian_lama").val(data.karyawan.kd_bagian)
-                    $("#panggol").val(data.karyawan.panggol.golongan + " - " + data.karyawan.panggol.pangkat)
+                    $("#panggol").val(data.karyawan.panggol != null ? data.karyawan.panggol.golongan + " - " + data.karyawan.panggol.pangkat : '-')
                     $("#panggol_lama").val(data.karyawan.kd_panggol)
                     $("#status_jabatan_lama").val(data.karyawan.status_jabatan)
                 }
@@ -434,27 +434,64 @@ $('#nip').select2({
                     $("#gj_pokok").val(formatRupiah(res.data_gj.gj_pokok.toString()))
                     $("#gj_penyesuaian").val(formatRupiah(res.data_gj.gj_penyesuaian.toString()))
                     $("#tj").empty();
-                    $.each(res.data_tj, function(i, item){
-                        var idTj = item.id_tunjangan
-                        $("#tj").append(`
-                        <div class="row" id="row_tunjangan">
+                    if(res.data_tj.length > 0){
+                        $.each(res.data_tj, function(i, item){
+                            var idTj = item.id_tunjangan
+                            $("#tj").append(`
+                            <div class="row" id="row_tunjangan">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="is">Tunjangan</label>
+                                            <select name="tunjangan[]" id="tunjangan`+i+`" class="form-control">
+                                                <option value="">--- Pilih ---</option>
+                                                @foreach ($tunjangan as $item)
+                                                    <option value="{{ $item->id }}" ${ idTj === {{ $item->id }} ? 'selected' : '' }>{{ $item->nama_tunjangan }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="id_tk[]" id="id_tk" value="`+item.id+`">
+                                    <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="`+item.nominal+`">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="is_nama">Nominal</label>
+                                            <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control" value="`+formatRupiah(item.nominal.toString())+`">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 mt-3">
+                                        <button class="btn btn-info" type="button" id="btn-add">
+                                            <i class="bi-plus-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-1 mt-3">
+                                        <button class="btn btn-info" type="button" id="btn-delete">
+                                            <i class="bi-dash-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `);
+                            setTunjangan(i, item.id_tunjangan)
+                        })
+                    } else{
+                        $('#tj').append(`
+                            <div class="row pb-3">
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="is">Tunjangan</label>
-                                        <select name="tunjangan[]" id="tunjangan`+i+`" class="form-control">
+                                        <select name="tunjangan[]" id="row_tunjangan" class="form-control">
                                             <option value="">--- Pilih ---</option>
                                             @foreach ($tunjangan as $item)
-                                                <option value="{{ $item->id }}" {{ ($item->id == `+ idTj +`) ? 'selected' : '' }}>{{ $item->nama_tunjangan }}</option>
+                                                <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <input type="hidden" name="id_tk[]" id="id_tk" value="`+item.id+`">
-                                <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="`+item.nominal+`">
+                                <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                                <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="0">
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="is_nama">Nominal</label>
-                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control" value="`+formatRupiah(item.nominal.toString())+`">
+                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-1 mt-3">
@@ -469,8 +506,7 @@ $('#nip').select2({
                                 </div>
                             </div>
                         `);
-                        setTunjangan(i, item.id_tunjangan)
-                    })
+                    }
                 }
             })
         });

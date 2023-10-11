@@ -18,7 +18,7 @@ class KaryawanResource extends JsonResource
             "id" => $this->nip,
             "text" => "{$this->nip} - {$this->nama_karyawan}",
             "nama" => $this->nama_karyawan,
-            "jabatan" => $this->jabatan->nama_jabatan,
+            "jabatan" => $this->jabatan->nama_jabatan ?? '-',
         ];
     }
 }
