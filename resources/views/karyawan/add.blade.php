@@ -208,20 +208,20 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Honorarium</label>
+                                    <label for="" id="labelGajiPokok">Honorarium</label>
                                     <input type="text" id="gj_pokok" class="@error('gj_pokok') is-invalid @enderror form-control" name="gj_pokok" value="{{ old('gj_pokok') }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Honorarium Penyesuaian</label>
+                                    <label for="">Gaji Penyesuaian</label>
                                     <input type="text" id="gj_penyesuaian" class="form-control" name="gj_penyesuaian" value="{{ old('gj_penyesuaian') }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Status Karyawan</label>
-                                    <select name="status_karyawan" id="" class="@error('status_karyawan') is-invalid @enderror form-control">
+                                    <select name="status_karyawan" id="status_karyawan" class="@error('status_karyawan') is-invalid @enderror form-control">
                                         <option {{ old('status_karyawan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                         <option {{ old('status_karyawan') == 'Tetap' ? 'selected' : '' }} value="Tetap">Tetap</option>
                                         <option {{ old('status_karyawan') == 'IKJP' ? 'selected' : '' }} value="IKJP">IKJP</option>
@@ -650,6 +650,15 @@
             if(y > 1){
                 $(this).closest('.card').remove()
                 y--;
+            }
+        })
+
+        $("#status_karyawan").change(function(){
+            var value = $(this).val();
+            if(value == "IKJP" || value == "Kontrak Perpanjangan"){
+                $("#labelGajiPokok").html("Honorarium")
+            } else{
+                $("#labelGajiPokok").html("Gaji Pokok")
             }
         })
     </script>

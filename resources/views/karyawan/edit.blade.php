@@ -207,13 +207,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Honorarium</label>
+                                    <label for="" id="labelGajiPokok">{{ $data->status_karyawan == 'Kontrak Perpanjangan' || $data->status_karyawan == 'IKJP' ? 'Honorarium' : 'Gaji Pokok' }}</label>
                                     <input type="text" id="gj_pokok" class="@error('gj_pokok') is-invalid @enderror form-control" name="gj_pokok" value="{{ old('gj_pokok', $data->gj_pokok) }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Honorarium Penyesuaian</label>
+                                    <label for="">Gaji Penyesuaian</label>
                                     <input type="text" class="form-control" id="gj_penyesuaian" name="gj_penyesuaian" value="{{ old('gj_penyesuaian', $data->gj_penyesuaian) }}">
                                 </div>
                             </div>
@@ -843,5 +843,14 @@
                 }
             })
         }
+
+        $("#status_karyawan").change(function(){
+            var value = $(this).val();
+            if(value == "IKJP" || value == "Kontrak Perpanjangan"){
+                $("#labelGajiPokok").html("Honorarium")
+            } else{
+                $("#labelGajiPokok").html("Gaji Pokok")
+            }
+        })
     </script>
 @endsection
