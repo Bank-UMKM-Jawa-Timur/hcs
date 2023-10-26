@@ -893,6 +893,7 @@ class KaryawanController extends Controller
         if ($karyawan instanceof Builder) {
             $karyawan->with('keluarga');
             $karyawan->whereNull('tanggal_penonaktifan');
+            $karyawan->where('status_karyawan', '!=', 'Nonaktif');
             $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
             $karyawan->orderBy('tgl_lahir', 'asc');
             $karyawan = $karyawan->get();
