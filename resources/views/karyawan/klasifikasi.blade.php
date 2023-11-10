@@ -133,6 +133,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            Tanggal<br> Mulai</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
@@ -268,6 +270,9 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>
+                            {{ $item->tgl_mulai != null ? date('d M Y', strtotime($item->tgl_mulai)) : '-' }}
+                        </td>
                         <td>{{ getSKTerakhir($item->nip) ?? $item->skangkat }}</td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
@@ -401,6 +406,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            Tanggal<br> Mulai</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
@@ -536,6 +543,9 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>
+                            {{ $item->tgl_mulai != null ? date('d M Y', strtotime($item->tgl_mulai)) : '-' }}
+                        </td>
                         <td>{{ getSKTerakhir($item->nip) ?? $item->skangkat }}</td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
@@ -669,6 +679,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            Tanggal<br> Mulai</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
@@ -804,6 +816,9 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>
+                            {{ $item->tgl_mulai != null ? date('d M Y', strtotime($item->tgl_mulai)) : '-' }}
+                        </td>
                         <td>{{ getSKTerakhir($item->nip) ?? $item->skangkat }}</td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
@@ -1213,6 +1228,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            Tanggal<br> Mulai</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Terakhir</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
@@ -1347,6 +1364,9 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>
+                            {{ $item->tgl_mulai != null ? date('d M Y', strtotime($item->tgl_mulai)) : '-' }}
+                        </td>
                         <td>{{ getSKTerakhir($item->nip) ?? $item->skangkat }}</td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
@@ -1583,6 +1603,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            Tanggal<br> Mulai</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
@@ -1715,6 +1737,9 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>
+                            {{ $item->tgl_mulai != null ? date('d M Y', strtotime($item->tgl_mulai)) : '-' }}
+                        </td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
                             : '-' }}</td>
@@ -2171,6 +2196,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            Tanggal<br> Mulai</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
@@ -2303,6 +2330,9 @@ return number_format($value, 0, '.', ',');
                         }
                         @endphp
                         <td>{{ $status }}/{{ $anak }}</td>
+                        <td>
+                            {{ $item->tgl_mulai != null ? date('d M Y', strtotime($item->tgl_mulai)) : '-' }}
+                        </td>
                         <td>{{ ($item->skangkat != null) ? $item->skangkat : '-' }}</td>
                         <td>{{ ($item->tanggal_pengangkat != null) ? date('d M Y', strtotime($item->tanggal_pengangkat))
                             : '-' }}</td>
@@ -2441,6 +2471,8 @@ return number_format($value, 0, '.', ',');
                         </th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 40px;">
                             Status</th>
+                        <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
+                            Tanggal<br> Mulai</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 50px;">
                             SK<br> Angkat</th>
                         <th style="background-color: #CCD6A6; text-align: center; font-size: 11px; min-width: 65px;">
