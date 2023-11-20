@@ -88,7 +88,7 @@ class PenghasilanTidakTeraturController extends Controller
 
         if(in_array($karyawan->kd_entitas, $cabang)){
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
-                ->where('kd_cabang', $karyawan->kd_entitas)
+                ->where('mst_profil_kantor.kd_cabang', $karyawan->kd_entitas)
                 ->where('active', 1)
                 ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
                 ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
@@ -113,17 +113,32 @@ class PenghasilanTidakTeraturController extends Controller
                 ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
                 ->first();
         }
-        $persen_jkk = $hitungan_penambah->jkk;
-        $persen_jht = $hitungan_penambah->jht;
-        $persen_jkm = $hitungan_penambah->jkm;
-        $persen_kesehatan = $hitungan_penambah->kesehatan;
-        $persen_jp_penambah = $hitungan_penambah->jp;
-        $persen_dpp = $hitungan_pengurang->dpp;
-        $persen_jp_pengurang = $hitungan_pengurang->jp;
-        $batas_atas = $hitungan_penambah->kesehatan_batas_atas;
-        $batas_bawah = $hitungan_penambah->kesehatan_batas_bawah;
-        $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
-        $jp_mar_des = $hitungan_pengurang->jp_mar_des;
+        // $persen_jkk = $hitungan_penambah && $hitungan_penambah->jkk === null ? $hitungan_penambah->jkk : 0;
+        if ($hitungan_penambah == null && $hitungan_pengurang == null) {
+            $persen_jkk = 0;
+            $persen_jht = 0;
+            $persen_jkm = 0;
+            $persen_kesehatan = 0;
+            $persen_jp_penambah = 0;
+            $persen_dpp = 0;
+            $persen_jp_pengurang = 0;
+            $batas_atas = 0;
+            $batas_bawah = 0;
+            $jp_jan_feb = 0;
+            $jp_mar_des = 0;
+        }else{
+            $persen_jkk = $hitungan_penambah->jkk;
+            $persen_jht = $hitungan_penambah->jht;
+            $persen_jkm = $hitungan_penambah->jkm;
+            $persen_kesehatan = $hitungan_penambah->kesehatan;
+            $persen_jp_penambah = $hitungan_penambah->jp;
+            $persen_dpp = $hitungan_pengurang->dpp;
+            $persen_jp_pengurang = $hitungan_pengurang->jp;
+            $batas_atas = $hitungan_penambah->kesehatan_batas_atas;
+            $batas_bawah = $hitungan_penambah->kesehatan_batas_bawah;
+            $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
+            $jp_mar_des = $hitungan_pengurang->jp_mar_des;
+        }
         // $nominal_jp = ($request->get('bulan') < 3) ? $jp_jan_feb : $jp_mar_des;
         // Get gaji secara bulanan
         for($i = 1; $i <= 12; $i++){
