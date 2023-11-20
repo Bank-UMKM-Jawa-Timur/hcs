@@ -55,17 +55,29 @@ class SlipGajiController extends Controller
                         ->where('tahun', $tahun)
                         ->where('bulan', $bulan)
                         ->first();
-    
-                    $data[$i]['tunjangan'][1] = $gaji->tj_keluarga;
-                    $data[$i]['tunjangan'][2] = $gaji->tj_telepon;
-                    $data[$i]['tunjangan'][3] = $gaji->tj_teller;
-                    $data[$i]['tunjangan'][4] = $gaji->tj_jabatan;
-                    $data[$i]['tunjangan'][5] = $gaji->tj_perumahan;
-                    $data[$i]['tunjangan'][6] = $gaji->tj_pelaksana;
-                    $data[$i]['tunjangan'][7] = $gaji->tj_kemahalan;
-                    $data[$i]['tunjangan'][8] = $gaji->tj_kesejahteraan;
+                    
+                    if ($gaji == null) {
+                        // $data[$i]['tunjangan'][1] = $gaji->tj_keluarga;
+                        // $data[$i]['tunjangan'][2] = $gaji->tj_telepon;
+                        // $data[$i]['tunjangan'][3] = $gaji->tj_teller;
+                        // $data[$i]['tunjangan'][4] = $gaji->tj_jabatan;
+                        // $data[$i]['tunjangan'][5] = $gaji->tj_perumahan;
+                        // $data[$i]['tunjangan'][6] = $gaji->tj_pelaksana;
+                        // $data[$i]['tunjangan'][7] = $gaji->tj_kemahalan;
+                        // $data[$i]['tunjangan'][8] = $gaji->tj_kesejahteraan;
+                        $totalGaji = 0 + 0 + 0;
+                    }else{
+                        $data[$i]['tunjangan'][1] = $gaji->tj_keluarga;
+                        $data[$i]['tunjangan'][2] = $gaji->tj_telepon;
+                        $data[$i]['tunjangan'][3] = $gaji->tj_teller;
+                        $data[$i]['tunjangan'][4] = $gaji->tj_jabatan;
+                        $data[$i]['tunjangan'][5] = $gaji->tj_perumahan;
+                        $data[$i]['tunjangan'][6] = $gaji->tj_pelaksana;
+                        $data[$i]['tunjangan'][7] = $gaji->tj_kemahalan;
+                        $data[$i]['tunjangan'][8] = $gaji->tj_kesejahteraan;
+                        $totalGaji = $gaji->gj_pokok + $gaji->gj_penyesuaian + array_sum($data[$i]['tunjangan']);
+                    }
         
-                    $totalGaji = $gaji->gj_pokok + $gaji->gj_penyesuaian + array_sum($data[$i]['tunjangan']);
                 }
                 else{
                     $totalGaji = $item->gj_pokok + $item->gj_penyesuaian;
