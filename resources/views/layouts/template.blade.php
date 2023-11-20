@@ -418,7 +418,9 @@ Coded by www.creative-tim.com
                                 <i class="nc-icon nc-settings" style="font-weight: bolder"></i>
                                 Setting
                             </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show')"
+                            <ul class="sub-menu list-unstyled flex-column collapse pl-2
+                            {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show') --}}
+                            "
                                 id="submenu7">
                                 <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
@@ -450,7 +452,9 @@ Coded by www.creative-tim.com
                                 @php
                                     $profilKantorPusat = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->where('kd_cabang', '000')->first();
                                 @endphp
-                                <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
+                                <li class="dropdown
+                                {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show') --}}
+                                " style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-bank"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Kantor Pusat </p>
