@@ -303,28 +303,28 @@ $request = isset($request) ? $request : null;
                             {{ $karyawan[$i]->nama_karyawan }}
                         </td>
                         <td>
-                            {{ rupiah4(($jkk[$i])) }}
+                            {{ $i >= 261 ? 0 : rupiah4(($jkk[$i])) }}
                         </td>
                         <td>
-                            {{ rupiah2(($jht[$i])) }}
+                            {{  $i >= 261 ? 0 : rupiah2(($jht[$i])) }}
                         </td>
                         <td>
-                            {{ rupiah2(($jkm[$i])) }}
+                            {{  $i >= 261 ? 0 : rupiah2(($jkm[$i])) }}
                         </td>
                         <td>
-                            {{ rupiah2(($jkk[$i] + $jht[$i] + $jkm[$i])) }}
+                            {{  $i >= 261 ? 0 : rupiah2(($jkk[$i] + $jht[$i] + $jkm[$i])) }}
                         </td>
                         <td>
-                            {{ rupiah(($jp1[$i])) }}
+                            {{  $i >= 261 ? 0 : rupiah(($jp1[$i])) }}
                         </td>
                         <td>
-                            {{ rupiah(($jp2[$i])) }}
+                            {{  $i >= 261 ? 0 : rupiah(($jp2[$i])) }}
                         </td>
                         <td>
-                            {{ rupiah(($jp1[$i] + $jp2[$i])) }}
+                            {{  $i >= 261 ? 0 : rupiah(($jp1[$i] + $jp2[$i])) }}
                         </td>
-                        </tr>
-                        @endfor
+                    </tr>
+                    @endfor
                 </tbody>
                 <tfoot style="font-weight: bold; text-align: center;">
                     <tr>
