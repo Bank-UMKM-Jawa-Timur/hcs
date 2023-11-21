@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div id="cabang-graph" class="w-100"></div>
+                <div id="pendidikan-graph" class="w-100"></div>
             </div>
         </div>
 
@@ -110,7 +110,7 @@
                 }
             }
         };
-        var perPendidikanChart = new ApexCharts(document.querySelector("#cabang-graph"), optionsPerPendidikan);
+        var perPendidikanChart = new ApexCharts(document.querySelector("#pendidikan-graph"), optionsPerPendidikan);
         perPendidikanChart.render();
 
         $(document).ready(function() {

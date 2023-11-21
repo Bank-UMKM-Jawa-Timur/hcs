@@ -138,6 +138,18 @@ Route::prefix('graph')->group(function () {
     Route::get('/per-pendidikan', function(){
         return view('graph.per-pendidikan');
     });
+    Route::get('/gaji', function(){
+        return view('graph.per-gaji');
+    });
+    Route::get('/table-karyawan', function(){
+        return view('graph.table-karyawan');
+    });
+    Route::get('/gaji-percabang', function(){
+        return view('graph.gaji-percabang');
+    });
+    Route::get('/table-karyawan-sp', function(){
+        return view('graph.table-karyawan-sp');
+    });
 });
 
 Route::group(['middleware' => 'auth'], function () {

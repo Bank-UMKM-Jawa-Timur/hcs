@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div id="cabang-graph" class="w-100"></div>
+                <div id="bagian-graph" class="w-100"></div>
             </div>
         </div>
 
@@ -110,7 +110,7 @@
                 }
             }
         };
-        var subDevisiChart = new ApexCharts(document.querySelector("#cabang-graph"), optionsSubDevisi);
+        var subDevisiChart = new ApexCharts(document.querySelector("#bagian-graph"), optionsSubDevisi);
         subDevisiChart.render();
 
         $(document).ready(function() {

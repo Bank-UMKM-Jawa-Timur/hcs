@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div id="cabang-graph" class="w-100"></div>
+                <div id="golongan-graph" class="w-100"></div>
             </div>
         </div>
 
@@ -110,7 +110,7 @@
                 }
             }
         };
-        var perGolonganChart = new ApexCharts(document.querySelector("#cabang-graph"), optionsPerGolongan);
+        var perGolonganChart = new ApexCharts(document.querySelector("#golongan-graph"), optionsPerGolongan);
         perGolonganChart.render();
 
         $(document).ready(function() {

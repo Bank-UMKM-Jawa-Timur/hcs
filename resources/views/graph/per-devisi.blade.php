@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div id="cabang-graph" class="w-100"></div>
+                <div id="divisi-graph" class="w-100"></div>
             </div>
         </div>
 
@@ -110,7 +110,7 @@
                 }
             }
         };
-        var perDevisiChart = new ApexCharts(document.querySelector("#cabang-graph"), optionsPerDevisi);
+        var perDevisiChart = new ApexCharts(document.querySelector("#divisi-graph"), optionsPerDevisi);
         perDevisiChart.render();
 
         $(document).ready(function() {
