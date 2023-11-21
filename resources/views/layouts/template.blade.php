@@ -600,7 +600,7 @@ Coded by www.creative-tim.com
     <!--  Notifications Plugin    -->
     <script src="{{ asset('style/assets/js/plugins/bootstrap-notify.js') }}"></script>
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="{{ asset('style/assets/js/paper-dashboard.min.js') }}" type="text/javascript"></script>
+    {{-- <script src="{{ asset('style/assets/js/paper-dashboard.min.js') }}" type="text/javascript"></script> --}}
     <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
     <script src="{{ asset('style/assets/demo/demo.js') }}"></script>
     <!-- Jam Realtime -->
@@ -608,12 +608,12 @@ Coded by www.creative-tim.com
     <script src="{{ asset('style/assets/js/Datatables.js') }}"></script>
     <script src="{{ asset('style/assets/js/ReorderWithResize.js') }}"></script>
     <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('vendor/apexchart/apexcharts.js') }}"></script>
     <script>
-        $(document).ready(function() {
-            // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
-            demo.initChartsPages();
-        });
-
+        // $(document).ready(function() {
+        //     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
+        //     demo.initChartsPages();
+        // });
         var url = window.location;
 
         // for sidebar menu entirely but not cover treeview
@@ -669,7 +669,6 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
-    @stack('script')
 </body>
 
 </html>

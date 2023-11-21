@@ -122,6 +122,24 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::prefix('graph')->group(function () {
+    Route::get('/per-devisi', function(){
+        return view('graph.per-devisi');
+    });
+    Route::get('/sub-devisi', function(){
+        return view('graph.sub-devisi');
+    });
+    Route::get('/per-bagian', function(){
+        return view('graph.per-bagian');
+    });
+    Route::get('/per-golongan', function(){
+        return view('graph.per-golongan');
+    });
+    Route::get('/per-pendidikan', function(){
+        return view('graph.per-pendidikan');
+    });
+});
+
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('/kantor', KantorController::class);
     Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);
