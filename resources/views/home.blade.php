@@ -8,15 +8,15 @@
                 <h5 class="card-title">Dashboard</h5>
                 <p class="card-title"><a href="/">Dashboard </a></p>
             </div>
-            <div>
-                <button class="btn btn-info">Detail</button>
-            </div>
         </div>
     </div>
 </div>
 <div class="card-body">
     <div class="row mb-4">
         <div class="col-md-12">
+            <div >
+                <button class="btn btn-info">Detail</button>
+            </div>
             <div id="cabang-graph" class="w-100"></div>
         </div>
     </div>
@@ -30,51 +30,45 @@
     </div>
     <div class="p-4">
         <div class="mb-2 p-2">
-            <div class="card-title mb-2">
+            <div class="card-title mb-2 {{$totalDataMutasi > 5 ? 'd-flex justify-content-between' : ''}}">
                 <h4 class="font-weight-bold">
-                    Data Table Karyawan
+                    Data Mutasi Bulan Ini
                 </h4>
+                @if ($totalDataMutasi > 5)
+                    <button class="btn btn-info">Selengkapnya</button>
+                @endif
             </div>
             <div class="table-responsive overflow-hidden content-center mt-4">
                 <table class="table whitespace-nowrap" id="table" style="width: 100%">
                     <thead class=" text-primary">
-                    <th>
-                        No
-                    </th>
-                    <th>
-                        Kode Divisi
-                    </th>
-                    <th>
-                        Nama Divisi
-                    </th>
-    
+                    <th>#</th>
+                    <th>Nip</th>
+                    <th>Nama Karyawan</th>
+                    <th>Tgl Mutasi</th>
+                    <th>Jabatan Lama</th>
+                    <th>Jabatan Baru</th>
+                    <th>Kantor Lama</th>
+                    <th>Kantor Baru</th>
+                    <th>Bukti SK</th>
                 </thead>
                 <tbody>
+                    @forelse ($dataMutasi as $item)
                     <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            CSR
-                        </td>
-                        <td>
-                            Corporate Secretary
-                        </td>
-
+                        <td>{{$loop->iteration}}</td>
+                        <td>{{ $item->nip }}</td>
+                        <td>{{ $item->nama_karyawan }}</td>
+                        <td><span style="display: none;">{{ date('Ymd', strtotime($item->tanggal_pengesahan)) }}</span>{{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}</td>
+                        <td class="text-nowrap">{{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{ $item->jabatan_lama }}</td>
+                        <td class="text-nowrap">{{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }}{{ $item->jabatan_baru }}</td>
+                        <td>{{ $item->kantor_lama ?? '-' }}</td>
+                        <td>{{ $item->kantor_baru ?? '-' }}</td>
+                        <td>{{ $item->bukti_sk }}</td>
                     </tr>
+                    @empty
                     <tr>
-                        <td>
-                            2
-                        </td>
-                        <td>
-                            CSR
-                        </td>
-                        <td>
-                            Corporate Secretary
-                        </td>
-
+                        <td colspan="9" class="text-center">Maaf data mutasi bulan ini tidak ada.</td>
                     </tr>
-    
+                    @endforelse
                 </tbody>
                 </table>
                 </div>
@@ -84,47 +78,41 @@
                 </div>
             </div>
             <div class="mb-2 p-2">
-                <div class="card-title mb-2">
+                <div class="card-title mb-2 {{$totalDataSP > 5 ? 'd-flex justify-content-between' : ''}}">
                    <h4 class="font-weight-bold">
-                        Data Table Karyawan SP
+                        Data Karyawan SP Bulan Ini
                    </h4>
+                   @if ($totalDataSP > 5)
+                        <button class="btn btn-info">Selengkapnya</button>
+                   @endif
                 </div>
                 <div class="table-responsive overflow-hidden content-center mt-4">
                     <table class="table whitespace-nowrap" id="table" style="width: 100%">
                         <thead class=" text-primary">
-                        <th>
-                            No
-                        </th>
-                        <th>
-                            Kode Divisi
-                        </th>
-                        <th>
-                            Nama Divisi
-                        </th>
+                        <tr>
+                            <th>No</th>
+                            <th>Nomor SP</th>
+                            <th>NIP</th>
+                            <th>Nama Karyawan</th>
+                            <th>Tanggal SP</th>
+                            <th>Pelanggaran</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                CSR
-                            </td>
-                            <td>
-                                Corporate Secretary
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                CSR
-                            </td>
-                            <td>
-                                Corporate Secretary
-                            </td>
-                        </tr>
+                        @forelse ($dataSP as $sp)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $sp->no_sp ?? '-' }}</td>
+                                <td>{{ $sp->nip }}</td>
+                                <td>{{ $sp->karyawan->nama_karyawan }}</td>
+                                <td>{{ $sp->tanggal_sp->format('d M Y') }}</td>
+                                <td>{{ $sp->pelanggaran }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">Maaf data karyawan SP bulan ini tidak ada.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                     </table>
                     </div>
@@ -142,14 +130,26 @@
 
 @section('custom_script')
     <script>
+        var totalKaryawan = @json($totalKaryawan);
+        var cabang = [];
+        var total_karyawan = [];
+         $.each(totalKaryawan, function(i, item){
+            cabang.push(item.cabang);
+            total_karyawan.push(item.total_karyawan);
+         })
+
         var options = {
           series: [{
-          name: 'Net Profit',
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+          name: 'Total',
+          data: total_karyawan
         }],
           chart: {
           type: 'bar',
           height: 350
+        },
+        title: {
+            text: 'Total Karyawan Per Cabang',
+            align: 'left'
         },
         plotOptions: {
           bar: {
@@ -167,117 +167,105 @@
           colors: ['transparent']
         },
         xaxis: {
-          categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+          categories: cabang,
         },
         fill: {
           opacity: 1
         },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return "$ " + val + " thousands"
-            }
-          }
-        }
         };
 
         var chart = new ApexCharts(document.querySelector("#cabang-graph"), options);
         chart.render();
+        //end chart total karyawan by cabang
 
+        // chart total gaji karyawan per cabang
+        var totalGaji = @json($gajiPerCabang);
+        var cabang = [];
+        var gaji_pokok = [];
+         $.each(totalGaji, function(i, item){
+            cabang.push(item.cabang);
+            gaji_pokok.push(item.gaji_pokok);
+         })
         var optionsPe = {
           series: [{
-          name: 'series1',
-          data: [11, 32, 45, 32, 34, 52, 41,11,44, 32, 34, 42]
-        }, {
-          name: 'series2',
-          data: [11, 32, 45, 32, 34, 52, 41,11,44, 32, 34, 52]
-        }],
-          chart: {
-          height: 350,
-          type: 'area'
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        xaxis: {
-          type: 'text',
-          categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul","Okt", "Nov", "Des"]
-        },
+                name: "Total",
+                data: gaji_pokok
+            }],
+            chart: {
+            height: 350,
+            type: 'line',
+            zoom: {
+                enabled: false
+            }
+            },
+            dataLabels: {
+            enabled: false
+            },
+            stroke: {
+            curve: 'straight'
+            },
+            title: {
+            text: 'Total Gaji Karyawan Per Cabang',
+            align: 'left'
+            },
+            grid: {
+            row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0.5
+            },
+            },
+            xaxis: {
+            categories: cabang,
+            }
         };
 
         var perCabangGraph = new ApexCharts(document.querySelector("#percabang-graph"), optionsPe);
         perCabangGraph.render();
 
+        //chart gaji perbulan dalam setahun
+        var tanggal = new Date();
+        var tahun = tanggal.getFullYear();
+
+        var data_gaji = @json($dataGaji);
+        var total_gaji = [];
+        $.each(data_gaji, function(i, item){
+            total_gaji.push(item.gaji);
+        })
+
+        let total_salary = total_gaji.map((item) => {
+            return typeof item === "string" ? parseInt(item) : item;
+        })
         var optionsPerGaji = {
-          series: [
-          {
-            name: "High - 2013",
-            data: [28, 29, 33, 36, 32, 32, 33]
-          },
-          {
-            name: "Low - 2013",
-            data: [12, 11, 14, 18, 17, 13, 13]
-          }
-        ],
-          chart: {
-          height: 350,
-          type: 'line',
-          dropShadow: {
-            enabled: true,
-            color: '#000',
-            top: 18,
-            left: 7,
-            blur: 10,
-            opacity: 0.2
-          },
-          toolbar: {
-            show: false
-          }
-        },
-        colors: ['#77B6EA', '#545454'],
-        dataLabels: {
-          enabled: true,
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        title: {
-          text: 'Average High & Low Temperature',
-          align: 'left'
-        },
-        grid: {
-          borderColor: '#e7e7e7',
-          row: {
-            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-            opacity: 0.5
-          },
-        },
-        markers: {
-          size: 1
-        },
-        xaxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-          title: {
-            text: 'Month'
-          }
-        },
-        yaxis: {
-          title: {
-            text: 'Temperature'
-          },
-          min: 5,
-          max: 40
-        },
-        legend: {
-          position: 'top',
-          horizontalAlign: 'right',
-          floating: true,
-          offsetY: -25,
-          offsetX: -5
-        }
+            series: [{
+                name: "Desktops",
+                data: total_salary
+            }],
+            chart: {
+            height: 350,
+            type: 'line',
+            zoom: {
+                enabled: false
+            }
+            },
+            dataLabels: {
+            enabled: false
+            },
+            stroke: {
+            curve: 'straight'
+            },
+            title: {
+            text: 'Total Gaji Karyawan Tahun ' + tahun,
+            align: 'left'
+            },
+            grid: {
+            row: {
+                colors: ['#f3f3f3', 'transparent'],
+                opacity: 0.5
+            },
+            },
+            xaxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Des'],
+            }
         };
 
 
