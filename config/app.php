@@ -196,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
         Irsyadulibad\LaravelActivehelper\ActiveHelperServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
 
@@ -212,6 +213,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ])->toArray(),
 
 ];
