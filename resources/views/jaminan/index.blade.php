@@ -91,24 +91,6 @@ $request = isset($request) ? $request : null;
 <div class="card ml-3 mr-3 mb-3 mt-3 shadow">
     <div class="col-md-12">
         @if ($status != null)
-        @php
-        function rupiah($angka)
-        {
-        $hasil_rupiah = number_format($angka, 0, ".", ",");
-        return $hasil_rupiah;
-        }
-
-        function rupiah2($angka)
-        {
-        $hasil_rupiah = number_format($angka, 2, ".", ",");
-        return $hasil_rupiah;
-        }
-        function rupiah4($angka)
-        {
-        $hasil_rupiah = number_format($angka, 4, ".", ",");
-        return $hasil_rupiah;
-        }
-        @endphp
         @if ($cek_data == 0)
         <h5 class="text-center align-item-center"><b>Data Ini Masih Belum Diproses ({{ getMonth($bulan) }} {{ $tahun
                 }})</b></h5>
@@ -138,14 +120,14 @@ $request = isset($request) ? $request : null;
                         <td>-</td>
                         <td>Kantor Pusat</td>
                         <td>{{ $count_pusat }}</td>
-                        <td>{{ rupiah(((0.0024 * $total_gaji_pusat))) }}</td>
-                        <td>{{ rupiah(((0.057 * $total_gaji_pusat))) }}</td>
-                        <td>{{ rupiah(((0.003 * $total_gaji_pusat))) }}</td>
-                        <td>{{ rupiah((((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 *
-                            $total_gaji_pusat))) }}</td>
-                        <td>{{ rupiah(array_sum($jp1_pusat)) }}</td>
-                        <td>{{ rupiah(array_sum($jp2_pusat)) }}</td>
-                        <td>{{ rupiah((array_sum($jp1_pusat) + array_sum($jp2_pusat))) }}</td>
+                        <td>{{ number_format(((0.0024 * $total_gaji_pusat)), 0, ".", ",") }}</td>
+                        <td>{{ number_format(((0.057 * $total_gaji_pusat)), 0, ".", ",") }}</td>
+                        <td>{{ number_format(((0.003 * $total_gaji_pusat)), 0, ".", ",") }}</td>
+                        <td>{{ number_format((((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 *
+                            $total_gaji_pusat)), 0, ".", ",") }}</td>
+                        <td>{{ number_format(array_sum($jp1_pusat), 0, ".", ",") }}</td>
+                        <td>{{ number_format(array_sum($jp2_pusat), 0, ".", ",") }}</td>
+                        <td>{{ number_format((array_sum($jp1_pusat) + array_sum($jp2_pusat)), 0, ".", ",") }}</td>
                     </tr>
 
                     @php
@@ -224,14 +206,14 @@ $request = isset($request) ? $request : null;
                             }
                             @endphp
                             <td>{{ count($karyawan) }}</td>
-                            <td>{{ rupiah(((0.0024 * array_sum($total_gaji_cabang)))) }}</td>
-                            <td>{{ rupiah(((0.057 * array_sum($total_gaji_cabang)))) }}</td>
-                            <td>{{ rupiah(((0.003 * array_sum($total_gaji_cabang)))) }}</td>
-                            <td>{{ rupiah((((0.0024 * array_sum($total_gaji_cabang))) + ((0.057 *
-                                array_sum($total_gaji_cabang)))) + ((0.003 * array_sum($total_gaji_cabang)))) }}</td>
-                            <td>{{ rupiah(array_sum($jp1_cabang)) }}</td>
-                            <td>{{ rupiah(array_sum($jp2_cabang)) }}</td>
-                            <td>{{ rupiah((array_sum($jp1_cabang) + array_sum($jp2_cabang))) }}</td>
+                            <td>{{ number_format(((0.0024 * array_sum($total_gaji_cabang))), 0, ".", ",") }}</td>
+                            <td>{{ number_format(((0.057 * array_sum($total_gaji_cabang))), 0, ".", ",") }}</td>
+                            <td>{{ number_format(((0.003 * array_sum($total_gaji_cabang))), 0, ".", ",") }}</td>
+                            <td>{{ number_format((((0.0024 * array_sum($total_gaji_cabang))) + ((0.057 *
+                                array_sum($total_gaji_cabang)))) + ((0.003 * array_sum($total_gaji_cabang))), 0, ".", ",") }}</td>
+                            <td>{{ number_format(array_sum($jp1_cabang), 0, ".", ",") }}</td>
+                            <td>{{ number_format(array_sum($jp2_cabang), 0, ".", ",") }}</td>
+                            <td>{{ number_format((array_sum($jp1_cabang) + array_sum($jp2_cabang)), 0, ".", ",") }}</td>
 
                             @php
                             array_push($total_jamsostek, (((0.0024 * array_sum($total_gaji_cabang))) + ((0.057 *
@@ -256,21 +238,21 @@ $request = isset($request) ? $request : null;
                         $total_karyawan = DB::table('mst_karyawan')->get();
                         @endphp
                         <td style="text-align: center;">{{ count($total_karyawan) }}</td>
-                        <td style="text-align: center;">{{ rupiah(array_sum($total_jkk)) }}</td>
-                        <td style="text-align: center;">{{ rupiah(array_sum($total_jht)) }}</td>
-                        <td style="text-align: center;">{{ rupiah(array_sum($total_jkm)) }}</td>
+                        <td style="text-align: center;">{{ number_format(array_sum($total_jkk), 0, ".", ",") }}</td>
+                        <td style="text-align: center;">{{ number_format(array_sum($total_jht), 0, ".", ",") }}</td>
+                        <td style="text-align: center;">{{ number_format(array_sum($total_jkm), 0, ".", ",") }}</td>
                         <td style="background-color: #FED049; text-align: center;">{{
-                            rupiah(array_sum($total_jamsostek)) }}</td>
-                        <td style="text-align: center;">{{ rupiah(array_sum($total_jp1)) }}</td>
-                        <td style="text-align: center;">{{ rupiah(array_sum($total_jp2)) }}</td>
-                        <td style="background-color: #FED049; text-align: center;">{{ rupiah(array_sum($total_jp)) }}
+                            number_format(array_sum($total_jamsostek), 0, ".", ",") }}</td>
+                        <td style="text-align: center;">{{ number_format(array_sum($total_jp1), 0, ".", ",") }}</td>
+                        <td style="text-align: center;">{{ number_format(array_sum($total_jp2), 0, ".", ",") }}</td>
+                        <td style="background-color: #FED049; text-align: center;">{{ number_format(array_sum($total_jp), 0, ".", ",") }}
                         </td>
                     </tr>
                     <tr>
                         <td colspan="9" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)
                         </td>
                         <td style="background-color: #54B435; text-align: center;">{{
-                            rupiah((array_sum($total_jamsostek) + array_sum($total_jp))) }}</td>
+                            number_format((array_sum($total_jamsostek) + array_sum($total_jp)), 0, ".", ",") }}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -303,25 +285,44 @@ $request = isset($request) ? $request : null;
                             {{ $karyawan[$i]->nama_karyawan }}
                         </td>
                         <td>
-                            {{ $i >= 261 ? 0 : rupiah4(($jkk[$i])) }}
+                            {{ $i >= 261 ? 0 : number_format(isset($jkk[$i]) ? $jkk[$i] : 0 , 4, ".", ",") }}
                         </td>
                         <td>
-                            {{  $i >= 261 ? 0 : rupiah2(($jht[$i])) }}
+                            {{  $i >= 261 ? 0 : number_format(isset($jht[$i]) ? $jht[$i] : 0, 2, ".", ",") }}
                         </td>
                         <td>
-                            {{  $i >= 261 ? 0 : rupiah2(($jkm[$i])) }}
+                            {{  $i >= 261 ? 0 : number_format(isset($jkm[$i]) ? $jkm[$i] : 0, 2, ".", ",") }}
                         </td>
                         <td>
-                            {{  $i >= 261 ? 0 : rupiah2(($jkk[$i] + $jht[$i] + $jkm[$i])) }}
+                            @php
+                                if (!isset($jkk[$i])) {
+                                    $jkk[$i] = 0;
+                                }
+                                if (!isset($jht[$i])) {
+                                    $jht[$i] = 0;
+                                }
+                                if (!isset($jkm[$i])) {
+                                    $jkm[$i] = 0;
+                                }
+                            @endphp
+                            {{  $i >= 261 ? 0 : number_format(($jkk[$i] + $jht[$i] + $jkm[$i]), 2, ".", ",") }}
                         </td>
                         <td>
-                            {{  $i >= 261 ? 0 : rupiah(($jp1[$i])) }}
+                            {{  $i >= 261 ? 0 : number_format(isset($jp1[$i]) ? $jp1[$i] : 0, 0, ".", ",") }}
                         </td>
                         <td>
-                            {{  $i >= 261 ? 0 : rupiah(($jp2[$i])) }}
+                            {{  $i >= 261 ? 0 : number_format(isset($jp2[$i]) ? $jp2[$i] : 0, 0, ".", ",") }}
                         </td>
                         <td>
-                            {{  $i >= 261 ? 0 : rupiah(($jp1[$i] + $jp2[$i])) }}
+                            @php
+                                if (!isset($jp1[$i])) {
+                                    $jp1[$i] = 0;
+                                }
+                                if (!isset($jp2[$i])) {
+                                    $jp2[$i] = 0;
+                                }
+                            @endphp
+                            {{  $i >= 261 ? 0 : number_format(($jp1[$i] + $jp2[$i]), 0, ".", ",") }}
                         </td>
                     </tr>
                     @endfor
@@ -329,21 +330,21 @@ $request = isset($request) ? $request : null;
                 <tfoot style="font-weight: bold; text-align: center;">
                     <tr>
                         <td colspan="2" style="text-align: center;">Jumlah</td>
-                        <td style="text-align: center;">{{ rupiah2(array_sum($jkk)) }}</td>
-                        <td style="text-align: center;">{{ rupiah(array_sum($jht)) }}</td>
-                        <td style="text-align: center;">{{ rupiah(array_sum($jkm)) }}</td>
-                        <td style="background-color: #FED049; text-align: center;">{{ rupiah((array_sum($jkk) +
-                            array_sum($jht) + array_sum($jkm))) }}</td>
-                        <td style="text-align: center;">{{ rupiah((array_sum($jp1))) }}</td>
-                        <td style="text-align: center;">{{ rupiah((array_sum($jp2))) }}</td>
-                        <td style="background-color: #FED049; text-align: center;">{{ rupiah((array_sum($jp1) +
-                            array_sum($jp2))) }}</td>
+                        <td style="text-align: center;">{{ number_format(array_sum($jkk), 2, ".", ",") }}</td>
+                        <td style="text-align: center;">{{ number_format(array_sum($jht), 0, ".", ",") }}</td>
+                        <td style="text-align: center;">{{ number_format(array_sum($jkm), 0, ".", ",") }}</td>
+                        <td style="background-color: #FED049; text-align: center;">{{ number_format((array_sum($jkk) +
+                            array_sum($jht) + array_sum($jkm)), 0, ".", ",") }}</td>
+                        <td style="text-align: center;">{{ number_format((array_sum($jp1)), 0, ".", ",") }}</td>
+                        <td style="text-align: center;">{{ number_format((array_sum($jp2)), 0, ".", ",") }}</td>
+                        <td style="background-color: #FED049; text-align: center;">{{ number_format((array_sum($jp1) +
+                            array_sum($jp2)), 0, ".", ",") }}</td>
                     </tr>
                     <tr>
                         <td colspan="8" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)
                         </td>
-                        <td style="background-color: #54B435; text-align: center;">{{ rupiah((array_sum($jkk) +
-                            array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2))) }}</td>
+                        <td style="background-color: #54B435; text-align: center;">{{ number_format((array_sum($jkk) +
+                            array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2)), 0, ".", ",") }}</td>
                     </tr>
                 </tfoot>
             </table>
