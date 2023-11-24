@@ -37,9 +37,10 @@ class HomeController extends Controller
         $pusat = 0;
         foreach ($dataCabang as $value) {
             $cabang = $value->nama_cabang;
-            $dataKaryawan = KaryawanModel::where('kd_entitas', $value->kd_cabang)->count();
-            if ($dataKaryawan > 0) {
-                $pusat++;
+            if ($value->kd_cabang === '000') {
+                $dataKaryawan = KaryawanModel::whereNotIn('kd_entitas', $dataCabang->pluck('kd_cabang'))->count();
+            } else {
+                $dataKaryawan = KaryawanModel::where('kd_entitas', $value->kd_cabang)->count();
             }
 
             $dataKaryawanByCabang = [
@@ -157,9 +158,15 @@ class HomeController extends Controller
         $dataCabang = CabangModel::orderBy('kd_cabang')->get();
         $karyawanByCabang = [];
         $pusat = 0;
+
         foreach ($dataCabang as $value) {
             $cabang = $value->nama_cabang;
-            $dataKaryawan = KaryawanModel::where('kd_entitas', $value->kd_cabang)->count();
+
+            if ($value->kd_cabang === '000') {
+                $dataKaryawan = KaryawanModel::whereNotIn('kd_entitas', $dataCabang->pluck('kd_cabang'))->count();
+            } else {
+                $dataKaryawan = KaryawanModel::where('kd_entitas', $value->kd_cabang)->count();
+            }
 
             $dataKaryawanByCabang = [
                 'cabang' => $cabang,
@@ -169,8 +176,9 @@ class HomeController extends Controller
 
             array_push($karyawanByCabang, $dataKaryawanByCabang);
         }
-        $data = $karyawanByCabang;
 
+
+        $data = $karyawanByCabang;
 
         return view('graph.per-cabang', compact('data'));
     }
