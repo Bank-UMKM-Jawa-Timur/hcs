@@ -87,15 +87,15 @@
                                                     'Penjabat Sementara' => 'Pjs. ',
                                                     default => '',
                                                 };
-                                                
+
                                                 if ($krywn->jabatan) {
                                                     $jabatan = $krywn->jabatan->nama_jabatan;
                                                 } else {
                                                     $jabatan = 'undifined';
                                                 }
-                                                
+
                                                 $ket = $krywn->ket_jabatan ? "({$krywn->ket_jabatan})" : '';
-                                                
+
                                                 if (isset($krywn->entitas->subDiv)) {
                                                     $entitas = $krywn->entitas->subDiv->nama_subdivisi;
                                                 } elseif (isset($krywn->entitas->div)) {
@@ -103,7 +103,7 @@
                                                 } else {
                                                     $entitas = '';
                                                 }
-                                                
+
                                                 if ($jabatan == 'Pemimpin Sub Divisi') {
                                                     $jabatan = 'PSD';
                                                 } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
