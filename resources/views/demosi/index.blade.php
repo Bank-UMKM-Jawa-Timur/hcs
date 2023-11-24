@@ -73,6 +73,10 @@
                                 <tbody>
                                     @php
                                         $i = 1;
+                                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                        $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                                        $number = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
+                                        $i = $page == 1 ? 1 : $number;
                                     @endphp
                                     @foreach ($data as $item)
                                         <tr>
