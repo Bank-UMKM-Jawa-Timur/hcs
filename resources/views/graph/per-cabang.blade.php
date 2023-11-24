@@ -5,8 +5,8 @@
         <div class="card-header">
             <div class="d-flex justify-content-between">
                 <div>
-                    <h5 class="card-title">Sub Divisi</h5>
-                    <p class="card-title"><a href="/">Dashboard </a> > <a href="{{route('per-devisi')}}">Divisi</a> > <a href="">Sub Divisi</a> </p>
+                    <h5 class="card-title">Per Devisi</h5>
+                    <p class="card-title"><a href="/">Dashboard </a> > <a href="">Per Cabang</a> </p>
                 </div>
             </div>
         </div>
@@ -15,47 +15,48 @@
         <div class="row">
             <div class="col-md-6 p-4">
                 <div class="table-responsive overflow-hidden content-center">
-                    <table class="table whitespace-nowrap" style="width: 100%">
+                    <table class="table whitespace-nowrap" id="table" style="width: 100%">
                         <thead class="text-primary">
                             <th>
                                 No
                             </th>
                             <th>
-                                Kode Devisi
+                                Kode Cabang
                             </th>
                             <th>
-                                Kode Sub Devisi
-                            </th>
-                            <th>
-                                Nama Sub Devisi
+                                Nama Cabang
                             </th>
                             <th>
                                 Total Karyawan
                             </th>
-                            {{-- <th>
+                            <th>
                                 Aksi
-                            </th> --}}
+                            </th>
                         </thead>
                         <tbody>
                             @forelse ($data as $item)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td>{{$item->kode}}</td>
-                                    <td>{{$item->kd_subdiv}}</td>
-                                    <td>{{$item->nama_subdivisi}}</td>
-                                    <td>{{$item->jumlah_karyawan}}</td>
+                                    <td>{{$item['kode_cabang']}}</td>
+                                    <td>{{$item['cabang']}}</td>
+                                    <td>{{$item['total_karyawan']}}</td>
+                                    @if ($item['kode_cabang'] == '000')
+                                        <td><a href="{{route('per-devisi')}}" class="btn-sm btn-info">Selengkapnya</a></td>
+                                    @else
+                                        <td><a href="list-karyawan-by-cabang/{{$item['kode_cabang']}}" class="btn-sm btn-info">Selengkapnya</a></td>
+                                    @endif
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center">Data sub devisi tidak ada.</td>
+                                    <td colspan="3">Data devisi belum ada.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div id="sub-devisi-graph" class="w-100"></div>
+            <div class="col-md-6 mt-5 pt-5">
+                <div id="divisi-graph" class="w-100"></div>
             </div>
         </div>
 
@@ -65,13 +66,15 @@
 @section('custom_script')
     <script>
         var dataKaryawan = @json($data);
+        console.log(dataKaryawan);
         var kode = [];
         var total = [];
         $.each(dataKaryawan, function(i, item){
-            kode.push(item.kode);
-            total.push(item.jumlah_karyawan);
-        })
-        var optionsSubDevisi = {
+            kode.push(item.cabang);
+            total.push(item.total_karyawan);
+         })
+
+        var optionsPerDevisi = {
             series: [{
                 name: 'Total Karyawan',
                 data: total
@@ -109,8 +112,8 @@
                 }
             }
         };
-        var subDevisiChart = new ApexCharts(document.querySelector("#sub-devisi-graph"), optionsSubDevisi);
-        subDevisiChart.render();
+        var perDevisiChart = new ApexCharts(document.querySelector("#divisi-graph"), optionsPerDevisi);
+        perDevisiChart.render();
 
         $(document).ready(function() {
         var table = $('#table').DataTable({

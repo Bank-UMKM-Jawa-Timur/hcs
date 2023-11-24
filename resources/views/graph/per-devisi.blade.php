@@ -5,11 +5,8 @@
         <div class="card-header">
             <div class="d-flex justify-content-between">
                 <div>
-                    <h5 class="card-title">Per Divisi</h5>
+                    <h5 class="card-title">Per Devisi</h5>
                     <p class="card-title"><a href="/">Dashboard </a> > <a href="">Per Divisi</a> </p>
-                </div>
-                <div>
-                    <button class="btn btn-info">Detail</button>
                 </div>
             </div>
         </div>
@@ -18,46 +15,43 @@
         <div class="row">
             <div class="col-md-6 p-4">
                 <div class="table-responsive overflow-hidden content-center">
-                    <table class="table whitespace-nowrap" id="table" style="width: 100%">
+                    <table class="table whitespace-nowrap" style="width: 100%">
                         <thead class="text-primary">
                             <th>
                                 No
                             </th>
                             <th>
-                                Kode Divisi
+                                Kode Devisi
                             </th>
                             <th>
-                                Nama Divisi
+                                Nama Devisi
+                            </th>
+                            <th>
+                                Total Karyawan
+                            </th>
+                            <th>
+                                Aksi
                             </th>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    1
-                                </td>
-                                <td>
-                                    CSR
-                                </td>
-                                <td>
-                                    Corporate Secretary
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    2
-                                </td>
-                                <td>
-                                    CSR
-                                </td>
-                                <td>
-                                    Corporate Secretary
-                                </td>
-                            </tr>
+                            @forelse ($datas as $item)
+                                <tr>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{$item->kode}}</td>
+                                    <td>{{$item->nama_divisi}}</td>
+                                    <td>{{$item->jumlah_karyawan}}</td>
+                                    <td><a href="sub-devisi/{{$item->kode}}" class="btn-sm btn-info">Selengkapnya</a></td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3">Data devisi belum ada.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mt-5 pt-5">
                 <div id="divisi-graph" class="w-100"></div>
             </div>
         </div>
@@ -67,10 +61,18 @@
 
 @section('custom_script')
     <script>
+        var dataKaryawan = @json($datas);
+        var kode = [];
+        var total = [];
+        $.each(dataKaryawan, function(i, item){
+            kode.push(item.kode);
+            total.push(item.jumlah_karyawan);
+         })
+
         var optionsPerDevisi = {
             series: [{
-                name: 'Net Profit',
-                data: [44]
+                name: 'Total Karyawan',
+                data: total
             }],
             chart: {
                 type: 'bar',
@@ -92,12 +94,7 @@
                 colors: ['transparent']
             },
             xaxis: {
-                categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-            },
-            yaxis: {
-                title: {
-                    text: '$ (thousands)'
-                }
+                categories: kode,
             },
             fill: {
                 opacity: 1
@@ -105,7 +102,7 @@
             tooltip: {
                 y: {
                     formatter: function(val) {
-                        return "$ " + val + " thousands"
+                        return val + " Karyawan"
                     }
                 }
             }

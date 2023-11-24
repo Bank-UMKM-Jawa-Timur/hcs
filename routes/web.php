@@ -7,6 +7,7 @@ use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
 use App\Http\Controllers\HistoryJabatanController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JaminanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
@@ -123,12 +124,12 @@ Route::get('/', function () {
 });
 
 Route::prefix('graph')->group(function () {
-    Route::get('/per-devisi', function(){
-        return view('graph.per-devisi');
-    });
-    Route::get('/sub-devisi', function(){
-        return view('graph.sub-devisi');
-    });
+    Route::get('/detail-per-cabang', [HomeController::class, 'perCabang'])->name('per-cabang');
+    Route::get('/list-karyawan-by-cabang/{kd_cabang}', [HomeController::class, 'listKaryawanByCabang'])->name('list-karyawan-by-cabang');
+    Route::get('/list-karyawan-by-sub-divisi/{sub_divisi}', [HomeController::class, 'listKaryawanBySubDivisi'])->name('list-karyawan-by-sub-divisi');
+    Route::get('/per-devisi', [HomeController::class, 'perDevisi'])->name('per-devisi');
+    Route::get('/sub-devisi/{kode}', [HomeController::class, 'subDevisi'])->name('sub-devisi');
+
     Route::get('/per-bagian', function(){
         return view('graph.per-bagian');
     });

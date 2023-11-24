@@ -14,10 +14,10 @@
 <div class="card-body">
     <div class="row mb-4">
         <div class="col-md-12">
-            <div >
-                <button class="btn btn-info">Detail</button>
+            <div class="d-flex justify-content-end">
+                <a href="{{route('per-cabang')}}" class="btn btn-info">Detail</a>
             </div>
-            <div id="cabang-graph" class="w-100"></div>
+            <div id="cabang-graph" class="w-100 mt-3"></div>
         </div>
     </div>
     <div class="row mb-4">
@@ -133,7 +133,9 @@
         var totalKaryawan = @json($totalKaryawan);
         var cabang = [];
         var total_karyawan = [];
+        var pusat = [];
          $.each(totalKaryawan, function(i, item){
+            pusat.push(item.pusat);
             cabang.push(item.cabang);
             total_karyawan.push(item.total_karyawan);
          })

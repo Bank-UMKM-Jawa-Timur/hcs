@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CabangModel;
+use App\Models\DivisiModel;
 use App\Models\GajiPerBulanModel;
 use App\Models\KaryawanModel;
 use App\Models\SpModel;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Service\EntityService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\DB;
+use PDO;
 
 class HomeController extends Controller
 {
@@ -30,14 +32,18 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $dataCabang = CabangModel::where('kd_cabang', '!=', '000')->orderBy('kd_cabang')->get();
-        // return $dataCabang;
+        $dataCabang = CabangModel::orderBy('kd_cabang')->get();
         $karyawanByCabang = [];
+        $pusat = 0;
         foreach ($dataCabang as $value) {
             $cabang = $value->nama_cabang;
             $dataKaryawan = KaryawanModel::where('kd_entitas', $value->kd_cabang)->count();
+            if ($dataKaryawan > 0) {
+                $pusat++;
+            }
 
             $dataKaryawanByCabang = [
+                'pusat' => $pusat,
                 'cabang' => $cabang,
                 'total_karyawan' => intval($dataKaryawan)
             ];
@@ -91,6 +97,7 @@ class HomeController extends Controller
             ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
             ->orderBy('tanggal_pengesahan', 'asc')
             ->whereMonth('tanggal_pengesahan', $bulan_ini)
+            ->whereYear('tanggal_pengesahan', $tahunSekarang)
             ->limit(5)
             ->get();
 
@@ -128,19 +135,117 @@ class HomeController extends Controller
             return $mutasiLama;
         });
 
-        $totalDataMutasi = DB::table('demosi_promosi_pangkat')->whereMonth('tanggal_pengesahan', $bulan_ini)->count();
+        $totalDataMutasi = DB::table('demosi_promosi_pangkat')->whereMonth('tanggal_pengesahan', $bulan_ini)->whereYear('tanggal_pengesahan', $tahunSekarang)->count();
 
         $dataSP = SpModel::with('karyawan')
+        ->whereYear('tanggal_sp', $tahunSekarang)
         ->whereMonth('tanggal_sp', $bulan_ini)
         ->orderBy('tanggal_sp', 'DESC')
         ->limit(5)
         ->get();
 
         $totalDataSP = SpModel::with('karyawan')
+        ->whereYear('tanggal_sp', $tahunSekarang)
         ->whereMonth('tanggal_sp', $bulan_ini)
         ->orderBy('tanggal_sp', 'DESC')
         ->count();
 
         return view('home', compact('totalKaryawan', 'dataGaji', 'gajiPerCabang', 'dataMutasi', 'totalDataMutasi', 'dataSP', 'totalDataSP'));
+    }
+
+    public function perCabang(){
+        $dataCabang = CabangModel::orderBy('kd_cabang')->get();
+        $karyawanByCabang = [];
+        $pusat = 0;
+        foreach ($dataCabang as $value) {
+            $cabang = $value->nama_cabang;
+            $dataKaryawan = KaryawanModel::where('kd_entitas', $value->kd_cabang)->count();
+
+            $dataKaryawanByCabang = [
+                'cabang' => $cabang,
+                'kode_cabang' => $value->kd_cabang,
+                'total_karyawan' => intval($dataKaryawan)
+            ];
+
+            array_push($karyawanByCabang, $dataKaryawanByCabang);
+        }
+        $data = $karyawanByCabang;
+
+
+        return view('graph.per-cabang', compact('data'));
+    }
+
+    public function listKaryawanByCabang($kode_cabang){
+        $cabang = CabangModel::where('kd_cabang', $kode_cabang)->first();
+
+        $data = KaryawanModel::where('kd_entitas', $kode_cabang)
+        ->select('mst_karyawan.nip', 'mst_karyawan.nik', 'mst_karyawan.nama_karyawan', 'c.nama_cabang as kantor', 'mst_karyawan.ket_jabatan as jabatan')
+        ->join('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
+        ->get();
+
+        return view('graph.list-karyawan', compact('data', 'cabang'));
+    }
+
+    public function listKaryawanBySubDivisi($sub_divisi){
+        $sub_div = $sub_divisi;
+
+        $data = KaryawanModel::where('kd_entitas', $sub_divisi)
+        ->select('mst_karyawan.nip', 'mst_karyawan.nik', 'mst_karyawan.nama_karyawan', 'c.nama_cabang as kantor', 'mst_karyawan.ket_jabatan as jabatan')
+        ->join('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
+        ->get();
+
+        return view('graph.list-karyawan-by-sub-divisi', compact('data', 'sub_div'));
+    }
+
+    public function perDevisi(){
+        // $datadev = DivisiModel::select('kd_divisi as kode', 'nama_divisi')->get();
+
+        // $data = [];
+        // foreach ($datadev as $key => $value) {
+        //     $kode = $value->kode;
+        //     $dataKaryawan = KaryawanModel::where('kd_entitas', $kode)->count();
+        //     $jumlahKaryawan = [
+        //         'kode' => $kode,
+        //         'nama_devisi' => $value->nama_divisi,
+        //         'jumlah_karyawan' => $dataKaryawan
+        //     ];
+
+        //     array_push($data, $jumlahKaryawan);
+        // }
+
+        // $datas = $data;
+
+        $datas = DB::table('mst_karyawan as k')
+        ->select(
+            'd.kd_divisi as kode',
+            'd.nama_divisi',
+            DB::raw('count(d.kd_divisi) as jumlah_karyawan')
+        )
+        ->join('mst_divisi as d', 'k.kd_entitas', '=', 'd.kd_divisi')
+        ->join('mst_sub_divisi as s', 'd.kd_divisi', '=', 's.kd_divisi')
+        ->groupBy('d.kd_divisi', 'd.nama_divisi')
+        ->get();
+
+        // return $datas;
+
+        return view('graph.per-devisi', compact('datas'));
+    }
+
+    public function subDevisi($kode){
+        $data = DB::table('mst_karyawan as k')
+        ->select(
+            'd.kd_divisi as kode',
+            'd.nama_divisi',
+            's.kd_subdiv',
+            's.nama_subdivisi',
+            DB::raw('count(s.kd_subdiv) as jumlah_karyawan')
+        )
+        ->join('mst_divisi as d', 'k.kd_entitas', '=', 'd.kd_divisi')
+        ->join('mst_sub_divisi as s', 'd.kd_divisi', '=', 's.kd_divisi')
+        ->where('d.kd_divisi', $kode)
+        ->groupBy('s.kd_subdiv')
+        ->get();
+
+        return view('graph.sub-devisi', compact('data'));
     }
 }
