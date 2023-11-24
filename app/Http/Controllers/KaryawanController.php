@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Utils\PaginationController;
 use App\Http\Requests\Karyawan\PenonaktifanRequest;
 use App\Imports\ImportDataKeluarga;
 use App\Imports\ImportKaryawan;
@@ -37,12 +38,17 @@ class KaryawanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+
         $karyawanRepo = new KaryawanRepository();
+        $search = $request->get('q');
+        $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
 
         return view('karyawan.index', [
-            'karyawan' => $karyawanRepo->getAllKaryawan()
+            'karyawan' => $data,
         ]);
     }
 
