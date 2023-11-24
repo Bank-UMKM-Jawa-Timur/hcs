@@ -70,7 +70,11 @@
                             </thead>
                             <tbody>
                                 @php
-                                    $i = 1;
+                                  $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                  $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                                  $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
+                                  $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
+                                  $i = $page == 1 ? 1 : $start;
                                 @endphp
                                 @foreach ($karyawan as $krywn)
                                     @if ($krywn->tanggal_penonaktifan === null)
@@ -147,10 +151,15 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="d-flex justify-content-end">
-                          @if ($karyawan instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                          {{ $karyawan->links('pagination::bootstrap-4') }}
-                          @endif
+                        <div class="d-flex justify-content-between">
+                          <div>
+                            Showing {{$start}} to {{$end}} of {{$karyawan->total()}} entries
+                          </div>
+                          <div>
+                            @if ($karyawan instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                            {{ $karyawan->links('pagination::bootstrap-4') }}
+                            @endif
+                          </div>
                         </div>
                     </form>
                 </div>
