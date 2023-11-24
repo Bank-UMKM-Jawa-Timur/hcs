@@ -84,11 +84,6 @@ $status = isset($status) ? $status : null;
     <div class="col-md-12">
         @if ($status != null)
         @php
-        function rupiah($angka)
-        {
-        $hasil_rupiah = number_format($angka, 0, ".", ",");
-        return $hasil_rupiah;
-        }
         $cek_data = DB::table('gaji_per_bulan')
         ->where('bulan', $bulan)
         ->where('tahun', $tahun)
@@ -110,7 +105,7 @@ $status = isset($status) ? $status : null;
                     <tr>
                         <td>-</td>
                         <td>Kantor Pusat</td>
-                        <td>{{ rupiah($dpp_pusat) }}</td>
+                        <td>{{ number_format($dpp_pusat, 0, ".", ",") }}</td>
                     </tr>
 
                     @php
@@ -191,7 +186,7 @@ $status = isset($status) ? $status : null;
 
                         array_push($total_dpp, $gj_cabang);
                         @endphp
-                        <td>{{ rupiah($gj_cabang) }}</td>
+                        <td>{{ number_format($gj_cabang, 0, ".", ",") }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -200,7 +195,7 @@ $status = isset($status) ? $status : null;
                         <td colspan="2" style="text-align: center">
                             Jumlah
                         </td>
-                        <td style="background-color: #FED049; text-align: center;">{{ rupiah(array_sum($total_dpp)) }}
+                        <td style="background-color: #FED049; text-align: center;">{{ number_format(array_sum($total_dpp), 0, ".", ",") }}
                         </td>
                     </tr>
                 </tfoot>
@@ -219,7 +214,7 @@ $status = isset($status) ? $status : null;
                         <tr>
                             <td>{{ $karyawan[$i]->nip }}</td>
                             <td>{{ $karyawan[$i]->nama_karyawan }}</td>
-                            <td>{{ rupiah($dpp[$i]) }}</td>
+                            <td>{{ isset($dpp[$i]) ? number_format($dpp[$i], 0, ".", ",") : '0' }}</td>
                         </tr>
                         @endif
                         @endfor
@@ -227,7 +222,7 @@ $status = isset($status) ? $status : null;
                 <tfoot style="font-weight: bold">
                     <tr>
                         <td colspan="2" style="text-align: center">Jumlah</td>
-                        <td style="background-color: #FED049; text-align: center;">{{ rupiah(array_sum($dpp)) }}</td>
+                        <td style="background-color: #FED049; text-align: center;">{{ number_format(array_sum($dpp), 0, ".", ",") }}</td>
                     </tr>
                 </tfoot>
             </table>
