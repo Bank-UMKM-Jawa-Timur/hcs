@@ -33,8 +33,6 @@ class KaryawanRepository
     public function getAllKaryawan($search, $limit=10, $page=1)
     {
         return $this->getDataKaryawan($search, $limit, $page);
-        // return $this->getKaryawanPusat($limit=10)
-        //     ->push(...$this->getKaryawanCabang($limit=10))->toArray();
     }
 
     public function getDataKaryawan($search, $limit=10, $page=1) {
@@ -66,9 +64,6 @@ class KaryawanRepository
         ->orderByRaw($this->orderRaw)
         ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
         ->paginate($limit);
-        // ->get();
-
-        // $karyawan = PaginationController::paginate($karyawan, $limit, $page);
 
         $this->addEntity($karyawan);
         return $karyawan;
