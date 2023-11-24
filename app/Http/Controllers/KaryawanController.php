@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Utils\PaginationController;
 use App\Http\Requests\Karyawan\PenonaktifanRequest;
 use App\Imports\ImportDataKeluarga;
 use App\Imports\ImportKaryawan;
@@ -24,6 +25,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
+use Yajra\DataTables\Facades\DataTables;
 
 class KaryawanController extends Controller
 {
@@ -36,13 +38,31 @@ class KaryawanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+
         $karyawanRepo = new KaryawanRepository();
+        $search = $request->get('q');
+        $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
 
         return view('karyawan.index', [
-            'karyawan' => $karyawanRepo->getAllKaryawan()
+            'karyawan' => $data,
         ]);
+    }
+
+    public function listKaryawan()
+    {
+        return view('karyawan.list');
+    }
+    
+    public function listKaryawanJson(Request $request) {
+        $karyawanRepo = new KaryawanRepository();
+        $data = $karyawanRepo->getAllKaryawan();
+        $data = DataTables::collection($data)->toJson();
+        // $data = DataTables::of($data)->make(true);
+        return $data;
     }
 
     public function importStatusIndex()

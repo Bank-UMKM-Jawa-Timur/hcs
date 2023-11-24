@@ -131,6 +131,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
     Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
     Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
+    Route::get('list-karyawan', [\App\Http\Controllers\KaryawanController::class, 'listKaryawan']);
     Route::resource('/mutasi', \App\Http\Controllers\MutasiController::class);
     Route::resource('/umur', \App\Http\Controllers\UmurController::class);
     Route::resource('/demosi', DemosiController::class);

@@ -197,7 +197,7 @@ return [
         Spatie\Backup\BackupServiceProvider::class,
         Irsyadulibad\LaravelActivehelper\ActiveHelperServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-
+        Yajra\DataTables\DataTablesServiceProvider::class,
     ],
 
     /*
