@@ -36,12 +36,22 @@ class KaryawanRepository
 
     public function getKaryawanPusat(): Collection
     {
-        $karyawan = KaryawanModel::with('jabatan')
+        $karyawan = KaryawanModel::select(
+                'mst_karyawan.nip',
+                'mst_karyawan.nik',
+                'mst_karyawan.nama_karyawan',
+                'mst_karyawan.kd_bagian',
+                'mst_karyawan.kd_jabatan',
+                'mst_karyawan.kd_entitas',
+            )
+            ->with('jabatan')
             ->with('bagian')
             ->whereNull('tanggal_penonaktifan')
             ->whereNotIn('kd_entitas', $this->cabang)
             ->orWhere('kd_entitas', null)
             ->orderByRaw($this->orderRaw)
+            ->limit(200)
+            ->offset(300)
             ->get();
 
         $this->addEntity($karyawan);
@@ -50,11 +60,21 @@ class KaryawanRepository
 
     public function getKaryawanCabang(): Collection
     {
-        $karyawan = KaryawanModel::with('jabatan')
+        $karyawan = KaryawanModel::select(
+                'mst_karyawan.nip',
+                'mst_karyawan.nik',
+                'mst_karyawan.nama_karyawan',
+                'mst_karyawan.kd_bagian',
+                'mst_karyawan.kd_jabatan',
+                'mst_karyawan.kd_entitas',
+            )
+            ->with('jabatan')
             ->with('bagian')
             ->whereNull('tanggal_penonaktifan')
             ->whereIn('kd_entitas', $this->cabang)
             ->orderByRaw($this->orderRaw)
+            ->limit(200)
+            ->offset(300)
             ->get();
 
         $this->addEntity($karyawan);

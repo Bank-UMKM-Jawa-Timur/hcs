@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
+use Yajra\DataTables\Facades\DataTables;
 
 class KaryawanController extends Controller
 {
@@ -43,6 +44,19 @@ class KaryawanController extends Controller
         return view('karyawan.index', [
             'karyawan' => $karyawanRepo->getAllKaryawan()
         ]);
+    }
+
+    public function listKaryawan()
+    {
+        return view('karyawan.list');
+    }
+    
+    public function listKaryawanJson(Request $request) {
+        $karyawanRepo = new KaryawanRepository();
+        $data = $karyawanRepo->getAllKaryawan();
+        $data = DataTables::collection($data)->toJson();
+        // $data = DataTables::of($data)->make(true);
+        return $data;
     }
 
     public function importStatusIndex()
