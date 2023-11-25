@@ -27,7 +27,7 @@ class MutasiController extends Controller
             'success' => false,
             'message' => 'Data karyawan tidak ditemukan',
         ]);
-        
+
         if(isset($officer->kd_bagian)){
             if($officer->kd_entitas != null && !in_array($officer->kd_entitas, $cbg)){
                 $entity = DB::table('mst_bagian')
@@ -58,8 +58,10 @@ class MutasiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $search = $request->get('q');
         $data = DB::table('demosi_promosi_pangkat')
             ->where('keterangan', 'Mutasi')
             ->select(
@@ -72,7 +74,16 @@ class MutasiController extends Controller
             ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
             ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
             ->orderBy('tanggal_pengesahan', 'asc')
-            ->get();
+            ->when($search, function ($query) use ($search) {
+                $query->where('karyawan.nama_karyawan', 'like', "%$search%")
+                    ->orWhere('demosi_promosi_pangkat.nip', 'like', "%$search%")
+                    ->orWhere('demosi_promosi_pangkat.kd_jabatan_lama', 'like', "%$search%")
+                    ->orWhere('demosi_promosi_pangkat.kd_jabatan_baru', 'like', "%$search%")
+                    ->orWhere('demosi_promosi_pangkat.status_jabatan_lama', 'like', "%$search%")
+                    ->orWhere('demosi_promosi_pangkat.status_jabatan_baru', 'like', "%$search%");
+            })
+            // ->get();
+            ->paginate($limit);
 
         $data->map(function($mutasi) {
             $entity = EntityService::getEntity($mutasi->kd_entitas_baru);
@@ -107,6 +118,7 @@ class MutasiController extends Controller
 
             return $mutasiLama;
         });
+
 
         return view('mutasi.index', compact('data'));
     }
@@ -145,7 +157,7 @@ class MutasiController extends Controller
                     $tj = DB::table('mst_tunjangan')
                         ->where('id', $request->tunjangan[$key])
                         ->first('nama_tunjangan');
-        
+
                     if($request->id_tk[$key] != 0){
                         DB::table('history_penyesuaian')
                             ->insert([
@@ -184,14 +196,14 @@ class MutasiController extends Controller
                 }
             }
         }
-        
+
         $filename = null;
         if($request->file_sk != null){
             $file = $request->file_sk;
             $folderPath = public_path() . '/upload/pergerakan_karir/';
             $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
             $path = realpath($folderPath);
-    
+
             if(!($path !== true AND is_dir($path))){
                 mkdir($folderPath, 0755, true);
             }
