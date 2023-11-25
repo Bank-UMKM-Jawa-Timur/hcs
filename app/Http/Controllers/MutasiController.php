@@ -119,6 +119,7 @@ class MutasiController extends Controller
             return $mutasiLama;
         });
 
+
         return view('mutasi.index', compact('data'));
     }
 
