@@ -2,9 +2,6 @@
 @include('vendor.select2')
 
 @section('content')
-@php
-    $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
-@endphp
 <div class="card-header">
   <div class="card-header">
       <h5 class="card-title">Pengganti Biaya Kesehatan</h5>
