@@ -27,7 +27,8 @@ Coded by www.creative-tim.com
     <!--     Fonts and icons     -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    {{-- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"> --}}
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <!-- CSS Files -->
@@ -81,7 +82,7 @@ Coded by www.creative-tim.com
                         <img src="{{ asset('style/assets/img/logo.png') }}">
                     </div>
                 </a>
-                <a href="" class="simple-text logo-normal" style="font-size: 13px;">
+                <a href="" class="simple-text logo-normal font-weight-bold" style="font-size: 13px;">
                     Human Capital System
                 </a>
             </div>
@@ -220,7 +221,7 @@ Coded by www.creative-tim.com
                         </li>
                         {{-- Menu Penghasilan --}}
                         <li
-                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }}">
+                            class="@active('pajak_penghasilan')">
                             <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
@@ -228,13 +229,6 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
                                 id="submenu2">
-                                <li style="margin-top: -15px" class="@active('gaji_perbulan')">
-                                    <a href="{{ route('gaji_perbulan.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Proses Penghasilan</p>
-                                        <p></p>
-                                    </a>
-                                </li>
                                 <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
                                     <a href="{{ route('pajak_penghasilan.index') }}">
                                         <i class="nc-icon nc-scissors"></i>
@@ -336,14 +330,21 @@ Coded by www.creative-tim.com
                             </ul>
                         </li>
                         {{-- Menu Gaji --}}
-                        <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
+                        <li class="@active('gaji.*, slipIndex.*, gaji_perbulan.*')">
                             <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
                                 Gaji
                             </a>
-                            <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
+                            <ul class="sub-menu list-unstyled flex-column collapse pl-2  @active('gaji.*, slipIndex.*, gaji_perbulan.*', 'show')"
                                 id="submenu5">
+                                <li style="margin-top: -15px" class="@active('gaji_perbulan.*')">
+                                    <a href="{{ route('gaji_perbulan.index') }}">
+                                        <i class="nc-icon nc-money-coins"></i>
+                                        <p>Proses Penghasilan</p>
+                                        <p></p>
+                                    </a>
+                                </li>
                                 <li style="margin-top: -15px"
                                     class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                                     <a href="{{ route('gaji.index') }}">
@@ -524,7 +525,7 @@ Coded by www.creative-tim.com
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="nc-icon nc-single-02"></i>
                                     {{-- @if (session('status')) --}}
-                                    <p>Halo, {{ auth()->user()->name }}</p>
+                                    <p>Welcome, {{ auth()->user()->name }}</p>
                                     <p></p>
                                     {{-- @endif --}}
                                 </a>
@@ -600,7 +601,7 @@ Coded by www.creative-tim.com
     <!--  Notifications Plugin    -->
     <script src="{{ asset('style/assets/js/plugins/bootstrap-notify.js') }}"></script>
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="{{ asset('style/assets/js/paper-dashboard.min.js') }}" type="text/javascript"></script>
+    {{-- <script src="{{ asset('style/assets/js/paper-dashboard.min.js') }}" type="text/javascript"></script> --}}
     <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
     <script src="{{ asset('style/assets/demo/demo.js') }}"></script>
     <!-- Jam Realtime -->
@@ -608,11 +609,12 @@ Coded by www.creative-tim.com
     <script src="{{ asset('style/assets/js/Datatables.js') }}"></script>
     <script src="{{ asset('style/assets/js/ReorderWithResize.js') }}"></script>
     <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('vendor/apexchart/apexcharts.js') }}"></script>
     <script>
-        $(document).ready(function() {
-            demo.initChartsPages();
-        });
-
+        // $(document).ready(function() {
+        //     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
+        //     demo.initChartsPages();
+        // });
         var url = window.location;
 
         // for sidebar menu entirely but not cover treeview
@@ -668,7 +670,6 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
-    @stack('script')
 </body>
 
 </html>
