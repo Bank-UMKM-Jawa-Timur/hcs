@@ -220,13 +220,13 @@ Coded by www.creative-tim.com
                         </li>
                         {{-- Menu Penghasilan --}}
                         <li
-                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }}">
+                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
                                 Penghasilan
                             </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
+                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
                                 id="submenu2">
                                 <li style="margin-top: -15px" class="@active('gaji_perbulan')">
                                     <a href="{{ route('gaji_perbulan.index') }}">
@@ -234,6 +234,20 @@ Coded by www.creative-tim.com
                                         <p>Proses Penghasilan</p>
                                         <p></p>
                                     </a>
+                                </li>
+                                <li class="dropdown @active('pengganti-biaya-kesehatan.index','uang-duka.index')" style="margin-top: -15px">
+                                    <a data-toggle="dropdown" aria-expanded="false">
+                                        <i class="nc-icon nc-money-coins"></i>
+                                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Import Tidak Teratur
+                                        </p>
+                                        <p></p>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                                        <a class="dropdown-item @active('pengganti-biaya-kesehatan.index')"
+                                            href="{{ route('pengganti-biaya-kesehatan.index') }}">Pengganti Biaya Kesehatan</a>
+                                        <a class="dropdown-item @active('uang-duka.index')"
+                                            href="{{ route('uang-duka.index') }}">Uang Duka</a>
+                                    </div>
                                 </li>
                                 <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
                                     <a href="{{ route('pajak_penghasilan.index') }}">
