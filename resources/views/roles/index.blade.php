@@ -71,18 +71,12 @@
                                         <td style="min-width: 130px">
                                             <div class="container">
                                                 <div class="row">
-                                                    <a href="{{ route('role.edit', $item_roles->id) }}">
-                                                        <button class="btn btn-outline-warning p-1 mr-2"
-                                                            style="min-width: 60px">
-                                                            Edit
-                                                        </button>
+                                                    <a href="{{ route('role.edit', $item_roles->id) }}" class="btn btn-outline-warning p-1 mr-2">
+                                                        Edit
                                                     </a>
 
-                                                    <a href="{{ route('role.show', $item_roles->id) }}">
-                                                        <button class="btn btn-outline-info p-1"
-                                                            style="min-width: 60px">
-                                                            Detail
-                                                        </button>
+                                                    <a href="{{ route('role.show', $item_roles->id) }}" class="btn btn-outline-info p-1">
+                                                        Detail
                                                     </a>
                                                 </div>
                                             </div>
