@@ -5,30 +5,65 @@
     <div class="card-header">
         <div class="d-flex justify-content-between">
             <div>
-                <h5 class="card-title">Dashboard</h5>
+                <h5 class="card-title font-weight-bold">Dashboard</h5>
                 <p class="card-title"><a href="/">Dashboard </a></p>
             </div>
         </div>
     </div>
 </div>
 <div class="card-body">
+    <div class="d-flex justify-content-end">
+        <a href="{{ route('per-cabang') }}" class="btn btn-info">Detail</a>
+    </div>
     <div class="row mb-4">
         <div class="col-md-12">
-            <div class="d-flex justify-content-end">
-                <a href="{{route('per-cabang')}}" class="btn btn-info">Detail</a>
+            <div class="card"  style="border: 1px solid #dcdcdc">
+                <div class="card-body">
+                <div id="cabang-graph" class="w-100 mt-3"></div >
+                </div>
             </div>
-            <div id="cabang-graph" class="w-100 mt-3"></div>
         </div>
     </div>
     <div class="row mb-4">
         <div class="col-md-6">
-            <div id="gaji-graph" class="w-100"></div>
+          <div class="card" style="border: 1px solid #dcdcdc">
+            <div class="card-body">
+                <div id="gaji-graph" class="w-100"></div>
+            </div>
+          </div>
         </div>
         <div class="col-md-6">
-            <div id="percabang-graph" class="w-100"></div>
+            <div class="card"  style="border: 1px solid #dcdcdc">
+                <div class="card-header">
+                    <p class="card-title h6 font-weight-bold text-muted text-capitalize">Perkiraan Gaji Per Bulan</p>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex">
+                        <h2 class="font-weight-bold" style="letter-spacing: -2px;">Rp.2.55 0.000</h2>
+                    </div>
+                    <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><p class="font-weight-bold">Gaji Lembur</p></td>
+                            <td><p class="text-success">Rp. 250.000 +</p></td>
+                        </tr>
+                        <tr>
+                            <td><p class="font-weight-bold">Vitamin</p></td>
+                            <td><p class="text-success">Rp 300.000 +</p></td>
+                        </tr>
+                        {{-- <tr>
+                            <td><p class="font-weight-bold">Total</p></td>
+                            <td><p class="">Rp 2.200.000 </p></td>
+                        </tr> --}}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            {{-- <div id="percabang-graph" class="w-100"></div> --}}
         </div>
     </div>
-    <div class="p-4">
+    {{-- <div class="p-4">
         <div class="mb-2 p-2">
             <div class="card-title mb-2 {{$totalDataMutasi > 5 ? 'd-flex justify-content-between' : ''}}">
                 <h4 class="font-weight-bold">
@@ -124,7 +159,7 @@
             </div>
         </div>
 
-    </div>
+    </div> --}}
 </div>
 @endsection
 
@@ -134,20 +169,21 @@
         var cabang = [];
         var total_karyawan = [];
         var pusat = [];
-         $.each(totalKaryawan, function(i, item){
+        $.each(totalKaryawan, function(i, item){
             pusat.push(item.pusat);
             cabang.push(item.cabang);
             total_karyawan.push(item.total_karyawan);
-         })
+        })
 
         var options = {
-          series: [{
+        series: [{
           name: 'Total',
           data: total_karyawan
         }],
-          chart: {
+        chart: {
           type: 'bar',
-          height: 350
+          height: 350,
+          fontFamily: 'Plus Jakarta Sans, sans-serif'
         },
         title: {
             text: 'Total Karyawan Per Cabang',
@@ -160,6 +196,7 @@
             endingShape: 'rounded'
           },
         },
+        colors: ['#00E396'],
         dataLabels: {
           enabled: false
         },
@@ -172,7 +209,7 @@
           categories: cabang,
         },
         fill: {
-          opacity: 1
+        opacity: 1
         },
         };
 
@@ -194,21 +231,22 @@
                 data: gaji_pokok
             }],
             chart: {
-            height: 350,
-            type: 'line',
-            zoom: {
-                enabled: false
-            }
+                height: 350,
+                type: 'line',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                zoom: {
+                    enabled: false
+                }
             },
             dataLabels: {
             enabled: false
             },
             stroke: {
-            curve: 'straight'
+                curve: 'straight'
             },
             title: {
-            text: 'Total Gaji Karyawan Per Cabang',
-            align: 'left'
+                text: 'Total Gaji Karyawan Per Cabang',
+                align: 'left'
             },
             grid: {
             row: {
@@ -217,7 +255,7 @@
             },
             },
             xaxis: {
-            categories: cabang,
+                categories: cabang,
             }
         };
 
@@ -243,21 +281,22 @@
                 data: total_salary
             }],
             chart: {
-            height: 350,
-            type: 'line',
+                height: 350,
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                type: 'area',
             zoom: {
                 enabled: false
             }
             },
             dataLabels: {
-            enabled: false
+                enabled: false
             },
             stroke: {
-            curve: 'straight'
+                curve: 'straight'
             },
             title: {
-            text: 'Total Gaji Karyawan Tahun ' + tahun,
-            align: 'left'
+                text: 'Total Gaji Karyawan Tahun ' + tahun,
+                align: 'left'
             },
             grid: {
             row: {
