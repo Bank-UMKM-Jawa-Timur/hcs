@@ -45,8 +45,7 @@ class KaryawanController extends Controller
 
         $karyawanRepo = new KaryawanRepository();
         $search = $request->get('q');
-        $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
-
+        $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);  
         return view('karyawan.index', [
             'karyawan' => $data,
         ]);
@@ -56,7 +55,7 @@ class KaryawanController extends Controller
     {
         return view('karyawan.list');
     }
-    
+
     public function listKaryawanJson(Request $request) {
         $karyawanRepo = new KaryawanRepository();
         $data = $karyawanRepo->getAllKaryawan();
@@ -1058,10 +1057,10 @@ class KaryawanController extends Controller
         // PHP program to calculate age in years
         // Define the date of birth
         $dateOfBirth = '14-02-2022';
-        
+
         // Get today's date
         $now = date("Y-m-d");
-        
+
         // Calculate the time difference between the two dates
         $diff = date_diff(date_create($dateOfBirth), date_create($now));
         $year = $diff->format('%y');
@@ -1069,7 +1068,7 @@ class KaryawanController extends Controller
         if ($year > 0) {
             $month += ($year * 12);
         }
-        
+
         return $month;
     }
 }
