@@ -9,9 +9,11 @@
     <div class="card-body">
         <div class="col">
             <div class="row">
+                @can('setting - master - role - create role')
                 <a class="mb-3" href="{{ route('role.create') }}">
                     <button class="btn btn-primary">tambah role</button>
                 </a>
+                @endcan
 
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
@@ -71,13 +73,16 @@
                                         <td style="min-width: 130px">
                                             <div class="container">
                                                 <div class="row">
+                                                    @can('setting - master - role - edit role')
                                                     <a href="{{ route('role.edit', $item_roles->id) }}" class="btn btn-outline-warning p-1 mr-2">
                                                         Edit
                                                     </a>
-
+                                                    @endcan
+                                                    @can('setting - master - role - detail role')
                                                     <a href="{{ route('role.show', $item_roles->id) }}" class="btn btn-outline-info p-1">
                                                         Detail
                                                     </a>
+                                                    @endcan
                                                 </div>
                                             </div>
 
