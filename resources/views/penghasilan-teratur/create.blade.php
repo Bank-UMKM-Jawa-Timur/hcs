@@ -23,7 +23,7 @@
                             <option value="{{$item->id}}">{{$item->nama_tunjangan}}</option>
                         @endforeach
                     </select>
-                    <p class="text-danger d-none" id="error-penghasilan"></p>
+                    <p class="text-danger d-none mt-2" id="error-penghasilan"></p>
                 </div>
             </div>
             <div class="col-lg-5">
@@ -33,7 +33,7 @@
                         <input type="file" name="upload_excel" class="custom-file-input" id="file-penghasilan" accept=".xlsx, .xls" onchange="updateFileName()">
                         <label class="custom-file-label overflow-hidden" for="file-penghasilan" id="file-label">Choose Excel file...</label>
                     </div>
-                    <p class="text-danger d-none" id="error-file">File belum di pilih.</p>
+                    <p class="text-danger d-none mt-2" id="error-file">File belum di pilih.</p>
                 </div>
             </div>
             <div class="col-lg-2 mt-2">
@@ -110,7 +110,7 @@
             var value = $("#penghasilan").val()
             var hari_ini = new Date();
             // var tanggal = hari_ini.getDate();
-            var tanggal = 5;
+            var tanggal = 6;
             var message = '';
             var nmbr = 0;
 
@@ -125,6 +125,12 @@
                         nmbr++
                     } else if (value == 13) {
                         var message = 'Uang vitamin hanya bisa di pilih tanggal 1 sampai 5'
+                        nmbr++
+                    } else if (value == 11) {
+                        var message = 'Uang Transport hanya bisa di pilih saat tanggal 25'
+                        nmbr++
+                    } else if (value == 14) {
+                        var message = 'Uang Makan hanya bisa di pilih saat tanggal 25'
                         nmbr++
                     }
                     // alertWarning(message)
@@ -141,6 +147,8 @@
                     } else if (value == 14) {
                         var message = 'Uang makan hanya bisa di pilih saat tanggal 25'
                         nmbr++
+                    } else if (value == 12) {
+                        var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
                     }
 
                     if (tanggal > 5 && value == 13) {
@@ -154,27 +162,29 @@
                 }
             } else if(value == 13){
                 if (tanggal >= 1 && tanggal <= 5 ) {
-                    if (value == 12 || value == 13) {
-                        var message = "success"
-                    } else {
-                        if (value == 11) {
-                            var message = 'Uang transport hanya bisa di pilih saat tanggal 25'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Uang makan hanya bisa di pilih saat tanggal 25'
-                            nmbr++
-                        }
-                        // alertWarning(message)
-                        $('#error-penghasilan').removeClass('d-none').html(message)
-                        $("#penghasilan").val("")
+                    var message = "success"
+                }
+                else {
+                    if (value == 11) {
+                        var message = 'Uang transport hanya bisa di pilih saat tanggal 25'
+                        nmbr++
+                    } else if (value == 12) {
+                        var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
+                        nmbr++
+                    } else if (value == 13) {
+                        var message = 'Uang vitamin hanya bisa di pilih tanggal 1 sampai 5'
+                        nmbr++
+                    } else if (value == 14) {
+                        var message = 'Uang makan hanya bisa di pilih saat tanggal 25'
+                        nmbr++
                     }
+                    // alertWarning(message)
+                    $('#error-penghasilan').removeClass('d-none').html(message)
+                    $("#penghasilan").val("")
                 }
             }
 
-            if (nmbr > 0){
-                $('#error-penghasilan').removeClass('d-none').html(message)
-                $("#penghasilan").val("")
-            }
+            console.log(message);
         })
 
         $('#filter').on('click', function(e) {
@@ -248,44 +258,56 @@
             return number;
         }
 
-        function showToTable(data){
+        function showToTable(data) {
             var penghasilan = $('#penghasilan').val();
             var total_data = data.length;
-            // $('#span_info_save').html('Informasi! Geser layar ke bawah untuk menyimpan data.')
-            // $('#span_total_data').html(`Total data : ${total_data}`)
-            $('#btn-simpan').removeClass('d-none')
-            $('#hasil-filter').removeClass('d-none')
+            $('#btn-simpan').removeClass('d-none');
+            $('#hasil-filter').removeClass('d-none');
 
             for (let i = 0; i < data.length; i++) {
-                var row = data[i]
-                var nominal = formatNumber(row[3].v);
-                var new_tr = `
-                    <tr>
-                        <td><span id="number[]">${(i+1)}</span></td>
-                        <td>
-                            <input type="hidden" name="number[]" id="number[]" class="form-control" value="${(i+1)}">
-                            <input type="hidden" name="penghasilan[]" id="penghasilan[]" class="form-control" value="${penghasilan}">
-                            <input type="text" name="nip[]" id="nip[]" class="form-control" readonly value="${row[1].v}">
-                        </td>
-                        <td>
-                            <input type="text" name="nama[]" id="nama[]" class="form-control" readonly value="${row[1].v}">
-                        </td>
-                        <td>
-                            <input type="text" name="nominal[]" id="nominal[]" class="form-control only-number" readonly value="${nominal}">
-                        </td>
-                        <td class="m-2">
-                            <button type="button" class="btn btn-sm btn-warning btn-edit">
-                                edit
-                            </button>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
-                                -
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                $('#t_body').append(new_tr);
+                var row = data[i];
+                (function (row, i) {
+                    $.ajax({
+                        url: "{{ url('penghasilan/get-karyawan-by-entitas') }}/" + row[1].v,
+                        type: "GET",
+                        accept: "Application/json",
+                        success: function (response) {
+                            var nominal = formatNumber(row[3].v);
+                            var nama = response.data.nama_karyawan;
+                            console.log(nama);
+                            var new_tr = `
+                                <tr>
+                                    <td><span id="number[]">${(i + 1)}</span></td>
+                                    <td>
+                                        <input type="hidden" name="number[]" id="number[]" class="form-control" value="${(i + 1)}">
+                                        <input type="hidden" name="penghasilan[]" id="penghasilan[]" class="form-control" value="${penghasilan}">
+                                        <input type="text" name="nip[]" id="nip[]" class="form-control" readonly value="${row[1].v}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="nama[]" id="nama[]" class="form-control" readonly value="${nama}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="nominal[]" id="nominal[]" class="form-control only-number" readonly value="${nominal}">
+                                    </td>
+                                    <td class="m-2">
+                                        <button type="button" class="btn btn-sm btn-warning btn-edit">
+                                            edit
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
+                                            -
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                            $('#t_body').append(new_tr);
+                        },
+                        error: function (response) {
+                            console.log(response);
+                        }
+                    });
+                })(row, i);
             }
         }
 
