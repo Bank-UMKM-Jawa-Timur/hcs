@@ -23,7 +23,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($dataPermissions as $item)
+                                @foreach ($selected as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td> {{ ucwords(str_replace('-','/',$item->name)) }}</td>

@@ -38,6 +38,10 @@ class RolesRepository
         foreach($selected as $item){
             array_push($arraySelected, $item->permission_id);
         }
+        $this->param['selected'] = DB::table('role_has_permissions')
+                                ->where('role_id',$id)
+                                ->join('permissions', 'role_has_permissions.permission_id', 'permissions.id')
+                                ->get();
         $this->param['dataPermissionsSelected'] = $arraySelected;
         return $this->param;
     }
