@@ -234,8 +234,11 @@
         })
 
         $("#table_item").on('click', '.btn-edit', function () {
-            $(this).closest('tr').removeAttr("readonly");
-        })
+            var $row = $(this).closest('tr');
+            $row.find('input[name^="nip"], input[name^="nama"], input[name^="nominal"]').prop("readonly", function(_, value) {
+                return !value;
+            });
+        });
 
         function formatNumber(number) {
             number = number.toString();
