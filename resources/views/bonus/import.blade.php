@@ -105,6 +105,7 @@
                                 if (res != 'null') {
                                     $('#table_item tbody tr:eq(' + index + ') span').removeClass('hidden');
                                 } else {
+                                    console.log('agaag');
                                     $('#table_item tbody tr:eq(' + index + ') span').addClass('hidden')
 
                                 }

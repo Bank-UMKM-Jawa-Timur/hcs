@@ -281,16 +281,14 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-<<<<<<< Updated upstream
                                 @endcan
-=======
+
                                 <li class="@active('penghasilan-lainnya') {{ request()->is('bonus', 'bonus/*') ? 'active' : '' }}">
                                     <a href="{{ route('bonus.index') }}" style="font-weight: bolder">
                                         <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
                                         <p>Import Bonus</p>
                                     </a>
                                 </li>
->>>>>>> Stashed changes
                             </ul>
                         </li>
 
@@ -427,45 +425,7 @@ Coded by www.creative-tim.com
                             </ul>
                         </li>
                         @endcan
-                        {{-- Menu Bonus  --}}
 
-                        {{-- <li class="@active('penghasilan-lainnya') {{ request()->is('bonus', 'bonus/*') ? 'active' : '' }}">
-                            <a class="nav-link" href="#bonus" data-toggle="collapse" data-target="#bonus"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
-                                Bonus
-                            </a>
-                            <ul class="sub-menu {{ request()->is('bonus', 'bonus/*','penghasilan-lainnya/') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('penghasilan-lainnya', 'index')"
-                                id="bonus">
-                                <li style="margin-top: -15px"
-                                    class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                                    <a href="{{ route('gaji.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Jaspro DanKes</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('slipIndex')">
-                                    <a href="{{ route('slipIndex') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>THR</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('penghasilan-lainnya')">
-                                    <a href="{{ route('penghasilan-lainnya.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Penghasilan Lainnya</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                            </ul>
-<<<<<<< Updated upstream
-                        </li>
-                        
-=======
-                        </li> --}}
->>>>>>> Stashed changes
                         {{-- Menu Migrasi Data --}}
                         @can('migrasi')
                         <li class="@active('migrasi')">
@@ -815,6 +775,7 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
+    @stack('script')
 </body>
 
 </html>
