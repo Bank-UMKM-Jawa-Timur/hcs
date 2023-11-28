@@ -193,6 +193,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/dpp', [JaminanController::class, 'getDpp'])->name('get-dpp');
     Route::post('penghasilan/get-gaji', [PenghasilanTidakTeraturController::class, 'filter'])->name('get-penghasilan');
     Route::get('/getPenghasilan', [PenghasilanTidakTeraturController::class, 'getPenghasilan'])->name('getPenghasilanResult');
+    Route::get('/list-penghasilan-tidak-teratur', [PenghasilanTidakTeraturController::class, 'lists'])->name('list-penghasilan-tidak-teratur');
 
     // Klasifikasi Data Karyawan
     Route::post('/klasifikasi_data', [App\Http\Controllers\KlasifikasiController::class, 'klasifikasi_data'])->name('klasifikasi-data');

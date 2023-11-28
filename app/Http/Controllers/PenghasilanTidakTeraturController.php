@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\PenghasilanImport;
 use App\Models\PPHModel;
+use App\Repository\PenghasilanTidakTeraturRepository;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -359,6 +360,17 @@ class PenghasilanTidakTeraturController extends Controller
     public function index()
     {
         return view('penghasilan.index');
+    }
+
+    public function lists(Request $request)
+    {   
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->get('q');
+
+        $penghasilanRepo = new PenghasilanTidakTeraturRepository();
+        $data = $penghasilanRepo->getAllPenghasilan($search, $limit, $page);
+        return view('penghasilan.index-list', compact('data'));
     }
 
     /**
