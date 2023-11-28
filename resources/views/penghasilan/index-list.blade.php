@@ -13,9 +13,11 @@
 
 <div class="card-body">
     <div class="row">
-        <a class="mb-3" href="{{ route('pajak_penghasilan.create') }}">
-            <button class="btn btn-primary">tambah karyawan</button>
-        </a>
+        <div class="col">
+            <a class="mb-3" href="{{ route('pajak_penghasilan.create') }}">
+                <button class="btn btn-primary">tambah penghasilan</button>
+            </a>
+        </div>
         <div class="col-lg-12">
             <div class="table-responsive overflow-hidden content-center">
                 <form action="" id="form" method="get">
