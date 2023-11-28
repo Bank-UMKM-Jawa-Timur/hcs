@@ -18,7 +18,7 @@ class PenghasilanTidakTeraturRepository
             'bulan' => $data['bulan'],
             'tahun' => $data['tahun'],
             'nominal' => str_replace('.', '', $data['nominal']),
-            'keterangan' => $data['keterangan'],
+            'keterangan' => $data['keterangan'] ?? null,
             'created_at' => now()
         ]);
     }

@@ -247,6 +247,8 @@ Coded by www.creative-tim.com
                                             href="{{ route('pengganti-biaya-kesehatan.index') }}">Pengganti Biaya Kesehatan</a>
                                         <a class="dropdown-item @active('uang-duka.index')"
                                             href="{{ route('uang-duka.index') }}">Uang Duka</a>
+                                        <a class="dropdown-item @active('lembur.index')"
+                                            href="{{ route('lembur.index') }}">Uang Lembur</a>
                                     </div>
                                 </li>
                                 <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
@@ -256,8 +258,8 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
-                                    <a href="{{ route('pajak_penghasilan.create') }}">
+                                <li style="margin-top: -15px" class="@active('list-penghasilan-tidak-teratur')">
+                                    <a href="{{ route('list-penghasilan-tidak-teratur') }}">
                                         <i class="nc-icon nc-ruler-pencil"></i>
                                         <p>Tambah Penghasilan</p>
                                         <p></p>

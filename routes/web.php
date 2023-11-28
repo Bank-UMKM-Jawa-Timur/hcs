@@ -16,6 +16,7 @@ use App\Http\Controllers\LaporanPergerakanKarir\LaporanDemosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanMutasiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanPromosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanPenonaktifanController;
+use App\Http\Controllers\LemburController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\MstPenambahanBrutoController;
 use App\Http\Controllers\MstPenguranganBrutoController;
@@ -151,6 +152,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/ptkp', PtkpController::class);
     Route::resource('/penambahan-bruto', MstPenambahanBrutoController::class);
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
+    Route::resource('/lembur', LemburController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
 
