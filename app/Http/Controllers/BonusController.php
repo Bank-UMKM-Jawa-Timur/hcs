@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class PenghasilanLainnyaController extends Controller
+class BonusController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class PenghasilanLainnyaController extends Controller
      */
     public function index()
     {
-        return view('bonus.penghasilan-lainnya.index');
+        return view('bonus.index');
     }
 
     /**
@@ -29,7 +29,7 @@ class PenghasilanLainnyaController extends Controller
      */
     public function create()
     {
-        return view('bonus.penghasilan-lainnya.import');
+        return view('bonus.import');
     }
 
     /**
@@ -52,25 +52,27 @@ class PenghasilanLainnyaController extends Controller
         ]);
         try {
             \DB::beginTransaction();
-            $tunjangan = TunjanganModel::where('nama_tunjangan','Tambahan Penghasilan')->where('kategori','bonus')->first();
-            for ($i=0; $i < count($request->get('nip')); $i++) {
-                $data = KaryawanModel::select('nip')->where('nip', $_POST['nip'][$i])->first()->nip ?? null;
-                if ($data) {
-                    DB::table('penghasilan_tidak_teratur')
-                    ->insert([
-                        'nip' => $data,
-                        'id_tunjangan' => $tunjangan->id,
-                        'nominal' => $_POST['nominal'][$i],
-                        'ket' => $_POST['kategori'][$i],
-                        'bulan' => Carbon::now()->format('m'),
-                        'tahun' => Carbon::now()->format('Y'),
-                        'created_at' => now()
-                    ]);
+            if ($request->get('kategori_bonus') == 'penghasilan-lainnya') {
+                $tunjangan = TunjanganModel::where('nama_tunjangan','Tambahan Penghasilan')->where('kategori','bonus')->first();
+                for ($i=0; $i < count($request->get('nip')); $i++) {
+                    $data = KaryawanModel::select('nip')->where('nip', $_POST['nip'][$i])->first()->nip ?? null;
+                    if ($data) {
+                        DB::table('penghasilan_tidak_teratur')
+                        ->insert([
+                            'nip' => $data,
+                            'id_tunjangan' => $tunjangan->id,
+                            'nominal' => $_POST['nominal'][$i],
+                            'ket' => $_POST['kategori'][$i],
+                            'bulan' => Carbon::now()->format('m'),
+                            'tahun' => Carbon::now()->format('Y'),
+                            'created_at' => now()
+                        ]);
+                    }
                 }
+                \DB::commit();
             }
-            \DB::commit();
             Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan tambahan');
-            return redirect()->route('penghasilan-lainnya.index');
+            return redirect()->route('bonus.index');
         } catch (Exception $th) {
             \DB::rollBack();
             return $th;

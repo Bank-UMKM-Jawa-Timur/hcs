@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\BonusController;
 use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
@@ -19,7 +20,6 @@ use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\MstPenambahanBrutoController;
 use App\Http\Controllers\MstPenguranganBrutoController;
 use App\Http\Controllers\PejabatSementaraController;
-use App\Http\Controllers\PenghasilanLainnyaController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PengkinianDataController;
 use App\Http\Controllers\ProfilKantorPusatController;
@@ -291,10 +291,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('post-import-pph', [GajiPerBulanController::class, 'importPPH'])->name('import-pph');
 
     // Bonus
-    Route::prefix('bonus')->group(function () {
-        // Penghasilan lainnya
-        Route::resource('penghasilan-lainnya',PenghasilanLainnyaController::class);
-    });
+    Route::resource('bonus',BonusController::class);
+
 });
 Auth::routes();
 

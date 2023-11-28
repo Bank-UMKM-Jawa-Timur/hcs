@@ -253,7 +253,7 @@ Coded by www.creative-tim.com
                                 <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
                                 Penghasilan
                             </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
+                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'bonus/*','show')"
                                 id="submenu2">
                                 @can('penghasilan - proses penghasilan')
                                 <li style="margin-top: -15px" class="@active('gaji_perbulan')">
@@ -281,7 +281,16 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
+<<<<<<< Updated upstream
                                 @endcan
+=======
+                                <li class="@active('penghasilan-lainnya') {{ request()->is('bonus', 'bonus/*') ? 'active' : '' }}">
+                                    <a href="{{ route('bonus.index') }}" style="font-weight: bolder">
+                                        <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
+                                        <p>Import Bonus</p>
+                                    </a>
+                                </li>
+>>>>>>> Stashed changes
                             </ul>
                         </li>
 
@@ -419,7 +428,8 @@ Coded by www.creative-tim.com
                         </li>
                         @endcan
                         {{-- Menu Bonus  --}}
-                        <li class="@active('penghasilan-lainnya') {{ request()->is('bonus', 'bonus/*') ? 'active' : '' }}">
+
+                        {{-- <li class="@active('penghasilan-lainnya') {{ request()->is('bonus', 'bonus/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#bonus" data-toggle="collapse" data-target="#bonus"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
@@ -450,8 +460,12 @@ Coded by www.creative-tim.com
                                     </a>
                                 </li>
                             </ul>
+<<<<<<< Updated upstream
                         </li>
                         
+=======
+                        </li> --}}
+>>>>>>> Stashed changes
                         {{-- Menu Migrasi Data --}}
                         @can('migrasi')
                         <li class="@active('migrasi')">
