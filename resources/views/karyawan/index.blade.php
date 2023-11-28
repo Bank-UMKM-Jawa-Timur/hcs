@@ -9,15 +9,21 @@
     <div class="card-body">
         <div class="col">
             <div class="row">
-                <a class="mb-3" href="{{ route('karyawan.create') }}">
-                    <button class="btn btn-primary">tambah karyawan</button>
-                </a>
-                <a class="ml-3" href="{{ route('import') }}">
-                    <button class="btn btn-primary">import karyawan</button>
-                </a>
-                <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
-                    <button class="btn btn-primary">Export Karyawan</button>
-                </a>
+                @can('manajemen karyawan - data karyawan - create karyawan')
+                    <a class="mb-3" href="{{ route('karyawan.create') }}">
+                        <button class="btn btn-primary">tambah karyawan</button>
+                    </a>
+                @endcan
+                @can('manajemen karyawan - data karyawan - import karyawan')
+                    <a class="ml-3" href="{{ route('import') }}">
+                        <button class="btn btn-primary">import karyawan</button>
+                    </a>
+                @endcan
+                @can('manajemen karyawan - data karyawan - export karyawan')
+                    <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
+                        <button class="btn btn-primary">Export Karyawan</button>
+                    </a>
+                @endcan
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -77,39 +83,70 @@
                                   $i = $page == 1 ? 1 : $start;
                                 @endphp
                                 @foreach ($karyawan as $krywn)
-                                    <tr>
-                                        <td>{{ $i++ }}</td>
-                                        <td>{{ $krywn->nip }}</td>
-                                        <td>{{ $krywn->nik }}</td>
-                                        <td>{{ $krywn->nama_karyawan }}</td>
-                                        <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
-                                        </td>
-                                        <td>{{$krywn->display_jabatan}}</td>
-                                        <td style="min-width: 130px">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <a href="{{ route('karyawan.edit', $krywn->nip) }}">
-                                                        <button class="btn btn-outline-warning p-1 mr-2"
-                                                            style="min-width: 60px">
-                                                            Edit
-                                                        </button>
-                                                    </a>
+                                    @if ($krywn->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $i++ }}</td>
+                                            <td>{{ $krywn->nip }}</td>
+                                            <td>{{ $krywn->nik }}</td>
+                                            <td>{{ $krywn->nama_karyawan }}</td>
+                                            <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
+                                            </td>
+                                            @php
+                                                $prefix = match ($krywn->status_jabatan) {
+                                                    'Penjabat' => 'Pj. ',
+                                                    'Penjabat Sementara' => 'Pjs. ',
+                                                    default => '',
+                                                };
 
-                                                    <a href="{{ route('karyawan.show', $krywn->nip) }}">
-                                                        <button class="btn btn-outline-info p-1"
-                                                            style="min-width: 60px">
-                                                            Detail
-                                                        </button>
-                                                    </a>
-                                                </div>
-                                            </div>
+                                                if ($krywn->jabatan) {
+                                                    $jabatan = $krywn->jabatan->nama_jabatan;
+                                                } else {
+                                                    $jabatan = 'undifined';
+                                                }
 
-                                            {{-- <form action="{{ route('karyawan.destroy', $krywn->nip) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
+                                                $ket = $krywn->ket_jabatan ? "({$krywn->ket_jabatan})" : '';
 
-                                                <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                                            </form> --}}
+                                                if (isset($krywn->entitas->subDiv)) {
+                                                    $entitas = $krywn->entitas->subDiv->nama_subdivisi;
+                                                } elseif (isset($krywn->entitas->div)) {
+                                                    $entitas = $krywn->entitas->div->nama_divisi;
+                                                } else {
+                                                    $entitas = '';
+                                                }
+
+                                                if ($jabatan == 'Pemimpin Sub Divisi') {
+                                                    $jabatan = 'PSD';
+                                                } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
+                                                    $jabatan = 'PBO';
+                                                } elseif ($jabatan == 'Pemimpin Bidang Pemasaran') {
+                                                    $jabatan = 'PBP';
+                                                } else {
+                                                    $jabatan = $krywn->jabatan ? $krywn->jabatan->nama_jabatan : 'undifined';
+                                                }
+                                            @endphp
+                                            <td>{{ $prefix . $jabatan }} {{ $entitas }}
+                                                {{ $krywn?->bagian?->nama_bagian }} {{ $ket }}</td>
+                                            <td style="min-width: 130px">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        @can('manajemen karyawan - data karyawan - edit karyawan')
+                                                            <a href="{{ route('karyawan.edit', $krywn->nip) }}">
+                                                                <button class="btn btn-outline-warning p-1 mr-2"
+                                                                    style="min-width: 60px">
+                                                                    Edit
+                                                                </button>
+                                                            </a>
+                                                        @endcan
+                                                        @can('manajemen karyawan - data karyawan - detail karyawan')
+                                                            <a href="{{ route('karyawan.show', $krywn->nip) }}">
+                                                                <button class="btn btn-outline-info p-1"
+                                                                    style="min-width: 60px">
+                                                                    Detail
+                                                                </button>
+                                                            </a>
+                                                        @endcan
+                                                    </div>
+                                   
                                         </td>
                                     </tr>
                                 @endforeach

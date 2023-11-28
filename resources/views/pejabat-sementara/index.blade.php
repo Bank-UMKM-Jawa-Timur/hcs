@@ -10,7 +10,9 @@
     </div>
     <div class="card-body">
         <div class="table-responsive overflow-hidden content-center">
+            @can('manajemen karyawan - tambah penjabat sementara')
             <a href="{{ route('pejabat-sementara.create') }}" class="btn btn-primary">Tambah PJS</a>
+            @endcan
             <table class="table whitespace-nowrap" id="pjs-table">
                 <thead class="text-primary">
                     <tr>
