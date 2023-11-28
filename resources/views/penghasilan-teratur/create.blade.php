@@ -1,14 +1,19 @@
 @extends('layouts.template')
+@push('style')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+
+@endpush
 @push('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 @endpush
 @section('content')
 
     <div class="card-header">
         <div class="card-title">
             <h5 class="card-title">Import Penghasilan</h5>
-            <p class="card-title"><a href="">Dashboard </a> > Penghasilan Teratur</p>
+            <p class="card-title"><a href="">Dashboard </a> > <a href="{{route('penghasilan.import-penghasilan-teratur.index')}}">Penghasilan Teratur</a> > Import Penghasilan Teratur</p>
         </div>
     </div>
 
@@ -127,10 +132,10 @@
                         var message = 'Uang vitamin hanya bisa di pilih tanggal 1 sampai 5'
                         nmbr++
                     } else if (value == 11) {
-                        var message = 'Uang Transport hanya bisa di pilih saat tanggal 25'
+                        var message = 'Uang Transport hanya bisa di pilih pada tanggal 25'
                         nmbr++
                     } else if (value == 14) {
-                        var message = 'Uang Makan hanya bisa di pilih saat tanggal 25'
+                        var message = 'Uang Makan hanya bisa di pilih pada tanggal 25'
                         nmbr++
                     }
                     // alertWarning(message)
@@ -142,10 +147,10 @@
                     var message = "success"
                 } else {
                     if (value == 11) {
-                        var message = 'Uang transport hanya bisa di pilih saat tanggal 25'
+                        var message = 'Uang transport hanya bisa di pilih pada tanggal 25'
                         nmbr++
                     } else if (value == 14) {
-                        var message = 'Uang makan hanya bisa di pilih saat tanggal 25'
+                        var message = 'Uang makan hanya bisa di pilih pada tanggal 25'
                         nmbr++
                     } else if (value == 12) {
                         var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
@@ -163,7 +168,7 @@
                 }
                 else {
                     if (value == 11) {
-                        var message = 'Uang transport hanya bisa di pilih saat tanggal 25'
+                        var message = 'Uang transport hanya bisa di pilih pada tanggal 25'
                         nmbr++
                     } else if (value == 12) {
                         var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
@@ -172,7 +177,7 @@
                         var message = 'Uang vitamin hanya bisa di pilih tanggal 1 sampai 5'
                         nmbr++
                     } else if (value == 14) {
-                        var message = 'Uang makan hanya bisa di pilih saat tanggal 25'
+                        var message = 'Uang makan hanya bisa di pilih pada tanggal 25'
                         nmbr++
                     }
                     // alertWarning(message)
@@ -207,32 +212,40 @@
             }
         });
 
-        $('.btn-plus').on('click', function(e) {
-            var number = $("#t_body").children().length + 1
-            var new_tr = `
-            <tr>
-                <td><span id="number[]">${number}</span></td>
-                <td>
-                    <input type="text" name="nip[]" id="nip[]" class="form-control">
-                </td>
-                <td>
-                    <input type="text" name="nama[]" id="nama[]" class="form-control">
-                </td>
-                <td>
-                    <input type="text" name="nominal[]" id="nominal[]" class="form-control only-number">
-                </td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-warning btn-edit">
-                        edit
-                    </button>
-                    <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
-                        -
-                    </button>
-                </td>
-            </tr>
-            `;
-            $('#t_body').append(new_tr);
-        })
+        var $row = null;
+
+        $("#table_item").on('click', '.btn-edit', function () {
+            var $row = $(this).closest('tr');
+            var namaInput = $row.find('input.nama');
+            var rowInputs = $row.find('input').not('.nama');
+
+            $row.removeClass('hidden');
+
+            rowInputs.prop('readonly', false);
+
+            namaInput.prop('readonly', true);
+
+            $row.find('input.nip').autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: '{{ url("penghasilan/get-karyawan-search") }}',
+                        type: 'GET',
+                        dataType: "json",
+                        data: {
+                            search: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    rowInputs.filter('.nip').val(ui.item.value);
+                    namaInput.val(ui.item.nama);
+                    return false;
+                }
+            });
+        });
 
         $("#table_item").on('click', '.btn-minus', function () {
             $(this).closest('tr').remove();
@@ -246,11 +259,39 @@
             return number;
         }
 
+        $('.nip').autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: '{{ url("penghasilan/get-karyawan-search") }}',
+                    type: 'GET',
+                    dataType: "json",
+                    data: {
+                        search: request.term
+                    },
+                    success: function(data) {
+                        response(data.data); // Assuming your server returns data as { data: [...] }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            },
+            select: function(event, ui) {
+                $(this).val(ui.item.value);
+                $(this).closest('tr').find('.nama').val(ui.item.nama);
+                return false;
+            }
+        });
+
         $("#table_item").on('click', '.btn-edit', function () {
             var $row = $(this).closest('tr');
-            $row.find('input[name^="nip"], input[name^="nominal"]').prop("readonly", function(_, value) {
-                return !value;
-            });
+            var namaInput = $row.find('.nama');
+            var nominalInput = $row.find('.nominal');
+
+            $row.removeClass('hidden');
+
+            nominalInput.prop('readonly', false);
+            namaInput.prop('readonly', true);
         });
 
         function showToTable(data) {
@@ -270,23 +311,27 @@
                             console.log(response.data);
                             var nominal = formatNumber(row[3].v);
                             var employeeData = response.data[0];
-                            var nama = employeeData && employeeData.nama_karyawan ? employeeData.nama_karyawan : 'Karyawan tidak ditemukan';
+                            var nama = employeeData && employeeData.nama_karyawan ? employeeData.nama_karyawan : 'Karyawan tidak ditemukan.';
+                            if (nama = 'Karyawan tidak ditemukan.') {
+                                $('#error-karyawan').removeClass('d-none').html('Silahkan edit atau hapus data ini.');
+                            }
                             var new_tr = `
                                 <tr>
                                     <td><span id="number[]">${(i + 1)}</span></td>
                                     <td>
-                                        <input type="hidden" name="number[]" id="number[]" class="form-control" value="${(i + 1)}">
-                                        <input type="hidden" name="penghasilan[]" id="penghasilan[]" class="form-control" value="${penghasilan}">
-                                        <input type="text" name="nip[]" id="nip[]" class="form-control" readonly value="${row[1].v}">
+                                        <input type="hidden" name="number" id="number" class="form-control" value="${i + 1}">
+                                        <input type="hidden" name="penghasilan" id="penghasilan" class="form-control" value="${penghasilan}">
+                                        <input type="text" name="nip" id="nip" class="form-control nip" readonly value="${row[1].v}">
+                                        <span class="text-danger d-none" id="error-karyawan"></span>
                                     </td>
                                     <td>
-                                        <input type="text" name="nama[]" id="nama[]" class="form-control" readonly value="${nama}">
+                                        <input type="text" name="nama" id="nama" class="form-control nama" readonly value="${nama}">
                                     </td>
                                     <td>
-                                        <input type="text" name="nominal[]" id="nominal[]" class="form-control only-number" readonly value="${nominal}">
+                                        <input type="text" name="nominal" id="nominal" class="form-control only-number nominal" readonly value="${nominal}">
                                     </td>
-                                    <td class="m-2">
-                                        <button type="button" class="btn btn-sm btn-warning btn-edit">
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-warning btn-edit" data-index="${i}">
                                             edit
                                         </button>
                                     </td>

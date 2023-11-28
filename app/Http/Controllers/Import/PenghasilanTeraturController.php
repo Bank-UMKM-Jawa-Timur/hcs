@@ -51,21 +51,27 @@ class PenghasilanTeraturController extends Controller
             ]);
         }
     }
-    public function getKaryawanSearch(){
-        $data = KaryawanModel::select('nip as value', 'nama_karyawan')->get();
+    public function getKaryawanSearch(Request $request){
+        try {
+            $data = KaryawanModel::select("nama_karyawan", "nip")
+            ->where('nip', 'LIKE', '%' . $request->get('search') . '%')
+            ->get();
 
-        if (count($data) > 0) {
+            foreach ($data as $item) {
+                $datas[] = array(
+                    "label" => $item->nip . ' - ' . $item->nama_karyawan,
+                    "value" => $item->nip,
+                    "nama" => $item->nama_karyawan,
+                );
+            }
+
+            return response()->json(
+                $datas
+            );
+        } catch (\Exception $e) {
             return response()->json([
-                'status' => 'Success',
-                'message' => 'success',
-                'data' => $data
-            ]);
-        } else {
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'data not found',
-                'data' => 'null'
-            ]);
+                'error' => 'Internal Server Error'
+            ], 500);
         }
     }
 
@@ -83,6 +89,7 @@ class PenghasilanTeraturController extends Controller
             $id_tunjangan = $request->get('penghasilan');
             $nip = $request->get('nip');
             $nominal = str_replace([' ', '.', "\u{A0}"], '', $request->get('nominal'));
+            $tanggal = date('Y-m-d H:i:s');
 
             if ($total) {
                 if (is_array($total)) {
@@ -90,7 +97,9 @@ class PenghasilanTeraturController extends Controller
                         DB::table('tunjangan_karyawan')->insert([
                             'nip' => $nip[$i],
                             'nominal' => $nominal[$i],
-                            'id_tunjangan' => $id_tunjangan[$i]
+                            'id_tunjangan' => $id_tunjangan[$i],
+                            'created_at' => $tanggal,
+                            'updated_at' => $tanggal,
                         ]);
                     }
                 }
