@@ -91,10 +91,10 @@ Coded by www.creative-tim.com
                 <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar"
                     role="navigation">
                     <ul class="nav flex-column sticky-top pl-2 mt-0">
-                        <li class="@active('home')">
+                        <li class="@active('home')" class="">
                             <a href="{{ route('home') }}" style="font-weight: bolder">
                                 <i class="nc-icon nc-bank" style="font-weight: bolder"></i>
-                                <p>Dashboard</p>
+                                <p class="mt-2">Dashboard</p>
                             </a>
                         </li>
                         {{-- Menu Manajemen Karyawan --}}
@@ -148,21 +148,20 @@ Coded by www.creative-tim.com
                                 ? 'show'
                                 : '' }}"
                                 id="submenu1">
-                                <li style="margin-top: -15px" class="@active('karyawan.index,karyawan.create,karyawan.edit,karyawan.show,import,klasifikasi')">
+                                <li style="" class="@active('karyawan.index,karyawan.create,karyawan.edit,karyawan.show,import,klasifikasi')">
                                     <a href="{{ route('karyawan.index') }}">
                                         <i class="nc-icon nc-badge"></i>
                                         <p>Karyawan </p>
-                                        <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
+                                <li style="" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
                                     <a href="{{ route('reminder-pensiun.index') }}">
                                         <i class="nc-icon nc-badge"></i>
                                         <p>Data Masa Pensiun</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
+                                <li style="" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
                                     <a href="{{ route('pengkinian_data.index') }}">
                                         <i class="nc-icon nc-ruler-pencil"></i>
                                         <p>Pengkinian Data </p>
@@ -181,7 +180,7 @@ Coded by www.creative-tim.com
                                 )
                                     ? 'active'
                                     : '' }}"
-                                    style="margin-top: -15px">
+                                    style="">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-chart-bar-32"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
@@ -198,14 +197,14 @@ Coded by www.creative-tim.com
                                             href="{{ route('penonaktifan.index') }}">Penonaktifan</a>
                                     </div>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">
+                                <li style="" class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">
                                     <a href="{{ route('pejabat-sementara.index') }}">
                                         <i class="nc-icon nc-tie-bow"></i>
                                         <p>Penjabat Sementara</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" style="margin-top: -15px">
+                                <li class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" style="">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-bell-55"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Reward & Punishment
@@ -229,14 +228,14 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
                                 id="submenu2">
-                                <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
+                                <li style="" class="@active('pajak_penghasilan')">
                                     <a href="{{ route('pajak_penghasilan.index') }}">
                                         <i class="nc-icon nc-scissors"></i>
                                         <p>Pajak Penghasilan</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
+                                <li style="" class="@active('pajak_penghasilan.create')">
                                     <a href="{{ route('pajak_penghasilan.create') }}">
                                         <i class="nc-icon nc-ruler-pencil"></i>
                                         <p>Tambah Penghasilan</p>
@@ -254,21 +253,21 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('history', 'show')"
                                 id="submenu3">
-                                <li style="margin-top: -15px" class="@active('history_jabatan')">
+                                <li style="" class="@active('history_jabatan')">
                                     <a href="{{ route('history_jabatan.index') }}">
                                         <i class="nc-icon nc-briefcase-24"></i>
                                         <p>Jabatan</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('pejabat-sementara.history')">
+                                <li style="" class="@active('pejabat-sementara.history')">
                                     <a href="{{ route('pejabat-sementara.history') }}">
                                         <i class="nc-icon nc-tie-bow"></i>
                                         <p>Penjabat Sementara</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('surat-peringatan.history')">
+                                <li style="" class="@active('surat-peringatan.history')">
                                     <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}">
                                         <i class="nc-icon nc-email-85"></i>
                                         <p>Surat Peringatan</p>
@@ -295,7 +294,7 @@ Coded by www.creative-tim.com
                                 )
                                     ? 'active'
                                     : '' }}"
-                                    style="margin-top: -15px">
+                                    style="">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-single-copy-04"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan Pergerakan
@@ -313,14 +312,14 @@ Coded by www.creative-tim.com
                                             href="{{ route('laporan-penonaktifan.index') }}">Laporan Penonaktifan</a>
                                     </div>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('laporan_jamsostek')">
+                                <li style="" class="@active('laporan_jamsostek')">
                                     <a href="{{ route('laporan_jamsostek.index') }}">
                                         <i class="nc-icon nc-single-copy-04"></i>
                                         <p>Laporan Jamsostek</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('index_dpp')">
+                                <li style="" class="@active('index_dpp')">
                                     <a href="{{ route('index_dpp') }}">
                                         <i class="nc-icon nc-single-copy-04"></i>
                                         <p>Laporan DPP</p>
@@ -338,14 +337,14 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2  @active('gaji.*, slipIndex.*, gaji_perbulan.*', 'show')"
                                 id="submenu5">
-                                <li style="margin-top: -15px" class="@active('gaji_perbulan.*')">
+                                <li style="" class="@active('gaji_perbulan.*')">
                                     <a href="{{ route('gaji_perbulan.index') }}">
                                         <i class="nc-icon nc-money-coins"></i>
                                         <p>Proses Penghasilan</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px"
+                                <li style=""
                                     class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                                     <a href="{{ route('gaji.index') }}">
                                         <i class="nc-icon nc-money-coins"></i>
@@ -353,7 +352,7 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('slipIndex')">
+                                <li style="" class="@active('slipIndex')">
                                     <a href="{{ route('slipIndex') }}">
                                         <i class="nc-icon nc-money-coins"></i>
                                         <p>Slip Jurnal</p>
@@ -371,21 +370,21 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('migrasi')"
                                 id="submenu8">
-                                <li style="margin-top: -15px" class="@active('migrasiJabatan')">
+                                <li style="" class="@active('migrasiJabatan')">
                                     <a href="{{ route('migrasiJabatan') }}">
                                         <i class="nc-icon nc-cloud-upload-94"></i>
                                         <p>Jabatan</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('migrasiPJS')">
+                                <li style="" class="@active('migrasiPJS')">
                                     <a href="{{ route('migrasiPJS') }}">
                                         <i class="nc-icon nc-cloud-upload-94"></i>
                                         <p>Penjabat Sementara</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('migrasiSP')">
+                                <li style="" class="@active('migrasiSP')">
                                     <a href="{{ route('migrasiSP') }}">
                                         <i class="nc-icon nc-cloud-upload-94"></i>
                                         <p>Surat Peringatan</p>
@@ -403,7 +402,7 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6"
                                 aria-expanded="false">
-                                <li style="margin-top: -15px">
+                                <li style="">
                                     <a href="#">
                                         <i class="nc-icon nc-refresh-69"></i>
                                         <p>Log Aktivitas</p>
@@ -423,7 +422,7 @@ Coded by www.creative-tim.com
                             {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show') --}}
                             "
                                 id="submenu7">
-                                <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
+                                <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-box"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Master </p>
@@ -455,7 +454,7 @@ Coded by www.creative-tim.com
                                 @endphp
                                 <li class="dropdown
                                 {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show') --}}
-                                " style="margin-top: -15px">
+                                " style="">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-bank"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Kantor Pusat </p>
@@ -470,14 +469,14 @@ Coded by www.creative-tim.com
                                             href="{{ route('pengurangan-bruto.index') }}?profil_kantor={{$profilKantorPusat ? $profilKantorPusat->id : ''}}">Pengurangan Bruto</a>
                                     </div>
                                 </li>
-                                <li style="margin-top: -15px">
+                                <li style="">
                                     <a href="#">
                                         <i class="nc-icon nc-single-02"></i>
                                         <p>User Akses</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('database')">
+                                <li style="" class="@active('database')">
                                     <a href="{{ route('database.index') }}">
                                         <i class="nc-icon nc-vector"></i>
                                         <p>Database</p>
