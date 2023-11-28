@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Import;
 use App\Http\Controllers\Controller;
 use App\Models\KaryawanModel;
 use App\Models\TunjanganModel;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -36,10 +37,38 @@ class PenghasilanTeraturController extends Controller
     public function getKaryawanByEntitas($nip){
         $data = KaryawanModel::where('nip', $nip)->get();
 
-        return response()->json([
-            'data' => $data
-        ]);
+        if (count($data) > 0) {
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'success',
+                'data' => $data
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'data not found',
+                'data' => 'null'
+            ]);
+        }
     }
+    public function getKaryawanSearch(){
+        $data = KaryawanModel::select('nip as value', 'nama_karyawan')->get();
+
+        if (count($data) > 0) {
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'success',
+                'data' => $data
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'data not found',
+                'data' => 'null'
+            ]);
+        }
+    }
+
 
     /**
      * Store a newly created resource in storage.

@@ -149,11 +149,8 @@
                         nmbr++
                     } else if (value == 12) {
                         var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
-                    }
-
-                    if (tanggal > 5 && value == 13) {
-                        var message = 'Uang vitamin hanya bisa di pilih tanggal 1 sampai 5'
-                        nmbr++
+                    } else if (value == 13 && tanggal > 5) {
+                        var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
                     }
 
                     // alertWarning(message)
@@ -183,8 +180,6 @@
                     $("#penghasilan").val("")
                 }
             }
-
-            console.log(message);
         })
 
         $('#filter').on('click', function(e) {
@@ -194,12 +189,16 @@
 
             if (penghasilan && filePenghasilan) {
                 importExcel();
+                $('#error-penghasilan').addClass('d-none')
+                $('#error-file').addClass('d-none')
             } else {
                 if (penghasilan == "" && filePenghasilan) {
                     $('#error-penghasilan').removeClass('d-none').html('Kategori belum di pilih.')
+                    $('#error-file').addClass('d-none')
                 }
                 else if (!filePenghasilan && penghasilan){
                     $('#error-file').removeClass('d-none')
+                    $('#error-penghasilan').addClass('d-none')
                 }
                 else {
                     $('#error-penghasilan').removeClass('d-none').html('Kategori belum di pilih.')
@@ -207,10 +206,6 @@
                 }
             }
         });
-
-        $('#btn-simpan').on('click', function(){
-
-        })
 
         $('.btn-plus').on('click', function(e) {
             var number = $("#t_body").children().length + 1
@@ -243,13 +238,6 @@
             $(this).closest('tr').remove();
         })
 
-        $("#table_item").on('click', '.btn-edit', function () {
-            var $row = $(this).closest('tr');
-            $row.find('input[name^="nip"], input[name^="nama"], input[name^="nominal"]').prop("readonly", function(_, value) {
-                return !value;
-            });
-        });
-
         function formatNumber(number) {
             number = number.toString();
             var pattern = /(-?\d+)(\d{3})/;
@@ -257,6 +245,13 @@
                 number = number.replace(pattern, "$1.$2");
             return number;
         }
+
+        $("#table_item").on('click', '.btn-edit', function () {
+            var $row = $(this).closest('tr');
+            $row.find('input[name^="nip"], input[name^="nominal"]').prop("readonly", function(_, value) {
+                return !value;
+            });
+        });
 
         function showToTable(data) {
             var penghasilan = $('#penghasilan').val();
@@ -272,9 +267,10 @@
                         type: "GET",
                         accept: "Application/json",
                         success: function (response) {
+                            console.log(response.data);
                             var nominal = formatNumber(row[3].v);
-                            var nama = response.data.nama_karyawan;
-                            console.log(nama);
+                            var employeeData = response.data[0];
+                            var nama = employeeData && employeeData.nama_karyawan ? employeeData.nama_karyawan : 'Karyawan tidak ditemukan';
                             var new_tr = `
                                 <tr>
                                     <td><span id="number[]">${(i + 1)}</span></td>
