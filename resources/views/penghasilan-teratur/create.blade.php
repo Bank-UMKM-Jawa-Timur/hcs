@@ -19,12 +19,11 @@
                     <label for="">Kategori penghasilan teratur</label>
                     <select name="penghasilan" class="form-control" id="penghasilan">
                         <option value="">==Pilih Kategori==</option>
-                        <option value="1">Uang Makan</option>
-                        <option value="2">Uang Vitamin</option>
-                        <option value="3">Uang Transport</option>
-                        <option value="4">Uang Pulsa</option>
+                        @foreach ($penghasilan as $item)
+                            <option value="{{$item->id}}">{{$item->nama_tunjangan}}</option>
+                        @endforeach
                     </select>
-                    <p class="text-danger d-none" id="error-penghasilan">Kategori belum di pilih.</p>
+                    <p class="text-danger d-none" id="error-penghasilan"></p>
                 </div>
             </div>
             <div class="col-lg-5">
@@ -38,97 +37,148 @@
                 </div>
             </div>
             <div class="col-lg-2 mt-2">
-                <button class="btn btn-primary filter" id="filter">Tampilkan</button>
+                <button class="btn btn-primary" id="filter">Tampilkan</button>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        {{-- <p id="span_info_save"></p>
-                        <p id="span_total_data"></p> --}}
-                    </div>
-                    <div class="card-body">
-                        <table class="table" id="table_item">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nip</th>
-                                    <th>Nama</th>
-                                    <th>Nominal</th>
-                                    <th>Aksi</th>
-                                    <th>
-                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-primary btn-plus">
-                                            +
-                                        </button>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody id="t_body">
-                                {{-- <tr>
-                                    <td>1</td>
-                                    <td>1121212</td>
-                                    <td>Saya</td>
-                                    <td>123.321</td>
-                                    <td>
-                                        <button class="btn btn-warning" id="edit-penghasilan">edit</button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
-                                            -
-                                        </button>
-                                    </td>
-                                </tr> --}}
-                            </tbody>
-                        </table>
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
+        <form action="{{route('penghasilan.import-penghasilan-teratur.store')}}" method="POST">
+        @csrf
+            <div class="row d-none" id="hasil-filter">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            {{-- <p id="span_info_save"></p>
+                            <p id="span_total_data"></p> --}}
+                        </div>
+                        <div class="card-body">
+                            <table class="table" id="table_item">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nip</th>
+                                        <th>Nama Karyawan</th>
+                                        <th>Nominal</th>
+                                        <th>Aksi</th>
+                                        {{-- <th>
+                                            <button type="button" class="btn btn-sm btn-icon btn-round btn-primary btn-plus">
+                                                +
+                                            </button>
+                                        </th> --}}
+                                    </tr>
+                                </thead>
+                                <tbody id="t_body">
+                                    {{-- <tr>
+                                        <td>1</td>
+                                        <td>1121212</td>
+                                        <td>Saya</td>
+                                        <td>123.321</td>
+                                        <td>
+                                            <button class="btn btn-warning" id="edit-penghasilan">edit</button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
+                                                -
+                                            </button>
+                                        </td>
+                                    </tr> --}}
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 @endsection
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-            var hari_ini = new Date();
-            // var tanggal = hari_ini.getDate();
-            var tanggal = 6;
-
-            var dropdown = document.getElementById("penghasilan");
-
-            for (var i = 0; i < dropdown.options.length; i++) {
-                dropdown.options[i].style.display = "none";
-            }
-
-            if (tanggal >= 1 && tanggal <= 5 ) {
-                // Show Uang Vitamin
-                dropdown.querySelector('option[value="2"]').style.display = "block";
-                dropdown.querySelector('option[value="4"]').style.display = "block";
-            } else if (tanggal >= 1 && tanggal <= 10) {
-                // Show Uang Pulsa
-                dropdown.querySelector('option[value="4"]').style.display = "block";
-            } else if (tanggal == 25) {
-                // Show Uang Makan and Uang Transport
-                dropdown.querySelector('option[value="1"]').style.display = "block";
-                dropdown.querySelector('option[value="3"]').style.display = "block";
-            }
-        });
-</script>
+    <script>
+    function updateFileName() {
+        var input = document.getElementById('file-penghasilan');
+        var label = document.getElementById('file-label');
+        var fileName = input.files[0].name;
+        label.innerHTML = fileName;
+    }
+    </script>
 
 @push('script')
     <script>
 
-        function updateFileName() {
-            var input = document.getElementById('file-penghasilan');
-            var label = document.getElementById('file-label');
-            var fileName = input.files[0].name;
-            label.innerHTML = fileName;
-        }
-         $('.filter').on('click', function(e) {
+        $('#penghasilan').on('change', function(){
+            var value = $("#penghasilan").val()
+            var hari_ini = new Date();
+            // var tanggal = hari_ini.getDate();
+            var tanggal = 5;
+            var message = '';
+            var nmbr = 0;
+
+            // 11 = tranport, 12 = pulsa, 13 = vitamin, 14 = uang makan
+
+            if (value == 11 || value == 14) {
+                if (tanggal == 25) {
+                    var message = "success"
+                } else {
+                    if (value == 12) {
+                        var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
+                        nmbr++
+                    } else if (value == 13) {
+                        var message = 'Uang vitamin hanya bisa di pilih tanggal 1 sampai 5'
+                        nmbr++
+                    }
+                    // alertWarning(message)
+                    $('#error-penghasilan').removeClass('d-none').html(message)
+                    $("#penghasilan").val("")
+                }
+            } else if (value == 12) {
+                if (tanggal >= 1 && tanggal <= 10){
+                    var message = "success"
+                } else {
+                    if (value == 11) {
+                        var message = 'Uang transport hanya bisa di pilih saat tanggal 25'
+                        nmbr++
+                    } else if (value == 14) {
+                        var message = 'Uang makan hanya bisa di pilih saat tanggal 25'
+                        nmbr++
+                    }
+
+                    if (tanggal > 5 && value == 13) {
+                        var message = 'Uang vitamin hanya bisa di pilih tanggal 1 sampai 5'
+                        nmbr++
+                    }
+
+                    // alertWarning(message)
+                    $('#error-penghasilan').removeClass('d-none').html(message)
+                    $("#penghasilan").val("")
+                }
+            } else if(value == 13){
+                if (tanggal >= 1 && tanggal <= 5 ) {
+                    if (value == 12 || value == 13) {
+                        var message = "success"
+                    } else {
+                        if (value == 11) {
+                            var message = 'Uang transport hanya bisa di pilih saat tanggal 25'
+                            nmbr++
+                        } else if (value == 14) {
+                            var message = 'Uang makan hanya bisa di pilih saat tanggal 25'
+                            nmbr++
+                        }
+                        // alertWarning(message)
+                        $('#error-penghasilan').removeClass('d-none').html(message)
+                        $("#penghasilan").val("")
+                    }
+                }
+            }
+
+            if (nmbr > 0){
+                $('#error-penghasilan').removeClass('d-none').html(message)
+                $("#penghasilan").val("")
+            }
+        })
+
+        $('#filter').on('click', function(e) {
+            console.log('askdaskdjasldjldj');
             var penghasilan = $('#penghasilan').val();
             var filePenghasilan = $('#file-penghasilan').val();
 
@@ -136,17 +186,21 @@
                 importExcel();
             } else {
                 if (penghasilan == "" && filePenghasilan) {
-                    $('#error-penghasilan').removeClass('d-none')
+                    $('#error-penghasilan').removeClass('d-none').html('Kategori belum di pilih.')
                 }
                 else if (!filePenghasilan && penghasilan){
                     $('#error-file').removeClass('d-none')
                 }
                 else {
-                    $('#error-penghasilan').removeClass('d-none')
+                    $('#error-penghasilan').removeClass('d-none').html('Kategori belum di pilih.')
                     $('#error-file').removeClass('d-none')
                 }
             }
         });
+
+        $('#btn-simpan').on('click', function(){
+
+        })
 
         $('.btn-plus').on('click', function(e) {
             var number = $("#t_body").children().length + 1
@@ -163,6 +217,9 @@
                     <input type="text" name="nominal[]" id="nominal[]" class="form-control only-number">
                 </td>
                 <td>
+                    <button type="button" class="btn btn-sm btn-warning btn-edit">
+                        edit
+                    </button>
                     <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
                         -
                     </button>
@@ -171,8 +228,13 @@
             `;
             $('#t_body').append(new_tr);
         })
+
         $("#table_item").on('click', '.btn-minus', function () {
             $(this).closest('tr').remove();
+        })
+
+        $("#table_item").on('click', '.btn-edit', function () {
+            $(this).closest('tr').removeAttr("readonly");
         })
 
         function formatNumber(number) {
@@ -184,10 +246,12 @@
         }
 
         function showToTable(data){
+            var penghasilan = $('#penghasilan').val();
             var total_data = data.length;
             // $('#span_info_save').html('Informasi! Geser layar ke bawah untuk menyimpan data.')
             // $('#span_total_data').html(`Total data : ${total_data}`)
             $('#btn-simpan').removeClass('d-none')
+            $('#hasil-filter').removeClass('d-none')
 
             for (let i = 0; i < data.length; i++) {
                 var row = data[i]
@@ -196,13 +260,20 @@
                     <tr>
                         <td><span id="number[]">${(i+1)}</span></td>
                         <td>
-                            <input type="text" name="nip[]" id="nip[]" class="form-control" value="${row[1].v}">
+                            <input type="hidden" name="number[]" id="number[]" class="form-control" value="${(i+1)}">
+                            <input type="hidden" name="penghasilan[]" id="penghasilan[]" class="form-control" value="${penghasilan}">
+                            <input type="text" name="nip[]" id="nip[]" class="form-control" readonly value="${row[1].v}">
                         </td>
                         <td>
-                            <input type="text" name="nama[]" id="nama[]" class="form-control" value="${row[2].v}">
+                            <input type="text" name="nama[]" id="nama[]" class="form-control" readonly value="${row[1].v}">
                         </td>
                         <td>
-                            <input type="text" name="nominal[]" id="nominal[]" class="form-control only-number" value="${nominal}">
+                            <input type="text" name="nominal[]" id="nominal[]" class="form-control only-number" readonly value="${nominal}">
+                        </td>
+                        <td class="m-2">
+                            <button type="button" class="btn btn-sm btn-warning btn-edit">
+                                edit
+                            </button>
                         </td>
                         <td>
                             <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
@@ -278,6 +349,19 @@
             else {
                 alert("Unggah file Excel yang valid!");
             }
+        }
+
+        function alertWarning(message) {
+            Swal.fire({
+                tittle: 'Warning!',
+                html: message,
+                icon: 'warning',
+                iconColor: '#DC3545',
+                confirmButtonText: 'Ya',
+                confirmButtonColor: '#DC3545'
+            }).then((result) => {
+                return result.isConfirmed;
+            })
         }
     </script>
 @endpush

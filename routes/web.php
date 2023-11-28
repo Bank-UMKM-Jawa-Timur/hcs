@@ -7,6 +7,7 @@ use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
 use App\Http\Controllers\HistoryJabatanController;
+use App\Http\Controllers\Import\PenghasilanTeraturController;
 use App\Http\Controllers\JaminanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
@@ -142,8 +143,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::prefix('penghasilan')->name('penghasilan.')->group(function() {
         Route::resource('import-penghasilan-teratur', \App\Http\Controllers\Import\PenghasilanTeraturController::class);
+        Route::get('/get-karyawan-by-entitas/{entitas}', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
     });
-    
+
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::resource('/backup', BackupController::class);
     Route::resource('/history_jabatan', HistoryJabatanController::class);
