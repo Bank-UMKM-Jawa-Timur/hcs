@@ -249,6 +249,8 @@ Coded by www.creative-tim.com
                                             href="{{ route('uang-duka.index') }}">Uang Duka</a>
                                         <a class="dropdown-item @active('lembur.index')"
                                             href="{{ route('lembur.index') }}">Uang Lembur</a>
+                                        <a class="dropdown-item @active('spd.index')"
+                                            href="{{ route('spd.index') }}">SPD</a>
                                     </div>
                                 </li>
                                 <li style="margin-top: -15px" class="@active('pajak_penghasilan')">

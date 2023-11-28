@@ -5,7 +5,7 @@
 <div class="card-header">
   <div class="card-header">
       <h5 class="card-title">Uang Duka</h5>
-      <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('uang-duka.index') }}">Penghasilan </a> > Import Tidak Teratur</p>
+      <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('uang-duka.index') }}">Penghasilan </a> > Import Tidak Teratur > Uang Duka</p>
   </div>
 
   <div class="card-body">

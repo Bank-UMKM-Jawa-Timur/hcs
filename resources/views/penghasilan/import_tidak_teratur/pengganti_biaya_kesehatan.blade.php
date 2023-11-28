@@ -5,7 +5,7 @@
 <div class="card-header">
   <div class="card-header">
       <h5 class="card-title">Pengganti Biaya Kesehatan</h5>
-      <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pengganti-biaya-kesehatan.index') }}">Penghasilan </a> > Import Tidak Teratur</p>
+      <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pengganti-biaya-kesehatan.index') }}">Penghasilan </a> > Import Tidak Teratur > Pengganti Biaya Kesehatan</p>
   </div>
 
   <div class="card-body">

@@ -4,8 +4,8 @@
 @section('content')
 <div class="card-header">
   <div class="card-header">
-      <h5 class="card-title">Lembur</h5>
-      <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('list-penghasilan-tidak-teratur') }}">Penghasilan </a> > Import Tidak Teratur > Lembur</p>
+      <h5 class="card-title">SPD</h5>
+      <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('list-penghasilan-tidak-teratur') }}">Penghasilan </a> > Import Tidak Teratur > SPD</p>
   </div>
 
   <div class="card-body">
@@ -16,7 +16,7 @@
               </a>
           </div>
       </div> --}}
-      <form action="{{ route('lembur.store') }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('spd.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
           <div class="row m-0">
               <div class="col-md-6 form-group">
@@ -27,11 +27,19 @@
                 <label for="tanggal">Tanggal:</label>
                 <input type="date" name="tanggal" id="tanggal" class="form-control">
               </div>
+              <div class="col-md-6 form-group" id="grup-date">
+                <label for="id_tunjangan">SPD:</label>
+                <select name="id_tunjangan" id="id_tunjangan" class="form-control">
+                    <option value="" selected>-- Pilih SPD --</option>
+                    @foreach ($data as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                    @endforeach
+                </select>
+              </div>
               <div class="col-md-6 form-group">
                   <label for="nominal">Nominal:</label>
                   <input type="text" name="nominal" class="form-control rupiah">
               </div>
-              <input type="hidden" name="id_tunjangan" class="form-control" value="16" required>
           </div>
 
           <div class="row m-0">
@@ -45,6 +53,7 @@
 @endsection
 @push('script')
   <script>
+      $("#id_tunjangan").select2();
       $('#nip').select2({
           ajax: {
               url: '{{ route('api.select2.karyawan') }}'
