@@ -13,9 +13,11 @@
     <div class="card-body">
         <div class="row m-0">
             <div class="col">
+                @can('penghasilan - tambah penghasilan - import penghasilan')
                 <a class="mb-3" href="{{ route('import-penghasilan-index') }}">
                     <button class="btn btn-primary">Import penghasilan</button>
                 </a>
+                @endcan
             </div>
         </div>
         <form action="{{ route('insert-penghasilan') }}" method="POST" enctype="multipart/form-data">
