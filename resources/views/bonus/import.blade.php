@@ -103,7 +103,6 @@
                             success: function (res) {
                                 var nama = res != 'null' ? res : '-';
                                 if (res != 'null') {
-                                    console.log('agaag');
                                     $('#table_item tbody tr:eq(' + index + ') span').removeClass('hidden');
                                 } else {
                                     $('#table_item tbody tr:eq(' + index + ') span').addClass('hidden')
