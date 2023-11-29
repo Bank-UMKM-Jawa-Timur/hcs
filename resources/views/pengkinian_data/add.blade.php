@@ -337,7 +337,7 @@
             </div>
 
             <div class="row m-3">
-                <button type="submit" id="submit" class="btn btn-info">Simpan</button>
+                <button type="submit" id="submit" class="is-btn is-primary-light">Simpan</button>
             </div>
         </form>
     </div>

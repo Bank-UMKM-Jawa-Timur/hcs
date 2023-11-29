@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Tambah Mutasi</h5>
+            <h5 class="card-title font-weight-bold">Tambah Mutasi</h5>
             <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="{{ route('mutasi.index') }}">Mutasi</a> > Tambah</p>
         </div>
     </div>
@@ -224,7 +224,9 @@
                     </div>
                 </div>
             </div>
-                <button type="submit" class="btn btn-info">Simpan</button>
+             <div class="mt-3">
+                <button type="submit" class="is-btn is-primary-light">Simpan</button>
+             </div>
             </div>
         </form>
     </div>

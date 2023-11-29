@@ -26,7 +26,7 @@ $request = isset($request) ? $request : null;
 <div class="card-header">
     <div class="card-header">
         <div class="card-title">
-            <h5 class="card-title @active('klasifikasi')">Data Masa Pensiun</h5>
+            <h5 class="card-title @active('klasifikasi') font-weight-bold">Data Masa Pensiun</h5>
             <p class="card-title"><a href="">Manajemen Karyawan</a> > <a
                     href="{{ route('karyawan.index') }}">Karyawan</a> > Data Masa Pensiun</p>
         </div>
@@ -80,8 +80,8 @@ $request = isset($request) ? $request : null;
             <div id="pendidikan_col" class="col-md-4">
             </div>
 
-            <div class="col-md-12">
-                <button class="btn btn-info" type="submit">Tampilkan</button>
+            <div class="col-md-12 mt-2">
+                <button class="is-btn is-primary-light" type="submit">Tampilkan</button>
             </div>
         </div>
     </form>

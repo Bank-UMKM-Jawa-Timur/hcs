@@ -2,7 +2,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Edit Promosi</h5>
+            <h5 class="card-title font-weight-bold">Edit Promosi</h5>
             <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="{{ route('promosi.index') }}">Promosi</a> > Edit</p>
         </div>
     </div>
@@ -96,7 +96,7 @@
                     </div>
                 </div>
             </div>
-                <button type="submit" class="btn btn-info">Update</button>
+                <button type="submit" class="is-btn is-primary-light">Update</button>
             </div>
         </form>
     </div>

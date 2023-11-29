@@ -10,9 +10,9 @@
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="{{ route('demosi.create') }}">
-                        <button  class="btn btn-primary">Tambah Demosi</button>
+                        <button  class="is-btn is-primary-light">Tambah Demosi</button>
                     </a>
-                    <div class="table-responsive">
+                    <div class="is-table-responsive">
                         <table class="table" id="table">
                             <thead class="text-primary">
                                 <th>
@@ -95,8 +95,8 @@
 
 @section('custom_script')
     <script>
-        $(document).ready( function () {
-            $('#table').DataTable();
+       $('#table').DataTable({
+                responsive: true
         });
     </script>
 @endsection

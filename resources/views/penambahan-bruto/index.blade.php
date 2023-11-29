@@ -1,17 +1,21 @@
 @extends('layouts.template')
 @section('content')
-    <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title">Data Penambahan Bruto</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang > <a href="" class="text-secondary">Penambahan Bruto</a></p>
-        </div>
 
-        <div class="card-body">
+    <div class="card-header">
+        <div class="d-lg-flex justify-content-between w-100 p-3">
+            <div class="card-header">
+                <h5 class="card-title font-weight-bold">Data Penambahan Bruto</h5>
+                <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang > <a href="" class="text-secondary">Penambahan Bruto</a></p>
+            </div>
+            <div class="card-header row mt-3 mr-8 pr-5" >
+                <a class="mb-3" href="{{ route('penambahan-bruto.create') }}?profil_kantor={{$_GET['profil_kantor']}}">
+                    <button class="is-btn is-primary-light">Tambah</button>
+                </a>
+            </div>
+        </div>
+        <div class="card-body p-4">
             <div class="col">
                 <div class="row">
-                    <a class="mb-3" href="{{ route('penambahan-bruto.create') }}?profil_kantor={{$_GET['profil_kantor']}}">
-                        <button class="btn btn-primary">Tambah</button>
-                    </a>
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class=" text-primary">

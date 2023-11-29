@@ -1,30 +1,33 @@
 @extends('layouts.template')
 
 @section('content')
+<div class="d-lg-flex justify-content-between w-100 p-3">
     <div class="card-header">
-        <h5 class="card-title">Data Karyawan</h5>
+        <h5 class="card-title font-weight-bold">Data Karyawan</h5>
         <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="/karyawan">Karyawan</a></p>
     </div>
-
-    <div class="card-body">
+    <div class="card-header row mt-3 mr-8 pr-5" >
+        <a class="mb-3" href="{{ route('karyawan.create') }}">
+            <button class="is-btn is-primary-light">tambah karyawan</button>
+        </a>
+        <a class="ml-3" href="{{ route('import') }}">
+            <button class="is-btn is-primary-light">import karyawan</button>
+        </a>
+        <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
+            <button class="is-btn is-primary-light">Export Karyawan</button>
+        </a>
+    </div>
+</div>
+<div class="card-body">
         <div class="col">
-            <div class="row">
-                <a class="mb-3" href="{{ route('karyawan.create') }}">
-                    <button class="btn btn-primary">tambah karyawan</button>
-                </a>
-                <a class="ml-3" href="{{ route('import') }}">
-                    <button class="btn btn-primary">import karyawan</button>
-                </a>
-                <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
-                    <button class="btn btn-primary">Export Karyawan</button>
-                </a>
+            <div class="row p-3">
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
-                          <div class="p-2 mt-4">
+                        <div class="p-2 mt-3 w-100">
                             <label for="page_length" class="mr-3 text-sm text-neutral-400">show</label>
                             <select name="page_length" id="page_length"
-                                class="border px-4 py-2 cursor-pointer rounded appearance-none text-center">
+                                class="border px-3 py-2 cursor-pointer rounded appearance-none text-center">
                                 <option value="10"
                                     @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
                                     10</option>
@@ -40,14 +43,13 @@
                             </select>
                             <label for="" class="ml-3 text-sm text-neutral-400">entries</label>
                           </div>
-                          <div class="p-2">
+                          <div class="p-2 w-25">
                             <label for="q">Cari</label>
-                            <input type="search" name="q" id="q" placeholder="Cari disini..."
-                              class="form-control p-2" value="{{isset($_GET['q']) ? $_GET['q'] : ''}}">
-                          </div>
+                            <input type="search" name="q" id="q" placeholder="Cari disini..." class="form-control  p-2" value="{{isset($_GET['q']) ? $_GET['q'] : ''}}">
                         </div>
-                        <table class="table whitespace-nowrap" id="table" style="width: 100%">
-                            <thead class="text-primary">
+                        </div>
+                        <table class="table whitespace-nowrap border text-center" id="table" style="width: 100%">
+                            <thead class="text-dark">
                                 <th>No</th>
                                 <th>
                                     NIP
@@ -112,7 +114,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between mt-5">
                           <div>
                             Showing {{$start}} to {{$end}} of {{$karyawan->total()}} entries
                           </div>

@@ -1,21 +1,26 @@
 @extends('layouts.template')
 
 @section('content')
-      <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title">Pengkinian Data Karyawan</h5>
-            <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > Pengkinian Data</p>
-        </div>
 
-        <div class="card-body">
+      <div class="card-header">
+        <div class="d-lg-flex justify-content-between w-100 ">
+          <div class="card-header">
+              <h5 class="card-title font-weight-bold">Pengkinian Data Karyawan</h5>
+              <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > Pengkinian Data</p>
+          </div>
+          <div class="card-header row mt-3 mr-8 pr-4" >
+
+              <a class="mb-3" href="{{ route('pengkinian_data.create') }}">
+                <button class="is-btn is-primary-light">Pengkinian Data</button>
+              </a>
+              <a class="ml-3" href="{{ route('pengkinian-data-import-index') }}">
+                <button class="is-btn is-primary-light">Import Pengkinian</button>
+              </a>
+          </div>
+        </div> 
+        <div class="card-body p-3">
             <div class="col">
                 <div class="row">
-                    <a class="mb-3" href="{{ route('pengkinian_data.create') }}">
-                      <button class="btn btn-primary">Pengkinian Data</button>
-                    </a>
-                    <a class="ml-3" href="{{ route('pengkinian-data-import-index') }}">
-                      <button class="btn btn-primary">Import Pengkinian</button>
-                    </a>
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
                         <thead class="text-primary">

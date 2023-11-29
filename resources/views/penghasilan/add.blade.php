@@ -6,7 +6,7 @@
 @endphp
 <div class="card-header">
     <div class="card-header">
-        <h5 class="card-title">Pajak Penghasilan</h5>
+        <h5 class="card-title font-weight-bold">Pajak Penghasilan</h5>
         <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> > Tambah</p>
     </div>
 
