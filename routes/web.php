@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\BonusController;
 use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
@@ -151,6 +152,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/ptkp', PtkpController::class);
     Route::resource('/penambahan-bruto', MstPenambahanBrutoController::class);
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
+    Route::resource('/bonus', BonusController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
 

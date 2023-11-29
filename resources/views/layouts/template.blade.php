@@ -247,7 +247,7 @@ Coded by www.creative-tim.com
                         {{-- Menu Penghasilan --}}
                         @can('penghasilan')
                         <li
-                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }}">
+                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'bonus', 'bonus/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
@@ -282,19 +282,19 @@ Coded by www.creative-tim.com
                                     </a>
                                 </li>
                                 @endcan
-                                @can('penghasilan - bonus')
-                                <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
-                                    <a href="{{ route('pajak_penghasilan.create') }}">
+                                {{-- @can('penghasilan - bonus') --}}
+                                <li style="margin-top: -15px" class="@active('bonus')">
+                                    <a href="{{ route('bonus.index') }}">
                                         <i class="nc-icon nc-ruler-pencil"></i>
                                         <p>Bonus</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                @endcan
+                                {{-- @endcan --}}
                             </ul>
                         </li>
-
                         @endcan
+
                         {{-- Menu Histori --}}
                         @can('histori')
                         <li class="@active('history')">
