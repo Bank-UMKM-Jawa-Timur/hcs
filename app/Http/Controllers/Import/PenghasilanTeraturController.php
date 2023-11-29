@@ -34,20 +34,33 @@ class PenghasilanTeraturController extends Controller
         return view('penghasilan-teratur.create', compact('penghasilan'));
     }
 
-    public function getKaryawanByEntitas($nip){
-        $data = KaryawanModel::where('nip', $nip)->get();
-
-        if (count($data) > 0) {
+    public function getKaryawanByEntitas(Request $request){
+        $nip = $request->nip;
+        $tanggal = $request->tanggal;
+        $tanggal = $request->tanggal;
+        $id_tunjangan = $request->id_tunjangan;
+        $data = KaryawanModel::where('nip', $nip)->first();
+        $tunjangan = DB::table('tunjangan_karyawan AS tk')
+                        ->select('m.nama_tunjangan')
+                        ->join('mst_tunjangan AS m', 'm.id', 'tk.id_tunjangan')
+                        ->where('tk.nip', $nip)
+                        ->where('tk.id_tunjangan', $id_tunjangan)
+                        ->whereMonth('tk.created_at', date('m', strtotime( $tanggal)))
+                        ->whereYear('tk.created_at', date('Y', strtotime($tanggal)))
+                        ->first();
+        if ($data) {
             return response()->json([
                 'status' => 'Success',
                 'message' => 'success',
-                'data' => $data
+                'data' => $data,
+                'tunjangan' => $tunjangan
             ]);
         } else {
             return response()->json([
                 'status' => 'Success',
                 'message' => 'data not found',
-                'data' => 'null'
+                'data' => null,
+                'tunjangan' => null
             ]);
         }
     }
@@ -98,15 +111,16 @@ class PenghasilanTeraturController extends Controller
                             'nip' => $nip[$i],
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $id_tunjangan[$i],
-                            'created_at' => $tanggal,
-                            'updated_at' => $tanggal,
+                            'created_at' => now(),
+                            'updated_at' => now(),
                         ]);
                     }
                 }
             }
 
             Alert::success('Success', 'Berhasil menyimpan data');
-            return redirect()->route('penghasilan.import-penghasilan-teratur.index');
+            // return redirect()->route('penghasilan.import-penghasilan-teratur.index');
+            return redirect()->back();
 
         } catch (\Exception $e) {
             Alert::error('Error', $e->getMessage());

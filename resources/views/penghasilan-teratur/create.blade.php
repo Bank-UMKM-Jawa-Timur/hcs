@@ -1,12 +1,17 @@
 @extends('layouts.template')
 @push('style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
-
+    <style>
+        .hidden{
+            display: none;
+        }
+    </style>
 @endpush
 @push('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @endpush
 @section('content')
 
@@ -297,41 +302,67 @@
         function showToTable(data) {
             var penghasilan = $('#penghasilan').val();
             var total_data = data.length;
+            var date = new Date();
+            var hari_ini = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+            var id_tunjangan = $('#penghasilan').val()
+
             $('#btn-simpan').removeClass('d-none');
             $('#hasil-filter').removeClass('d-none');
 
             for (let i = 0; i < data.length; i++) {
-                var row = data[i];
-                (function (row, i) {
+                (function (index) {
+                    var row = data[index];
+                    var errorElement = $(`#error-karyawan-${index}`);
+
                     $.ajax({
-                        url: "{{ url('penghasilan/get-karyawan-by-entitas') }}/" + row[1].v,
+                        url: "{{ url('penghasilan/get-karyawan-by-entitas') }}",
                         type: "GET",
+                        data: {
+                            nip: row[1].v,
+                            tanggal: hari_ini,
+                            id_tunjangan: id_tunjangan,
+                        },
                         accept: "Application/json",
                         success: function (response) {
-                            console.log(response.data);
+                            console.log(response);
+
                             var nominal = formatNumber(row[3].v);
-                            var employeeData = response.data[0];
+                            var employeeData = response.data;
+                            var tunjanganExists = response.tunjangan;
                             var nama = employeeData && employeeData.nama_karyawan ? employeeData.nama_karyawan : 'Karyawan tidak ditemukan.';
-                            if (nama = 'Karyawan tidak ditemukan.') {
-                                $('#error-karyawan').removeClass('d-none').html('Silahkan edit atau hapus data ini.');
+
+                            if (tunjanganExists) {
+                                var nama_tunjangan = tunjanganExists.nama_tunjangan;
+                                var msg_tunjangan = `${nama} sudah ada di tunjangan ${nama_tunjangan}.`;
+                                var validation_msg = `${msg_tunjangan} Silahkan edit atau hapus data ini.`;
+                                errorElement.removeClass('d-none');
+                                errorElement.html(validation_msg);
+                                console.log(`Validasi tunjangan berhasil untuk indeks ${index}`);
+                            } else if (nama === 'Karyawan tidak ditemukan.') {
+                                errorElement.removeClass('d-none');
+                                errorElement.html('Silahkan edit atau hapus data ini.');
+                                console.log(`Validasi nama berhasil untuk indeks ${index}`);
+                            } else {
+                                console.log(`Validasi gagal untuk indeks ${index}`);
                             }
+
                             var new_tr = `
                                 <tr>
-                                    <td><span id="number[]">${(i + 1)}</span></td>
+                                    <td><span id="number[]">${(index + 1)}</span></td>
                                     <td>
-                                        <input type="hidden" name="number" id="number" class="form-control" value="${i + 1}">
-                                        <input type="hidden" name="penghasilan" id="penghasilan" class="form-control" value="${penghasilan}">
-                                        <input type="text" name="nip" id="nip" class="form-control nip" readonly value="${row[1].v}">
-                                        <span class="text-danger d-none" id="error-karyawan"></span>
+                                        <input type="hidden" name="number[]" class="form-control" value="${index + 1}">
+                                        <input type="hidden" name="penghasilan[]" class="form-control" value="${penghasilan}">
+                                        <input type="text" name="nip[]" class="form-control nip" readonly value="${row[1].v}">
+                                        <span class="text-danger d-none" data-error="${index}" id="error-karyawan-${index}"></span>
                                     </td>
                                     <td>
-                                        <input type="text" name="nama" id="nama" class="form-control nama" readonly value="${nama}">
+                                        <input type="text" name="nama[]" class="form-control nama" readonly value="${nama}">
                                     </td>
                                     <td>
-                                        <input type="text" name="nominal" id="nominal" class="form-control only-number nominal" readonly value="${nominal}">
+                                        <input type="text" name="nominal[]" class="form-control only-number nominal" readonly value="${nominal}">
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-warning btn-edit" data-index="${i}">
+                                        <button type="button" class="btn btn-sm btn-warning btn-edit" data-index="${index}">
                                             edit
                                         </button>
                                     </td>
@@ -342,13 +373,14 @@
                                     </td>
                                 </tr>
                             `;
+
                             $('#t_body').append(new_tr);
                         },
                         error: function (response) {
                             console.log(response);
                         }
                     });
-                })(row, i);
+                })(i);
             }
         }
 

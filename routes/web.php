@@ -143,7 +143,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::prefix('penghasilan')->name('penghasilan.')->group(function() {
         Route::resource('import-penghasilan-teratur', \App\Http\Controllers\Import\PenghasilanTeraturController::class);
-        Route::get('/get-karyawan-by-entitas/{entitas}', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
+        Route::get('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
         Route::get('/get-karyawan-search', [PenghasilanTeraturController::class, 'getKaryawanSearch'])->name('karyawan-search');
     });
 
