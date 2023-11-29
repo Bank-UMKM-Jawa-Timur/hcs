@@ -282,6 +282,15 @@ Coded by www.creative-tim.com
                                     </a>
                                 </li>
                                 @endcan
+                                @can('penghasilan - bonus')
+                                <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
+                                    <a href="{{ route('pajak_penghasilan.create') }}">
+                                        <i class="nc-icon nc-ruler-pencil"></i>
+                                        <p>Bonus</p>
+                                        <p></p>
+                                    </a>
+                                </li>
+                                @endcan
                             </ul>
                         </li>
 
