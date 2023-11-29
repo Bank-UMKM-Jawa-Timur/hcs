@@ -114,13 +114,6 @@
                                                     @endcan
                                                 </div>
                                             </div>
-
-                                            {{-- <form action="{{ route('karyawan.destroy', $item_roles->nip) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach
