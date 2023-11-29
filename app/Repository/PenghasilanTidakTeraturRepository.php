@@ -2,6 +2,11 @@
 
 namespace App\Repository;
 
+use App\Models\ImportPenghasilanTidakTeraturModel;
+use App\Models\KaryawanModel;
+use App\Models\TunjanganModel;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
 
 class PenghasilanTidakTeraturRepository
@@ -33,4 +38,36 @@ class PenghasilanTidakTeraturRepository
       return $bonus;
     }
 
+    public function getTHP($nip):int {
+        $karyawan = KaryawanModel::where('nip', $nip)
+          ->first();
+        $dateStart = Carbon::parse($karyawan->tgl_mulai);
+        $dateNow = Carbon::now();
+        $monthDiff = $dateNow->diffInMonths($dateStart);
+
+        if($monthDiff < 12) {
+          return $karyawan->gj_pokok * 2 / $monthDiff;
+        } else{
+          return $karyawan->gj_pokok * 2;
+        }
+    }
+
+    public function getTHRId(){
+        $tunjangan = TunjanganModel::where('nama_tunjangan', 'like', '%Tunjangan Hari Raya%')
+          ->first();
+        return $tunjangan->id;
+    }
+
+    public function store(array $data)
+    {
+        return ImportPenghasilanTidakTeraturModel::create([
+            'nip' => $data['nip'],
+            'id_tunjangan' => $this->getTHRId(),
+            'bulan' => $data['bulan'],
+            'tahun' => $data['tahun'],
+            'nominal' => $this->getTHP($data['nip']),
+            'keterangan' => $data['keterangan'] ?? '',
+            'created_at' => now()
+        ]);
+    }
 }
