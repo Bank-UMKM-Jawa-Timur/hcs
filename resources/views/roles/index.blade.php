@@ -79,9 +79,38 @@
                                                     </a>
                                                     @endcan
                                                     @can('setting - master - role - detail role')
-                                                    <a href="{{ route('role.show', $item_roles->id) }}" class="btn btn-outline-info p-1">
+                                                    <a href="{{ route('role.show', $item_roles->id) }}" class="btn btn-outline-info p-1 mr-2">
                                                         Detail
                                                     </a>
+                                                    @endcan
+                                                    @can('setting - master - role - delete role')
+                                                    <a href="javascript:void(0)" class="btn btn-outline-danger p-1" data-toggle="modal" data-target="#confirmHapusModal{{$item_roles->id}}">
+                                                            Hapus
+                                                    </a>
+                                                    {{-- modal hapus --}}
+                                                    <div class="modal fade" id="confirmHapusModal{{$item_roles->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Hapus Data</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p>Apakah Anda Yakin Ingin Menghapus Data Role, <b>{{$item_roles->name}}</b>?</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                                    <form action="{{ route('role.destroy', $item_roles->id) }}" method="POST">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                        <button type="submit" class="btn btn-danger">Hapus</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     @endcan
                                                 </div>
                                             </div>

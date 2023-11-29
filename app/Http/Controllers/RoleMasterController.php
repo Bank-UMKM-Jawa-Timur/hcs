@@ -171,6 +171,19 @@ class RoleMasterController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            DB::table('roles')
+                ->where('id', $id)
+                ->delete();
+
+            Alert::success('Berhasil', 'Berhasil Menghapus Data Role.');
+            return redirect()->route('role.index');
+        } catch(Exception $e){
+            Alert::error('Terjadi Kesalahan', ''.$e);
+            return redirect()->route('role.index')->withStatus($e->getMessage());
+        } catch(QueryException $e){
+            Alert::error('Terjadi Kesalahan', ''.$e);
+            return redirect()->route('role.index')->withStatus($e->getMessage());
+        }
     }
 }
