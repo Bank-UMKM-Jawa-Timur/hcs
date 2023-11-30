@@ -235,25 +235,14 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                <li class="dropdown @active('pengganti-biaya-kesehatan.index','uang-duka.index')" style="margin-top: -15px">
-                                    <a data-toggle="dropdown" aria-expanded="false">
+                                <li class="dropdown @active('pajak_penghasilan.create')" style="margin-top: -15px">
+                                    <a href="{{ route('pajak_penghasilan.create') }}">
                                         <i class="nc-icon nc-money-coins"></i>
-                                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Import Tidak Teratur
-                                        </p>
+                                        <p>Import Penghasilan Tidak Teratur</p>
                                         <p></p>
                                     </a>
-                                    <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                        <a class="dropdown-item @active('pengganti-biaya-kesehatan.index')"
-                                            href="{{ route('pengganti-biaya-kesehatan.index') }}">Pengganti Biaya Kesehatan</a>
-                                        <a class="dropdown-item @active('uang-duka.index')"
-                                            href="{{ route('uang-duka.index') }}">Uang Duka</a>
-                                        <a class="dropdown-item @active('lembur.index')"
-                                            href="{{ route('lembur.index') }}">Uang Lembur</a>
-                                        <a class="dropdown-item @active('spd.index')"
-                                            href="{{ route('spd.index') }}">SPD</a>
-                                    </div>
                                 </li>
-                                <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
+                                <li style="margin-top: -15px" class="@active('pajak_penghasilan.index') @active('get-penghasilan')">
                                     <a href="{{ route('pajak_penghasilan.index') }}">
                                         <i class="nc-icon nc-scissors"></i>
                                         <p>Pajak Penghasilan</p>
@@ -686,7 +675,7 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
-    @stack('script')
+    {{-- @stack('script') --}}
 </body>
 
 </html>
