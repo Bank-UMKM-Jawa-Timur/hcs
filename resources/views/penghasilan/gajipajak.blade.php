@@ -819,21 +819,18 @@
         var prtContent = document.getElementById("reportPrinting");
         var mywindow = window.open();
 
-        mywindow.document.write('<html><head><title></title>');
-        mywindow.document.write('<link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />');
-        mywindow.document.write('<link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />');
-        mywindow.document.write('<link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />');
-        mywindow.document.write('<style> .table-responsive {-ms-overflow-style: none; scrollbar-width: none; } .table-responsive::-webkit-scrollbar { overflow-y: hidden; overflow-x: scroll; } </style>');
-        mywindow.document.write('</head><body >');
+        mywindow.document.write(`<html><head><title></title>`);
+        mywindow.document.write(`<link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />`);
+        mywindow.document.write(`<link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />`);
+        mywindow.document.write(`<link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />`);
+        mywindow.document.write(`<style> .table-responsive {-ms-overflow-style: none; scrollbar-width: none; } .table-responsive::-webkit-scrollbar { overflow-y: hidden; overflow-x: scroll; } </style>`);
         mywindow.document.write(prtContent.innerHTML);
-        mywindow.document.write('</body></html>');
+        mywindow.document.write(`</body></html>`);
 
         setTimeout(function () {
-        mywindow.print();
-        mywindow.close();
+            mywindow.print();
+            //mywindow.close();
         }, 1000)
-        return true;
-
         return true;
     }
 </script>

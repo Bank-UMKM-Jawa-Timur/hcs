@@ -90,13 +90,41 @@ class KaryawanModel extends Model
         return $this->hasOne(KeluargaModel::class, 'nip');
     }
 
+    public function gaji() {
+        return $this->hasOne(GajiPerBulanModel::class, 'nip');
+    }
+
+    public function tunjanganKaryawan() {
+        return $this->hasOne(TunjanganKaryawanModel::class, 'nip');
+    }
+
     public function tunjangan()
     {
         return $this->belongsToMany(
             TunjanganModel::class,
             'tunjangan_karyawan',
             'nip',
-            'id_tunjangan'
+            'id_tunjangan',
+        )->withPivot('nominal');
+    }
+
+    public function tunjanganTidakTetap()
+    {
+        return $this->belongsToMany(
+            TunjanganModel::class,
+            'penghasilan_tidak_teratur',
+            'nip',
+            'id_tunjangan',
+        )->withPivot('nominal');
+    }
+
+    public function bonus()
+    {
+        return $this->belongsToMany(
+            TunjanganModel::class,
+            'penghasilan_tidak_teratur',
+            'nip',
+            'id_tunjangan',
         )->withPivot('nominal');
     }
 }

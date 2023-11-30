@@ -18,6 +18,7 @@ use App\Http\Controllers\LaporanPergerakanKarir\LaporanPenonaktifanController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\MstPenambahanBrutoController;
 use App\Http\Controllers\MstPenguranganBrutoController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PengkinianDataController;
@@ -288,6 +289,12 @@ Route::group(['middleware' => 'auth'], function () {
         return view('gaji_perbulan.import');
     });
     Route::post('post-import-pph', [GajiPerBulanController::class, 'importPPH'])->name('import-pph');
+
+    Route::prefix('payroll')
+        ->name('payroll.')
+        ->group(function() {
+            Route::get('/', [PayrollController::class, 'index'])->name('');
+        });
 });
 Auth::routes();
 
