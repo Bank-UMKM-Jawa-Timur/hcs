@@ -24,4 +24,8 @@ class PayrollController extends Controller
 
         return $data;
     }
+
+    public function templateCetak (){
+        return view('payroll.template');
+    }
 }

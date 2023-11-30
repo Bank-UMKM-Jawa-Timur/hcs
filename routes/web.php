@@ -294,6 +294,7 @@ Route::group(['middleware' => 'auth'], function () {
         ->name('payroll.')
         ->group(function() {
             Route::get('/', [PayrollController::class, 'index'])->name('');
+            Route::get('/template-cetak', [PayrollController::class, 'templateCetak'])->name('template-cetak');
         });
 });
 Auth::routes();
