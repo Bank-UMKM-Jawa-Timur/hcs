@@ -335,7 +335,7 @@
                                 <input type="text" disabled class="form-control" value="{{ $item->nama_tunjangan }}">
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" disabled class="form-control" value="Rp. {{ rupiah($item->nominal) }}">
+                                <input type="text" disabled class="form-control" value="Rp. {{ ($item->nama_tunjangan != 'DPP') ? rupiah($item->nominal) : rupiah($dpp_perhitungan) }}">
                             </div>
                         </div>
                         @php
