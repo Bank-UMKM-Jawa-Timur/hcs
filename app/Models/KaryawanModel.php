@@ -127,4 +127,9 @@ class KaryawanModel extends Model
             'id_tunjangan',
         )->withPivot('nominal');
     }
+
+    public function potonganGaji()
+    {
+        return $this->belongsTo(PotonganGajiModel::class, 'nip', 'nip');
+    }
 }

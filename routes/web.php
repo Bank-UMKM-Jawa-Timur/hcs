@@ -293,7 +293,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::prefix('payroll')
         ->name('payroll.')
         ->group(function() {
-            Route::get('/', [PayrollController::class, 'index'])->name('');
+            Route::get('/', [PayrollController::class, 'index'])->name('index');
             Route::get('/template-cetak', [PayrollController::class, 'templateCetak'])->name('template-cetak');
         });
 });
