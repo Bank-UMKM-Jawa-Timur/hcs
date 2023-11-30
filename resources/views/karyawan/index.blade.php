@@ -123,31 +123,48 @@
                                             <td style="min-width: 130px">
                                                 <div class="container">
                                                     <div class="row">
-                                                        <a href="{{ route('karyawan.edit', $krywn->nip) }}">
-                                                            <button class="btn btn-outline-warning p-1 mr-2"
-                                                                style="min-width: 60px">
-                                                                Edit
-                                                            </button>
+                                                        <a href="{{ route('karyawan.edit', $krywn->nip) }}"
+                                                            class="btn btn-outline-warning p-1 mr-2"
+                                                            style="min-width: 60px">
+                                                            Edit
                                                         </a>
-
-                                                        <a href="{{ route('karyawan.show', $krywn->nip) }}">
-                                                            <button class="btn btn-outline-info p-1"
-                                                                style="min-width: 60px">
-                                                                Detail
-                                                            </button>
+                                                        <a href="{{ route('karyawan.show', $krywn->nip) }}"
+                                                            class="btn btn-outline-info p-1"
+                                                            style="min-width: 60px">
+                                                            Detail
                                                         </a>
                                                     </div>
                                                 </div>
-
-                                                {{-- <form action="{{ route('karyawan.destroy', $krywn->nip) }}" method="POST">
-                                                  @csrf
-                                                  @method('DELETE')
-
-                                                  <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                                                </form> --}}
                                             </td>
                                         </tr>
                                     @endif
+                                @endforeach
+                                @foreach ($karyawan as $krywn)
+                                    <tr>
+                                        <td>{{ $i++ }}</td>
+                                        <td>{{ $krywn->nip }}</td>
+                                        <td>{{ $krywn->nik }}</td>
+                                        <td>{{ $krywn->nama_karyawan }}</td>
+                                        <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
+                                        </td>
+                                        <td>{{$krywn->display_jabatan}}</td>
+                                        <td style="min-width: 130px">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <a href="{{ route('karyawan.edit', $krywn->nip) }}"
+                                                        class="btn btn-outline-warning p-1 mr-2"
+                                                        style="min-width: 60px">
+                                                        Edit
+                                                    </a>
+                                                    <a href="{{ route('karyawan.show', $krywn->nip) }}"
+                                                        class="btn btn-outline-info p-1"
+                                                        style="min-width: 60px">
+                                                        Detail
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
