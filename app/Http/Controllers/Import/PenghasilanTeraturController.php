@@ -14,7 +14,7 @@ class PenghasilanTeraturController extends Controller
      */
     public function index()
     {
-        return 'list';
+
     }
 
     /**
@@ -24,7 +24,7 @@ class PenghasilanTeraturController extends Controller
      */
     public function create()
     {
-        //
+        return view('penghasilan-teratur.create');
     }
 
     /**
