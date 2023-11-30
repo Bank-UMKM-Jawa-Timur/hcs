@@ -29,7 +29,10 @@ class BonusController extends Controller
      */
     public function create()
     {
-        return view('bonus.import');
+        $tunjangan = TunjanganModel::select('nama_tunjangan','id')->where('kategori','bonus')->get();
+        return view('bonus.import',[
+            'data_tunjangan' => $tunjangan
+        ]);
     }
 
     /**
@@ -43,26 +46,27 @@ class BonusController extends Controller
         $request->validate([
             'upload_csv' => 'required|mimes:xlsx,xls',
             'nip.*' => 'required',
+            'kategori_tunjangan' => 'required',
             'kategori.*' => 'required',
             'nominal.*' => 'required',
         ],[
             'kategori.*' => ':attribute harus terisi.'
         ],[
-            'kategori.*' => 'Kategori'
+            'kategori.*' => 'Kategori',
+            'nip.*' => 'NIP'
         ]);
         try {
             \DB::beginTransaction();
             if ($request->get('kategori_bonus') == 'penghasilan-lainnya') {
-                $tunjangan = TunjanganModel::where('nama_tunjangan','Tambahan Penghasilan')->where('kategori','bonus')->first();
+                $tunjangan = TunjanganModel::where('id',$request->get('kategori_tunjangan'))->first();
                 for ($i=0; $i < count($request->get('nip')); $i++) {
                     $data = KaryawanModel::select('nip')->where('nip', $_POST['nip'][$i])->first()->nip ?? null;
                     if ($data) {
                         DB::table('penghasilan_tidak_teratur')
                         ->insert([
                             'nip' => $data,
-                            'id_tunjangan' => $tunjangan->id,
+                            'id_tunjangan' => $request->get('kategori_tunjangan'),
                             'nominal' => $_POST['nominal'][$i],
-                            'ket' => $_POST['kategori'][$i],
                             'bulan' => Carbon::now()->format('m'),
                             'tahun' => Carbon::now()->format('Y'),
                             'created_at' => now()

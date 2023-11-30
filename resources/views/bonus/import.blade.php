@@ -14,6 +14,14 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
         $(document).ready(function() {
+            // cek kategori bonus
+            $('#kategori-bonus').on('change',function(e) {
+                if ($(this).val() == 'penghasilan-lainnya') {
+                    $('.kategori-tunjangan-select').removeClass('hidden');
+                }else{
+                    $('.kategori-tunjangan-select').addClass('hidden');
+                }
+            })
             $('.btn-import').on('click',function(element) {
                 $('#table_item tbody').empty();
                 $('#table-data').removeClass('hidden');
@@ -50,7 +58,7 @@
                                 var numberPattern = /\d+/g;
                                 var cell_from_number = cell_from.match(numberPattern)[0]
                                 var cell_to_number = cell_to.match(numberPattern)[0]
-                                var cell_range_letter = ['A', 'B', 'C']
+                                var cell_range_letter = ['A', 'B']
 
                                 var arr_data = [];
 
@@ -103,14 +111,12 @@
                             success: function (res) {
                                 var nama = res != 'null' ? res : '-';
                                 if (res != 'null') {
-                                    $('#table_item tbody tr:eq(' + index + ') span').removeClass('hidden');
+                                    var text = '';
                                 } else {
-                                    console.log('agaag');
-                                    $('#table_item tbody tr:eq(' + index + ') span').addClass('hidden')
-
+                                    var text = `<small class="text-danger" id="alert">Data NIP tidak ditemukan silahkan klik button edit</small>`;
                                 }
 
-                                createTableRow(row, nama,index);
+                                createTableRow(row, nama,index, text);
                             },
                             complete: function () {
                                 // Continue processing the next row after the AJAX request is complete
@@ -125,21 +131,18 @@
                 handleRow(0);
             }
 
-            function createTableRow(row, nama,index) {
+            function createTableRow(row, nama,index,text) {
                 var new_body_tr = `
                     <tr>
                         <td>
                             <input type="text" name="nip[]" class="typeahead form-control nip-input" value="${row[0]}" readonly>
-                            <small class="hidden" id="alert">Data NIP tidak ditemukan</small>
+                            ${text}
                         </td>
                         <td>
                             <input type="text" name="nama[]" class="form-control nama-input" value="${nama}" readonly>
                         </td>
                         <td>
-                            <input type="text" name="kategori[]" class="form-control kategori-input" value="${row[1]}" readonly>
-                        </td>
-                        <td>
-                            <input type="text" name="nominal[]" class="form-control nominal-input" value="${row[2]}" readonly>
+                            <input type="text" name="nominal[]" class="form-control nominal-input" value="${row[1]}" readonly>
                         </td>
                         <td>
                             <button type="button" class="btn btn-warning edit-button" data-index="${index}">Edit</button>
@@ -152,6 +155,7 @@
             $('#table_item tbody').on('click', '.edit-button', function () {
                 var index = $(this).data('index');
                 var rowInputs = $('#table_item tbody tr:eq(' + index + ') input');
+                // var rowSpan = $('#table_item tbody tr:eq('+ index +') span');
                 var namaInputs = $('#table_item tbody tr:eq(' + index + ') input.nama-input');
                 $('#table_item tbody tr:eq(' + index + ') input.nip-input').autocomplete({
                     source: function( request, response ) {
@@ -169,6 +173,9 @@
                     },
                     select: function (event, ui) {
                         $('#table_item tbody tr:eq(' + index + ') input.nip-input').val(ui.item.value);
+                        // rowSpan.remove();
+                        // console.log(rowSpan);
+                        $('#table_item tbody tr:eq(' + index + ')').find('small').remove();
                         namaInputs.val(ui.item.nama)
                         return false;
                     }
@@ -212,16 +219,26 @@
                     <div class="form-row">
                         <div class="col">
                             <label for="">Kategori</label>
-                            <select name="kategori_bonus" id="kategori" class="form-control">
+                            <select name="kategori_bonus" id="kategori-bonus" class="form-control">
                                 <option value="jaspro">Jaspro DanKes</option>
                                 <option value="thr">Import THR </option>
                                 <option value="penghasilan-lainnya">Import Penghasilan Lainnya</option>
                             </select>
                         </div>
+                        <div class="col hidden kategori-tunjangan-select">
+                            <label for="">Kategori Tunjangan</label>
+                            <select name="kategori_tunjangan" id="kategori" class="form-control">
+                                @forelse ($data_tunjangan as $item)
+                                    <option value="{{ $item->id }}">{{ ucwords($item->nama_tunjangan) }}</option>
+                                @empty
+
+                                @endforelse
+                            </select>
+                        </div>
                         <div class="col">
                             <label for="">Data Excel</label>
-                            <div class="custom-file col-md-12">
-                                <input type="file" name="upload_csv" class="custom-file-input" id="upload_csv"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                            <div class="custom-file col-md-12 ">
+                                <input type="file" name="upload_csv" class="custom-file-input form-control py-3" id="upload_csv"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                 <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
                             </div>
                         </div>
@@ -240,9 +257,6 @@
                         </th>
                         <th>
                             Nama
-                        </th>
-                        <th>
-                            Kategori
                         </th>
                         <th>
                             Nominal
