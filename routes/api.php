@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ProfilKantorController;
 use App\Http\Controllers\Api\Select2\KaryawanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Row;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,8 @@ Route::prefix('select2')->name('api.select2.')->group(function () {
 
 Route::name('api.')->group(function () {
     Route::get('karyawan', ApiKaryawanController::class)->name('karyawan');
+    Route::get('get-karyawan',[ApiKaryawanController::class,'getKaryawan'])->name('get.karyawan');
+    Route::get('get-autocomplete',[ApiKaryawanController::class,'autocomplete'])->name('get.autocomplete');
 });
 
 Route::prefix('v1')->group(function() {
