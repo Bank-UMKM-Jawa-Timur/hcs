@@ -141,7 +141,7 @@ class RoleSeeder extends Seeder
                 $all_menu = \DB::table('permissions')->pluck('name');
                 $role_akses->givePermissionTo($all_menu);
             }else{
-                $role_akses->givePermissionTo(['dashboard']);
+                $role_akses->givePermissionTo(['dashboard','setting - master - role','setting - master - role - create role']);
             }
         }
     }
