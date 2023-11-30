@@ -23,6 +23,9 @@
             <div class="row p-3">
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
+                        @include('components.pagination.header')
+                        <table class="table whitespace-nowrap" id="table" style="width: 100%">
+                            <thead class="text-primary">
                         <div class="d-flex justify-content-between mb-4">
                         <div class="p-2 mt-3 w-100">
                             <label for="page_length" class="mr-3 text-sm text-neutral-400">show</label>
@@ -74,47 +77,88 @@
                                 @php
                                   $page = isset($_GET['page']) ? $_GET['page'] : 1;
                                   $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
-                                  $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
-                                  $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
-                                  $i = $page == 1 ? 1 : $start;
+                                  $pagination = \App\Helpers\Pagination::generateNumber($page, $page_length);
+                                  $number = 1;
+                                  if ($pagination) {
+                                    $number = $pagination['iteration'];
+                                  }
                                 @endphp
                                 @foreach ($karyawan as $krywn)
-                                    <tr>
-                                        <td>{{ $i++ }}</td>
-                                        <td>{{ $krywn->nip }}</td>
-                                        <td>{{ $krywn->nik }}</td>
-                                        <td>{{ $krywn->nama_karyawan }}</td>
-                                        <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
-                                        </td>
-                                        <td>{{$krywn->display_jabatan}}</td>
-                                        <td style="min-width: 130px">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <a href="{{ route('karyawan.edit', $krywn->nip) }}"
-                                                        class="btn btn-outline-warning p-1 mr-2"
-                                                        style="min-width: 60px">
-                                                        Edit
-                                                    </a>
-                                                    <a href="{{ route('karyawan.show', $krywn->nip) }}"
-                                                        class="btn btn-outline-info p-1"
-                                                        style="min-width: 60px">
-                                                        Detail
-                                                    </a>
+                                    @if ($krywn->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $i++ }}</td>
+                                            <td>{{ $krywn->nip }}</td>
+                                            <td>{{ $krywn->nik }}</td>
+                                            <td>{{ $krywn->nama_karyawan }}</td>
+                                            <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
+                                            </td>
+                                            @php
+                                                $prefix = match ($krywn->status_jabatan) {
+                                                    'Penjabat' => 'Pj. ',
+                                                    'Penjabat Sementara' => 'Pjs. ',
+                                                    default => '',
+                                                };
+                                                
+                                                if ($krywn->jabatan) {
+                                                    $jabatan = $krywn->jabatan->nama_jabatan;
+                                                } else {
+                                                    $jabatan = 'undifined';
+                                                }
+                                                
+                                                $ket = $krywn->ket_jabatan ? "({$krywn->ket_jabatan})" : '';
+                                                
+                                                if (isset($krywn->entitas->subDiv)) {
+                                                    $entitas = $krywn->entitas->subDiv->nama_subdivisi;
+                                                } elseif (isset($krywn->entitas->div)) {
+                                                    $entitas = $krywn->entitas->div->nama_divisi;
+                                                } else {
+                                                    $entitas = '';
+                                                }
+                                                
+                                                if ($jabatan == 'Pemimpin Sub Divisi') {
+                                                    $jabatan = 'PSD';
+                                                } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
+                                                    $jabatan = 'PBO';
+                                                } elseif ($jabatan == 'Pemimpin Bidang Pemasaran') {
+                                                    $jabatan = 'PBP';
+                                                } else {
+                                                    $jabatan = $krywn->jabatan ? $krywn->jabatan->nama_jabatan : 'undifined';
+                                                }
+                                            @endphp
+                                            <td>{{ $prefix . $jabatan }} {{ $entitas }}
+                                                {{ $krywn?->bagian?->nama_bagian }} {{ $ket }}</td>
+                                            <td style="min-width: 130px">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <a href="{{ route('karyawan.edit', $krywn->nip) }}">
+                                                            <button class="btn btn-outline-warning p-1 mr-2"
+                                                                style="min-width: 60px">
+                                                                Edit
+                                                            </button>
+                                                        </a>
+
+                                                        <a href="{{ route('karyawan.show', $krywn->nip) }}">
+                                                            <button class="btn btn-outline-info p-1"
+                                                                style="min-width: 60px">
+                                                                Detail
+                                                            </button>
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            {{-- <form action="{{ route('karyawan.destroy', $krywn->nip) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
+                                                {{-- <form action="{{ route('karyawan.destroy', $krywn->nip) }}" method="POST">
+                                                  @csrf
+                                                  @method('DELETE')
 
-                                                <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                                            </form> --}}
-                                        </td>
-                                    </tr>
+                                                  <button type="submit" class="btn btn-danger btn-block">Delete</button>
+                                                </form> --}}
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="d-flex justify-content-between mt-5">
+                        <div class="d-flex justify-content-between">
                           <div>
                             Showing {{$start}} to {{$end}} of {{$karyawan->total()}} entries
                           </div>
@@ -134,8 +178,10 @@
 @section('custom_script')
     <script>
         $('#page_length').on('change', function() {
-            $('#form').submit()
+          $(".loader-wrapper").removeAttr("style"); // show loading
+          $('#form').submit()
         })
+
         // Adjust pagination url
         var btn_pagination = $(`.pagination`).find('a')
         var page_url = window.location.href
