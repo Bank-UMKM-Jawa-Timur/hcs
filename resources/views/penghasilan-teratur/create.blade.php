@@ -199,6 +199,7 @@
 
             if (penghasilan && filePenghasilan) {
                 importExcel();
+                $('#table_item tbody').empty();
                 $('#error-penghasilan').addClass('d-none')
                 $('#error-file').addClass('d-none')
             } else {
@@ -312,7 +313,8 @@
             for (let i = 0; i < data.length; i++) {
                 (function (index) {
                     var row = data[index];
-                    var errorElement = $(`#error-karyawan-${index}`);
+                    var errorElement = $(`tbody #error-karyawan-${index}`);
+                    // console.log(errorElement);
 
                     $.ajax({
                         url: "{{ url('penghasilan/get-karyawan-by-entitas') }}",
@@ -324,26 +326,28 @@
                         },
                         accept: "Application/json",
                         success: function (response) {
-                            console.log(response);
+                            // console.log(response);
 
                             var nominal = formatNumber(row[3].v);
                             var employeeData = response.data;
                             var tunjanganExists = response.tunjangan;
                             var nama = employeeData && employeeData.nama_karyawan ? employeeData.nama_karyawan : 'Karyawan tidak ditemukan.';
-
+                            var validation_msg = "";
                             if (tunjanganExists) {
                                 var nama_tunjangan = tunjanganExists.nama_tunjangan;
                                 var msg_tunjangan = `${nama} sudah ada di tunjangan ${nama_tunjangan}.`;
-                                var validation_msg = `${msg_tunjangan} Silahkan edit atau hapus data ini.`;
-                                errorElement.removeClass('d-none');
+                                validation_msg = `${msg_tunjangan} Silahkan edit atau hapus data ini.`;
+                                // errorElement.removeClass('d-none');
                                 errorElement.html(validation_msg);
-                                console.log(`Validasi tunjangan berhasil untuk indeks ${index}`);
+                                // console.log(`Validasi tunjangan berhasil untuk indeks ${index}`);
                             } else if (nama === 'Karyawan tidak ditemukan.') {
-                                errorElement.removeClass('d-none');
-                                errorElement.html('Silahkan edit atau hapus data ini.');
-                                console.log(`Validasi nama berhasil untuk indeks ${index}`);
+                                validation_msg = 'Nip tidak di temukan. Silahkan edit atau hapus data ini.'
+                                // errorElement.removeClass('d-none');
+                                // console.log(`Validasi nama berhasi l untuk indeks ${index}`);
+                                errorElement.html(validation_msg);
                             } else {
-                                console.log(`Validasi gagal untuk indeks ${index}`);
+                                validation_msg = ""
+                                errorElement.html(validation_msg);
                             }
 
                             var new_tr = `
@@ -353,7 +357,7 @@
                                         <input type="hidden" name="number[]" class="form-control" value="${index + 1}">
                                         <input type="hidden" name="penghasilan[]" class="form-control" value="${penghasilan}">
                                         <input type="text" name="nip[]" class="form-control nip" readonly value="${row[1].v}">
-                                        <span class="text-danger d-none" data-error="${index}" id="error-karyawan-${index}"></span>
+                                        <small class="text-danger" data-error="${index}" id="error-karyawan-${index}">${validation_msg}</small>
                                     </td>
                                     <td>
                                         <input type="text" name="nama[]" class="form-control nama" readonly value="${nama}">
@@ -374,7 +378,7 @@
                                 </tr>
                             `;
 
-                            $('#t_body').append(new_tr);
+                            $('#table_item tbody').append(new_tr);
                         },
                         error: function (response) {
                             console.log(response);

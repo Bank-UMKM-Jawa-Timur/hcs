@@ -97,6 +97,7 @@ class PenghasilanTeraturController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         try {
             $total = $request->get('number');
             $id_tunjangan = $request->get('penghasilan');
@@ -107,6 +108,17 @@ class PenghasilanTeraturController extends Controller
             if ($total) {
                 if (is_array($total)) {
                     for ($i=0; $i < count($total); $i++) {
+                        $dataAda = DB::table('tunjangan_karyawan')->where('nip', $nip[$i])
+                            ->where('id_tunjangan', $id_tunjangan[$i])
+                            ->where('created_at', $tanggal)
+                            ->count();
+
+                        $dataTidakDitemukan = KaryawanModel::where('nip', $nip[$i])->count();
+
+                        if ($dataAda > 1 && $dataTidakDitemukan < 1) {
+                            continue;
+                        }
+
                         DB::table('tunjangan_karyawan')->insert([
                             'nip' => $nip[$i],
                             'nominal' => $nominal[$i],
