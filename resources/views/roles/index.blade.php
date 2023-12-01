@@ -2,28 +2,19 @@
 
 @section('content')
     <div class="card-header">
-        <h5 class="card-title">Data Karyawan</h5>
-        <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="/karyawan">Karyawan</a></p>
+        <h5 class="card-title">Data Roles</h5>
+        <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('role.index') }}">Roles</p>
     </div>
 
     <div class="card-body">
         <div class="col">
             <div class="row">
-                @can('manajemen karyawan - data karyawan - create karyawan')
-                    <a class="mb-3" href="{{ route('karyawan.create') }}">
-                        <button class="btn btn-primary">tambah karyawan</button>
-                    </a>
+                @can('setting - master - role - create role')
+                <a class="mb-3" href="{{ route('role.create') }}">
+                    <button class="btn btn-primary">tambah role</button>
+                </a>
                 @endcan
-                @can('manajemen karyawan - data karyawan - import karyawan')
-                    <a class="ml-3" href="{{ route('import') }}">
-                        <button class="btn btn-primary">import karyawan</button>
-                    </a>
-                @endcan
-                @can('manajemen karyawan - data karyawan - export karyawan')
-                    <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
-                        <button class="btn btn-primary">Export Karyawan</button>
-                    </a>
-                @endcan
+
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -56,19 +47,10 @@
                             <thead class="text-primary">
                                 <th>No</th>
                                 <th>
-                                    NIP
+                                    Name
                                 </th>
                                 <th>
-                                    NIK
-                                </th>
-                                <th>
-                                    Nama karyawan
-                                </th>
-                                <th>
-                                    Kantor
-                                </th>
-                                <th>
-                                    Jabatan
+                                    Guard Name
                                 </th>
                                 <th>
                                     Aksi
@@ -82,34 +64,34 @@
                                   $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
                                   $i = $page == 1 ? 1 : $start;
                                 @endphp
-                                @foreach ($karyawan as $krywn)
+                                @foreach ($data as $item_roles)
                                     <tr>
                                         <td>{{ $i++ }}</td>
-                                        <td>{{ $krywn->nip }}</td>
-                                        <td>{{ $krywn->nik }}</td>
-                                        <td>{{ $krywn->nama_karyawan }}</td>
-                                        <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
-                                        </td>
-                                        <td>{{$krywn->display_jabatan}}</td>
+                                        <td>{{ $item_roles->name }}</td>
+                                        <td>{{ $item_roles->guard_name }}</td>
+
                                         <td style="min-width: 130px">
                                             <div class="container">
                                                 <div class="row">
-                                                    @can('manajemen karyawan - data karyawan - edit karyawan')
-                                                        <a href="{{ route('karyawan.edit', $krywn->nip) }}"
-                                                            class="btn btn-outline-warning p-1 mr-2"
-                                                            style="min-width: 60px">
-                                                            Edit
-                                                        </a>
+                                                    @can('setting - master - role - edit role')
+                                                    <a href="{{ route('role.edit', $item_roles->id) }}" class="btn btn-outline-warning p-1 mr-2">
+                                                        Edit
+                                                    </a>
                                                     @endcan
-                                                    @can('manajemen karyawan - data karyawan - detail karyawan')
-                                                        <a href="{{ route('karyawan.show', $krywn->nip) }}"
-                                                            class="btn btn-outline-info p-1"
-                                                            style="min-width: 60px">
-                                                            Detail
-                                                        </a>
+                                                    @can('setting - master - role - detail role')
+                                                    <a href="{{ route('role.show', $item_roles->id) }}" class="btn btn-outline-info p-1">
+                                                        Detail
+                                                    </a>
                                                     @endcan
                                                 </div>
                                             </div>
+
+                                            {{-- <form action="{{ route('karyawan.destroy', $item_roles->nip) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit" class="btn btn-danger btn-block">Delete</button>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -117,11 +99,11 @@
                         </table>
                         <div class="d-flex justify-content-between">
                           <div>
-                            Showing {{$start}} to {{$end}} of {{$karyawan->total()}} entries
+                            Showing {{$start}} to {{$end}} of {{$data->total()}} entries
                           </div>
                           <div>
-                            @if ($karyawan instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                            {{ $karyawan->links('pagination::bootstrap-4') }}
+                            @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                            {{ $data->links('pagination::bootstrap-4') }}
                             @endif
                           </div>
                         </div>

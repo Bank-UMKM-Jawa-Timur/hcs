@@ -6,13 +6,15 @@
         <h5 class="card-title">Data Divisi</h5>
         <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('divisi.index') }}">Divisi</a></p>
       </div>
-      
+
       <div class="card-body">
         <div class="col">
           <div class="row">
+            @can('setting - master - divisi - create divisi')
             <a class="mb-3" href="{{ route('divisi.create') }}">
               <button class="btn btn-primary">Tambah Divisi</button>
             </a>
+            @endcan
             <div class="table-responsive overflow-hidden content-center">
               <table class="table whitespace-nowrap" id="table" style="width: 100%">
                 <thead class=" text-primary">
@@ -46,16 +48,18 @@
                           </td>
                           <td>
                             {{-- <div class="row"> --}}
-                              <a href="{{ route('divisi.edit', $item['kd_divisi']) }}">
-                                <button class="btn btn-warning">
-                                    Edit
-                                </button>
-                              </a>
-  
+                                @can('setting - master - divisi - edit divisi')
+                                <a href="{{ route('divisi.edit', $item['kd_divisi']) }}">
+                                  <button class="btn btn-warning">
+                                      Edit
+                                  </button>
+                                </a>
+                                @endcan
+
                               {{-- <form action="{{ route('divisi.destroy', $item['kd_divisi']) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                            
+
                                 <button type="submit" class="btn btn-danger btn-block">Delete</button>
                               </form> --}}
                             {{-- </div> --}}
