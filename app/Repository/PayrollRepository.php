@@ -37,7 +37,9 @@ class PayrollRepository
          * bpjs kesehatan = jkn 
          */
 
-        if($kantor == 'Pusat'){
+        $kode_cabang_arr = [];
+        
+        if($kantor == 'pusat'){
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('kd_cabang', '000')
                 ->where('active', 1)
@@ -52,6 +54,9 @@ class PayrollRepository
                 ->first();
         }
         else {
+            $cabangRepo = new CabangRepository;
+            $kode_cabang_arr = $cabangRepo->listCabang(true);
+
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('mst_profil_kantor.kd_cabang', $kantor)
                 ->where('active', 1)
@@ -117,7 +122,9 @@ class PayrollRepository
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji")
-                                    );
+                                    )
+                                    ->where('bulan', $month)
+                                    ->where('tahun', $year);
                                 },
                                 'tunjangan' => function($query) use ($month, $year) {
                                     $query->whereMonth('tunjangan_karyawan.created_at', $month)
@@ -158,11 +165,20 @@ class PayrollRepository
                                 'jkn',
                             )
                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
-                            ->where(function($query) use ($month, $year) {
+                            ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
                                 $query->whereRelation('gaji', 'bulan', $month)
-                                ->whereRelation('gaji', 'tahun', $year);
+                                ->whereRelation('gaji', 'tahun', $year)
+                                ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
+                                    if ($kantor == 'pusat') {
+                                        $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
+                                    }
+                                    else {
+                                        $q->orWhere('mst_karyawan.kd_entitas', $kantor);
+                                    }
+                                    $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
+                                });
                             })
-                            ->get();
+                            ->paginate($limit);
 
         foreach ($data as $key => $karyawan) {
             $nominal_jp = 0;
@@ -201,7 +217,6 @@ class PayrollRepository
                         }
                     }
                     $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
-                    $bpjs_tk = $jkk + $jht + $jkm + $jp_penambah;
                 }
 
                 // Get Potongan(JP1%, DPP 5%)
@@ -214,7 +229,7 @@ class PayrollRepository
                     $tj_kesejahteraan = $obj_gaji->tj_kesejahteraan;
 
                     // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5% 
-                    $dpp = ($gj_pokok + $tj_keluarga + ($tj_kesejahteraan * 0.5)) + ($persen_dpp / 100);
+                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
                     if($gaji >= $nominal_jp){
                         $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
                     } else {
@@ -223,6 +238,24 @@ class PayrollRepository
                 }
                 $potongan->dpp = $dpp;
                 $potongan->jp_1_persen = $jp_1_persen;
+                
+                // Get BPJS TK
+                if ($obj_gaji->bulan > 2) {
+                    if ($total_gaji > $jp_mar_des) {
+                        $bpjs_tk = $jp_mar_des * 1 / 100;
+                    }
+                    else {
+                        $bpjs_tk = $total_gaji * 1 / 100;
+                    }
+                }
+                else {
+                    if ($total_gaji >= $jp_jan_feb) {
+                        $bpjs_tk = $jp_jan_feb * 1 / 100;
+                    }
+                    else {
+                        $bpjs_tk = $$total_gaji * 1 / 100;
+                    }
+                }
 
             }
             $karyawan->jamsostek = $jamsostek;
@@ -230,12 +263,19 @@ class PayrollRepository
             $karyawan->bpjs_kesehatan = $bpjs_kesehatan;
             $karyawan->potongan = $potongan;
             // Get total yg diterima
-            if ($karyawan->potongan_gaji) {
-                $total_potongan = $karyawan->potongan_gaji->total_potongan;
+            if ($karyawan->potonganGaji) {
+                $total_potongan += $karyawan->potonganGaji->total_potongan;
             }
+
+            if ($karyawan->potongan) {
+                $total_potongan += $karyawan->potongan->dpp;
+            }
+            
+            $total_potongan += $bpjs_tk;
 
             $total_yg_diterima = $total_gaji - $total_potongan;
             $karyawan->total_yg_diterima = $total_yg_diterima;
+            $karyawan->total_potongan = $total_potongan;
         }
         return $data;
     }

@@ -1,5 +1,11 @@
 @extends('layouts.template')
-
+@push('style')
+    <style>
+        table th {
+            border: 1px solid #e3e3e3 !important;
+        }
+    </style>
+@endpush
 @section('content')
     <div class="card-header">
         <h5 class="card-title">Payroll</h5>
@@ -14,63 +20,75 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="">Kantor</label>
+                                    <label for="">Kantor<span class="text-danger">*</span></label>
                                     <select name="kantor" id="kantor"
                                         class="form-control">
-                                        <option value="">-- Pilih kantor --</option>
-                                        <option value="pusat">Pusat</option>
-                                        <option value="cabang">Cabang</option>
+                                        <option value="0">-- Pilih kantor --</option>
+                                        <option value="pusat" @if(\Request::get('kantor') == 'pusat') selected @endif>Pusat</option>
+                                        <option value="cabang" @if(\Request::get('kantor') != '' && \Request::get('kantor') != 'pusat') selected @endif>Cabang</option>
                                     </select>
+                                    @error('kantor')
+                                        <small class="text-danger">{{$message}}</small>
+                                    @enderror
                                 </div>
                             </div>
-                            <div class="col cabang-input d-none">
+                            <div class="col cabang-input @if(\Request::get('kantor') == 'pusat')d-none @endif">
                                 <div class="form-group">
-                                    <label for="">Cabang</label>
+                                    <label for="">Cabang<span class="text-danger">*</span></label>
                                     <select name="cabang" id="cabang"
                                         class="form-control select2">
-                                        <option value="">-- Pilih cabang --</option>
+                                        <option value="0">-- Pilih cabang --</option>
                                         @foreach ($cabang as $item)
-                                            <option value="{{$item->kd_cabang}}">{{$item->nama_cabang}}</option>
+                                            <option value="{{$item->kd_cabang}}" @if(\Request::get('cabang') == $item->kd_cabang) selected @endif>{{$item->nama_cabang}}</option>
                                         @endforeach
                                     </select>
+                                    @error('cabang')
+                                        <small class="text-danger">{{$message}}</small>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="">Bulan</label>
+                                    <label for="">Bulan<span class="text-danger">*</span></label>
                                     <select name="bulan" id="bulan"
                                         class="form-control">
-                                        <option value="">-- Pilih bulan --</option>
-                                        <option value="1">Januari</option>
-                                        <option value="2">Februari</option>
-                                        <option value="3">Maret</option>
-                                        <option value="4">April</option>
-                                        <option value="5">Mei</option>
-                                        <option value="6">Juni</option>
-                                        <option value="7">Juli</option>
-                                        <option value="8">Agustus</option>
-                                        <option value="9">September</option>
-                                        <option value="10">Oktober</option>
-                                        <option value="11">November</option>
-                                        <option value="12">Desember</option>
+                                        <option value="0">-- Pilih bulan --</option>
+                                        <option value="1" @if(\Request::get('bulan') == '1') selected @endif>Januari</option>
+                                        <option value="2" @if(\Request::get('bulan') == '2') selected @endif>Februari</option>
+                                        <option value="3" @if(\Request::get('bulan') == '3') selected @endif>Maret</option>
+                                        <option value="4" @if(\Request::get('bulan') == '4') selected @endif>April</option>
+                                        <option value="5" @if(\Request::get('bulan') == '5') selected @endif>Mei</option>
+                                        <option value="6" @if(\Request::get('bulan') == '6') selected @endif>Juni</option>
+                                        <option value="7" @if(\Request::get('bulan') == '7') selected @endif>Juli</option>
+                                        <option value="8" @if(\Request::get('bulan') == '8') selected @endif>Agustus</option>
+                                        <option value="9" @if(\Request::get('bulan') == '9') selected @endif>September</option>
+                                        <option value="10" @if(\Request::get('bulan') == '10') selected @endif>Oktober</option>
+                                        <option value="11" @if(\Request::get('bulan') == '11') selected @endif>November</option>
+                                        <option value="12" @if(\Request::get('bulan') == '12') selected @endif>Desember</option>
                                     </select>
+                                    @error('bulan')
+                                        <small class="text-danger">{{$message}}</small>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="">Tahun</label>
+                                    <label for="">Tahun<span class="text-danger">*</span></label>
                                     <select name="tahun" id="tahun"
                                         class="form-control">
-                                        <option value="">-- Pilih tahun --</option>
+                                        <option value="0">-- Pilih tahun --</option>
                                         @php
                                             $sekarang = date('Y');
                                             $awal = $sekarang - 5;
                                             $akhir = $sekarang + 5;
                                         @endphp
                                         @for($i=$awal;$i<=$akhir;$i++)
-                                            <option value="{{$i}}">{{$i}}</option>
+                                            <option value="{{$i}}" @if(\Request::get('tahun') == $i) selected @endif>{{$i}}</option>
                                         @endfor
                                     </select>
+                                    @error('tahun')
+                                        <small class="text-danger">{{$message}}</small>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -101,28 +119,30 @@
                           </div>
                           <div class="p-2">
                             <label for="q">Cari</label>
-                            <input type="search" name="q" id="q" placeholder="Cari disini..."
-                              class="form-control p-2" value="{{isset($_GET['q']) ? $_GET['q'] : ''}}">
+                            <input type="search" name="q" id="q" placeholder="Cari nama karyawan disini..."
+                              class="form-control p-2" value="{{isset($_GET['q']) ? $_GET['q'] : ''}}"
+                              style="width: 300px;">
                           </div>
                         </div>
-                        <table class="table whitespace-nowrap" id="table" style="width: 100%">
-                            <thead class="text-primary">
+                        <table class="table whitespace-nowrap table-bordered" id="table" style="width: 100%;">
+                            <thead class="text-primary" style="border:1px solid #e3e3e3 !important">
                                 <tr>
-                                    <th rowspan="2">No</th>
-                                    <th rowspan="2">Nama karyawan</th>
-                                    <th rowspan="2">Gaji</th>
-                                    <th rowspan="2">No Rek</th>
+                                    <th rowspan="2" class="text-center">No</th>
+                                    <th rowspan="2" class="text-center">Nama karyawan</th>
+                                    <th rowspan="2" class="text-center">Gaji</th>
+                                    <th rowspan="2" class="text-center">No Rek</th>
                                     <th colspan="6" class="text-center">Potongan</th>
-                                    <th rowspan="2">Total Potongan</th>
-                                    <th rowspan="2">Total Yang Diterima</th>
+                                    <th rowspan="2" class="text-center">Total Potongan</th>
+                                    <th rowspan="2" class="text-center">Total Yang Diterima</th>
+                                    <th rowspan="2" class="text-center">Aksi</th>
                                 </tr>
                                 <tr>
-                                    <th>JP BPJS TK 1%</th>
-                                    <th>DPP 5%</th>
-                                    <th>Kredit Koperasi</th>
-                                    <th>Iuaran Koperasi</th>
-                                    <th>Kredit Pegawai</th>
-                                    <th>Iuran IK</th>
+                                    <th class="text-center">JP BPJS TK 1%</th>
+                                    <th class="text-center">DPP 5%</th>
+                                    <th class="text-center">Kredit Koperasi</th>
+                                    <th class="text-center">Iuaran Koperasi</th>
+                                    <th class="text-center">Kredit Pegawai</th>
+                                    <th class="text-center">Iuran IK</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -131,7 +151,7 @@
                                     $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
                                     $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
                                     $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
-                                    $i = $page == 1 ? 1 : $start;
+                                    $number = $page == 1 ? 1 : $start;
                                     $footer_total_gaji = 0;
                                     $footer_bpjs_tk = 0;
                                     $footer_dpp = 0;
@@ -142,7 +162,7 @@
                                     $footer_total_potongan = 0;
                                     $footer_total_diterima = 0;
                                 @endphp
-                                @foreach ($data as $item)
+                                @forelse ($data as $item)
                                     @php
                                         $norek = $item->no_rekening ? $item->no_rekening : '-';
                                         $total_gaji = $item->gaji ? number_format($item->gaji->total_gaji, 0, ',', '.') : 0;
@@ -151,8 +171,8 @@
                                         $kredit_koperasi = $item->potonganGaji ? number_format($item->potonganGaji->kredit_koperasi, 0, ',', '.') : 0;
                                         $iuran_koperasi = $item->potonganGaji ? number_format($item->potonganGaji->iuran_koperasi, 0, ',', '.') : 0;
                                         $kredit_pegawai = $item->potonganGaji ? number_format($item->potonganGaji->kredit_pegawai, 0, ',', '.') : 0;
-                                        $iuran_ik = $item->potongan_gaji ? number_format($item->potongan_gaji->iuran_ik, 0, ',', '.') : 0;
-                                        $total_potongan = $item->potonganGaji ? number_format($item->potonganGaji->total_potongan, 0, ',', '.') : 0;
+                                        $iuran_ik = $item->potonganGaji ? number_format($item->potonganGaji->iuran_ik, 0, ',', '.') : 0;
+                                        $total_potongan = number_format($item->total_potongan, 0, ',', '.');
                                         $total_diterima = $item->total_yg_diterima ? number_format($item->total_yg_diterima, 0, ',', '.') : 0;
                                         
                                         // count total
@@ -167,7 +187,7 @@
                                         $footer_total_diterima += str_replace('.', '', $total_diterima);
                                     @endphp
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $number++ }}</td>
                                         <td>{{ $item->nama_karyawan }}</td>
                                         <td class="text-right">{{ $total_gaji }}</td>
                                         <td class="text-center">{{ $norek }}</td>
@@ -179,8 +199,18 @@
                                         <td class="text-right">{{ $iuran_ik }}</td>
                                         <td class="text-right">{{ $total_potongan }}</td>
                                         <td class="text-right">{{ $total_diterima }}</td>
+                                        <td>
+                                            <a href=""
+                                                class="btn btn-sm btn-outline-info p-1">
+                                                Slip Gaji
+                                            </a>
+                                        </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td class="text-center" colspan="13">Data tidak tersedia.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -198,16 +228,16 @@
                                 </tr>
                             </tfoot>
                         </table>
-                        {{--  <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between">
                             <div>
-                                Showing {{$start}} to {{$end}} of {{$karyawan->total()}} entries
+                                Showing {{$start}} to {{$end}} of {{$data->total()}} entries
                             </div>
                             <div>
-                                @if ($karyawan instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                                {{ $karyawan->links('pagination::bootstrap-4') }}
+                                @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                {{ $data->links('pagination::bootstrap-4') }}
                                 @endif
                             </div>
-                        </div>  --}}
+                        </div>
                     </form>
                 </div>
             </div>
@@ -231,10 +261,29 @@
         $('#page_length').on('change', function() {
             $('#form').submit()
         })
+
+        $('#form').on('submit', function() {
+            $('.loader-wrapper').css('display: none;')
+            $('.loader-wrapper').addClass('d-block')
+            $(".loader-wrapper").fadeOut("slow");
+        })
+
         // Adjust pagination url
         var btn_pagination = $(`.pagination`).find('a')
         var page_url = window.location.href
         $(`.pagination`).find('a').each(function(i, obj) {
+            if (page_url.includes('kantor')) {
+                btn_pagination[i].href += `&kantor=${$('#kantor').val()}`
+            }
+            if (page_url.includes('cabang')) {
+                btn_pagination[i].href += `&cabang=${$('#cabang').val()}`
+            }
+            if (page_url.includes('bulan')) {
+                btn_pagination[i].href += `&bulan=${$('#bulan').val()}`
+            }
+            if (page_url.includes('tahun')) {
+                btn_pagination[i].href += `&tahun=${$('#tahun').val()}`
+            }
             if (page_url.includes('page_length')) {
                 btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
             }

@@ -196,7 +196,7 @@ class PenghasilanTidakTeraturController extends Controller
                 'uang_makan' => ($data != null) ? $data->uang_makan : 0,
             ];
 
-           $total_gj[$i-1] = [
+            $total_gj[$i-1] = [
             'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
             'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
             'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
@@ -247,7 +247,7 @@ class PenghasilanTidakTeraturController extends Controller
             $l++;
             array_push($bonus, $bon);
         }
-// return $bonus;
+// return array_sum($gj[7]);
         foreach($total_gaji as $key => $item){
             $nominal_jp = ($key > 1) ? $jp_mar_des : $jp_jan_feb;
             // Get Jamsostek

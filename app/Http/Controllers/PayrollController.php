@@ -5,17 +5,23 @@ namespace App\Http\Controllers;
 use App\Repository\CabangRepository;
 use App\Repository\PayrollRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PayrollController extends Controller
 {
     public function index(Request $request) {
+        $this->validate($request, [
+            'kantor' => 'not_in:0',
+            'bulan' => 'not_in:0',
+            'tahun' => 'not_in:0'
+        ]);
+
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->get('q');
-        $kantor = 'Pusat';
-        $month = 8;
-        $year = '2023';
-        $q = '';
+        $kantor = $request->get('kantor') == 'pusat' ? 'pusat' : $request->get('cabang');
+        $month = $request->get('bulan');
+        $year = $request->get('tahun');
         
         $cabangRepo = new CabangRepository;
         $cabang = $cabangRepo->listCabang();
@@ -32,7 +38,7 @@ class PayrollController extends Controller
         return $data;
     }
 
-    public function templateCetak (){
-        return view('payroll.template');
+    public function cetakSlip(){
+        return view('payroll.print.slip');
     }
 }
