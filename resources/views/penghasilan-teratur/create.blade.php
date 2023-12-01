@@ -47,7 +47,7 @@
             </div>
             <div class="col-lg-2 mt-2">
                 <button class="btn btn-primary" id="filter">Tampilkan</button>
-                <a href="{{ asset('template_penghasilan_lainnya.xlsx') }}" download>Template Excel</a>
+                <a href="{{ asset('template_penghasilan_teratur.xlsx') }}" download>Template Excel</a>
             </div>
         </div>
 
@@ -119,8 +119,7 @@
             $('#penghasilan').on('change', function(){
                 var value = $("#penghasilan").val()
                 var hari_ini = new Date();
-                // var tanggal = hari_ini.getDate();
-                var tanggal = 6;
+                var tanggal = hari_ini.getDate();
                 var message = '';
                 var nmbr = 0;
 
@@ -129,6 +128,7 @@
                 if (value == 11 || value == 14) {
                     if (tanggal == 25) {
                         var message = "success"
+                        $('#error-penghasilan').addClass('d-none')
                     } else {
                         if (value == 12) {
                             var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
@@ -150,6 +150,7 @@
                 } else if (value == 12) {
                     if (tanggal >= 1 && tanggal <= 10){
                         var message = "success"
+                        $('#error-penghasilan').addClass('d-none')
                     } else {
                         if (value == 11) {
                             var message = 'Uang transport hanya bisa di pilih pada tanggal 25'
@@ -170,6 +171,7 @@
                 } else if(value == 13){
                     if (tanggal >= 1 && tanggal <= 5 ) {
                         var message = "success"
+                        $('#error-penghasilan').addClass('d-none')
                     }
                     else {
                         if (value == 11) {
