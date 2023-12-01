@@ -283,6 +283,13 @@ Coded by www.creative-tim.com
                                 </li>
                                 @endcan
 
+                                <li class="@active('penghasilan') {{ request()->is('penghasilan', 'penghasilan/*') ? 'active' : '' }}">
+                                    <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}" style="font-weight: bolder">
+                                        <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
+                                        <p>Penghasilan Teratur</p>
+                                    </a>
+                                </li>
+
                                 <li class="@active('penghasilan-lainnya') {{ request()->is('bonus', 'bonus/*') ? 'active' : '' }}">
                                     <a href="{{ route('bonus.index') }}" style="font-weight: bolder">
                                         <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>

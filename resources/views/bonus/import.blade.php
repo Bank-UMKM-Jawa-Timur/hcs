@@ -173,7 +173,6 @@
                     },
                     select: function (event, ui) {
                         $('#table_item tbody tr:eq(' + index + ') input.nip-input').val(ui.item.value);
-                        // rowSpan.remove();
                         // console.log(rowSpan);
                         $('#table_item tbody tr:eq(' + index + ')').find('small').remove();
                         namaInputs.val(ui.item.nama)

@@ -22,14 +22,9 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-<<<<<<< Updated upstream
-            RoleSeeder::class,
-            UserSeeder::class,
-=======
             TunjanganSeeder::class,
             SetKategoriOnTunjanganSeeder::class,
             // UserSeeder::class,
->>>>>>> Stashed changes
             // KantorSeeder::class,
             // DivisiSeeder::class,
             // CabangSeeder::class,

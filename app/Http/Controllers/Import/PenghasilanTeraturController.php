@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Import;
 use App\Http\Controllers\Controller;
 use App\Models\KaryawanModel;
 use App\Models\TunjanganModel;
+use App\Repository\PenghasilanTeraturRepository;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,9 +19,15 @@ class PenghasilanTeraturController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
 
+        $search = $request->get('q');
+
+        $data = new PenghasilanTeraturRepository;
+        return view('penghasilan-teratur.index',['data' => $data->getPenghasilanTeraturImport($search,$limit,$page)]);
     }
 
     /**
@@ -65,27 +72,18 @@ class PenghasilanTeraturController extends Controller
         }
     }
     public function getKaryawanSearch(Request $request){
-        try {
-            $data = KaryawanModel::select("nama_karyawan", "nip")
-            ->where('nip', 'LIKE', '%' . $request->get('search') . '%')
-            ->get();
-
-            foreach ($data as $item) {
-                $datas[] = array(
-                    "label" => $item->nip . ' - ' . $item->nama_karyawan,
-                    "value" => $item->nip,
-                    "nama" => $item->nama_karyawan,
-                );
-            }
-
-            return response()->json(
-                $datas
-            );
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Internal Server Error'
-            ], 500);
+        $data = KaryawanModel::select("nama_karyawan", "nip")
+                        ->where('nip', 'LIKE', '%'. $request->get('search'). '%')
+                        ->get();
+        foreach($data as $item ){
+        $usersArray[] = array(
+            "label" => $item->nip.'-'.$item->nama_karyawan,
+            "value" => $item->nip,
+            "nama" => $item->nama_karyawan,
+        );
         }
+
+        return response()->json($usersArray);
     }
 
 
