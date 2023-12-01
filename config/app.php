@@ -182,6 +182,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+
         /*
          * Package Service Providers...
          */
@@ -198,6 +199,8 @@ return [
         Irsyadulibad\LaravelActivehelper\ActiveHelperServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        // Spatie Role laravel
+        Spatie\Permission\PermissionServiceProvider::class,
     ],
 
     /*
