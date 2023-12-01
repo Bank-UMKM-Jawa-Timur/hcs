@@ -12,6 +12,7 @@ use App\Models\PengkinianPjsModel;
 use App\Models\PjsModel;
 use App\Models\SpModel;
 use App\Service\EntityService;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PengkinianDataController extends Controller
@@ -35,6 +36,9 @@ class PengkinianDataController extends Controller
 
     public function pengkinian_data_index()
     {
+        if (!Auth::user()->can('manajemen karyawan - pengkinian data - import pengkinian data')) {
+            return view('roles.forbidden');
+        }
         return view('pengkinian_data.import');
     }
     /**
@@ -44,6 +48,9 @@ class PengkinianDataController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->can('manajemen karyawan - pengkinian data')) {
+            return view('roles.forbidden');
+        }
         $cbg = array();
         $cabang = DB::table('mst_cabang')
             ->get();
@@ -65,6 +72,9 @@ class PengkinianDataController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->can('manajemen karyawan - pengkinian data - create pengkinian data')) {
+            return view('roles.forbidden');
+        }
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
         $data_jabatan = DB::table('mst_jabatan')
@@ -338,8 +348,11 @@ class PengkinianDataController extends Controller
      */
     public function show($id)
     {
+        if (!Auth::user()->can('manajemen karyawan - pengkinian data - detail pengkinian data')) {
+            return view('roles.forbidden');
+        }
         $data_suis = null;
-        
+
         $karyawan = PengkinianKaryawanModel::findOrFail($id);
         $data_suis = DB::table('history_pengkinian_data_keluarga')
             ->where('nip', $karyawan->nip)

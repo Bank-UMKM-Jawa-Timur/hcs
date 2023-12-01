@@ -5,12 +5,16 @@ namespace App\Http\Controllers\LaporanPergerakanKarir;
 use App\Http\Controllers\Controller;
 use App\Service\EntityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LaporanPromosiController extends Controller
 {
     public function index(Request $request)
     {
+        if (!Auth::user()->can('laporan - laporan pergerakan karir - laporan promosi')) {
+            return view('roles.forbidden');
+        }
         $data = null;
         $start_date = $request->start_date;
         $end_date = $request->end_date;

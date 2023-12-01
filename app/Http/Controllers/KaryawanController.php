@@ -22,6 +22,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -40,6 +41,9 @@ class KaryawanController extends Controller
      */
     public function index(Request $request)
     {
+        if (!Auth::user()->can('manajemen karyawan - data karyawan')) {
+            return view('roles.forbidden');
+        }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -97,6 +101,9 @@ class KaryawanController extends Controller
 
     public function import()
     {
+        if (!Auth::user()->can('manajemen karyawan - data karyawan - import karyawan')) {
+            return view('roles.forbidden');
+        }
         return view('karyawan.import');
     }
 
@@ -289,6 +296,9 @@ class KaryawanController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->can('manajemen karyawan - data karyawan - create karyawan')) {
+            return view('roles.forbidden');
+        }
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
         $data_jabatan = DB::table('mst_jabatan')
@@ -441,6 +451,9 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
+        if (!Auth::user()->can('manajemen karyawan - data karyawan - detail karyawan')) {
+            return view('roles.forbidden');
+        }
         $data_suis = null;
         $karyawan = KaryawanModel::findOrFail($id);
         $data_suis = DB::table('keluarga')
@@ -570,6 +583,9 @@ class KaryawanController extends Controller
      */
     public function edit($id)
     {
+        if (!Auth::user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
+            return view('roles.forbidden');
+        }
         $data = DB::table('mst_karyawan')
             ->where('nip', $id)
             ->first();
@@ -799,11 +815,17 @@ class KaryawanController extends Controller
 
     public function penonaktifanAdd()
     {
+        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')) {
+            return view('roles.forbidden');
+        }
         return view('karyawan.penonaktifan.penonaktifan');
     }
 
     public function indexPenonaktifan()
     {
+        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan')) {
+            return view('roles.forbidden');
+        }
         $karyawanRepo = new KaryawanRepository();
 
         return view('karyawan.penonaktifan.index', [
@@ -839,6 +861,9 @@ class KaryawanController extends Controller
 
     public function reminderPensiunIndex()
     {
+        if (!Auth::user()->can('manajemen karyawan - data masa pensiunan')) {
+            return view('roles.forbidden');
+        }
         $jabatan = JabatanModel::all();
         $panggol = PanggolModel::all();
 

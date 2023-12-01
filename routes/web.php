@@ -27,6 +27,7 @@ use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\SuratPeringatanController;
 use App\Http\Controllers\TunjanganKaryawanController;
+use App\Http\Controllers\RoleMasterController;
 use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
