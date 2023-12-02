@@ -45,12 +45,12 @@
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class="text-primary">
                                 <th>No</th>
-                                <th>
+                                {{-- <th>
                                     NIP
                                 </th>
                                 <th>
                                     Karyawan
-                                </th>
+                                </th> --}}
                                 <th>
                                     Tunjangan
                                 </th>
@@ -72,8 +72,8 @@
                                 @foreach ($data as $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
-                                        <td>{{ $item->nip_tunjangan }}</td>
-                                        <td>{{ $item->nama_karyawan }}</td>
+                                        {{-- <td>{{ $item->nip_tunjangan }}</td> --}}
+                                        {{-- <td>{{ $item->nama_karyawan }}</td> --}}
                                         <td>{{ $item->nama_tunjangan }}</td>
                                         <td>{{ number_format($item->nominal, 0, ".", ",") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>

@@ -294,6 +294,7 @@
                 var date = new Date();
                 var hari_ini = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
                 var id_tunjangan = $('#penghasilan').val()
+                var grandNominal = 0
 
                 $('#btn-simpan').removeClass('d-none');
                 $('#hasil-filter').removeClass('d-none');
@@ -317,6 +318,8 @@
                             success: function (response) {
                                 // console.log(response);
                                 var nominal = formatNumber(row[1].v);
+                                grandNominal += parseFloat(row[1].v);
+                                $('#span_total_nominal').html('Grand nominal : <b>' + formatNumber(grandNominal) + '</b>');
                                 var employeeData = response.data;
                                 var tunjanganExists = response.tunjangan;
                                 var nama = employeeData && employeeData.nama_karyawan ? employeeData.nama_karyawan : 'Karyawan tidak ditemukan.';

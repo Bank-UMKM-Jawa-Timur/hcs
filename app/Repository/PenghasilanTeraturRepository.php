@@ -26,6 +26,8 @@ class PenghasilanTeraturRepository
                         ->orWhere('tunjangan_karyawan.nominal', 'like', "%$search%")
                         ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%");
                 })
+                ->groupBy('tunjangan_karyawan.created_at')
+                ->groupBy('tunjangan_karyawan.id_tunjangan')
                 ->paginate($limit);
         return $data;
     }

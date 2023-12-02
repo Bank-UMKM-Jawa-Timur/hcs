@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Import;
 
 use App\Http\Controllers\Controller;
+use App\Models\GajiPerBulanModel;
 use App\Models\KaryawanModel;
 use App\Models\TunjanganModel;
 use App\Repository\PenghasilanTeraturRepository;
@@ -102,6 +103,7 @@ class PenghasilanTeraturController extends Controller
             $nip = $request->get('nip');
             $nominal = str_replace([' ', '.', "\u{A0}"], '', $request->get('nominal'));
             $tanggal = date('Y-m-d H:i:s');
+            $bulan = date("m", strtotime($tanggal));
 
             if ($total) {
                 if (is_array($total)) {
