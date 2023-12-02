@@ -6,6 +6,7 @@ use App\Repository\RolesRepository;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Role;
@@ -15,7 +16,8 @@ class RoleMasterController extends Controller
     public $param;
     public function __construct()
     {
-        $this->middleware('auth');
+        // $permissionNames = auth()->user()->getAllPermissions()->pluck('name');
+        // $this->middleware(['auth','permission:'.getPermission($permissionNames)]);
         $this->param = new RolesRepository();
     }
     /**
@@ -25,14 +27,20 @@ class RoleMasterController extends Controller
      */
     public function index(Request $request)
     {
-        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
-        $page = $request->has('page') ? $request->get('page') : 1;
+        if (Auth::user()->can('setting - master - role')) {
+            $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+            $page = $request->has('page') ? $request->get('page') : 1;
 
-        $search = $request->get('q');
-        $data_role = $this->param->getRoles($search, $limit, $page);
-        return view('roles.index', [
-            'data' => $data_role,
-        ]);
+            $search = $request->get('q');
+            $data_role = $this->param->getRoles($search, $limit, $page);
+            return view('roles.index', [
+                'data' => $data_role,
+            ]);
+        } else {
+            return view('roles.forbidden');
+
+        }
+
     }
 
     /**
@@ -42,6 +50,9 @@ class RoleMasterController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->can('setting - master - role - create role')) {
+            return view('roles.forbidden');
+        }
         return view('roles.add',['data' => $this->param->getPermission()]);
     }
 
@@ -97,6 +108,9 @@ class RoleMasterController extends Controller
      */
     public function show($id)
     {
+        if (!Auth::user()->can('setting - master - role - detail role')) {
+            return view('roles.forbidden');
+        }
         return view('roles.show',$this->param->getRoleId($id));
     }
 
@@ -108,6 +122,9 @@ class RoleMasterController extends Controller
      */
     public function edit($id)
     {
+        if (!Auth::user()->can('setting - master - role - edit role')) {
+            return view('roles.forbidden');
+        }
         return view('roles.edit',$this->param->getRoleId($id));
     }
 
@@ -171,6 +188,19 @@ class RoleMasterController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            DB::table('roles')
+                ->where('id', $id)
+                ->delete();
+
+            Alert::success('Berhasil', 'Berhasil Menghapus Data Role.');
+            return redirect()->route('role.index');
+        } catch(Exception $e){
+            Alert::error('Terjadi Kesalahan', ''.$e);
+            return redirect()->route('role.index')->withStatus($e->getMessage());
+        } catch(QueryException $e){
+            Alert::error('Terjadi Kesalahan', ''.$e);
+            return redirect()->route('role.index')->withStatus($e->getMessage());
+        }
     }
 }

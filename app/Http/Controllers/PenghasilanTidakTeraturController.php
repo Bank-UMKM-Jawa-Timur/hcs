@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -322,6 +323,9 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function import() {
+        if (!Auth::user()->can('penghasilan - tambah penghasilan - import penghasilan')) {
+            return view('roles.forbidden');
+        }
         return view('penghasilan.import');
     }
 
@@ -362,6 +366,9 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->can('penghasilan - tambah penghasilan')) {
+            return view('roles.forbidden');
+        }
         return view('penghasilan.index');
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class JaminanController extends Controller
@@ -15,6 +16,7 @@ class JaminanController extends Controller
 
     public function getJamsostek(Request $request)
     {
+
         return view('jaminan.index', [
             'status' => null
         ]);
@@ -117,6 +119,9 @@ class JaminanController extends Controller
 
     public function index()
     {
+        if (!Auth::user()->can('laporan - laporan jamsostek')) {
+            return view('roles.forbidden');
+        }
         return view('jaminan.index', [
             'karyawan' => null,
             'status' => null
@@ -125,6 +130,9 @@ class JaminanController extends Controller
 
     public function filter(Request $request)
     {
+        if (!Auth::user()->can('laporan - laporan jamsostek')) {
+            return view('roles.forbidden');
+        }
         $kantor = $request->kantor;
         $tipe = $request->tipe;
         $tahun = $request->tahun;
@@ -357,6 +365,9 @@ class JaminanController extends Controller
 
     public function dppIndex()
     {
+        if (!Auth::user()->can('laporan - laporan dpp')) {
+            return view('roles.forbidden');
+        }
         return view('jaminan.dpp_index');
     }
 

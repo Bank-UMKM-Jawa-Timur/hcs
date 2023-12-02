@@ -33,6 +33,7 @@ use App\Http\Controllers\SPDController;
 use App\Http\Controllers\SuratPeringatanController;
 use App\Http\Controllers\THRController;
 use App\Http\Controllers\TunjanganKaryawanController;
+use App\Http\Controllers\RoleMasterController;
 use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;

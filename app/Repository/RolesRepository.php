@@ -7,6 +7,7 @@ use App\Models\CabangModel;
 use App\Models\KaryawanModel;
 use App\Service\EntityService;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
