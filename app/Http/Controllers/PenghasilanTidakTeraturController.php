@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Imports\PenghasilanImport;
+use App\Models\ImportPenghasilanTidakTeraturModel;
 use App\Models\PPHModel;
+use App\Models\TunjanganModel;
+use App\Repository\PenghasilanTidakTeraturRepository;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -59,7 +64,7 @@ class PenghasilanTidakTeraturController extends Controller
         foreach($cbg as $item){
             array_push($cabang, $item->kd_cabang);
         }
-        
+
         $tahun = $request->get('tahun');
         $mode = $request->get('mode');
         $nip = $request->get('nip');
@@ -263,7 +268,7 @@ class PenghasilanTidakTeraturController extends Controller
                     $jkm = round(($persen_jkm / 100) * $item);
                     $jp_penambah = round(($persen_jp_penambah / 100) * $item);
                 }
-    
+
                 if($karyawan->jkn != null){
                     if($item > $batas_atas){
                         $kesehatan = round($batas_atas * ($persen_kesehatan / 100));
@@ -331,6 +336,9 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function import() {
+        if (!Auth::user()->can('penghasilan - tambah penghasilan - import penghasilan')) {
+            return view('roles.forbidden');
+        }
         return view('penghasilan.import');
     }
 
@@ -371,7 +379,21 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->can('penghasilan - tambah penghasilan')) {
+            return view('roles.forbidden');
+        }
         return view('penghasilan.index');
+    }
+
+    public function lists(Request $request)
+    {   
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->get('q');
+
+        $penghasilanRepo = new PenghasilanTidakTeraturRepository();
+        $data = $penghasilanRepo->getAllPenghasilan($search, $limit, $page);
+        return view('penghasilan.index-list', compact('data'));
     }
 
     /**
@@ -381,11 +403,9 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function create()
     {
-        $data = DB::table('mst_tunjangan')
-            ->where('id', '>', '15')
-            ->get();
+        $dataSPD = TunjanganModel::where('nama_tunjangan', 'like', '%spd%')->get();
 
-        return view('penghasilan.add', compact('data'));
+        return view('penghasilan.add', compact('dataSPD'));
     }
 
     /**
@@ -396,57 +416,42 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
-        $nip = $request->nip;
+        // dd($request->get('nip'));
+        DB::beginTransaction();
         try{
-            if($request->get('nominal_teratur')[0] != null){
-                for($i = 0; $i < count($request->get('nominal_teratur')); $i++){
-                    DB::table('tunjangan_karyawan')
-                        ->insert([
-                            'nip' => $nip,
-                            'id_tunjangan' => $request->get('id_teratur')[$i],
-                            'nominal' => $request->get('nominal_teratur')[$i],
-                            'created_at' => now()
-                        ]);
-                }
+            $inserted = array();
+            $tunjangan = $request->get('kategori');
+            if($tunjangan == 'spd'){
+                $tunjangan = $request->get('kategori_spd');
             }
-            if($request->get('nominal_tidak_teratur')[0] != null){
-                for($i = 0; $i < count($request->get('nominal_tidak_teratur')); $i++){
-                    DB::table('penghasilan_tidak_teratur')
-                        ->insert([
-                            'nip' => $nip,
-                            'id_tunjangan' => $request->get('id_tidak_teratur')[$i],
-                            'nominal' => $request->get('nominal_tidak_teratur')[$i],
-                            'bulan' => $request->get('bulan'),
-                            'tahun' => $request->get('bulan'),
-                            'created_at' => now()
-                        ]);
-                }
-            }
-            if($request->get('nominal_bonus')[0] != null){
-                for($i = 0; $i < count($request->get('nominal_bonus')); $i++){
-                    DB::table('penghasilan_tidak_teratur')
-                        ->insert([
-                            'nip' => $nip,
-                            'id_tunjangan' => $request->get('id_bonus')[$i],
-                            'nominal' => $request->get('nominal_bonus')[$i],
-                            'bulan' => $request->get('bulan'),
-                            'tahun' => $request->get('bulan'),
-                            'created_at' => now()
-                        ]);
-                }
+            $idTunjangan = TunjanganModel::where('nama_tunjangan', 'like', "%$tunjangan%")->first();
+
+            foreach($request->get('nip') as $key => $item){
+                array_push($inserted, [
+                    'nip' => $item,
+                    'id_tunjangan' => $idTunjangan->id,
+                    'bulan' => Carbon::now()->format('m'),
+                    'tahun' => Carbon::now()->format('Y'),
+                    'nominal' => str_replace('.', '', $request['nominal'][$key]),
+                    'keterangan' => $request->get('keterangan')[$key] ?? null,
+                    'created_at' => now()
+                ]);
             }
 
+            ImportPenghasilanTidakTeraturModel::insert($inserted);
+            DB::commit();
+
             Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan');
-            return redirect()->route('penghasilan.index');
+            return redirect()->route('pajak_penghasilan.create');
         } catch(Exception $e){
             DB::rollBack();
+            dd($e);
             Alert::error('Terjadi Kesalahan', $e->getMessage());
-            return redirect()->route('penghasilan.index');
+            return redirect()->route('pajak_penghasilan.create');
         } catch(QueryException $e){
             DB::rollBack();
             Alert::error('Terjadi Kesalahan', $e->getMessage());
-            return redirect()->route('penghasilan.index');
+            return redirect()->route('pajak_penghasilan.create');
         }
     }
 

@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\BonusController;
 use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
 use App\Http\Controllers\HistoryJabatanController;
+use App\Http\Controllers\Import\PenghasilanTeraturController;
 use App\Http\Controllers\JaminanController;
+use App\Http\Controllers\UangDukaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KantorController;
 use App\Http\Controllers\KaryawanController;
@@ -15,19 +18,23 @@ use App\Http\Controllers\LaporanPergerakanKarir\LaporanDemosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanMutasiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanPromosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanPenonaktifanController;
+use App\Http\Controllers\LemburController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\MstPenambahanBrutoController;
 use App\Http\Controllers\MstPenguranganBrutoController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PejabatSementaraController;
+use App\Http\Controllers\PenggantiBiayaKesehatanController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PengkinianDataController;
 use App\Http\Controllers\ProfilKantorPusatController;
 use App\Http\Controllers\PromosiController;
-use App\Http\Controllers\RoleMasterController;
 use App\Http\Controllers\SlipGajiController;
+use App\Http\Controllers\SPDController;
 use App\Http\Controllers\SuratPeringatanController;
+use App\Http\Controllers\THRController;
 use App\Http\Controllers\TunjanganKaryawanController;
+use App\Http\Controllers\RoleMasterController;
 use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
@@ -125,17 +132,14 @@ Route::get('/', function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
-    // start Setting - Master
     Route::resource('/kantor', KantorController::class);
     Route::resource('role', RoleMasterController::class);
-    Route::resource('/cabang', \App\Http\Controllers\KantorCabangController::class);
     Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);
     Route::resource('/sub_divisi', \App\Http\Controllers\SubdivisiController::class);
-    Route::resource('/bagian', BagianController::class);
     Route::resource('/jabatan', \App\Http\Controllers\JabatanController::class);
+    Route::resource('/cabang', \App\Http\Controllers\KantorCabangController::class);
     Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
     Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
-    // end Setting - Master
     Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
     Route::get('list-karyawan', [\App\Http\Controllers\KaryawanController::class, 'listKaryawan']);
     Route::resource('/mutasi', \App\Http\Controllers\MutasiController::class);
@@ -143,8 +147,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/demosi', DemosiController::class);
     Route::resource('/promosi', PromosiController::class);
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
+    Route::resource('/bagian', BagianController::class);
     Route::resource('/pajak_penghasilan', PenghasilanTidakTeraturController::class);
+
+    Route::prefix('penghasilan')->name('penghasilan.')->group(function() {
+        Route::resource('import-penghasilan-teratur', \App\Http\Controllers\Import\PenghasilanTeraturController::class);
+        Route::get('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
+        Route::get('/get-karyawan-search', [PenghasilanTeraturController::class, 'getKaryawanSearch'])->name('karyawan-search');
+    });
+
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
+    Route::resource('/pengganti-biaya-kesehatan', PenggantiBiayaKesehatanController::class);
+    Route::resource('/uang-duka', UangDukaController::class);
     Route::resource('/backup', BackupController::class);
     Route::resource('/history_jabatan', HistoryJabatanController::class);
     Route::resource('/gaji', SlipGajiController::class);
@@ -152,6 +166,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/ptkp', PtkpController::class);
     Route::resource('/penambahan-bruto', MstPenambahanBrutoController::class);
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
+    Route::resource('/lembur', LemburController::class);
+    Route::resource('/spd', SPDController::class);
+    Route::resource('/bonus', BonusController::class);
+    Route::resource('/thr', THRController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
 
@@ -194,6 +212,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/dpp', [JaminanController::class, 'getDpp'])->name('get-dpp');
     Route::post('penghasilan/get-gaji', [PenghasilanTidakTeraturController::class, 'filter'])->name('get-penghasilan');
     Route::get('/getPenghasilan', [PenghasilanTidakTeraturController::class, 'getPenghasilan'])->name('getPenghasilanResult');
+    Route::get('/list-penghasilan-tidak-teratur', [PenghasilanTidakTeraturController::class, 'lists'])->name('list-penghasilan-tidak-teratur');
 
     // Klasifikasi Data Karyawan
     Route::post('/klasifikasi_data', [App\Http\Controllers\KlasifikasiController::class, 'klasifikasi_data'])->name('klasifikasi-data');
@@ -289,6 +308,9 @@ Route::group(['middleware' => 'auth'], function () {
         return view('gaji_perbulan.import');
     });
     Route::post('post-import-pph', [GajiPerBulanController::class, 'importPPH'])->name('import-pph');
+
+    // Bonus
+    Route::resource('bonus',BonusController::class);
 
     Route::prefix('payroll')
         ->name('payroll.')

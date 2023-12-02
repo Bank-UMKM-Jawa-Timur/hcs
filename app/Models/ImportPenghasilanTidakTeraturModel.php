@@ -16,6 +16,7 @@ class ImportPenghasilanTidakTeraturModel extends Model
         'nominal',
         'tahun',
         'bulan',
+        'keterangan',
         'created_at'
     ];
 }
