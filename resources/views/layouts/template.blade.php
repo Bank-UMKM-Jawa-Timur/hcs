@@ -247,13 +247,13 @@ Coded by www.creative-tim.com
                         {{-- Menu Penghasilan --}}
                         @can('penghasilan')
                         <li
-                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }}">
+                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
                                 Penghasilan
                             </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'bonus/*','show')"
+                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'bonus/*', 'show')"
                                 id="submenu2">
                                 @can('penghasilan - proses penghasilan')
                                 <li style="margin-top: -15px" class="@active('gaji_perbulan')">
@@ -263,9 +263,14 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                @endcan
-                                @can('penghasilan - pajak penghasilan')
-                                <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
+                                <li class="dropdown @active('pajak_penghasilan.create')" style="margin-top: -15px">
+                                    <a href="{{ route('pajak_penghasilan.create') }}">
+                                        <i class="nc-icon nc-money-coins"></i>
+                                        <p>Import Penghasilan Tidak Teratur</p>
+                                        <p></p>
+                                    </a>
+                                </li>
+                                <li style="margin-top: -15px" class="@active('pajak_penghasilan.index') @active('get-penghasilan')">
                                     <a href="{{ route('pajak_penghasilan.index') }}">
                                         <i class="nc-icon nc-scissors"></i>
                                         <p>Pajak Penghasilan</p>
@@ -782,7 +787,7 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
-    @stack('script')
+    {{-- @stack('script') --}}
 </body>
 
 </html>
