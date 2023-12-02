@@ -301,16 +301,49 @@ Coded by www.creative-tim.com
                                         <p>Import Bonus</p>
                                     </a>
                                 </li>
+
+                                {{-- Menu Payroll --}}
+                                <li class="@active('payroll')">
+                                    <a href="{{ route('payroll.index') }}" style="font-weight: bolder">
+                                        <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
+                                        <p>Payroll</p>
+                                    </a>
+                                </li>
+                                {{-- Menu Gaji --}}
+                                @can('gaji')
+                                <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
+                                        style="font-weight: bolder">
+                                        <i class="nc-icon nc-credit-card " style="font-weight: bolder"></i>
+                                        <span class="dropdown-toggle">Gaji</span>
+                                    </a>
+                                    <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
+                                        id="submenu5">
+                                        @can('gaji - lampiran gaji')
+                                        <li style="margin-top: -15px"
+                                            class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
+                                            <a href="{{ route('gaji.index') }}">
+                                                <i class="nc-icon nc-money-coins"></i>
+                                                <p>Lampiran Gaji</p>
+                                                <p></p>
+                                            </a>
+                                        </li>
+                                        @endcan
+                                        @can('gaji - slip jurnal')
+                                        <li style="margin-top: -15px" class="@active('slipIndex')">
+                                            <a href="{{ route('slipIndex') }}">
+                                                <i class="nc-icon nc-money-coins"></i>
+                                                <p>Slip Jurnal</p>
+                                                <p></p>
+                                            </a>
+                                        </li>
+                                        @endcan
+                                    </ul>
+                                </li>
+                                @endcan
                             </ul>
                         </li>
                         @endcan
-                        {{-- Menu Payroll --}}
-                        <li class="@active('payroll')">
-                            <a href="{{ route('payroll.index') }}" style="font-weight: bolder">
-                                <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
-                                <p>Payroll</p>
-                            </a>
-                        </li>
                         {{-- Menu Histori --}}
                         @can('histori')
                         <li class="@active('history')">
@@ -404,38 +437,6 @@ Coded by www.creative-tim.com
                                     <a href="{{ route('index_dpp') }}">
                                         <i class="nc-icon nc-single-copy-04"></i>
                                         <p>Laporan DPP</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                @endcan
-                            </ul>
-                        </li>
-                        @endcan
-                        {{-- Menu Gaji --}}
-                        @can('gaji')
-                        <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                            <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
-                                Gaji
-                            </a>
-                            <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
-                                id="submenu5">
-                                @can('gaji - lampiran gaji')
-                                <li style="margin-top: -15px"
-                                    class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                                    <a href="{{ route('gaji.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Lampiran Gaji</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                @endcan
-                                @can('gaji - slip jurnal')
-                                <li style="margin-top: -15px" class="@active('slipIndex')">
-                                    <a href="{{ route('slipIndex') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Slip Jurnal</p>
                                         <p></p>
                                     </a>
                                 </li>
