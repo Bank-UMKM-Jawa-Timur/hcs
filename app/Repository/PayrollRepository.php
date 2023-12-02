@@ -163,6 +163,7 @@ class PayrollRepository
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
+                                'status_karyawan',
                             )
                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
@@ -318,6 +319,9 @@ class PayrollRepository
                                                     $query->select(
                                                         'nip',
                                                         'bulan',
+                                                        'gj_pokok',
+                                                        'tj_keluarga',
+                                                        'tj_kesejahteraan',
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
                                                     )
@@ -353,12 +357,14 @@ class PayrollRepository
                                                 'tanggal_penonaktifan',
                                                 'kpj',
                                                 'jkn',
+                                                'status_karyawan',
                                             )
                                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
                                             ->where(function($query) use ($karyawan) {
                                                 $query->whereRelation('allGajiByKaryawan', 'nip', $karyawan->nip);
                                             })
                                             ->first();
+
             if ($karyawan_bruto) {
                 $gaji_bruto = 0;
                 // Get jamsostek
@@ -367,10 +373,12 @@ class PayrollRepository
                     $allGajiByKaryawan = $karyawan_bruto->allGajiByKaryawan;
                     $total_gaji_bruto = 0;
                     $total_jamsostek = 0;
+                    $total_pengurang_bruto = 0;
                     foreach ($allGajiByKaryawan as $key => $value) {
                         $gaji_bruto += $value->gaji ? intval($value->gaji) : 0;
                         $total_gaji = $value->total_gaji ? intval($value->total_gaji) : 0;
                         $total_gaji_bruto += $total_gaji;
+                        $pengurang_bruto = 0;
 
                         // Get jamsostek
                         if($total_gaji > 0){
@@ -398,8 +406,33 @@ class PayrollRepository
                             $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
 
                             $total_jamsostek += $jamsostek;
+
+                            // Get Potongan(JP1%, DPP 5%)
+                            $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
+                            $dppBruto = 0;
+                            $dppBrutoExtra = 0;
+                            if($karyawan->status_karyawan == 'IKJP') {
+                                $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
+                            } else{
+                                $gj_pokok = $value->gj_pokok;
+                                $tj_keluarga = $value->tj_keluarga;
+                                $tj_kesejahteraan = $value->tj_kesejahteraan;
+
+                                // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5% 
+                                $dppBruto = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
+                                if($total_gaji >= $nominal_jp){
+                                    $dppBrutoExtra = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                                } else {
+                                    $dppBrutoExtra = round($total_gaji * ($persen_jp_pengurang / 100), 2);
+                                }
+                            }
+
+                            $pengurang_bruto = $dppBruto + $dppBrutoExtra;
+                            $total_pengurang_bruto += $pengurang_bruto;
                         }
+                        $value->pengurangan_bruto = $pengurang_bruto;
                     }
+                    $penghasilanBruto->total_pengurangan_bruto = $total_pengurang_bruto;
                     $penghasilanBruto->gaji_pensiun = intval($total_gaji_bruto);
                     $penghasilanBruto->total_jamsostek = intval($total_jamsostek);
                 }
