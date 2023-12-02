@@ -14,20 +14,11 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
         $(document).ready(function() {
-            var kategori; 
+            var kategori;
             var url;
 
-            // cek kategori bonus
-            $('#kategori-bonus').on('change',function(e) {
-                if ($(this).val() == 'penghasilan-lainnya') {
-                    $('.kategori-tunjangan-select').removeClass('hidden');
-                }else{
-                    $('.kategori-tunjangan-select').addClass('hidden');
-                }
-            })
             $('.btn-import').on('click',function(element) {
-                kategori = $('#kategori-bonus').val();
-                url = kategori == 'thr' ? "{{ route('api.get.thr') }}" : "{{ route('api.get.karyawan') }}";
+                url = "{{ route('api.get.karyawan') }}";
                 $('#table_item tbody').empty();
                 $('#table-data').removeClass('hidden');
                 $('#button-simpan').removeClass('hidden');
@@ -229,29 +220,29 @@
                         <div class="col">
                             <label for="">Kategori</label>
                             <select name="kategori_bonus" id="kategori-bonus" class="form-control">
-                                <option value="">Pilih Kategori</option>
-                                <option value="jaspro">Jaspro DanKes</option>
-                                <option value="thr">Import THR </option>
-                                <option value="penghasilan-lainnya">Import Penghasilan Lainnya</option>
-                            </select>
-                        </div>
-                        <div class="col hidden kategori-tunjangan-select">
-                            <label for="">Kategori Tunjangan</label>
-                            <select name="kategori_tunjangan" id="kategori" class="form-control">
                                 <option value="">Pilih Kategori Tunjangan</option>
                                 @forelse ($data_tunjangan as $item)
                                     <option value="{{ $item->id }}">{{ ucwords($item->nama_tunjangan) }}</option>
                                 @empty
-
+                                    <option value="">Tidak Ada Tunjangan</option>
                                 @endforelse
                             </select>
                         </div>
+                        <div class="col kategori-tunjangan-select">
+                            <label for="">Tanggal</label>
+                            <input type="date" class="form-control" name="tanggal" id="">
+                        </div>
                         <div class="col">
                             <label for="">Data Excel</label>
-                            <div class="custom-file col-md-12 ">
-                                <input type="file" name="upload_csv" class="custom-file-input form-control py-3" id="upload_csv"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                              </div>
+
+                            {{-- <div class=" col-md-12 ">
+                                <input type="file" name="upload_csv" class="custom-file-input form-control" style="padding: 12px 10px !important" id="upload_csv"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                 <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="col align-items-center mt-2">
                             <button type="button" class="btn btn-info btn-import">Import</button>

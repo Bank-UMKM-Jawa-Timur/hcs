@@ -386,7 +386,7 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function lists(Request $request)
-    {   
+    {
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->get('q');

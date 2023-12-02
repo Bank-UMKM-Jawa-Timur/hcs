@@ -7,7 +7,6 @@ use App\Models\KaryawanModel;
 use App\Models\SpModel;
 use Carbon\Carbon;
 use App\Models\TunjanganModel;
-use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
 
@@ -123,7 +122,7 @@ class PenghasilanTidakTeraturRepository
                                 ->orWhereRaw("MATCH(nama_bagian) AGAINST('$search')");
                         });
                     });
-    
+
                 if ($search == 'pusat') {
                     $query->orWhereRaw('mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang)');
                 }
@@ -139,15 +138,15 @@ class PenghasilanTidakTeraturRepository
                     'Penjabat Sementara' => 'Pjs. ',
                     default => '',
                 };
-                
+
                 if ($value->jabatan) {
                     $jabatan = $value->jabatan->nama_jabatan;
                 } else {
                     $jabatan = 'undifined';
                 }
-                
+
                 $ket = $value->ket_jabatan ? "({$value->ket_jabatan})" : '';
-                
+
                 if (isset($value->entitas->subDiv)) {
                     $entitas = $value->entitas->subDiv->nama_subdivisi;
                 } elseif (isset($value->entitas->div)) {
@@ -155,7 +154,7 @@ class PenghasilanTidakTeraturRepository
                 } else {
                     $entitas = '';
                 }
-                
+
                 if ($jabatan == 'Pemimpin Sub Divisi') {
                     $jabatan = 'PSD';
                 } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
@@ -165,7 +164,7 @@ class PenghasilanTidakTeraturRepository
                 } else {
                     $jabatan = $value->jabatan ? $value->jabatan->nama_jabatan : 'undifined';
                 }
-    
+
                 $display_jabatan = $prefix . ' ' . $jabatan . ' ' . $entitas . ' ' . $value?->bagian?->nama_bagian . ' ' . $ket;
                 $value->display_jabatan = $display_jabatan;
             }
