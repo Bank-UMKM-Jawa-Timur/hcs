@@ -314,6 +314,7 @@ class PayrollRepository
             $month_on_year = 12;
             $month_on_year_paid = 0;
             $penghasilanBruto = new \stdClass();
+            $penguranganPenghasilan = new \stdClass();
             $karyawan_bruto = KaryawanModel::with([
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
@@ -427,12 +428,12 @@ class PayrollRepository
                                 }
                             }
 
-                            $pengurang_bruto = $dppBruto + $dppBrutoExtra;
+                            $pengurang_bruto = intval($dppBruto + $dppBrutoExtra);
                             $total_pengurang_bruto += $pengurang_bruto;
                         }
                         $value->pengurangan_bruto = $pengurang_bruto;
                     }
-                    $penghasilanBruto->total_pengurangan_bruto = $total_pengurang_bruto;
+                    $penguranganPenghasilan->total_pengurangan_bruto = $total_pengurang_bruto;
                     $penghasilanBruto->gaji_pensiun = intval($total_gaji_bruto);
                     $penghasilanBruto->total_jamsostek = intval($total_jamsostek);
                 }
@@ -503,9 +504,14 @@ class PayrollRepository
                 $pembanding = 500000 * $month_on_year_paid;
                 $biaya_jabatan = (0.05 * $penghasilanBruto->total_penghasilan) > $pembanding ? $pembanding : (0.05 * $penghasilanBruto->total_penghasilan);
             }
+            $penguranganPenghasilan->biaya_jabatan = $biaya_jabatan;
+
+            $jumlah_pengurangan = $total_pengurang_bruto + $biaya_jabatan;
+            $penguranganPenghasilan->jumlah_pengurangan = $jumlah_pengurangan;
 
             $karyawan->karyawan_bruto = $karyawan_bruto;
             $karyawan->penghasilan_bruto = $penghasilanBruto;
+            $karyawan->pengurangan_penghasilan = $penguranganPenghasilan;
         }
         return $data;
     }
