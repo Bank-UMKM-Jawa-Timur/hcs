@@ -47,9 +47,11 @@
             </div>
             <div class="col-lg-2 mt-2">
                 <button class="btn btn-primary" id="filter">Tampilkan</button>
-                <a href="{{ asset('template_penghasilan_teratur.xlsx') }}" download>Template Excel</a>
             </div>
         </div>
+
+        <a class="btn btn-primary" href="{{ asset('template_penghasilan_teratur.xlsx') }}" download>Template Excel</a>
+
 
         <form action="{{route('penghasilan.import-penghasilan-teratur.store')}}" method="POST">
         @csrf
@@ -57,8 +59,8 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            {{-- <p id="span_info_save"></p>
-                            <p id="span_total_data"></p> --}}
+                            <p id="span_total_data"></p>
+                            <p id="span_total_nominal"></p>
                         </div>
                         <div class="card-body">
                             <table class="table" id="table_item">
@@ -68,7 +70,7 @@
                                         <th>Nip</th>
                                         <th>Nama Karyawan</th>
                                         <th>Nominal</th>
-                                        <th>Aksi</th>
+                                        {{-- <th>Aksi</th> --}}
                                         {{-- <th>
                                             <button type="button" class="btn btn-sm btn-icon btn-round btn-primary btn-plus">
                                                 +
@@ -131,16 +133,16 @@
                         $('#error-penghasilan').addClass('d-none')
                     } else {
                         if (value == 12) {
-                            var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
+                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                             nmbr++
                         } else if (value == 13) {
-                            var message = 'Uang vitamin hanya bisa di pilih tanggal 1 sampai 5'
+                            var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
                             nmbr++
                         } else if (value == 11) {
-                            var message = 'Uang Transport hanya bisa di pilih pada tanggal 25'
+                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
                             nmbr++
                         } else if (value == 14) {
-                            var message = 'Uang Makan hanya bisa di pilih pada tanggal 25'
+                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
                             nmbr++
                         }
                         // alertWarning(message)
@@ -153,15 +155,15 @@
                         $('#error-penghasilan').addClass('d-none')
                     } else {
                         if (value == 11) {
-                            var message = 'Uang transport hanya bisa di pilih pada tanggal 25'
+                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
                             nmbr++
                         } else if (value == 14) {
-                            var message = 'Uang makan hanya bisa di pilih pada tanggal 25'
+                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
                             nmbr++
                         } else if (value == 12) {
-                            var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
+                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                         } else if (value == 13 && tanggal > 5) {
-                            var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
+                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                         }
 
                         // alertWarning(message)
@@ -175,16 +177,16 @@
                     }
                     else {
                         if (value == 11) {
-                            var message = 'Uang transport hanya bisa di pilih pada tanggal 25'
+                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
                             nmbr++
                         } else if (value == 12) {
-                            var message = 'Uang pulsa hanya bisa di pilih tanggal 1 sampai 10'
+                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                             nmbr++
                         } else if (value == 13) {
-                            var message = 'Uang vitamin hanya bisa di pilih tanggal 1 sampai 5'
+                            var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
                             nmbr++
                         } else if (value == 14) {
-                            var message = 'Uang makan hanya bisa di pilih pada tanggal 25'
+                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
                             nmbr++
                         }
                         // alertWarning(message)
@@ -295,6 +297,7 @@
 
                 $('#btn-simpan').removeClass('d-none');
                 $('#hasil-filter').removeClass('d-none');
+                $('#span_total_data').html('Total data : <b>' + total_data + '</b>');
 
                 for (let i = 0; i < data.length; i++) {
                     (function (index) {
@@ -313,7 +316,6 @@
                             accept: "Application/json",
                             success: function (response) {
                                 // console.log(response);
-
                                 var nominal = formatNumber(row[1].v);
                                 var employeeData = response.data;
                                 var tunjanganExists = response.tunjangan;
@@ -342,24 +344,17 @@
                                         <td>
                                             <input type="hidden" name="number[]" class="form-control" value="${index + 1}">
                                             <input type="hidden" name="penghasilan[]" class="form-control" value="${penghasilan}">
-                                            <input type="text" name="nip[]" class="form-control nip" readonly value="${row[0].v}">
+                                            <input type="hidden" name="nip[]" class="form-control nip" readonly value="${row[0].v}">
+                                            ${row[0].v}
                                             <small class="text-danger" data-error="${index}" id="error-karyawan-${index}">${validation_msg}</small>
                                         </td>
                                         <td>
-                                            <input type="text" name="nama[]" class="form-control nama" readonly value="${nama}">
+                                            <input type="hidden" name="nama[]" class="form-control nama" readonly value="${nama}">
+                                            ${nama}
                                         </td>
                                         <td>
-                                            <input type="text" name="nominal[]" class="form-control only-number nominal" readonly value="${nominal}">
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-warning btn-edit" data-index="${index}">
-                                                edit
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
-                                                -
-                                            </button>
+                                            <input type="hidden" name="nominal[]" class="form-control only-number nominal" readonly value="${nominal}">
+                                            ${nominal}
                                         </td>
                                     </tr>
                                 `;
