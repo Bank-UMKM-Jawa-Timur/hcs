@@ -14,6 +14,9 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
         $(document).ready(function() {
+            var kategori; 
+            var url;
+
             // cek kategori bonus
             $('#kategori-bonus').on('change',function(e) {
                 if ($(this).val() == 'penghasilan-lainnya') {
@@ -23,6 +26,8 @@
                 }
             })
             $('.btn-import').on('click',function(element) {
+                kategori = $('#kategori-bonus').val();
+                url = kategori == 'thr' ? "{{ route('api.get.thr') }}" : "{{ route('api.get.karyawan') }}";
                 $('#table_item tbody').empty();
                 $('#table-data').removeClass('hidden');
                 $('#button-simpan').removeClass('hidden');
@@ -104,19 +109,20 @@
                         // get karyawan
                         $.ajax({
                             type: "GET",
-                            url: `{{ route('api.get.karyawan') }}`,
+                            url: url,
                             data: {
                                 nip: row[0]
                             },
                             success: function (res) {
-                                var nama = res != 'null' ? res : '-';
+                                var nama = res != 'null' ? res.karyawan : '-';
+                                var thr = res != 'null' ? res.thr : null;
                                 if (res != 'null') {
                                     var text = '';
                                 } else {
                                     var text = `<small class="text-danger" id="alert">Data NIP tidak ditemukan silahkan klik button edit</small>`;
                                 }
 
-                                createTableRow(row, nama,index, text);
+                                createTableRow(row, nama,index, text, thr);
                             },
                             complete: function () {
                                 // Continue processing the next row after the AJAX request is complete
@@ -131,7 +137,7 @@
                 handleRow(0);
             }
 
-            function createTableRow(row, nama,index,text) {
+            function createTableRow(row, nama,index,text, thr = null) {
                 var new_body_tr = `
                     <tr>
                         <td>
@@ -142,7 +148,7 @@
                             <input type="text" name="nama[]" class="form-control nama-input" value="${nama}" readonly>
                         </td>
                         <td>
-                            <input type="text" name="nominal[]" class="form-control nominal-input" value="${row[1]}" readonly>
+                            <input type="text" name="nominal[]" class="form-control nominal-input" value="${kategori != 'thr' ? formatRupiah(row[1].toString()) : formatRupiah(thr.toString())}" readonly>
                         </td>
                         <td>
                             <button type="button" class="btn btn-warning edit-button" data-index="${index}">Edit</button>
@@ -179,6 +185,10 @@
                         return false;
                     }
                 });
+                $('#table_item tbody tr:eq(' + index + ') input.nominal-input').on('keyup', function(){
+                    var value = $(this).val();
+                    $(this).val(formatRupiah(value))
+                })
                 rowInputs.prop('readonly', !rowInputs.prop('readonly'));
             });
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\KaryawanResource;
 use App\Models\KaryawanModel;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -52,5 +53,24 @@ class KaryawanController extends Controller
         }
 
         return response()->json($usersArray);
+    }
+
+    public function getTHR(Request $request) {
+        $karyawan = KaryawanModel::where('nip', $request->get('nip'))
+          ->first();
+        $dateStart = Carbon::parse($karyawan->tgl_mulai);
+        $dateNow = Carbon::now();
+        $monthDiff = $dateNow->diffInMonths($dateStart);
+
+        if($monthDiff < 12) {
+          $thr = $karyawan->gj_pokok * 2 / $monthDiff;
+        } else{
+          $thr = $karyawan->gj_pokok * 2;
+        }
+
+        return response()->json([
+            'karyawan' => $karyawan->nama_karyawan,
+            'thr' => $thr
+        ]);
     }
 }

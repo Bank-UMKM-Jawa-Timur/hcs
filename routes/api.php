@@ -33,6 +33,7 @@ Route::name('api.')->group(function () {
     Route::get('karyawan', ApiKaryawanController::class)->name('karyawan');
     Route::get('get-karyawan',[ApiKaryawanController::class,'getKaryawan'])->name('get.karyawan');
     Route::get('get-autocomplete',[ApiKaryawanController::class,'autocomplete'])->name('get.autocomplete');
+    Route::get('get-thr',[ApiKaryawanController::class,'getTHR'])->name('get.thr');
 });
 
 Route::prefix('v1')->group(function() {
