@@ -107,13 +107,13 @@ class SlipGajiController extends Controller
                 $data[$i]['potongan'][2] = $pengurang->kredit_koperasi ?? 0;
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;
                 $data[$i]['potongan'][4] = $pengurang->kredit_pegawai ?? 0;
-                $data[$i]['potongan'][5] = $pengurang->iuran_jk ?? 0;
+                $data[$i]['potongan'][5] = $pengurang->iuran_ik ?? 0;
     
                 $value[0] += $totalGaji + array_sum($data[$i]['potongan']);
                 $value[1] += 0;
                 $value[2] += $totalGaji;
                 $value[3] += $pengurang->iuran_koperasi ?? 0;
-                $value[4] += $pengurang->iuran_jk ?? 0;
+                $value[4] += $pengurang->iuran_ik ?? 0;
                 $value[5] += $dpp->nominal ?? 0;
                 $value[6] += $jk;
                 $value[7] += $pengurang->kredit_pegawai ?? 0;
@@ -268,7 +268,7 @@ class SlipGajiController extends Controller
                 $data[$i]['potongan'][2] = $pengurang->kredit_koperasi ?? 0;
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;
                 $data[$i]['potongan'][4] = $pengurang->kredit_pegawai ?? 0;
-                $data[$i]['potongan'][5] = $pengurang->iuran_jk ?? 0;
+                $data[$i]['potongan'][5] = $pengurang->iuran_ik ?? 0;
             }
         }
         

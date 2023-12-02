@@ -22,6 +22,7 @@ use App\Http\Controllers\LemburController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\MstPenambahanBrutoController;
 use App\Http\Controllers\MstPenguranganBrutoController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenggantiBiayaKesehatanController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
@@ -310,6 +311,12 @@ Route::group(['middleware' => 'auth'], function () {
     // Bonus
     Route::resource('bonus',BonusController::class);
 
+    Route::prefix('payroll')
+        ->name('payroll.')
+        ->group(function() {
+            Route::get('/', [PayrollController::class, 'index'])->name('index');
+            Route::get('/cetak-slip', [PayrollController::class, 'cetakSlip'])->name('cetak_slip');
+        });
 });
 Auth::routes();
 

@@ -180,26 +180,27 @@ class PenghasilanTidakTeraturController extends Controller
                 ->where('tahun', $tahun)
                 ->where('bulan', $i)
                 ->first();
-           $gj[$i - 1] = [
-            'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
-            'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
-            'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
-            'tj_telepon' => ($data != null) ? $data->tj_telepon : 0,
-            'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
-            'tj_teller' => ($data != null) ? $data->tj_teller : 0,
-            'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
-            'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
-            'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
-            'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
-            'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
-            'tj_ti' => ($data != null) ? $data->tj_ti : 0,
-            'tj_transport' => ($data != null) ? $data->tj_transport : 0,
-            'tj_pulsa' => ($data != null) ? $data->tj_pulsa : 0,
-            'tj_vitamin' => ($data != null) ? $data->tj_vitamin : 0,
-            'uang_makan' => ($data != null) ? $data->uang_makan : 0,
-           ];
 
-           $total_gj[$i-1] = [
+            $gj[$i - 1] = [
+                'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
+                'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
+                'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
+                'tj_telepon' => ($data != null) ? $data->tj_telepon : 0,
+                'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
+                'tj_teller' => ($data != null) ? $data->tj_teller : 0,
+                'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
+                'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
+                'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
+                'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
+                'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
+                'tj_ti' => ($data != null) ? $data->tj_ti : 0,
+                'tj_transport' => ($data != null) ? $data->tj_transport : 0,
+                'tj_pulsa' => ($data != null) ? $data->tj_pulsa : 0,
+                'tj_vitamin' => ($data != null) ? $data->tj_vitamin : 0,
+                'uang_makan' => ($data != null) ? $data->uang_makan : 0,
+            ];
+
+            $total_gj[$i-1] = [
             'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
             'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
             'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
@@ -250,7 +251,7 @@ class PenghasilanTidakTeraturController extends Controller
             $l++;
             array_push($bonus, $bon);
         }
-
+// return array_sum($gj[7]);
         foreach($total_gaji as $key => $item){
             $nominal_jp = ($key > 1) ? $jp_mar_des : $jp_jan_feb;
             // Get Jamsostek
@@ -305,7 +306,19 @@ class PenghasilanTidakTeraturController extends Controller
         }
         $karyawanController = new KaryawanController;
         $karyawan->masa_kerja = $karyawanController->countAge($karyawan->tanggal_pengangkat);
-
+// return [
+//     'gj' => $gj,
+//     'jamsostek' => $jamsostek,
+//     'tunjangan' => $tk,
+//     'penghasilan' => $ptt,
+//     'bonus' => $bonus,
+//     'tahun' => $tahun,
+//     'karyawan' => $karyawan,
+//     'request' => $request,
+//     'mode' => $mode,
+//     'pengurang' => array_sum($pengurang),
+//     'pph' => $pph_yang_dilunasi
+// ];
         return view('penghasilan.gajipajak', [
             'gj' => $gj,
             'jamsostek' => $jamsostek,

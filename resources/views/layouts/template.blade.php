@@ -304,7 +304,13 @@ Coded by www.creative-tim.com
                             </ul>
                         </li>
                         @endcan
-
+                        {{-- Menu Payroll --}}
+                        <li class="@active('payroll')">
+                            <a href="{{ route('payroll.index') }}" style="font-weight: bolder">
+                                <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
+                                <p>Payroll</p>
+                            </a>
+                        </li>
                         {{-- Menu Histori --}}
                         @can('histori')
                         <li class="@active('history')">
