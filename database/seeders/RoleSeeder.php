@@ -40,6 +40,7 @@ class RoleSeeder extends Seeder
             'manajemen karyawan - import data masa pensiunan',
             'manajemen karyawan - detail data masa pensiunan',
             'manajemen karyawan - pengkinian data',
+            'manajemen karyawan - pengkinian data - create pengkinian data',
             'manajemen karyawan - pengkinian data - update pengkinian data',
             'manajemen karyawan - pengkinian data - import pengkinian data',
             'manajemen karyawan - pengkinian data - detail pengkinian data',
@@ -63,6 +64,8 @@ class RoleSeeder extends Seeder
             'penghasilan - pajak penghasilan',
             'penghasilan - tambah penghasilan',
             'penghasilan - tambah penghasilan - import penghasilan',
+            'penghasilan - bonus',
+            'penghasilan - bonus - import',
             'histori',
             'histori - jabatan',
             'histori - penjabat sementara',
@@ -141,7 +144,7 @@ class RoleSeeder extends Seeder
                 $all_menu = \DB::table('permissions')->pluck('name');
                 $role_akses->givePermissionTo($all_menu);
             }else{
-                $role_akses->givePermissionTo(['dashboard']);
+                $role_akses->givePermissionTo(['dashboard','setting - master - role','setting - master - role - create role']);
             }
         }
     }

@@ -7,6 +7,7 @@ use App\Imports\MigrasiJabatanImport;
 use App\Imports\MigrasiPJSImport;
 use App\Imports\MigrasiSPImport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class MigrasiController extends Controller
@@ -33,16 +34,25 @@ class MigrasiController extends Controller
 
     public function migrasiJabatan()
     {
+        if (!Auth::user()->can('migrasi - jabatan')) {
+            return view('roles.forbidden');
+        }
         return view('migrasi.jabatan');
     }
 
     public function migrasiPJS()
     {
+        if (!Auth::user()->can('migrasi - penjabat sementara')) {
+            return view('roles.forbidden');
+        }
         return view('migrasi.pjs');
     }
 
     public function migrasiSP()
     {
+        if (!Auth::user()->can('migrasi - surat peringatan')) {
+            return view('roles.forbidden');
+        }
         return view('migrasi.sp');
     }
 
@@ -64,7 +74,7 @@ class MigrasiController extends Controller
         } else if($tipe == 'sp'){
             $import = new MigrasiSPImport;
         }
-        
+
         $import = $import->import($file);
 
         Alert::success('Berhasil', 'Berhasil mengimport data excel');

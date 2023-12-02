@@ -12,6 +12,7 @@ use App\Service\EntityService;
 use Doctrine\DBAL\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class KlasifikasiController extends Controller
@@ -41,6 +42,9 @@ class KlasifikasiController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->can('manajemen karyawan - data karyawan - export karyawan')) {
+            return view('roles.forbidden');
+        }
         $jabatan = JabatanModel::all();
         $panggol = PanggolModel::all();
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\ImportPotonganGaji;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -16,11 +17,17 @@ class SlipGajiController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->can('gaji - lampiran gaji')) {
+            return view('roles.forbidden');
+        }
         return view('slip_gaji.laporan_gaji', ['data' => null, 'kategori' => null, 'request' => null]);
     }
-    
+
     public function slipJurnalIndex()
     {
+        if (!Auth::user()->can('gaji - slip jurnal')) {
+            return view('roles.forbidden');
+        }
         return view('slip_gaji.slip_jurnal', ['data' => null, 'kategori' => null, 'request' => null]);
     }
 
@@ -34,7 +41,7 @@ class SlipGajiController extends Controller
             ->where('tahun', $tahun)
             ->where('bulan', $bulan)
             ->count('*');
-            
+
         if($kategori == 1){
             $value['item'] = ['Biaya Pegawai', 'Pph 21 Pegawai', 'Tabungan Sikemas', 'Iuran Koperasi Pegawai', 'Iuran IK', 'Dana Pensiun Pegawai ( 5% DPP )', 'Titipan Lainnya ( 1% JP BPJS TK )', 'Angsuran Kredit Pegawai', 'Angsuran kredit koperasi'];
             $value['kode_rekening'] = ['52103', '20303', '20102', '0013011797', '0013011794', '0013021911', '21101', '0019000003', '0013011797'];
@@ -43,7 +50,7 @@ class SlipGajiController extends Controller
             $value[2] = 0;
             $value[3] = 0;
             $value[4] = 0;
-            $value[5] = 0; 
+            $value[5] = 0;
             $value[6] = 0;
             $value[7] = 0;
             $value[8] = 0;
@@ -55,7 +62,7 @@ class SlipGajiController extends Controller
                         ->where('tahun', $tahun)
                         ->where('bulan', $bulan)
                         ->first();
-                    
+
                     if ($gaji == null) {
                         // $data[$i]['tunjangan'][1] = $gaji->tj_keluarga;
                         // $data[$i]['tunjangan'][2] = $gaji->tj_telepon;
@@ -77,7 +84,7 @@ class SlipGajiController extends Controller
                         $data[$i]['tunjangan'][8] = $gaji->tj_kesejahteraan;
                         $totalGaji = $gaji->gj_pokok + $gaji->gj_penyesuaian + array_sum($data[$i]['tunjangan']);
                     }
-        
+
                 }
                 else{
                     $totalGaji = $item->gj_pokok + $item->gj_penyesuaian;
@@ -103,7 +110,7 @@ class SlipGajiController extends Controller
                     ->where('bulan', $bulan)
                     ->where('nip', $item->nip)
                     ->first();
-                $data[$i]['potongan'][1] = $dpp->nominal ?? 0; 
+                $data[$i]['potongan'][1] = $dpp->nominal ?? 0;
                 $data[$i]['potongan'][2] = $pengurang->kredit_koperasi ?? 0;
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;
                 $data[$i]['potongan'][4] = $pengurang->kredit_pegawai ?? 0;
@@ -157,7 +164,7 @@ class SlipGajiController extends Controller
     {
         $kantor = $request->kantor;
         $kategori = $request->kategori;
-        
+
         // if($kantor == 'pusat'){
             $cabang = DB::table('mst_cabang')
                 ->select('kd_cabang')
@@ -220,7 +227,7 @@ class SlipGajiController extends Controller
                     ->where('tahun', $tahun)
                     ->where('bulan', $bulan)
                     ->first();
-                
+
                 $data[$i]['gj_pokok'] = $gaji->gj_pokok;
                 $data[$i]['gj_penyesuaian'] = $gaji->gj_penyesuaian;
 
@@ -264,14 +271,14 @@ class SlipGajiController extends Controller
                     ->where('bulan', $bulan)
                     ->where('nip', $item->nip)
                     ->first();
-                $data[$i]['potongan'][1] = $dpp->nominal ?? 0; 
+                $data[$i]['potongan'][1] = $dpp->nominal ?? 0;
                 $data[$i]['potongan'][2] = $pengurang->kredit_koperasi ?? 0;
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;
                 $data[$i]['potongan'][4] = $pengurang->kredit_pegawai ?? 0;
                 $data[$i]['potongan'][5] = $pengurang->iuran_ik ?? 0;
             }
         }
-        
+
         return $data;
     }
 
