@@ -552,13 +552,29 @@ class KaryawanController extends Controller
         $sp = SpModel::where('nip', $id)->get();
         // dd($sp);
         // dd($karyawan->bagian);
+
+        $dppPerhitungan = DB::table('gaji_per_bulan')
+                ->select(
+                    'gj_pokok',
+                    'tj_keluarga',
+                    'tj_kesejahteraan',
+                )
+                ->where('nip', $id)
+                ->first();
+        
+        $gjPokok = $dppPerhitungan->gj_pokok;
+        $tjKeluarga = $dppPerhitungan->tj_keluarga;
+        $tjKesejahteraan = $dppPerhitungan->tj_kesejahteraan;
+        $totalDppPerhitungan = ($gjPokok + $tjKeluarga + 0.5 * $tjKesejahteraan) * 0.05;
+
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,
             'tunjangan' => $data_tunjangan,
             'data_anak' => $data_anak,
             'pjs' => $historyJabatan,
-            'sp' => $sp
+            'sp' => $sp,
+            'dpp_perhitungan' => $totalDppPerhitungan,
         ]);
     }
 
