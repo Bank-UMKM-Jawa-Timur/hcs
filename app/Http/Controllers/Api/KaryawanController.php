@@ -31,8 +31,10 @@ class KaryawanController extends Controller
     function getKaryawan(Request $request)
     {
         try {
-            $nip = $request->get('nip');
-            $data = KaryawanModel::select('nama_karyawan')->where('nip', $nip)->first()->nama_karyawan ?? 'null';
+            $explode_id = json_decode($request->get('nip'), true);
+            // $nip = $request->get('nip');
+            // return gettype($explode_id);
+            $data = KaryawanModel::select('nip','nama_karyawan')->whereIn('nip', $explode_id)->get();
             return response()->json($data);
         }catch (Exception $e){
             return $e;
