@@ -131,8 +131,8 @@ class PenghasilanTeraturController extends Controller
             }
 
             Alert::success('Success', 'Berhasil menyimpan data');
-            // return redirect()->route('penghasilan.import-penghasilan-teratur.index');
-            return redirect()->back();
+            return redirect()->route('penghasilan.import-penghasilan-teratur.index');
+            // return redirect()->back();
 
         } catch (\Exception $e) {
             Alert::error('Error', $e->getMessage());
@@ -151,7 +151,20 @@ class PenghasilanTeraturController extends Controller
      */
     public function show($id)
     {
-        //
+
+    }
+
+    public function details($idTunjangan, $createdAt)
+    {
+        $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;
+        $page = Request()->has('page') ? Request()->get('page') : 1;
+
+        $search = Request()->get('q');
+        $repo = new PenghasilanTeraturRepository;
+        return view('penghasilan-teratur.detail', [
+            'data' => $repo->getDetailTunjangan($idTunjangan, $createdAt, $search, $limit),
+            'tunjangan' => $repo->getNamaTunjangan($idTunjangan)
+        ]);
     }
 
     /**

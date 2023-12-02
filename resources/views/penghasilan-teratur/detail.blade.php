@@ -3,17 +3,13 @@
 @section('content')
     <div class="card-header">
         <h5 class="card-title">Data Penghasilan Teratur</h5>
-        <p class="card-title"><a href="">Penghasilan</a> > Penghasilan Teratur</p>
+        <p class="card-title"><a href="">Penghasilan</a> > <a href="{{route('penghasilan.import-penghasilan-teratur.index')}}">Penghasilan Teratur</a> > Detail</p>
     </div>
 
     <div class="card-body">
         <div class="col">
             <div class="row">
-                @can('manajemen karyawan - data karyawan - create karyawan')
-                    <a class="mb-3" href="{{ route('penghasilan.import-penghasilan-teratur.create') }}">
-                        <button class="btn btn-primary">import penghasilan teratur</button>
-                    </a>
-                @endcan
+                <h6> Tunjangan : {{$tunjangan->nama_tunjangan}}</h6>
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -45,23 +41,17 @@
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class="text-primary">
                                 <th>No</th>
-                                {{-- <th>
+                                <th>
                                     NIP
                                 </th>
                                 <th>
                                     Karyawan
-                                </th> --}}
-                                <th>
-                                    Tunjangan
                                 </th>
                                 <th>
                                     Nominal
                                 </th>
                                 <th>
                                     Tanggal
-                                </th>
-                                <th>
-                                    Aksi
                                 </th>
                             </thead>
                             <tbody>
@@ -75,14 +65,10 @@
                                 @foreach ($data as $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
-                                        {{-- <td>{{ $item->nip_tunjangan }}</td> --}}
-                                        {{-- <td>{{ $item->nama_karyawan }}</td> --}}
-                                        <td>{{ $item->nama_tunjangan }}</td>
-                                        <td>{{ number_format($item->total_nominal, 0, ".", ",") }}</td>
+                                        <td>{{ $item->nip_tunjangan }}</td>
+                                        <td>{{ $item->nama_karyawan }}</td>
+                                        <td>{{ number_format($item->nominal, 0, ".", ",") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
-                                        <td>
-                                            <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-info">Detail</a>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
