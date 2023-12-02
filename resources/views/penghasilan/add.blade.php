@@ -35,7 +35,7 @@
                     <label for="id_tunjangan">Penghasilan:</label>
                     <select name="id_tunjangan" id="" class="form-control" required>
                         <option value="">--- Pilih Penghasilan ---</option>
-                        @foreach ($data as $item)
+                        @foreach ($dataSPD as $item)
                             <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
                         @endforeach
                     </select>
