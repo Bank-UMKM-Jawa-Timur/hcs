@@ -247,7 +247,7 @@ Coded by www.creative-tim.com
                         {{-- Menu Penghasilan --}}
                         @can('penghasilan')
                         <li
-                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }}">
+                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*', 'bonus', 'bonus/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
@@ -303,8 +303,8 @@ Coded by www.creative-tim.com
                                 </li>
                             </ul>
                         </li>
-
                         @endcan
+
                         {{-- Menu Histori --}}
                         @can('histori')
                         <li class="@active('history')">
@@ -787,7 +787,7 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
-    {{-- @stack('script') --}}
+    @stack('script')
 </body>
 
 </html>

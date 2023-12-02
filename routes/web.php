@@ -31,6 +31,7 @@ use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\SPDController;
 use App\Http\Controllers\SuratPeringatanController;
+use App\Http\Controllers\THRController;
 use App\Http\Controllers\TunjanganKaryawanController;
 use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
@@ -165,6 +166,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
     Route::resource('/lembur', LemburController::class);
     Route::resource('/spd', SPDController::class);
+    Route::resource('/bonus', BonusController::class);
+    Route::resource('/thr', THRController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
 

@@ -9,7 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
-
+use App\Repository\PenghasilanTidakTeraturRepository;
 class BonusController extends Controller
 {
     /**
@@ -17,9 +17,23 @@ class BonusController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+     private PenghasilanTidakTeraturRepository $repo;
+
+     public function __construct()
+     {
+         $this->repo = new PenghasilanTidakTeraturRepository;
+     }
+
+    public function index(Request $request)
     {
-        return view('bonus.index');
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+
+        $search = $request->get('q');
+        $data = $this->repo->getDataBonus($search, $limit, $page);
+        // dd($data);
+        return view('bonus.index', compact('data'));
     }
 
     /**
