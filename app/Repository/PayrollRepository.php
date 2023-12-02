@@ -163,6 +163,7 @@ class PayrollRepository
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
+                                'status_karyawan',
                             )
                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
@@ -188,6 +189,11 @@ class PayrollRepository
             $potongan = new \stdClass();
             $total_gaji = 0;
             $total_potongan = 0;
+            $penghasilan_rutin = 0;
+            $penghasilan_tidak_rutin = 0;
+            $penghasilan_tidak_teratur = 0;
+            $bonus = 0;
+            $tunjangan_teratur_import = 0; // Uang makan, vitamin, transport & pulsa
 
             if ($karyawan->gaji) {
                 // Get BPJS TK * Kesehatan
@@ -257,12 +263,35 @@ class PayrollRepository
                     }
                 }
 
+                // Penghasilan rutin
+                $penghasilan_rutin = $gaji + $jamsostek;
             }
+
             $karyawan->jamsostek = $jamsostek;
             $karyawan->bpjs_tk = $bpjs_tk;
             $karyawan->bpjs_kesehatan = $bpjs_kesehatan;
             $karyawan->potongan = $potongan;
-            // Get total yg diterima
+
+            // Get total penghasilan tidak teratur
+            if ($karyawan->tunjanganTidakTetap) {
+                $tunjangan_tidak_tetap = $karyawan->tunjanganTidakTetap;
+                foreach ($tunjangan_tidak_tetap as $key => $value) {
+                    $penghasilan_tidak_teratur += $value->pivot->nominal;
+                }
+            }
+
+            // Get total bonus
+            if ($karyawan->bonus) {
+                $bonus_item = $karyawan->bonus;
+                foreach ($bonus_item as $key => $value) {
+                    $bonus += $value->pivot->nominal;
+                }
+            }
+
+            // Penghasilan tidak rutin
+            $penghasilan_tidak_rutin = $penghasilan_tidak_teratur + $bonus;
+
+            // Get total potongan
             if ($karyawan->potonganGaji) {
                 $total_potongan += $karyawan->potonganGaji->total_potongan;
             }
@@ -272,10 +301,211 @@ class PayrollRepository
             }
             
             $total_potongan += $bpjs_tk;
+            $karyawan->total_potongan = $total_potongan;
 
+            // Get total yg diterima
             $total_yg_diterima = $total_gaji - $total_potongan;
             $karyawan->total_yg_diterima = $total_yg_diterima;
-            $karyawan->total_potongan = $total_potongan;
+
+            $karyawan->penghasilan_rutin = $penghasilan_rutin;
+            $karyawan->penghasilan_tidak_rutin = $penghasilan_tidak_rutin;
+            
+            // Get Penghasilan bruto
+            $month_on_year = 12;
+            $month_on_year_paid = 0;
+            $penghasilanBruto = new \stdClass();
+            $karyawan_bruto = KaryawanModel::with([
+                                                'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
+                                                    $query->select(
+                                                        'nip',
+                                                        'bulan',
+                                                        'gj_pokok',
+                                                        'tj_keluarga',
+                                                        'tj_kesejahteraan',
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                                    )
+                                                    ->where('nip', $karyawan->nip)
+                                                    ->where('tahun', $year)
+                                                    ->groupBy('bulan');
+                                                },
+                                                'sumBonusKaryawan' => function($query) use ($karyawan) {
+                                                    $query->select(
+                                                        'penghasilan_tidak_teratur.nip',
+                                                        'mst_tunjangan.kategori',
+                                                        DB::raw("SUM(penghasilan_tidak_teratur.nominal) AS total"),
+                                                    )
+                                                        ->where('penghasilan_tidak_teratur.nip', $karyawan->nip)
+                                                        ->where('mst_tunjangan.kategori', 'bonus')
+                                                        ->groupBy('penghasilan_tidak_teratur.nip');
+                                                },
+                                                'sumTunjanganTidakTetapKaryawan' => function($query) use ($karyawan) {
+                                                    $query->select(
+                                                            'penghasilan_tidak_teratur.nip',
+                                                            'mst_tunjangan.kategori',
+                                                            DB::raw("SUM(penghasilan_tidak_teratur.nominal) AS total"),
+                                                        )
+                                                        ->where('penghasilan_tidak_teratur.nip', $karyawan->nip)
+                                                        ->where('mst_tunjangan.kategori', 'tidak teratur')
+                                                        ->groupBy('penghasilan_tidak_teratur.nip');
+                                                },
+                                            ])
+                                            ->select(
+                                                'nip',
+                                                'nama_karyawan',
+                                                'no_rekening',
+                                                'tanggal_penonaktifan',
+                                                'kpj',
+                                                'jkn',
+                                                'status_karyawan',
+                                            )
+                                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
+                                            ->where(function($query) use ($karyawan) {
+                                                $query->whereRelation('allGajiByKaryawan', 'nip', $karyawan->nip);
+                                            })
+                                            ->first();
+
+            if ($karyawan_bruto) {
+                $gaji_bruto = 0;
+                // Get jamsostek
+                if ($karyawan_bruto->allGajiByKaryawan) {
+                    $month_on_year_paid = count($karyawan_bruto->allGajiByKaryawan);
+                    $allGajiByKaryawan = $karyawan_bruto->allGajiByKaryawan;
+                    $total_gaji_bruto = 0;
+                    $total_jamsostek = 0;
+                    $total_pengurang_bruto = 0;
+                    foreach ($allGajiByKaryawan as $key => $value) {
+                        $gaji_bruto += $value->gaji ? intval($value->gaji) : 0;
+                        $total_gaji = $value->total_gaji ? intval($value->total_gaji) : 0;
+                        $total_gaji_bruto += $total_gaji;
+                        $pengurang_bruto = 0;
+
+                        // Get jamsostek
+                        if($total_gaji > 0){
+                            $jkk = 0;
+                            $jht = 0;
+                            $jkm = 0;
+                            $jp_penambah = 0;
+                            $bpjs_kesehatan = 0;
+                            if(!$karyawan_bruto->tanggal_penonaktifan && $karyawan_bruto->kpj){
+                                $jkk = round(($persen_jkk / 100) * $total_gaji);
+                                $jht = round(($persen_jht / 100) * $total_gaji);
+                                $jkm = round(($persen_jkm / 100) * $total_gaji);
+                                $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
+                            }
+
+                            if($karyawan_bruto->jkn){
+                                if($total_gaji > $batas_atas){
+                                    $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                                } else if($total_gaji < $batas_bawah){
+                                    $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                                } else{
+                                    $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
+                                }
+                            }
+                            $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
+
+                            $total_jamsostek += $jamsostek;
+
+                            // Get Potongan(JP1%, DPP 5%)
+                            $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
+                            $dppBruto = 0;
+                            $dppBrutoExtra = 0;
+                            if($karyawan->status_karyawan == 'IKJP') {
+                                $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
+                            } else{
+                                $gj_pokok = $value->gj_pokok;
+                                $tj_keluarga = $value->tj_keluarga;
+                                $tj_kesejahteraan = $value->tj_kesejahteraan;
+
+                                // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5% 
+                                $dppBruto = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
+                                if($total_gaji >= $nominal_jp){
+                                    $dppBrutoExtra = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                                } else {
+                                    $dppBrutoExtra = round($total_gaji * ($persen_jp_pengurang / 100), 2);
+                                }
+                            }
+
+                            $pengurang_bruto = $dppBruto + $dppBrutoExtra;
+                            $total_pengurang_bruto += $pengurang_bruto;
+                        }
+                        $value->pengurangan_bruto = $pengurang_bruto;
+                    }
+                    $penghasilanBruto->total_pengurangan_bruto = $total_pengurang_bruto;
+                    $penghasilanBruto->gaji_pensiun = intval($total_gaji_bruto);
+                    $penghasilanBruto->total_jamsostek = intval($total_jamsostek);
+                }
+
+                // Get penghasilan tidak teratur
+                $total_penghasilan_tidak_teratur_bruto = 0;
+                if ($karyawan_bruto->sumTunjanganTidakTetapKaryawan) {
+                    $sumTunjanganTidakTetapKaryawan = $karyawan_bruto->sumTunjanganTidakTetapKaryawan;
+                    $total_penghasilan_tidak_teratur_bruto = isset($sumTunjanganTidakTetapKaryawan[0]) ? intval($sumTunjanganTidakTetapKaryawan[0]->total) : 0;
+                    $penghasilanBruto->total_penghasilan_tidak_teratur = $total_penghasilan_tidak_teratur_bruto;
+                }
+
+                // Get total bonus
+                $total_bonus_bruto = 0;
+                if ($karyawan_bruto->sumBonusKaryawan) {
+                    $sumBonusKaryawan = $karyawan_bruto->sumBonusKaryawan;
+                    $total_bonus_bruto = isset($sumBonusKaryawan[0]) ? intval($sumBonusKaryawan[0]->total) : 0;
+                    $penghasilanBruto->total_bonus = $total_bonus_bruto;
+                }
+
+                $penghasilan_rutin_bruto = 0;
+                $penghasilan_tidak_rutin_bruto = 0;
+                $total_penghasilan = 0; // ( Teratur + Tidak Teratur )
+
+                $penghasilan_rutin_bruto = $gaji_bruto;
+                $penghasilan_tidak_rutin_bruto = $total_penghasilan_tidak_teratur_bruto + $total_bonus_bruto;
+                $total_penghasilan = $penghasilan_rutin_bruto + $penghasilan_tidak_rutin_bruto;
+                $penghasilanBruto->penghasilan_rutin = $penghasilan_rutin_bruto;
+                $penghasilanBruto->penghasilan_tidak_rutin = $penghasilan_tidak_rutin_bruto;
+                $penghasilanBruto->total_penghasilan = $total_penghasilan;
+            }
+
+            // Get Tunjangan lainnya (T.Makan, T.Pulsa, T.Transport, T.Vitamin, T.Tidak teratur, Bonus)
+            if ($karyawan->tunjangan) {
+                $tunjangan = $karyawan->tunjangan;
+                foreach ($tunjangan as $key => $value) {
+                    $tunjangan_teratur_import += $value->pivot->nominal;
+                }
+            }
+            $tunjangan_lainnya = $tunjangan_teratur_import + $penghasilan_tidak_rutin;
+            $penghasilanBruto->tunjangan_lainnya = $tunjangan_lainnya;
+
+            // Get total penghasilan bruto
+            $total_penghasilan_bruto = 0;
+            if (property_exists($penghasilanBruto, 'gaji_pensiun')) {
+                $total_penghasilan_bruto += $penghasilanBruto->gaji_pensiun;
+            }
+            if (property_exists($penghasilanBruto, 'total_jamsostek')) {
+                $total_penghasilan_bruto += $penghasilanBruto->total_jamsostek;
+            }
+            if (property_exists($penghasilanBruto, 'total_bonus')) {
+                $total_penghasilan_bruto += $penghasilanBruto->total_bonus;
+            }
+            if (property_exists($penghasilanBruto, 'tunjangan_lainnya')) {
+                $total_penghasilan_bruto += $penghasilanBruto->tunjangan_lainnya;
+            }
+            $penghasilanBruto->total_keseluruhan = $total_penghasilan_bruto;
+
+            /**
+             * Pengurang Penghasilan
+             * IF(5%*K46>500000*SUM(L18:L29);500000*SUM(L18:L29);5%*K46)
+             * K46 = total penghasilan
+             * SUM(L18:19) = jumlah bulan telah digaji dalam setahun ($month_on_year_paid)
+             */
+
+            $biaya_jabatan = 0;
+            if (property_exists($penghasilanBruto, 'total_penghasilan')) {
+                $pembanding = 500000 * $month_on_year_paid;
+                $biaya_jabatan = (0.05 * $penghasilanBruto->total_penghasilan) > $pembanding ? $pembanding : (0.05 * $penghasilanBruto->total_penghasilan);
+            }
+
+            $karyawan->karyawan_bruto = $karyawan_bruto;
+            $karyawan->penghasilan_bruto = $penghasilanBruto;
         }
         return $data;
     }
