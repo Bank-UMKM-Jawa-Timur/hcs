@@ -22,12 +22,11 @@ class PayrollController extends Controller
         $kantor = $request->get('kantor') == 'pusat' ? 'pusat' : $request->get('cabang');
         $month = $request->get('bulan');
         $year = $request->get('tahun');
-        
+
         $cabangRepo = new CabangRepository;
         $cabang = $cabangRepo->listCabang();
 
         $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, $limit);
-
         return view('payroll.index', compact('data', 'cabang'));
     }
 

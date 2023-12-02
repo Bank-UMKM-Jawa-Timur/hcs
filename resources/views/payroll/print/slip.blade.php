@@ -11,6 +11,9 @@
 </head>
 
 <body>
+    <script>
+        print();
+    </script>
     <style>
         .text-utama{
             color: #DA251D;

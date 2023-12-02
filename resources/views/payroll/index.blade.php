@@ -6,6 +6,106 @@
         }
     </style>
 @endpush
+
+@section('custom_script')
+    <script>
+        const formatRupiahPayroll = (angka) => {
+            let reverse = angka.toString().split('').reverse().join('');
+            let ribuan = reverse.match(/\d{1,3}/g);
+            ribuan = ribuan.join('.').split('').reverse().join('');
+            return `${ribuan}`;
+        }
+        $('.show-data').on('click',function(e) {
+            // console.log(e);
+            const targetId = $(this).data("target-id");
+            const data = $(this).data('json');
+            $('#table-tunjangan-tidak > tbody').empty();
+            $('#table-tunjangan-total-tidak thead').empty();
+
+            $('#table-tunjangan > tbody').empty();
+            $('#table-tunjangan-total thead ').empty();
+
+            $('#nip').html(`${data.nip}`)
+            $('#nama').html(`${data.nama_karyawan}`)
+            $('#no_rekening').html(`${data.no_rekening != null ? data.no_rekening : '-'}`)
+
+            var nominal = 0;
+            var tableTunjangan = `
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Gaji Pokok</td>
+                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gaji['total_gaji'])}</td>
+                    </tr>
+            `;
+            // START TUNJANGAN TERATUR
+            $.each(data.tunjangan, function( key, value ) {
+                nominal += value.pivot.nominal ;
+                tableTunjangan += `
+                    <tr style="border:1px solid #e3e3e3">
+                        <td class="text-left fw-bold">${value.nama_tunjangan}</td>
+                        <td class="text-right">${formatRupiahPayroll(value.pivot.nominal)}</td>
+                    </tr>
+                `
+            });
+            $("#table-tunjangan tbody").append(tableTunjangan);
+
+            var tableTotalTunjanganTeratur = `
+                <tr>
+                    <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
+                    <th class="text-right ">${formatRupiahPayroll(nominal + data.gaji['total_gaji'])}</th>
+                </tr>
+            `
+            $("#table-tunjangan-total thead").append(tableTotalTunjanganTeratur);
+            // END TUNJANGAN TERATUR
+        })
+        function showModal(identifier) {
+        }
+
+        $('#kantor').on('change', function() {
+            const selected = $(this).val()
+
+            if (selected == 'cabang') {
+                $('.cabang-input').removeClass('d-none')
+            }
+            else {
+                $('.cabang-input').addClass('d-none')
+            }
+        })
+
+        $('#page_length').on('change', function() {
+            $('#form').submit()
+        })
+
+        $('#form').on('submit', function() {
+            $('.loader-wrapper').css('display: none;')
+            $('.loader-wrapper').addClass('d-block')
+            $(".loader-wrapper").fadeOut("slow");
+        })
+
+        // Adjust pagination url
+        var btn_pagination = $(`.pagination`).find('a')
+        var page_url = window.location.href
+        $(`.pagination`).find('a').each(function(i, obj) {
+            if (page_url.includes('kantor')) {
+                btn_pagination[i].href += `&kantor=${$('#kantor').val()}`
+            }
+            if (page_url.includes('cabang')) {
+                btn_pagination[i].href += `&cabang=${$('#cabang').val()}`
+            }
+            if (page_url.includes('bulan')) {
+                btn_pagination[i].href += `&bulan=${$('#bulan').val()}`
+            }
+            if (page_url.includes('tahun')) {
+                btn_pagination[i].href += `&tahun=${$('#tahun').val()}`
+            }
+            if (page_url.includes('page_length')) {
+                btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
+            }
+            if (page_url.includes('q')) {
+                btn_pagination[i].href += `&q=${$('#q').val()}`
+            }
+        })
+    </script>
+@endsection
 @section('content')
     <div class="card-header">
         <h5 class="card-title">Payroll</h5>
@@ -162,7 +262,7 @@
                                     $footer_total_potongan = 0;
                                     $footer_total_diterima = 0;
                                 @endphp
-                                @forelse ($data as $item)
+                                @forelse ($data as $key => $item)
                                     @php
                                         $norek = $item->no_rekening ? $item->no_rekening : '-';
                                         $total_gaji = $item->gaji ? number_format($item->gaji->total_gaji, 0, ',', '.') : 0;
@@ -174,7 +274,7 @@
                                         $iuran_ik = $item->potonganGaji ? number_format($item->potonganGaji->iuran_ik, 0, ',', '.') : 0;
                                         $total_potongan = number_format($item->total_potongan, 0, ',', '.');
                                         $total_diterima = $item->total_yg_diterima ? number_format($item->total_yg_diterima, 0, ',', '.') : 0;
-                                        
+
                                         // count total
                                         $footer_total_gaji += str_replace('.', '', $total_gaji);
                                         $footer_bpjs_tk += str_replace('.', '', $bpjs_tk);
@@ -200,10 +300,15 @@
                                         <td class="text-right">{{ $total_potongan }}</td>
                                         <td class="text-right">{{ $total_diterima }}</td>
                                         <td>
-                                            <a href=""
-                                                class="btn btn-sm btn-outline-info p-1">
+                                            <button type="button"
+                                                data-toggle="modal"
+                                                data-target="#exampleModal"
+                                                data-target-id="slipGaji-{{ $item->id }}"
+                                                data-json="{{ $data[$key] }}"
+                                                {{-- onclick="showModal(this)" --}}
+                                                class="btn btn-sm btn-outline-info p-1 show-data">
                                                 Slip Gaji
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                 @empty
@@ -243,53 +348,73 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Slip Gaji</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-end">
+                    <div>
+                        <button type="button" class="btn btn-primary">Cetak Gaji</button>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-start">
+                    <div>
+                        <img src="{{ asset('style/assets/img/logo.png') }}" width="100px" class="img-fluid">
+                        <p class="pt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <div class="row">
+                        <div class="col-lg-12 mt-3">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="fw-bold">NIP</td>
+                                    <td>:</td>
+                                    <td id="nip"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Nama Karyawan</td>
+                                    <td>:</td>
+                                    <td id="nama"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">No Rekening</td>
+                                    <td>:</td>
+                                    <td id="no_rekening"></td>
+                                </tr>
+                            </table>
+                            <hr>
+                        </div>
+                        <div class="col-lg-12 m-0">
+                            <table class="table table-borderless m-0" style="border:1px solid #e3e3e3" id="table-tunjangan">
+                                <thead>
+                                    <th>Nama</th>
+                                    <th class="text-right">Nominal</th>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                            <table class="table table-borderless" id="table-tunjangan-total">
+                                <thead></thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- <div class="modal-footer">
+
+            </div> --}}
+        </div>
+        </div>
+    </div>
 @endsection
 
-@section('custom_script')
-    <script>
-        $('#kantor').on('change', function() {
-            const selected = $(this).val()
-
-            if (selected == 'cabang') {
-                $('.cabang-input').removeClass('d-none')
-            }
-            else {
-                $('.cabang-input').addClass('d-none')
-            }
-        })
-
-        $('#page_length').on('change', function() {
-            $('#form').submit()
-        })
-
-        $('#form').on('submit', function() {
-            $('.loader-wrapper').css('display: none;')
-            $('.loader-wrapper').addClass('d-block')
-            $(".loader-wrapper").fadeOut("slow");
-        })
-
-        // Adjust pagination url
-        var btn_pagination = $(`.pagination`).find('a')
-        var page_url = window.location.href
-        $(`.pagination`).find('a').each(function(i, obj) {
-            if (page_url.includes('kantor')) {
-                btn_pagination[i].href += `&kantor=${$('#kantor').val()}`
-            }
-            if (page_url.includes('cabang')) {
-                btn_pagination[i].href += `&cabang=${$('#cabang').val()}`
-            }
-            if (page_url.includes('bulan')) {
-                btn_pagination[i].href += `&bulan=${$('#bulan').val()}`
-            }
-            if (page_url.includes('tahun')) {
-                btn_pagination[i].href += `&tahun=${$('#tahun').val()}`
-            }
-            if (page_url.includes('page_length')) {
-                btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
-            }
-            if (page_url.includes('q')) {
-                btn_pagination[i].href += `&q=${$('#q').val()}`
-            }
-        })
-    </script>
-@endsection
