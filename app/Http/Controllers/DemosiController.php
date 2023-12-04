@@ -7,6 +7,7 @@ use App\Service\EntityService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -29,6 +30,9 @@ class DemosiController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data demosi')) {
+            return view('roles.forbidden');
+        }
         $data = DB::table('demosi_promosi_pangkat')
             ->where('keterangan', 'Demosi')
             ->select(
@@ -87,6 +91,9 @@ class DemosiController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data demosi - create demosi')) {
+            return view('roles.forbidden');
+        }
         $data = DB::table('mst_karyawan')
             ->select('nip', 'nama_karyawan', 'kd_panggol')
             ->get();
@@ -114,7 +121,7 @@ class DemosiController extends Controller
                     $tj = DB::table('mst_tunjangan')
                         ->where('id', $request->tunjangan[$key])
                         ->first('nama_tunjangan');
-        
+
                     if($request->id_tk[$key] != 0){
                         DB::table('history_penyesuaian')
                             ->insert([
@@ -153,14 +160,14 @@ class DemosiController extends Controller
                 }
             }
         }
-        
+
         $filename = null;
         if($request->file_sk != null){
             $file = $request->file_sk;
             $folderPath = public_path() . '/upload/pergerakan_karir/';
             $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
             $path = realpath($folderPath);
-    
+
             if(!($path !== true AND is_dir($path))){
                 mkdir($folderPath, 0755, true);
             }

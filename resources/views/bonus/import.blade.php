@@ -5,6 +5,9 @@
         .hidden{
             display: none;
         }
+        .custom-file-label::after{
+            padding: 10px 5px 30px 5px;
+        }
     </style>
 @endpush
 @push('script')
@@ -14,15 +17,16 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
         $(document).ready(function() {
-            // cek kategori bonus
-            $('#kategori-bonus').on('change',function(e) {
-                if ($(this).val() == 'penghasilan-lainnya') {
-                    $('.kategori-tunjangan-select').removeClass('hidden');
-                }else{
-                    $('.kategori-tunjangan-select').addClass('hidden');
-                }
-            })
+            var kategori;
+            var url;
+
+            // 1. Import Data dan cek validasi jika ada yang salah ditampilkan alert eror row berapa kesalahan nya dan upload ulang
+                // -- tombol simpan tampil jika proses data selesai
+            // 2. Jika data valid maka muncul alert success
+            // 3. jika success maka data dapat disimpan
+
             $('.btn-import').on('click',function(element) {
+                url = "{{ route('api.get.karyawan') }}";
                 $('#table_item tbody').empty();
                 $('#table-data').removeClass('hidden');
                 $('#button-simpan').removeClass('hidden');
@@ -72,9 +76,10 @@
                                 }
 
                                 // Tampil data di table
-                                console.log(arr_data);
+                                // console.log(typeof(arr_data));
                                 // jquery untuk cek api
-                                showTable(arr_data);
+                                // showTable(arr_data);
+                                handleRow(arr_data);
 
 
                             })
@@ -97,60 +102,129 @@
             })
             function showTable(arr_data) {
                 var total_data = arr_data.length;
-                // Function to handle each row
-                function handleRow(index) {
-                    var row = arr_data[index];
-                    if (row[0] != null) {
-                        // get karyawan
-                        $.ajax({
-                            type: "GET",
-                            url: `{{ route('api.get.karyawan') }}`,
-                            data: {
-                                nip: row[0]
-                            },
-                            success: function (res) {
-                                var nama = res != 'null' ? res : '-';
-                                if (res != 'null') {
-                                    var text = '';
-                                } else {
-                                    var text = `<small class="text-danger" id="alert">Data NIP tidak ditemukan silahkan klik button edit</small>`;
-                                }
+                $.each(arr_data, function( key, value ) {
+                    console.log(value);
+                });
 
-                                createTableRow(row, nama,index, text);
-                            },
-                            complete: function () {
-                                // Continue processing the next row after the AJAX request is complete
-                                if (index < total_data - 1) {
-                                    handleRow(index + 1);
-                                }
-                            }
-                        });
-                    }
-                }
+                // Function to handle each row
+
                 // Start processing rows
                 handleRow(0);
             }
+            function handleRow(arr_data) {
+                // var row = arr_data;
+                // console.log(arr_data);
+                $('#total-data').html(`
+                    <span id="total-data">Total Data : ${arr_data.length}</span>
+                `)
 
-            function createTableRow(row, nama,index,text) {
-                var new_body_tr = `
-                    <tr>
-                        <td>
-                            <input type="text" name="nip[]" class="typeahead form-control nip-input" value="${row[0]}" readonly>
-                            ${text}
-                        </td>
-                        <td>
-                            <input type="text" name="nama[]" class="form-control nama-input" value="${nama}" readonly>
-                        </td>
-                        <td>
-                            <input type="text" name="nominal[]" class="form-control nominal-input" value="${row[1]}" readonly>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-warning edit-button" data-index="${index}">Edit</button>
-                        </td>
-                    </tr>
-                `;
-                $('#table_item tbody').append(new_body_tr);
+                var test = [];
+                $.each(arr_data,function(key, value) {
+                    // console.log(value[0]);
+                    test.push(value[0]);
+                })
+                var grand_total = 0;
+                $.ajax({
+                        type: "GET",
+                        url: url,
+                        data: {
+                            nip: JSON.stringify(test)
+                        },
+                        success: function (res) {
+                            var new_body_tr = ``
+                            $.each(res,function(key,value) {
+                                grand_total += arr_data[key][1]
+                                // console.log(value.nip);
+                                new_body_tr += `
+                                    <tr>
+                                        <td>
+                                            <span>${key + 1}</span>
+                                        </td>
+                                        <td>
+                                            <span>${value.nip}</span>
+                                            <input type="text" name="nip[]" class="typeahead form-control nip-input" value="${value.nip}" readonly hidden>
+                                        </td>
+                                        <td>
+                                            <span>${value.nama_karyawan}</span>
+                                            <input type="text" name="nama[]" class="form-control nama-input" value="${value.nama_karyawan}" readonly hidden>
+                                        </td>
+                                        <td>
+                                            <span>${arr_data[key][1]}</span>
+                                            <input type="text" name="nominal[]" class="form-control nominal-input" value="${arr_data[key][1]}" readonly hidden>
+                                        </td>
+                                    </tr>
+                                `;
+
+                            })
+                            $('#grand-total').html(`
+                                <span id="grand-total">Grand Total : ${grand_total}</span>
+                            `)
+                            $('#table_item tbody').append(new_body_tr);
+                            // var nama = res != 'null' ? res.karyawan : '-';
+                            // var thr = res != 'null' ? res.thr : null;
+                            // if (res != 'null') {
+                            //     var text = '';
+                            // } else {
+                            //     var text = `<small class="text-danger" id="alert">Data NIP tidak ditemukan silahkan klik button edit</small>`;
+                            // }
+
+                            // createTableRow(row, nama,index, text, thr);
+                        },
+                        complete: function () {
+                            // // Continue processing the next row after the AJAX request is complete
+                            // if (index < total_data - 1) {
+                            //     handleRow(index + 1);
+                            // }
+                        }
+                });
+
+                // if (row[0] != null) {
+                //     // get karyawan
+                //     $.ajax({
+                //         type: "GET",
+                //         url: url,
+                //         data: {
+                //             nip: JSON.stringify(row)
+                //         },
+                //         success: function (res) {
+                //             // console.log(res);
+                //             // var nama = res != 'null' ? res.karyawan : '-';
+                //             // var thr = res != 'null' ? res.thr : null;
+                //             // if (res != 'null') {
+                //             //     var text = '';
+                //             // } else {
+                //             //     var text = `<small class="text-danger" id="alert">Data NIP tidak ditemukan silahkan klik button edit</small>`;
+                //             // }
+
+                //             // createTableRow(row, nama,index, text, thr);
+                //         },
+                //         complete: function () {
+                //             // // Continue processing the next row after the AJAX request is complete
+                //             // if (index < total_data - 1) {
+                //             //     handleRow(index + 1);
+                //             // }
+                //         }
+                //     });
+                // }
             }
+
+            // function createTableRow(row, nama,index,text, thr = null) {
+            //     var new_body_tr = `
+            //         <tr>
+            //             <td>
+            //                 <input type="text" name="nip[]" class="typeahead form-control nip-input" value="${row[0]}" readonly>
+            //                 ${text}
+            //             </td>
+            //             <td>
+            //                 <input type="text" name="nama[]" class="form-control nama-input" value="${nama}" readonly>
+            //             </td>
+            //             <td>
+            //                 <input type="text" name="nominal[]" class="form-control nominal-input" value="${formatRupiah(row[1].toString())}" readonly>
+            //             </td>
+            //         </tr>
+            //     `;
+            //     $('#table_item tbody').append(new_body_tr);
+            // }
             // Event handler for edit button
             $('#table_item tbody').on('click', '.edit-button', function () {
                 var index = $(this).data('index');
@@ -179,6 +253,10 @@
                         return false;
                     }
                 });
+                $('#table_item tbody tr:eq(' + index + ') input.nominal-input').on('keyup', function(){
+                    var value = $(this).val();
+                    $(this).val(formatRupiah(value))
+                })
                 rowInputs.prop('readonly', !rowInputs.prop('readonly'));
             });
 
@@ -190,6 +268,8 @@
         <div class="card-header">
             <h5 class="card-title">Import Bonus</h5>
             <p class="card-title"><a href="">Dashboard</a> > <a href="{{ route('bonus.index') }}">Bonus</a> >Import</p>
+            <a href="{{ route('bonus.excel') }}"  class="btn btn-primary">Download Template Excel</a>
+
         </div>
     </div>
 
@@ -215,44 +295,53 @@
                 @endif
             </div>
             <div class="col-md-12">
+            </div>
+            <div class="col-md-12">
                     <div class="form-row">
                         <div class="col">
                             <label for="">Kategori</label>
                             <select name="kategori_bonus" id="kategori-bonus" class="form-control">
-                                <option value="">Pilih Kategori</option>
-                                <option value="jaspro">Jaspro DanKes</option>
-                                <option value="thr">Import THR </option>
-                                <option value="penghasilan-lainnya">Import Penghasilan Lainnya</option>
-                            </select>
-                        </div>
-                        <div class="col hidden kategori-tunjangan-select">
-                            <label for="">Kategori Tunjangan</label>
-                            <select name="kategori_tunjangan" id="kategori" class="form-control">
                                 <option value="">Pilih Kategori Tunjangan</option>
                                 @forelse ($data_tunjangan as $item)
                                     <option value="{{ $item->id }}">{{ ucwords($item->nama_tunjangan) }}</option>
                                 @empty
-
+                                    <option value="">Tidak Ada Tunjangan</option>
                                 @endforelse
                             </select>
                         </div>
+                        <div class="col kategori-tunjangan-select">
+                            <label for="">Tanggal</label>
+                            <input type="date" class="form-control" name="tanggal" id="">
+                        </div>
                         <div class="col">
                             <label for="">Data Excel</label>
-                            <div class="custom-file col-md-12 ">
-                                <input type="file" name="upload_csv" class="custom-file-input form-control py-3" id="upload_csv"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
+
+                            <div class=" col-md-12 ">
+                                <input type="file" name="upload_csv" class="custom-file-input form-control"  id="upload_csv"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                <label class="custom-file-label overflow-hidden" for="validatedCustomFile" style="padding: 10px 4px 30px 5px">Choose file...</label>
                             </div>
                         </div>
                         <div class="col align-items-center mt-2">
                             <button type="button" class="btn btn-info btn-import">Import</button>
-                            <a href="{{ asset('template_penghasilan_lainnya.xlsx') }}" download>Download Template Excel</a>
                         </div>
                     </div>
+            </div>
+            <div class="col-md-4 mt-4" id="total-data">
+            </div>
+            <div class="col-md-4 mt-4" id="grand-total">
+            </div>
+            <div class="col-md-4 mt-4" ">
+                <div class="d-flex justify-content-end hidden">
+                    <button type="submit" class="btn btn-info hidden" id="button-simpan">Simpan</button>
+                </div>
             </div>
             <div class="col-md-12 my-5 hidden" id="table-data">
                 <div class="table-responsive overflow-hidden content-center">
                     <table class="table whitespace-nowrap table-bondered" id="table_item" style="width: 100%">
                       <thead class="text-primary">
+                        <th>
+                            No
+                        </th>
                         <th>
                             NIP
                         </th>
@@ -262,9 +351,6 @@
                         <th>
                             Nominal
                         </th>
-                        <th>
-                            Aksi
-                        </th>
                       </thead>
                       <tbody>
 
@@ -273,11 +359,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-12 " ">
-                <div class="d-flex justify-content-end hidden">
-                    <button type="submit" class="btn btn-info hidden" id="button-simpan">Simpan</button>
-                </div>
-            </div>
+
 
         </div>
     </form>

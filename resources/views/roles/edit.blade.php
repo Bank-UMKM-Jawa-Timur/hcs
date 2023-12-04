@@ -59,7 +59,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Tambah Roles</h5>
+            <h5 class="card-title">Edit Roles</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('role.index') }}">Roles</a> > <a>Edit</a></p>
         </div>
     </div>

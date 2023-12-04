@@ -210,4 +210,9 @@ class KaryawanRepository
     {
         $karyawan->map(fn($karyawan) => $karyawan->entitas = EntityService::getEntity($karyawan->kd_entitas));
     }
+
+    public function getEntity($karyawan) :void
+    {
+        $this->addEntity($karyawan);
+    }
 }
