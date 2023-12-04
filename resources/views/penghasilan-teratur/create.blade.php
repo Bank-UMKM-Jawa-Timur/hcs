@@ -5,6 +5,9 @@
         .hidden{
             display: none;
         }
+        .custom-file-label::after{
+            padding: 10px 4px 30px 4px;
+        }
     </style>
 @endpush
 @push('script')
@@ -39,8 +42,10 @@
                 <div class="form-group">
                     <label for="">File</label>
                     <div class="custom-file">
-                        <input type="file" name="upload_excel" class="custom-file-input" id="file-penghasilan" accept=".xlsx, .xls" onchange="updateFileName()">
-                        <label class="custom-file-label overflow-hidden" for="file-penghasilan" id="file-label">Choose Excel file...</label>
+                        <input type="file" name="upload_excel" class="custom-file-input form-control"  id="file-penghasilan"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="updateFileName()">
+                        <label class="custom-file-label overflow-hidden" for="validatedCustomFile" id="file-label" style="padding: 10px 4px 30px 5px">Choose file...</label>
+                        {{-- <input type="file" name="upload_excel" class="custom-file-input form-control" id="file-penghasilan" accept=".xlsx, .xls" >
+                        <label class="custom-file-label overflow-hidden" for="file-penghasilan"  id="file-label">Choose Excel file...</label> --}}
                     </div>
                     <p class="text-danger d-none mt-2" id="error-file">File belum di pilih.</p>
                 </div>
@@ -226,7 +231,6 @@
             $("#table_item").on('click', '.btn-edit', function () {
                 var $row = $(this).closest('tr');
                 var index = $(this).data('index');
-                // console.log( $('#table_item tbody tr:eq(' + index + ') input.nip'));
                 var namaInput = $row.find('input.nama');
                 var rowInputs = $row.find('input').not('.nama');
 
