@@ -383,9 +383,9 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function create()
     {
-        $dataSPD = TunjanganModel::where('nama_tunjangan', 'like', '%spd%')->get();
+        $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
 
-        return view('penghasilan.add', compact('dataSPD'));
+        return view('penghasilan.add', compact('data'));
     }
 
     /**
@@ -410,8 +410,8 @@ class PenghasilanTidakTeraturController extends Controller
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $idTunjangan->id,
-                    'bulan' => Carbon::now()->format('m'),
-                    'tahun' => Carbon::now()->format('Y'),
+                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
                     'nominal' => str_replace('.', '', $request['nominal'][$key]),
                     'keterangan' => $request->get('keterangan')[$key] ?? null,
                     'created_at' => now()

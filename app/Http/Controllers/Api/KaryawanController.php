@@ -31,7 +31,10 @@ class KaryawanController extends Controller
     {
         try {
             $nip = $request->get('nip');
-            $data = KaryawanModel::select('nama_karyawan')->where('nip', $nip)->first()->nama_karyawan ?? 'null';
+            $data = KaryawanModel::select('nama_karyawan', 'nip')
+                ->whereIn('nip', $nip)
+                ->whereNull('tanggal_penonaktifan')
+                ->get() ?? 'null';
             return response()->json($data);
         }catch (Exception $e){
             return $e;
