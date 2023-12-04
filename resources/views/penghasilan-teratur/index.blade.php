@@ -82,6 +82,12 @@
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                         <td>
                                             <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-info">Detail</a>
+                                            @if ($item->nama_tunjangan == 'Vitamin')
+                                            <form action="{{route('penghasilan.cetak-vitamin')}}" method="post">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary">Cetak Vitamin</button>
+                                            </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

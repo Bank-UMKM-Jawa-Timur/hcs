@@ -200,4 +200,8 @@ class PenghasilanTeraturController extends Controller
     {
         //
     }
+
+    public function templateExcel(){
+
+    }
 }
