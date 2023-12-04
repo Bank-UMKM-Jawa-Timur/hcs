@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\KaryawanModel;
+use App\Models\PtkpModel;
 use Illuminate\Support\Facades\DB;
 
 use function PHPSTORM_META\map;
@@ -98,6 +99,20 @@ class PayrollRepository
         }
 
         $data = KaryawanModel::with([
+                                'keluarga' => function($query) {
+                                    $query->select(
+                                        'nip',
+                                        'enum',
+                                        'nama AS nama_keluarga',
+                                        'jml_anak',
+                                        DB::raw("
+                                            IF(jml_anak > 3,
+                                                'K/3',
+                                                IF(jml_anak IS NOT NULL, CONCAT('K/', jml_anak), 'K/0')) AS status_kawin
+                                        ")
+                                    )
+                                    ->whereIn('enum', ['Suami', 'Istri']);
+                                },
                                 'gaji' => function($query) use ($month, $year) {
                                     $query->select(
                                         'nip',
@@ -163,6 +178,17 @@ class PayrollRepository
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
+                                DB::raw("
+                                    IF(
+                                        status = 'Kawin',
+                                        'K',
+                                        IF(
+                                            status = 'Belum Kawin',
+                                            'TK',
+                                            status
+                                        )
+                                    ) AS status
+                                "),
                                 'status_karyawan',
                             )
                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
@@ -182,6 +208,14 @@ class PayrollRepository
                             ->paginate($limit);
 
         foreach ($data as $key => $karyawan) {
+            $ptkp = null;
+            if ($karyawan->keluarga) {
+                $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
+                                ->where('kode', $karyawan->keluarga->status_kawin)
+                                ->first();
+            }
+            $karyawan->ptkp = $ptkp;
+
             $nominal_jp = 0;
             $jamsostek = 0;
             $bpjs_tk = 0;
@@ -312,9 +346,11 @@ class PayrollRepository
             
             // Get Penghasilan bruto
             $month_on_year = 12;
+            $month_paided_arr = [];
             $month_on_year_paid = 0;
             $penghasilanBruto = new \stdClass();
             $penguranganPenghasilan = new \stdClass();
+
             $karyawan_bruto = KaryawanModel::with([
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
@@ -325,6 +361,7 @@ class PayrollRepository
                                                         'tj_kesejahteraan',
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                                        DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
                                                     )
                                                     ->where('nip', $karyawan->nip)
                                                     ->where('tahun', $year)
@@ -368,15 +405,17 @@ class PayrollRepository
 
             if ($karyawan_bruto) {
                 $gaji_bruto = 0;
+                $tunjangan_lainnya_bruto = 0;
                 // Get jamsostek
                 if ($karyawan_bruto->allGajiByKaryawan) {
-                    $month_on_year_paid = count($karyawan_bruto->allGajiByKaryawan);
                     $allGajiByKaryawan = $karyawan_bruto->allGajiByKaryawan;
                     $total_gaji_bruto = 0;
                     $total_jamsostek = 0;
                     $total_pengurang_bruto = 0;
                     foreach ($allGajiByKaryawan as $key => $value) {
-                        $gaji_bruto += $value->gaji ? intval($value->gaji) : 0;
+                        array_push($month_paided_arr, intval($value->bulan));
+                        $gaji_bruto += $value->total_gaji ? intval($value->total_gaji) : 0;
+                        $tunjangan_lainnya_bruto += $value->total_tunjangan_lainnya ? intval($value->total_tunjangan_lainnya) : 0;
                         $total_gaji = $value->total_gaji ? intval($value->total_gaji) : 0;
                         $total_gaji_bruto += $total_gaji;
                         $pengurang_bruto = 0;
@@ -438,6 +477,21 @@ class PayrollRepository
                     $penghasilanBruto->total_jamsostek = intval($total_jamsostek);
                 }
 
+                // Get keterangan tunjangan tidak tetap & bonus
+                $ketTunjanganTidakTetap = DB::table('penghasilan_tidak_teratur')
+                                            ->select('bulan', 'tahun')
+                                            ->where('nip', $karyawan->nip)
+                                            ->where('tahun', $year)
+                                            ->groupBy(['bulan', 'tahun'])
+                                            ->pluck('bulan');
+                for ($i=0; $i < count($ketTunjanganTidakTetap); $i++) { 
+                    $i_bulan = $ketTunjanganTidakTetap[$i];
+                    if (!in_array($i_bulan, $month_paided_arr)) {
+                        array_push($month_paided_arr, intval($i_bulan));
+                    }
+                }
+                $month_on_year_paid = count($month_paided_arr);
+
                 // Get penghasilan tidak teratur
                 $total_penghasilan_tidak_teratur_bruto = 0;
                 if ($karyawan_bruto->sumTunjanganTidakTetapKaryawan) {
@@ -458,7 +512,7 @@ class PayrollRepository
                 $penghasilan_tidak_rutin_bruto = 0;
                 $total_penghasilan = 0; // ( Teratur + Tidak Teratur )
 
-                $penghasilan_rutin_bruto = $gaji_bruto;
+                $penghasilan_rutin_bruto = $gaji_bruto + $tunjangan_lainnya_bruto + $penghasilanBruto->total_jamsostek;
                 $penghasilan_tidak_rutin_bruto = $total_penghasilan_tidak_teratur_bruto + $total_bonus_bruto;
                 $total_penghasilan = $penghasilan_rutin_bruto + $penghasilan_tidak_rutin_bruto;
                 $penghasilanBruto->penghasilan_rutin = $penghasilan_rutin_bruto;
@@ -473,7 +527,8 @@ class PayrollRepository
                     $tunjangan_teratur_import += $value->pivot->nominal;
                 }
             }
-            $tunjangan_lainnya = $tunjangan_teratur_import + $penghasilan_tidak_rutin;
+            // $tunjangan_lainnya = $tunjangan_teratur_import + $penghasilan_tidak_rutin;
+            $tunjangan_lainnya = $tunjangan_lainnya_bruto;
             $penghasilanBruto->tunjangan_lainnya = $tunjangan_lainnya;
 
             // Get total penghasilan bruto
@@ -500,6 +555,8 @@ class PayrollRepository
              */
 
             $biaya_jabatan = 0;
+            $pembanding = 0;
+            $biaya_jabatan = 0;
             if (property_exists($penghasilanBruto, 'total_penghasilan')) {
                 $pembanding = 500000 * $month_on_year_paid;
                 $biaya_jabatan = (0.05 * $penghasilanBruto->total_penghasilan) > $pembanding ? $pembanding : (0.05 * $penghasilanBruto->total_penghasilan);
@@ -512,6 +569,69 @@ class PayrollRepository
             $karyawan->karyawan_bruto = $karyawan_bruto;
             $karyawan->penghasilan_bruto = $penghasilanBruto;
             $karyawan->pengurangan_penghasilan = $penguranganPenghasilan;
+
+            // Perhitungan Pph 21
+            $perhitunganPph21 = new \stdClass();
+
+            // Get jumlah penghasilan neto
+            $jumlah_penghasilan = property_exists($penghasilanBruto, 'total_keseluruhan') ? $penghasilanBruto->total_keseluruhan : 0;
+            $jumlah_pengurang = property_exists($penguranganPenghasilan, 'jumlah_pengurangan') ? $penguranganPenghasilan->jumlah_pengurangan : 0;
+            $jumlah_penghasilan_neto = $jumlah_penghasilan - $jumlah_pengurang;
+            $perhitunganPph21->jumlah_penghasilan_neto = $jumlah_penghasilan_neto;
+            
+            // Get jumlah penghasilan neto masa sebelumnya
+            $jumlah_penghasilan_neto_sebelumnya = 0;
+            $perhitunganPph21->jumlah_penghasilan_neto_sebelumnya = $jumlah_penghasilan_neto_sebelumnya;
+
+            // Get total penghasilan neto
+            $total_penghasilan_neto = $jumlah_penghasilan_neto + $jumlah_penghasilan_neto_sebelumnya;
+            $perhitunganPph21->total_penghasilan_neto = $total_penghasilan_neto;
+
+            // Get jumlah penghasilan neto untuk Pph 21 (Setahun/Disetaunkan)
+            if ($month_on_year_paid == 0) {
+                $jumlah_penghasilan_neto_pph21 = 0;
+            } else {
+                $rumus_14 = 0;
+                if (0.05 * $penghasilanBruto->total_penghasilan > $pembanding) {
+                    $rumus_14 = ceil($pembanding);
+                } else{
+                    $rumus_14 = ceil(0.05 * $penghasilanBruto->total_penghasilan);
+                }
+                $total_rutin = $penghasilanBruto->penghasilan_rutin;
+                $total_tidak_rutin = $penghasilanBruto->penghasilan_tidak_rutin;
+                $bonus_sum = $penghasilanBruto->total_bonus;
+                $pengurang = $penguranganPenghasilan->total_pengurangan_bruto;
+                $total_ket = $month_on_year_paid;
+
+                $jumlah_penghasilan_neto_pph21 = (($total_rutin + $total_tidak_rutin) - $bonus_sum - $pengurang - $biaya_jabatan) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
+
+                $perhitunganPph21->jumlah_penghasilan_neto_pph21 = $jumlah_penghasilan_neto_pph21;
+            }
+
+
+            // Get PTKP
+            $nominal_ptkp = 0;
+            if ($ptkp) {
+                $nominal_ptkp = $ptkp->ptkp_tahun;
+            }
+            $perhitunganPph21->ptkp = $nominal_ptkp;
+
+            // Get Penghasilan Kena Pajak Setahun/Disetahunkan
+            $keluarga = $karyawan->keluarga;
+            $status_kawin = $keluarga->status_kawin;
+            $penghasilan_kena_pajak_setahun = 0;
+            if ($status_kawin == 'Mutasi Keluar') {
+                $penghasilan_kena_pajak_setahun = floor(($jumlah_penghasilan_neto_pph21 - $ptkp?->ptkp_tahun) / 1000) * 1000;
+            } else {
+                if (($jumlah_penghasilan_neto_pph21 - $ptkp?->ptkp_tahun) <= 0) {
+                    $penghasilan_kena_pajak_setahun = 0;
+                } else {
+                    $penghasilan_kena_pajak_setahun = $jumlah_penghasilan_neto_pph21 - $ptkp?->ptkp_tahun;
+                }
+            }
+            $perhitunganPph21->penghasilan_kena_pajak_setahun = $penghasilan_kena_pajak_setahun;
+
+            $karyawan->perhitungan_pph21 = $perhitunganPph21;
         }
         return $data;
     }
