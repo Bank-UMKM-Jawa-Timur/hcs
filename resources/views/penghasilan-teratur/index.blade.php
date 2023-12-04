@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@include('penghasilan-teratur.modal.modal-excel-vitamin')
 
 @section('content')
     <div class="card-header">
@@ -10,10 +11,11 @@
         <div class="col">
             <div class="row">
                 @can('manajemen karyawan - data karyawan - create karyawan')
-                    <a class="mb-3" href="{{ route('penghasilan.import-penghasilan-teratur.create') }}">
-                        <button class="btn btn-primary">import penghasilan teratur</button>
-                    </a>
-                @endcan
+                    <a href="{{ route('penghasilan.import-penghasilan-teratur.create') }}" class="btn btn-primary">import penghasilan teratur</a>
+                    @endcan
+                    <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#modal-cetak-vitamin">
+                        Print vitamin karyawan kantor pusat
+                    </button>
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -82,12 +84,12 @@
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                         <td>
                                             <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-info">Detail</a>
-                                            @if ($item->nama_tunjangan == 'Vitamin')
+                                            {{-- @if ($item->nama_tunjangan == 'Vitamin')
                                             <form action="{{route('penghasilan.cetak-vitamin')}}" method="post">
                                                 @csrf
                                                 <button type="submit" class="btn btn-primary">Cetak Vitamin</button>
                                             </form>
-                                            @endif
+                                            @endif --}}
                                         </td>
                                     </tr>
                                 @endforeach

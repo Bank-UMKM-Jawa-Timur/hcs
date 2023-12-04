@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\KaryawanExport;
+use App\Exports\ExportVitamin;
 
 class PenghasilanTeraturController extends Controller
 {
@@ -203,6 +204,13 @@ class PenghasilanTeraturController extends Controller
     }
 
     public function templateExcel(){
-        return Excel::download(new KaryawanExport, 'template_import_penghasilan_teratur.xlsx');
+        return Excel::download(new KaryawanExport(), 'template_import_penghasilan_teratur.xlsx');
+    }
+
+    public function cetakVitamin(Request $request){
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
+        return Excel::download(new ExportVitamin(), 'RINCIAN_PENGGANTI_UANG_VITAMIN_PEGAWAI.xlsx');
     }
 }

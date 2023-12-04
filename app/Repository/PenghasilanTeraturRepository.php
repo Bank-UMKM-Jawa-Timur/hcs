@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Models\CabangModel;
+use App\Models\GajiPerBulanModel;
 use App\Models\TunjanganModel;
 use Illuminate\Support\Facades\DB;
 
@@ -69,6 +71,22 @@ class PenghasilanTeraturRepository
         $tunjangan = TunjanganModel::find($idTunjangan);
 
         return $tunjangan;
+    }
+
+    public function excelVitamin($bulan, $tahun){
+        $cabang = CabangModel::select('kd_cabang')->pluck('kd_cabang');
+        $data = GajiPerBulanModel::select(
+            'gaji_per_bulan.nip',
+            'k.nama_karyawan',
+            'k.no_rekening',
+            'gaji_per_bulan.tj_vitamin as vitamin'
+        )
+            ->join('mst_karyawan as k', 'k.nip', 'gaji_per_bulan.nip')
+            ->where('bulan', $bulan)->where('tahun', $tahun)
+            ->whereNotIn('k.kd_entitas', $cabang)
+            ->get();
+
+        return $data;
     }
 }
 

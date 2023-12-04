@@ -52,7 +52,6 @@
 
         <a class="btn btn-primary" href="{{ route('penghasilan.template-excel') }}" download>Template Excel</a>
 
-
         <form action="{{route('penghasilan.import-penghasilan-teratur.store')}}" method="POST">
         @csrf
             <div class="row d-none" id="hasil-filter">
