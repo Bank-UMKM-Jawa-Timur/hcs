@@ -14,6 +14,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\KaryawanExport;
 use App\Exports\ExportVitamin;
+use Exception;
 
 class PenghasilanTeraturController extends Controller
 {
@@ -45,34 +46,43 @@ class PenghasilanTeraturController extends Controller
     }
 
     public function getKaryawanByEntitas(Request $request){
-        $nip = $request->nip;
-        $tanggal = $request->tanggal;
-        $tanggal = $request->tanggal;
-        $id_tunjangan = $request->id_tunjangan;
-        $data = KaryawanModel::where('nip', $nip)->first();
-        $tunjangan = DB::table('tunjangan_karyawan AS tk')
-                        ->select('m.nama_tunjangan')
-                        ->join('mst_tunjangan AS m', 'm.id', 'tk.id_tunjangan')
-                        ->where('tk.nip', $nip)
-                        ->where('tk.id_tunjangan', $id_tunjangan)
-                        ->whereMonth('tk.created_at', date('m', strtotime( $tanggal)))
-                        ->whereYear('tk.created_at', date('Y', strtotime($tanggal)))
-                        ->first();
-        if ($data) {
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'success',
-                'data' => $data,
-                'tunjangan' => $tunjangan
-            ]);
-        } else {
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'data not found',
-                'data' => null,
-                'tunjangan' => null
-            ]);
+        try {
+            $nip = $request->nip;
+            $tanggal = $request->tanggal;
+            $tanggal = $request->tanggal;
+            $id_tunjangan = $request->id_tunjangan;
+            $data = KaryawanModel::select('nama_karyawan', 'nip')
+                            ->whereIn('nip', $nip)
+                            ->whereNull('tanggal_penonaktifan')
+                            ->get() ?? 'null';
+            $tunjangan = DB::table('tunjangan_karyawan AS tk')
+                            ->select('m.nama_tunjangan')
+                            ->join('mst_tunjangan AS m', 'm.id', 'tk.id_tunjangan')
+                            ->where('tk.nip', $nip)
+                            ->where('tk.id_tunjangan', $id_tunjangan)
+                            ->whereMonth('tk.created_at', date('m', strtotime( $tanggal)))
+                            ->whereYear('tk.created_at', date('Y', strtotime($tanggal)))
+                            ->first();
+            return response($data);
+        } catch (Exception $e) {
+            return $e;
         }
+
+        // if ($data) {
+        //     return response()->json([
+        //         'status' => 'Success',
+        //         'message' => 'success',
+        //         'data' => $data,
+        //         'tunjangan' => $tunjangan
+        //     ]);
+        // } else {
+        //     return response()->json([
+        //         'status' => 'Success',
+        //         'message' => 'data not found',
+        //         'data' => null,
+        //         'tunjangan' => null
+        //     ]);
+        // }
     }
     public function getKaryawanSearch(Request $request){
         $data = KaryawanModel::select("nama_karyawan", "nip")
