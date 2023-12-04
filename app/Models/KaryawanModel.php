@@ -156,4 +156,8 @@ class KaryawanModel extends Model
     {
         return $this->belongsTo(PotonganGajiModel::class, 'nip', 'nip');
     }
+
+    public function pphDilunasi() {
+        return $this->hasMany(PPHModel::class, 'nip');
+    }
 }

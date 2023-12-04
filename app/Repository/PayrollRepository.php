@@ -174,6 +174,7 @@ class PayrollRepository
                             ->select(
                                 'nip',
                                 'nama_karyawan',
+                                'npwp',
                                 'no_rekening',
                                 'tanggal_penonaktifan',
                                 'kpj',
@@ -350,6 +351,7 @@ class PayrollRepository
             $month_on_year_paid = 0;
             $penghasilanBruto = new \stdClass();
             $penguranganPenghasilan = new \stdClass();
+            $pph_dilunasi = 0;
 
             $karyawan_bruto = KaryawanModel::with([
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
@@ -367,7 +369,7 @@ class PayrollRepository
                                                     ->where('tahun', $year)
                                                     ->groupBy('bulan');
                                                 },
-                                                'sumBonusKaryawan' => function($query) use ($karyawan) {
+                                                'sumBonusKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'penghasilan_tidak_teratur.nip',
                                                         'mst_tunjangan.kategori',
@@ -375,9 +377,10 @@ class PayrollRepository
                                                     )
                                                         ->where('penghasilan_tidak_teratur.nip', $karyawan->nip)
                                                         ->where('mst_tunjangan.kategori', 'bonus')
+                                                        ->where('penghasilan_tidak_teratur.tahun', $year)
                                                         ->groupBy('penghasilan_tidak_teratur.nip');
                                                 },
-                                                'sumTunjanganTidakTetapKaryawan' => function($query) use ($karyawan) {
+                                                'sumTunjanganTidakTetapKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                             'penghasilan_tidak_teratur.nip',
                                                             'mst_tunjangan.kategori',
@@ -385,8 +388,20 @@ class PayrollRepository
                                                         )
                                                         ->where('penghasilan_tidak_teratur.nip', $karyawan->nip)
                                                         ->where('mst_tunjangan.kategori', 'tidak teratur')
+                                                        ->where('penghasilan_tidak_teratur.tahun', $year)
                                                         ->groupBy('penghasilan_tidak_teratur.nip');
                                                 },
+                                                'pphDilunasi' => function($query) use ($karyawan, $year) {
+                                                    $query->select(
+                                                        'nip',
+                                                        'bulan',
+                                                        'tahun',
+                                                        DB::raw('SUM(total_pph) AS nominal'),
+                                                    )
+                                                    ->where('tahun', $year)
+                                                    ->where('nip', $karyawan->nip)
+                                                    ->groupBy('bulan');
+                                                }
                                             ])
                                             ->select(
                                                 'nip',
@@ -572,11 +587,18 @@ class PayrollRepository
 
             // Perhitungan Pph 21
             $perhitunganPph21 = new \stdClass();
+            
+            $total_rutin = $penghasilanBruto->penghasilan_rutin;
+            $total_tidak_rutin = $penghasilanBruto->penghasilan_tidak_rutin;
+            $bonus_sum = $penghasilanBruto->total_bonus;
+            $pengurang = $penguranganPenghasilan->total_pengurangan_bruto;
+            $total_ket = $month_on_year_paid;
 
             // Get jumlah penghasilan neto
             $jumlah_penghasilan = property_exists($penghasilanBruto, 'total_keseluruhan') ? $penghasilanBruto->total_keseluruhan : 0;
             $jumlah_pengurang = property_exists($penguranganPenghasilan, 'jumlah_pengurangan') ? $penguranganPenghasilan->jumlah_pengurangan : 0;
-            $jumlah_penghasilan_neto = $jumlah_penghasilan - $jumlah_pengurang;
+            // $jumlah_penghasilan_neto = $jumlah_penghasilan - $jumlah_pengurang;
+            $jumlah_penghasilan_neto = ($total_rutin + $total_tidak_rutin) - ($biaya_jabatan + $pengurang);
             $perhitunganPph21->jumlah_penghasilan_neto = $jumlah_penghasilan_neto;
             
             // Get jumlah penghasilan neto masa sebelumnya
@@ -584,7 +606,7 @@ class PayrollRepository
             $perhitunganPph21->jumlah_penghasilan_neto_sebelumnya = $jumlah_penghasilan_neto_sebelumnya;
 
             // Get total penghasilan neto
-            $total_penghasilan_neto = $jumlah_penghasilan_neto + $jumlah_penghasilan_neto_sebelumnya;
+            $total_penghasilan_neto = ($total_rutin + $total_tidak_rutin) - ($biaya_jabatan + $pengurang);
             $perhitunganPph21->total_penghasilan_neto = $total_penghasilan_neto;
 
             // Get jumlah penghasilan neto untuk Pph 21 (Setahun/Disetaunkan)
@@ -597,17 +619,11 @@ class PayrollRepository
                 } else{
                     $rumus_14 = ceil(0.05 * $penghasilanBruto->total_penghasilan);
                 }
-                $total_rutin = $penghasilanBruto->penghasilan_rutin;
-                $total_tidak_rutin = $penghasilanBruto->penghasilan_tidak_rutin;
-                $bonus_sum = $penghasilanBruto->total_bonus;
-                $pengurang = $penguranganPenghasilan->total_pengurangan_bruto;
-                $total_ket = $month_on_year_paid;
 
                 $jumlah_penghasilan_neto_pph21 = (($total_rutin + $total_tidak_rutin) - $bonus_sum - $pengurang - $biaya_jabatan) / $total_ket * 12 + $bonus_sum + ($biaya_jabatan - $rumus_14);
 
                 $perhitunganPph21->jumlah_penghasilan_neto_pph21 = $jumlah_penghasilan_neto_pph21;
             }
-
 
             // Get PTKP
             $nominal_ptkp = 0;
@@ -631,6 +647,100 @@ class PayrollRepository
             }
             $perhitunganPph21->penghasilan_kena_pajak_setahun = $penghasilan_kena_pajak_setahun;
 
+            /**
+             * Get PPh Pasal 21 atas Penghasilan Kena Pajak Setahun/Disetahunkan
+             * 1. Create std class object pphPasal21
+             * 2. Get persentase perhitungan pph21
+             * 3. PPh Pasal 21 atas Penghasilan Kena Pajak Setahun/Disetahunkan
+             * 4. PPh Pasal 21 yang telah dipotong Masa Sebelumnya (default 0)
+             * 5. PPh Pasal 21 Terutang
+             * 6. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi
+             * 7. PPh Pasal 21 yang masih harus dibayar
+             */
+
+            // 1. Create std class object pphPasal21
+            $pphPasal21 = new \stdClass;
+
+            // 2. Get persentase perhitungan pph21
+            $persen5 = 0;
+            if (($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) > 0) {
+                if (($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) <= 60000000) {
+                    $persen5 = ($karyawan->npwp != null) ? (floor(($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) / 1000) * 1000) * 0.05 :  (floor(($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) / 1000) * 1000) * 0.06;
+                } else {
+                    $persen5 = ($karyawan->npwp != null) ? 60000000 * 0.05 : 60000000 * 0.06;
+                }
+            } else {
+                $persen5 = 0;
+            }
+            $persen15 = 0;
+            if (($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) > 60000000) {
+                if (($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) <= 250000000) {
+                    $persen15 = ($karyawan->npwp != null) ? (floor(($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) / 1000) * 1000 - 60000000) * 0.15 :  (floor(($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) / 1000) * 1000- 60000000) * 0.18;
+                } else {
+                    $persen15 = 190000000 * 0.15;
+                }
+            } else {
+                $persen15 = 0;
+            }
+            $persen25 = 0;
+            if (($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) > 250000000) {
+                if (($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) <= 500000000) {
+                    $persen25 = ($karyawan->npwp != null) ? (floor(($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) / 1000) * 1000 - 250000000) * 0.25 :  (floor(($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) / 1000) * 1000 - 250000000) * 0.3;
+                } else {
+                    $persen25 = 250000000 * 0.25;
+                }
+            } else {
+                $persen25 = 0;
+            }
+            $persen30 = 0;
+            if (($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) > 500000000) {
+                if (($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) <= 5000000000) {
+                    $persen30 = ($karyawan->npwp != null) ? (floor(($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) / 1000) * 1000 - 500000000) * 0.3 :  (floor(($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) / 1000) * 1000 - 500000000) * 0.36;
+                } else {
+                    $persen30 = 4500000000 * 0.30;
+                }
+            } else {
+                $persen30 = 0;
+            }
+            $persen35 = 0;
+            if (($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) > 5000000000) {
+                    $persen35 = ($karyawan->npwp != null) ? (floor(($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) / 1000) * 1000 - 5000000000) * 0.35 :  (floor(($jumlah_penghasilan_neto_pph21 - $nominal_ptkp) / 1000) * 1000 - 5000000000) * 0.42;
+            } else {
+                $persen35 = 0;
+            }
+            $pphPasal21->persen5 = $persen5;
+            $pphPasal21->persen15 = $persen15;
+            $pphPasal21->persen25 = $persen25;
+            $pphPasal21->persen30 = $persen30;
+            $pphPasal21->persen35 = $persen35;
+
+            // 3. PPh Pasal 21 atas Penghasilan Kena Pajak Setahun/Disetahunkan
+            $penghasilan_kena_pajak_setahun = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
+            $pphPasal21->penghasilan_kena_pajak_setahun = $penghasilan_kena_pajak_setahun;
+            
+            // 4. PPh Pasal 21 yang telah dipotong Masa Sebelumnya
+            $pph_21_dipotong_masa_sebelumnya = 0;
+            $pphPasal21->pph_21_dipotong_masa_sebelumnya = $pph_21_dipotong_masa_sebelumnya;
+
+            // 5. PPh Pasal 21 Terutang
+            $pph_21_terutang = ceil(($penghasilan_kena_pajak_setahun / 12) * $total_ket);
+            $pphPasal21->pph_21_terutang = $pph_21_terutang;
+
+            // 6. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi
+            $total_pph_dilunasi = 0;
+            if ($karyawan_bruto->pphDilunasi) {
+                $pphDilunasi = $karyawan_bruto->pphDilunasi;
+                foreach ($pphDilunasi as $key => $value) {
+                    $total_pph_dilunasi += intval($value->nominal);
+                }
+            }
+            $pphPasal21->pph_telah_dilunasi = $total_pph_dilunasi;
+            
+            // 7. PPh Pasal 21 yang masih harus dibayar
+            $pph_harus_dibayar = $pph_21_terutang - $total_pph_dilunasi;
+            $pphPasal21->pph_harus_dibayar = $pph_harus_dibayar;
+
+            $perhitunganPph21->pph_pasal_21 = $pphPasal21;
             $karyawan->perhitungan_pph21 = $perhitunganPph21;
         }
         return $data;
