@@ -25,15 +25,15 @@
             // 2. Jika data valid maka muncul alert success
             // 3. jika success maka data dapat disimpan
 
-            var hasError = false;
-            var hasSuccess = false;
+
+
 
             $('.btn-import').on('click',function(element) {
                 url = "{{ route('api.get.karyawan') }}";
-                hasError = false;
-                hasSuccess = false;
+
                 $('#table-data').addClass('hidden');
                 $('#table_item tbody').empty();
+                $('#alert-container').addClass('hidden');
 
                 var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
                 var test = $("#upload_csv").val();
@@ -112,6 +112,11 @@
                 var dataNominal = [];
                 var nipDataRequest = [];
 
+                var checkNip = [];
+
+                var hasError = false;
+                var hasSuccess = false;
+
                 var invalidNamaRows = [];
                 $.each(arr_data,function(key, value) {
                     dataNip.push({ nip: value[0], row: key + 1 });
@@ -135,25 +140,17 @@
                             `);
                         },
                         success: function (res) {
-                            console.log(res);
                             $('#table-data').removeClass('hidden');
-                            // $('#button-simpan').removeClass('hidden');
                             var new_body_tr = ``
                             $.each(res,function(key,value) {
                                 dataNominal.push(arr_data[key][1]);
                                 nipDataRequest.push(value.nip);
-                                grand_total += arr_data[key][1]
+                                // if (res.some(checkUsername)) {
                                 if (value.nip == '-') {
-                                    // If there is an error, display a danger alert
-                                    alertDanger(`Nip Tidak dapat ditemukan pada row : ${value.row}`);
-                                    hasError = true;
+                                    checkNip.push(value.row);
+                                    hasError = true
                                 }
-                                if(value.nip != '-'){
-                                    alertSuccess(`Data valid.`);
-                                    hasSuccess = true;
-                                    hasError = false;
-
-                                }
+                                grand_total += arr_data[key][1]
                                 new_body_tr += `
                                     <tr>
                                         <td>
@@ -173,7 +170,13 @@
                                 `;
 
                             })
+                            if (hasError == true) {
+                                var message = ``;
+                                message += `Data tidak ditemukan di row : ${checkNip}`
+                                alertDanger(message)
+                            }
                             if (hasError != true) {
+                                alertSuccess('Data Valid.');
                                 $('.nominal-input').val(dataNominal)
                                 $('.nip').val(nipDataRequest);
                                 $('#button-simpan').removeClass('hidden');
@@ -214,6 +217,8 @@
 
             function alertDanger(message) {
                 // Display an alert with danger style
+                $('#alert-container').removeClass('hidden');
+
                 $('#alert-container').html(`
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         ${message}
@@ -225,6 +230,8 @@
             }
             function alertSuccess(message) {
                 // Display an alert with danger style
+                $('#alert-container').removeClass('hidden');
+
                 $('#alert-container').html(`
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         ${message}
