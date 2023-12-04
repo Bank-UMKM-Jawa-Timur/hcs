@@ -62,7 +62,7 @@
                                         <td>{{ $item->total_data }}</td>
                                         <td>Rp {{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('d F Y') }}</td>
-                                        <td><a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}">Detail</a></td>
+                                        <td><a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}" class="btn btn-primary">Detail</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
