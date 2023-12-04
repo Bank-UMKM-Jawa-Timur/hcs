@@ -3,8 +3,7 @@
 @section('content')
     <div class="card-header">
         <h5 class="card-title">Bonus</h5>
-        <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> >Bonus</p>
-        <a href="{{ route('bonus.create') }}" class="btn btn-primary">Import Bonus</a>
+        <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> > <a href="{{ route('bonus.index') }}">Bonus</a> > Detail</p>
     </div>
 
     <div class="card-body">
@@ -41,11 +40,10 @@
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class="text-primary">
                                 <th>No</th>
-                                <th>Tunjangan</th>
-                                <th>Total Data</th>
-                                <th>Grand Total</th>
+                                <th>NIP</th>
+                                <th>Karyawan</th>
+                                <th>Nominal</th>
                                 <th>Bulan/Tahun</th>
-                                <th>Aksi</th>
                             </thead>
                             <tbody>
                                 @php
@@ -58,11 +56,10 @@
                                 @foreach ($data as $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
-                                        <td>{{ $item->nama_tunjangan }}</td>
-                                        <td>{{ $item->total_data }}</td>
-                                        <td>Rp {{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
+                                        <td>{{ $item->nip }}</td>
+                                        <td>{{ $item->nama_karyawan }}</td>
+                                        <td>Rp {{ number_format($item->nominal, 0,',','.') }}</td>
                                         <td>{{ $item->bulan }} - {{ $item->tahun }}</td>
-                                        <td><a href="{{ route('bonus.show',$item->id_tunjangan) }}">Detail</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>

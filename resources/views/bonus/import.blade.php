@@ -25,11 +25,15 @@
             // 2. Jika data valid maka muncul alert success
             // 3. jika success maka data dapat disimpan
 
+            var hasError = false;
+            var hasSuccess = false;
+
             $('.btn-import').on('click',function(element) {
                 url = "{{ route('api.get.karyawan') }}";
+                hasError = false;
+                hasSuccess = false;
+                $('#table-data').addClass('hidden');
                 $('#table_item tbody').empty();
-                $('#table-data').removeClass('hidden');
-                $('#button-simpan').removeClass('hidden');
 
                 var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
                 var test = $("#upload_csv").val();
@@ -75,10 +79,6 @@
                                     arr_data.push(arr_row)
                                 }
 
-                                // Tampil data di table
-                                // console.log(typeof(arr_data));
-                                // jquery untuk cek api
-                                // showTable(arr_data);
                                 handleRow(arr_data);
 
 
@@ -100,41 +100,60 @@
                     $('#button-simpan').addClass('hidden');
                 }
             })
-            function showTable(arr_data) {
-                var total_data = arr_data.length;
-                $.each(arr_data, function( key, value ) {
-                    console.log(value);
-                });
-
-                // Function to handle each row
-
-                // Start processing rows
-                handleRow(0);
-            }
             function handleRow(arr_data) {
                 // var row = arr_data;
                 // console.log(arr_data);
                 $('#total-data').html(`
-                    <span id="total-data">Total Data : ${arr_data.length}</span>
+                    <span id="total-data" class="font-weight-bold">Total Data : ${arr_data.length}</span>
                 `)
 
-                var test = [];
+
+                var dataNip = [];
+                var dataNominal = [];
+                var nipDataRequest = [];
+
+                var invalidNamaRows = [];
                 $.each(arr_data,function(key, value) {
-                    // console.log(value[0]);
-                    test.push(value[0]);
+                    dataNip.push({ nip: value[0], row: key + 1 });
                 })
                 var grand_total = 0;
                 $.ajax({
                         type: "GET",
                         url: url,
                         data: {
-                            nip: JSON.stringify(test)
+                            nip: JSON.stringify(dataNip)
+                        },
+                        beforeSend: function () {
+                            // Display a loading message or indicator before the API call
+                            $('#loading-message').html(`
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                   Loading Data...
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            `);
                         },
                         success: function (res) {
+                            console.log(res);
+                            $('#table-data').removeClass('hidden');
+                            // $('#button-simpan').removeClass('hidden');
                             var new_body_tr = ``
                             $.each(res,function(key,value) {
+                                dataNominal.push(arr_data[key][1]);
+                                nipDataRequest.push(value.nip);
                                 grand_total += arr_data[key][1]
-                                // console.log(value.nip);
+                                if (value.nip == '-') {
+                                    // If there is an error, display a danger alert
+                                    alertDanger(`Nip Tidak dapat ditemukan pada row : ${value.row}`);
+                                    hasError = true;
+                                }
+                                if(value.nip != '-'){
+                                    alertSuccess(`Data valid.`);
+                                    hasSuccess = true;
+                                    hasError = false;
+
+                                }
                                 new_body_tr += `
                                     <tr>
                                         <td>
@@ -142,123 +161,79 @@
                                         </td>
                                         <td>
                                             <span>${value.nip}</span>
-                                            <input type="text" name="nip[]" class="typeahead form-control nip-input" value="${value.nip}" readonly hidden>
                                         </td>
                                         <td>
                                             <span>${value.nama_karyawan}</span>
-                                            <input type="text" name="nama[]" class="form-control nama-input" value="${value.nama_karyawan}" readonly hidden>
                                         </td>
                                         <td>
                                             <span>${arr_data[key][1]}</span>
-                                            <input type="text" name="nominal[]" class="form-control nominal-input" value="${arr_data[key][1]}" readonly hidden>
+
                                         </td>
                                     </tr>
                                 `;
 
                             })
+                            if (hasError != true) {
+                                $('.nominal-input').val(dataNominal)
+                                $('.nip').val(nipDataRequest);
+                                $('#button-simpan').removeClass('hidden');
+                            }
                             $('#grand-total').html(`
-                                <span id="grand-total">Grand Total : ${grand_total}</span>
+                                <span id="grand-total" class="font-weight-bold">Grand Total : ${
+                                    new Intl.NumberFormat("id-ID", {
+                                    style: "currency",
+                                    currency: "IDR"
+                                    }).format(grand_total)
+                                }</span>
                             `)
                             $('#table_item tbody').append(new_body_tr);
-                            // var nama = res != 'null' ? res.karyawan : '-';
-                            // var thr = res != 'null' ? res.thr : null;
-                            // if (res != 'null') {
-                            //     var text = '';
-                            // } else {
-                            //     var text = `<small class="text-danger" id="alert">Data NIP tidak ditemukan silahkan klik button edit</small>`;
-                            // }
 
-                            // createTableRow(row, nama,index, text, thr);
                         },
                         complete: function () {
-                            // // Continue processing the next row after the AJAX request is complete
-                            // if (index < total_data - 1) {
-                            //     handleRow(index + 1);
-                            // }
+                            // Remove the loading message or indicator after the API call is complete
+                            $('#loading-message').empty();
                         }
                 });
+            }
+            function formatRupiah(angka, prefix) {
+                var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                    split = number_string.split(','),
+                    sisa = split[0].length % 3,
+                    rupiah = split[0].substr(0, sisa),
+                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-                // if (row[0] != null) {
-                //     // get karyawan
-                //     $.ajax({
-                //         type: "GET",
-                //         url: url,
-                //         data: {
-                //             nip: JSON.stringify(row)
-                //         },
-                //         success: function (res) {
-                //             // console.log(res);
-                //             // var nama = res != 'null' ? res.karyawan : '-';
-                //             // var thr = res != 'null' ? res.thr : null;
-                //             // if (res != 'null') {
-                //             //     var text = '';
-                //             // } else {
-                //             //     var text = `<small class="text-danger" id="alert">Data NIP tidak ditemukan silahkan klik button edit</small>`;
-                //             // }
+                // tambahkan titik jika yang di input sudah menjadi angka ribuan
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
 
-                //             // createTableRow(row, nama,index, text, thr);
-                //         },
-                //         complete: function () {
-                //             // // Continue processing the next row after the AJAX request is complete
-                //             // if (index < total_data - 1) {
-                //             //     handleRow(index + 1);
-                //             // }
-                //         }
-                //     });
-                // }
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
             }
 
-            // function createTableRow(row, nama,index,text, thr = null) {
-            //     var new_body_tr = `
-            //         <tr>
-            //             <td>
-            //                 <input type="text" name="nip[]" class="typeahead form-control nip-input" value="${row[0]}" readonly>
-            //                 ${text}
-            //             </td>
-            //             <td>
-            //                 <input type="text" name="nama[]" class="form-control nama-input" value="${nama}" readonly>
-            //             </td>
-            //             <td>
-            //                 <input type="text" name="nominal[]" class="form-control nominal-input" value="${formatRupiah(row[1].toString())}" readonly>
-            //             </td>
-            //         </tr>
-            //     `;
-            //     $('#table_item tbody').append(new_body_tr);
-            // }
-            // Event handler for edit button
-            $('#table_item tbody').on('click', '.edit-button', function () {
-                var index = $(this).data('index');
-                var rowInputs = $('#table_item tbody tr:eq(' + index + ') input');
-                // var rowSpan = $('#table_item tbody tr:eq('+ index +') span');
-                var namaInputs = $('#table_item tbody tr:eq(' + index + ') input.nama-input');
-                $('#table_item tbody tr:eq(' + index + ') input.nip-input').autocomplete({
-                    source: function( request, response ) {
-                    $.ajax({
-                        url: `{{ route('api.get.autocomplete') }}`,
-                        type: 'GET',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function( data ) {
-                         response( data );
-                        }
-                    });
-                    },
-                    select: function (event, ui) {
-                        $('#table_item tbody tr:eq(' + index + ') input.nip-input').val(ui.item.value);
-                        // console.log(rowSpan);
-                        $('#table_item tbody tr:eq(' + index + ')').find('small').remove();
-                        namaInputs.val(ui.item.nama)
-                        return false;
-                    }
-                });
-                $('#table_item tbody tr:eq(' + index + ') input.nominal-input').on('keyup', function(){
-                    var value = $(this).val();
-                    $(this).val(formatRupiah(value))
-                })
-                rowInputs.prop('readonly', !rowInputs.prop('readonly'));
-            });
+            function alertDanger(message) {
+                // Display an alert with danger style
+                $('#alert-container').html(`
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                `);
+            }
+            function alertSuccess(message) {
+                // Display an alert with danger style
+                $('#alert-container').html(`
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                `);
+            }
 
         })
     </script>
@@ -277,6 +252,11 @@
         <form action="{{ route('bonus.store') }}" enctype="multipart/form-data" method="POST" class="form-group mt-4">
             @csrf
         <div class="row">
+            <div class="col-md-12">
+                <div id="alert-container">
+
+                </div>
+            </div>
            <div class="col-md-12 justify-content-center">
                 @if ($errors->any())
                 <div class="alert alert-danger" role="alert">
@@ -326,16 +306,20 @@
                         </div>
                     </div>
             </div>
-            <div class="col-md-4 mt-4" id="total-data">
+            <div class="col-md-4 align-self-center mt-4" id="total-data">
             </div>
-            <div class="col-md-4 mt-4" id="grand-total">
+            <div class="col-md-4 align-self-center mt-4" id="grand-total">
             </div>
-            <div class="col-md-4 mt-4" ">
-                <div class="d-flex justify-content-end hidden">
+            <div class="col-md-4 align-self-center mt-4">
+                <div class="d-flex justify-content-start hidden">
+                    <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
+                    <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
                     <button type="submit" class="btn btn-info hidden" id="button-simpan">Simpan</button>
                 </div>
             </div>
-            <div class="col-md-12 my-5 hidden" id="table-data">
+            <div class="col-md-12" id="loading-message">
+            </div>
+            <div class="col-md-12 hidden" id="table-data">
                 <div class="table-responsive overflow-hidden content-center">
                     <table class="table whitespace-nowrap table-bondered" id="table_item" style="width: 100%">
                       <thead class="text-primary">
