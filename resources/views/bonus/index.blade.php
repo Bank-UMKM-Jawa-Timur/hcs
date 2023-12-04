@@ -41,6 +41,7 @@
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class="text-primary">
                                 <th>No</th>
+                                <th>Tunjangan</th>
                                 <th>Total Data</th>
                                 <th>Grand Total</th>
                                 <th>Tanggal</th>
@@ -57,6 +58,7 @@
                                 @foreach ($data as $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
+                                        <td>{{ $item->nama_tunjangan }}</td>
                                         <td>{{ $item->total_data }}</td>
                                         <td>Rp {{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('d F Y') }}</td>
