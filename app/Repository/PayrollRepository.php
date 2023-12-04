@@ -10,7 +10,7 @@ use function PHPSTORM_META\map;
 
 class PayrollRepository
 {
-    public function get($kantor, $month, $year, $search, $page=1, $limit=10) {
+    public function get($kantor, $month, $year, $search, $page=1, $limit=10, $cetak) {
         /**
          * PPH 21
          * Gaji - done
@@ -35,11 +35,11 @@ class PayrollRepository
          * tunjangan tetap = tunjangan_karyawan
          * tunjangan tidak tetap = penghasilan_tidak_teratur
          * bpjs tk = kpj (jamsostek)
-         * bpjs kesehatan = jkn 
+         * bpjs kesehatan = jkn
          */
 
         $kode_cabang_arr = [];
-        
+
         if($kantor == 'pusat'){
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('kd_cabang', '000')
@@ -205,8 +205,13 @@ class PayrollRepository
                                     }
                                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
                                 });
-                            })
-                            ->paginate($limit);
+                            });
+                            if ($cetak == 'cetak') {
+                                $data = $data->take(50)->get();
+                                // return $test;
+                            }else{
+                                $data=  $data->paginate($limit);
+                            }
 
         foreach ($data as $key => $karyawan) {
             $ptkp = null;
@@ -269,7 +274,7 @@ class PayrollRepository
                     $tj_keluarga = $obj_gaji->tj_keluarga;
                     $tj_kesejahteraan = $obj_gaji->tj_kesejahteraan;
 
-                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5% 
+                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
                     $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
                     if($gaji >= $nominal_jp){
                         $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
@@ -279,7 +284,7 @@ class PayrollRepository
                 }
                 $potongan->dpp = $dpp;
                 $potongan->jp_1_persen = $jp_1_persen;
-                
+
                 // Get BPJS TK
                 if ($obj_gaji->bulan > 2) {
                     if ($total_gaji > $jp_mar_des) {
@@ -334,7 +339,7 @@ class PayrollRepository
             if ($karyawan->potongan) {
                 $total_potongan += $karyawan->potongan->dpp;
             }
-            
+
             $total_potongan += $bpjs_tk;
             $karyawan->total_potongan = $total_potongan;
 
@@ -344,7 +349,7 @@ class PayrollRepository
 
             $karyawan->penghasilan_rutin = $penghasilan_rutin;
             $karyawan->penghasilan_tidak_rutin = $penghasilan_tidak_rutin;
-            
+
             // Get Penghasilan bruto
             $month_on_year = 12;
             $month_paided_arr = [];
@@ -473,7 +478,7 @@ class PayrollRepository
                                 $tj_keluarga = $value->tj_keluarga;
                                 $tj_kesejahteraan = $value->tj_kesejahteraan;
 
-                                // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5% 
+                                // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
                                 $dppBruto = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
                                 if($total_gaji >= $nominal_jp){
                                     $dppBrutoExtra = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
@@ -499,7 +504,7 @@ class PayrollRepository
                                             ->where('tahun', $year)
                                             ->groupBy(['bulan', 'tahun'])
                                             ->pluck('bulan');
-                for ($i=0; $i < count($ketTunjanganTidakTetap); $i++) { 
+                for ($i=0; $i < count($ketTunjanganTidakTetap); $i++) {
                     $i_bulan = $ketTunjanganTidakTetap[$i];
                     if (!in_array($i_bulan, $month_paided_arr)) {
                         array_push($month_paided_arr, intval($i_bulan));
@@ -587,7 +592,7 @@ class PayrollRepository
 
             // Perhitungan Pph 21
             $perhitunganPph21 = new \stdClass();
-            
+
             $total_rutin = $penghasilanBruto->penghasilan_rutin;
             $total_tidak_rutin = $penghasilanBruto->penghasilan_tidak_rutin;
             $bonus_sum = $penghasilanBruto->total_bonus;
@@ -600,7 +605,7 @@ class PayrollRepository
             // $jumlah_penghasilan_neto = $jumlah_penghasilan - $jumlah_pengurang;
             $jumlah_penghasilan_neto = ($total_rutin + $total_tidak_rutin) - ($biaya_jabatan + $pengurang);
             $perhitunganPph21->jumlah_penghasilan_neto = $jumlah_penghasilan_neto;
-            
+
             // Get jumlah penghasilan neto masa sebelumnya
             $jumlah_penghasilan_neto_sebelumnya = 0;
             $perhitunganPph21->jumlah_penghasilan_neto_sebelumnya = $jumlah_penghasilan_neto_sebelumnya;
@@ -724,7 +729,7 @@ class PayrollRepository
             // 3. PPh Pasal 21 atas Penghasilan Kena Pajak Setahun/Disetahunkan
             $penghasilan_kena_pajak_setahun = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
             $pphPasal21->penghasilan_kena_pajak_setahun = $penghasilan_kena_pajak_setahun;
-            
+
             // 4. PPh Pasal 21 yang telah dipotong Masa Sebelumnya
             $pph_21_dipotong_masa_sebelumnya = 0;
             $pphPasal21->pph_21_dipotong_masa_sebelumnya = $pph_21_dipotong_masa_sebelumnya;
@@ -742,7 +747,7 @@ class PayrollRepository
                 }
             }
             $pphPasal21->pph_telah_dilunasi = $total_pph_dilunasi;
-            
+
             // 7. PPh Pasal 21 yang masih harus dibayar
             $pph_harus_dibayar = $pph_21_terutang - $total_pph_dilunasi;
             $pphPasal21->pph_harus_dibayar = $pph_harus_dibayar;
