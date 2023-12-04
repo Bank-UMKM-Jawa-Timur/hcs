@@ -83,7 +83,7 @@ class BonusController extends Controller
                     'nominal' => $data_nominal[$i],
                     'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
-                    'created_at' => now()
+                    'created_at' => Carbon::parse($request->get('tanggal'))
                 ]);
 
             }
