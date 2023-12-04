@@ -17,7 +17,7 @@
     <script>
         $(document).ready(function() {
             var kategori;
-            var totalDataInput = 0;
+            var totalDataInput = 1;
             var grandTotalNominal = 0;
             $("#kategori").select2();
 
@@ -227,6 +227,10 @@
 
             function createTableRow(row, nama,index) {
                 console.log(row);
+                totalDataInput++;
+                grandTotalNominal += parseInt(row[1]);
+                $("#totalData").parent().removeClass('hidden')
+                $("#totalData").html(`Total Data: ${totalDataInput} </br>Grand total nominal: ${formatRupiah(grandTotalNominal.toString())}`)
                 var keterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
                         <td>
                             ${row[2]}
@@ -348,7 +352,14 @@
 
             <div class="col-md-12 mt-5">
                 <div class="d-flex justify-content-start hidden">
-                    <button type="submit" class="btn btn-info hidden" id="button-simpan">Simpan</button>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p id="totalData"></p>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-info hidden" id="button-simpan">Simpan</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-12 hidden" id="table-data">
