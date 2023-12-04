@@ -44,7 +44,7 @@
                                 <th>Tunjangan</th>
                                 <th>Total Data</th>
                                 <th>Grand Total</th>
-                                <th>Bulan/Tahun</th>
+                                <th>Tanggal</th>
                                 <th>Aksi</th>
                             </thead>
                             <tbody>
@@ -61,7 +61,7 @@
                                         <td>{{ $item->nama_tunjangan }}</td>
                                         <td>{{ $item->total_data }}</td>
                                         <td>Rp {{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
-                                        <td>{{ $item->bulan }} / {{ $item->tahun }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                         <td><a href="{{ route('bonus.show',$item->id_tunjangan) }}">Detail</a></td>
                                     </tr>
                                 @endforeach

@@ -24,7 +24,9 @@ class PenghasilanTidakTeraturRepository
                         'mst_tunjangan.nama_tunjangan',
                         'nominal',
                         'bulan',
+                        'penghasilan_tidak_teratur.created_at',
                         DB::raw('SUM(nominal) as jumlah_nominal'),
+                        DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
                         DB::raw('COUNT(penghasilan_tidak_teratur.id) as total_data'),
                         'tahun',
                         'keterangan',
@@ -34,7 +36,7 @@ class PenghasilanTidakTeraturRepository
                         $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
                             ->orWhere('nominal', 'like', "%$search%");
                     })
-                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'bulan', 'tahun')
+                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date')
                     ->orderBy('mst_tunjangan.id', 'ASC')
                     ->paginate($limit);
 
@@ -51,12 +53,12 @@ class PenghasilanTidakTeraturRepository
                           'mst_karyawan.nama_karyawan',
                           'mst_tunjangan.nama_tunjangan',
                           'nominal',
-                          'bulan',
-                          'tahun',
                           'keterangan',
+                          'penghasilan_tidak_teratur.created_at',
+                          DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
                       )
                       ->where('mst_tunjangan.kategori','bonus')
-                      ->groupBy('bulan', 'tahun')
+                    //   ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan')
                       ->where(function ($query) use ($search) {
                           $query->where('penghasilan_tidak_teratur.nip', 'like', "%$search%")
                               ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%")
@@ -66,6 +68,7 @@ class PenghasilanTidakTeraturRepository
                       })
                       ->orderBy('mst_tunjangan.id', 'ASC')
                       ->where('penghasilan_tidak_teratur.id_tunjangan',$id)
+                    //   ->get();
                       ->paginate($limit);
 
           return $bonus;

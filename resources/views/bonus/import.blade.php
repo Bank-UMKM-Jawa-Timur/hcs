@@ -16,17 +16,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
+        document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+            var name = document.getElementById("upload_csv").files[0].name;
+            var nextSibling = e.target.nextElementSibling
+            nextSibling.innerText = name
+        });
         $(document).ready(function() {
             var kategori;
             var url;
-
-            // 1. Import Data dan cek validasi jika ada yang salah ditampilkan alert eror row berapa kesalahan nya dan upload ulang
-                // -- tombol simpan tampil jika proses data selesai
-            // 2. Jika data valid maka muncul alert success
-            // 3. jika success maka data dapat disimpan
-
-
-
 
             $('.btn-import').on('click',function(element) {
                 url = "{{ route('api.get.karyawan') }}";
@@ -146,23 +143,23 @@
                                 dataNominal.push(arr_data[key][1]);
                                 nipDataRequest.push(value.nip);
                                 // if (res.some(checkUsername)) {
-                                if (value.nip == '-') {
-                                    checkNip.push(value.row);
+                                if (value.cek == '-') {
+                                    checkNip.push(value.nip);
                                     hasError = true
                                 }
                                 grand_total += arr_data[key][1]
                                 new_body_tr += `
                                     <tr>
-                                        <td>
+                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
                                             <span>${key + 1}</span>
                                         </td>
-                                        <td>
-                                            <span>${value.nip}</span>
+                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
+                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
                                         </td>
-                                        <td>
-                                            <span>${value.nama_karyawan}</span>
+                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
+                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
                                         </td>
-                                        <td>
+                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
                                             <span>${arr_data[key][1]}</span>
 
                                         </td>
@@ -172,7 +169,7 @@
                             })
                             if (hasError == true) {
                                 var message = ``;
-                                message += `Data tidak ditemukan di row : ${checkNip}`
+                                message += `Data tidak ditemukan di NIP :${checkNip}`
                                 alertDanger(message)
                             }
                             if (hasError != true) {
@@ -198,23 +195,6 @@
                         }
                 });
             }
-            function formatRupiah(angka, prefix) {
-                var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                    split = number_string.split(','),
-                    sisa = split[0].length % 3,
-                    rupiah = split[0].substr(0, sisa),
-                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-                // tambahkan titik jika yang di input sudah menjadi angka ribuan
-                if (ribuan) {
-                    separator = sisa ? '.' : '';
-                    rupiah += separator + ribuan.join('.');
-                }
-
-                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-            }
-
             function alertDanger(message) {
                 // Display an alert with danger style
                 $('#alert-container').removeClass('hidden');
@@ -302,11 +282,14 @@
                         </div>
                         <div class="col">
                             <label for="">Data Excel</label>
-
-                            <div class=" col-md-12 ">
+                            <div class="custom-file col-md-12">
+                                <input type="file" name="upload_csv" class="custom-file-input" id="upload_csv" >
+                                <label class="custom-file-label overflow-hidden" for="upload_csv"  style="padding: 10px 4px 30px 5px">Choose file...</label>
+                            </div>
+                            {{-- <div class=" col-md-12 ">
                                 <input type="file" name="upload_csv" class="custom-file-input form-control"  id="upload_csv"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                 <label class="custom-file-label overflow-hidden" for="validatedCustomFile" style="padding: 10px 4px 30px 5px">Choose file...</label>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="col align-items-center mt-2">
                             <button type="button" class="btn btn-info btn-import">Import</button>

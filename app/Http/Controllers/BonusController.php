@@ -111,6 +111,7 @@ class BonusController extends Controller
         $search = $request->get('q');
         // $data = $this->repo->getDataBonus($search, $limit, $page);
         $data = $this->repo->getDetailBonus($search, $limit,$page, $id);
+        // return $data;
         return view('bonus.detail',['data' => $data]);
     }
 

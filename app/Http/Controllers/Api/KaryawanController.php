@@ -48,14 +48,16 @@ class KaryawanController extends Controller
                     $response[] = [
                         'row' => $row,
                         'nip' => $found->nip,
+                        'cek' => null,
                         'nama_karyawan' => $found->nama_karyawan,
                     ];
                 } else {
                     // If NIP not found, return an error response
                     $response[] = [
                         'row' => $row,
-                        'nip' => '-',
-                        'nama_karyawan' => '-',
+                        'nip' => $item['nip'],
+                        'cek' => '-',
+                        'nama_karyawan' => 'Karyawan Tidak Ditemukan',
                     ];
                 }
             }

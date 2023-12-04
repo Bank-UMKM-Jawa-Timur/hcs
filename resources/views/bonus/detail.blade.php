@@ -43,7 +43,7 @@
                                 <th>NIP</th>
                                 <th>Karyawan</th>
                                 <th>Nominal</th>
-                                <th>Bulan/Tahun</th>
+                                <th>Tanggal</th>
                             </thead>
                             <tbody>
                                 @php
@@ -59,7 +59,7 @@
                                         <td>{{ $item->nip }}</td>
                                         <td>{{ $item->nama_karyawan }}</td>
                                         <td>Rp {{ number_format($item->nominal, 0,',','.') }}</td>
-                                        <td>{{ $item->bulan }} - {{ $item->tahun }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
