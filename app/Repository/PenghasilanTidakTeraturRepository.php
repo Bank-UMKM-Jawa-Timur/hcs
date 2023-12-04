@@ -42,7 +42,8 @@ class PenghasilanTidakTeraturRepository
 
         return $bonus;
     }
-    public function getDetailBonus($search, $limit=10, $page=1, $id) {
+    public function getDetailBonus($search, $limit=10, $page=1, $id, $tgl) {
+        $format_tgl = Carbon::parse($tgl)->format('y-m-d');
         $bonus = DB::table('penghasilan_tidak_teratur')
                       ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                       ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
@@ -57,19 +58,20 @@ class PenghasilanTidakTeraturRepository
                           'penghasilan_tidak_teratur.created_at',
                           DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
                       )
-                      ->where('mst_tunjangan.kategori','bonus')
-                    //   ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan')
-                      ->where(function ($query) use ($search) {
-                          $query->where('penghasilan_tidak_teratur.nip', 'like', "%$search%")
+                    //   ->groupBy('new_date')
+                    ->where('mst_tunjangan.kategori','bonus')
+                    ->where(function ($query) use ($search) {
+                        $query->where('penghasilan_tidak_teratur.nip', 'like', "%$search%")
                               ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%")
                               ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
                               ->orWhere('nominal', 'like', "%$search%")
                               ->orWhere('keterangan', 'like', "%$search%");
-                      })
-                      ->orderBy('mst_tunjangan.id', 'ASC')
-                      ->where('penghasilan_tidak_teratur.id_tunjangan',$id)
-                    //   ->get();
-                      ->paginate($limit);
+                            })
+                    ->orderBy('mst_tunjangan.id', 'ASC')
+                    ->where('penghasilan_tidak_teratur.id_tunjangan',$id)
+                    ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'),$format_tgl)
+                    // ->get()
+                    ->paginate($limit);
 
           return $bonus;
       }

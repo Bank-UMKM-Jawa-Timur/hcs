@@ -170,6 +170,7 @@
                             if (hasError == true) {
                                 var message = ``;
                                 message += `Data tidak ditemukan di NIP :${checkNip}`
+                                $('#button-simpan').addClass('hidden');
                                 alertDanger(message)
                             }
                             if (hasError != true) {
