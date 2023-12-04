@@ -24,7 +24,7 @@
 
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Slip Jurnal</h5>
+            <h5 class="card-title font-weight-bold">Slip Jurnal</h5>
             <p class="card-title"><a href="">Gaji</a> > Slip Jurnal</p>
         </div>
     </div>
@@ -86,7 +86,9 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-info">Tampilkan</button>
+                   <div class="pt-4 pb-4">
+                    <button class="is-btn is-primary-light">Tampilkan</button>
+                   </div>
                 </form>
             </div>
         </div>

@@ -20,7 +20,7 @@ $request = isset($request) ? $request : null;
 <div class="card-header">
     <div class="card-header">
         <div class="card-title">
-            <h5 class="card-title">Laporan JAMSOSTEK</h5>
+            <h5 class="card-title font-weight-bold">Laporan JAMSOSTEK</h5>
             <p class="card-title"><a href="">Laporan </a> > <a href="{{ route('get-jamsostek') }}">Laporan JAMSOSTEK</a>
             </p>
         </div>
@@ -82,7 +82,7 @@ $request = isset($request) ? $request : null;
                 </div>
             </div>
             <div class="col-md-12 mt-2">
-                <button class="btn btn-info" type="submit">Tampilkan</button>
+                <button class="is-btn is-primary-light" type="submit">Tampilkan</button>
             </div>
         </div>
     </form>

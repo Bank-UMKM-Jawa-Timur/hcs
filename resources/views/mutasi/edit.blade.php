@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Edit Mutasi</h5>
+            <h5 class="card-title font-weight-bold">Edit Mutasi</h5>
             <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="{{ route('mutasi.index') }}">Mutasi</a> > Edit</p>
         </div>
     </div> 

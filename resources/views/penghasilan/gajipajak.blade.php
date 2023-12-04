@@ -38,7 +38,7 @@
 <div class="card-header">
     <div class="card-header">
         <div class="card-title">
-            <h5 class="card-title">Pajak Penghasilan</h5>
+            <h5 class="card-title font-weight-bold">Pajak Penghasilan</h5>
             <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Pajak Penghasilan </a></p>
         </div>
     </div>
@@ -82,7 +82,7 @@
             </div>
             <div class="col-md-4">
                 <a href="penghasilan/gajipajak">
-                    <button class="btn btn-info" type="submit">Tampilkan</button>
+                    <button class="is-btn is-primary-light" type="submit">Tampilkan</button>
                 </a>
             </div>
     </form>

@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-          <h5 class="card-title">Data Pangkat Dan Golongan</h5>
+          <h5 class="card-title font-weight-bold">Data Pangkat Dan Golongan</h5>
           <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('pangkat_golongan.index') }}">Pangkat Dan Golongan</a></p>
         </div>
     
@@ -11,7 +11,9 @@
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="{{ route('pangkat_golongan.create') }}">
-                      <button class="btn btn-primary">tambah pangkat dan golongan</button>
+                      <div class="pt-2 pb-3">
+                      <button class="is-btn is-primary-light">tambah pangkat dan golongan</button>
+                      </div>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">

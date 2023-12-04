@@ -49,7 +49,7 @@
                             $no = 1;
                         @endphp
                         <tbody>
-                          @foreach ($data_pusat as $item)
+                          @foreach ($data as $item)
                             @php
                                 $ket = null;
                                 if($item->ket_jabatan != null){

@@ -51,7 +51,9 @@
                             @enderror
                         </div>
                         <div class="col">
-                            <button class="btn btn-info" type="submit" value="submit">Update</button>
+                            <div class="pt-4 pb-4">
+                                <button class="is-btn is-primary-light">Update</button>
+                            </div>
                         </div>
                     </div>
 

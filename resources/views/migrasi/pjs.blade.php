@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Import Data Migrasi Penjabat Sementara</h5>
+            <h5 class="card-title font-weight-bold">Import Data Migrasi Penjabat Sementara</h5>
             <p class="card-title"><a href="/">Dashboard </a> > Insert Data Migrasi Penjabat Sementara</p>
         </div>
     </div>
@@ -13,18 +13,21 @@
             <div class="col-md-12">
                 <form action="{{ route('migrasiStore') }}" enctype="multipart/form-data" method="POST" class="form-group">
                     @csrf
-                    <div class="row">
-                        <input type="hidden" name="tipe" value="pjs">
-                        <div class="container">
-                            <label for="">Data Excel</label>
-                            <div class="custom-file col-md-12">
-                                <input type="file" name="upload_csv" class="custom-file-input" id="validatedCustomFile">
-                                <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
-                            </div>  
+                    <div class="d-flex justify-content-between">
+                        <div class="w-50">
+                            <input type="hidden" name="tipe" value="pjs">
+                            <div class="container">
+                                <label for="">Data Excel</label>
+                                <div class="custom-file col-md-12">
+                                    <input type="file" name="upload_csv" class="custom-file-input" id="validatedCustomFile">
+                                    <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
+                                </div>  
+                                <div class="pt-4 pb-4">
+                                    <button class="is-btn is-primary-light">Import</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="container">
-                            <button class="btn btn-info">Import</button>
-                        </div>
+                        <div class="container"></div>
                     </div>
                 </form>
             </div>

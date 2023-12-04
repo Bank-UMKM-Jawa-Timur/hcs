@@ -2,7 +2,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Data Sub Divisi</h5>
+            <h5 class="card-title font-weight-bold">Data Sub Divisi</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('sub_divisi.index') }}">Sub Divisi</a></p>
         </div>
         
@@ -10,7 +10,7 @@
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="{{ route('sub_divisi.create') }}">
-                        <button class="btn btn-primary">tambah sub divisi</button>
+                        <button class="is-btn is-primary-light">tambah sub divisi</button>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">

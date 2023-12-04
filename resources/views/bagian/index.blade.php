@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Data Bagian</h5>
+            <h5 class="card-title font-weight-bold">Data Bagian</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('bagian.index') }}">Bagian</a></p>
         </div>
         
@@ -11,7 +11,7 @@
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="{{ route('bagian.create') }}">
-                      <button class="btn btn-primary">tambah bagian</button>
+                      <button class="is-btn is-primary-light">tambah bagian</button>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">

@@ -2,7 +2,7 @@
 @section('content')
   <div class="card-header">
       <div class="card-header">
-        <h5 class="card-title">Data Kantor</h5>
+        <h5 class="card-title font-weight-bold">Data Kantor</h5>
         <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('kantor.index') }}">Kantor</a></p>
       </div>
 
@@ -10,7 +10,7 @@
         <div class="col">
           <div class="row">
             <a class="mb-3" href="{{ route('kantor.create') }}">
-              <button class="btn btn-primary">tambah kantor</button>
+              <button class="is-btn is-primary-light">tambah kantor</button>
             </a>
             <div class="table-responsive overflow-hidden">
               <table class="table" id="table">

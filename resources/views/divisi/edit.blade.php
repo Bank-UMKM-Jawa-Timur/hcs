@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Edit Divisi</h5>
+            <h5 class="card-title font-weight-bold">Edit Divisi</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('divisi.index') }}">Divisi</a> > <a>Edit</a></p>
         </div>
     </div>
@@ -24,8 +24,10 @@
                     @error('nama_divisi')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
-
-                    <button class="btn btn-info" type="submit" value="submit">Update</button>
+                    <div class="pt-3 pb-3">
+                        <button class="is-btn is-primary-light" type="submit" value="submit">Update</button>
+                    </div>
+                   
                 </form>
             </div>
         </div>

@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Tambah Penghasilan Tanpa Pajak</h5>
+                <h5 class="card-title font-weight-bold">Tambah Penghasilan Tanpa Pajak</h5>
                 <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('ptkp.index') }}">Penghasilan Tanpa Pajak</a> > <a>Tambah Data</a></p>
             </div>
         </div>
@@ -44,8 +44,9 @@
                             @enderror
                         </div>
                     </div>
-
-                    <button class="btn btn-info" value="submit" style="submit">Simpan</button>
+                    <div class="pt-4 pb-3">
+                        <button class="is-btn is-primary-light" value="submit" style="submit">Simpan</button>
+                    </div>
                 </form>
             </div>
         </div>

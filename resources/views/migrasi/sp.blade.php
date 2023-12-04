@@ -13,17 +13,17 @@
             <div class="col-md-12">
                 <form action="{{ route('migrasiStore') }}" enctype="multipart/form-data" method="POST" class="form-group">
                     @csrf
-                    <div class="row">
+                    <div class="d-flex justify-between">
                         <input type="hidden" name="tipe" value="sp">
-                        <div class="container">
+                        <div class="w-50">
                             <label for="">Data Excel</label>
                             <div class="custom-file col-md-12">
                                 <input type="file" name="upload_csv" class="custom-file-input" id="validatedCustomFile">
                                 <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
                             </div>  
-                        </div>
-                        <div class="container">
-                            <button class="btn btn-info">Import</button>
+                            <div class="pt-4 pb-4">
+                                <button class="is-btn is-primary-light">Import</button>
+                            </div>
                         </div>
                     </div>
                 </form>

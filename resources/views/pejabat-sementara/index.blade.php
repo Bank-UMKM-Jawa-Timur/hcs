@@ -2,17 +2,19 @@
 
 @section('content')
 <div class="card-header">
-    <div class="card-header">
-        <div class="card-title">
-            <h5 class="card-title">Penjabat Sementara</h5>
+    <div class="justify-content-between w-100 p-3">
+        <div class="card-header">
+            <h5 class="card-title font-weight-bold">Penjabat Sementara</h5>
             <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="{{ route('pejabat-sementara.index') }}">Penjabat Sementara</a></p>
         </div>
+        <div class="card-header row mt-3 mr-8 pl-4" >
+            <a href="{{ route('pejabat-sementara.create') }}" class="is-btn is-primary-light">Tambah PJS</a>
+        </div>
     </div>
-    <div class="card-body">
+    <div class="card-body p-5">
         <div class="table-responsive overflow-hidden content-center">
-            <a href="{{ route('pejabat-sementara.create') }}" class="btn btn-primary">Tambah PJS</a>
             <table class="table whitespace-nowrap" id="pjs-table">
-                <thead class="text-primary">
+                <thead class="text-dark">
                     <tr>
                         <th>No</th>
                         <th>NIP</th>

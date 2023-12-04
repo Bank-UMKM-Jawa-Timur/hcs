@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Tambah Penghasilan Tanpa Pajak</h5>
+            <h5 class="card-title font-weight-bold">Tambah Penghasilan Tanpa Pajak</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('ptkp.index') }}">Penghasilan Tanpa Pajak</a></p>
         </div>
 
@@ -11,7 +11,7 @@
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="{{ route('ptkp.create') }}">
-                        <button class="btn btn-primary">Tambah Data</button>
+                        <button  class="is-btn is-primary-light">Tambah Data</button>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">

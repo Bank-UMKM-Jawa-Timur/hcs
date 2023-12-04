@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Tambah Kantor</h5>
+                <h5 class="card-title font-weight-bold">Tambah Kantor</h5>
                 <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('kantor.index') }}">Kantor </a> > Tambah</p>
             </div>
         </div>
@@ -17,7 +17,9 @@
                         @csrf
                         <label for="nama_kantot">Nama Kantor</label>
                         <input type="text" name="nama_kantor" id="nama_kantor" class="form-control">
-                        <button class="btn btn-info" value="submit" type="submit">Simpan</button>
+                        <div class="pt-3 pb-3">
+                        <button class="is-btn is-primary-light" value="submit" type="submit">Simpan</button>
+                        </div>
                     </form>
                 </div>
             </div>

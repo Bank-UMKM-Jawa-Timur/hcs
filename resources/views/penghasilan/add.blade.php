@@ -43,11 +43,10 @@
                     <input type="text" name="nominal" class="form-control rupiah">
                 </div>
             </div>
-
+            <div class="p-4">
+                <button class="is-btn is-primary-light">Tambah</button>
+            </div>
             <div class="row m-0">
-                <div class="container">
-                    <button class="btn btn-info">Tambah</button>
-                </div>
             </div>
         </form>
     </div>

@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Edit Rentang Umur</h5>
+                <h5 class="card-title font-weight-bold">Edit Rentang Umur</h5>
                 <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('umur.index') }}">Rentang Umur</a> > <a>Edit</a></p>
             </div>
         </div>
@@ -35,7 +35,9 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-info">Update</button>
+                 <div class="pt-4 pt-3">
+                    <button class="is-btn is-primary-light">Update</button>
+                 </div>
                 </form>
             </div>
         </div>

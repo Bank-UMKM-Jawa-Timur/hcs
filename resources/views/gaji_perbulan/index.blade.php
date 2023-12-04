@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Proses Gaji Bulanan</h5>
+            <h5 class="card-title font-weight-bold">Proses Gaji Bulanan</h5>
             <p class="card-title"><a href="">Penghasilan </a> > <a href="{{ route('gaji_perbulan.index') }}">Proses Gaji Bulanan</a></p>
         </div>
     </div>
@@ -48,8 +48,8 @@
                 </div>
             </div>
             <div class="row m-0">
-                <div class="col-md-5">
-                    <button class="btn btn-info">proses</button>
+                <div class="col-md-5 pt-4 pb-4">
+                    <button class="is-btn is-primary-light">proses</button>
                 </div>
             </div>
         </form>
@@ -58,8 +58,8 @@
 
     <div class="card-body ">
         <div class="card shadow">
-            <div class="row m-0 mt-3">
-                <p class="col-sm-12 text-center" style="font-size: 20px; font-weight: 550">DATA GAJI YANG TELAH DI PROSES</p>
+            <div class="row m-0 p-5">
+                <p class="col-sm-12 text-center" style="font-size: 20px; font-weight: 700">DATA GAJI YANG TELAH DI PROSES</p>
             </div>
             <div class="row m-0">
                 <div class="card-body">

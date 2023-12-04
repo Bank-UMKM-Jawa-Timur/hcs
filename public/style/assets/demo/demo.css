@@ -54,7 +54,11 @@
     color: #fff;
     border-radius: 4px;
 }
-
+.dataTables_wrapper a.paginate_button.current {
+    background-color: #51cbce !important;
+    border: none !important;
+    color: #fff !important;
+}
 .is-primary-light {
     background-color: white;
     color: #51cbce;

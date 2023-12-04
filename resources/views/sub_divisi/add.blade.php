@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Tambah Sub Divisi</h5>
+            <h5 class="card-title font-weight-bold">Tambah Sub Divisi</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('sub_divisi.index') }}">Sub Divisi</a> > <a>Tambah</a></p>
         </div>
     </div>
@@ -43,7 +43,7 @@
                             @enderror
                         </div>
                     </div>
-                    <button class="btn btn-info" type="submit" value="submit">Simpan</button>
+                    <button class="is-btn is-primary-light" type="submit" value="submit">Simpan</button>
                 </form>
             </div>
         </div>

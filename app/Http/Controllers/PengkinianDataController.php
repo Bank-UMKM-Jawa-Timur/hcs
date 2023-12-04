@@ -57,7 +57,6 @@ class PengkinianDataController extends Controller
 
         $pengkinianDataRepo = new PengkinianDataRepository();
         $data_pusat = $pengkinianDataRepo->getData($search, $limit, $page);
-
         return view('pengkinian_data.index', [
             'data' => $data_pusat
         ]);
