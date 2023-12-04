@@ -45,7 +45,7 @@ class BonusController extends Controller
      */
     public function create()
     {
-        $tunjangan = TunjanganModel::select('nama_tunjangan','id')->where('kategori','bonus')->get();
+        $tunjangan = TunjanganModel::select('nama_tunjangan','id')->where('kategori','bonus')->where('is_import',1)->get();
         return view('bonus.import',[
             'data_tunjangan' => $tunjangan
         ]);
@@ -61,36 +61,34 @@ class BonusController extends Controller
     {
         $request->validate([
             'upload_csv' => 'required|mimes:xlsx,xls',
-            'nip.*' => 'required',
-            'kategori_tunjangan' => 'required',
-            'kategori.*' => 'required',
-            'nominal.*' => 'required',
+            'nip' => 'required',
+            'kategori_bonus' => 'required',
+            'nominal' => 'required',
         ],[
-            'kategori.*' => ':attribute harus terisi.'
+            'kategori_bonus' => ':attribute harus terisi.'
         ],[
-            'kategori.*' => 'Kategori',
-            'nip.*' => 'NIP'
+            'kategori_bonus' => 'Kategori',
+            'nip' => 'NIP'
         ]);
         try {
             \DB::beginTransaction();
-            if ($request->get('kategori_bonus') == 'penghasilan-lainnya') {
-                $tunjangan = TunjanganModel::where('id',$request->get('kategori_tunjangan'))->first();
-                for ($i=0; $i < count($request->get('nip')); $i++) {
-                    $data = KaryawanModel::select('nip')->where('nip', $_POST['nip'][$i])->first()->nip ?? null;
-                    if ($data) {
-                        DB::table('penghasilan_tidak_teratur')
-                        ->insert([
-                            'nip' => $data,
-                            'id_tunjangan' => $request->get('kategori_tunjangan'),
-                            'nominal' => $_POST['nominal'][$i],
-                            'bulan' => Carbon::now()->format('m'),
-                            'tahun' => Carbon::now()->format('Y'),
-                            'created_at' => now()
-                        ]);
-                    }
-                }
-                \DB::commit();
+            $data_nominal = explode(',',$request->get('nominal'));
+            $data_nip = explode(',',$request->get('nip'));
+            $tunjangan = TunjanganModel::where('id',$request->get('kategori_bonus'))->first();
+            for ($i=0; $i < count($data_nip); $i++) {
+                DB::table('penghasilan_tidak_teratur')
+                ->insert([
+                    'nip' => $data_nip[$i],
+                    'id_tunjangan' => $tunjangan->id,
+                    'nominal' => $data_nominal[$i],
+                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
+                    'created_at' => now()
+                ]);
+
             }
+            \DB::commit();
+
             Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan tambahan');
             return redirect()->route('bonus.index');
         } catch (Exception $th) {
@@ -105,9 +103,15 @@ class BonusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
-        //
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+
+        $search = $request->get('q');
+        // $data = $this->repo->getDataBonus($search, $limit, $page);
+        $data = $this->repo->getDetailBonus($search, $limit,$page, $id);
+        return view('bonus.detail',['data' => $data]);
     }
 
     /**

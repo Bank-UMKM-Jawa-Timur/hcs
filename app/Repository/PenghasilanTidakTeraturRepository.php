@@ -18,26 +18,58 @@ class PenghasilanTidakTeraturRepository
                     ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
                     ->select(
                         'penghasilan_tidak_teratur.id',
+                        'penghasilan_tidak_teratur.id_tunjangan',
                         'penghasilan_tidak_teratur.nip',
                         'mst_karyawan.nama_karyawan',
                         'mst_tunjangan.nama_tunjangan',
                         'nominal',
                         'bulan',
+                        DB::raw('SUM(nominal) as jumlah_nominal'),
+                        DB::raw('COUNT(penghasilan_tidak_teratur.id) as total_data'),
                         'tahun',
                         'keterangan',
                     )
+                    ->where('mst_tunjangan.kategori','bonus')
                     ->where(function ($query) use ($search) {
-                        $query->where('penghasilan_tidak_teratur.nip', 'like', "%$search%")
-                            ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%")
-                            ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
-                            ->orWhere('nominal', 'like', "%$search%")
-                            ->orWhere('keterangan', 'like', "%$search%");
+                        $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
+                            ->orWhere('nominal', 'like', "%$search%");
                     })
-                    ->orderBy('id', 'ASC')
+                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'bulan', 'tahun')
+                    ->orderBy('mst_tunjangan.id', 'ASC')
                     ->paginate($limit);
 
         return $bonus;
     }
+    public function getDetailBonus($search, $limit=10, $page=1, $id) {
+        $bonus = DB::table('penghasilan_tidak_teratur')
+                      ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
+                      ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
+                      ->select(
+                          'penghasilan_tidak_teratur.id',
+                          'penghasilan_tidak_teratur.id_tunjangan',
+                          'penghasilan_tidak_teratur.nip',
+                          'mst_karyawan.nama_karyawan',
+                          'mst_tunjangan.nama_tunjangan',
+                          'nominal',
+                          'bulan',
+                          'tahun',
+                          'keterangan',
+                      )
+                      ->where('mst_tunjangan.kategori','bonus')
+                      ->groupBy('bulan', 'tahun')
+                      ->where(function ($query) use ($search) {
+                          $query->where('penghasilan_tidak_teratur.nip', 'like', "%$search%")
+                              ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%")
+                              ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
+                              ->orWhere('nominal', 'like', "%$search%")
+                              ->orWhere('keterangan', 'like', "%$search%");
+                      })
+                      ->orderBy('mst_tunjangan.id', 'ASC')
+                      ->where('penghasilan_tidak_teratur.id_tunjangan',$id)
+                      ->paginate($limit);
+
+          return $bonus;
+      }
     public function dataFileExcel() {
         $karyawan = KaryawanModel::select(
                     'mst_karyawan.nip',
