@@ -170,6 +170,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/spd', SPDController::class);
     // Bonus Data
     Route::get('bonus/excel',[BonusController::class,'fileExcel'])->name('bonus.excel');
+    Route::get('bonus/{id}/{tgl}',[BonusController::class,'detail'])->name('bonus.detail');
     Route::resource('bonus', BonusController::class);
     Route::resource('/thr', THRController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');

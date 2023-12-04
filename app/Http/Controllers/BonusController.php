@@ -103,15 +103,14 @@ class BonusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function detail(Request $request,$id, $tgl)
     {
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
         $search = $request->get('q');
         // $data = $this->repo->getDataBonus($search, $limit, $page);
-        $data = $this->repo->getDetailBonus($search, $limit,$page, $id);
-        // return $data;
+        $data = $this->repo->getDetailBonus($search, $limit,$page, $id,$tgl);
         return view('bonus.detail',['data' => $data]);
     }
 
