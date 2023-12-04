@@ -56,6 +56,7 @@ class PenghasilanTidakTeraturRepository
                           'keterangan',
                       )
                       ->where('mst_tunjangan.kategori','bonus')
+                      ->groupBy('bulan', 'tahun')
                       ->where(function ($query) use ($search) {
                           $query->where('penghasilan_tidak_teratur.nip', 'like', "%$search%")
                               ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%")

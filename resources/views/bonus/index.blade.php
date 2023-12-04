@@ -61,7 +61,7 @@
                                         <td>{{ $item->nama_tunjangan }}</td>
                                         <td>{{ $item->total_data }}</td>
                                         <td>Rp {{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
-                                        <td>{{ $item->bulan }} - {{ $item->tahun }}</td>
+                                        <td>{{ $item->bulan }} / {{ $item->tahun }}</td>
                                         <td><a href="{{ route('bonus.show',$item->id_tunjangan) }}">Detail</a></td>
                                     </tr>
                                 @endforeach
