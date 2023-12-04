@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <a class="btn btn-primary" href="{{ asset('template_penghasilan_teratur.xlsx') }}" download>Template Excel</a>
+        <a class="btn btn-primary" href="{{ route('penghasilan.template-excel') }}" download>Template Excel</a>
 
 
         <form action="{{route('penghasilan.import-penghasilan-teratur.store')}}" method="POST">

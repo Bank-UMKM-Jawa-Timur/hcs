@@ -11,7 +11,8 @@ use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\KaryawanExport;
 
 class PenghasilanTeraturController extends Controller
 {
@@ -202,6 +203,6 @@ class PenghasilanTeraturController extends Controller
     }
 
     public function templateExcel(){
-
+        return Excel::download(new KaryawanExport, 'template_import_penghasilan_teratur.xlsx');
     }
 }
