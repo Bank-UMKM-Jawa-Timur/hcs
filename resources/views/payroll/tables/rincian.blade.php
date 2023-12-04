@@ -83,7 +83,7 @@
                 <td class="text-right">{{ $tj_kesejahteraan > 0 ? $tj_kesejahteraan : '-' }}</td>
                 <td class="text-right">{{ $gj_penyesuaian > 0 ? $gj_penyesuaian : '-' }}</td>
                 <td class="text-right">{{ $total_gaji > 0 ? $total_gaji : '-' }}</td>
-                <td class="text-right">{{ $pph_harus_dibayar > 0 ? $pph_harus_dibayar : '-' }}</td>
+                <td class="text-right">{{ $pph_harus_dibayar > 0 ? "($pph_harus_dibayar)" : '-' }}</td>
             </tr>
         @empty
             <tr>
@@ -105,7 +105,7 @@
             <th class="text-right">{{ number_format($footer_tj_kesejahteraan, 0, ',', '.') }}</th>
             <th class="text-right">{{ number_format($footer_gj_penyesuaian, 0, ',', '.') }}</th>
             <th class="text-right">{{ number_format($footer_total_gaji, 0, ',', '.') }}</th>
-            <th class="text-right">{{ number_format($footer_pph_harus_dibayar, 0, ',', '.') }}</th>
+            <th class="text-right">({{ number_format($footer_pph_harus_dibayar, 0, ',', '.') }})</th>
         </tr>
     </tfoot>
 </table>
