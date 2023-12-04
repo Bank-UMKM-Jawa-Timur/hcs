@@ -11,7 +11,8 @@ class PayrollController extends Controller
 {
     public function index(Request $request) {
         $this->validate($request, [
-            'kantor' => 'not_in:0',
+            'kantor' => 'not_in:0|required_with:cabang',
+            'kategori' => 'not_in:0',
             'bulan' => 'not_in:0',
             'tahun' => 'not_in:0'
         ]);
@@ -27,6 +28,7 @@ class PayrollController extends Controller
         $cabang = $cabangRepo->listCabang();
 
         $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, $limit);
+
         return view('payroll.index', compact('data', 'cabang'));
     }
 

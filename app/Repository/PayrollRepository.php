@@ -634,7 +634,14 @@ class PayrollRepository
 
             // Get Penghasilan Kena Pajak Setahun/Disetahunkan
             $keluarga = $karyawan->keluarga;
-            $status_kawin = $keluarga->status_kawin;
+            $status_kawin = 'TK';
+            if ($keluarga) {
+                $status_kawin = $keluarga->status_kawin;
+            }
+            else {
+                $status_kawin = $karyawan->status;
+            }
+
             $penghasilan_kena_pajak_setahun = 0;
             if ($status_kawin == 'Mutasi Keluar') {
                 $penghasilan_kena_pajak_setahun = floor(($jumlah_penghasilan_neto_pph21 - $ptkp?->ptkp_tahun) / 1000) * 1000;
