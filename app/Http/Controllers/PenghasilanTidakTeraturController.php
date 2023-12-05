@@ -214,42 +214,40 @@ class PenghasilanTidakTeraturController extends Controller
            ];
            array_push($gaji, $gj[$i-1]);
            array_push($total_gaji, array_sum($total_gj[$i-1]));
-        // Get Penghasilan tidak teratur karyawan
+        // Get Penghasilan tidak teratur karyawan (exclude bonus)
+            $id_ptt = TunjanganModel::where('kategori', 'tidak teratur')
+                                    ->orderBy('id')
+                                    ->pluck('id');
            $k = 0;
-            for($j = 16; $j <= 26; $j++){
-                if($j != 22 && $j != 23 && $j != 24 && $j != 26){
-                    $penghasilan = DB::table('penghasilan_tidak_teratur')
-                        ->where('nip', $nip)
-                        ->where('id_tunjangan', $j)
-                        ->where('tahun', $tahun)
-                        ->where('bulan', $i)
-                        ->first();
-                    $peng[$k] = ($penghasilan != null) ? $penghasilan->nominal : 0;
-                    $k++;
-                }
+            for($j = 0; $j < count($id_ptt); $j++){
+                $penghasilan = DB::table('penghasilan_tidak_teratur')
+                    ->where('nip', $nip)
+                    ->where('id_tunjangan', $id_ptt[$j])
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $i)
+                    ->first();
+                $peng[$k] = ($penghasilan != null) ? $penghasilan->nominal : 0;
+                $k++;
             }
             array_push($ptt, $peng);
 
             // Get Bonus Karyawan
             $l = 0;
-            for($j = 22; $j <= 24; $j++){
+            $id_bonus = TunjanganModel::where('kategori', 'bonus')
+                                     ->orderBy('id')
+                                     ->pluck('id');
+
+            // for($j = 22; $j <= 24; $j++){
+            for($j = 0; $j < count($id_bonus); $j++){
                 $bns = DB::table('penghasilan_tidak_teratur')
                     ->where('nip', $nip)
-                    ->where('id_tunjangan', $j)
+                    ->where('id_tunjangan', $id_bonus[$j])
                     ->where('tahun', $tahun)
                     ->where('bulan', $i)
                     ->first();
                 $bon[$l] = ($bns != null) ? $bns->nominal : 0;
                 $l++;
             }
-            $bns = DB::table('penghasilan_tidak_teratur')
-                    ->where('nip', $nip)
-                    ->where('id_tunjangan', 26)
-                    ->where('tahun', $tahun)
-                    ->where('bulan', $i)
-                    ->first();
-            $bon[$l] = ($bns != null) ? $bns->nominal : 0;
-            $l++;
             array_push($bonus, $bon);
         }
 // return array_sum($gj[7]);
