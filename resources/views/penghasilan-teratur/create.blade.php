@@ -57,8 +57,8 @@
             </div>
         </div>
         <div class="teks mt-4">
-            <p id="span_total_data"></p>
-            <p id="span_total_nominal"></p>
+            <div class="col-md-4 align-self-center mt-4" id="span_total_data"></div>
+            <div class="col-md-4 align-self-center mt-4" id="span_total_nominal"></div>
         </div>
 
         <form action="{{route('penghasilan.import-penghasilan-teratur.store')}}" method="POST">
@@ -66,46 +66,47 @@
         <div class="d-flex justify-content-start">
             <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
         </div>
-            <div class="row d-none" id="hasil-filter">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <table class="table" id="table_item">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nip</th>
-                                        <th>Nama Karyawan</th>
-                                        <th>Nominal</th>
-                                        {{-- <th>Aksi</th> --}}
-                                        {{-- <th>
-                                            <button type="button" class="btn btn-sm btn-icon btn-round btn-primary btn-plus">
-                                                +
-                                            </button>
-                                        </th> --}}
-                                    </tr>
-                                </thead>
-                                <tbody id="t_body">
-                                    {{-- <tr>
-                                        <td>1</td>
-                                        <td>1121212</td>
-                                        <td>Saya</td>
-                                        <td>123.321</td>
-                                        <td>
-                                            <button class="btn btn-warning" id="edit-penghasilan">edit</button>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
-                                                -
-                                            </button>
-                                        </td>
-                                    </tr> --}}
-                                </tbody>
-                            </table>
-                        </div>
+        <div class="col-md-10" id="loading-message"></div>
+        <div class="row d-none" id="hasil-filter">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table" id="table_item">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nip</th>
+                                    <th>Nama Karyawan</th>
+                                    <th>Nominal</th>
+                                    {{-- <th>Aksi</th> --}}
+                                    {{-- <th>
+                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-primary btn-plus">
+                                            +
+                                        </button>
+                                    </th> --}}
+                                </tr>
+                            </thead>
+                            <tbody id="t_body">
+                                {{-- <tr>
+                                    <td>1</td>
+                                    <td>1121212</td>
+                                    <td>Saya</td>
+                                    <td>123.321</td>
+                                    <td>
+                                        <button class="btn btn-warning" id="edit-penghasilan">edit</button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
+                                            -
+                                        </button>
+                                    </td>
+                                </tr> --}}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
         </form>
     </div>
 @endsection
@@ -398,28 +399,17 @@
                                     var cell_range_letter = ['A', 'B']
 
                                     var arr_data = [];
-                                    var nip = [];
 
                                     for (var i = 2; i <= cell_to_number; i++) {
                                         var arr_row = [];
                                         for (var j = 0; j < cell_range_letter.length; j++) {
                                             var index = `${cell_range_letter[j]}${i}`
-                                            if(typeof excel[`B${i}`] === "undefined" || excel[`B${i}`] == null){
-                                            }else{
-                                                arr_row.push(excel[index].v)
-                                                arr_data.push(arr_row)
-                                            }
+                                            arr_row.push(excel[index].v)
                                         }
+                                        arr_data.push(arr_row)
                                     }
 
-                                    for(var i = 0; i < arr_data.length; i++){
-                                        searchForArray(arr_data, arr_data[i]);
-                                    }
-                                    for(var i = 0; i < arr_data.length; i++){
-                                        nip.push(arr_data[i][0]);
-                                    }
-                                    // jquery untuk cek api
-                                    showTable(arr_data, nip);
+                                    showTable(arr_data);
                                 })
                         }
                         if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
@@ -438,46 +428,126 @@
                 }
             }
 
-            function showTable(arr_data, nip) {
+            function showTable(arr_data) {
+
+                $('#span_total_data').html(`
+                    <span id="total-data" class="font-weight-bold">Total Data : ${arr_data.length}</span>
+                `)
+
                 var no = 0;
                 var grandTotalNominal = 0;
                 var id_tunjangan = $('#penghasilan').val()
                 var date = new Date();
                 var hari_ini = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
+                var dataNip = [];
+                var dataNominal = [];
+                var nipDataRequest = [];
+                var checkNip = [];
+                var checkNipTunjangan = [];
+                var hasError = false;
+                var hasNip = false;
+                var hasTunjangan = false;
+                var hasSuccess = false;
+
+                var invalidNamaRows = [];
+                $.each(arr_data,function(key, value) {
+                    dataNip.push({ nip: value[0], row: key + 1 });
+                })
+
                 $.ajax({
                     type: "GET",
                     url: `{{ url('penghasilan/get-karyawan-by-entitas') }}`,
                     data: {
-                        nip: nip,
+                        nip: JSON.stringify(dataNip),
                         tanggal: hari_ini,
                         id_tunjangan: id_tunjangan,
                     },
+                    beforeSend: function () {
+                        $('#loading-message').html(`
+                            <div class="d-flex align-items-center">
+                                <strong>Loading...</strong>
+                                <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                            </div>
+                        `);
+                    },
                     success: function(res){
                         console.log(res);
-                        var employeeData = res.data;
-                        var nama = employeeData.nama_karyawan;
-                        if(res.data.length != nip.length){
-                            searchArrayDiff(arr_data, res.data);
-                        } else if (tunjanganExists) {
-                            var tunjanganExists = res.tunjangan;
-                            var nama_tunjangan = tunjanganExists.nama_tunjangan;
-                            tunjanganExist(arr_data, res.tunjangan, nama, nama_tunjangan)
-                        } else{
-                            Swal.fire({
-                                icon: 'success',
-                                text: 'Data valid.'
-                            });
-
-                            $.each(res.data, function(i, v){
+                            var new_body_tr = ``
+                            $.each(res,function(key,value) {
                                 no++;
-                                var index = searchArray(arr_data, v.nip);
-                                var row = arr_data[index];
-                                createTableRow(row, v.nama_karyawan, i, no);
-                                $('#hasil-filter').removeClass('d-none');
-                                $('#btn-simpan').removeClass('d-none');
+                                if (value.cek_nip == false) {
+                                    checkNip.push(value.nip);
+                                    hasError = true;
+                                    hasNip = true;
+                                } else if (value.cek_tunjangan == true) {
+                                    checkNipTunjangan.push(value.nip);
+                                    hasError = true;
+                                    hasTunjangan = true;
+                                } else {
+                                    hasError = false;
+                                    hasTunjangan = false;
+                                }
+                                grandTotalNominal += arr_data[key][1]
+                                new_body_tr += `
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" name="number[]" class="form-control" value="${no}">
+                                            <input type="hidden" name="penghasilan[]" class="form-control" value="${id_tunjangan}">
+                                            ${no}
+                                        </td>
+                                        <td>
+                                            ${value.nip}
+                                            <input type="hidden" name="nip[]" class="typeahead form-control nip-input" value="${value.nip}" readonly>
+                                        </td>
+                                        <td>
+                                            ${value.nama_karyawan}
+                                            <input type="hidden" name="nama[]" class="form-control nama-input" value="${value.nama_karyawan}" readonly>
+                                        </td>
+                                        <td>
+                                            ${formatRupiah(arr_data[key][1].toString())}
+                                            <input type="hidden" name="nominal[]" class="form-control nominal-input" value="${arr_data[key][1]}" readonly>
+                                        </td>
+                                    </tr>
+                                `;
+
                             })
-                        }
+                            if (hasError == true) {
+                                var message = ``;
+                                if (hasNip == true) {
+                                    message += `NIP :${checkNip} tidak di temukan.`
+                                }
+                                if (hasTunjangan == true) {
+                                    message += `NIP :${checkNipTunjangan} sudah terdaftar di tunjangan.`
+                                }
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Data tidak valid!',
+                                    text: message
+                                });
+                                $('#btn-simpan').addClass('d-none');
+                                $('#hasil-filter').addClass('d-none');
+                            }
+                            else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    text: 'Data valid.'
+                                });
+                                $('#table_item tbody').append(new_body_tr);
+                                $('#btn-simpan').removeClass('d-none');
+                                $('#hasil-filter').removeClass('d-none');
+                                $('#span_total_nominal').html(`
+                                    <span id="grand-total" class="font-weight-bold">Grand Total : ${
+                                        new Intl.NumberFormat("id-ID", {
+                                        style: "currency",
+                                        currency: "IDR"
+                                        }).format(grandTotalNominal)
+                                    }</span>
+                                `)
+                            }
+                    },
+                    complete: function () {
+                        $('#loading-message').empty();
                     }
                 })
                 // Start processing rows
@@ -487,7 +557,7 @@
             function createTableRow(row, nama,index, no) {
                 grandTotalNominal += parseInt(row[1]);
                 var penghasilan = $('#penghasilan').val();
-                $('#span_total_data').html('Total data : <b>' + no + '</b>');
+
                 $('#span_total_nominal').html('Grand nominal : <b>' + formatRupiah(grandTotalNominal.toString()) + '</b>');
                 var new_body_tr = `
                     <tr>
@@ -511,90 +581,6 @@
                     </tr>
                 `;
                 $('#t_body').append(new_body_tr);
-            }
-
-            function showToTable(data) {
-                var penghasilan = $('#penghasilan').val();
-                var total_data = data.length;
-                var date = new Date();
-                var hari_ini = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-                var id_tunjangan = $('#penghasilan').val()
-                var grandNominal = 0
-
-                $('#btn-simpan').removeClass('d-none');
-                $('#hasil-filter').removeClass('d-none');
-                $('#span_total_data').html('Total data : <b>' + total_data + '</b>');
-
-                for (let i = 0; i < data.length; i++) {
-                    (function (index) {
-                        var row = data[index];
-                        var errorElement = $(`tbody #error-karyawan-${index}`);
-                        // console.log(errorElement);
-
-                        $.ajax({
-                            url: "{{ url('penghasilan/get-karyawan-by-entitas') }}",
-                            type: "GET",
-                            data: {
-                                nip: row[0].v,
-                                tanggal: hari_ini,
-                                id_tunjangan: id_tunjangan,
-                            },
-                            accept: "Application/json",
-                            success: function (response) {
-                                // console.log(response);
-                                var nominal = formatNumber(row[1].v);
-                                grandNominal += parseFloat(row[1].v);
-                                $('#span_total_nominal').html('Grand nominal : <b>' + formatNumber(grandNominal) + '</b>');
-                                var employeeData = response.data;
-                                var tunjanganExists = response.tunjangan;
-                                var nama = employeeData && employeeData.nama_karyawan ? employeeData.nama_karyawan : 'Karyawan tidak ditemukan.';
-                                var validation_msg = "";
-                                if (tunjanganExists) {
-                                    var nama_tunjangan = tunjanganExists.nama_tunjangan;
-                                    var msg_tunjangan = `${nama} sudah ada di tunjangan ${nama_tunjangan}.`;
-                                    validation_msg = `${msg_tunjangan} Silahkan edit atau hapus data ini.`;
-                                    // errorElement.removeClass('d-none');
-                                    errorElement.html(validation_msg);
-                                    // console.log(`Validasi tunjangan berhasil untuk indeks ${index}`);
-                                } else if (nama === 'Karyawan tidak ditemukan.') {
-                                    validation_msg = 'Nip tidak di temukan. Silahkan edit atau hapus data ini.'
-                                    // errorElement.removeClass('d-none');
-                                    // console.log(`Validasi nama berhasi l untuk indeks ${index}`);
-                                    errorElement.html(validation_msg);
-                                } else {
-                                    validation_msg = ""
-                                    errorElement.html(validation_msg);
-                                }
-
-                                var new_tr = `
-                                    <tr>
-                                        <td><span id="number[]">${(index + 1)}</span></td>
-                                        <td>
-                                            <input type="hidden" name="number[]" class="form-control" value="${index + 1}">
-                                            <input type="hidden" name="penghasilan[]" class="form-control" value="${penghasilan}">
-                                            <input type="hidden" name="nip[]" class="form-control nip" readonly value="${row[0].v}">
-                                            ${row[0].v}
-                                            <small class="text-danger" data-error="${index}" id="error-karyawan-${index}">${validation_msg}</small>
-                                        </td>
-                                        <td>
-                                            <input type="hidden" name="nama[]" class="form-control nama" readonly value="${nama}">
-                                            ${nama}
-                                        </td>
-                                        <td>
-                                            <input type="hidden" name="nominal[]" class="form-control only-number nominal" readonly value="${nominal}">
-                                            ${nominal}
-                                        </td>
-                                    </tr>
-                                `;
-
-                                $('#table_item tbody').append(new_tr);
-                            },
-                            error: function (response) {
-                                console.log(response);
-                            }
-                        });
-                    })(i);
-                }
             }
 
             function alertWarning(message) {

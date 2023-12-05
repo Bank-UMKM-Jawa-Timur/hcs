@@ -47,17 +47,11 @@
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class="text-primary">
                                 <th>No</th>
-                                {{-- <th>
-                                    NIP
-                                </th>
-                                <th>
-                                    Karyawan
-                                </th> --}}
                                 <th>
                                     Tunjangan
                                 </th>
                                 <th>
-                                    Nominal
+                                    Grand Nominal
                                 </th>
                                 <th>
                                     Tanggal
