@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <h5 class="card-title">Data Penghasilan Teratur</h5>
-        <p class="card-title"><a href="">Penghasilan</a> > <a href="{{route('penghasilan.import-penghasilan-teratur.index')}}">Penghasilan Teratur</a> > Detail</p>
+        <p class="card-title"><a href="/">Dashboard</a> > <a href="{{route('penghasilan.import-penghasilan-teratur.index')}}">Penghasilan Teratur</a> > Detail</p>
     </div>
 
     <div class="card-body">

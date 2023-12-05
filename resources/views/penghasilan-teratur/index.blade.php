@@ -4,7 +4,7 @@
 @section('content')
     <div class="card-header">
         <h5 class="card-title">Data Penghasilan Teratur</h5>
-        <p class="card-title"><a href="">Penghasilan</a> > Penghasilan Teratur</p>
+        <p class="card-title"><a href="/">Dashboard</a> > Penghasilan Teratur</p>
     </div>
 
     <div class="card-body">
