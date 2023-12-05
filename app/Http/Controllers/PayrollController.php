@@ -8,6 +8,7 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session as FacadesSession;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PayrollController extends Controller
 {
@@ -42,7 +43,6 @@ class PayrollController extends Controller
         $this->param = null;
 
         $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, $limit,null);
-
         return view('payroll.index', compact('data', 'cabang'));
     }
 
@@ -67,7 +67,8 @@ class PayrollController extends Controller
         }elseif ($kategori = 'rincian') {
             return view('payroll.tables.rincian-pdf', ['data' => $data]);
         }else{
-            return 'qwq';
+            Alert::error('Terjadi kesalahan');
+            return redirect()->route('payroll.index');
         }
 
     }

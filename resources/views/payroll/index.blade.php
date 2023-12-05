@@ -216,7 +216,7 @@
                         <div class="d-flex justify-content-end">
                             @if (\Request::has('kantor') && count($data) > 0)
                                 <div class="mr-2">
-                                    <a href="{{ route('payroll.pdf') }}" class="btn btn-warning">Cetak PDF</a>
+                                    <a href="{{ route('payroll.pdf') }}" target="_blank"  class="btn btn-warning">Cetak PDF</a>
                                 </div>
                             @endif
                             <div>

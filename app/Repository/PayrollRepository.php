@@ -207,11 +207,12 @@ class PayrollRepository
                                 });
                             });
                             if ($cetak == 'cetak') {
-                                $data = $data->take(50)->get();
+                                $data = $data->get();
                                 // return $test;
                             }else{
-                                $data=  $data->paginate($limit);
+                                $data=  $data->paginate(10);
                             }
+
 
         foreach ($data as $key => $karyawan) {
             $ptkp = null;
@@ -268,6 +269,7 @@ class PayrollRepository
                 // Get Potongan(JP1%, DPP 5%)
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                 if($karyawan->status_karyawan == 'IKJP') {
+                    $dpp = 0;
                     $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
                 } else{
                     $gj_pokok = $obj_gaji->gj_pokok;
