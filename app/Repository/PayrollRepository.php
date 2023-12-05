@@ -301,7 +301,7 @@ class PayrollRepository
                         $bpjs_tk = $jp_jan_feb * 1 / 100;
                     }
                     else {
-                        $bpjs_tk = $$total_gaji * 1 / 100;
+                        $bpjs_tk = $total_gaji * 1 / 100;
                     }
                 }
 
