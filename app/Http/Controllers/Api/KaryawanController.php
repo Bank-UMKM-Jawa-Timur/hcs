@@ -31,6 +31,7 @@ class KaryawanController extends Controller
     function getKaryawan(Request $request)
     {
         try {
+            $request->get('nip');
             $explode_data = collect(json_decode($request->get('nip'), true));
             $explode_id = $explode_data->pluck('nip')->toArray();
 
