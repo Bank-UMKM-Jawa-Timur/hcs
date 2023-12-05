@@ -103,13 +103,11 @@ class PenghasilanTeraturController extends Controller
             $nip = $request->get('nip');
             $nominal = str_replace([' ', '.', "\u{A0}"], '', $request->get('nominal'));
             $tanggal = date('Y-m-d H:i:s');
-            
+
             $bulan = date("m", strtotime($tanggal));
             $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
 
             $tahun = date("Y", strtotime($tanggal));
-
-            return ['bulan' => $bulan, 'tahun' => $tahun];
 
             if ($total) {
                 if (is_array($total)) {
