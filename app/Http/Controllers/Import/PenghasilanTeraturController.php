@@ -63,26 +63,14 @@ class PenghasilanTeraturController extends Controller
                             ->whereMonth('tk.created_at', date('m', strtotime( $tanggal)))
                             ->whereYear('tk.created_at', date('Y', strtotime($tanggal)))
                             ->first();
-            return response($data);
+            return response()->json([
+                'data' => $data,
+                'tunjangan' => $tunjangan
+            ]);
+            // return response($data);
         } catch (Exception $e) {
             return $e;
         }
-
-        // if ($data) {
-        //     return response()->json([
-        //         'status' => 'Success',
-        //         'message' => 'success',
-        //         'data' => $data,
-        //         'tunjangan' => $tunjangan
-        //     ]);
-        // } else {
-        //     return response()->json([
-        //         'status' => 'Success',
-        //         'message' => 'data not found',
-        //         'data' => null,
-        //         'tunjangan' => null
-        //     ]);
-        // }
     }
     public function getKaryawanSearch(Request $request){
         $data = KaryawanModel::select("nama_karyawan", "nip")

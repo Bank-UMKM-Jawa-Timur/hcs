@@ -340,6 +340,29 @@
                 });
             }
 
+            function tunjanganExist(arr_data, res, nama, tunjangan) {
+                var arrayExcel = [];
+                var arrayRes = [];
+                for(var i = 0; i < arr_data.length; i++){
+                    arrayExcel.push(arr_data[i][0]);
+                }
+                for(var i = 0; i < res.length; i++){
+                    arrayRes.push(res[i].nip);
+                }
+                const difference = arrayExcel.reduce((result, element) => {
+                    if (arrayRes.indexOf(element) === -1) {
+                        result.push(element);
+                    }
+                    return result;
+                }, []);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Data tidak valid!',
+                    text: `NIP ${difference.toString().replaceAll(',', ', ')} sudah terdaftar di tunjangan ${tunjangan}.`
+                });
+            }
+
             function importExcel() {
                     var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
                     var test = $("#file-penghasilan").val();
@@ -418,25 +441,36 @@
             function showTable(arr_data, nip) {
                 var no = 0;
                 var grandTotalNominal = 0;
+                var id_tunjangan = $('#penghasilan').val()
+                var date = new Date();
+                var hari_ini = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+
                 $.ajax({
                     type: "GET",
                     url: `{{ url('penghasilan/get-karyawan-by-entitas') }}`,
                     data: {
-                        nip: nip
+                        nip: nip,
+                        tanggal: hari_ini,
+                        id_tunjangan: id_tunjangan,
                     },
                     success: function(res){
-                        if(res.length != nip.length){
-                            searchArrayDiff(arr_data, res);
+                        console.log(res);
+                        var employeeData = res.data;
+                        var nama = employeeData.nama_karyawan;
+                        if(res.data.length != nip.length){
+                            searchArrayDiff(arr_data, res.data);
+                        } else if (tunjanganExists) {
+                            var tunjanganExists = res.tunjangan;
+                            var nama_tunjangan = tunjanganExists.nama_tunjangan;
+                            tunjanganExist(arr_data, res.tunjangan, nama, nama_tunjangan)
                         } else{
                             Swal.fire({
                                 icon: 'success',
                                 text: 'Data valid.'
                             });
 
-                            $.each(res, function(i, v){
+                            $.each(res.data, function(i, v){
                                 no++;
-
-                                // console.log(v.length);
                                 var index = searchArray(arr_data, v.nip);
                                 var row = arr_data[index];
                                 createTableRow(row, v.nama_karyawan, i, no);
