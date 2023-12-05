@@ -56,6 +56,10 @@
                 <button class="btn btn-primary" id="filter">Tampilkan</button>
             </div>
         </div>
+        <div class="teks mt-4">
+            <p id="span_total_data"></p>
+            <p id="span_total_nominal"></p>
+        </div>
 
         <form action="{{route('penghasilan.import-penghasilan-teratur.store')}}" method="POST">
         @csrf
@@ -65,10 +69,6 @@
             <div class="row d-none" id="hasil-filter">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
-                            <p id="span_total_data"></p>
-                            <p id="span_total_nominal"></p>
-                        </div>
                         <div class="card-body">
                             <table class="table" id="table_item">
                                 <thead>
@@ -122,6 +122,7 @@
 @push('script')
     <script>
         $(document).ready(function() {
+            var grandTotalNominal = 0;
             $('#penghasilan').on('change', function(){
                 var value = $("#penghasilan").val()
                 var hari_ini = new Date();
@@ -416,6 +417,7 @@
 
             function showTable(arr_data, nip) {
                 var no = 0;
+                var grandTotalNominal = 0;
                 $.ajax({
                     type: "GET",
                     url: `{{ url('penghasilan/get-karyawan-by-entitas') }}`,
@@ -449,10 +451,15 @@
             }
 
             function createTableRow(row, nama,index, no) {
+                grandTotalNominal += parseInt(row[1]);
+                var penghasilan = $('#penghasilan').val();
                 $('#span_total_data').html('Total data : <b>' + no + '</b>');
+                $('#span_total_nominal').html('Grand nominal : <b>' + formatRupiah(grandTotalNominal.toString()) + '</b>');
                 var new_body_tr = `
                     <tr>
                         <td>
+                            <input type="hidden" name="number[]" class="form-control" value="${no}">
+                            <input type="hidden" name="penghasilan[]" class="form-control" value="${penghasilan}">
                             ${no}
                         </td>
                         <td>
