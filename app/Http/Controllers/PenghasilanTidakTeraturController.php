@@ -243,14 +243,6 @@ class PenghasilanTidakTeraturController extends Controller
                 $bon[$l] = ($bns != null) ? $bns->nominal : 0;
                 $l++;
             }
-            $bns = DB::table('penghasilan_tidak_teratur')
-                    ->where('nip', $nip)
-                    ->where('id_tunjangan', 26)
-                    ->where('tahun', $tahun)
-                    ->where('bulan', $i)
-                    ->first();
-            $bon[$l] = ($bns != null) ? $bns->nominal : 0;
-            $l++;
             array_push($bonus, $bon);
         }
 
