@@ -15,13 +15,17 @@ class PayrollController extends Controller
     public $param;
 
     public function index(Request $request) {
+        FacadesSession::forget('kategori');
+        FacadesSession::forget('kantor');
+        FacadesSession::forget('month');
+        FacadesSession::forget('year');
+
         $this->validate($request, [
             'kantor' => 'not_in:0|required_with:cabang',
             'kategori' => 'not_in:0',
             'bulan' => 'not_in:0',
             'tahun' => 'not_in:0'
         ]);
-
         FacadesSession::put('kategori',$request->get('kategori'));
 
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
