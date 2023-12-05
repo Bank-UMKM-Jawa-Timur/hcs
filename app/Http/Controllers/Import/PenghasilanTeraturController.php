@@ -103,11 +103,43 @@ class PenghasilanTeraturController extends Controller
             $nip = $request->get('nip');
             $nominal = str_replace([' ', '.', "\u{A0}"], '', $request->get('nominal'));
             $tanggal = date('Y-m-d H:i:s');
+            
             $bulan = date("m", strtotime($tanggal));
+            $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
+
+            $tahun = date("Y", strtotime($tanggal));
+
+            return ['bulan' => $bulan, 'tahun' => $tahun];
 
             if ($total) {
                 if (is_array($total)) {
                     for ($i=0; $i < count($total); $i++) {
+
+                        $gaji = GajiPerBulanModel::where('nip', $nip[$i])
+                                                ->where('bulan', $bulanReq)
+                                                ->where('tahun', $tahun)
+                                                ->first();
+                        $tunjangan = TunjanganModel::find($id_tunjangan);
+                        if ($gaji) {
+                            if ($tunjangan->nama_tunjangan == 'Transport') {
+                                $gaji->update([
+                                    'tj_transport' => $nominal[$i]
+                                ]);
+                            } elseif($tunjangan->nama_tunjangan == 'Pulsa') {
+                                $gaji->update([
+                                    'tj_pulsa' => $nominal[$i]
+                                ]);
+                            } elseif ($tunjangan->nama_tunjangan == 'Vitamin') {
+                                $gaji->update([
+                                    'tj_vitamin' => $nominal[$i]
+                                ]);
+                            } elseif ($tunjangan->nama_tunjangan == 'Uang Makan') {
+                                $gaji->update([
+                                    'uang_makan' => $nominal[$i]
+                                ]);
+                            }
+                        }
+
                         $dataAda = DB::table('tunjangan_karyawan')->where('nip', $nip[$i])
                             ->where('id_tunjangan', $id_tunjangan[$i])
                             ->where('created_at', $tanggal)
@@ -132,8 +164,6 @@ class PenghasilanTeraturController extends Controller
 
             Alert::success('Success', 'Berhasil menyimpan data');
             return redirect()->route('penghasilan.import-penghasilan-teratur.index');
-            // return redirect()->back();
-
         } catch (\Exception $e) {
             Alert::error('Error', $e->getMessage());
             return back();
