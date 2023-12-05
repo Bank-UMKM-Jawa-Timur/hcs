@@ -47,6 +47,7 @@ class PayrollController extends Controller
         $this->param = null;
 
         $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, $limit,null);
+
         return view('payroll.index', compact('data', 'cabang'));
     }
 

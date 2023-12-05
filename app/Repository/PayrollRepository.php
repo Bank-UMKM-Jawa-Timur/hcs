@@ -116,8 +116,8 @@ class PayrollRepository
                                 'gaji' => function($query) use ($month, $year) {
                                     $query->select(
                                         'nip',
-                                        'bulan',
-                                        'tahun',
+                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
                                         'gj_pokok',
                                         'gj_penyesuaian',
                                         'tj_keluarga',
@@ -364,7 +364,7 @@ class PayrollRepository
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        'bulan',
+                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
                                                         'gj_pokok',
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
@@ -374,6 +374,7 @@ class PayrollRepository
                                                     )
                                                     ->where('nip', $karyawan->nip)
                                                     ->where('tahun', $year)
+                                                    ->orderBy('bulan')
                                                     ->groupBy('bulan');
                                                 },
                                                 'sumBonusKaryawan' => function($query) use ($karyawan, $year) {
@@ -401,8 +402,8 @@ class PayrollRepository
                                                 'pphDilunasi' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        'bulan',
-                                                        'tahun',
+                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
                                                         DB::raw('SUM(total_pph) AS nominal'),
                                                     )
                                                     ->where('tahun', $year)

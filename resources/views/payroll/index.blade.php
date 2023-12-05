@@ -258,9 +258,13 @@
                                 $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
                             @endphp
                             @if (\Request::get('kategori') == 'payroll')
-                                @include('payroll.tables.payroll', ['data' => $data])
+                                <div class="table-responsive">
+                                    @include('payroll.tables.payroll', ['data' => $data])
+                                </div>
                             @elseif (\Request::get('kategori') == 'rincian')
-                                @include('payroll.tables.rincian', ['data' => $data])
+                                <div class="table-responsive">
+                                    @include('payroll.tables.rincian', ['data' => $data])
+                                </div>
                             @else
                                 <span class="text-warning">Harap pilih kategori yang benar!</span>
                             @endif
