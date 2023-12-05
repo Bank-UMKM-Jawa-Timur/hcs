@@ -31,9 +31,39 @@ class KaryawanController extends Controller
     function getKaryawan(Request $request)
     {
         try {
-            $nip = $request->get('nip');
-            $data = KaryawanModel::select('nama_karyawan')->where('nip', $nip)->first()->nama_karyawan ?? 'null';
-            return response()->json($data);
+            $explode_data = json_decode($request->get('nip'), true);
+            $explode_id = array_column($explode_data, 'nip');
+
+            $data = KaryawanModel::select('nip', 'nama_karyawan')->whereIn('nip', $explode_id)->get();
+
+            $response = [];
+            foreach ($explode_data as $key => $item) {
+                $nip = $item['nip'];
+                $row = $item['row'];
+
+                // Check if the NIP is found in the server-side data
+                $found = $data->where('nip', $nip)->first();
+
+                if ($found) {
+                    $response[] = [
+                        'row' => $row,
+                        'nip' => $found->nip,
+                        'cek' => null,
+                        'nama_karyawan' => $found->nama_karyawan,
+                    ];
+                } else {
+                    // If NIP not found, return an error response
+                    $response[] = [
+                        'row' => $row,
+                        'nip' => $item['nip'],
+                        'cek' => '-',
+                        'nama_karyawan' => 'Karyawan Tidak Ditemukan',
+                    ];
+                }
+            }
+
+            return response()->json($response);
+
         }catch (Exception $e){
             return $e;
         }

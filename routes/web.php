@@ -168,7 +168,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
     Route::resource('/lembur', LemburController::class);
     Route::resource('/spd', SPDController::class);
-    Route::resource('/bonus', BonusController::class);
+    // Bonus Data
+    Route::get('bonus/excel',[BonusController::class,'fileExcel'])->name('bonus.excel');
+    Route::get('bonus/{id}/{tgl}',[BonusController::class,'detail'])->name('bonus.detail');
+    Route::resource('bonus', BonusController::class);
     Route::resource('/thr', THRController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
@@ -308,9 +311,6 @@ Route::group(['middleware' => 'auth'], function () {
         return view('gaji_perbulan.import');
     });
     Route::post('post-import-pph', [GajiPerBulanController::class, 'importPPH'])->name('import-pph');
-
-    // Bonus
-    Route::resource('bonus',BonusController::class);
 
     Route::prefix('payroll')
         ->name('payroll.')
