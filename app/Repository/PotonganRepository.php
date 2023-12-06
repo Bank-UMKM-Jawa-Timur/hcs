@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Models\PotonganModel;
 use Illuminate\Support\Facades\DB;
 
 class PotonganRepository
@@ -30,6 +31,19 @@ class PotonganRepository
           ->paginate($limit);
 
         return $potongan;
+    }
+
+    public function store(array $data)
+    {
+        return PotonganModel::create([
+            'nip' => $data['nip'],
+            'bulan' => $data['bulan'],
+            'tahun' => $data['tahun'],
+            'kredit_koperasi' => str_replace(".", "", $data['kredit_koperasi']),
+            'iuran_koperasi' => str_replace(".", "", $data['iuran_koperasi']),
+            'kredit_pegawai' => str_replace(".","",$data['kredit_pegawai']),
+            'iuran_ik' => str_replace(".","", $data['iuran_ik']),
+        ]);
     }
     
 }

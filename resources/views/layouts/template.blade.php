@@ -616,6 +616,7 @@ Coded by www.creative-tim.com
     <script src="{{ asset('style/assets/js/ReorderWithResize.js') }}"></script>
     <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('vendor/apexchart/apexcharts.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.0/moment.min.js"></script>
     <script>
         // $(document).ready(function() {
         //     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
@@ -676,6 +677,7 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
+    @stack('script')
 </body>
 
 </html>

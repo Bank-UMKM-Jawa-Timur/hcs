@@ -2,32 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Repository\PotonganRepository;
+use App\Models\PotonganModel;
 use Illuminate\Http\Request;
-use RealRashid\SweetAlert\Facades\Alert;
 
-class PotonganController extends Controller
+class PotonganModelController extends Controller
 {
-    private PotonganRepository $repo;
-
-    public function __construct()
-    {
-        $this->repo = new PotonganRepository;
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
-        $page = $request->has('page') ? $request->get('page') : 1;
-
-        $search = $request->get('q');
-        $data = $this->repo->getPotongan($search, $limit, $page);
-
-        return view('potongan.index', compact('data'));
+        //
     }
 
     /**
@@ -37,7 +24,7 @@ class PotonganController extends Controller
      */
     public function create()
     {
-        return view('potongan.add');
+        //
     }
 
     /**
@@ -48,19 +35,16 @@ class PotonganController extends Controller
      */
     public function store(Request $request)
     {
-        $this->repo->store($request->all());
-
-        Alert::success('Berhasil menambahkan Potongan.');
-        return redirect()->route('potongan.index');
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\PotonganModel  $potonganModel
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(PotonganModel $potonganModel)
     {
         //
     }
@@ -68,10 +52,10 @@ class PotonganController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\PotonganModel  $potonganModel
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(PotonganModel $potonganModel)
     {
         //
     }
@@ -80,10 +64,10 @@ class PotonganController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\PotonganModel  $potonganModel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, PotonganModel $potonganModel)
     {
         //
     }
@@ -91,10 +75,10 @@ class PotonganController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\PotonganModel  $potonganModel
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(PotonganModel $potonganModel)
     {
         //
     }
