@@ -14,6 +14,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\KaryawanExport;
 use App\Exports\ExportVitamin;
+use Carbon\Carbon;
 use Exception;
 
 class PenghasilanTeraturController extends Controller
@@ -120,10 +121,12 @@ class PenghasilanTeraturController extends Controller
     {
         // return $request;
         try {
-            $total = $request->get('number');
-            $id_tunjangan = $request->get('penghasilan');
-            $nip = $request->get('nip');
-            $nominal = str_replace([' ', '.', "\u{A0}"], '', $request->get('nominal'));
+            $id_tunjangan = $request->get('tunjangan');
+            $nominal = explode(',', $request->get('nominal'));
+            $nip = explode(',', $request->get('nip'));
+            $total = count($nip);
+
+            // return ['nip' => $nip,'nominal' => $nominal, 'total' => count($nip)];
             $tanggal = date('Y-m-d H:i:s');
 
             $bulan = date("m", strtotime($tanggal));
@@ -131,9 +134,16 @@ class PenghasilanTeraturController extends Controller
 
             $tahun = date("Y", strtotime($tanggal));
 
-            if ($total) {
-                if (is_array($total)) {
-                    for ($i = 0; $i < count($total); $i++) {
+            if ($nip) {
+                if (is_array($nip)) {
+                    for ($i = 0; $i < $total; $i++) {
+                        DB::table('tunjangan_karyawan')->insert([
+                            'nip' => $nip[$i],
+                            'nominal' => $nominal[$i],
+                            'id_tunjangan' => $id_tunjangan,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
 
                         $gaji = GajiPerBulanModel::where('nip', $nip[$i])
                             ->where('bulan', $bulanReq)
@@ -160,24 +170,7 @@ class PenghasilanTeraturController extends Controller
                             }
                         }
 
-                        $dataAda = DB::table('tunjangan_karyawan')->where('nip', $nip[$i])
-                            ->where('id_tunjangan', $id_tunjangan[$i])
-                            ->where('created_at', $tanggal)
-                            ->count();
 
-                        $dataTidakDitemukan = KaryawanModel::where('nip', $nip[$i])->count();
-
-                        if ($dataAda > 1 && $dataTidakDitemukan < 1) {
-                            continue;
-                        }
-
-                        DB::table('tunjangan_karyawan')->insert([
-                            'nip' => $nip[$i],
-                            'nominal' => $nominal[$i],
-                            'id_tunjangan' => $id_tunjangan[$i],
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
                     }
                 }
             }

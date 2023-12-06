@@ -63,6 +63,9 @@
 
         <form action="{{route('penghasilan.import-penghasilan-teratur.store')}}" method="POST">
         @csrf
+        <input type="hidden" name="nominal" class="form-control nominal-input" value="" readonly>
+        <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
+        <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
         <div class="d-flex justify-content-start">
             <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
         </div>
@@ -293,80 +296,10 @@
                 namaInput.prop('readonly', true);
             });
 
-            function searchForArray(haystack, needle){
-                var i, j, current;
-                for(i = 0; i < haystack.length; ++i){
-                    if(needle.length === haystack[i].length){
-                    current = haystack[i];
-                    for(j = 0; j < needle.length && needle[j] === current[j]; ++j);
-                        if(j === needle.length){
-                            haystack.splice(i, 1);
-                        }
-                    }
-                }
-            }
-
-            function searchArray(arr_data, data){
-                for(var i = 0; i < arr_data.length; i++){
-                    for(var j = 0; j < arr_data[i].length; j++){
-                        if(data == arr_data[i][j]){
-                            return i;
-                        }
-                    }
-                }
-                return -1;
-            }
-
-            function searchArrayDiff(arr_data, res){
-                var arrayExcel = [];
-                var arrayRes = [];
-                var diffArray = []
-                for(var i = 0; i < arr_data.length; i++){
-                    arrayExcel.push(arr_data[i][0]);
-                }
-                for(var i = 0; i < res.length; i++){
-                    arrayRes.push(res[i].nip);
-                }
-                const difference = arrayExcel.reduce((result, element) => {
-                    if (arrayRes.indexOf(element) === -1) {
-                        result.push(element);
-                    }
-                    return result;
-                }, []);
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Data tidak valid!',
-                    text: `NIP ${difference.toString().replaceAll(',', ', ')} tidak dapat ditemukan.`
-                });
-            }
-
-            function tunjanganExist(arr_data, res, nama, tunjangan) {
-                var arrayExcel = [];
-                var arrayRes = [];
-                for(var i = 0; i < arr_data.length; i++){
-                    arrayExcel.push(arr_data[i][0]);
-                }
-                for(var i = 0; i < res.length; i++){
-                    arrayRes.push(res[i].nip);
-                }
-                const difference = arrayExcel.reduce((result, element) => {
-                    if (arrayRes.indexOf(element) === -1) {
-                        result.push(element);
-                    }
-                    return result;
-                }, []);
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Data tidak valid!',
-                    text: `NIP ${difference.toString().replaceAll(',', ', ')} sudah terdaftar di tunjangan ${tunjangan}.`
-                });
-            }
-
             function importExcel() {
                     var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
                     var test = $("#file-penghasilan").val();
+                    var sheet_data = [];
                     if (regex.test($("#file-penghasilan").val().toLowerCase())) {
                         var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/
                         if ($('#file-penghasilan').val().toLowerCase().indexOf(".xlsx") > 0) {
@@ -383,57 +316,33 @@
                                 }
                                 // all element sheetnames of excel
                                 var sheet_name_list = workbook.SheetNames;
-                                var cnt = 0;
-                                sheet_name_list.forEach(function(y) {
-                                    var exceljson = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[y]);
-                                    var excel = workbook.Sheets[y];
-                                    var cell_range = excel['!ref'] != '' ? excel['!ref'].split(':') : [];
-                                    var cell_from = cell_range.length == 2 ? cell_range[0] : ''
-                                    var cell_to = cell_range.length == 2 ? cell_range[1] : ''
-                                    var letterPattern = /[a-z]+/gi;
-                                    var cell_from_letter = cell_from.match(letterPattern)[0]
-                                    var cell_to_letter = cell_to.match(letterPattern)[0]
-                                    var numberPattern = /\d+/g;
-                                    var cell_from_number = cell_from.match(numberPattern)[0]
-                                    var cell_to_number = cell_to.match(numberPattern)[0]
-                                    var cell_range_letter = ['A', 'B']
+                                if (typeof(sheet_name_list) != 'undefined') {
+                                    sheet_data = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {header:2});
+                                    showTable(sheet_data);
+                                }
+                            }
 
-                                    var arr_data = [];
-
-                                    for (var i = 2; i <= cell_to_number; i++) {
-                                        var arr_row = [];
-                                        for (var j = 0; j < cell_range_letter.length; j++) {
-                                            var index = `${cell_range_letter[j]}${i}`
-                                            arr_row.push(excel[index].v)
-                                        }
-                                        arr_data.push(arr_row)
-                                    }
-
-                                    showTable(arr_data);
-                                })
+                            reader.onerror = function(ex) {
+                                console.log(ex);
+                            };
+                            if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
+                                reader.readAsArrayBuffer($("#file-penghasilan")[0].files[0]);
+                            }
+                            else {
+                                reader.readAsBinaryString($("#file-penghasilan")[0].files[0]);
+                            }
+                        } else {
+                            console.log('tidak support');
                         }
-                        if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
-                            reader.readAsArrayBuffer($("#file-penghasilan")[0].files[0]);
-                        }
-                        else {
-                            reader.readAsBinaryString($("#file-penghasilan")[0].files[0]);
-                        }
+                    } else {
+                        alert("Unggah file Excel yang valid!");
+                        $('#table_item tbody').empty();
+                        $('#hasil-filter').addClass('d-none');
+                        $('#btn-simpan').addClass('d-none');
                     }
-                    else {
-                        alert("Maaf! Browser Anda tidak mendukung HTML5!");
-                    }
-                }
-                else {
-                    alert("Unggah file Excel yang valid!");
-                }
             }
 
-            function showTable(arr_data) {
-
-                $('#span_total_data').html(`
-                    <span id="total-data" class="font-weight-bold">Total Data : ${arr_data.length}</span>
-                `)
-
+            function showTable(sheet_data) {
                 var no = 0;
                 var grandTotalNominal = 0;
                 var id_tunjangan = $('#penghasilan').val()
@@ -443,16 +352,22 @@
                 var dataNip = [];
                 var dataNominal = [];
                 var nipDataRequest = [];
+
                 var checkNip = [];
                 var checkNipTunjangan = [];
+                var namaTunjangan = [];
+
                 var hasError = false;
                 var hasNip = false;
                 var hasTunjangan = false;
                 var hasSuccess = false;
 
-                var invalidNamaRows = [];
-                $.each(arr_data,function(key, value) {
-                    dataNip.push({ nip: value[0], row: key + 1 });
+                $.each(sheet_data,function(key, value) {
+                    if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
+
+                        dataNip.push({ nip: value['NIP'], row: key + 1 });
+                        dataNominal.push(value['Nominal'])
+                    }
                 })
 
                 $.ajax({
@@ -472,9 +387,9 @@
                         `);
                     },
                     success: function(res){
-                        console.log(res);
-                            var new_body_tr = ``
-                            $.each(res,function(key,value) {
+                        var new_body_tr = ``
+                        $.each(res,function(key,value) {
+                                nipDataRequest.push(value.nip);
                                 no++;
                                 if (value.cek_nip == false) {
                                     checkNip.push(value.nip);
@@ -482,31 +397,27 @@
                                     hasNip = true;
                                 } else if (value.cek_tunjangan == true) {
                                     checkNipTunjangan.push(value.nip);
+                                    namaTunjangan.push(value.tunjangan.nama_tunjangan);
                                     hasError = true;
                                     hasTunjangan = true;
                                 } else {
                                     hasError = false;
                                     hasTunjangan = false;
                                 }
-                                grandTotalNominal += arr_data[key][1]
+                                grandTotalNominal += parseInt(dataNominal[key])
                                 new_body_tr += `
                                     <tr>
                                         <td>
-                                            <input type="hidden" name="number[]" class="form-control" value="${no}">
-                                            <input type="hidden" name="penghasilan[]" class="form-control" value="${id_tunjangan}">
                                             ${no}
                                         </td>
                                         <td>
                                             ${value.nip}
-                                            <input type="hidden" name="nip[]" class="typeahead form-control nip-input" value="${value.nip}" readonly>
                                         </td>
                                         <td>
                                             ${value.nama_karyawan}
-                                            <input type="hidden" name="nama[]" class="form-control nama-input" value="${value.nama_karyawan}" readonly>
                                         </td>
                                         <td>
-                                            ${formatRupiah(arr_data[key][1].toString())}
-                                            <input type="hidden" name="nominal[]" class="form-control nominal-input" value="${arr_data[key][1]}" readonly>
+                                            ${formatRupiah(dataNominal[key].toString())}
                                         </td>
                                     </tr>
                                 `;
@@ -515,10 +426,10 @@
                             if (hasError == true) {
                                 var message = ``;
                                 if (hasNip == true) {
-                                    message += `NIP :${checkNip} tidak di temukan.`
+                                    message += `NIP : ${checkNip} tidak di temukan.`
                                 }
                                 if (hasTunjangan == true) {
-                                    message += `NIP :${checkNipTunjangan} sudah terdaftar di tunjangan.`
+                                    message += `NIP : ${checkNipTunjangan} sudah terdaftar di tunjangan ${namaTunjangan[0]}.`
                                 }
                                 Swal.fire({
                                     icon: 'error',
@@ -533,9 +444,16 @@
                                     icon: 'success',
                                     text: 'Data valid.'
                                 });
+                                $('.nominal-input').val(dataNominal)
+                                $('.nip-input').val(nipDataRequest);
+                                $('.tunjangan-input').val(id_tunjangan);
+
                                 $('#table_item tbody').append(new_body_tr);
                                 $('#btn-simpan').removeClass('d-none');
                                 $('#hasil-filter').removeClass('d-none');
+                                $('#span_total_data').html(`
+                                    <span id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</span>
+                                `)
                                 $('#span_total_nominal').html(`
                                     <span id="grand-total" class="font-weight-bold">Grand Total : ${
                                         new Intl.NumberFormat("id-ID", {
