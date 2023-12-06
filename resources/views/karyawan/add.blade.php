@@ -5,7 +5,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Tambah Data Karyawan</h5>
+            <h5 class="card-title font-weight-bold">Tambah Data Karyawan</h5>
             <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="{{ route('karyawan.index') }}">Karyawan</a> > Tambah</p>
         </div>
     </div>
@@ -367,7 +367,7 @@
             </div>
 
             <div class="row m-3">
-                <button type="submit" id="submit" class="btn btn-info">Simpan</button>
+                <button type="submit" id="submit" class="is-btn is-primary-light">Simpan</button>
             </div>
         </form>
     </div>

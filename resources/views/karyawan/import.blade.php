@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Import Data Karyawan</h5>
+            <h5 class="card-title font-weight-bold">Import Data Karyawan</h5>
             <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="/karyawan">Karyawan</a> > Import</p>
         </div>
     </div>
@@ -28,7 +28,7 @@
                             </div>  
                         </div>
                         <div class="container ml-3">
-                            <button class="btn btn-info">Import</button>
+                            <button class="is-btn is-primary-light">Import</button>
                         </div>
                     </div>
                 </form>

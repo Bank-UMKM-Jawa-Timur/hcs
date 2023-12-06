@@ -121,6 +121,7 @@ Coded by www.creative-tim.com
     <script src="{{ asset('style/assets/js/ReorderWithResize.js') }}"></script>
     <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('vendor/apexchart/apexcharts.js') }}"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script>
         // $(document).ready(function() {
         //     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js

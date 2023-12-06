@@ -417,7 +417,7 @@
             </div>
 
             <div class="row m-3">
-                <button type="submit" class="btn btn-info">Update</button>
+                <button type="submit" class="is-btn is-primary-light">Update</button>
             </div>
         </form>
     </div>

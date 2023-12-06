@@ -567,7 +567,7 @@ fieldset[disabled] .navbar .navbar-nav > a.btn.active {
 }
 
 .btn-primary {
-    background-color: #51cbce;
+    background-color: #da271f;
     color: #ffffff;
     border-radius: 15px;
 }
@@ -616,13 +616,13 @@ fieldset[disabled] .btn-primary:focus,
 fieldset[disabled] .btn-primary.focus,
 fieldset[disabled] .btn-primary:active,
 fieldset[disabled] .btn-primary.active {
-    background-color: #51cbce;
-    border-color: #51cbce;
+    background-color: #da271f;
+    border-color: #da271f;
 }
 
 .btn-primary.btn-simple {
-    color: #51cbce;
-    border-color: #51cbce;
+    color: #da271f;
+    border-color: #da271f;
 }
 
 .btn-primary.btn-simple:hover,
@@ -635,7 +635,7 @@ fieldset[disabled] .btn-primary.active {
 }
 
 .btn-primary.btn-link {
-    color: #51cbce;
+    color: #da271f;
 }
 
 .btn-primary.btn-link:hover,
@@ -1036,8 +1036,8 @@ fieldset[disabled] .btn-outline-default.active {
 
 .btn-outline-primary {
     background: transparent;
-    border: 2px solid #51cbce !important;
-    color: #51cbce;
+    border: 2px solid #da271f !important;
+    color: #da271f;
     opacity: 1;
     filter: alpha(opacity=100);
 }
@@ -1048,9 +1048,9 @@ fieldset[disabled] .btn-outline-default.active {
 .btn-outline-primary:focus:active,
 .btn-outline-primary.active,
 .open > .btn-outline-primary.dropdown-toggle {
-    background-color: #51cbce !important;
+    background-color: #da271f !important;
     color: rgba(255, 255, 255, 0.8) !important;
-    border-color: #51cbce !important;
+    border-color: #da271f !important;
 }
 
 .btn-outline-primary:hover .caret,
@@ -1091,7 +1091,7 @@ fieldset[disabled] .btn-outline-primary.focus,
 fieldset[disabled] .btn-outline-primary:active,
 fieldset[disabled] .btn-outline-primary.active {
     background-color: transparent !important;
-    border-color: #51cbce !important;
+    border-color: #da271f !important;
 }
 
 .btn-outline-success {
@@ -1402,7 +1402,7 @@ fieldset[disabled] .btn-outline-neutral.active {
 
 .btn-neutral {
     background-color: #ffffff;
-    color: #51cbce;
+    color: #da271f;
     color: #66615b;
 }
 
@@ -2332,12 +2332,12 @@ h6 {
 }
 
 a {
-    color: #51cbce;
+    color: #da271f;
 }
 
 a:hover,
 a:focus {
-    color: #51cbce;
+    color: #da271f;
 }
 
 h1,
@@ -2440,7 +2440,7 @@ p.description {
 .text-primary,
 a.text-primary:focus,
 a.text-primary:hover {
-    color: #51cbce !important;
+    color: #da271f !important;
 }
 
 .text-info,
@@ -2488,12 +2488,12 @@ a.text-gray:hover {
 }
 
 .blockquote.blockquote-primary {
-    border-color: #51cbce;
-    color: #51cbce;
+    border-color: #da271f;
+    color: #da271f;
 }
 
 .blockquote.blockquote-primary small {
-    color: #51cbce;
+    color: #da271f;
 }
 
 .blockquote.blockquote-danger {
@@ -2658,8 +2658,8 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
 }
 
 .badge.badge-primary {
-    border-color: #51cbce;
-    background-color: #51cbce;
+    border-color: #da271f;
+    background-color: #da271f;
 }
 
 .badge.badge-info {
@@ -3126,7 +3126,7 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
 }
 
 .bg-primary {
-    background-color: #51cbce !important;
+    background-color: #da271f !important;
 }
 
 .bg-info {
@@ -4998,7 +4998,7 @@ License - nucleoapp.com/license/
     > ul
     > li.active
     > a {
-    color: #51cbce;
+    color: #da271f;
     opacity: 1;
 }
 
@@ -5521,7 +5521,7 @@ License - nucleoapp.com/license/
 }
 
 .fixed-plugin .badge-orange {
-    background-color: #51cbce;
+    background-color: #da271f;
 }
 
 .fixed-plugin .badge-yellow {
@@ -5783,11 +5783,11 @@ License - nucleoapp.com/license/
 }
 
 .card[data-background-color="orange"] {
-    background-color: #51cbce;
+    background-color: #da271f;
 }
 
 .card[data-background-color="orange"] .card-header {
-    background-color: #51cbce;
+    background-color: #da271f;
 }
 
 .card[data-background-color="orange"] .card-footer .stats {

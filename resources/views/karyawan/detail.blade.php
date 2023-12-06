@@ -2,7 +2,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Detail Data Karyawan</h5>
+            <h5 class="card-title font-weight-bold">Detail Data Karyawan</h5>
             <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="{{ route('karyawan.index') }}">Karyawan</a> > Detail</p>
         </div>
     </div>
@@ -527,7 +527,7 @@
 
             <div class="row m-3">
                 <a href="/karyawan">
-                    <button type="button" class="btn btn-info">Kembali</button>
+                    <button type="button" class="is-btn is-primary-light">Kembali</button>
                 </a>
             </div>
         </form>

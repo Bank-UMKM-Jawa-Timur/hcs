@@ -18,7 +18,7 @@
             <form action="{{ route('history_jabatan.store') }}" method="post">
                 @csrf
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class  ="col-lg-6">
                         <div class="form-group">
                             <label for="">Karyawan:</label>
                             <select name="nip" id="nip" class="form-control"></select>

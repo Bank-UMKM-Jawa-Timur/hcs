@@ -3,21 +3,28 @@
 }
 
 .page-item.active .page-link {
-    background-color: #51cbce !important;
-    border: 1px solid #51cbce !important;
+    background-color: #da271f !important;
+    border: 1px solid #da271f !important;
     color: white !important;
 }
 .page-item .page-link {
-    color: #51cbce !important;
+    color: #da271f !important;
 }
 .tim-white-buttons {
     background-color: #777777;
 }
 
+.dataTables_wrapper .dataTables_paginate a.paginate_button.current {
+    color: #fff !important;
+}
+
 .text-is-dark {
     color: #333;
 }
-
+.sub-menu {
+    width: 100%;
+    background-color: #f2f2f2;
+}
 .reduce-line-height {
     display: flex;
     gap: 4px;
@@ -38,7 +45,14 @@
     color: #da241c;
     font-family: "Plus Jakarta Sans", sans-serif;
 }
-
+.sidebar .nav .icon {
+    font-size: 22px;
+    margin-top: 4px;
+}
+.sidebar .nav span {
+    margin-left: 1rem;
+    margin-top: 1px;
+}
 .is-btn {
     padding: 10px 20px;
     text-transform: capitalize;
@@ -50,24 +64,24 @@
     border-radius: 4px !important;
 }
 .is-primary {
-    background-color: #51cbce;
+    background-color: #da271f;
     color: #fff;
     border-radius: 4px;
 }
 .dataTables_wrapper a.paginate_button.current {
-    background-color: #51cbce !important;
+    background-color: #da271f !important;
     border: none !important;
     color: #fff !important;
 }
 .is-primary-light {
     background-color: white;
-    color: #51cbce;
+    color: #da271f;
     font-family: "Plus Jakarta Sans", sans-serif;
     border-radius: 4px;
-    border: 1px solid #51cbce;
+    border: 1px solid #da271f;
 }
 .is-primary-light:hover {
-    background-color: #51cbce;
+    background-color: #da271f;
     color: #fff;
 }
 .is-table-responsive {

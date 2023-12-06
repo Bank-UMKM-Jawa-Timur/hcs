@@ -17,8 +17,10 @@
                 <li class="@active('home')">
                     <a class="nav-link" href="{{ route('home') }}" 
                         style="font-weight: bolder">
-                        <i class="nc-icon nc-bank"></i>
-                        Dashboard
+                        <div class="d-flex">
+                            <iconify-icon icon="akar-icons:dashboard" class="icon"></iconify-icon>
+                            <span> Dashboard</span>
+                        </div>
                     </a>
                 </li>
                 {{-- Menu Manajemen Karyawan --}}
@@ -51,7 +53,7 @@
                         <i class="nc-icon nc-tile-56" style="font-weight: bolder"></i>
                         Manajemen Karyawan
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is(
+                    <ul class="sub-menu list-unstyled ml-3 collapse {{ request()->is(
                         'karyawan',
                         'karyawan/*',
                         'reminder_pensiun',
@@ -151,7 +153,7 @@
                         <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
                         Penghasilan
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
+                    <ul class="sub-menu list-unstyled flex-column collapse ml-3 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
                         id="submenu2">
                         <li style="" class="@active('pajak_penghasilan')">
                             <a href="{{ route('pajak_penghasilan.index') }}">
@@ -176,7 +178,7 @@
                         <i class="nc-icon nc-compass-05" style="font-weight: bolder"></i>
                         Histori
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('history', 'show')"
+                    <ul class="sub-menu list-unstyled flex-column collapse ml-3 @active('history', 'show')"
                         id="submenu3">
                         <li style="" class="@active('history_jabatan')">
                             <a href="{{ route('history_jabatan.index') }}">
@@ -209,7 +211,7 @@
                         <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
                         Laporan
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('laporan,index_dpp', 'show')"
+                    <ul class="sub-menu list-unstyled flex-column collapse ml-3 @active('laporan,index_dpp', 'show')"
                         id="submenu4">
                         <li class="dropdown {{ request()->is(
                             'laporan-pergerakan-karir/laporan-mutasi',
@@ -260,7 +262,7 @@
                         <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
                         Gaji
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2  @active('gaji.*, slipIndex.*, gaji_perbulan.*', 'show')"
+                    <ul class="sub-menu list-unstyled flex-column collapse ml-3  @active('gaji.*, slipIndex.*, gaji_perbulan.*', 'show')"
                         id="submenu5">
                         <li style="" class="@active('gaji_perbulan.*')">
                             <a href="{{ route('gaji_perbulan.index') }}">
@@ -293,7 +295,7 @@
                         <i class="nc-icon nc-cloud-upload-94" style="font-weight: bolder"></i>
                         Migrasi
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('migrasi')"
+                    <ul class="sub-menu list-unstyled flex-column collapse ml-3 @active('migrasi')"
                         id="submenu8">
                         <li style="" class="@active('migrasiJabatan')">
                             <a href="{{ route('migrasiJabatan') }}">
@@ -325,7 +327,7 @@
                         <i class="nc-icon nc-tap-01" style="font-weight: bolder"></i>
                         Log
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6"
+                    <ul class="sub-menu list-unstyled flex-column collapse ml-3" id="submenu6"
                         aria-expanded="false">
                         <li style="">
                             <a href="#">
@@ -343,7 +345,7 @@
                         <i class="nc-icon nc-settings" style="font-weight: bolder"></i>
                         Setting
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2
+                    <ul class="sub-menu list-unstyled flex-column collapse ml-3
                     {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show') --}}
                     "
                         id="submenu7">
