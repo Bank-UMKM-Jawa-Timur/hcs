@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\PotonganController;
 use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
@@ -139,6 +140,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
     Route::resource('/pajak_penghasilan', PenghasilanTidakTeraturController::class);
+    Route::resource('/potongan', PotonganController::class);
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::resource('/backup', BackupController::class);
     Route::resource('/history_jabatan', HistoryJabatanController::class);

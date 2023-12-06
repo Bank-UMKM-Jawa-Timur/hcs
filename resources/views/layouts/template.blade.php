@@ -242,6 +242,13 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
+                                <li style="" class="@active('potongan')">
+                                    <a href="{{ route('potongan.index') }}">
+                                        <i class="nc-icon nc-ruler-pencil"></i>
+                                        <p>Import Potongan</p>
+                                        <p></p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         {{-- Menu Histori --}}
