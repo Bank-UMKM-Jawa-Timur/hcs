@@ -372,7 +372,7 @@ class PenghasilanTidakTeraturController extends Controller
         $search = $request->get('q');
 
         $penghasilanRepo = new PenghasilanTidakTeraturRepository();
-        $data = $penghasilanRepo->getAllPenghasilan($search, $limit, $page);
+        $data = $penghasilanRepo->getPenghasilan($search, $limit, $page);
         return view('penghasilan.index-list', compact('data'));
     }
 
@@ -441,9 +441,25 @@ class PenghasilanTidakTeraturController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        try{
+            $idTunjangan = $request->get('idTunjangan');
+            $tanggal = $request->get('tanggal');
+            $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+            $page = $request->has('page') ? $request->get('page') : 1;
+            $search = $request->get('q');
+
+            $repo = new PenghasilanTidakTeraturRepository();
+            $data = $repo->getAllPenghasilan($search, $limit, $page, $tanggal, $idTunjangan);
+            return view('penghasilan.detail', compact('data'));
+        } catch(Exception $e){
+            Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());
+            return back();
+        } catch(QueryException $e){
+            Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());
+            return back();
+        }
     }
 
     /**

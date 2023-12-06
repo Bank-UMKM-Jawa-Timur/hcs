@@ -6,6 +6,9 @@
         .hidden{
             display: none;
         }
+        .custom-file-label::after{
+            padding: 10px 4px 30px 4px;
+        }
     </style>
 @endpush
 @push('script')
@@ -341,7 +344,7 @@
                             <label for="">Data Excel</label>
                             <div class="custom-file">
                                 <input type="file" name="upload_excel" class="custom-file-input" id="upload_csv" accept=".xlsx, .xls">
-                                <label class="custom-file-label overflow-hidden" for="file-penghasilan" id="file-label">Choose Excel file...</label>
+                                <label class="custom-file-label overflow-hidden" for="validatedCustomFile" id="file-label" style="padding: 10px 4px 30px 5px">Choose file...</label>
                             </div>
                         </div>
                         <div class="col align-items-center mt-2">

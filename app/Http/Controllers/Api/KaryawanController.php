@@ -29,6 +29,7 @@ class KaryawanController extends Controller
 
     function getKaryawan(Request $request)
     {
+        ini_set('max_input_vars','2000');
         try {
             $nip = $request->get('nip');
             $data = KaryawanModel::select('nama_karyawan', 'nip')

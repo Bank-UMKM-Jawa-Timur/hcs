@@ -158,6 +158,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
 
+    Route::prefix('penghasilan-tidak-teratur')
+        ->name('penghasilan-tidak-teratur.')
+        ->controller(PenghasilanTidakTeraturController::class)
+        ->group(function(){
+            Route::get('/', 'lists')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/detail', 'show')->name('detail');
+        });
+
     // Penonaktifan Karyawan
     Route::prefix('penonaktifan')
         ->name('penonaktifan.')

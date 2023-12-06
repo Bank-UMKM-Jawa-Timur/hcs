@@ -235,8 +235,8 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                <li class="dropdown @active('pajak_penghasilan.create')" style="margin-top: -15px">
-                                    <a href="{{ route('pajak_penghasilan.create') }}">
+                                <li class="dropdown @active('penghasilan-tidak-teratur')" style="margin-top: -15px">
+                                    <a href="{{ route('penghasilan-tidak-teratur.index') }}">
                                         <i class="nc-icon nc-money-coins"></i>
                                         <p>Import Penghasilan Tidak Teratur</p>
                                         <p></p>
