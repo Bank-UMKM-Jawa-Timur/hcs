@@ -1,4 +1,6 @@
 @extends('layouts.template')
+@include('vendor.select2')
+@include('payroll.scripts.slip')
 @push('style')
     <style>
         table th {
@@ -10,7 +12,7 @@
 @section('content')
     <div class="card-header">
         <h5 class="card-title">Payroll</h5>
-        <p class="card-title"><a href="{{route('payroll.index')}}">Payroll</a></p>
+        <p class="card-title">Payroll > <a href="{{route('payroll.slip')}}">Slip Gaji</a></p>
     </div>
 
     <div class="card-body">
@@ -35,33 +37,66 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="">Kategori Gaji Pegawai<span class="text-danger">*</span></label>
-                                    <select name="kategori" id="kategori"
-                                        class="form-control">
-                                        <option value="0">-- Pilih kategori --</option>
-                                        <option value="rincian" @if(\Request::get('kategori') == 'rincian') selected @endif
-                                            {{old('kategori') == 'rincian' ? 'selected' : ''}}>Rincian</option>
-                                        <option value="payroll" @if(\Request::get('kategori') == 'payroll') selected @endif
-                                            {{old('kategori') == 'payroll' ? 'selected' : ''}}>Payroll</option>
-                                    </select>
-                                    @error('kategori')
-                                        <small class="text-danger">{{ucfirst($message)}}</small>
-                                    @enderror
-                                </div>
-                            </div>
                             <div class="col cabang-input @if(\Request::get('kantor') == 'pusat' || \Request::get('kantor') == '0')d-none @endif">
                                 <div class="form-group">
                                     <label for="">Cabang<span class="text-danger">*</span></label>
                                     <select name="cabang" id="cabang"
                                         class="form-control select2">
-                                        <option value="0">-- Pilih cabang --</option>
+                                        <option value="0">-- Semua Cabang --</option>
                                         @foreach ($cabang as $item)
                                             <option value="{{$item->kd_cabang}}" @if(\Request::get('cabang') == $item->kd_cabang) selected @endif>{{$item->nama_cabang}}</option>
                                         @endforeach
                                     </select>
                                     @error('cabang')
+                                        <small class="text-danger">{{ucfirst($message)}}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col divisi-input @if(\Request::get('kantor') != 'pusat')d-none @endif">
+                                <div class="form-group">
+                                    <label for="">Divisi<span class="text-danger">*</span></label>
+                                    <select name="divisi" id="divisi"
+                                        class="form-control select2">
+                                    </select>
+                                    @error('divisi')
+                                        <small class="text-danger">{{ucfirst($message)}}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col sub-divisi-input @if(\Request::get('kantor') != 'pusat')d-none @endif">
+                                <div class="form-group">
+                                    <label for="">Sub Divisi<span class="text-danger">*</span></label>
+                                    <select name="sub_divisi" id="sub_divisi"
+                                        class="form-control select2">
+                                        <option value="0">-- Semua Sub Divisi --</option>
+                                    </select>
+                                    @error('sub_divisi')
+                                        <small class="text-danger">{{ucfirst($message)}}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="">Bagian<span class="text-danger">*</span></label>
+                                    <select name="bagian" id="bagian"
+                                        class="form-control select2">
+                                        <option value="0">-- Semua Bagian --</option>
+                                    </select>
+                                    @error('bagian')
+                                        <small class="text-danger">{{ucfirst($message)}}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="">Karyawan<span class="text-danger">*</span></label>
+                                    <select name="nip" id="nip"
+                                        class="form-control select2">
+                                        <option value="0">-- Pilih Semua Karyawan --</option>
+                                    </select>
+                                    @error('nip')
                                         <small class="text-danger">{{ucfirst($message)}}</small>
                                     @enderror
                                 </div>
@@ -112,7 +147,7 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">
-                            @if (\Request::has('kantor') && count($data) > 0)
+                            @if (\Request::has('kantor') && !empty($data))
                                 <div class="mr-2">
                                     <a href="{{ route('payroll.pdf') }}" target="_blank"  class="btn btn-warning">Cetak PDF</a>
                                 </div>
@@ -155,25 +190,17 @@
                                 $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
                                 $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
                             @endphp
-                            @if (\Request::get('kategori') == 'payroll')
-                                <div class="table-responsive">
-                                    @include('payroll.tables.payroll', ['data' => $data])
-                                </div>
-                            @elseif (\Request::get('kategori') == 'rincian')
-                                <div class="table-responsive">
-                                    @include('payroll.tables.rincian', ['data' => $data])
-                                </div>
-                            @else
-                                <span class="text-warning">Harap pilih kategori yang benar!</span>
-                            @endif
+                            <div class="table-responsive">
+                                @include('payroll.tables.slip', ['data' => $data])
+                            </div>
                             <div class="d-flex justify-content-between">
                                 <div>
                                     Showing {{$start}} to {{$end}} of {{$data->total()}} entries
                                 </div>
                                 <div>
-                                    @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                    {{--  @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
                                     {{ $data->links('pagination::bootstrap-4') }}
-                                    @endif
+                                    @endif  --}}
                                 </div>
                             </div>
                         @endif
@@ -182,185 +209,4 @@
             </div>
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Slip Gaji</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                <div class="d-flex justify-content-end">
-                    <div>
-                        <button type="button" class="btn btn-primary">Cetak Gaji</button>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-start">
-                    <div>
-                        <img src="{{ asset('style/assets/img/logo.png') }}" width="100px" class="img-fluid">
-                        <p class="pt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                    </div>
-                </div>
-                <hr>
-                <div>
-                    <div class="row">
-                        <div class="col-lg-12 mt-3">
-                            <table class="table table-borderless">
-                                <tr>
-                                    <td class="fw-bold">NIP</td>
-                                    <td>:</td>
-                                    <td id="nip"></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold">Nama Karyawan</td>
-                                    <td>:</td>
-                                    <td id="nama"></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold">No Rekening</td>
-                                    <td>:</td>
-                                    <td id="no_rekening"></td>
-                                </tr>
-                            </table>
-                            <hr>
-                        </div>
-                        <div class="col-lg-12 m-0">
-                            <table class="table table-borderless m-0" style="border:1px solid #e3e3e3" id="table-tunjangan">
-                                <thead>
-                                    <th>Nama</th>
-                                    <th class="text-right">Nominal</th>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                            <table class="table table-borderless" id="table-tunjangan-total">
-                                <thead></thead>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- <div class="modal-footer">
-
-            </div> --}}
-        </div>
-        </div>
-    </div>
 @endsection
-
-@push('script')
-    <script>
-        var selected_kantor = $('#kantor').val()
-        if (selected_kantor == '0' || selected_kantor == 'pusat') {
-            // Hide cabang
-            $('.cabang-input').addClass('d-none')
-        }
-        else {
-            // Show cabang
-            $('.cabang-input').removeClass('d-none')
-        }
-
-        const formatRupiahPayroll = (angka) => {
-            let reverse = angka.toString().split('').reverse().join('');
-            let ribuan = reverse.match(/\d{1,3}/g);
-            ribuan = ribuan.join('.').split('').reverse().join('');
-            return `${ribuan}`;
-        }
-
-        $('.show-data').on('click',function(e) {
-            const targetId = $(this).data("target-id");
-            const data = $(this).data('json');
-            $('#table-tunjangan-tidak > tbody').empty();
-            $('#table-tunjangan-total-tidak thead').empty();
-
-            $('#table-tunjangan > tbody').empty();
-            $('#table-tunjangan-total thead ').empty();
-
-            $('#nip').html(`${data.nip}`)
-            $('#nama').html(`${data.nama_karyawan}`)
-            $('#no_rekening').html(`${data.no_rekening != null ? data.no_rekening : '-'}`)
-
-            var nominal = 0;
-            var tableTunjangan = `
-                    <tr style="border:1px solid #e3e3e3">
-                        <td>Gaji Pokok</td>
-                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gaji['total_gaji'])}</td>
-                    </tr>
-            `;
-            // START TUNJANGAN TERATUR
-            $.each(data.tunjangan, function( key, value ) {
-                nominal += value.pivot.nominal ;
-                tableTunjangan += `
-                    <tr style="border:1px solid #e3e3e3">
-                        <td class="text-left fw-bold">${value.nama_tunjangan}</td>
-                        <td class="text-right">${formatRupiahPayroll(value.pivot.nominal)}</td>
-                    </tr>
-                `
-            });
-            $("#table-tunjangan tbody").append(tableTunjangan);
-
-            var tableTotalTunjanganTeratur = `
-                <tr>
-                    <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
-                    <th class="text-right ">${formatRupiahPayroll(nominal + data.gaji['total_gaji'])}</th>
-                </tr>
-            `
-            $("#table-tunjangan-total thead").append(tableTotalTunjanganTeratur);
-            // END TUNJANGAN TERATUR
-        })
-        function showModal(identifier) {
-        }
-
-        $('#kantor').on('change', function() {
-            const selected = $(this).val()
-
-            if (selected == 'cabang') {
-                $('.cabang-input').removeClass('d-none')
-            }
-            else {
-                $('.cabang-input').addClass('d-none')
-            }
-        })
-
-        $('#page_length').on('change', function() {
-            $('#form').submit()
-        })
-
-        $('#form').on('submit', function() {
-            $('.loader-wrapper').css('display: none;')
-            $('.loader-wrapper').addClass('d-block')
-            $(".loader-wrapper").fadeOut("slow");
-        })
-
-        // Adjust pagination url
-        var btn_pagination = $(`.pagination`).find('a')
-        var page_url = window.location.href
-        $(`.pagination`).find('a').each(function(i, obj) {
-            if (page_url.includes('kantor')) {
-                btn_pagination[i].href += `&kantor=${$('#kantor').val()}`
-            }
-            if (page_url.includes('kategori')) {
-                btn_pagination[i].href += `&kategori=${$('#kategori').val()}`
-            }
-            if (page_url.includes('cabang')) {
-                btn_pagination[i].href += `&cabang=${$('#cabang').val()}`
-            }
-            if (page_url.includes('bulan')) {
-                btn_pagination[i].href += `&bulan=${$('#bulan').val()}`
-            }
-            if (page_url.includes('tahun')) {
-                btn_pagination[i].href += `&tahun=${$('#tahun').val()}`
-            }
-            if (page_url.includes('page_length')) {
-                btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
-            }
-            if (page_url.includes('q')) {
-                btn_pagination[i].href += `&q=${$('#q').val()}`
-            }
-        })
-    </script>
-@endpush

@@ -46,12 +46,12 @@ class PayrollController extends Controller
 
         $this->param = null;
 
-        $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, $limit,null);
+        $data = $this->list($kantor, $month, $year, $search, $page, $limit,null);
 
         return view('payroll.index', compact('data', 'cabang'));
     }
 
-    public function listSlipGaji($kantor, $month, $year, $q, $page, $limit, $cetak) {
+    public function list($kantor, $month, $year, $q, $page, $limit, $cetak) {
         $payrollRepository = new PayrollRepository;
         $data = $payrollRepository->get($kantor, $month, $year, $q, $page, $limit,$cetak);
 
@@ -77,7 +77,38 @@ class PayrollController extends Controller
         }
 
     }
+
     public function cetakSlip(){
         return view('payroll.print.slip');
+    }
+
+    public function slip(Request $request) {
+        $this->validate($request, [
+            'kantor' => 'not_in:0',
+            'bulan' => 'not_in:0',
+            'tahun' => 'not_in:0'
+        ]);
+
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->get('q');
+        $kantor = $request->get('kantor') == 'pusat' ? 'pusat' : $request->get('cabang');
+        $month = $request->get('bulan');
+        $year = $request->get('tahun');
+
+        // Retrieve cabang data
+        $cabangRepo = new CabangRepository;
+        $cabang = $cabangRepo->listCabang();
+
+        $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, $limit,null);
+// return $data;
+        return view('payroll.slip', compact('data', 'cabang'));
+    }
+
+    public function listSlipGaji($kantor, $month, $year, $q, $page, $limit, $cetak) {
+        $payrollRepository = new PayrollRepository;
+        $data = $payrollRepository->getSlip($kantor, $month, $year, $q, $page, $limit,$cetak);
+
+        return $data;
     }
 }

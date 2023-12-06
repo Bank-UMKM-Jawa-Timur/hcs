@@ -29,7 +29,7 @@ class KaryawanController extends Controller
             ->orderBy('nama_karyawan', 'ASC')
             ->simplePaginate();
 
-        return $this->response($karyawan);
+        return $this->response($karyawan, KaryawanResource::collection($karyawan));
     }
 
     public function karyawanPjs(Request $request)
@@ -50,18 +50,18 @@ class KaryawanController extends Controller
             ->orderBy('nama_karyawan', 'ASC')
             ->simplePaginate();
 
-        return $this->response($karyawan);
+        return $this->response($karyawan, KaryawanResource::collection($karyawan));
     }
 
-    private function response(Paginator $karyawan)
-    {
-        return [
-            'results' => KaryawanResource::collection($karyawan),
-            'pagination' => [
-                'more' => !empty($karyawan->nextPageUrl())
-            ]
-        ];
-    }
+    // private function response(Paginator $karyawan)
+    // {
+    //     return [
+    //         'results' => KaryawanResource::collection($karyawan),
+    //         'pagination' => [
+    //             'more' => !empty($karyawan->nextPageUrl())
+    //         ]
+    //     ];
+    // }
 
     function getDetail($nip)
     {

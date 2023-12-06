@@ -303,11 +303,28 @@ Coded by www.creative-tim.com
                                 </li>
 
                                 {{-- Menu Payroll --}}
-                                <li class="@active('payroll')">
-                                    <a href="{{ route('payroll.index') }}" style="font-weight: bolder">
+                                <li class="@active('payroll') {{ request()->is('payroll', 'payroll/*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
+                                        style="font-weight: bolder">
                                         <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
-                                        <p>Payroll</p>
+                                        <span class="dropdown-toggle">Payroll</span>
                                     </a>
+                                    <ul class="sub-menu {{ request()->is('payroll', 'payroll/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('payroll.slip', 'show')"
+                                        id="submenu5">
+                                        <li style="margin-top: -15px"
+                                            class="@active('payroll.index')">
+                                            <a href="{{ route('payroll.index') }}">
+                                                <i class="nc-icon nc-money-coins"></i>
+                                                <p>Payroll</p>
+                                            </a>
+                                        </li>
+                                        <li style="margin-top: -15px" class="@active('payroll.slip')">
+                                            <a href="{{ route('payroll.slip') }}">
+                                                <i class="nc-icon nc-money-coins"></i>
+                                                <p>Slip Gaji</p>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                                 {{-- Menu Gaji --}}
                                 @can('gaji')
