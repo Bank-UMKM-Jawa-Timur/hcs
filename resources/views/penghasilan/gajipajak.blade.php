@@ -251,6 +251,9 @@
                             @for ($i = 0; $i < 12; $i++)
                                 <tr>
                                     <td>{{ $bulan[$i] }}</td>
+                                    {{--  @if ($i == 7)
+                                        @dd($gj[$i], array_sum($gj[$i]),$jamsostek[$i], $jamsostek)
+                                    @endif  --}}
                                     <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] > 0) ? rupiah(array_sum($gj[$i]) + $jamsostek[$i]) : '-' }}</td>
                                     <td>{{ (array_sum($penghasilan[$i]) + array_sum($bonus[$i]) > 0) ? rupiah(array_sum($penghasilan[$i]) + array_sum($bonus[$i])) : '-' }}</td>
                                     @php
@@ -819,21 +822,18 @@
         var prtContent = document.getElementById("reportPrinting");
         var mywindow = window.open();
 
-        mywindow.document.write('<html><head><title></title>');
-        mywindow.document.write('<link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />');
-        mywindow.document.write('<link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />');
-        mywindow.document.write('<link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />');
-        mywindow.document.write('<style> .table-responsive {-ms-overflow-style: none; scrollbar-width: none; } .table-responsive::-webkit-scrollbar { overflow-y: hidden; overflow-x: scroll; } </style>');
-        mywindow.document.write('</head><body >');
+        mywindow.document.write(`<html><head><title></title>`);
+        mywindow.document.write(`<link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />`);
+        mywindow.document.write(`<link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />`);
+        mywindow.document.write(`<link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />`);
+        mywindow.document.write(`<style> .table-responsive {-ms-overflow-style: none; scrollbar-width: none; } .table-responsive::-webkit-scrollbar { overflow-y: hidden; overflow-x: scroll; } </style>`);
         mywindow.document.write(prtContent.innerHTML);
-        mywindow.document.write('</body></html>');
+        mywindow.document.write(`</body></html>`);
 
         setTimeout(function () {
-        mywindow.print();
-        mywindow.close();
+            mywindow.print();
+            //mywindow.close();
         }, 1000)
-        return true;
-
         return true;
     }
 </script>

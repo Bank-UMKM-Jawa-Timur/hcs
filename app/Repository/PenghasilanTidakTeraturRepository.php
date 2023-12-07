@@ -6,10 +6,103 @@ use App\Models\ImportPenghasilanTidakTeraturModel;
 use App\Models\KaryawanModel;
 use App\Models\SpModel;
 use Carbon\Carbon;
+use App\Models\TunjanganModel;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
 
 class PenghasilanTidakTeraturRepository
 {
+    public function getDataBonus($search, $limit=10, $page=1) {
+      $bonus = DB::table('penghasilan_tidak_teratur')
+                    ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
+                    ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
+                    ->select(
+                        'penghasilan_tidak_teratur.id',
+                        'penghasilan_tidak_teratur.id_tunjangan',
+                        'penghasilan_tidak_teratur.nip',
+                        'mst_karyawan.nama_karyawan',
+                        'mst_tunjangan.nama_tunjangan',
+                        'nominal',
+                        'bulan',
+                        'penghasilan_tidak_teratur.created_at',
+                        DB::raw('SUM(nominal) as jumlah_nominal'),
+                        DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
+                        DB::raw('COUNT(penghasilan_tidak_teratur.id) as total_data'),
+                        'tahun',
+                        'keterangan',
+                    )
+                    ->where('mst_tunjangan.kategori','bonus')
+                    ->where(function ($query) use ($search) {
+                        $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
+                            ->orWhere('nominal', 'like', "%$search%");
+                    })
+                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date')
+                    ->orderBy('mst_tunjangan.id', 'ASC')
+                    ->paginate($limit);
+
+        return $bonus;
+    }
+    public function getDetailBonus($search, $limit=10, $page=1, $id, $tgl) {
+        $format_tgl = Carbon::parse($tgl)->format('y-m-d');
+        $bonus = DB::table('penghasilan_tidak_teratur')
+                      ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
+                      ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
+                      ->select(
+                          'penghasilan_tidak_teratur.id',
+                          'penghasilan_tidak_teratur.id_tunjangan',
+                          'penghasilan_tidak_teratur.nip',
+                          'mst_karyawan.nama_karyawan',
+                          'mst_tunjangan.nama_tunjangan',
+                          'nominal',
+                          'keterangan',
+                          'penghasilan_tidak_teratur.created_at',
+                          DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
+                      )
+                    //   ->groupBy('new_date')
+                    ->where('mst_tunjangan.kategori','bonus')
+                    ->where(function ($query) use ($search) {
+                        $query->where('penghasilan_tidak_teratur.nip', 'like', "%$search%")
+                              ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%")
+                              ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
+                              ->orWhere('nominal', 'like', "%$search%")
+                              ->orWhere('keterangan', 'like', "%$search%");
+                            })
+                    ->orderBy('mst_tunjangan.id', 'ASC')
+                    ->where('penghasilan_tidak_teratur.id_tunjangan',$id)
+                    ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'),$format_tgl)
+                    // ->get()
+                    ->paginate($limit);
+
+          return $bonus;
+      }
+    public function dataFileExcel() {
+        $karyawan = KaryawanModel::select(
+                    'mst_karyawan.nip',
+                )
+                ->whereNull('tanggal_penonaktifan')
+                ->get();
+        return $karyawan;
+    }
+    public function getTHP($nip):int {
+        $karyawan = KaryawanModel::where('nip', $nip)
+          ->first();
+        $dateStart = Carbon::parse($karyawan->tgl_mulai);
+        $dateNow = Carbon::now();
+        $monthDiff = $dateNow->diffInMonths($dateStart);
+
+        if($monthDiff < 12) {
+          return $karyawan->gj_pokok * 2 / $monthDiff;
+        } else{
+          return $karyawan->gj_pokok * 2;
+        }
+    }
+
+    public function getTHRId(){
+        $tunjangan = TunjanganModel::where('nama_tunjangan', 'like', '%Tunjangan Hari Raya%')
+          ->first();
+        return $tunjangan->id;
+    }
+
     public function store(array $data)
     {
         return ImportPenghasilanTidakTeraturModel::create([
@@ -87,7 +180,7 @@ class PenghasilanTidakTeraturRepository
                                 ->orWhereRaw("MATCH(nama_bagian) AGAINST('$search')");
                         });
                     });
-    
+
                 if ($search == 'pusat') {
                     $query->orWhereRaw('mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang)');
                 }
@@ -103,15 +196,15 @@ class PenghasilanTidakTeraturRepository
                     'Penjabat Sementara' => 'Pjs. ',
                     default => '',
                 };
-                
+
                 if ($value->jabatan) {
                     $jabatan = $value->jabatan->nama_jabatan;
                 } else {
                     $jabatan = 'undifined';
                 }
-                
+
                 $ket = $value->ket_jabatan ? "({$value->ket_jabatan})" : '';
-                
+
                 if (isset($value->entitas->subDiv)) {
                     $entitas = $value->entitas->subDiv->nama_subdivisi;
                 } elseif (isset($value->entitas->div)) {
@@ -119,7 +212,7 @@ class PenghasilanTidakTeraturRepository
                 } else {
                     $entitas = '';
                 }
-                
+
                 if ($jabatan == 'Pemimpin Sub Divisi') {
                     $jabatan = 'PSD';
                 } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
@@ -129,7 +222,7 @@ class PenghasilanTidakTeraturRepository
                 } else {
                     $jabatan = $value->jabatan ? $value->jabatan->nama_jabatan : 'undifined';
                 }
-    
+
                 $display_jabatan = $prefix . ' ' . $jabatan . ' ' . $entitas . ' ' . $value?->bagian?->nama_bagian . ' ' . $ket;
                 $value->display_jabatan = $display_jabatan;
             }

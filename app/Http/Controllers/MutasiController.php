@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MutasiRequest;
 use App\Service\EntityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -27,7 +28,7 @@ class MutasiController extends Controller
             'success' => false,
             'message' => 'Data karyawan tidak ditemukan',
         ]);
-        
+
         if(isset($officer->kd_bagian)){
             if($officer->kd_entitas != null && !in_array($officer->kd_entitas, $cbg)){
                 $entity = DB::table('mst_bagian')
@@ -60,6 +61,9 @@ class MutasiController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data mutasi')) {
+            return view('roles.forbidden');
+        }
         $data = DB::table('demosi_promosi_pangkat')
             ->where('keterangan', 'Mutasi')
             ->select(
@@ -118,6 +122,9 @@ class MutasiController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data mutasi - create mutasi')) {
+            return view('roles.forbidden');
+        }
         $data = DB::table('mst_karyawan')
             ->select('nip', 'nama_karyawan', 'kd_jabatan')
             ->get();
@@ -145,7 +152,7 @@ class MutasiController extends Controller
                     $tj = DB::table('mst_tunjangan')
                         ->where('id', $request->tunjangan[$key])
                         ->first('nama_tunjangan');
-        
+
                     if($request->id_tk[$key] != 0){
                         DB::table('history_penyesuaian')
                             ->insert([
@@ -184,14 +191,14 @@ class MutasiController extends Controller
                 }
             }
         }
-        
+
         $filename = null;
         if($request->file_sk != null){
             $file = $request->file_sk;
             $folderPath = public_path() . '/upload/pergerakan_karir/';
             $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
             $path = realpath($folderPath);
-    
+
             if(!($path !== true AND is_dir($path))){
                 mkdir($folderPath, 0755, true);
             }

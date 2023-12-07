@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\BonusController;
 use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
 use App\Http\Controllers\HistoryJabatanController;
+use App\Http\Controllers\Import\PenghasilanTeraturController;
 use App\Http\Controllers\JaminanController;
 use App\Http\Controllers\UangDukaController;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +22,7 @@ use App\Http\Controllers\LemburController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\MstPenambahanBrutoController;
 use App\Http\Controllers\MstPenguranganBrutoController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenggantiBiayaKesehatanController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
@@ -29,7 +32,9 @@ use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\SPDController;
 use App\Http\Controllers\SuratPeringatanController;
+use App\Http\Controllers\THRController;
 use App\Http\Controllers\TunjanganKaryawanController;
+use App\Http\Controllers\RoleMasterController;
 use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
@@ -128,6 +133,7 @@ Route::get('/', function () {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('/kantor', KantorController::class);
+    Route::resource('role', RoleMasterController::class);
     Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);
     Route::resource('/sub_divisi', \App\Http\Controllers\SubdivisiController::class);
     Route::resource('/jabatan', \App\Http\Controllers\JabatanController::class);
@@ -143,6 +149,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
     Route::resource('/pajak_penghasilan', PenghasilanTidakTeraturController::class);
+
+    Route::prefix('penghasilan')->name('penghasilan.')->group(function() {
+        Route::resource('import-penghasilan-teratur', \App\Http\Controllers\Import\PenghasilanTeraturController::class);
+        Route::get('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
+        Route::get('/get-karyawan-search', [PenghasilanTeraturController::class, 'getKaryawanSearch'])->name('karyawan-search');
+    });
+
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::resource('/pengganti-biaya-kesehatan', PenggantiBiayaKesehatanController::class);
     Route::resource('/uang-duka', UangDukaController::class);
@@ -155,6 +168,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
     Route::resource('/lembur', LemburController::class);
     Route::resource('/spd', SPDController::class);
+    // Bonus Data
+    Route::get('bonus/excel',[BonusController::class,'fileExcel'])->name('bonus.excel');
+    Route::get('bonus/{id}/{tgl}',[BonusController::class,'detail'])->name('bonus.detail');
+    Route::resource('bonus', BonusController::class);
+    Route::resource('/thr', THRController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
 
@@ -303,6 +321,16 @@ Route::group(['middleware' => 'auth'], function () {
         return view('gaji_perbulan.import');
     });
     Route::post('post-import-pph', [GajiPerBulanController::class, 'importPPH'])->name('import-pph');
+
+    Route::prefix('payroll')
+        ->name('payroll.')
+        ->group(function() {
+            Route::get('/', [PayrollController::class, 'index'])->name('index');
+            Route::get('pdf', [PayrollController::class, 'cetak'])->name('pdf');
+            Route::get('/cetak-slip', [PayrollController::class, 'cetakSlip'])->name('cetak_slip');
+            Route::get('/slip', [PayrollController::class, 'slip'])->name('slip');
+            Route::get('/slip/pdf', [PayrollController::class, 'slipPDF'])->name('slip.pdf');
+        });
 });
 Auth::routes();
 
