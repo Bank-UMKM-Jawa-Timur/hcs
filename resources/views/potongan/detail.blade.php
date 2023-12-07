@@ -20,18 +20,14 @@
       <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Input dan Import Potongan</h5>
-            <p class="card-title"><a href="/">Dashboard</a> >Import Potongan</p>
+            <p class="card-title"><a href="/">Dashboard</a> > <a href="{{route('potongan.index')}}">Input dan Import Potongan</a> > Detail </p>
         </div>
 
         <div class="card-body">
             <div class="col">
+                <p> Bulan : <span style="font-weight: bold">{{$bulanNama[$bulan]}}</span></p>
+                <p> Tahun : <span style="font-weight: bold">{{$tahun}}</span></p>
                 <div class="row">
-                    <a class="mb-3" href="{{ route('potongan.create') }}">
-                      <button class="btn btn-primary">Tampah Potongan</button>
-                    </a>
-                    <a class="ml-3" href="{{ route('import-potongan') }}">
-                      <button class="btn btn-primary">Import Potongan</button>
-                    </a>
                     <div class="table-responsive overflow-hidden content-center">
                       <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -64,10 +60,10 @@
                           <thead class="text-primary">
                             <th>No</th>
                             <th>
-                                Bulan
+                                Nip
                             </th>
                             <th>
-                                Tahun
+                                Nama Karyawan
                             </th>
                             <th>
                               JP
@@ -87,9 +83,6 @@
                             <th>
                               Iuran IK
                             </th>
-                            <th>
-                                Aksi
-                            </th>
                           </thead>
                           @php
                               $num = 0;
@@ -106,25 +99,14 @@
                             @foreach ($data as $item)
                                 <tr>
                                   <td>{{ $i++ }}</td>
-                                  <td>{{ $bulanNama[$item->bulan] }}</td>
-                                  <td>{{ $item->tahun }}</td>
+                                  <td>{{ $item->nip }}</td>
+                                  <td>{{ $item->nama_karyawan }}</td>
                                   <td> - </td>
                                   <td> - </td>
                                   <td>Rp {{ number_format($item->kredit_koperasi,0,',','.') }}</td>
                                   <td>Rp {{ number_format($item->iuran_koperasi,0,',','.') }}</td>
                                   <td>Rp {{ number_format($item->kredit_pegawai,0,',','.') }}</td>
                                   <td>Rp {{ number_format($item->iuran_ik,0,',','.') }}</td>
-                                  <td style="min-width: 130px">
-                                    <div class="container">
-                                        <div class="row">
-                                            <a href="{{ route('detail-potongan', ['bulan' => $item->bulan, 'tahun' => $item->tahun]) }}"
-                                                class="btn btn-info p-1"
-                                                style="min-width: 60px">
-                                                Detail
-                                            </a>
-                                        </div>
-                                    </div>
-                                  </td>
                                 </tr>
                             @endforeach
                           </tbody>

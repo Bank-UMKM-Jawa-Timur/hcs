@@ -140,7 +140,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
     Route::resource('/pajak_penghasilan', PenghasilanTidakTeraturController::class);
+
     Route::resource('/potongan', PotonganController::class);
+    Route::get('/get-karyawan-by-nip', [PotonganController::class, 'getKaryawanByNip'])->name('karyawan-by-entitas');
+    Route::get('import-potongan', [\App\Http\Controllers\PotonganController::class, 'importPotongan'])->name('import-potongan');
+    Route::get('/potongan-template-excel', [PotonganController::class, 'templateExcel'])->name('template-excel-potongan');
+    Route::post('import-potongan-post', [\App\Http\Controllers\PotonganController::class, 'importPotonganPost'])->name('import-potongan-post');
+    Route::get('/detail/{bulan}/{tahun}', [PotonganController::class, 'detail'])->name('detail-potongan');
+
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::resource('/backup', BackupController::class);
     Route::resource('/history_jabatan', HistoryJabatanController::class);

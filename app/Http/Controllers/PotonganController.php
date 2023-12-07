@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\KaryawanExportForPotongan;
+use App\Models\KaryawanModel;
 use App\Repository\PotonganRepository;
-use Illuminate\Http\Request;
+use Exception;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PotonganController extends Controller
 {
@@ -40,6 +45,45 @@ class PotonganController extends Controller
         return view('potongan.add');
     }
 
+    public function getKaryawanByNip(Request $request)
+    {
+        try {
+            $nip = $request->get('nip');
+
+            $nip_req = collect(json_decode($nip, true));
+            $nip_id = $nip_req->pluck('nip')->toArray();
+
+            $data = KaryawanModel::select('nama_karyawan', 'nip')
+                ->whereIn('nip', $nip_id)
+                ->whereNull('tanggal_penonaktifan')
+                ->get();
+
+            $response = $nip_req->map(function ($value) use ($data) {
+                $nip = $value['nip'];
+                $row = $value['row'];
+
+                $nip_exist = $data->where('nip', $nip)->first();
+
+                return [
+                    'row' => $row,
+                    'nip' => $nip_exist ? $nip_exist->nip : $nip,
+                    'cek_nip' => $nip_exist ? true : false,
+                    'nama_karyawan' => $nip_exist ? $nip_exist->nama_karyawan : 'Karyawan Tidak Ditemukan',
+                ];
+            })->toArray();
+
+            return response()->json($response);
+
+            // return response($data);
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function importPotongan(){
+        return view('potongan.import-potongan');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -49,9 +93,50 @@ class PotonganController extends Controller
     public function store(Request $request)
     {
         $this->repo->store($request->all());
-
         Alert::success('Berhasil menambahkan Potongan.');
         return redirect()->route('potongan.index');
+    }
+
+    public function importPotonganPost(Request $request){
+        // return $request;
+        try {
+            $kredit_koperasi = explode(',', $request->get('kredit_koperasi'));
+            $iuran_koperasi = explode(',', $request->get('iuran_koperasi'));
+            $kredit_pegawai = explode(',', $request->get('kredit_pegawai'));
+            $iuran_ik = explode(',', $request->get('iuran_ik'));
+            $nip = explode(',', $request->get('nip'));
+            $total = count($nip);
+            $bulan = $request->get('bulan');
+            $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
+            $tahun = $request->get('tahun');
+
+            if ($nip) {
+                if (is_array($nip)) {
+                    for ($i = 0; $i < $total; $i++) {
+                        DB::table('potongan_gaji')->insert([
+                            'nip' => $nip[$i],
+                            'bulan' => $bulanReq,
+                            'tahun' => $tahun,
+                            'kredit_koperasi' => $kredit_koperasi[$i],
+                            'iuran_koperasi' => $iuran_koperasi[$i],
+                            'kredit_pegawai' => $kredit_pegawai[$i],
+                            'iuran_ik' => $iuran_ik[$i],
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                }
+            }
+
+            Alert::success('Success', 'Berhasil menyimpan data');
+            return redirect()->route('potongan.index');
+        } catch (\Exception $e) {
+            Alert::error('Error', $e->getMessage());
+            return back();
+        } catch (\Illuminate\Database\QueryException $e) {
+            Alert::error('Error', $e->getMessage());
+            return back();
+        }
     }
 
     /**
@@ -76,6 +161,18 @@ class PotonganController extends Controller
         //
     }
 
+    public function detail($bulan, $tahun){
+        $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;
+        $search = Request()->get('q');
+
+        $data = $this->repo->detailPotongan($bulan, $tahun, $limit, $search);
+        return view('potongan.detail', [
+            'data' => $data,
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -97,5 +194,10 @@ class PotonganController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function templateExcel()
+    {
+        return Excel::download(new KaryawanExportForPotongan(), 'template_import_potongan.xlsx');
     }
 }

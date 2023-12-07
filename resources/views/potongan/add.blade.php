@@ -74,8 +74,8 @@
           $('#month_year').empty();
           var tgl = document.getElementById('tanggal');
           var date = new Date(tgl.value);
-          var month = moment(date).format('YYYY');
-          var year = moment(date).format('MM');
+          var year = moment(date).format('YYYY');
+          var month = moment(date).format('MM');
           
           $('#month_year').append(`
             <input type="hidden" name="bulan" id="bulan" value="${month}">

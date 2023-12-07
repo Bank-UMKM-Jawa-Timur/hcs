@@ -3,20 +3,23 @@
 namespace App\Repository;
 
 use App\Models\PotonganModel;
+use App\Models\KaryawanModel;
 use Illuminate\Support\Facades\DB;
 
 class PotonganRepository
 {
-    public function getPotongan($search, $limit=10, $page=1) {
+    public function getPotongan($search, $limit, $page=1) {
       $potongan = DB::table('potongan_gaji as p')
           ->select(
             'p.id',
             'p.nip',
+            'p.bulan',
+            'p.tahun',
             'k.nama_karyawan',
-            'p.kredit_koperasi',
-            'p.iuran_koperasi',
-            'p.kredit_pegawai',
-            'p.iuran_ik',
+            DB::raw('SUM(p.kredit_koperasi) as kredit_koperasi'),
+            DB::raw('SUM(p.iuran_koperasi) as iuran_koperasi'),
+            DB::raw('SUM(p.kredit_pegawai) as kredit_pegawai'),
+            DB::raw('SUM(p.iuran_ik) as iuran_ik'),
             )
             ->join('mst_karyawan as k','p.nip','=','k.nip')
             ->where(function ($query) use ($search) {
@@ -27,10 +30,54 @@ class PotonganRepository
                   ->orWhere('p.kredit_pegawai', 'like', "%$search%")
                   ->orWhere('p.iuran_ik', 'like', "%$search%");
           })
-          ->orderBy('p.id', 'ASC')
+            ->orderBy('p.bulan')
+            ->orderBy('p.tahun')
+          ->groupBy('p.bulan')
+          ->groupBy('p.tahun')
           ->paginate($limit);
 
         return $potongan;
+    }
+
+    // public function dataFileExcel()
+    // {
+    //     $karyawan = KaryawanModel::select(
+    //         'mst_karyawan.nip',
+    //     )
+    //         ->whereNull('tanggal_penonaktifan')
+    //         ->get();
+
+    //     return $karyawan;
+    // }
+
+    public function detailPotongan($bulan, $tahun, $limit, $search){
+        $data = DB::table('potongan_gaji as p')
+        ->select(
+            'p.id',
+            'p.nip',
+            'p.bulan',
+            'p.tahun',
+            'k.nama_karyawan',
+            'p.kredit_koperasi',
+            'p.iuran_koperasi',
+            'p.kredit_pegawai',
+            'p.iuran_ik',
+        )
+            ->join('mst_karyawan as k', 'p.nip', '=', 'k.nip')
+            ->where(function ($query) use ($search) {
+                $query->where('p.nip', 'like', "%$search%")
+                ->orWhere('k.nama_karyawan', 'like', "%$search%")
+                ->orWhere('p.kredit_koperasi', 'like', "%$search%")
+                ->orWhere('p.iuran_koperasi', 'like', "%$search%")
+                ->orWhere('p.kredit_pegawai', 'like', "%$search%")
+                ->orWhere('p.iuran_ik', 'like', "%$search%");
+            })
+            ->where('p.bulan', $bulan)
+            ->where('p.tahun', $tahun)
+            ->orderBy('p.nip')
+            ->paginate($limit);
+
+        return $data;
     }
 
     public function store(array $data)
@@ -46,4 +93,16 @@ class PotonganRepository
         ]);
     }
     
+    public function dataFileExcel()
+    {
+        $karyawan = KaryawanModel::select(
+            'mst_karyawan.nip',
+        )
+            ->whereNull('tanggal_penonaktifan')
+            ->get();
+
+        return $karyawan;
+    }
+
+
 }
