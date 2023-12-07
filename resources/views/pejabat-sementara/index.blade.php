@@ -8,7 +8,7 @@
             <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="{{ route('pejabat-sementara.index') }}">Penjabat Sementara</a></p>
         </div>
         <div class="card-header row mt-3 mr-8 pl-4" >
-            <a href="{{ route('pejabat-sementara.create') }}" class="is-btn is-primary-light">Tambah PJS</a>
+            <a href="{{ route('pejabat-sementara.create') }}" class="is-btn is-primary">Tambah PJS</a>
         </div>
     </div>
     <div class="card-body p-5">

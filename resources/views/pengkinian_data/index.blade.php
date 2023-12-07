@@ -11,10 +11,10 @@
           <div class="card-header row mt-3 mr-8 pr-4" >
 
               <a class="mb-3" href="{{ route('pengkinian_data.create') }}">
-                <button class="is-btn is-primary-light">Pengkinian Data</button>
+                <button class="is-btn is-primary">Pengkinian Data</button>
               </a>
               <a class="ml-3" href="{{ route('pengkinian-data-import-index') }}">
-                <button class="is-btn is-primary-light">Import Pengkinian</button>
+                <button class="is-btn is-primary">Import Pengkinian</button>
               </a>
           </div>
         </div> 

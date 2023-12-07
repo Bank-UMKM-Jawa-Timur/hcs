@@ -527,7 +527,7 @@
 
             <div class="row m-3">
                 <a href="/karyawan">
-                    <button type="button" class="is-btn is-primary-light">Kembali</button>
+                    <button type="button" class="is-btn is-primary">Kembali</button>
                 </a>
             </div>
         </form>

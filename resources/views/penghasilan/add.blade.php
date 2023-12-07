@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="p-4">
-                <button class="is-btn is-primary-light">Tambah</button>
+                <button class="is-btn is-primary">Tambah</button>
             </div>
             <div class="row m-0">
             </div>

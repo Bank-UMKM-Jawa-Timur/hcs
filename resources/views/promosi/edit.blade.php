@@ -96,7 +96,7 @@
                     </div>
                 </div>
             </div>
-                <button type="submit" class="is-btn is-primary-light">Update</button>
+                <button type="submit" class="is-btn is-primary">Update</button>
             </div>
         </form>
     </div>

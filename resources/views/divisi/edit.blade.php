@@ -25,7 +25,7 @@
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
                     <div class="pt-3 pb-3">
-                        <button class="is-btn is-primary-light" type="submit" value="submit">Update</button>
+                        <button class="is-btn is-primary" type="submit" value="submit">Update</button>
                     </div>
                    
                 </form>

@@ -87,7 +87,7 @@
                         </div>
                     </div>
                    <div class="pt-4 pb-4">
-                    <button class="is-btn is-primary-light">Tampilkan</button>
+                    <button class="is-btn is-primary">Tampilkan</button>
                    </div>
                 </form>
             </div>

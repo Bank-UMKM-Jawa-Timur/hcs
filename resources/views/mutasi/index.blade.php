@@ -12,7 +12,7 @@
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="{{ route('mutasi.create') }}">
-                        <button  class="is-btn is-primary-light">Tambah Mutasi</button>
+                        <button  class="is-btn is-primary">Tambah Mutasi</button>
                     </a>
                     <div class="table-responsive">
                         <form id="form" method="get">

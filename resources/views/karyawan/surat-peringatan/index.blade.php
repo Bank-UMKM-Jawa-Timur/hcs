@@ -8,7 +8,7 @@
                 <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="">Reward & Punishment</a> > <a href="/surat-peringatan">Surat Peringatan</a></p>
             </div>
             <div class="mt-3 pt-4 pb-4">
-                <a href="{{ route('surat-peringatan.create') }}" class="is-btn is-primary-light ">Tambah Surat Peringatan</a>
+                <a href="{{ route('surat-peringatan.create') }}" class="is-btn is-primary ">Tambah Surat Peringatan</a>
             </div>
         </div>
 

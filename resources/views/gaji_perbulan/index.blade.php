@@ -49,7 +49,7 @@
             </div>
             <div class="row m-0">
                 <div class="col-md-5 pt-4 pb-4">
-                    <button class="is-btn is-primary-light">proses</button>
+                    <button class="is-btn is-primary">proses</button>
                 </div>
             </div>
         </form>

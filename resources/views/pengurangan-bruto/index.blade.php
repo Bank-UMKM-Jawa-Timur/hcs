@@ -19,7 +19,7 @@ $profilKantor = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->find(
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="{{ route('pengurangan-bruto.create') }}?profil_kantor={{$_GET['profil_kantor']}}">
-                        <button class="is-btn is-primary-light">Tambah</button>
+                        <button class="is-btn is-primary">Tambah</button>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">

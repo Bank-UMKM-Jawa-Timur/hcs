@@ -12,7 +12,7 @@
                 <div class="row">
                   <div class="pt-3 pb-3">
                     <a class="mb-3" href="{{ route('cabang.create') }}">
-                      <button class="is-btn is-primary-light">tambah cabang</button>
+                      <button class="is-btn is-primary">tambah cabang</button>
                     </a>
                   </div>
                     <div class="table-responsive overflow-hidden content-center">

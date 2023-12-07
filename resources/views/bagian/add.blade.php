@@ -50,7 +50,7 @@
                             @enderror
                         </div>
                         <div class="pt-4 pb-4">
-                            <button class="is-btn is-primary-light">Simpan</button>
+                            <button class="is-btn is-primary">Simpan</button>
                         </div>
                     </div>
 

@@ -53,18 +53,6 @@ Coded by www.creative-tim.com
             -moz-appearance: textfield;
         }
 
-        .loader-wrapper {
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 100px;
-            position: fixed;
-            background-color: rgba(110, 110, 110, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         .vh-100 {
             height: 90vh !important;
         }

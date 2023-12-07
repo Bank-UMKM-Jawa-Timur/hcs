@@ -18,7 +18,7 @@
                         <label for="nama_kantot">Nama Kantor</label>
                         <input type="text" name="nama_kantor" id="nama_kantor" class="form-control">
                         <div class="pt-3 pb-3">
-                        <button class="is-btn is-primary-light" value="submit" type="submit">Simpan</button>
+                        <button class="is-btn is-primary" value="submit" type="submit">Simpan</button>
                         </div>
                     </form>
                 </div>

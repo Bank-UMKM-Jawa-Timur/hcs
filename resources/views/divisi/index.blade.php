@@ -11,7 +11,7 @@
         <div class="col">
           <div class="row">
             <a class="mb-3" href="{{ route('divisi.create') }}">
-              <button class="is-btn is-primary-light">Tambah Divisi</button>
+              <button class="is-btn is-primary">Tambah Divisi</button>
             </a>
             <div class="table-responsive overflow-hidden content-center">
               <table class="table whitespace-nowrap" id="table" style="width: 100%">

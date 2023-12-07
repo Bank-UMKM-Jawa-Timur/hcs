@@ -60,7 +60,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <button type="submit" class="is-btn is-primary-light">Tampilkan</button>
+                        <button type="submit" class="is-btn is-primary">Tampilkan</button>
                     </div>
                 </div>
             </form>

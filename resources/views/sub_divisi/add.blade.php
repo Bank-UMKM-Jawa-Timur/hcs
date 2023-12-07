@@ -43,7 +43,7 @@
                             @enderror
                         </div>
                     </div>
-                    <button class="is-btn is-primary-light" type="submit" value="submit">Simpan</button>
+                    <button class="is-btn is-primary" type="submit" value="submit">Simpan</button>
                 </form>
             </div>
         </div>

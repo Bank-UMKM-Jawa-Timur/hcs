@@ -36,7 +36,7 @@
                     </div>
 
                  <div class="pt-4 pt-3">
-                    <button class="is-btn is-primary-light">Update</button>
+                    <button class="is-btn is-primary">Update</button>
                  </div>
                 </form>
             </div>

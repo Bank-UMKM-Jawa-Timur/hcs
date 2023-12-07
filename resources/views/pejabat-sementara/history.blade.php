@@ -31,7 +31,7 @@
             </div>
             <div class="row">
                 <div class="col-md-8 pt-4 pb-4">
-                    <button class="is-btn is-primary-light" type="submit">Tampilkan</button>
+                    <button class="is-btn is-primary" type="submit">Tampilkan</button>
                 </div>
             </div>
         </div>

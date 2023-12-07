@@ -10,7 +10,7 @@
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="{{ route('promosi.create') }}">
-                        <button  class="is-btn is-primary-light">Tambah Promosi</button>
+                        <button  class="is-btn is-primary">Tambah Promosi</button>
                     </a>
                     <div class="table-responsive">
                         <table class="table" id="table">

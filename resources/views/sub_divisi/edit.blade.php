@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="pt-5 pb-5">
-                        <button class="is-btn is-primary-light" type="submit" value="submit">Update</button>
+                        <button class="is-btn is-primary" type="submit" value="submit">Update</button>
                     </div>
                 </form>
             </div>

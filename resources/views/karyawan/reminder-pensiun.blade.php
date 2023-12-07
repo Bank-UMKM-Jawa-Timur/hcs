@@ -80,7 +80,7 @@ $request = isset($request) ? $request : null;
             </div>
 
             <div class="col-md-12 mt-2">
-                <button class="is-btn is-primary-light" type="submit">Tampilkan</button>
+                <button class="is-btn is-primary" type="submit">Tampilkan</button>
             </div>
         </div>
     </div>

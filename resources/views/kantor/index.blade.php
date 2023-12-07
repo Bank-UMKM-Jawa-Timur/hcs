@@ -10,7 +10,7 @@
         <div class="col">
           <div class="row">
             <a class="mb-3" href="{{ route('kantor.create') }}">
-              <button class="is-btn is-primary-light">tambah kantor</button>
+              <button class="is-btn is-primary">tambah kantor</button>
             </a>
             <div class="table-responsive overflow-hidden">
               <table class="table" id="table">

@@ -45,7 +45,7 @@
             </div>
             <div class="row" id="kategori-wrapper"></div>
             <div class="pt-4 pb-4">
-                <button type="submit" class="is-btn is-primary-light">Tampilkan</button>
+                <button type="submit" class="is-btn is-primary">Tampilkan</button>
             </div>
         </form>
     </div>

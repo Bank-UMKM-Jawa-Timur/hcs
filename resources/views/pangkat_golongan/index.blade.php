@@ -12,7 +12,7 @@
                 <div class="row">
                     <a class="mb-3" href="{{ route('pangkat_golongan.create') }}">
                       <div class="pt-2 pb-3">
-                      <button class="is-btn is-primary-light">tambah pangkat dan golongan</button>
+                      <button class="is-btn is-primary">tambah pangkat dan golongan</button>
                       </div>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">

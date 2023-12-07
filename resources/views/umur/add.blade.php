@@ -34,7 +34,7 @@
                         </div>
                     </div>
 
-                    <button class="is-btn is-primary-light" value="submit" style="submit">Simpan</button>
+                    <button class="is-btn is-primary" value="submit" style="submit">Simpan</button>
                 </form>
             </div>
         </div>

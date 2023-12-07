@@ -28,7 +28,7 @@
                             </div>  
                         </div>
                         <div class="container ml-3">
-                            <button class="is-btn is-primary-light">Import</button>
+                            <button class="is-btn is-primary">Import</button>
                         </div>
                     </div>
                 </form>

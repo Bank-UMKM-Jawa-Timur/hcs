@@ -82,7 +82,7 @@
             </div>
             <div class="col-md-4">
                 <a href="penghasilan/gajipajak">
-                    <button class="is-btn is-primary-light" type="submit">Tampilkan</button>
+                    <button class="is-btn is-primary" type="submit">Tampilkan</button>
                 </a>
             </div>
     </form>

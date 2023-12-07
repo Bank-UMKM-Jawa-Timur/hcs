@@ -65,7 +65,7 @@
                     </div>
                     <div class="">
                         <div class="pt-4 pb-4">
-                            <button type="submit" class="is-btn is-primary-light">Tampilkan</button>
+                            <button type="submit" class="is-btn is-primary">Tampilkan</button>
                         </div>
                     </div>
                 </form>

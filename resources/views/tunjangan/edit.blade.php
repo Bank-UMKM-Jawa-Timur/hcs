@@ -22,7 +22,7 @@
                     @enderror
 
                     <div class="pt-4 pb-3">
-                        <button class="is-btn is-primary-light"value="submit" type="submit">Update</button>
+                        <button class="is-btn is-primary"value="submit" type="submit">Update</button>
                     </div>
                 </form>
             </div>

@@ -9,7 +9,7 @@
             </div>
             <div class="card-header row mt-3 mr-8 pr-5" >
                 <a class="mb-3" href="{{ route('penambahan-bruto.create') }}?profil_kantor={{$_GET['profil_kantor']}}">
-                    <button class="is-btn is-primary-light">Tambah</button>
+                    <button class="is-btn is-primary">Tambah</button>
                 </a>
             </div>
         </div>

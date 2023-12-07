@@ -54,7 +54,7 @@
         </div>
         <div class="col-lg-4 pt-4 pb-4">
           <a href="penghasilan/gajipajak">
-            <button class="is-btn is-primary-light" type="submit">Tampilkan</button>
+            <button class="is-btn is-primary" type="submit">Tampilkan</button>
           </a>
         </div>
 @endsection

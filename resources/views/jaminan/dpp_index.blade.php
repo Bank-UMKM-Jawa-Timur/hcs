@@ -75,7 +75,7 @@ $status = isset($status) ? $status : null;
                 </div>
             </div>
             <div class="col-md-12 mt-4">
-                <button class="is-btn is-primary-light" type="submit">Tampilkan</button>
+                <button class="is-btn is-primary" type="submit">Tampilkan</button>
             </div>
         </div>
     </form>

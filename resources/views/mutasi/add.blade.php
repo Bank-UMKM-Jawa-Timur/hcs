@@ -225,7 +225,7 @@
                 </div>
             </div>
              <div class="mt-3">
-                <button type="submit" class="is-btn is-primary-light">Simpan</button>
+                <button type="submit" class="is-btn is-primary">Simpan</button>
              </div>
             </div>
         </form>

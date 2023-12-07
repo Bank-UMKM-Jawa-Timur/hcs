@@ -52,7 +52,7 @@
                         </div>
                         <div class="col">
                             <div class="pt-4 pb-4">
-                                <button class="is-btn is-primary-light">Update</button>
+                                <button class="is-btn is-primary">Update</button>
                             </div>
                         </div>
                     </div>
