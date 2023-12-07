@@ -231,51 +231,6 @@
                 }
             });
 
-            var $row = null;
-
-            $("#table_item").on('click', '.btn-edit', function () {
-                var $row = $(this).closest('tr');
-                var index = $(this).data('index');
-                var namaInput = $row.find('input.nama');
-                var rowInputs = $row.find('input').not('.nama');
-
-                $row.removeClass('hidden');
-
-                rowInputs.prop('readonly', false);
-
-                namaInput.prop('readonly', true);
-
-                $('#table_item tbody tr:eq(' + index + ') input.nip').autocomplete({
-                    source: function(request, response) {
-                        $.ajax({
-                            url: `{{ route('api.get.autocomplete') }}`,
-                            type: 'GET',
-                            dataType: "json",
-                            data: {
-                                search: request.term
-                            },
-                            success: function(data) {
-                                // console.log(data);
-                                response(data);
-                            }
-                        });
-                    },
-                    select: function(event, ui) {
-                        // rowInputs.filter('.nip').val(ui.item.value);
-                        // namaInput.val(ui.item.nama);
-                        $('#table_item tbody tr:eq(' + index + ') input.nip').val(ui.item.value);
-                        $('#table_item tbody tr:eq(' + index + ') input.nama').val(ui.item.nama);
-                        // $('#table_item tbody tr:eq(' + index + ')').find('small').remove();
-                        // namaInputs.val(ui.item.nama)
-                        return false;
-                    }
-                });
-            });
-
-            $("#table_item").on('click', '.btn-minus', function () {
-                $(this).closest('tr').remove();
-            })
-
             function formatNumber(number) {
                 number = number.toString();
                 var pattern = /(-?\d+)(\d{3})/;
@@ -472,35 +427,10 @@
                 // handleRow(0);
             }
 
-            function createTableRow(row, nama,index, no) {
-                grandTotalNominal += parseInt(row[1]);
-                var penghasilan = $('#penghasilan').val();
-
-                $('#span_total_nominal').html('Grand nominal : <b>' + formatRupiah(grandTotalNominal.toString()) + '</b>');
-                var new_body_tr = `
-                    <tr>
-                        <td>
-                            <input type="hidden" name="number[]" class="form-control" value="${no}">
-                            <input type="hidden" name="penghasilan[]" class="form-control" value="${penghasilan}">
-                            ${no}
-                        </td>
-                        <td>
-                            ${row[0]}
-                            <input type="hidden" name="nip[]" class="typeahead form-control nip-input" value="${row[0]}" readonly>
-                        </td>
-                        <td>
-                            ${nama}
-                            <input type="hidden" name="nama[]" class="form-control nama-input" value="${nama}" readonly>
-                        </td>
-                        <td>
-                            ${formatRupiah(row[1].toString())}
-                            <input type="hidden" name="nominal[]" class="form-control nominal-input" value="${row[1]}" readonly>
-                        </td>
-                    </tr>
-                `;
-                $('#t_body').append(new_body_tr);
-            }
-
+            $('#btn-simpan').on('click', function(){
+                $('.loader-wrapper').addClass('d-block')
+                $(".loader-wrapper").fadeOut("slow");
+            })
             function alertWarning(message) {
                 Swal.fire({
                     tittle: 'Warning!',
