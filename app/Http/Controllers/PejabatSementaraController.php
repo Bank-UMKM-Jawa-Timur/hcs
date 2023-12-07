@@ -11,6 +11,7 @@ use App\Service\EntityService;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PejabatSementaraController extends Controller
 {
@@ -23,12 +24,18 @@ class PejabatSementaraController extends Controller
 
     public function index()
     {
+        if (!Auth::user()->can('manajemen karyawan - data penjabat sementara')) {
+            return view('roles.forbidden');
+        }
         $pjs = PjsModel::with(['karyawan', 'jabatan'])->get();
         return view('pejabat-sementara.index', compact('pjs'));
     }
 
     public function create()
     {
+        if (!Auth::user()->can('manajemen karyawan - tambah penjabat sementara')) {
+            return view('roles.forbidden');
+        }
         $jabatan = JabatanModel::whereNotIn('kd_jabatan', [
             'IKJP', 'NST', 'ST',
         ])->get();
@@ -53,6 +60,9 @@ class PejabatSementaraController extends Controller
 
     public function history(Request $request)
     {
+        if (!Auth::user()->can('histori - penjabat sementara')) {
+            return view('roles.forbidden');
+        }
         $pjs = $karyawan = null;
 
         if ($request->kategori) {

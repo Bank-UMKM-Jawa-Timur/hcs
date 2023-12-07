@@ -4,18 +4,24 @@
       <div class="card-header">
         <div class="card-header">
             <h5 class="card-title">Pengkinian Data Karyawan</h5>
+
             <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > Pengkinian Data</p>
         </div>
 
         <div class="card-body">
             <div class="col">
                 <div class="row">
-                    <a class="mb-3" href="{{ route('pengkinian_data.create') }}">
-                      <button class="btn btn-primary">Pengkinian Data</button>
-                    </a>
-                    <a class="ml-3" href="{{ route('pengkinian-data-import-index') }}">
-                      <button class="btn btn-primary">Import Pengkinian</button>
-                    </a>
+                    @can('manajemen karyawan - pengkinian data - update pengkinian data')
+                        <a class="mb-3" href="{{ route('pengkinian_data.create') }}">
+                        <button class="btn btn-primary">Pengkinian Data</button>
+                        </a>
+                    @endcan
+                    @can('manajemen karyawan - pengkinian data - import pengkinian data')
+                        <a class="ml-3" href="{{ route('pengkinian-data-import-index') }}">
+                        <button class="btn btn-primary">Import Pengkinian</button>
+                        </a>
+                    @endcan
+
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
                         <thead class="text-primary">
@@ -87,20 +93,22 @@
                                     @endphp
 
                                     @if ($item->status_jabatan == "Penjabat")
-                                        Pj.{{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
+                                        Pj.{{ $item->nama_jabatan . ' ' . $bagian.$ket }}
                                     @elseif($item->status_jabatan == "Penjabat Sementara")
-                                        Pjs.{{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
+                                        Pjs.{{ $item->nama_jabatan . ' ' . $bagian.$ket }}
                                     @else
-                                    {{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
+                                    {{ $item->nama_jabatan . ' ' . $bagian.$ket }}
                                     @endif
                                   </td>
                                   <td style="min-width: 130px">
                                     <div class="container">
+                                        @can('manajemen karyawan - pengkinian data - detail pengkinian data')
                                         <a href="{{ route('pengkinian_data.show', $item->nip) }}">
                                           <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                             Detail
                                           </button>
                                         </a>
+                                        @endcan
                                       </div>
                                     </div>
                                   </td>
@@ -126,7 +134,7 @@
 
                                             if (isset($data)) {
                                               $data = $data->nama_cabang;
-                                            } 
+                                            }
                                       @endphp
                                       {{ $data }}
                                     </td>
@@ -154,20 +162,22 @@
                                       @endphp
 
                                       @if ($i->status_jabatan == "Penjabat")
-                                          Pj.{{ $i->nama_jabatan . ' ' . $bagian.$ket }} 
+                                          Pj.{{ $i->nama_jabatan . ' ' . $bagian.$ket }}
                                       @elseif($i->status_jabatan == "Penjabat Sementara")
-                                          Pjs.{{ $i->nama_jabatan . ' ' . $bagian.$ket }} 
+                                          Pjs.{{ $i->nama_jabatan . ' ' . $bagian.$ket }}
                                       @else
-                                      {{ $i->nama_jabatan . ' ' . $bagian.$ket }} 
+                                      {{ $i->nama_jabatan . ' ' . $bagian.$ket }}
                                       @endif
                                     </td>
                                     <td style="min-width: 130px">
                                       <div class="container">
-                                          <a href="{{ route('pengkinian_data.show', $i->nip) }}">
-                                            <button class="btn btn-outline-info p-1" style="min-width: 60px">
-                                              Detail
-                                            </button>
-                                          </a>
+                                        @can('manajemen karyawan - pengkinian data - detail pengkinian data')
+                                        <a href="{{ route('pengkinian_data.show', $i->nip) }}">
+                                          <button class="btn btn-outline-info p-1" style="min-width: 60px">
+                                            Detail
+                                          </button>
+                                        </a>
+                                        @endcan
                                         </div>
                                       </div>
                                     </td>

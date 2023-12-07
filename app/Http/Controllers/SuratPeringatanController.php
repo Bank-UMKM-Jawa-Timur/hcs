@@ -9,6 +9,7 @@ use App\Models\KaryawanModel;
 use App\Models\SpModel;
 use App\Repository\SuratPeringatanRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class SuratPeringatanController extends Controller
@@ -22,6 +23,9 @@ class SuratPeringatanController extends Controller
 
     public function index()
     {
+        if (!Auth::user()->can('manajemen karyawan - reward & punishment - surat peringatan')) {
+            return view('roles.forbidden');
+        }
         $sps = SpModel::with('karyawan')->orderBy('tanggal_sp', 'DESC')->get();
 
         return view('karyawan.surat-peringatan.index', compact('sps'));
@@ -29,6 +33,9 @@ class SuratPeringatanController extends Controller
 
     public function show($id)
     {
+        if (!Auth::user()->can('manajemen karyawan - reward & punishment - surat peringatan - detail')) {
+            return view('roles.forbidden');
+        }
         $sp = SpModel::findOrFail($id);
 
         return view('karyawan.surat-peringatan.show', compact('sp'));
@@ -36,6 +43,9 @@ class SuratPeringatanController extends Controller
 
     public function create()
     {
+        if (!Auth::user()->can('manajemen karyawan - reward & punishment - surat peringatan - create')) {
+            return view('roles.forbidden');
+        }
         return view('karyawan.surat-peringatan.add');
     }
 
@@ -65,6 +75,9 @@ class SuratPeringatanController extends Controller
 
     public function history(HistoryRequest $request)
     {
+        if (!Auth::user()->can('histori - surat peringatan')) {
+            return view('roles.forbidden');
+        }
         return view('karyawan.surat-peringatan.history', [
             'history' => $this->repo->report($request->only(['tahun', 'nip', 'first_date', 'end_date'])),
             'firstData' => SpModel::oldest('tanggal_sp')->first(),

@@ -119,7 +119,6 @@ class PenghasilanTeraturController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
         try {
             $id_tunjangan = $request->get('tunjangan');
             $nominal = explode(',', $request->get('nominal'));
@@ -169,13 +168,12 @@ class PenghasilanTeraturController extends Controller
                                 ]);
                             }
                         }
-
-
                     }
                 }
             }
 
             Alert::success('Success', 'Berhasil menyimpan data');
+
             return redirect()->route('penghasilan.import-penghasilan-teratur.index');
         } catch (\Exception $e) {
             Alert::error('Error', $e->getMessage());
@@ -194,6 +192,7 @@ class PenghasilanTeraturController extends Controller
      */
     public function show($id)
     {
+
     }
 
     public function details($idTunjangan, $createdAt)

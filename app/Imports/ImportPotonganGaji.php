@@ -28,7 +28,7 @@ class ImportPotonganGaji implements ToCollection, WithHeadingRow, SkipsOnError, 
                     'kredit_koperasi' => $item['kredit_koperasi'],
                     'iuran_koperasi' => $item['iuran_koperasi'],
                     'kredit_pegawai' => $item['kredit_pegawai'],
-                    'iuran_jk' => $item['iuran_jk'],
+                    'iuran_ik' => $item['iuran_ik'],
                     'created_at' => now()
                 ]);
         }
