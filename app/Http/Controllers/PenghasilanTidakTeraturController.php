@@ -250,7 +250,7 @@ class PenghasilanTidakTeraturController extends Controller
             }
             array_push($bonus, $bon);
         }
-// return array_sum($gj[7]);
+
         foreach($total_gaji as $key => $item){
             $nominal_jp = ($key > 1) ? $jp_mar_des : $jp_jan_feb;
             // Get Jamsostek
@@ -305,19 +305,7 @@ class PenghasilanTidakTeraturController extends Controller
         }
         $karyawanController = new KaryawanController;
         $karyawan->masa_kerja = $karyawanController->countAge($karyawan->tanggal_pengangkat);
-// return [
-//     'gj' => $gj,
-//     'jamsostek' => $jamsostek,
-//     'tunjangan' => $tk,
-//     'penghasilan' => $ptt,
-//     'bonus' => $bonus,
-//     'tahun' => $tahun,
-//     'karyawan' => $karyawan,
-//     'request' => $request,
-//     'mode' => $mode,
-//     'pengurang' => array_sum($pengurang),
-//     'pph' => $pph_yang_dilunasi
-// ];
+
         return view('penghasilan.gajipajak', [
             'gj' => $gj,
             'jamsostek' => $jamsostek,
