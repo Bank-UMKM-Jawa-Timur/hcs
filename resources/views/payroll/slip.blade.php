@@ -39,7 +39,7 @@
                             </div>
                             <div class="col cabang-input @if(\Request::get('kantor') == 'pusat' || \Request::get('kantor') == '0')d-none @endif">
                                 <div class="form-group">
-                                    <label for="">Cabang<span class="text-danger">*</span></label>
+                                    <label for="">Cabang</label>
                                     <select name="cabang" id="cabang"
                                         class="form-control select2">
                                         <option value="0">-- Semua Cabang --</option>
@@ -54,7 +54,7 @@
                             </div>
                             <div class="col divisi-input @if(\Request::get('kantor') != 'pusat')d-none @endif">
                                 <div class="form-group">
-                                    <label for="">Divisi<span class="text-danger">*</span></label>
+                                    <label for="">Divisi</label>
                                     <select name="divisi" id="divisi"
                                         class="form-control select2">
                                     </select>
@@ -65,7 +65,7 @@
                             </div>
                             <div class="col sub-divisi-input @if(\Request::get('kantor') != 'pusat')d-none @endif">
                                 <div class="form-group">
-                                    <label for="">Sub Divisi<span class="text-danger">*</span></label>
+                                    <label for="">Sub Divisi</label>
                                     <select name="sub_divisi" id="sub_divisi"
                                         class="form-control select2">
                                         <option value="0">-- Semua Sub Divisi --</option>
@@ -77,7 +77,7 @@
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="">Bagian<span class="text-danger">*</span></label>
+                                    <label for="">Bagian</label>
                                     <select name="bagian" id="bagian"
                                         class="form-control select2">
                                         <option value="0">-- Semua Bagian --</option>
@@ -91,7 +91,7 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="">Karyawan<span class="text-danger">*</span></label>
+                                    <label for="">Karyawan</label>
                                     <select name="nip" id="nip"
                                         class="form-control select2">
                                         <option value="0">-- Pilih Semua Karyawan --</option>
@@ -105,7 +105,7 @@
                                 <div class="form-group">
                                     <label for="">Bulan<span class="text-danger">*</span></label>
                                     <select name="bulan" id="bulan"
-                                        class="form-control">
+                                        class="form-control" required>
                                         <option value="0">-- Pilih bulan --</option>
                                         <option value="1" @if(\Request::get('bulan') == '1') selected @endif>Januari</option>
                                         <option value="2" @if(\Request::get('bulan') == '2') selected @endif>Februari</option>
@@ -129,7 +129,7 @@
                                 <div class="form-group">
                                     <label for="">Tahun<span class="text-danger">*</span></label>
                                     <select name="tahun" id="tahun"
-                                        class="form-control">
+                                        class="form-control" required>
                                         <option value="0">-- Pilih tahun --</option>
                                         @php
                                             $sekarang = date('Y');
@@ -198,9 +198,9 @@
                                     Showing {{$start}} to {{$end}} of {{$data->total()}} entries
                                 </div>
                                 <div>
-                                    {{--  @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                    @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
                                     {{ $data->links('pagination::bootstrap-4') }}
-                                    @endif  --}}
+                                    @endif
                                 </div>
                             </div>
                         @endif
