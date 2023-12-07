@@ -208,7 +208,6 @@ class PayrollRepository
                             });
                             if ($cetak == 'cetak') {
                                 $data = $data->get();
-                                // return $test;
                             }else{
                                 $data=  $data->paginate(10);
                             }
@@ -761,7 +760,7 @@ class PayrollRepository
         return $data;
     }
 
-    public function getSlip($kantor, $month, $year, $search, $page=1, $limit=10, $cetak) {
+    public function getSlip($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page=1, $limit=10, $cetak) {
         /**
          * PPH 21
          * Gaji - done
@@ -788,6 +787,19 @@ class PayrollRepository
          * bpjs tk = kpj (jamsostek)
          * bpjs kesehatan = jkn
          */
+
+        if ($divisi == '0') {
+            $divisi = null;
+        }
+        if ($sub_divisi == '0') {
+            $sub_divisi = null;
+        }
+        if ($bagian == '0') {
+            $bagian = null;
+        }
+        if ($nip == '0') {
+            $nip = null;
+        }
 
         $kode_cabang_arr = [];
 
@@ -956,16 +968,30 @@ class PayrollRepository
                                     }
                                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
                                 });
+                            })
+                            ->when($divisi, function($query) use ($divisi, $sub_divisi) {
+                                if ($divisi && !$sub_divisi) {
+                                    $query->where('kd_entitas', $divisi);
+                                }
+                                if ($divisi && $sub_divisi) {
+                                    $query->where('kd_entitas', $sub_divisi);
+                                }
+                            })
+                            ->when($bagian, function($query) use ($bagian) {
+                                $query->where('kd_bagian', $bagian);
+                            })
+                            ->when($nip, function($query) use ($nip) {
+                                $query->where('nip', $nip);
                             });
+
                             if ($cetak == 'cetak') {
                                 $data = $data->get();
-                                // return $test;
                             }else{
                                 $data=  $data->paginate(10);
                             }
 
 
-        foreach ($data as $key => $karyawan) {
+        foreach ($data as $karyawan) {
             $ptkp = null;
             if ($karyawan->keluarga) {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')

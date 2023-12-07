@@ -64,9 +64,10 @@ class PayrollController extends Controller
         $month = FacadesSession::get('month');
         $year = FacadesSession::get('year');
         $kategori = FacadesSession::get('kategori');
+
         $search = null;
         $page = null;
-        $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, 10, 'cetak');
+        $data = $this->list($kantor, $month, $year, $search, $page, null,'cetak');
         if ($kategori == 'payroll'){
             return view('payroll.tables.payroll-pdf', ['data' => $data]);
 
@@ -97,9 +98,14 @@ class PayrollController extends Controller
         $kantor = FacadesSession::get('kantor');
         $month = FacadesSession::get('month');
         $year = FacadesSession::get('year');
+        $divisi = FacadesSession::get('divisi');
+        $sub_divisi = FacadesSession::get('sub_divisi');
+        $bagian = FacadesSession::get('bagian');
+        $nip = FacadesSession::get('nip');
         $search = null;
         $page = null;
-        $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, 10, 'cetak');
+
+        $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, null, 'cetak');
         return view('payroll.tables.slip-pdf', ['data' => $data]);
 
     }
@@ -108,6 +114,11 @@ class PayrollController extends Controller
         FacadesSession::forget('kantor');
         FacadesSession::forget('month');
         FacadesSession::forget('year');
+        FacadesSession::forget('kd_entitas');
+        FacadesSession::forget('divisi');
+        FacadesSession::forget('sub_divisi');
+        FacadesSession::forget('bagian');
+        FacadesSession::forget('nip');
         $this->validate($request, [
             'kantor' => 'not_in:0',
             'bulan' => 'not_in:0',
@@ -119,26 +130,41 @@ class PayrollController extends Controller
         $search = $request->get('q');
 
         $kantor = $request->get('kantor') == 'pusat' ? 'pusat' : $request->get('cabang');
-        FacadesSession::put('kantor',$kantor);
+
+        $kd_entitas = $request->get('cabang');
+
+        $divisi = $request->get('divisi');
+
+        $sub_divisi = $request->get('sub_divisi');
+
+        $bagian = $request->get('bagian');
+
+        $nip = $request->get('nip');
 
         $month = $request->get('bulan');
-        FacadesSession::put('month',$month);
 
         $year = $request->get('tahun');
+        FacadesSession::put('kd_entitas',$kd_entitas);
+        FacadesSession::put('divisi',$divisi);
+        FacadesSession::put('sub_divisi',$sub_divisi);
+        FacadesSession::put('bagian',$bagian);
+        FacadesSession::put('nip',$nip);
+        FacadesSession::put('kantor',$kantor);
+        FacadesSession::put('month',$month);
         FacadesSession::put('year',$year);
 
         // Retrieve cabang data
         $cabangRepo = new CabangRepository;
         $cabang = $cabangRepo->listCabang();
 
-        $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, $limit,null);
-        // return $data;
+        $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, $limit,null);
+
         return view('payroll.slip', compact('data', 'cabang'));
     }
 
-    public function listSlipGaji($kantor, $month, $year, $q, $page, $limit, $cetak) {
+    public function listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $q, $page, $limit, $cetak) {
         $payrollRepository = new PayrollRepository;
-        $data = $payrollRepository->getSlip($kantor, $month, $year, $q, $page, $limit,$cetak);
+        $data = $payrollRepository->getSlip($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $q, $page, $limit,$cetak);
 
         return $data;
     }
