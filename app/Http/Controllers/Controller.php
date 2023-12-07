@@ -17,7 +17,7 @@ class Controller extends BaseController
         return [
             'results' => $collection,
             'pagination' => [
-                'more' => !empty($data->nextPageUrl())
+                'more' => $data instanceof \Illuminate\Pagination\Paginator ? !empty($data->nextPageUrl()) : null,
             ]
         ];
     }
