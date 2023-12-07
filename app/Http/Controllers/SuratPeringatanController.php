@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Karyawan\SuratPeringatanRequest;
+use App\Http\Requests\PotonganRequest;
 use App\Http\Requests\SuratPeringatan\HistoryRequest;
 use App\Models\KaryawanModel;
 use App\Models\SpModel;
@@ -48,8 +49,9 @@ class SuratPeringatanController extends Controller
         return view('karyawan.surat-peringatan.add');
     }
 
-    public function store(SuratPeringatanRequest $request)
+    public function store(PotonganRequest $request)
     {
+        dd($request->nip);
         $this->repo->store($request->all());
 
         Alert::success('Berhasil menambahkan SP');

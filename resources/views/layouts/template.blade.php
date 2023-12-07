@@ -286,6 +286,13 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
+                                <li style="" class="@active('potongan')">
+                                    <a href="{{ route('potongan.index') }}">
+                                        <i class="nc-icon nc-ruler-pencil"></i>
+                                        <p>Import Potongan</p>
+                                        <p></p>
+                                    </a>
+                                </li>
                                 @endcan
 
                                 <li class="@active('penghasilan') {{ request()->is('penghasilan', 'penghasilan/*') ? 'active' : '' }}">
@@ -751,6 +758,7 @@ Coded by www.creative-tim.com
     <script src="{{ asset('style/assets/js/ReorderWithResize.js') }}"></script>
     <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('vendor/apexchart/apexcharts.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.0/moment.min.js"></script>
     <script>
         // $(document).ready(function() {
         //     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
