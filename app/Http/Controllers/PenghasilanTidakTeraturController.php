@@ -378,7 +378,7 @@ class PenghasilanTidakTeraturController extends Controller
         $search = $request->get('q');
 
         $penghasilanRepo = new PenghasilanTidakTeraturRepository();
-        $data = $penghasilanRepo->getAllPenghasilan($search, $limit, $page);
+        $data = $penghasilanRepo->getPenghasilan($search, $limit, $page);
         return view('penghasilan.index-list', compact('data'));
     }
 
@@ -389,9 +389,9 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function create()
     {
-        $dataSPD = TunjanganModel::where('nama_tunjangan', 'like', '%spd%')->get();
+        $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
 
-        return view('penghasilan.add', compact('dataSPD'));
+        return view('penghasilan.add', compact('data'));
     }
 
     /**
@@ -416,8 +416,8 @@ class PenghasilanTidakTeraturController extends Controller
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $idTunjangan->id,
-                    'bulan' => Carbon::now()->format('m'),
-                    'tahun' => Carbon::now()->format('Y'),
+                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
                     'nominal' => str_replace('.', '', $request['nominal'][$key]),
                     'keterangan' => $request->get('keterangan')[$key] ?? null,
                     'created_at' => now()
@@ -447,9 +447,25 @@ class PenghasilanTidakTeraturController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        try{
+            $idTunjangan = $request->get('idTunjangan');
+            $tanggal = $request->get('tanggal');
+            $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+            $page = $request->has('page') ? $request->get('page') : 1;
+            $search = $request->get('q');
+
+            $repo = new PenghasilanTidakTeraturRepository();
+            $data = $repo->getAllPenghasilan($search, $limit, $page, $tanggal, $idTunjangan);
+            return view('penghasilan.detail', compact('data'));
+        } catch(Exception $e){
+            Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());
+            return back();
+        } catch(QueryException $e){
+            Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());
+            return back();
+        }
     }
 
     /**

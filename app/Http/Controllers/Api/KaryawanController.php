@@ -30,6 +30,7 @@ class KaryawanController extends Controller
 
     function getKaryawan(Request $request)
     {
+        ini_set('max_input_vars','2000');
         try {
             $explode_data = json_decode($request->get('nip'), true);
             $explode_id = array_column($explode_data, 'nip');
@@ -63,7 +64,6 @@ class KaryawanController extends Controller
             }
 
             return response()->json($response);
-
         }catch (Exception $e){
             return $e;
         }
