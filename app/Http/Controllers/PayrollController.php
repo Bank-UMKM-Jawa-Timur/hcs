@@ -81,11 +81,12 @@ class PayrollController extends Controller
     }
 
     public function cetakSlip(Request $request){
-        // return $request;
         $payrollRepository = new PayrollRepository;
         $data = $payrollRepository->getSlipId($request->get('request_kantor'), $request->get('request_month'),$request->get('request_year'), $request->get('request_nip'));
 
-        $pdf = Pdf::loadview('payroll.print.slip',['data'=>$data]);
+        $pdf = Pdf::loadview('payroll.print.slip',[
+            'data' => $data
+        ]);
 
         $fileName =  time().'.'. 'pdf' ;
         $pdf->save(public_path() . '/' . $fileName);

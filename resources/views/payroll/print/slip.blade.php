@@ -2,14 +2,16 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="dompdf.view" content="FitV" />
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> --}}
 
-    <title>Template payroll!</title>
+    <title>Slip Gaji</title>
 </head>
-
 <body>
     <style>
 
@@ -36,6 +38,9 @@
 
         .bg-utama{
             background-color: #DA251D;
+        }
+        .table td, .table th{
+            padding: 3px !important;
         }
 
         @page {
@@ -86,13 +91,15 @@
         /* ... the rest of the rules ... */
         }
     </style>
-    <div class="p-5 mt-5 mb-5">
+    <div class="p-2">
         <div class="row">
             <div class="col-lg-8 m-auto">
-                <div class="header d-flex justify-content-between gap-5">
-                    <img src="{{ asset('style/assets/img/logo.png') }}" width="150px" class="img-fluid">
-                    <div class="content">
-                        <h4 class="fw-bold p-3 ms-5"> PT HCS</h4>
+                <div class="d-flex">
+                    <center>
+                        <img src="{{public_path('style/assets/img/logo.png') }}" width="150px" class="img-fluid">
+                        <h4 class="fw-bold p-3"> PT HCS</h4>
+                    </center>
+                    <div class="content col">
                         <p class="text-start">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto facere ipsam quod laudantium voluptates commodi error aperiam libero, esse suscipit dicta deleniti consequatur eos, nostrum odit, nemo quas neque? Magnam.</p>
                     </div>
                 </div>
@@ -103,7 +110,7 @@
         <div class="content-header bg-utama p-2 rounded">
             <h6 class="fw-bold text-center text-white">Data Karyawan</h6>
         </div>
-        <div class="row">
+        <div class="row mb-5 pb-5">
             <div class="col-lg-4 mt-3">
                 <table class="table table-borderless">
                     <tr>
@@ -130,60 +137,60 @@
             <h6 class="fw-bold text-center text-white">Pendapatan</h6>
         </div>
         <div class="row">
-            <div class="col-lg-12 mt-3">
+            <div class="col-lg-12 mt-3 mb-5 pb-5">
                 <table class="table table-borderless m-0" style="border:1px solid #e3e3e3" id="table-tunjangan">
                     <tbody>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Gaji Pokok</td>
-                            <td id="gaji_pokok" class="text-end">{{ $data[0]->gaji->gj_pokok }}</td>
+                            <td id="gaji_pokok" class="text-end">{{ number_format($data[0]->gaji->gj_pokok , 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Jabatan</td>
-                            <td id="gaji_pokok" class="text-end">{{ $data[0]->gaji->tj_jabatan }}</td>
+                            <td id="gaji_pokok" class="text-end">{{ number_format($data[0]->gaji->tj_jabatan , 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Penyesuaian</td>
-                            <td id="gaji_pokok" class="text-end">{{ $data[0]->gaji->gj_penyesuaian }}</td>
+                            <td id="gaji_pokok" class="text-end">{{ number_format($data[0]->gaji->gj_penyesuaian , 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Keluarga</td>
-                            <td id="gaji_pokok" class="text-end">{{ $data[0]->gaji->tj_keluarga}}</td>
+                            <td id="gaji_pokok" class="text-end">{{ number_format($data[0]->gaji->tj_keluarga, 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Kemahalan</td>
-                            <td class="text-end">{{ $data[0]->gaji->tj_kemahalan}}</td>
+                            <td class="text-end">{{ number_format($data[0]->gaji->tj_kemahalan, 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Kesejahteraan</td>
-                            <td class="text-end">{{ $data[0]->gaji->tj_kesejahteraan}}</td>
+                            <td class="text-end">{{ number_format($data[0]->gaji->tj_kesejahteraan, 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Multilevel</td>
-                            <td class="text-end">{{ $data[0]->gaji->tj_multilevel}}</td>
+                            <td class="text-end">{{ number_format($data[0]->gaji->tj_multilevel, 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Pelaksana</td>
-                            <td class="text-end">{{ $data[0]->gaji->tj_pelaksana}}</td>
+                            <td class="text-end">{{ number_format($data[0]->gaji->tj_pelaksana, 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Perumahan</td>
-                            <td class="text-end">{{ $data[0]->gaji->tj_perumahan}}</td>
+                            <td class="text-end">{{ number_format($data[0]->gaji->tj_perumahan, 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Pulsa</td>
-                            <td class="text-end">{{ $data[0]->gaji->tj_pulsa}}</td>
+                            <td class="text-end">{{ number_format($data[0]->gaji->tj_pulsa, 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Telepon</td>
-                            <td class="text-end">{{ $data[0]->gaji->tj_telepon}}</td>
+                            <td class="text-end">{{ number_format($data[0]->gaji->tj_telepon, 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Transport</td>
-                            <td class="text-end">{{ $data[0]->gaji->tj_transport}}</td>
+                            <td class="text-end">{{ number_format($data[0]->gaji->tj_transport, 0, ',', '.')}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Vitamin</td>
-                            <td class="text-end">{{ $data[0]->gaji->tj_vitamin}}</td>
+                            <td class="text-end">{{ number_format($data[0]->gaji->tj_vitamin, 0, ',', '.')}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -191,14 +198,16 @@
                     <thead>
                         <tr>
                             <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
-                            <th class="text-end">{{ $data[0]->gaji->total_gaji }}</th>
+                            <th class="text-end">{{ number_format($data[0]->gaji->total_gaji , 0, ',', '.')}}</th>
                         </tr>
                     </thead>
                 </table>
             </div>
         </div>
-        <div class="content-header bg-utama p-2 mt-4 rounded">
-            <h6 class="fw-bold text-center text-white">Potongan</h6>
+        <div class="pt-5 mt-5">
+            <div class="content-header bg-utama p-2 mt-5 rounded">
+                <h6 class="fw-bold text-center text-white">Potongan</h6>
+            </div>
         </div>
         <div class="row">
             <div class="col-lg-12 mt-3">
@@ -234,7 +243,7 @@
                     <thead>
                         <tr>
                             <th width="60%">TOTAL POTONGAN</th>
-                            <th class="text-end">{{ $data[0]->total_potongan }}</th>
+                            <th class="text-end">{{ number_format($data[0]->total_potongan, 0, ',', '.')  }}</th>
                         </tr>
                     </thead>
                 </table>
@@ -243,7 +252,7 @@
                     <thead>
                         <tr>
                             <th width="60%">TOTAL YANG DITERIMA</th>
-                            <th class="text-end">{{ $data[0]->total_yg_diterima > 0 ? $data[0]->total_yg_diterima : '-'}}</th>
+                            <th class="text-end">{{ $data[0]->total_yg_diterima > 0 ? number_format($data[0]->total_yg_diterima, 0, ',', '.') : '-'}}</th>
                         </tr>
                     </thead>
                 </table>
@@ -254,47 +263,14 @@
 
         <br><br>
 
-        <div class="row">
-            <div class="col-lg-4">
-                <table class="table table-borderless">
-                    <tbody class="text-center">
-                        <tr>
-                            <td>Mengetahui</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>Manajer Keuangan</p>
-                                <p>Julio Critiano</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="p-4 my-5" style="display: flex; justify-content: space-between;">
+            <div>
+                <p class="p-0 mb-5">Mengetahui</p>
+                <p class="p-0 m-0 fw-bold text-decoration-underline">SIGIT PURWANTO</p>
+                <p class="p-0 m-0">Pemimpin Divisi Umum</p>
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
 </body>
 
 </html>
