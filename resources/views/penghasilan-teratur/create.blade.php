@@ -1,3 +1,4 @@
+@include('penghasilan-teratur.modal.loading')
 @extends('layouts.template')
 @push('style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
@@ -428,8 +429,10 @@
             }
 
             $('#btn-simpan').on('click', function(){
-                $('.loader-wrapper').addClass('d-block')
-                $(".loader-wrapper").fadeOut("slow");
+                $("#loadingModal").modal({
+                    keyboard: false
+                });
+                $("#loadingModal").modal("show");
             })
             function alertWarning(message) {
                 Swal.fire({
