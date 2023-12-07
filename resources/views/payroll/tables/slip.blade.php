@@ -29,7 +29,7 @@
                 $kredit_pegawai = $item->potonganGaji ? number_format($item->potonganGaji->kredit_pegawai, 0, ',', '.') : 0;
                 $iuran_ik = $item->potonganGaji ? number_format($item->potonganGaji->iuran_ik, 0, ',', '.') : 0;
                 $total_potongan = number_format($item->total_potongan, 0, ',', '.');
-                $total_diterima = $item->total_yg_diterima ? number_format($item->total_yg_diterima, 0, ',', '.') : 0;
+                $total_diterima = $item->total_yg_diterima ? $item->total_yg_diterima : 0;
 
                 // count total
                 $footer_total_gaji += str_replace('.', '', $total_gaji);
@@ -43,9 +43,16 @@
                 <td class="text-center">{{ $norek }}</td>
                 <td class="text-right">{{ $total_gaji }}</td>
                 <td class="text-right">{{ $total_potongan }}</td>
-                <td class="text-right">{{ $total_diterima }}</td>
+                <td class="text-right">{{ $total_diterima > 0 ? number_format($total_diterima, 0, ',', '.') : '-' }}</td>
                 <td class="text-center">
-                    <button class="btn btn-sm btn-primary">Slip</button>
+                    <button type="button"
+                    data-toggle="modal"
+                    data-target="#exampleModal"
+                    data-target-id="slipGaji-{{ $item->id }}"
+                    data-json="{{ $data[$key] }}"
+                    {{-- onclick="showModal(this)" --}}
+                    class="btn btn-sm btn-primary p-1 show-data">Slip</button>
+                    {{-- <button class="btn btn-sm btn-primary">Slip</button> --}}
                 </td>
             </tr>
         @empty

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repository\CabangRepository;
 use App\Repository\PayrollRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -78,11 +79,35 @@ class PayrollController extends Controller
 
     }
 
-    public function cetakSlip(){
-        return view('payroll.print.slip');
+    public function cetakSlip(Request $request){
+        // return $request;
+        $payrollRepository = new PayrollRepository;
+        $data = $payrollRepository->getSlipId($request->get('request_kantor'), $request->get('request_month'),$request->get('request_year'), $request->get('request_nip'));
+
+        $pdf = Pdf::loadview('payroll.print.slip',['data'=>$data]);
+
+        $fileName =  time().'.'. 'pdf' ;
+        $pdf->save(public_path() . '/' . $fileName);
+
+        $pdf = public_path($fileName);
+        return response()->download($pdf);
+    }
+
+    function slipPDF() {
+        $kantor = FacadesSession::get('kantor');
+        $month = FacadesSession::get('month');
+        $year = FacadesSession::get('year');
+        $search = null;
+        $page = null;
+        $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, 10, 'cetak');
+        return view('payroll.tables.slip-pdf', ['data' => $data]);
+
     }
 
     public function slip(Request $request) {
+        FacadesSession::forget('kantor');
+        FacadesSession::forget('month');
+        FacadesSession::forget('year');
         $this->validate($request, [
             'kantor' => 'not_in:0',
             'bulan' => 'not_in:0',
@@ -92,16 +117,22 @@ class PayrollController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->get('q');
+
         $kantor = $request->get('kantor') == 'pusat' ? 'pusat' : $request->get('cabang');
+        FacadesSession::put('kantor',$kantor);
+
         $month = $request->get('bulan');
+        FacadesSession::put('month',$month);
+
         $year = $request->get('tahun');
+        FacadesSession::put('year',$year);
 
         // Retrieve cabang data
         $cabangRepo = new CabangRepository;
         $cabang = $cabangRepo->listCabang();
 
         $data = $this->listSlipGaji($kantor, $month, $year, $search, $page, $limit,null);
-// return $data;
+        // return $data;
         return view('payroll.slip', compact('data', 'cabang'));
     }
 

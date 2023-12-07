@@ -209,4 +209,273 @@
             </div>
         </div>
     </div>
+    {{-- MODAL  --}}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Slip Gaji</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-end">
+                    <div>
+                        <input type="text" id="id_nip" name="id_nip" hidden>
+                        <a href="{{ route('payroll.slip.pdf') }}" target="_blank" class="btn btn-primary" id="cetak-gaji">Cetak Gaji</a>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-start">
+                    <div>
+                        <img src="{{ asset('style/assets/img/logo.png') }}" width="100px" class="img-fluid">
+                        <p class="pt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <div class="row">
+                        <div class="col-lg-12 mt-3">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="fw-bold">NIP</td>
+                                    <td>:</td>
+                                    <td id="data-nip"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Nama Karyawan</td>
+                                    <td>:</td>
+                                    <td id="nama"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">No Rekening</td>
+                                    <td>:</td>
+                                    <td id="no_rekening"></td>
+                                </tr>
+                            </table>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 m-0">
+                            <h4 class="font-weight-bold">Pendapatan</h4>
+                            <table class="table table-borderless m-0" style="border:1px solid #e3e3e3" id="table-tunjangan">
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                            <table class="table table-borderless" id="table-tunjangan-total">
+                                <thead></thead>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="font-weight-bold">Potongan</h4>
+                            <table class="table table-borderless m-0" style="border:1px solid #e3e3e3" id="table-potongan">
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                            <table class="table table-borderless m-0" style="border:1px solid #e3e3e3" id="table-total-potongan">
+                                <thead>
+
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-borderless m-0" style="border:1px solid #e3e3e3" id="table-total-diterima">
+                                <thead>
+
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {{-- <div class="modal-footer">
+
+            </div> --}}
+        </div>
+        </div>
+    </div>
 @endsection
+@push('script')
+    <script>
+
+        $('.show-data').on('click',function(e) {
+            // console.log(e);
+            const targetId = $(this).data("target-id");
+            const data = $(this).data('json');
+            // $('#table-tunjangan-tidak > tbody').empty();
+            // $('#table-tunjangan-total-tidak thead').empty();
+            $('#id_nip').val(data.nip);
+            $('#cetak-gaji').on('click',function(e) {
+                var nip =  $('#id_nip').val();
+                var kantor = $('#kantor').val();
+                var month = $('#bulan').val()
+                var year = $('#tahun').val()
+                console.log(`${nip}=${kantor}=${month}=${year}`);
+                $.ajax({
+                        type: "GET",
+                        url: `{{ route('payroll.cetak_slip') }}`,
+                        data: {
+                            request_nip: nip,
+                            request_kantor: kantor,
+                            request_month: month,
+                            request_year: year,
+                        },
+                        xhrFields: {
+                            responseType: 'blob'
+                        },
+                        success: function(response){
+                            var blob = new Blob([response]);
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = "slip-gaji.pdf";
+                            link.click();
+                        },
+                        // complete: function () {
+                        //     // Remove the loading message or indicator after the API call is complete
+                        //     $('#loading-message').empty();
+                        // }
+                });
+                // window.location.href = `{{ route('payroll.cetak_slip') }}`
+            })
+            $('#table-tunjangan > tbody').empty();
+            $('#table-tunjangan-total thead ').empty();
+
+            $('#table-potongan > tbody').empty()
+            $("#table-total-potongan thead").empty()
+
+            $("#table-total-diterima thead").empty();
+
+            $('#data-nip').html(`${data.nip}`)
+            $('#nama').html(`${data.nama_karyawan}`)
+            $('#no_rekening').html(`${data.no_rekening != null ? data.no_rekening : '-'}`)
+
+            var nominal = 0;
+            // console.log(typeof(data.gaji));
+            // Tunjangan
+            var tableTunjangan = `
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Gaji Pokok</td>
+                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gaji.total_gaji)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Jabatan</td>
+                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gaji.tj_jabatan)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Penyesuaian</td>
+                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gaji.gj_penyesuaian)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Keluarga</td>
+                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gaji.tj_keluarga)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Kemahalan</td>
+                        <td class="text-right">${formatRupiahPayroll(data.gaji.tj_kemahalan)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Kesejahteraan</td>
+                        <td class="text-right">${formatRupiahPayroll(data.gaji.tj_kesejahteraan)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Multilevel</td>
+                        <td class="text-right">${formatRupiahPayroll(data.gaji.tj_multilevel)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Pelaksana</td>
+                        <td class="text-right">${formatRupiahPayroll(data.gaji.tj_pelaksana)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Perumahan</td>
+                        <td class="text-right">${formatRupiahPayroll(data.gaji.tj_perumahan)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Pulsa</td>
+                        <td class="text-right">${formatRupiahPayroll(data.gaji.tj_pulsa)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Telepon</td>
+                        <td class="text-right">${formatRupiahPayroll(data.gaji.tj_telepon)}</td>
+                    </tr>
+                   ${
+                        !data.gaji.hasOwnProperty('tj_teller') ? (
+                            `<tr style="border:1px solid #e3e3e3">
+                                <td>Teller</td>
+                                <td class="text-right">${formatRupiahPayroll(data.gaji.tj_teller)}</td>
+                            </tr>`
+                        ) : null
+                   }
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Transport</td>
+                        <td class="text-right">${formatRupiahPayroll(data.gaji.tj_transport)}</td>
+                    </tr>
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Vitamin</td>
+                        <td class="text-right">${formatRupiahPayroll(data.gaji.tj_vitamin)}</td>
+                    </tr>
+            `;
+
+            $("#table-tunjangan tbody").append(tableTunjangan);
+
+            var tableTotalTunjanganTeratur = `
+                <tr>
+                    <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
+                    <th class="text-right ">${formatRupiahPayroll(data.gaji.total_gaji)}</th>
+                </tr>
+            `
+            $("#table-tunjangan-total thead").append(tableTotalTunjanganTeratur);
+            // END TUNJANGAN TERATUR
+            // POTONGAN
+            var potongan = `
+                <tr style="border:1px solid #e3e3e3">
+                    <td>JP BPJS TK 1%</td>
+                    <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.potongan.jp_1_persen)}</td>
+                </tr>
+                <tr style="border:1px solid #e3e3e3">
+                    <td>DPP 5%</td>
+                    <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.potongan.dpp)}</td>
+                </tr>
+                <tr style="border:1px solid #e3e3e3">
+                    <td>KREDIT KOPERASI</td>
+                    <td id="gaji_pokok" class="text-right">${data.potongan_gaji ? formatRupiahPayroll(parseInt(data.potongan_gaji.kredit_koperasi)) : 0}</td>
+                </tr>
+                <tr style="border:1px solid #e3e3e3">
+                    <td>IUARAN KOPERASI	</td>
+                    <td id="gaji_pokok" class="text-right">${data.potongan_gaji ? formatRupiahPayroll(parseInt(data.potongan_gaji.iuran_koperasi)) : 0}</td>
+                </tr>
+                <tr style="border:1px solid #e3e3e3">
+                    <td>KREDIT PEGAWAI	</td>
+                    <td id="gaji_pokok" class="text-right">${data.potongan_gaji ? formatRupiahPayroll(parseInt(data.potongan_gaji.kredit_pegawai)) : 0}</td>
+                </tr>
+                <tr style="border:1px solid #e3e3e3">
+                    <td>IURAN IK</td>
+                    <td id="gaji_pokok" class="text-right">${data.potongan_gaji ? formatRupiahPayroll(parseInt(data.potongan_gaji.iuran_ik)) : 0}</td>
+                </tr>
+            `
+            $('#table-potongan tbody').append(potongan);
+            var tableTotalPotongan = `
+                <tr>
+                    <th width="60%">TOTAL POTONGAN</th>
+                    <th class="text-right ">${formatRupiahPayroll(data.total_potongan)}</th>
+                </tr>
+            `
+            $("#table-total-potongan thead").append(tableTotalPotongan);
+            // END POTONGAN
+            var tableTotalDiterima = `
+                <tr>
+                    <th width="60%">Total Yang Diterima</th>
+                    <th class="text-right ">${data.total_yg_diterima > 0 ? formatRupiahPayroll(data.total_yg_diterima) : '-'}</th>
+                </tr>
+            `
+            $("#table-total-diterima thead").append(tableTotalDiterima);
+        })
+    </script>
+@endpush

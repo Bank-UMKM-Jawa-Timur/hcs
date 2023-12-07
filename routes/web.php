@@ -319,6 +319,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('pdf', [PayrollController::class, 'cetak'])->name('pdf');
             Route::get('/cetak-slip', [PayrollController::class, 'cetakSlip'])->name('cetak_slip');
             Route::get('/slip', [PayrollController::class, 'slip'])->name('slip');
+            Route::get('/slip/pdf', [PayrollController::class, 'slipPDF'])->name('slip.pdf');
         });
 });
 Auth::routes();
