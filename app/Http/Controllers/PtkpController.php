@@ -19,6 +19,7 @@ class PtkpController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = PtkpModel::all();
         return view('ptkp.index', compact('data'));
     }
@@ -30,6 +31,7 @@ class PtkpController extends Controller
      */
     public function create()
     {
+        // Need permission
         return view('ptkp.add');
     }
 
@@ -100,6 +102,7 @@ class PtkpController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = PtkpModel::where('id', $id)->first();
         return view('ptkp.edit', compact('data'));
     }
@@ -158,6 +161,7 @@ class PtkpController extends Controller
      */
     public function destroy($id)
     {
+        // Need permission
         try {
             PtkpModel::find($id)
                 ->delete();

@@ -16,6 +16,7 @@ class PayrollController extends Controller
     public $param;
 
     public function index(Request $request) {
+        // Need permission
         FacadesSession::forget('kategori');
         FacadesSession::forget('kantor');
         FacadesSession::forget('month');
@@ -112,6 +113,7 @@ class PayrollController extends Controller
     }
 
     public function slip(Request $request) {
+        // Need permission
         FacadesSession::forget('kantor');
         FacadesSession::forget('month');
         FacadesSession::forget('year');

@@ -228,7 +228,6 @@ class KlasifikasiController extends Controller
                 $value->gaji_total = $value->gj_pokok + $value->gj_penyesuaian + array_sum($arrTotalTunjangan);
             }
         }
-        // return $karyawan;
 
         return view('karyawan.klasifikasi', [
             'status' => $status,

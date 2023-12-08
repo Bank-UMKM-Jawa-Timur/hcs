@@ -32,6 +32,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Need permission
         $dataCabang = CabangModel::orderBy('kd_cabang')->get();
         $karyawanByCabang = [];
         $pusat = 0;
@@ -205,7 +206,7 @@ class HomeController extends Controller
         return view('graph.list-karyawan-by-sub-divisi', compact('data', 'sub_div'));
     }
 
-    public function perDevisi(){
+    public function perDivisi(){
         // $datadev = DivisiModel::select('kd_divisi as kode', 'nama_divisi')->get();
 
         // $data = [];
@@ -236,10 +237,10 @@ class HomeController extends Controller
 
         // return $datas;
 
-        return view('graph.per-devisi', compact('datas'));
+        return view('graph.per-divisi', compact('datas'));
     }
 
-    public function subDevisi($kode){
+    public function subDivisi($kode){
         $data = DB::table('mst_karyawan as k')
         ->select(
             'd.kd_divisi as kode',
@@ -254,6 +255,6 @@ class HomeController extends Controller
         ->groupBy('s.kd_subdiv')
         ->get();
 
-        return view('graph.sub-devisi', compact('data'));
+        return view('graph.sub-divisi', compact('data'));
     }
 }

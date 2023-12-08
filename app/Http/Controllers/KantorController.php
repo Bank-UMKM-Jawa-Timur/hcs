@@ -23,6 +23,7 @@ class KantorController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = KantorModel::select(
             'id',
             'nama_kantor'
@@ -37,6 +38,7 @@ class KantorController extends Controller
      */
     public function create()
     {
+        // Need permission
         return view('kantor.add');
     }
 
@@ -91,7 +93,7 @@ class KantorController extends Controller
      */
     public function edit($id)
     {
-        //
+        // Need permission
         $dataKantor = KantorModel::where('id', $id)
             ->first();
 
@@ -140,6 +142,7 @@ class KantorController extends Controller
      */
     public function destroy($id)
     {
+        // Need permission
         try{
             DB::table('mst_kantor')
                 ->where('id', $id)

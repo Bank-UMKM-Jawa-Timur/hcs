@@ -26,6 +26,7 @@ class PotonganController extends Controller
      */
     public function index(Request $request)
     {
+        // Need permission
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -42,6 +43,7 @@ class PotonganController extends Controller
      */
     public function create()
     {
+        // Need permission
         return view('potongan.add');
     }
 
@@ -81,6 +83,7 @@ class PotonganController extends Controller
     }
 
     public function importPotongan(){
+        // Need permission
         return view('potongan.import-potongan');
     }
 
@@ -98,7 +101,6 @@ class PotonganController extends Controller
     }
 
     public function importPotonganPost(Request $request){
-        // return $request;
         try {
             $kredit_koperasi = explode(',', $request->get('kredit_koperasi'));
             $iuran_koperasi = explode(',', $request->get('iuran_koperasi'));
@@ -162,6 +164,7 @@ class PotonganController extends Controller
     }
 
     public function detail($bulan, $tahun){
+        // Need permission
         $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;
         $search = Request()->get('q');
 

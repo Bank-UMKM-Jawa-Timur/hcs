@@ -19,6 +19,7 @@ class MigrasiController extends Controller
      */
     public function index()
     {
+        // Need permission
         return view('migrasi.index');
     }
 

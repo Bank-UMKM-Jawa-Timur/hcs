@@ -6,7 +6,7 @@
             <div class="d-flex justify-content-between">
                 <div>
                     <h5 class="card-title">Sub Divisi</h5>
-                    <p class="card-title"><a href="/">Dashboard </a> > <a href="{{route('per-devisi')}}">Divisi</a> > <a href="">Sub Divisi</a> </p>
+                    <p class="card-title"><a href="/">Dashboard </a> > <a href="{{route('per-divisi')}}">Divisi</a> > <a href="">Sub Divisi</a> </p>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div id="sub-devisi-graph" class="w-100"></div>
+                <div id="sub-divisi-graph" class="w-100"></div>
             </div>
         </div>
 
@@ -109,7 +109,7 @@
                 }
             }
         };
-        var subDevisiChart = new ApexCharts(document.querySelector("#sub-devisi-graph"), optionsSubDevisi);
+        var subDevisiChart = new ApexCharts(document.querySelector("#sub-divisi-graph"), optionsSubDevisi);
         subDevisiChart.render();
 
         $(document).ready(function() {

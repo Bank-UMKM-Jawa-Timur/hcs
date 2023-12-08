@@ -15,6 +15,7 @@ class BackupController extends Controller
      */
     public function index()
     {
+        // Need permission
         return view('backup.index');
     }
 

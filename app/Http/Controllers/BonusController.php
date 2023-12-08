@@ -21,15 +21,16 @@ class BonusController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     private PenghasilanTidakTeraturRepository $repo;
+    private PenghasilanTidakTeraturRepository $repo;
 
-     public function __construct()
-     {
-         $this->repo = new PenghasilanTidakTeraturRepository;
-     }
+    public function __construct()
+    {
+        $this->repo = new PenghasilanTidakTeraturRepository;
+    }
 
     public function index(Request $request)
     {
+        // Need permission
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -45,6 +46,7 @@ class BonusController extends Controller
      */
     public function create()
     {
+        // Need permission
         $tunjangan = TunjanganModel::select('nama_tunjangan','id')->where('kategori','bonus')->where('is_import',1)->get();
         return view('bonus.import',[
             'data_tunjangan' => $tunjangan
@@ -105,6 +107,7 @@ class BonusController extends Controller
      */
     public function detail(Request $request,$id, $tgl)
     {
+        // Need permission
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -149,6 +152,7 @@ class BonusController extends Controller
     }
 
     function fileExcel() {
+        // Need permission
         return Excel::download(new KaryawanExport,'template_import_bonus.xlsx');
     }
 }

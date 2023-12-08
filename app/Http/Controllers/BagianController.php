@@ -18,6 +18,7 @@ class BagianController extends Controller
      */
     public function index()
     {
+        // Need permission
         $kd_ent = null;
 
         $data = DB::table('mst_bagian')
@@ -33,6 +34,7 @@ class BagianController extends Controller
      */
     public function create()
     {
+        // Need permission
         $data = DB::table('mst_kantor')
             ->get();
 
@@ -107,6 +109,7 @@ class BagianController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = DB::table('mst_bagian')
             ->where('kd_bagian', $id)
             ->first();
