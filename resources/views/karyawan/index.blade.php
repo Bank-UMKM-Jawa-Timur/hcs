@@ -7,35 +7,26 @@
         <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="/karyawan">Karyawan</a></p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        <a class="mb-3" href="{{ route('karyawan.create') }}">
-            <button class="is-btn is-primary">tambah karyawan</button>
-        </a>
-        <a class="ml-3" href="{{ route('import') }}">
-            <button class="is-btn is-primary">import karyawan</button>
-        </a>
-        <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
-            <button class="is-btn is-primary">Export Karyawan</button>
-        </a>
+        @can('manajemen karyawan - data karyawan - create karyawan')
+            <a class="mb-3" href="{{ route('karyawan.create') }}">
+                <button class="is-btn is-primary">tambah karyawan</button>
+            </a>
+        @endcan
+        @can('manajemen karyawan - data karyawan - import karyawan')
+            <a class="ml-3" href="{{ route('import') }}">
+                <button class="is-btn is-primary">import karyawan</button>
+            </a>
+        @endcan
+        @can('manajemen karyawan - data karyawan - export karyawan')
+            <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
+                <button class="is-btn is-primary">Export Karyawan</button>
+            </a>
+        @endcan
     </div>
 </div>
     <div class="card-body p-3">
         <div class="col">
             <div class="row">
-                @can('manajemen karyawan - data karyawan - create karyawan')
-                    <a class="mb-3" href="{{ route('karyawan.create') }}">
-                        <button class="btn btn-primary">tambah karyawan</button>
-                    </a>
-                @endcan
-                @can('manajemen karyawan - data karyawan - import karyawan')
-                    <a class="ml-3" href="{{ route('import') }}">
-                        <button class="btn btn-primary">import karyawan</button>
-                    </a>
-                @endcan
-                @can('manajemen karyawan - data karyawan - export karyawan')
-                    <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
-                        <button class="btn btn-primary">Export Karyawan</button>
-                    </a>
-                @endcan
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
