@@ -131,7 +131,8 @@ class PenghasilanTidakTeraturRepository
 
     public function getPenghasilan($search, $limit=10, $page=1){
         $data = ImportPenghasilanTidakTeraturModel::join('mst_tunjangan', 'mst_tunjangan.id', 'penghasilan_tidak_teratur.id_tunjangan')
-            ->selectRaw("bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan")
+            ->selectRaw("bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan, SUM(penghasilan_tidak_teratur.nominal) as grand_total")
+            ->having('grand_total', '>', 0)
             ->groupBy('bulan')
             ->groupBy('tahun')
             ->groupBy('nama_tunjangan')

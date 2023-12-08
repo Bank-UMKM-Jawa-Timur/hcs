@@ -350,11 +350,11 @@ class PenghasilanTidakTeraturController extends Controller
         } catch(Exception $e){
             DB::rollBack();
             Alert::error('Gagal', 'Terjadi kesalahan.'.$e->getMessage());
-            return redirect()->route('pajak_penghasilan.create');
+            return redirect()->back();
         } catch(QueryException $e){
             DB::rollBack();
             Alert::error('Gagal', 'Terjadi kesalahan.'.$e->getMessage());
-            return redirect()->route('pajak_penghasilan.create');
+            return redirect()->back();
         }
     }
 
@@ -402,9 +402,15 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->get('nip'));
+        // dd(explode(',', $request->get('nip')));
         DB::beginTransaction();
         try{
+            $nip = explode(',', $request->get('nip'));
+            $nominal = explode(',', $request->get('nominal'));
+            $keterangan = [];
+            if(strlen($request->get('keterangan')) > 0){
+                $keterangan = explode(',', $request->get('keterangan'));
+            }
             $inserted = array();
             $tunjangan = $request->get('kategori');
             if($tunjangan == 'spd'){
@@ -412,15 +418,15 @@ class PenghasilanTidakTeraturController extends Controller
             }
             $idTunjangan = TunjanganModel::where('nama_tunjangan', 'like', "%$tunjangan%")->first();
 
-            foreach($request->get('nip') as $key => $item){
+            foreach($nip as $key => $item){
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $idTunjangan->id,
                     'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
-                    'nominal' => str_replace('.', '', $request['nominal'][$key]),
-                    'keterangan' => $request->get('keterangan')[$key] ?? null,
-                    'created_at' => now()
+                    'nominal' => str_replace('.', '', $nominal[$key]),
+                    'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
+                    'created_at' => $request->get('tanggal')
                 ]);
             }
 
@@ -428,7 +434,7 @@ class PenghasilanTidakTeraturController extends Controller
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan');
-            return redirect()->route('pajak_penghasilan.create');
+            return redirect()->route('penghasilan-tidak-teratur.index');
         } catch(Exception $e){
             DB::rollBack();
             dd($e);
