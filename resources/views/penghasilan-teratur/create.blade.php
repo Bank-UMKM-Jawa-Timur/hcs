@@ -58,8 +58,7 @@
             </div>
         </div>
         <div class="teks mt-4">
-            <div class="col-md-4 align-self-center mt-4" id="span_total_data"></div>
-            <div class="col-md-4 align-self-center mt-4" id="span_total_nominal"></div>
+            <div class="col-md-4 align-self-center mt-4" id="grand"></div>
         </div>
 
         <form action="{{route('penghasilan.import-penghasilan-teratur.store')}}" method="POST">
@@ -407,16 +406,11 @@
                                 $('#table_item tbody').append(new_body_tr);
                                 $('#btn-simpan').removeClass('d-none');
                                 $('#hasil-filter').removeClass('d-none');
-                                $('#span_total_data').html(`
-                                    <span id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</span>
-                                `)
-                                $('#span_total_nominal').html(`
-                                    <span id="grand-total" class="font-weight-bold">Grand Total : ${
-                                        new Intl.NumberFormat("id-ID", {
-                                        style: "currency",
-                                        currency: "IDR"
-                                        }).format(grandTotalNominal)
-                                    }</span>
+                                $('#grand').html(`
+                                    <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
+                                    <p id="grand-total" class="font-weight-bold">Grand Total : ${
+                                        formatRupiah(grandTotalNominal.toString())
+                                    }</p>
                                 `)
                             }
                     },
