@@ -3,11 +3,9 @@
 
 @section('content')
 <div class="card-header">
-    <div class="card-header">
-        <div class="card-title">
-            <h5 class="card-title">Penghasilan Tidak Teratur</h5>
-            <p class="card-title"><a href="">Penghasilan </a> > Penghasilan Tidak Teratur</p>
-        </div>
+    <div class="card-title">
+        <h5 class="card-title">Penghasilan Tidak Teratur</h5>
+        <p class="card-title"><a href="">Penghasilan </a> > Penghasilan Tidak Teratur</p>
     </div>
 </div>
 
@@ -15,7 +13,7 @@
     <div class="row">
         <div class="col">
             <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.create') }}">
-                <button class="btn btn-primary">import penghasilan <br> tidak teratur</button>
+                <button class="is-btn is-primary">import</button>
             </a>
         </div>
         <div class="col-lg-12">
@@ -77,7 +75,7 @@
                                     <td>Rp {{ formatRupiah($item->grand_total) }}</td>
                                     <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
                                     <td class="text-center">
-                                        <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->id_tunjangan }}&tanggal={{ $item->tanggal }}" class="btn btn-warning">Detail</a>
+                                        <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->id_tunjangan }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
                                     </td>
                                 </tr>
                             @empty

@@ -282,8 +282,8 @@
                                 <label class="custom-file-label overflow-hidden" for="validatedCustomFile" style="padding: 10px 4px 30px 5px">Choose file...</label>
                             </div> --}}
                         </div>
-                        <div class="col align-items-center mt-3">
-                            <button type="button" class="btn btn-info btn-import">Import</button>
+                        <div class="col align-items-center mt-4">
+                            <button type="button" class="is-btn is-primary btn-import">Import</button>
                         </div>
                     </div>
             </div>

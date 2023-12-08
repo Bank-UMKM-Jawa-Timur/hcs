@@ -183,13 +183,9 @@
                                                 }
                                                 $('#button-simpan').removeClass('hidden');
                                             }
+                                            var total_grand = grand_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
                                             $('#grand-total').html(`
-                                                <span id="grand-total" class="font-weight-bold">Grand Total : ${
-                                                    new Intl.NumberFormat("id-ID", {
-                                                    style: "currency",
-                                                    currency: "IDR"
-                                                    }).format(grand_total)
-                                                }</span>
+                                                <span id="grand-total" class="font-weight-bold">Grand Total : ${total_grand}</span>
                                             `)
                                             $('#total-data').html(`
                                                 <span id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</span>
@@ -315,8 +311,8 @@
                                     <label class="custom-file-label overflow-hidden" for="validatedCustomFile" id="file-label" style="padding: 10px 4px 30px 5px">Choose file...</label>
                                 </div>
                             </div>
-                            <div class="col align-items-center mt-2">
-                                <button type="button" class="btn btn-info btn-import">Import</button>
+                            <div class="col align-items-center mt-4">
+                                <button type="button" class="is-btn is-primary btn-import">Import</button>
                             </div>
                         </div>
                 </div>

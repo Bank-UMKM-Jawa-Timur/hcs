@@ -118,7 +118,7 @@
                                     <div class="container">
                                         <div class="row">
                                             <a href="{{ route('detail-potongan', ['bulan' => $item->bulan, 'tahun' => $item->tahun]) }}"
-                                                class="btn btn-info p-1"
+                                                class="btn btn-outline-info p-1"
                                                 style="min-width: 60px">
                                                 Detail
                                             </a>
