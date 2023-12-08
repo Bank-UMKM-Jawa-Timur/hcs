@@ -89,7 +89,7 @@ class BonusController extends Controller
             }
             \DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan tambahan');
+            Alert::success('Berhasil', 'Berhasil menambahkan bonus.');
             return redirect()->route('bonus.index');
         } catch (Exception $th) {
             \DB::rollBack();

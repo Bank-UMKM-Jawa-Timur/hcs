@@ -21,35 +21,24 @@
             var nextSibling = e.target.nextElementSibling
             nextSibling.innerText = name
         });
+
+
         $(document).ready(function() {
             var kategori;
             var url;
 
-            function formatRupiah(angka, prefix) {
-                var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                    split = number_string.split(','),
-                    sisa = split[0].length % 3,
-                    rupiah = split[0].substr(0, sisa),
-                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-                // tambahkan titik jika yang di input sudah menjadi angka ribuan
-                if (ribuan) {
-                    separator = sisa ? '.' : '';
-                    rupiah += separator + ribuan.join('.');
-                }
 
-                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-            }
 
             $('.btn-import').on('click',function(element) {
                 url = "{{ route('api.get.karyawan') }}";
-
                 $('#table-data').addClass('hidden');
                 $('#table_item tbody').empty();
                 $('#alert-container').addClass('hidden');
 
+
                 var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
+                var grand_total = 0;
                 var test = $("#upload_csv").val();
                 var sheet_data = [];
                 if (regex.test($("#upload_csv").val().toLowerCase())) {
@@ -88,7 +77,7 @@
                                         dataNominal.push(value['Nominal'])
                                     }
                                 })
-                                var grand_total = 0;
+
                                 $.ajax({
                                         type: "GET",
                                         url: url,
@@ -138,7 +127,7 @@
                                             })
                                             if (hasError == true) {
                                                 var message = ``;
-                                                message += `Data tidak ditemukan di NIP :${checkNip}`
+                                                message += `Data tidak ditemukan pada NIP :<span class="font-weight-bold"> ${checkNip}</span> <br> <span class="pt-3 font-italic">Harap cek pada file excel kembali dan silahkan upload ulang.</span>`
                                                 $('#button-simpan').addClass('hidden');
                                                 alertDanger(message)
                                             }
@@ -148,13 +137,9 @@
                                                 $('.nip').val(nipDataRequest);
                                                 $('#button-simpan').removeClass('hidden');
                                             }
+                                            var total_grand = grand_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
                                             $('#grand-total').html(`
-                                                <span id="grand-total" class="font-weight-bold">Grand Total : ${
-                                                    new Intl.NumberFormat("id-ID", {
-                                                    style: "currency",
-                                                    currency: "IDR"
-                                                    }).format(grand_total)
-                                                }</span>
+                                                <span id="grand-total-value" class="font-weight-bold">Grand Total : ${total_grand}</span>
                                             `)
                                             $('#total-data').html(`
                                                 <span id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</span>
@@ -188,7 +173,24 @@
                     $('#table-data').addClass('hidden');
                     $('#button-simpan').addClass('hidden');
                 }
+
             })
+            function formatRupiah(angka, prefix){
+                var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split   		= number_string.split(','),
+                sisa     		= split[0].length % 3,
+                rupiah     		= split[0].substr(0, sisa),
+                ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+
+                // tambahkan titik jika yang di input sudah menjadi angka ribuan
+                if(ribuan){
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
+            }
             function alertDanger(message) {
                 // Display an alert with danger style
                 $('#alert-container').removeClass('hidden');
