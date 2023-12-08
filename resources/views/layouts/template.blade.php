@@ -247,7 +247,7 @@ Coded by www.creative-tim.com
                         {{-- Menu Penghasilan --}}
                         @can('penghasilan')
                         <li
-                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*', 'bonus', 'bonus/*') ? 'active' : '' }}">
+                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*', 'bonus', 'bonus/*', 'penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
@@ -263,7 +263,7 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                <li class="dropdown @active('penghasilan-tidak-teratur')" style="margin-top: -15px">
+                                <li class="dropdown {{ request()->is('penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*') ? 'active' : '' }}" style="margin-top: -15px">
                                     <a href="{{ route('penghasilan-tidak-teratur.index') }}">
                                         <i class="nc-icon nc-money-coins"></i>
                                         <p>Import Penghasilan Tidak Teratur</p>
