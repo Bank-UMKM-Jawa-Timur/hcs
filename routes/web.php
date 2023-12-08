@@ -10,6 +10,7 @@ use App\Http\Controllers\DemosiController;
 use App\Http\Controllers\GajiPerBulanController;
 use App\Http\Controllers\HistoryJabatanController;
 use App\Http\Controllers\Import\PenghasilanTeraturController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JaminanController;
 use App\Http\Controllers\UangDukaController;
 use Illuminate\Support\Facades\Route;
@@ -132,6 +133,36 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::prefix('graph')->group(function () {
+    Route::get('/detail-per-cabang', [HomeController::class, 'perCabang'])->name('per-cabang');
+    Route::get('/list-karyawan-by-cabang/{kd_cabang}', [HomeController::class, 'listKaryawanByCabang'])->name('list-karyawan-by-cabang');
+    Route::get('/list-karyawan-by-sub-divisi/{sub_divisi}', [HomeController::class, 'listKaryawanBySubDivisi'])->name('list-karyawan-by-sub-divisi');
+    Route::get('/per-devisi', [HomeController::class, 'perDevisi'])->name('per-devisi');
+    Route::get('/sub-devisi/{kode}', [HomeController::class, 'subDevisi'])->name('sub-devisi');
+
+    Route::get('/per-bagian', function(){
+        return view('graph.per-bagian');
+    });
+    Route::get('/per-golongan', function(){
+        return view('graph.per-golongan');
+    });
+    Route::get('/per-pendidikan', function(){
+        return view('graph.per-pendidikan');
+    });
+    Route::get('/gaji', function(){
+        return view('graph.per-gaji');
+    });
+    Route::get('/table-karyawan', function(){
+        return view('graph.table-karyawan');
+    });
+    Route::get('/gaji-percabang', function(){
+        return view('graph.gaji-percabang');
+    });
+    Route::get('/table-karyawan-sp', function(){
+        return view('graph.table-karyawan-sp');
+    });
+});
+
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('/kantor', KantorController::class);
     Route::resource('role', RoleMasterController::class);
@@ -162,6 +193,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('import-penghasilan-teratur', \App\Http\Controllers\Import\PenghasilanTeraturController::class);
         Route::get('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
         Route::get('/get-karyawan-search', [PenghasilanTeraturController::class, 'getKaryawanSearch'])->name('karyawan-search');
+        Route::get('/details/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'details'])->name('details');
+        Route::post('/cetak-vitamin', [PenghasilanTeraturController::class, 'cetakVitamin'])->name('cetak-vitamin');
+        Route::get('/template-excel', [PenghasilanTeraturController::class, 'templateExcel'])->name('template-excel');
     });
 
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
@@ -313,7 +347,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Reminder Pensiun
     Route::get('/reminder_pensiun', [KaryawanController::class, 'reminderPensiunIndex'])->name('reminder-pensiun.index');
-    Route::post('/reminder_pensiun-show', [KaryawanController::class, 'reminderPensiunShow'])->name('reminder-pensiun.show');
+    // Route::post('/reminder_pensiun-show', [KaryawanController::class, 'reminderPensiunShow'])->name('reminder-pensiun.show');
+    Route::get('/reminder_pensiun-show', [KaryawanController::class, 'reminderPensiunShow'])->name('reminder-pensiun.show');
 
     // Export CV
     Route::get('/export-cv/{id}', [KaryawanController::class, 'exportCV'])->name('export-cv');

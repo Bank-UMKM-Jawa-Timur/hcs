@@ -5,19 +5,19 @@
 <div class="card-header">
     <div class="card-header">
         <div class="card-title">
-            <h5 class="card-title">Pajak Penghasilan</h5>
+            <h5 class="card-title font-weight-bold">Pajak Penghasilan</h5>
             <p class="card-title"><a href="">Penghasilan </a> > Pajak Penghasilan</p>
         </div>
     </div>
 </div>
 
-<div class="card-body">
+<div class="card-body mt-3">
     <div class="row m-0">
         <div class="col">
-            <h5>Cari Karyawan</h5>
+            <h6>Cari Karyawan</h6>
         </div>
     </div>
-  <form action="{{ route('get-penghasilan') }}" method="post">
+  <form action="{{ route('get-penghasilan') }}" method="post" class="mt-3">
       @csrf
       <div class="row m-0">
           <div class="col-lg-4">
@@ -52,9 +52,9 @@
               </div>
           </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4 pt-4 pb-4">
           <a href="penghasilan/gajipajak">
-            <button class="btn btn-info" type="submit">Tampilkan</button>
+            <button class="is-btn is-primary" type="submit">Tampilkan</button>
           </a>
         </div>
 @endsection

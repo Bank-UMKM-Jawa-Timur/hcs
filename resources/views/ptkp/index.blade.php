@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Tambah Penghasilan Tanpa Pajak</h5>
+            <h5 class="card-title font-weight-bold">Tambah Penghasilan Tanpa Pajak</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('ptkp.index') }}">Penghasilan Tanpa Pajak</a></p>
         </div>
 
@@ -12,7 +12,7 @@
                 <div class="row">
                     @can('setting - master - penghasilan tanpa pajak - create penghasilan tanpa pajak')
                     <a class="mb-3" href="{{ route('ptkp.create') }}">
-                        <button class="btn btn-primary">Tambah Data</button>
+                        <button  class="is-btn is-primary">Tambah Data</button>
                     </a>
                     @endcan
                     <div class="table-responsive overflow-hidden content-center">

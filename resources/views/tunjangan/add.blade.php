@@ -31,7 +31,7 @@
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                    <button class="btn btn-info" value="submit" type="submit">Simpan</button>
+                    <button class="is-btn is-primary" value="submit" type="submit">Simpan</button>
                 </form>
             </div>
         </div>

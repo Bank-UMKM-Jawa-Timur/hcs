@@ -4,7 +4,7 @@
     <div class="card-header">
         <h5 class="card-title">Bonus</h5>
         <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> >Bonus</p>
-        <a href="{{ route('bonus.create') }}" class="btn btn-primary">Import Bonus</a>
+        <a href="{{ route('bonus.create') }}" class="btn is-btn is-primary">Import Bonus</a>
     </div>
 
     <div class="card-body">
@@ -60,9 +60,9 @@
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->nama_tunjangan }}</td>
                                         <td>{{ $item->total_data }}</td>
-                                        <td>Rp {{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
+                                        <td>{{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('d F Y') }}</td>
-                                        <td><a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}" class="btn btn-primary">Detail</a></td>
+                                        <td><a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}" class="btn btn-outline-info p-1">Detail</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>

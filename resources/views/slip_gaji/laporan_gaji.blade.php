@@ -2,7 +2,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Lampiran Gaji</h5>
+            <h5 class="card-title font-weiht-bold">Lampiran Gaji</h5>
             <p class="card-title"><a href="">Gaji</a> > Lampiran Gaji</p>
         </div>
     </div>
@@ -68,7 +68,9 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-info">Tampilkan</button>
+                    <div class="pb-4 pt-4">
+                        <button class="is-btn is-primary">Tampilkan</button>
+                    </div>
                 </form>
             </div>
             @php

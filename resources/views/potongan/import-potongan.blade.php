@@ -27,7 +27,7 @@
     </div>
 
     <div class="card-body">
-        <a class="btn btn-primary" href="{{ route('template-excel-potongan') }}" download>Template Excel</a>
+        <a class="btn is-btn is-primary" href="{{ route('template-excel-potongan') }}" download>Download Template Excel</a>
         <div class="Container" id="alert-content">
         </div>
         <div class="row">
@@ -77,8 +77,8 @@
                     <p class="text-danger d-none mt-2" id="error-file">File belum di pilih.</p>
                 </div>
             </div>
-            <div class="col-lg-2 mt-2">
-                <button type="button" class="btn btn-primary filter-potongan-import" id="filter-potongan-import">Tampilkan</button>
+            <div class="col-lg-2 align-items-center mt-3">
+                <button type="button" class="btn is-btn is-primary filter-potongan-import" id="filter-potongan-import">Tampilkan</button>
             </div>
         </div>
         <div class="teks mt-4">
@@ -95,7 +95,7 @@
             <input type="hidden" name="kredit_pegawai" class="form-control kredit-pegawai-input" value="" readonly>
             <input type="hidden" name="iuran_ik" class="form-control iuran_ik-input" value="" readonly>
             <div class="d-flex justify-content-start">
-                <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
+                <button type="submit" class="btn is-btn is-primary d-none" id="btn-simpan">Simpan</button>
             </div>
             <div class="col-md-10" id="loading-message"></div>
             <div class="row d-none" id="hasil-import">

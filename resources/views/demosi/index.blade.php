@@ -11,7 +11,7 @@
                 <div class="row">
                     @can('manajemen karyawan - pergerakan karir - data demosi - create demosi')
                     <a class="mb-3" href="{{ route('demosi.create') }}">
-                        <button  class="btn btn-primary">Tambah Demosi</button>
+                        <button  class="is-btn is-primary">Tambah Demosi</button>
                     </a>
                     @endcan
                     <div class="table-responsive">
@@ -97,8 +97,8 @@
 
 @section('custom_script')
     <script>
-        $(document).ready( function () {
-            $('#table').DataTable();
+       $('#table').DataTable({
+                responsive: true
         });
     </script>
 @endsection

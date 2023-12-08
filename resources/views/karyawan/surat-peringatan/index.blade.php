@@ -4,8 +4,11 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Surat Peringatan</h5>
+                <h5 class="card-title font-weight-bold">Surat Peringatan</h5>
                 <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="">Reward & Punishment</a> > <a href="/surat-peringatan">Surat Peringatan</a></p>
+            </div>
+            <div class="mt-3 pt-4 pb-4">
+                <a href="{{ route('surat-peringatan.create') }}" class="is-btn is-primary ">Tambah Surat Peringatan</a>
             </div>
         </div>
 
@@ -17,7 +20,7 @@
                     @endcan
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="sp-table">
-                            <thead class="text-primary">
+                            <thead class="text-dark text-center">
                                 <tr>
                                     <th>No</th>
                                     <th>Nomor SP</th>
@@ -28,7 +31,7 @@
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="">
                                 @foreach ($sps as $sp)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>

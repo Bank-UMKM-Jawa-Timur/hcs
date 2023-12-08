@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Edit Penghasilan Tanpa Pajak</h5>
+                <h5 class="card-title font-weight-bold">Edit Penghasilan Tanpa Pajak</h5>
                 <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('ptkp.index') }}">Penghasilan Tanpa Pajak</a> > <a>Edit</a></p>
             </div>
         </div>
@@ -45,8 +45,10 @@
                             @enderror
                         </div>
                     </div>
-
-                    <button class="btn btn-info">Update</button>
+                    
+                   <div class="pt-4 pb-3">
+                       <button  class="is-btn is-primary">Update</button>
+                   </div>
                 </form>
             </div>
         </div>

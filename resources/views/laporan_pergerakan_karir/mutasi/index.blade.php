@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Laporan Mutasi</h5>
+            <h5 class="card-title font-weight-bold">Laporan Mutasi</h5>
             <p class="card-title"><a href="#">Laporan</a> > <a href="#">Laporan Pergerakan Karir</a> > <a
                     href="{{ route('laporan-mutasi.index') }}">Laporan Mutasi</a></p>
         </div>
@@ -28,8 +28,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
-                        <button class="btn btn-info" type="submit">Tampilkan</button>
+                    <div class="col-md-12 pt-4 pb-4">
+                        <button class="is-btn is-primary" type="submit">Tampilkan</button>
                     </div>
                 </div>
             </form>
@@ -128,7 +128,7 @@
 <script>
     var start_date = document.getElementById("start_date").value;
         var end_date = document.getElementById("end_date").value;
-        
+
         $("#table_export").DataTable({
 
             dom : "Bfrtip",
@@ -157,12 +157,12 @@
                     customize: function (doc) {
                         var now = new Date();
 						var jsDate = now.getDate()+' / '+(now.getMonth()+1)+' / '+now.getFullYear();
-                        
-                        doc.styles.tableHeader.fontSize = 10; 
+
+                        doc.styles.tableHeader.fontSize = 10;
                         doc.defaultStyle.fontSize = 9;
                         doc.defaultStyle.alignment = 'center';
                         doc.styles.tableHeader.alignment = 'center';
-                        
+
                         doc.content[1].margin = [0, 0, 0, 0];
                         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
 
@@ -195,20 +195,20 @@
                         var last = null;
                         var current = null;
                         var bod = [];
-        
+
                         var css = '@page { size: landscape; }',
                             head = win.document.head || win.document.getElementsByTagName('head')[0],
                             style = win.document.createElement('style');
-        
+
                         style.type = 'text/css';
                         style.media = 'print';
-        
+
                         if (style.styleSheet) {
                             style.styleSheet.cssText = css;
                         } else {
                             style.appendChild(win.document.createTextNode(css));
                         }
-        
+
                         head.appendChild(style);
 
                         $(win.document.body).find('h1')
@@ -227,7 +227,7 @@
                 }
             ]
         });
-        
+
         $(".buttons-excel").attr("class","btn btn-success mb-2");
         $(".buttons-pdf").attr("class","btn btn-success mb-2");
         $(".buttons-print").attr("class","btn btn-success mb-2");

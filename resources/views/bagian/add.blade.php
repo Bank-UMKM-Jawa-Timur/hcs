@@ -2,7 +2,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Tambah Bagian</h5>
+            <h5 class="card-title font-weight-bold">Tambah Bagian</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('bagian.index') }}">Bagian</a> > <a>Tambah</a></p>
         </div>
     </div>
@@ -49,7 +49,9 @@
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <button class="btn btn-info">Simpan</button>
+                        <div class="pt-4 pb-4">
+                            <button class="is-btn is-primary">Simpan</button>
+                        </div>
                     </div>
 
                 </form>

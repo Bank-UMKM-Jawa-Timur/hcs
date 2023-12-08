@@ -2,7 +2,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Data Sub Divisi</h5>
+            <h5 class="card-title font-weight-bold">Data Sub Divisi</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('sub_divisi.index') }}">Sub Divisi</a></p>
         </div>
 
@@ -11,7 +11,7 @@
                 <div class="row">
                     @can('setting - master - sub divisi - create sub divisi')
                     <a class="mb-3" href="{{ route('sub_divisi.create') }}">
-                        <button class="btn btn-primary">tambah sub divisi</button>
+                        <button class="is-btn is-primary">tambah sub divisi</button>
                     </a>
                     @endcan
                     <div class="table-responsive overflow-hidden content-center">
