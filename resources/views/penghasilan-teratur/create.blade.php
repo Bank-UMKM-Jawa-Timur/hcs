@@ -336,10 +336,12 @@
                     },
                     beforeSend: function () {
                         $('#loading-message').html(`
-                            <div class="d-flex align-items-center">
-                                <strong>Loading...</strong>
-                                <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
-                            </div>
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    Loading Data...
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
                         `);
                     },
                     success: function(res){
