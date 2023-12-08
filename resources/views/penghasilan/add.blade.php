@@ -257,115 +257,112 @@
 @endpush
 @section('content')
     <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title">Import Penghasilan Tidak Teratur</h5>
-            <p class="card-title"><a href="{{ route('home') }}">Dashboard</a> > <a href="{{ route('penghasilan-tidak-teratur.index') }}">Penghasilan Tidak Teratur</a> >Import</p>
-        </div>
+        <h5 class="card-title">Import Penghasilan Tidak Teratur</h5>
+        <p class="card-title"><a href="{{ route('home') }}">Dashboard</a> > <a href="{{ route('penghasilan-tidak-teratur.index') }}">Penghasilan Tidak Teratur</a> >Import</p>
     </div>
-
-    <div class="card-body">
-        <form action="{{ route('pajak_penghasilan.store') }}" enctype="multipart/form-data" method="POST" class="form-group mt-4">
+    <div class="card-body p-3">
+        <form action="{{ route('pajak_penghasilan.store') }}" enctype="multipart/form-data" method="POST" class="form-group">
             @csrf
-        <div class="row">
-            <div class="col">
-                <a href="{{ asset('template_penghasilan_tidak_teratur.xlsx') }}" class="btn btn-primary" id="btnDownloadTemplate" download>Download Template Excel</a>
-            </div>
-        </div>
-        <div class="row">
-           <div class="col-md-12 justify-content-center">
-                @if ($errors->any())
-                <div class="alert alert-danger" role="alert">
-                    <span class="alert-link">Terjadi Kesalahan</span>
-                    <ul>
-                        @foreach ($errors->all() as $item)
-                        <tr class="justify-content-center">
-                            <td>
-                                {{ $item }}
-                            </td>
-                        </tr>
-                        @endforeach
-                    </ul>
+            <div class="row">
+                <div class="col">
+                    <a href="{{ asset('template_penghasilan_tidak_teratur.xlsx') }}" class="btn btn-primary" id="btnDownloadTemplate" download>Download Template Excel</a>
                 </div>
-
-                @endif
             </div>
-            <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div id="alert-container">
-            
-                            </div>
-                        </div>
-                        <div class="col">
-                            <label for="">Kategori</label>
-                            <select name="kategori" id="kategori" class="form-control">
-                                <option value="">-- Pilih Kategori --</option>
-                                @forelse ($data as $item)
-                                    <option value="{{ strtolower($item->nama_tunjangan) }}">{{ $item->nama_tunjangan }}</option>
-                                @empty
-                                    
-                                @endforelse
-                            </select>
-                        </div>
-                        <div class="col">
-                            <label for="tanggal">Tanggal</label>
-                            <input type="date" class="form-control" name="tanggal">
-                        </div>
-                        <div class="col">
-                            <label for="">Data Excel</label>
-                            <div class="custom-file">
-                                <input type="file" name="upload_excel" class="custom-file-input" id="upload_csv" accept=".xlsx, .xls">
-                                <label class="custom-file-label overflow-hidden" for="validatedCustomFile" id="file-label" style="padding: 10px 4px 30px 5px">Choose file...</label>
-                            </div>
-                        </div>
-                        <div class="col align-items-center mt-2">
-                            <button type="button" class="btn btn-info btn-import">Import</button>
-                        </div>
+            <div class="row">
+            <div class="col-md-12 justify-content-center">
+                    @if ($errors->any())
+                    <div class="alert alert-danger" role="alert">
+                        <span class="alert-link">Terjadi Kesalahan</span>
+                        <ul>
+                            @foreach ($errors->all() as $item)
+                            <tr class="justify-content-center">
+                                <td>
+                                    {{ $item }}
+                                </td>
+                            </tr>
+                            @endforeach
+                        </ul>
                     </div>
-            </div>
 
-            <div class="col-md-4 align-self-center mt-4" id="total-data">
-            </div>
-            <div class="col-md-4 align-self-center mt-4" id="grand-total">
-            </div>
-            <div class="col-md-4 align-self-center mt-4">
-                <div class="d-flex justify-content-start hidden">
-                    <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
-                    <input type="text" name="keterangan" class="form-control keterangan-input" value="" readonly hidden>
-                    <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
-                    <button type="submit" class="btn btn-info hidden" id="button-simpan">Simpan</button>
+                    @endif
+                </div>
+                <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="alert-container">
+                
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="">Kategori</label>
+                                <select name="kategori" id="kategori" class="form-control">
+                                    <option value="">-- Pilih Kategori --</option>
+                                    @forelse ($data as $item)
+                                        <option value="{{ strtolower($item->nama_tunjangan) }}">{{ $item->nama_tunjangan }}</option>
+                                    @empty
+                                        
+                                    @endforelse
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="tanggal">Tanggal</label>
+                                <input type="date" class="form-control" name="tanggal">
+                            </div>
+                            <div class="col">
+                                <label for="">Data Excel</label>
+                                <div class="custom-file">
+                                    <input type="file" name="upload_excel" class="custom-file-input" id="upload_csv" accept=".xlsx, .xls">
+                                    <label class="custom-file-label overflow-hidden" for="validatedCustomFile" id="file-label" style="padding: 10px 4px 30px 5px">Choose file...</label>
+                                </div>
+                            </div>
+                            <div class="col align-items-center mt-2">
+                                <button type="button" class="btn btn-info btn-import">Import</button>
+                            </div>
+                        </div>
+                </div>
+
+                <div class="col-md-4 align-self-center mt-4" id="total-data">
+                </div>
+                <div class="col-md-4 align-self-center mt-4" id="grand-total">
+                </div>
+                <div class="col-md-4 align-self-center mt-4">
+                    <div class="d-flex justify-content-start hidden">
+                        <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
+                        <input type="text" name="keterangan" class="form-control keterangan-input" value="" readonly hidden>
+                        <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
+                        <button type="submit" class="btn btn-info hidden" id="button-simpan">Simpan</button>
+                    </div>
+                </div>
+                <div class="col-md-12" id="loading-message">
+                </div>
+                <div class="col-md-12 hidden" id="table-data">
+                    <div class="table-responsive overflow-hidden content-center">
+                        <table class="table whitespace-nowrap table-bondered" id="table_item" style="width: 100%">
+                        <thead class="text-primary">
+                            <th>
+                                No
+                            </th>
+                            <th>
+                                NIP
+                            </th>
+                            <th>
+                                Nama
+                            </th>
+                            <th>
+                                Nominal
+                            </th>
+                            <th class="hidden" id="keterangan">
+                                Keterangan
+                            </th>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+
+                        </table>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-12" id="loading-message">
-            </div>
-            <div class="col-md-12 hidden" id="table-data">
-                <div class="table-responsive overflow-hidden content-center">
-                    <table class="table whitespace-nowrap table-bondered" id="table_item" style="width: 100%">
-                      <thead class="text-primary">
-                        <th>
-                            No
-                        </th>
-                        <th>
-                            NIP
-                        </th>
-                        <th>
-                            Nama
-                        </th>
-                        <th>
-                            Nominal
-                        </th>
-                        <th class="hidden" id="keterangan">
-                            Keterangan
-                        </th>
-                      </thead>
-                      <tbody>
-
-                      </tbody>
-
-                    </table>
-                </div>
-            </div>
-        </div>
-    </form>
+        </form>
     </div>
 @endsection
