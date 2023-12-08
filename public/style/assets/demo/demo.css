@@ -81,6 +81,11 @@
     font-weight: 700;
     transition: 0.2s ease-in-out;
     border-radius: 4px !important;
+    margin: 4px;
+}
+
+a.is-btn {
+    text-decoration: none !important;
 }
 .is-primary {
     background-color: #da271f;
