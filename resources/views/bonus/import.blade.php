@@ -27,9 +27,6 @@
             var kategori;
             var url;
 
-
-
-
             $('.btn-import').on('click',function(element) {
                 url = "{{ route('api.get.karyawan') }}";
                 $('#table-data').addClass('hidden');
@@ -234,7 +231,7 @@
     <div class="card-body">
         <form action="{{ route('bonus.store') }}" enctype="multipart/form-data" method="POST" class="form-group mt-4">
             @csrf
-        <div class="row">
+        <div class="row px-3">
             <div class="col-md-12">
                 <div id="alert-container">
 
@@ -257,10 +254,8 @@
 
                 @endif
             </div>
-            <div class="col-md-12">
-            </div>
-            <div class="col-md-12">
-                    <div class="form-row">
+            <div class="col-md-12 px-4">
+                    <div class="form-row mb-3">
                         <div class="col">
                             <label for="">Kategori</label>
                             <select name="kategori_bonus" id="kategori-bonus" class="form-control">
@@ -287,25 +282,25 @@
                                 <label class="custom-file-label overflow-hidden" for="validatedCustomFile" style="padding: 10px 4px 30px 5px">Choose file...</label>
                             </div> --}}
                         </div>
-                        <div class="col align-items-center mt-2">
+                        <div class="col align-items-center mt-3">
                             <button type="button" class="btn btn-info btn-import">Import</button>
                         </div>
                     </div>
             </div>
-            <div class="col-md-4 align-self-center mt-4" id="total-data">
+            <div class="col-md-4 px-4 align-self-center mt-4" id="total-data">
             </div>
-            <div class="col-md-4 align-self-center mt-4" id="grand-total">
+            <div class="col-md-4 px-4 align-self-center mt-4" id="grand-total">
             </div>
-            <div class="col-md-4 align-self-center mt-4">
+            <div class="col-md-4 px-4 align-self-center mt-4">
                 <div class="d-flex justify-content-start hidden">
                     <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
                     <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
                     <button type="submit" class="btn btn-info hidden" id="button-simpan">Simpan</button>
                 </div>
             </div>
-            <div class="col-md-12" id="loading-message">
+            <div class="col-md-12 px-4" id="loading-message">
             </div>
-            <div class="col-md-12 hidden" id="table-data">
+            <div class="col-md-12 px-4 hidden" id="table-data">
                 <div class="table-responsive overflow-hidden content-center">
                     <table class="table whitespace-nowrap table-bondered" id="table_item" style="width: 100%">
                       <thead class="text-primary">
