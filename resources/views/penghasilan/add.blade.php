@@ -6,7 +6,7 @@
 @endphp
 <div class="card-header">
     <div class="card-header">
-        <h5 class="card-title">Pajak Penghasilan</h5>
+        <h5 class="card-title font-weight-bold">Pajak Penghasilan</h5>
         <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> > Tambah</p>
     </div>
 
@@ -45,11 +45,10 @@
                     <input type="text" name="nominal" class="form-control rupiah">
                 </div>
             </div>
-
+            <div class="p-4">
+                <button class="is-btn is-primary">Tambah</button>
+            </div>
             <div class="row m-0">
-                <div class="container">
-                    <button class="btn btn-info">Tambah</button>
-                </div>
             </div>
         </form>
     </div>

@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Data Rentang Umur</h5>
+            <h5 class="card-title font-weight-bold">Data Rentang Umur</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('umur.index') }}">Rentang Umur</a></p>
         </div>
 
@@ -12,7 +12,8 @@
                 <div class="row">
                     @can('setting - master - rentang umur - create rentang umur')
                     <a class="mb-3" href="{{ route('umur.create') }}">
-                        <button class="btn btn-primary">Tambah Rentang Umur</button>
+                
+                        <button class="is-btn is-primary">Tambah Rentang Umur</button>
                     </a>
                     @endcan
                     <div class="table-responsive overflow-hidden content-center">

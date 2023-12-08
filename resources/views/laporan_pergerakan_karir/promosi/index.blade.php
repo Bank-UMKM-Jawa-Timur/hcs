@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Laporan Promosi</h5>
+            <h5 class="card-title font-weight-bold">Laporan Promosi</h5>
             <p class="card-title"><a href="#">Laporan</a> > <a href="#">Laporan Pergerakan Karir</a> > <a
                     href="{{ route('laporan-promosi.index') }}">Laporan Promosi</a></p>
         </div>
@@ -28,8 +28,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
-                        <button class="btn btn-info" type="submit">Tampilkan</button>
+                    <div class="col-md-12 pt-4 pb-4">
+                        <button class="is-btn is-primary" type="submit">Tampilkan</button>
                     </div>
                 </div>
             </form>

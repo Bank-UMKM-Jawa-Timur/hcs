@@ -53,26 +53,12 @@ Coded by www.creative-tim.com
             -moz-appearance: textfield;
         }
 
-        .loader-wrapper {
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 100px;
-            position: fixed;
-            background-color: rgba(110, 110, 110, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         .vh-100 {
             height: 90vh !important;
         }
     </style>
     @stack('style')
-
 </head>
-
 <body>
     <div class="wrapper">
         <div class="sidebar" data-color="white" data-active-color="danger">
@@ -652,76 +638,15 @@ Coded by www.creative-tim.com
 
         </div>
         <div class="main-panel">
-            <!-- Navbar -->
-            <nav class="navbar fixed-top navbar-expand-lg navbar-absolute navbar-transparent">
-                <div class="container-fluid">
-                    <div class="navbar-wrapper">
-                        <div class="navbar-toggle">
-                            <button type="button" class="navbar-toggler">
-                                <span class="navbar-toggler-bar bar1"></span>
-                                <span class="navbar-toggler-bar bar2"></span>
-                                <span class="navbar-toggler-bar bar3"></span>
-                            </button>
-                        </div>
-                    </div>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
-                        aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-bar navbar-kebab"></span>
-                        <span class="navbar-toggler-bar navbar-kebab"></span>
-                        <span class="navbar-toggler-bar navbar-kebab"></span>
-                    </button>
-                    <div class="collapse navbar-collapse justify-content-end" id="navigation">
-                        <ul class="card m-sm-1  navbar-nav">
-                            <li class="nav-item btn-rotate">
-                                <a class="nav-link noHover">
-                                    <i class="nc-icon nc-watch-time"></i>
-                                    <p id="DisplayClock" class="" onload="showTime()"></p>
-                                </a>
-                            </li>
-                        </ul>
-                        <ul class="card m-sm-1 navbar-nav">
-                            <li class="nav-item btn-rotate dropdown">
-                                <a class="nav nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="nc-icon nc-single-02"></i>
-                                    {{-- @if (session('status')) --}}
-                                    <p>Welcome, {{ auth()->user()->name }}</p>
-                                    <p></p>
-                                    {{-- @endif --}}
-                                </a>
-                                <div class="dropdown-menu dropdown-primary dropdown-menu-right"
-                                    aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                    document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                        class="d-none">
-                                        @csrf
-                                    </form>
-
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            <!-- End Navbar -->
-
-            {{-- Content --}}
-
+            @include('components.old.navbar')
             <div class="content">
-
                 <div class="card">
                     @yield('content')
                     @include('sweetalert::alert')
                 </div>
-
             </div>
             {{-- End Content --}}
-            <footer class="footer footer-black  footer-white ">
+            <footer class="footer footer-black border-top footer-white ">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="credits ml-auto">
@@ -738,19 +663,8 @@ Coded by www.creative-tim.com
         </div>
     </div>
 
-    <div class="loader-wrapper">
-        <div class="la-line-spin-clockwise-fade la-dark la-2x">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    </div>
-
+    @include('components.old.loader')
+    
     <!--   Core JS Files   -->
     <script src="{{ asset('style/assets/js/core/jquery.min.js') }}"></script>
     <script src="{{ asset('style/assets/js/core/popper.min.js') }}"></script>
@@ -770,7 +684,9 @@ Coded by www.creative-tim.com
     <script src="{{ asset('style/assets/js/ReorderWithResize.js') }}"></script>
     <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('vendor/apexchart/apexcharts.js') }}"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.0/moment.min.js"></script>
+
     <script>
         // $(document).ready(function() {
         //     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js

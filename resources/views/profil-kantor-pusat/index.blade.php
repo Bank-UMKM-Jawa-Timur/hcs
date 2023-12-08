@@ -84,7 +84,7 @@
                     @error('nama_pemimpin_cabang')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
-                    <button class="btn btn-info" type="submit">Simpan</button>
+                    <button class="is-btn is-primary" type="submit">Simpan</button>
                 </form>
             </div>
         </div>
