@@ -263,13 +263,6 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                <li class="dropdown {{ request()->is('penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*') ? 'active' : '' }}" style="margin-top: -15px">
-                                    <a href="{{ route('penghasilan-tidak-teratur.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Import Penghasilan Tidak Teratur</p>
-                                        <p></p>
-                                    </a>
-                                </li>
                                 <li style="margin-top: -15px" class="@active('pajak_penghasilan.index') @active('get-penghasilan')">
                                     <a href="{{ route('pajak_penghasilan.index') }}">
                                         <i class="nc-icon nc-scissors"></i>
@@ -287,21 +280,47 @@ Coded by www.creative-tim.com
                                     </a>
                                 </li>
                                 @endcan
-
-                                <li class="@active('penghasilan') {{ request()->is('penghasilan', 'penghasilan/*') ? 'active' : '' }}">
-                                    <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}" style="font-weight: bolder">
-                                        <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
-                                        <p>Penghasilan Teratur</p>
+                                {{-- Menu Import --}}
+                                <li class="@active('payroll') {{ request()->is('payroll', 'payroll/*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
+                                        style="font-weight: bolder">
+                                        <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
+                                        <span class="dropdown-toggle">Import</span>
                                     </a>
+                                    <ul class="sub-menu {{ request()->is('payroll', 'payroll/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('payroll.slip', 'show')"
+                                        id="submenu5">
+                                        <li style="margin-top: -15px"
+                                            class="@active('payroll.index')">
+                                            <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}" style="font-weight: bolder">
+                                                <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
+                                                <p>Penghasilan Teratur</p>
+                                            </a>
+                                        </li>
+                                        <li style="margin-top: -15px"
+                                            class="@active('payroll.index')">
+                                            <a href="{{ route('penghasilan-tidak-teratur.index') }}" style="font-weight: bolder">
+                                                <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
+                                                <p>Penghasilan Tidak Teratur</p>
+                                                <p></p>
+                                            </a>
+                                        </li>
+                                        <li style="margin-top: -15px"
+                                            class="@active('payroll.index')">
+                                            <a href="{{ route('bonus.index') }}" style="font-weight: bolder">
+                                                <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
+                                                <p>Bonus</p>
+                                            </a>
+                                        </li>
+                                        <li style="margin-top: -15px"
+                                            class="@active('payroll.index')">
+                                            <a href="{{ route('potongan.index') }}" style="font-weight: bolder">
+                                                <i class="nc-icon nc-credit-card style="font-weight: bolder""></i>
+                                                <p>Potongan</p>
+                                                <p></p>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
-
-                                <li class="@active('penghasilan-lainnya') {{ request()->is('bonus', 'bonus/*') ? 'active' : '' }}">
-                                    <a href="{{ route('bonus.index') }}" style="font-weight: bolder">
-                                        <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
-                                        <p>Import Bonus</p>
-                                    </a>
-                                </li>
-
                                 {{-- Menu Payroll --}}
                                 <li class="@active('payroll') {{ request()->is('payroll', 'payroll/*') ? 'active' : '' }}">
                                     <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
@@ -751,6 +770,7 @@ Coded by www.creative-tim.com
     <script src="{{ asset('style/assets/js/ReorderWithResize.js') }}"></script>
     <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('vendor/apexchart/apexcharts.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.0/moment.min.js"></script>
     <script>
         // $(document).ready(function() {
         //     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js

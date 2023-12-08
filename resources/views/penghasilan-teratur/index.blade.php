@@ -1,19 +1,21 @@
 @extends('layouts.template')
+@include('penghasilan-teratur.modal.modal-excel-vitamin')
 
 @section('content')
     <div class="card-header">
         <h5 class="card-title">Data Penghasilan Teratur</h5>
-        <p class="card-title"><a href="">Penghasilan</a> > Penghasilan Teratur</p>
+        <p class="card-title"><a href="/">Dashboard</a> > Penghasilan Teratur</p>
     </div>
 
     <div class="card-body">
         <div class="col">
             <div class="row">
                 @can('manajemen karyawan - data karyawan - create karyawan')
-                    <a class="mb-3" href="{{ route('penghasilan.import-penghasilan-teratur.create') }}">
-                        <button class="btn btn-primary">import penghasilan teratur</button>
-                    </a>
-                @endcan
+                    <a href="{{ route('penghasilan.import-penghasilan-teratur.create') }}" class="btn btn-primary">import penghasilan teratur</a>
+                    @endcan
+                    <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#modal-cetak-vitamin">
+                        Print vitamin karyawan kantor pusat
+                    </button>
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -46,19 +48,16 @@
                             <thead class="text-primary">
                                 <th>No</th>
                                 <th>
-                                    NIP
-                                </th>
-                                <th>
-                                    Karyawan
-                                </th>
-                                <th>
                                     Tunjangan
                                 </th>
                                 <th>
-                                    Nominal
+                                    Grand Nominal
                                 </th>
                                 <th>
                                     Tanggal
+                                </th>
+                                <th>
+                                    Aksi
                                 </th>
                             </thead>
                             <tbody>
@@ -72,11 +71,20 @@
                                 @foreach ($data as $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
-                                        <td>{{ $item->nip_tunjangan }}</td>
-                                        <td>{{ $item->nama_karyawan }}</td>
+                                        {{-- <td>{{ $item->nip_tunjangan }}</td> --}}
+                                        {{-- <td>{{ $item->nama_karyawan }}</td> --}}
                                         <td>{{ $item->nama_tunjangan }}</td>
-                                        <td>{{ number_format($item->nominal, 0, ".", ",") }}</td>
+                                        <td>{{ number_format($item->total_nominal, 0, ".", ",") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
+                                        <td>
+                                            <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-info">Detail</a>
+                                            {{-- @if ($item->nama_tunjangan == 'Vitamin')
+                                            <form action="{{route('penghasilan.cetak-vitamin')}}" method="post">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary">Cetak Vitamin</button>
+                                            </form>
+                                            @endif --}}
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

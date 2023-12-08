@@ -32,36 +32,28 @@ class KaryawanController extends Controller
     {
         ini_set('max_input_vars','2000');
         try {
-            $explode_data = json_decode($request->get('nip'), true);
-            $explode_id = array_column($explode_data, 'nip');
+            $request->get('nip');
+            $explode_data = collect(json_decode($request->get('nip'), true));
+            $explode_id = $explode_data->pluck('nip')->toArray();
 
-            $data = KaryawanModel::select('nip', 'nama_karyawan')->whereIn('nip', $explode_id)->get();
+            $data = KaryawanModel::select('nip', 'nama_karyawan')
+                ->whereIn('nip', $explode_id)
+                ->get();
 
-            $response = [];
-            foreach ($explode_data as $key => $item) {
+            $response = $explode_data->map(function ($item) use ($data) {
                 $nip = $item['nip'];
                 $row = $item['row'];
 
                 // Check if the NIP is found in the server-side data
                 $found = $data->where('nip', $nip)->first();
 
-                if ($found) {
-                    $response[] = [
-                        'row' => $row,
-                        'nip' => $found->nip,
-                        'cek' => null,
-                        'nama_karyawan' => $found->nama_karyawan,
-                    ];
-                } else {
-                    // If NIP not found, return an error response
-                    $response[] = [
-                        'row' => $row,
-                        'nip' => $item['nip'],
-                        'cek' => '-',
-                        'nama_karyawan' => 'Karyawan Tidak Ditemukan',
-                    ];
-                }
-            }
+                return [
+                    'row' => $row,
+                    'nip' => $found ? $found->nip : $nip,
+                    'cek' => $found ? null : '-',
+                    'nama_karyawan' => $found ? $found->nama_karyawan : 'Karyawan Tidak Ditemukan',
+                ];
+            })->toArray();
 
             return response()->json($response);
         }catch (Exception $e){
