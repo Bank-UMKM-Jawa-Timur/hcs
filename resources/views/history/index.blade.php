@@ -23,9 +23,6 @@
                             <div class="form-group">
                                 <label for="">Karyawan:</label>
                                 <select name="nip" id="nip" class="form-control">
-                                    @foreach($data as $item)
-                                        <option value="{{ $item->nip }}">{{ $item->nama_karyawan }}</option>
-                                    @endforeach
                                 </select>
                             </div>
                         </div>
