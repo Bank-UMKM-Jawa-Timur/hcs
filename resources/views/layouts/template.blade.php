@@ -831,6 +831,7 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
+    @stack('script')
 </body>
 
 </html>
