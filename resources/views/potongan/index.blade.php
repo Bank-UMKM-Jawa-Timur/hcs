@@ -27,10 +27,10 @@
             <div class="col">
                 <div class="row">
                     <a class="mb-3" href="{{ route('potongan.create') }}">
-                      <button class="btn btn-primary">Tampah Potongan</button>
+                      <button class="btn btn-primary">Tambah</button>
                     </a>
                     <a class="ml-3" href="{{ route('import-potongan') }}">
-                      <button class="btn btn-primary">Import Potongan</button>
+                      <button class="btn btn-primary">Import</button>
                     </a>
                     <div class="table-responsive overflow-hidden content-center">
                       <form id="form" method="get">
