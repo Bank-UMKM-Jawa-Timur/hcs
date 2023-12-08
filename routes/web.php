@@ -162,6 +162,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('import-penghasilan-teratur', \App\Http\Controllers\Import\PenghasilanTeraturController::class);
         Route::get('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
         Route::get('/get-karyawan-search', [PenghasilanTeraturController::class, 'getKaryawanSearch'])->name('karyawan-search');
+        Route::get('/details/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'details'])->name('details');
+        Route::post('/cetak-vitamin', [PenghasilanTeraturController::class, 'cetakVitamin'])->name('cetak-vitamin');
+        Route::get('/template-excel', [PenghasilanTeraturController::class, 'templateExcel'])->name('template-excel');
     });
 
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
