@@ -223,7 +223,7 @@
         <div class="card-header">
             <h5 class="card-title">Import Bonus</h5>
             <p class="card-title"><a href="">Dashboard</a> > <a href="{{ route('bonus.index') }}">Bonus</a> >Import</p>
-            <a href="{{ route('bonus.excel') }}"  class="btn btn-primary">Download Template Excel</a>
+            <a href="{{ route('bonus.excel') }}"  class="btn is-btn is-primary">Download Template Excel</a>
 
         </div>
     </div>

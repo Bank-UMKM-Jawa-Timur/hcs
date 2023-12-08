@@ -265,7 +265,7 @@
             @csrf
             <div class="row">
                 <div class="col">
-                    <a href="{{ asset('template_penghasilan_tidak_teratur.xlsx') }}" class="is-btn is-primary" id="btnDownloadTemplate" download>Download Template Excel</a>
+                    <a href="{{ asset('template_penghasilan_tidak_teratur.xlsx') }}" class="btn is-btn is-primary" id="btnDownloadTemplate" download>Download Template Excel</a>
                 </div>
             </div>
             <div class="row">

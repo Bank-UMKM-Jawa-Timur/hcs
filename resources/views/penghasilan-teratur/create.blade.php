@@ -27,7 +27,7 @@
     </div>
 
     <div class="card-body">
-        <a class="btn btn-primary" href="{{ route('penghasilan.template-excel') }}" download>Template Excel</a>
+        <a class="btn is-btn is-primary" href="{{ route('penghasilan.template-excel') }}" download>Download Template Excel</a>
         <div class="row">
             <div class="col-lg-5">
                 <div class="form-group">

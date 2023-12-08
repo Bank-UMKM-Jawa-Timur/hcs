@@ -50,7 +50,7 @@
             </div>
 
             <div class="row m-0">
-                <button class="btn btn-info">Tambah</button>
+                <button class="is-btn is-info">Tambah</button>
             </div>
         </form>
     </div>
