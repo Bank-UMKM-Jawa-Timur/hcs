@@ -2,18 +2,16 @@
 
 @section('content')
 <div class="card-header">
-    <div class="card-header">
-        <div class="d-flex justify-content-between">
-            <div>
-                <h5 class="card-title font-weight-bold">Dashboard</h5>
-                <p class="card-title"><a href="/">Dashboard </a></p>
-            </div>
+    <div class="d-flex justify-content-between">
+        <div>
+            <h5 class="card-title font-weight-bold">Dashboard</h5>
+            <p class="card-title"><a href="/">Dashboard </a></p>
         </div>
     </div>
 </div>
 <div class="card-body">
     <div class="d-flex justify-content-end">
-        <a href="{{ route('per-cabang') }}" class="btn btn-info">Detail</a>
+        <a href="{{ route('per-cabang') }}" class="is-btn btn-info">Detail</a>
     </div>
     <div class="row mb-4">
         <div class="col-md-12">
@@ -26,11 +24,11 @@
     </div>
     <div class="row mb-4">
         <div class="col-md-6">
-          <div class="card" style="border: 1px solid #dcdcdc">
-            <div class="card-body">
-                <div id="gaji-graph" class="w-100"></div>
+            <div class="card" style="border: 1px solid #dcdcdc">
+                <div class="card-body">
+                    <div id="gaji-graph" class="w-100"></div>
+                </div>
             </div>
-          </div>
         </div>
         <div class="col-md-6">
             <div class="card"  style="border: 1px solid #dcdcdc">
@@ -39,7 +37,7 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex">
-                        <h2 class="font-weight-bold" style="letter-spacing: -2px;">Rp.2.55 0.000</h2>
+                        <h2 class="font-weight-bold" style="letter-spacing: -2px;">Rp.2.550.000</h2>
                     </div>
                     <table class="table">
                     <tbody>
@@ -51,115 +49,13 @@
                             <td><p class="font-weight-bold">Vitamin</p></td>
                             <td><p class="text-success">Rp 300.000 +</p></td>
                         </tr>
-                        {{-- <tr>
-                            <td><p class="font-weight-bold">Total</p></td>
-                            <td><p class="">Rp 2.200.000 </p></td>
-                        </tr> --}}
                         </tbody>
                     </table>
                 </div>
                 </div>
             </div>
-            {{-- <div id="percabang-graph" class="w-100"></div> --}}
         </div>
     </div>
-    {{-- <div class="p-4">
-        <div class="mb-2 p-2">
-            <div class="card-title mb-2 {{$totalDataMutasi > 5 ? 'd-flex justify-content-between' : ''}}">
-                <h4 class="font-weight-bold">
-                    Data Mutasi Bulan Ini
-                </h4>
-                @if ($totalDataMutasi > 5)
-                    <button class="btn btn-info">Selengkapnya</button>
-                @endif
-            </div>
-            <div class="table-responsive overflow-hidden content-center mt-4">
-                <table class="table whitespace-nowrap" id="table" style="width: 100%">
-                    <thead class=" text-primary">
-                    <th>#</th>
-                    <th>Nip</th>
-                    <th>Nama Karyawan</th>
-                    <th>Tgl Mutasi</th>
-                    <th>Jabatan Lama</th>
-                    <th>Jabatan Baru</th>
-                    <th>Kantor Lama</th>
-                    <th>Kantor Baru</th>
-                    <th>Bukti SK</th>
-                </thead>
-                <tbody>
-                    @forelse ($dataMutasi as $item)
-                    <tr>
-                        <td>{{$loop->iteration}}</td>
-                        <td>{{ $item->nip }}</td>
-                        <td>{{ $item->nama_karyawan }}</td>
-                        <td><span style="display: none;">{{ date('Ymd', strtotime($item->tanggal_pengesahan)) }}</span>{{ date('d-m-Y', strtotime($item->tanggal_pengesahan)) }}</td>
-                        <td class="text-nowrap">{{ ($item->status_jabatan_lama != null) ? $item->status_jabatan_lama.' - ' : '' }}{{ $item->jabatan_lama }}</td>
-                        <td class="text-nowrap">{{ ($item->status_jabatan_baru != null) ? $item->status_jabatan_baru.' - ' : '' }}{{ $item->jabatan_baru }}</td>
-                        <td>{{ $item->kantor_lama ?? '-' }}</td>
-                        <td>{{ $item->kantor_baru ?? '-' }}</td>
-                        <td>{{ $item->bukti_sk }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="9" class="text-center">Maaf data mutasi bulan ini tidak ada.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-                </table>
-                </div>
-                <div class="row">
-                <div class="col">
-                </div>
-                </div>
-            </div>
-            <div class="mb-2 p-2">
-                <div class="card-title mb-2 {{$totalDataSP > 5 ? 'd-flex justify-content-between' : ''}}">
-                   <h4 class="font-weight-bold">
-                        Data Karyawan SP Bulan Ini
-                   </h4>
-                   @if ($totalDataSP > 5)
-                        <button class="btn btn-info">Selengkapnya</button>
-                   @endif
-                </div>
-                <div class="table-responsive overflow-hidden content-center mt-4">
-                    <table class="table whitespace-nowrap" id="table" style="width: 100%">
-                        <thead class=" text-primary">
-                        <tr>
-                            <th>No</th>
-                            <th>Nomor SP</th>
-                            <th>NIP</th>
-                            <th>Nama Karyawan</th>
-                            <th>Tanggal SP</th>
-                            <th>Pelanggaran</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($dataSP as $sp)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $sp->no_sp ?? '-' }}</td>
-                                <td>{{ $sp->nip }}</td>
-                                <td>{{ $sp->karyawan->nama_karyawan }}</td>
-                                <td>{{ $sp->tanggal_sp->format('d M Y') }}</td>
-                                <td>{{ $sp->pelanggaran }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">Maaf data karyawan SP bulan ini tidak ada.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                    </table>
-                    </div>
-                    <div class="row">
-                    <div class="col">
-                    </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div> --}}
 </div>
 @endsection
 
