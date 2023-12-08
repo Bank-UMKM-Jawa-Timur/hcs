@@ -3,7 +3,7 @@
 @section('content') 
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Edit Kantor</h5>
+            <h5 class="card-title font-weight-bold">Edit Kantor</h5>
             <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('kantor.index') }}">Kantor </a> > Edit {{ $dataKantor['nama_kantor'] }}</p>
         </div>
     </div>
@@ -17,7 +17,7 @@
                     <input type="text" name="nama_kantor" id="nama_kantor" class="form-control" value="{{ $dataKantor['nama_kantor'] }}">
                     <input type="hidden" name="id" value="{{ $dataKantor['id'] }}">
 
-                    <button class="btn btn-info" type="submit">Update</button>
+                    <button class="is-btn is-primary" type="submit">Update</button>
                 </form>
             </div>
         </div>

@@ -2,7 +2,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Edit Pengkinian Data Karyawan</h5>
+            <h5 class="card-title font-weight-bold">Edit Pengkinian Data Karyawan</h5>
             <p class="card-title"><a href="/pengkinian_data">Pengkinian Data</a> > <a href="">Karyawan</a> > Edit</p>
         </div>
     </div>
@@ -385,7 +385,7 @@
             </div>
 
             <div class="row m-3">
-                <button type="submit" class="btn btn-info">Update</button>
+                <button type="submit" class="is-btn is-primary">Update</button>
             </div>
         </form>
     </div>

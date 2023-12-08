@@ -347,7 +347,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Reminder Pensiun
     Route::get('/reminder_pensiun', [KaryawanController::class, 'reminderPensiunIndex'])->name('reminder-pensiun.index');
-    Route::post('/reminder_pensiun-show', [KaryawanController::class, 'reminderPensiunShow'])->name('reminder-pensiun.show');
+    // Route::post('/reminder_pensiun-show', [KaryawanController::class, 'reminderPensiunShow'])->name('reminder-pensiun.show');
+    Route::get('/reminder_pensiun-show', [KaryawanController::class, 'reminderPensiunShow'])->name('reminder-pensiun.show');
 
     // Export CV
     Route::get('/export-cv/{id}', [KaryawanController::class, 'exportCV'])->name('export-cv');

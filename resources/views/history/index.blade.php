@@ -5,7 +5,7 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">History Jabatan</h5>
+                <h5 class="card-title font-weight-bold">History Jabatan</h5>
                 <p class="card-title"><a href="">History </a> > <a
                         href="{{ route('history_jabatan.index') }}">Jabatan</a></p>
             </div>
@@ -15,14 +15,15 @@
     <div class="card-body">
         <div class="row m-0">
             <div class="col">
-                <h5>Cari Karyawan</h5>
+                <h6>Cari Karyawan</h6>
                 <form action="{{ route('history_jabatan.store') }}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="">Karyawan:</label>
-                                <select name="nip" id="nip" class="form-control"></select>
+                                <select name="nip" id="nip" class="form-control">
+                                </select>
                             </div>
                         </div>
                         <div class="col-lg-3">
@@ -59,9 +60,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <button type="submit" class="btn btn-info">Tampilkan</button>
+                    <div class="">
+                        <div class="pt-4 pb-4">
+                            <button type="submit" class="is-btn is-primary">Tampilkan</button>
                         </div>
                     </div>
                 </form>

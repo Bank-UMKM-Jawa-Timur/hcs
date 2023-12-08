@@ -22,7 +22,7 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Histori Surat Peringatan</h5>
+                <h5 class="card-title font-weight-bold">Histori Surat Peringatan</h5>
                 <p class="card-title"><a href="">Histori</a> > <a href="/surat-peringatan">Surat Peringatan</a></p>
             </div>
         </div>
@@ -44,7 +44,9 @@
                 </div>
             </div>
             <div class="row" id="kategori-wrapper"></div>
-            <button type="submit" class="btn btn-primary">Tampilkan</button>
+            <div class="pt-4 pb-4">
+                <button type="submit" class="is-btn is-primary">Tampilkan</button>
+            </div>
         </form>
     </div>
 

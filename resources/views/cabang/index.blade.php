@@ -3,18 +3,20 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Data Kantor Cabang</h5>
+            <h5 class="card-title font-weight-bold">Data Kantor Cabang</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang</p>
         </div>
 
         <div class="card-body">
             <div class="col">
                 <div class="row">
+                  <div class="pt-3 pb-3">
                     @can('setting - master - kantor cabang - create kantor cabang')
                         <a class="mb-3" href="{{ route('cabang.create') }}">
                         <button class="btn btn-primary">tambah cabang</button>
                         </a>
                     @endcan
+                  </div>
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
                           <thead class=" text-primary">

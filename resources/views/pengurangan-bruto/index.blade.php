@@ -5,7 +5,7 @@ $profilKantor = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->find(
 @endphp
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Data Pengurangan Bruto</h5>
+            <h5 class="card-title font-weight-bold">Data Pengurangan Bruto</h5>
             @if ($profilKantor)
                 @if ($profilKantor->kd_cabang == '000')
                     <p class="card-title"><a href="">Setting </a> > <a href="">Kantor Pusat</a> > <a href="" class="text-secondary">Pengurangan Bruto</a></p>
@@ -20,7 +20,7 @@ $profilKantor = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->find(
                 <div class="row">
                     @can('setting - kantor pusat - pengurangan bruto - create pengurangan bruto')
                     <a class="mb-3" href="{{ route('pengurangan-bruto.create') }}?profil_kantor={{$_GET['profil_kantor']}}">
-                        <button class="btn btn-primary">Tambah</button>
+                        <button class="is-btn is-primary">Tambah</button>
                     </a>
                     @endcan
                     <div class="table-responsive overflow-hidden content-center">

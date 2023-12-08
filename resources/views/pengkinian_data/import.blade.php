@@ -27,8 +27,8 @@
                                 <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
                             </div>  
                         </div>
-                        <div class="container ml-3">
-                            <button class="btn btn-info">Import</button>
+                        <div class="container ml-3 mt-3">
+                            <button class="is-btn is-primary">Import</button>
                         </div>
                     </div>
                 </form>
