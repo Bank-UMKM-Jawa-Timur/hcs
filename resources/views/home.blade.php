@@ -63,20 +63,14 @@
                                 <tr>
                                     <td><p class="font-weight-bold">Tunjangan Telepon</p></td>
                                     <td><p class="text-success">Rp {{number_format($tunjangan->tj_telepon ?? 0)}}</p></td>
-                                    <td><p class="font-weight-bold">Tunjangan TI</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_ti ?? 0)}}</p></td>
+                                    <td><p class="font-weight-bold">Tunjangan Pulsa</p></td>
+                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_pulsa ?? 0)}}</p></td>
                                 </tr>
                                 <tr>
                                     <td><p class="font-weight-bold">Tunjangan Jabatan</p></td>
                                     <td><p class="text-success">Rp {{number_format($tunjangan->tj_jabatan ?? 0)}}</p></td>
                                     <td><p class="font-weight-bold">Tunjangan Transport</p></td>
                                     <td><p class="text-success">Rp {{number_format($tunjangan->tj_transport ?? 0)}}</p></td>
-                                </tr>
-                                <tr>
-                                    <td><p class="font-weight-bold">Tunjangan Teller</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_teller ?? 0)}}</p></td>
-                                    <td><p class="font-weight-bold">Tunjangan Pulsa</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_pulsa ?? 0)}}</p></td>
                                 </tr>
                                 <tr>
                                     <td><p class="font-weight-bold">Tunjangan Perumahan</p></td>
