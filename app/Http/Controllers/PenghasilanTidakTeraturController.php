@@ -214,45 +214,43 @@ class PenghasilanTidakTeraturController extends Controller
            ];
            array_push($gaji, $gj[$i-1]);
            array_push($total_gaji, array_sum($total_gj[$i-1]));
-        // Get Penghasilan tidak teratur karyawan
+        // Get Penghasilan tidak teratur karyawan (exclude bonus)
+            $id_ptt = TunjanganModel::where('kategori', 'tidak teratur')
+                                    ->orderBy('id')
+                                    ->pluck('id');
            $k = 0;
-            for($j = 16; $j <= 26; $j++){
-                if($j != 22 && $j != 23 && $j != 24 && $j != 26){
-                    $penghasilan = DB::table('penghasilan_tidak_teratur')
-                        ->where('nip', $nip)
-                        ->where('id_tunjangan', $j)
-                        ->where('tahun', $tahun)
-                        ->where('bulan', $i)
-                        ->first();
-                    $peng[$k] = ($penghasilan != null) ? $penghasilan->nominal : 0;
-                    $k++;
-                }
+            for($j = 0; $j < count($id_ptt); $j++){
+                $penghasilan = DB::table('penghasilan_tidak_teratur')
+                    ->where('nip', $nip)
+                    ->where('id_tunjangan', $id_ptt[$j])
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $i)
+                    ->first();
+                $peng[$k] = ($penghasilan != null) ? $penghasilan->nominal : 0;
+                $k++;
             }
             array_push($ptt, $peng);
 
             // Get Bonus Karyawan
             $l = 0;
-            for($j = 22; $j <= 24; $j++){
+            $id_bonus = TunjanganModel::where('kategori', 'bonus')
+                                     ->orderBy('id')
+                                     ->pluck('id');
+
+            // for($j = 22; $j <= 24; $j++){
+            for($j = 0; $j < count($id_bonus); $j++){
                 $bns = DB::table('penghasilan_tidak_teratur')
                     ->where('nip', $nip)
-                    ->where('id_tunjangan', $j)
+                    ->where('id_tunjangan', $id_bonus[$j])
                     ->where('tahun', $tahun)
                     ->where('bulan', $i)
                     ->first();
                 $bon[$l] = ($bns != null) ? $bns->nominal : 0;
                 $l++;
             }
-            $bns = DB::table('penghasilan_tidak_teratur')
-                    ->where('nip', $nip)
-                    ->where('id_tunjangan', 26)
-                    ->where('tahun', $tahun)
-                    ->where('bulan', $i)
-                    ->first();
-            $bon[$l] = ($bns != null) ? $bns->nominal : 0;
-            $l++;
             array_push($bonus, $bon);
         }
-// return array_sum($gj[7]);
+
         foreach($total_gaji as $key => $item){
             $nominal_jp = ($key > 1) ? $jp_mar_des : $jp_jan_feb;
             // Get Jamsostek
@@ -307,19 +305,7 @@ class PenghasilanTidakTeraturController extends Controller
         }
         $karyawanController = new KaryawanController;
         $karyawan->masa_kerja = $karyawanController->countAge($karyawan->tanggal_pengangkat);
-// return [
-//     'gj' => $gj,
-//     'jamsostek' => $jamsostek,
-//     'tunjangan' => $tk,
-//     'penghasilan' => $ptt,
-//     'bonus' => $bonus,
-//     'tahun' => $tahun,
-//     'karyawan' => $karyawan,
-//     'request' => $request,
-//     'mode' => $mode,
-//     'pengurang' => array_sum($pengurang),
-//     'pph' => $pph_yang_dilunasi
-// ];
+
         return view('penghasilan.gajipajak', [
             'gj' => $gj,
             'jamsostek' => $jamsostek,
@@ -392,7 +378,7 @@ class PenghasilanTidakTeraturController extends Controller
         $search = $request->get('q');
 
         $penghasilanRepo = new PenghasilanTidakTeraturRepository();
-        $data = $penghasilanRepo->getAllPenghasilan($search, $limit, $page);
+        $data = $penghasilanRepo->getPenghasilan($search, $limit, $page);
         return view('penghasilan.index-list', compact('data'));
     }
 
@@ -403,9 +389,9 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function create()
     {
-        $dataSPD = TunjanganModel::where('nama_tunjangan', 'like', '%spd%')->get();
+        $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
 
-        return view('penghasilan.add', compact('dataSPD'));
+        return view('penghasilan.add', compact('data'));
     }
 
     /**
@@ -430,8 +416,8 @@ class PenghasilanTidakTeraturController extends Controller
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $idTunjangan->id,
-                    'bulan' => Carbon::now()->format('m'),
-                    'tahun' => Carbon::now()->format('Y'),
+                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
                     'nominal' => str_replace('.', '', $request['nominal'][$key]),
                     'keterangan' => $request->get('keterangan')[$key] ?? null,
                     'created_at' => now()
@@ -461,9 +447,25 @@ class PenghasilanTidakTeraturController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        try{
+            $idTunjangan = $request->get('idTunjangan');
+            $tanggal = $request->get('tanggal');
+            $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+            $page = $request->has('page') ? $request->get('page') : 1;
+            $search = $request->get('q');
+
+            $repo = new PenghasilanTidakTeraturRepository();
+            $data = $repo->getAllPenghasilan($search, $limit, $page, $tanggal, $idTunjangan);
+            return view('penghasilan.detail', compact('data'));
+        } catch(Exception $e){
+            Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());
+            return back();
+        } catch(QueryException $e){
+            Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());
+            return back();
+        }
     }
 
     /**

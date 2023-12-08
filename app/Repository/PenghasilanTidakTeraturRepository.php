@@ -24,7 +24,9 @@ class PenghasilanTidakTeraturRepository
                         'mst_tunjangan.nama_tunjangan',
                         'nominal',
                         'bulan',
+                        'penghasilan_tidak_teratur.created_at',
                         DB::raw('SUM(nominal) as jumlah_nominal'),
+                        DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
                         DB::raw('COUNT(penghasilan_tidak_teratur.id) as total_data'),
                         'tahun',
                         'keterangan',
@@ -34,13 +36,14 @@ class PenghasilanTidakTeraturRepository
                         $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
                             ->orWhere('nominal', 'like', "%$search%");
                     })
-                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'bulan', 'tahun')
+                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date')
                     ->orderBy('mst_tunjangan.id', 'ASC')
                     ->paginate($limit);
 
         return $bonus;
     }
-    public function getDetailBonus($search, $limit=10, $page=1, $id) {
+    public function getDetailBonus($search, $limit=10, $page=1, $id, $tgl) {
+        $format_tgl = Carbon::parse($tgl)->format('y-m-d');
         $bonus = DB::table('penghasilan_tidak_teratur')
                       ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                       ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
@@ -51,22 +54,24 @@ class PenghasilanTidakTeraturRepository
                           'mst_karyawan.nama_karyawan',
                           'mst_tunjangan.nama_tunjangan',
                           'nominal',
-                          'bulan',
-                          'tahun',
                           'keterangan',
+                          'penghasilan_tidak_teratur.created_at',
+                          DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
                       )
-                      ->where('mst_tunjangan.kategori','bonus')
-                      ->groupBy('bulan', 'tahun')
-                      ->where(function ($query) use ($search) {
-                          $query->where('penghasilan_tidak_teratur.nip', 'like', "%$search%")
+                    //   ->groupBy('new_date')
+                    ->where('mst_tunjangan.kategori','bonus')
+                    ->where(function ($query) use ($search) {
+                        $query->where('penghasilan_tidak_teratur.nip', 'like', "%$search%")
                               ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%")
                               ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
                               ->orWhere('nominal', 'like', "%$search%")
                               ->orWhere('keterangan', 'like', "%$search%");
-                      })
-                      ->orderBy('mst_tunjangan.id', 'ASC')
-                      ->where('penghasilan_tidak_teratur.id_tunjangan',$id)
-                      ->paginate($limit);
+                            })
+                    ->orderBy('mst_tunjangan.id', 'ASC')
+                    ->where('penghasilan_tidak_teratur.id_tunjangan',$id)
+                    ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'),$format_tgl)
+                    // ->get()
+                    ->paginate($limit);
 
           return $bonus;
       }
@@ -124,7 +129,19 @@ class PenghasilanTidakTeraturRepository
         ]);
     }
 
-    public function getAllPenghasilan($search, $limit=10, $page=1){
+    public function getPenghasilan($search, $limit=10, $page=1){
+        $data = ImportPenghasilanTidakTeraturModel::join('mst_tunjangan', 'mst_tunjangan.id', 'penghasilan_tidak_teratur.id_tunjangan')
+            ->selectRaw("bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan")
+            ->groupBy('bulan')
+            ->groupBy('tahun')
+            ->groupBy('nama_tunjangan')
+            ->orderBy('penghasilan_tidak_teratur.created_at', 'desc')
+            ->paginate($limit);
+
+        return $data;
+    }
+
+    public function getAllPenghasilan($search, $limit=10, $page=1, $tanggal, $idTunjangan){
         $karyawanRepo = new KaryawanRepository();
         $penghasilan = KaryawanModel::select('nama_tunjangan', 'id_tunjangan', 'nominal', 'tahun', 'bulan', 'keterangan', 'penghasilan_tidak_teratur.created_at','mst_karyawan.nip', 'mst_karyawan.nik', 'mst_karyawan.nama_karyawan', 'mst_karyawan.kd_bagian', 'mst_karyawan.kd_jabatan', 'mst_karyawan.kd_entitas', 'mst_karyawan.tanggal_penonaktifan', 'mst_karyawan.status_jabatan', 'mst_karyawan.ket_jabatan', DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor"))
             ->join('penghasilan_tidak_teratur', 'mst_karyawan.nip', 'penghasilan_tidak_teratur.nip')
@@ -134,6 +151,8 @@ class PenghasilanTidakTeraturRepository
             ->with('bagian')
             ->whereNull('tanggal_penonaktifan')
             ->where('nominal', '>', 0)
+            ->where('penghasilan_tidak_teratur.created_at', $tanggal)
+            ->where('id_tunjangan', $idTunjangan)
             ->where(function ($query) use ($search) {
                 $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
                     ->orWhere('mst_karyawan.nik', 'like', "%$search%")

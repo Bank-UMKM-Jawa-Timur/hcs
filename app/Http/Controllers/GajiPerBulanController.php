@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Imports\ImportPPH21;
 use App\Models\GajiPerBulanModel;
 use App\Models\PPHModel;
+use App\Models\TunjanganModel;
 use Exception;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\QueryException;
@@ -106,6 +107,12 @@ class GajiPerBulanController extends Controller
             ->get();
 
         // Get Penghasilan from mst_karyawan + tunjangan karyawan + penghasilan tidak teratur
+        $item_penghasilan_teratur = TunjanganModel::select('id', 'kategori', 'status')
+                                                ->where('kategori', 'teratur')
+                                                ->orWhereNull('kategori')
+                                                ->orderBy('id')
+                                                ->get();
+
         foreach($karyawan as $key => $item){
             unset($tunjangan);
             unset($tjJamsostek);
@@ -113,13 +120,13 @@ class GajiPerBulanController extends Controller
             $tunjangan = array();
 
             // Get tunjangan karyawan
-            for($i = 1; $i <= 15; $i++){
+            foreach ($item_penghasilan_teratur as $tunj) {
                 $tj = DB::table('tunjangan_karyawan')
                     ->where('nip', $item->nip)
-                    ->where('id_tunjangan', $i)
+                    ->where('id_tunjangan', $tunj->id)
                     ->first();
                 array_push($tunjangan, ($tj != null) ? $tj->nominal : 0);
-                if($i >= 1 && $i <= 9){
+                if ($tunj->status) {
                     array_push($tjJamsostek, ($tj != null) ? $tj->nominal : 0);
                 }
             }

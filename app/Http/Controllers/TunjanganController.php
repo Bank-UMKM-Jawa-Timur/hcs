@@ -46,7 +46,8 @@ class TunjanganController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_tunjangan' => 'required'
+            'nama_tunjangan' => 'required',
+            'kategori' => 'required'
         ], [
             'required' => 'Data harus isi.'
         ]);
@@ -55,6 +56,7 @@ class TunjanganController extends Controller
             DB::table('mst_tunjangan')
                 ->insert([
                     'nama_tunjangan' => $request->get('nama_tunjangan'),
+                    'kategori' => $request->get('kategori'),
                     'created_at' => now()
                 ]);
 
@@ -105,7 +107,8 @@ class TunjanganController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_tunjangan' => 'required'
+            'nama_tunjangan' => 'required',
+            'kategori' => 'required'
         ], [
             'required' => 'Data harus isi.'
         ]);
@@ -115,6 +118,7 @@ class TunjanganController extends Controller
                 ->where('id', $id)
                 ->update([
                     'nama_tunjangan' => $request->get('nama_tunjangan'),
+                    'kategori' => $request->get('kategori'),
                     'updated_at' => now()
                 ]);
 

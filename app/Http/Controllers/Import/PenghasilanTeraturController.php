@@ -119,19 +119,15 @@ class PenghasilanTeraturController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
         try {
             $id_tunjangan = $request->get('tunjangan');
             $nominal = explode(',', $request->get('nominal'));
             $nip = explode(',', $request->get('nip'));
             $total = count($nip);
-
-            // return ['nip' => $nip,'nominal' => $nominal, 'total' => count($nip)];
             $tanggal = date('Y-m-d H:i:s');
 
             $bulan = date("m", strtotime($tanggal));
             $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
-
             $tahun = date("Y", strtotime($tanggal));
 
             if ($nip) {
@@ -169,13 +165,12 @@ class PenghasilanTeraturController extends Controller
                                 ]);
                             }
                         }
-
-
                     }
                 }
             }
 
             Alert::success('Success', 'Berhasil menyimpan data');
+
             return redirect()->route('penghasilan.import-penghasilan-teratur.index');
         } catch (\Exception $e) {
             Alert::error('Error', $e->getMessage());
@@ -194,6 +189,7 @@ class PenghasilanTeraturController extends Controller
      */
     public function show($id)
     {
+      
     }
 
     public function details($idTunjangan, $createdAt)

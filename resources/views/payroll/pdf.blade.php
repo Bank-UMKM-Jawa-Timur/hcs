@@ -7,6 +7,108 @@
     </style>
 @endpush
 
+@section('custom_script')
+    <script>
+        const formatRupiahPayroll = (angka) => {
+            let reverse = angka.toString().split('').reverse().join('');
+            let ribuan = reverse.match(/\d{1,3}/g);
+            ribuan = ribuan.join('.').split('').reverse().join('');
+            return `${ribuan}`;
+        }
+        $('.show-data').on('click',function(e) {
+            // console.log(e);
+            const targetId = $(this).data("target-id");
+            const data = $(this).data('json');
+            $('#table-tunjangan-tidak > tbody').empty();
+            $('#table-tunjangan-total-tidak thead').empty();
+
+            $('#table-tunjangan > tbody').empty();
+            $('#table-tunjangan-total thead ').empty();
+
+            $('#nip').html(`${data.nip}`)
+            $('#nama').html(`${data.nama_karyawan}`)
+            $('#no_rekening').html(`${data.no_rekening != null ? data.no_rekening : '-'}`)
+
+            var nominal = 0;
+            var tableTunjangan = `
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Gaji Pokok</td>
+                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gaji['total_gaji'])}</td>
+                    </tr>
+            `;
+            // START TUNJANGAN TERATUR
+            $.each(data.tunjangan, function( key, value ) {
+                nominal += value.pivot.nominal ;
+                tableTunjangan += `
+                    <tr style="border:1px solid #e3e3e3">
+                        <td class="text-left fw-bold">${value.nama_tunjangan}</td>
+                        <td class="text-right">${formatRupiahPayroll(value.pivot.nominal)}</td>
+                    </tr>
+                `
+            });
+            $("#table-tunjangan tbody").append(tableTunjangan);
+
+            var tableTotalTunjanganTeratur = `
+                <tr>
+                    <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
+                    <th class="text-right ">${formatRupiahPayroll(nominal + data.gaji['total_gaji'])}</th>
+                </tr>
+            `
+            $("#table-tunjangan-total thead").append(tableTotalTunjanganTeratur);
+            // END TUNJANGAN TERATUR
+        })
+        function showModal(identifier) {
+        }
+
+        $('#kantor').on('change', function() {
+            const selected = $(this).val()
+
+            if (selected == 'cabang') {
+                $('.cabang-input').removeClass('d-none')
+            }
+            else {
+                $('.cabang-input').addClass('d-none')
+            }
+        })
+
+        $('#page_length').on('change', function() {
+            $('#form').submit()
+        })
+
+        $('#form').on('submit', function() {
+            $('.loader-wrapper').css('display: none;')
+            $('.loader-wrapper').addClass('d-block')
+            $(".loader-wrapper").fadeOut("slow");
+        })
+
+        // Adjust pagination url
+        var btn_pagination = $(`.pagination`).find('a')
+        var page_url = window.location.href
+        $(`.pagination`).find('a').each(function(i, obj) {
+            if (page_url.includes('kantor')) {
+                btn_pagination[i].href += `&kantor=${$('#kantor').val()}`
+            }
+            if (page_url.includes('kategori')) {
+                btn_pagination[i].href += `&kategori=${$('#kategori').val()}`
+            }
+            if (page_url.includes('cabang')) {
+                btn_pagination[i].href += `&cabang=${$('#cabang').val()}`
+            }
+            if (page_url.includes('bulan')) {
+                btn_pagination[i].href += `&bulan=${$('#bulan').val()}`
+            }
+            if (page_url.includes('tahun')) {
+                btn_pagination[i].href += `&tahun=${$('#tahun').val()}`
+            }
+            if (page_url.includes('page_length')) {
+                btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
+            }
+            if (page_url.includes('q')) {
+                btn_pagination[i].href += `&q=${$('#q').val()}`
+            }
+        })
+    </script>
+@endsection
 @section('content')
     <div class="card-header">
         <h5 class="card-title">Payroll</h5>
@@ -114,7 +216,7 @@
                         <div class="d-flex justify-content-end">
                             @if (\Request::has('kantor') && count($data) > 0)
                                 <div class="mr-2">
-                                    <a href="{{ route('payroll.pdf') }}" target="_blank"  class="btn btn-warning">Cetak PDF</a>
+                                    <a href="{{ route('payroll.pdf') }}" class="btn btn-warning">Cetak PDF</a>
                                 </div>
                             @endif
                             <div>
@@ -156,13 +258,9 @@
                                 $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
                             @endphp
                             @if (\Request::get('kategori') == 'payroll')
-                                <div class="table-responsive">
-                                    @include('payroll.tables.payroll', ['data' => $data])
-                                </div>
+                                @include('payroll.tables.payroll', ['data' => $data])
                             @elseif (\Request::get('kategori') == 'rincian')
-                                <div class="table-responsive">
-                                    @include('payroll.tables.rincian', ['data' => $data])
-                                </div>
+                                @include('payroll.tables.rincian', ['data' => $data])
                             @else
                                 <span class="text-warning">Harap pilih kategori yang benar!</span>
                             @endif
@@ -255,112 +353,16 @@
 @push('script')
     <script>
         var selected_kantor = $('#kantor').val()
+        console.log(selected_kantor)
         if (selected_kantor == '0' || selected_kantor == 'pusat') {
             // Hide cabang
+            console.log('hide cabang')
             $('.cabang-input').addClass('d-none')
         }
         else {
             // Show cabang
+            console.log('show cabang')
             $('.cabang-input').removeClass('d-none')
         }
-
-        const formatRupiahPayroll = (angka) => {
-            let reverse = angka.toString().split('').reverse().join('');
-            let ribuan = reverse.match(/\d{1,3}/g);
-            ribuan = ribuan.join('.').split('').reverse().join('');
-            return `${ribuan}`;
-        }
-
-        $('.show-data').on('click',function(e) {
-            const targetId = $(this).data("target-id");
-            const data = $(this).data('json');
-            $('#table-tunjangan-tidak > tbody').empty();
-            $('#table-tunjangan-total-tidak thead').empty();
-
-            $('#table-tunjangan > tbody').empty();
-            $('#table-tunjangan-total thead ').empty();
-
-            $('#nip').html(`${data.nip}`)
-            $('#nama').html(`${data.nama_karyawan}`)
-            $('#no_rekening').html(`${data.no_rekening != null ? data.no_rekening : '-'}`)
-
-            var nominal = 0;
-            var tableTunjangan = `
-                    <tr style="border:1px solid #e3e3e3">
-                        <td>Gaji Pokok</td>
-                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gaji['total_gaji'])}</td>
-                    </tr>
-            `;
-            // START TUNJANGAN TERATUR
-            $.each(data.tunjangan, function( key, value ) {
-                nominal += value.pivot.nominal ;
-                tableTunjangan += `
-                    <tr style="border:1px solid #e3e3e3">
-                        <td class="text-left fw-bold">${value.nama_tunjangan}</td>
-                        <td class="text-right">${formatRupiahPayroll(value.pivot.nominal)}</td>
-                    </tr>
-                `
-            });
-            $("#table-tunjangan tbody").append(tableTunjangan);
-
-            var tableTotalTunjanganTeratur = `
-                <tr>
-                    <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
-                    <th class="text-right ">${formatRupiahPayroll(nominal + data.gaji['total_gaji'])}</th>
-                </tr>
-            `
-            $("#table-tunjangan-total thead").append(tableTotalTunjanganTeratur);
-            // END TUNJANGAN TERATUR
-        })
-        function showModal(identifier) {
-        }
-
-        $('#kantor').on('change', function() {
-            const selected = $(this).val()
-
-            if (selected == 'cabang') {
-                $('.cabang-input').removeClass('d-none')
-            }
-            else {
-                $('.cabang-input').addClass('d-none')
-            }
-        })
-
-        $('#page_length').on('change', function() {
-            $('#form').submit()
-        })
-
-        $('#form').on('submit', function() {
-            $('.loader-wrapper').css('display: none;')
-            $('.loader-wrapper').addClass('d-block')
-            $(".loader-wrapper").fadeOut("slow");
-        })
-
-        // Adjust pagination url
-        var btn_pagination = $(`.pagination`).find('a')
-        var page_url = window.location.href
-        $(`.pagination`).find('a').each(function(i, obj) {
-            if (page_url.includes('kantor')) {
-                btn_pagination[i].href += `&kantor=${$('#kantor').val()}`
-            }
-            if (page_url.includes('kategori')) {
-                btn_pagination[i].href += `&kategori=${$('#kategori').val()}`
-            }
-            if (page_url.includes('cabang')) {
-                btn_pagination[i].href += `&cabang=${$('#cabang').val()}`
-            }
-            if (page_url.includes('bulan')) {
-                btn_pagination[i].href += `&bulan=${$('#bulan').val()}`
-            }
-            if (page_url.includes('tahun')) {
-                btn_pagination[i].href += `&tahun=${$('#tahun').val()}`
-            }
-            if (page_url.includes('page_length')) {
-                btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
-            }
-            if (page_url.includes('q')) {
-                btn_pagination[i].href += `&q=${$('#q').val()}`
-            }
-        })
     </script>
 @endpush

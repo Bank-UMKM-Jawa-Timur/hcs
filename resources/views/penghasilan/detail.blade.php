@@ -1,23 +1,17 @@
 @extends('layouts.template')
-@include('vendor.select2')
 
 @section('content')
 <div class="card-header">
     <div class="card-header">
         <div class="card-title">
-            <h5 class="card-title">Pajak Penghasilan</h5>
-            <p class="card-title"><a href="">Penghasilan </a> > Penghasilan Tidak Teratur</p>
+            <h5 class="card-title">Penghasilan Tidak Teratur</h5>
+            <p class="card-title"><a href="">Penghasilan </a> > <a href="{{ route('penghasilan-tidak-teratur.index') }}">Penghasilan Tidak Teratur</a> > Detail</p>
         </div>
     </div>
 </div>
 
 <div class="card-body">
     <div class="row">
-        <div class="col">
-            <a class="mb-3" href="{{ route('pajak_penghasilan.create') }}">
-                <button class="btn btn-primary">tambah penghasilan</button>
-            </a>
-        </div>
         <div class="col-lg-12">
             <div class="table-responsive overflow-hidden content-center">
                 <form action="" id="form" method="get">
@@ -51,16 +45,18 @@
                         <thead class=" text-primary">
                             <tr>
                                 <th>No</th>
-                                <th>Nama Tunjangan</th>
-                                <th>Total Data</th>
-                                <th>Bulan</th>
-                                <th>Tahun</th>
-                                <th>Tanggal</th>
-                                <th class="text-center">Aksi</th>
+                                <th>NIP</th>
+                                <th>Nama Karyawan</th>
+                                <th>Jabatan</th>
+                                <th>Kantor</th>
+                                <th>Nominal</th>
                             </tr>
                         </thead>
                         <tbody>
                             @php
+                                function rupiah($num){
+                                    return number_format($num, 0, '.', '.');
+                                }
                                 $page = isset($_GET['page']) ? $_GET['page'] : 1;
                                 $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
                                 $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
@@ -70,14 +66,11 @@
                             @forelse ($data as $key => $item)
                                 <tr>
                                     <td>{{ $i++ }}</td>
-                                    <td>{{ $item->nama_tunjangan }}</td>
-                                    <td>{{ $item->total }}</td>
-                                    <td>{{ $item->bulan }}</td>
-                                    <td>{{$item->tahun}}</td>
-                                    <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
-                                    <td class="text-center">
-                                        <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->id_tunjangan }}&tanggal={{ $item->tanggal }}" class="btn btn-warning">Detail</a>
-                                    </td>
+                                    <td>{{ $item->nip }}</td>
+                                    <td>{{ $item->nama_karyawan }}</td>
+                                    <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}</td>
+                                    <td>{{$item->display_jabatan}}</td>
+                                    <td>{{ rupiah($item->nominal) }}</td>
                                 </tr>
                             @empty
                                 
@@ -100,29 +93,3 @@
     </div>
 </div>
 @endsection
-
-@push('script')
-<script>
-// $(document).ready(function() {
-//     var table = $('#table').DataTable({
-//         'autoWidth': false,
-//         'dom': 'Rlfrtip',
-//         'colReorder': {
-//             'allowReorder': false
-//         }
-//     });
-// })
-
-$('#nip').select2({
-    ajax: {
-        url: '{{ route('api.select2.karyawan') }}'
-    },
-    templateResult: function(data) {
-        if(data.loading) return data.text;
-        return $(`
-            <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
-        `);
-    }
-});
-</script>
-@endpush
