@@ -83,13 +83,13 @@ class BonusController extends Controller
                     'nominal' => $data_nominal[$i],
                     'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
-                    'created_at' => now()
+                    'created_at' => Carbon::parse($request->get('tanggal'))
                 ]);
 
             }
             \DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan tambahan');
+            Alert::success('Berhasil', 'Berhasil menambahkan bonus.');
             return redirect()->route('bonus.index');
         } catch (Exception $th) {
             \DB::rollBack();
@@ -103,14 +103,14 @@ class BonusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function detail(Request $request,$id, $tgl)
     {
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
         $search = $request->get('q');
         // $data = $this->repo->getDataBonus($search, $limit, $page);
-        $data = $this->repo->getDetailBonus($search, $limit,$page, $id);
+        $data = $this->repo->getDetailBonus($search, $limit,$page, $id,$tgl);
         return view('bonus.detail',['data' => $data]);
     }
 

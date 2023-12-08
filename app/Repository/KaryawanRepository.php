@@ -33,8 +33,6 @@ class KaryawanRepository
     public function getAllKaryawan($search, $limit=10, $page=1)
     {
         return $this->getDataKaryawan($search, $limit, $page);
-        // return $this->getKaryawanPusat($limit=10)
-        //     ->push(...$this->getKaryawanCabang($limit=10))->toArray();
     }
 
     public function getDataKaryawan($search, $limit=10, $page=1) {

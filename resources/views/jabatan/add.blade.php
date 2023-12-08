@@ -4,7 +4,7 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Tambah Jabatan</h5>
+                <h5 class="card-title font-weight-bold">Tambah Jabatan</h5>
                 <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('jabatan.index') }}">Jabatan</a> > <a>Tambah</a></p>
             </div>
         </div>
@@ -30,7 +30,9 @@
                             @enderror
                         </div>
                     </div>
-                        <button class="btn btn-info" value="submit" type="submit">Simpan</button>
+                        <div class="pt-3 pb-3">
+                            <button class="is-btn is-primary" value="submit" type="submit">Simpan</button>
+                        </div>
                 </form>
             </div>
         </div>

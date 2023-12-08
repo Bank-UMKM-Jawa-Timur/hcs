@@ -27,8 +27,7 @@
     </div>
 
     <div class="card-body">
-        <a class="btn btn-primary" href="{{ route('penghasilan.template-excel') }}" download>Template Excel</a>
-
+        <a class="btn is-btn is-primary" href="{{ route('penghasilan.template-excel') }}" download>Download Template Excel</a>
         <div class="row">
             <div class="col-lg-5">
                 <div class="form-group">
@@ -339,10 +338,12 @@
                     },
                     beforeSend: function () {
                         $('#loading-message').html(`
-                            <div class="d-flex align-items-center">
-                                <strong>Loading...</strong>
-                                <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
-                            </div>
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    Loading Data...
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
                         `);
                     },
                     success: function(res){

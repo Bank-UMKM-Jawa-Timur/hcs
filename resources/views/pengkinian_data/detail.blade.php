@@ -2,7 +2,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Detail Data Karyawan</h5>
+            <h5 class="card-title font-weight-bold">Detail Data Karyawan</h5>
             <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > <a href="{{ route('pengkinian_data.index') }}">Pengkinian Data</a> > Detail</p>
         </div>
     </div>

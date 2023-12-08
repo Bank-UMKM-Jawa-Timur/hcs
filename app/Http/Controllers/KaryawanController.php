@@ -563,8 +563,6 @@ class KaryawanController extends Controller
 
         // Get SP
         $sp = SpModel::where('nip', $id)->get();
-        // dd($sp);
-        // dd($karyawan->bagian);
 
         $dppPerhitungan = DB::table('gaji_per_bulan')
                 ->select(
@@ -575,10 +573,13 @@ class KaryawanController extends Controller
                 ->where('nip', $id)
                 ->first();
         
-        $gjPokok = $dppPerhitungan->gj_pokok;
-        $tjKeluarga = $dppPerhitungan->tj_keluarga;
-        $tjKesejahteraan = $dppPerhitungan->tj_kesejahteraan;
-        $totalDppPerhitungan = ($gjPokok + $tjKeluarga + 0.5 * $tjKesejahteraan) * 0.05;
+        $totalDppPerhitungan = 0;
+        if ($dppPerhitungan) {
+            $gjPokok = $dppPerhitungan->gj_pokok;
+            $tjKeluarga = $dppPerhitungan->tj_keluarga;
+            $tjKesejahteraan = $dppPerhitungan->tj_kesejahteraan;
+            $totalDppPerhitungan = ($gjPokok + $tjKeluarga + 0.5 * $tjKesejahteraan) * 0.05;
+        }
 
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
@@ -956,11 +957,9 @@ class KaryawanController extends Controller
             $karyawan->whereNull('tanggal_penonaktifan');
             $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
             $karyawan->orderBy('tgl_lahir', 'asc');
-            $karyawan = $karyawan->get();
+            $karyawan = $karyawan->paginate(25);
         }
-        // $date = date('Y-m-d', strtotime($karyawan[4]->tgl_lahir. ' + 56 years'));
-        // dd($date);
-        // dd($karyawan);
+
         return view('karyawan.reminder-pensiun', [
             'status' => $status,
             'karyawan' => $karyawan,

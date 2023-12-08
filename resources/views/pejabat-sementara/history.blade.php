@@ -5,7 +5,7 @@
 <div class="card-header">
     <div class="card-header">
         <div class="card-title">
-            <h5 class="card-title">History Penjabat Sementara (PJS)</h5>
+            <h5 class="card-title font-weight-bold">History Penjabat Sementara (PJS)</h5>
             <p class="card-title"><a href="/">Histori </a> > <a href="{{ route('pejabat-sementara.history') }}">History Penjabat Sementara</a></p>
         </div>
     </div>
@@ -30,8 +30,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-8">
-                    <button class="btn btn-primary" type="submit">Tampilkan</button>
+                <div class="col-md-8 pt-4 pb-4">
+                    <button class="is-btn is-primary" type="submit">Tampilkan</button>
                 </div>
             </div>
         </div>

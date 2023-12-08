@@ -19,8 +19,19 @@
                     @error('nama_tunjangan')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
-
-                    <button class="btn btn-info" value="submit" type="submit">Simpan</button>
+                    <div class="mt-3">
+                        <label for="nama_kantot">Kategori</label>
+                        <select name="kategori" id="" class="@error('kategori') is-invalid @enderror form-control">
+                            <option value="">Pilih Kategori</option>
+                            <option value="teratur" {{ old('kategori') == 'teratur' ? 'selected' : ''  }}>Teratur</option>
+                            <option value="tidak teratur" {{ old('kategori') == 'tidak teratur' ? 'selected' : '' }}>Tidak Teratur</option>
+                            <option value="Bonus" {{ old('kategori') == 'bonus' ? 'selected' : '' }}>Bonus</option>
+                        </select>
+                        @error('kategori')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <button class="is-btn is-primary" value="submit" type="submit">Simpan</button>
                 </form>
             </div>
         </div>

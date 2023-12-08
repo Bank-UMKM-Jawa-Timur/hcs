@@ -21,7 +21,7 @@ $status = isset($status) ? $status : null;
 <div class="card-header">
     <div class="card-header">
         <div class="card-title">
-            <h5 class="card-title">Laporan DPP</h5>
+            <h5 class="card-title font-weight-bold">Laporan DPP</h5>
             <p class="card-title"><a href="">Laporan </a> > <a href="{{ route('index_dpp') }}">Laporan DPP</a></p>
         </div>
     </div>
@@ -74,8 +74,8 @@ $status = isset($status) ? $status : null;
                     </select>
                 </div>
             </div>
-            <div class="col-md-12 mt-2">
-                <button class="btn btn-info" type="submit">Tampilkan</button>
+            <div class="col-md-12 mt-4">
+                <button class="is-btn is-primary" type="submit">Tampilkan</button>
             </div>
         </div>
     </form>
