@@ -7,12 +7,16 @@ use App\Service\EntityService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LaporanDemosiController extends Controller
 {
     public function index(Request $request)
     {
+        if (!Auth::user()->can('laporan - laporan pergerakan karir - laporan demosi')) {
+            return view('roles.forbidden');
+        }
         $data = null;
         $start_date = $request->start_date;
         $end_date = $request->end_date;

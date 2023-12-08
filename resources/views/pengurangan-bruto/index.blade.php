@@ -18,9 +18,11 @@ $profilKantor = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->find(
         <div class="card-body">
             <div class="col">
                 <div class="row">
+                    @can('setting - kantor pusat - pengurangan bruto - create pengurangan bruto')
                     <a class="mb-3" href="{{ route('pengurangan-bruto.create') }}?profil_kantor={{$_GET['profil_kantor']}}">
                         <button class="is-btn is-primary">Tambah</button>
                     </a>
+                    @endcan
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class=" text-primary">
@@ -53,17 +55,21 @@ $profilKantor = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->find(
                                         <input type="checkbox" name="check" id="check" @if($item->active) checked @endif>
                                     </td>
                                     <td class="text-center">
+                                        @can('setting - kantor pusat - pengurangan bruto - edit pengurangan bruto')
                                         <a href="{{ route('pengurangan-bruto.edit', $item->id) }}">
                                             <button class="btn btn-warning">
                                                 Edit
                                             </button>
                                         </a>
+                                        @endcan
+                                        @can('setting - kantor pusat - pengurangan bruto - delete pengurangan bruto')
                                         <form action="{{ route('pengurangan-bruto.destroy', $item->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="id_profil_kantor" value="{{$item->id_profil_kantor}}">
                                             <button type="submit" class="btn btn-danger">Delete</button>
                                         </form>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

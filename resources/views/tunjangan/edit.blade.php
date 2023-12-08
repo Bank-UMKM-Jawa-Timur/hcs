@@ -20,6 +20,18 @@
                     @error('nama_tunjangan')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <div class="mt-3">
+                        <label for="nama_kantot">Kategori</label>
+                        <select name="kategori" id="" class="@error('kategori') is-invalid @enderror form-control">
+                            <option value="">Pilih Kategori</option>
+                            <option value="teratur" {{ old('kategori',$data->kategori) == 'teratur' ? 'selected' : ''  }}>Teratur</option>
+                            <option value="tidak teratur" {{ old('kategori',$data->kategori) == 'tidak teratur' ? 'selected' : '' }}>Tidak Teratur</option>
+                            <option value="Bonus" {{ old('kategori',$data->kategori) == 'bonus' ? 'selected' : '' }}>Bonus</option>
+                        </select>
+                        @error('kategori')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
 
                     <div class="pt-4 pb-3">
                         <button class="is-btn is-primary"value="submit" type="submit">Update</button>

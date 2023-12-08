@@ -6,15 +6,17 @@
           <h5 class="card-title font-weight-bold">Data Pangkat Dan Golongan</h5>
           <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('pangkat_golongan.index') }}">Pangkat Dan Golongan</a></p>
         </div>
-    
+
         <div class="card-body">
             <div class="col">
                 <div class="row">
+                    @can('setting - master - pangkat & golongan - create pangkat & golongan')
                     <a class="mb-3" href="{{ route('pangkat_golongan.create') }}">
                       <div class="pt-2 pb-3">
                       <button class="is-btn is-primary">tambah pangkat dan golongan</button>
                       </div>
                     </a>
+                    @endcan
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
                           <thead class=" text-primary">
@@ -48,16 +50,18 @@
                                     </td>
                                     <td>
                                       {{-- <div class="row"> --}}
+                                        @can('setting - master - pangkat & golongan - edit pangkat & golongan')
                                         <a href="{{ route('pangkat_golongan.edit', $item->golongan) }}">
                                           <button class="btn btn-warning">
                                             Edit
                                           </button>
                                         </a>
-                                        
+                                        @endcan
+
                                         {{-- <form action="{{ route('pangkat_golongan.destroy', $item->golongan) }}" method="POST">
                                           @csrf
                                           @method('DELETE')
-                                      
+
                                           <button type="submit" class="btn btn-danger btn-block">Delete</button>
                                         </form> --}}
                                       {{-- </div> --}}
@@ -84,4 +88,4 @@
         });
     });
   </script>
-@endsection 
+@endsection

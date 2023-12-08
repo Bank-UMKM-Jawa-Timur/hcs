@@ -92,7 +92,7 @@
                                     </select>
                                 </div>`
                         );
-        
+
                         $("#divisi").change(function(){
                             var divisi = $(this).val();
 

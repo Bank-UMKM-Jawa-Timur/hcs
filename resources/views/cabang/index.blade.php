@@ -6,14 +6,16 @@
             <h5 class="card-title font-weight-bold">Data Kantor Cabang</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang</p>
         </div>
-        
+
         <div class="card-body">
             <div class="col">
                 <div class="row">
                   <div class="pt-3 pb-3">
-                    <a class="mb-3" href="{{ route('cabang.create') }}">
-                      <button class="is-btn is-primary">tambah cabang</button>
-                    </a>
+                    @can('setting - master - kantor cabang - create kantor cabang')
+                        <a class="mb-3" href="{{ route('cabang.create') }}">
+                        <button class="btn btn-primary">tambah cabang</button>
+                        </a>
+                    @endcan
                   </div>
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
@@ -48,13 +50,15 @@
                                     </td>
                                     <td class="text-center">
                                       {{-- <div class="row"> --}}
-                                        <p style="margin-bottom: 0.4rem !important;">
-                                          <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
-                                            <button class="btn btn-warning">
-                                              @if ($item->kode_cabang_profil) Edit @else Lengkapi Profil Kantor @endif
-                                            </button>
-                                          </a>
-                                        </p>
+                                        @can('setting - master - kantor cabang - edit kantor cabang')
+                                            <p style="margin-bottom: 0.4rem !important;">
+                                            <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
+                                                <button class="btn btn-warning">
+                                                @if ($item->kode_cabang_profil) Edit @else Lengkapi Profil Kantor @endif
+                                                </button>
+                                            </a>
+                                            </p>
+                                        @endcan
                                         @if ($item->kode_cabang_profil)
                                           <a href="{{ route('penambahan-bruto.index') }}?profil_kantor={{$item->profil_id}}" class="mt-2">
                                             <button class="btn btn-info">
@@ -70,7 +74,7 @@
                                         {{-- <form action="{{ route('cabang.destroy', $item->id) }}" method="POST">
                                           @csrf
                                           @method('DELETE')
-                                      
+
                                           <button type="submit" class="btn btn-danger btn-block">Delete</button>
                                         </form> --}}
                                       {{-- </div> --}}
@@ -97,4 +101,4 @@
         });
     });
   </script>
-@endsection 
+@endsection

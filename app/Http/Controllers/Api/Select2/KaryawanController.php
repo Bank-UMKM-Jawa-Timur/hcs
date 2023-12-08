@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Select2;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\select2\KaryawanResource;
 use App\Models\KaryawanModel;
+use App\Repository\CabangRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -19,17 +20,70 @@ class KaryawanController extends Controller
     public function karyawan(Request $request)
     {
         $query = $request->q ?? $request->search;
+        $kantor = $request->get('kantor');
+        $cabangRepo = new CabangRepository;
+        $kode_cabang_arr = $cabangRepo->listCabang(true);
 
         $karyawan = KaryawanModel::with('jabatan')
             ->where(function (Builder $builder) use ($query) {
                 $builder->orWhere('nip', 'LIKE', "%{$query}%");
                 $builder->orWhere('nama_karyawan', 'LIKE', "%{$query}%");
             })
-            ->where('status_karyawan', '!=', 'Nonaktif')
+            ->where(function ($query) {
+                $query->where('status_karyawan', '!=', 'Nonaktif')
+                    ->whereNull('tanggal_penonaktifan');
+            })
+            ->where(function($q) use ($kantor, $kode_cabang_arr) {
+                if ($kantor != '0') {
+                    if ($kantor == 'pusat') {
+                        $q->whereNotIn('kd_entitas', $kode_cabang_arr);
+                    }
+                    else {
+                        $q->orWhereIn('kd_entitas', $kode_cabang_arr);
+                    }
+                }
+            })
             ->orderBy('nama_karyawan', 'ASC')
             ->simplePaginate();
 
-        return $this->response($karyawan);
+        return $this->response($karyawan, KaryawanResource::collection($karyawan));
+    }
+
+    public function listKaryawan(Request $request)
+    {
+        $query = $request->q ?? $request->search;
+        $cabang = $request->get('cabang') != '0' ? $request->get('cabang') : '';
+        $divisi = $request->get('divisi') != '0' ? $request->get('divisi') : '';
+        $sub_divisi = $request->get('sub_divisi') != '0' ? $request->get('sub_divisi') : '';
+        $bagian = $request->get('bagian') != '0' ? $request->get('bagian') : '';
+
+        $karyawan = KaryawanModel::with('jabatan')
+                    ->where(function (Builder $builder) use ($query) {
+                        $builder->orWhere('nip', 'LIKE', "%{$query}%");
+                        $builder->orWhere('nama_karyawan', 'LIKE', "%{$query}%");
+                    })
+                    ->when($cabang, function($query) use ($cabang) {
+                        $query->where('kd_entitas', $cabang);
+                    })
+                    ->when($divisi, function($query) use ($divisi, $sub_divisi) {
+                        if ($divisi && !$sub_divisi) {
+                            $query->where('kd_entitas', $divisi);
+                        }
+                        if ($divisi && $sub_divisi) {
+                            $query->where('kd_entitas', $sub_divisi);
+                        }
+                    })
+                    ->when($bagian, function($query) use ($bagian) {
+                        $query->where('kd_bagian', $bagian);
+                    })
+                    ->where(function ($query) {
+                        $query->where('status_karyawan', '!=', 'Nonaktif')
+                            ->whereNull('tanggal_penonaktifan');
+                    })
+                    ->orderBy('nama_karyawan', 'ASC')
+                    ->get();
+
+        return $this->response($karyawan, KaryawanResource::collection($karyawan));
     }
 
     public function karyawanPjs(Request $request)
@@ -50,18 +104,18 @@ class KaryawanController extends Controller
             ->orderBy('nama_karyawan', 'ASC')
             ->simplePaginate();
 
-        return $this->response($karyawan);
+        return $this->response($karyawan, KaryawanResource::collection($karyawan));
     }
 
-    private function response(Paginator $karyawan)
-    {
-        return [
-            'results' => KaryawanResource::collection($karyawan),
-            'pagination' => [
-                'more' => !empty($karyawan->nextPageUrl())
-            ]
-        ];
-    }
+    // private function response(Paginator $karyawan)
+    // {
+    //     return [
+    //         'results' => KaryawanResource::collection($karyawan),
+    //         'pagination' => [
+    //             'more' => !empty($karyawan->nextPageUrl())
+    //         ]
+    //     ];
+    // }
 
     function getDetail($nip)
     {

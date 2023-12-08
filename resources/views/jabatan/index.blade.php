@@ -10,9 +10,11 @@
         <div class="card-body">
             <div class="col">
                 <div class="row">
+                    @can('setting - master - jabatan - create jabatan')
                     <a class="mb-3" href="{{ route('jabatan.create') }}">
                       <button class="is-btn is-primary">tambah jabatan</button>
                     </a>
+                    @endcan
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
                           <thead class=" text-primary">
@@ -40,16 +42,18 @@
                                     </td>
                                     <td>
                                       {{-- <div class="row"> --}}
+                                        @can('setting - master - jabatan - edit jabatan')
                                         <a href="{{ route('jabatan.edit', $item->kd_jabatan) }}">
                                           <button class="btn btn-warning">
                                             Edit
                                           </button>
                                         </a>
-                                        
+                                        @endcan
+
                                         {{-- <form action="{{ route('jabatan.destroy', $item->id) }}" method="POST">
                                           @csrf
                                           @method('DELETE')
-                                      
+
                                           <button type="submit" class="btn btn-danger btn-block">Delete</button>
                                         </form> --}}
                                       {{-- </div> --}}
@@ -76,4 +80,4 @@
         });
     });
   </script>
-@endsection 
+@endsection

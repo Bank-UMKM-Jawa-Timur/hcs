@@ -14,6 +14,7 @@ use App\Models\SpModel;
 use App\Repository\CabangRepository;
 use App\Repository\PengkinianDataRepository;
 use App\Service\EntityService;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PengkinianDataController extends Controller
@@ -42,6 +43,9 @@ class PengkinianDataController extends Controller
 
     public function pengkinian_data_index()
     {
+        if (!Auth::user()->can('manajemen karyawan - pengkinian data - import pengkinian data')) {
+            return view('roles.forbidden');
+        }
         return view('pengkinian_data.import');
     }
     /**
@@ -51,12 +55,16 @@ class PengkinianDataController extends Controller
      */
     public function index(Request $request)
     {
+        if (!Auth::user()->can('manajemen karyawan - pengkinian data')) {
+            return view('roles.forbidden');
+        }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->get('q');
 
         $pengkinianDataRepo = new PengkinianDataRepository();
         $data_pusat = $pengkinianDataRepo->getData($search, $limit, $page);
+
         return view('pengkinian_data.index', [
             'data' => $data_pusat
         ]);
@@ -69,6 +77,9 @@ class PengkinianDataController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->can('manajemen karyawan - pengkinian data - create pengkinian data')) {
+            return view('roles.forbidden');
+        }
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
         $data_jabatan = DB::table('mst_jabatan')
@@ -342,8 +353,11 @@ class PengkinianDataController extends Controller
      */
     public function show($id)
     {
+        if (!Auth::user()->can('manajemen karyawan - pengkinian data - detail pengkinian data')) {
+            return view('roles.forbidden');
+        }
         $data_suis = null;
-        
+
         $karyawan = PengkinianKaryawanModel::findOrFail($id);
         $data_suis = DB::table('history_pengkinian_data_keluarga')
             ->where('nip', $karyawan->nip)

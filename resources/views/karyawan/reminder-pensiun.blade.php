@@ -592,17 +592,17 @@ $request = isset($request) ? $request : null;
                         });
                     }
                 }
-            ], 
+            ],
             columnDefs: [{
                 targets:[1],
                 render: function(data, type, row, meta){
                     if(type === 'sort'){
                         //data = ' ' + data ;
-                        return "\u200C" + data ; 
+                        return "\u200C" + data ;
                     }
-                    
-                    return data ;   
-                    
+
+                    return data ;
+
                 }
             }]
         });

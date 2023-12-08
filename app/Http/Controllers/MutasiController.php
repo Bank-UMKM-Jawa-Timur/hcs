@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MutasiRequest;
 use App\Service\EntityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -62,6 +63,10 @@ class MutasiController extends Controller
     {
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $search = $request->get('q');
+
+        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data mutasi')) {
+            return view('roles.forbidden');
+        }
         $data = DB::table('demosi_promosi_pangkat')
             ->where('keterangan', 'Mutasi')
             ->select(
@@ -130,6 +135,9 @@ class MutasiController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data mutasi - create mutasi')) {
+            return view('roles.forbidden');
+        }
         $data = DB::table('mst_karyawan')
             ->select('nip', 'nama_karyawan', 'kd_jabatan')
             ->get();
