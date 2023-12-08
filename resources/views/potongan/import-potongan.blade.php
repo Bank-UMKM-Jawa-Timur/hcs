@@ -28,6 +28,8 @@
 
     <div class="card-body">
         <a class="btn btn-primary" href="{{ route('template-excel-potongan') }}" download>Template Excel</a>
+        <div class="Container" id="alert-content">
+        </div>
         <div class="row">
             <div class="col-lg-3">
                 <div class="form-group">
@@ -241,7 +243,29 @@
             }
         }
 
+        function alertSuccess(message) { 
+            let msg = `<div class="alert alert-success alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>`;
+            return msg;
+            
+        }
+
+        function alertDanger(message) { 
+            let msg = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>`;
+            return msg;
+        }
+
         function showTable(sheet_data) {
+            $('#alert-content').empty();
             var no = 0;
             var grandKreditKoprasi = 0;
             var grandIuranKoprasi = 0;
@@ -281,6 +305,8 @@
                 }
             })
 
+            var dataExcel = true;
+
             $.ajax({
                 type: "GET",
                 url: `{{ url('/get-karyawan-by-nip') }}`,
@@ -310,12 +336,15 @@
                             hasError = false;
                             hasNip = false;
                         }
+                        if (hasNip == true) {
+                            dataExcel = false;
+                        }
                         grandKreditKoprasi += parseInt(dataKreditKoprasi[key])
                         grandIuranKoprasi += parseInt(dataIuranKoprasi[key])
                         grandKreditPegawai += parseInt(dataKreditPegawai[key])
                         grandIuranIk += parseInt(dataIuranIk[key])
                         new_body_tr += `
-                                <tr>
+                                <tr class="${hasNip == true ? 'table-danger' : ''}">
                                     <td>
                                         ${no}
                                     </td>
@@ -341,23 +370,8 @@
                             `;
 
                     })
-                    if (hasError == true) {
-                        var message = ``;
-                        if (hasNip == true) {
-                            message += `NIP : ${checkNip} tidak di temukan.`
-                        }
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Data tidak valid!',
-                            text: message
-                        });
-                        $('#btn-simpan').addClass('d-none');
-                        $('#hasil-import').addClass('d-none');
-                    } else {
-                        Swal.fire({
-                            icon: 'success',
-                            text: 'Data valid.'
-                        });
+
+                    if (hasNip == true) {
                         $('.nip-input').val(nipDataRequest);
                         $('.kredit-koperasi-input').val(dataKreditKoprasi);
                         $('.iuran-koperasi-input').val(dataIuranKoprasi);
@@ -367,7 +381,17 @@
                         $('.tahun-input').val(tahun);
 
                         $('#table_item tbody').append(new_body_tr);
-                        $('#btn-simpan').removeClass('d-none');
+                        $('#hasil-import').removeClass('d-none');
+                    }else{
+                        $('.nip-input').val(nipDataRequest);
+                        $('.kredit-koperasi-input').val(dataKreditKoprasi);
+                        $('.iuran-koperasi-input').val(dataIuranKoprasi);
+                        $('.kredit-pegawai-input').val(dataKreditPegawai);
+                        $('.iuran_ik-input').val(dataIuranIk);
+                        $('.bulan-input').val(bulan);
+                        $('.tahun-input').val(tahun);
+
+                        $('#table_item tbody').append(new_body_tr);
                         $('#hasil-import').removeClass('d-none');
                         $('#grand').html(`
                                 <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
@@ -375,28 +399,44 @@
                                     new Intl.NumberFormat("id-ID", {
                                     style: "currency",
                                     currency: "IDR"
-                                    }).format(grandKreditKoprasi)
+                                    }).format(grandKreditKoprasi).replace(/(\.|,)00$/g, '')
                                 }</p>
                                 <p id="grand-total" class="font-weight-bold">Grand Iuran Koprasi : ${
                                     new Intl.NumberFormat("id-ID", {
                                     style: "currency",
                                     currency: "IDR"
-                                    }).format(grandIuranKoprasi)
+                                    }).format(grandIuranKoprasi).replace(/(\.|,)00$/g, '')
                                 }</p>
                                 <p id="grand-total" class="font-weight-bold">Grand Kredit Pegawai : ${
                                     new Intl.NumberFormat("id-ID", {
                                     style: "currency",
                                     currency: "IDR"
-                                    }).format(grandKreditPegawai)
+                                    }).format(grandKreditPegawai).replace(/(\.|,)00$/g, '')
                                 }</p>
                                 <p id="grand-total" class="font-weight-bold">Grand Iuran IK : ${
                                     new Intl.NumberFormat("id-ID", {
                                     style: "currency",
                                     currency: "IDR"
-                                    }).format(grandIuranIk)
+                                    }).format(grandIuranIk).replace(/(\.|,)00$/g, '')
                                 }</p>
                             `)
                     }
+
+                    if (dataExcel == true) {
+                        console.log("TRUE");
+                        let alrtSucces = alertSuccess("Data Valid.");
+                        $('#alert-content').append(alrtSucces);
+                        $('#btn-simpan').addClass('hidden');
+                        $('#btn-simpan').removeClass('d-none');
+                        $('#btn-simpan').removeClass('hidden');
+                    }else{
+                        console.log("FALSE");
+                        let message = ``;
+                        message += `NIP : ${checkNip} tidak di temukan, harap cek kembali pada file excel yang di upload`;
+                        $('#alert-content').append(alertDanger(message));
+                        $('#btn-simpan').addClass('hidden');
+                    }
+
                 },
                 complete: function() {
                     $('#loading-message').empty();
