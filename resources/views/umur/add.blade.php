@@ -33,8 +33,9 @@
                             @enderror
                         </div>
                     </div>
-
-                    <button class="is-btn is-primary" value="submit" style="submit">Simpan</button>
+                    <div class="pt-3 pb-3">
+                        <button class="is-btn is-primary" value="submit" style="submit">Simpan</button>
+                    </div>
                 </form>
             </div>
         </div>
