@@ -36,17 +36,6 @@ class PotonganRepository
         return $potongan;
     }
 
-    // public function dataFileExcel()
-    // {
-    //     $karyawan = KaryawanModel::select(
-    //         'mst_karyawan.nip',
-    //     )
-    //         ->whereNull('tanggal_penonaktifan')
-    //         ->get();
-
-    //     return $karyawan;
-    // }
-
     public function detailPotongan($bulan, $tahun, $limit, $search){
         $data = DB::table('potongan_gaji as p')
         ->select(
