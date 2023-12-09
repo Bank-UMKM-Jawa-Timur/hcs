@@ -63,13 +63,13 @@
                     } else{
                         $("#keterangan").addClass('hidden')
                     }
-                    
+
                     url = "{{ route('api.get.karyawan') }}";
-    
+
                     $('#table-data').addClass('hidden');
                     $('#table_item tbody').empty();
                     $('#alert-container').addClass('hidden');
-    
+
                     var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
                     var test = $("#upload_csv").val();
                     if (regex.test($("#upload_csv").val().toLowerCase())) {
@@ -286,7 +286,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div id="alert-container">
-                
+
                                 </div>
                             </div>
                             <div class="col">
@@ -296,7 +296,7 @@
                                     @forelse ($data as $item)
                                         <option value="{{ strtolower($item->nama_tunjangan) }}">{{ $item->nama_tunjangan }}</option>
                                     @empty
-                                        
+
                                     @endforelse
                                 </select>
                             </div>
