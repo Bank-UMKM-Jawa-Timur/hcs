@@ -206,23 +206,23 @@
                         </li>
                         @endcan  --}}
                         {{-- Menu Import --}}
-                        <li class="@active('payroll') {{ request()->is('payroll', 'payroll/*') ? 'active' : '' }}">
-                            <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
+                        <li class="@active('penghasilan.import-penghasilan-teratur', 'penghasilan.import-penghasilan-teratur/*', 'penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*') {{ request()->is('penghasilan.import-penghasilan-teratur', 'penghasilan.import-penghasilan-teratur/*', 'penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*') ? 'active' : '' }}">
+                            <a class="nav-link-item" href="#submenu-import" data-toggle="collapse" data-target="#submenu-import"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
                                 <span class="dropdown-toggle">Import</span>
                             </a>
                             <ul class="sub-menu {{ request()->is('payroll', 'payroll/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('payroll.slip', 'show')"
-                                id="submenu5">
+                                id="submenu-import">
                                 <li style="margin-top: -15px"
-                                    class="@active('payroll.index')">
+                                    class="@active('penghasilan.import-penghasilan-teratur.index')">
                                     <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}" style="font-weight: bolder">
                                         <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
                                         <p>Penghasilan Teratur</p>
                                     </a>
                                 </li>
                                 <li style="margin-top: -15px"
-                                    class="@active('payroll.index')">
+                                    class="@active('penghasilan-tidak-teratur.index')">
                                     <a href="{{ route('penghasilan-tidak-teratur.index') }}" style="font-weight: bolder">
                                         <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
                                         <p>Penghasilan Tidak Teratur</p>
@@ -230,14 +230,14 @@
                                     </a>
                                 </li>
                                 <li style="margin-top: -15px"
-                                    class="@active('payroll.index')">
+                                    class="@active('bonus.index')">
                                     <a href="{{ route('bonus.index') }}" style="font-weight: bolder">
                                         <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
                                         <p>Bonus</p>
                                     </a>
                                 </li>
                                 <li style="margin-top: -15px"
-                                    class="@active('payroll.index')">
+                                    class="@active('potongan.index')">
                                     <a href="{{ route('potongan.index') }}" style="font-weight: bolder">
                                         <i class="nc-icon nc-credit-card style="font-weight: bolder""></i>
                                         <p>Potongan</p>
@@ -248,13 +248,13 @@
                         </li>
                         {{-- Menu Payroll --}}
                         <li class="@active('payroll') {{ request()->is('payroll', 'payroll/*') ? 'active' : '' }}">
-                            <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
+                            <a class="nav-link-item" href="#submenu-payroll" data-toggle="collapse" data-target="#submenu-payroll"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
                                 <span class="dropdown-toggle">Payroll</span>
                             </a>
                             <ul class="sub-menu {{ request()->is('payroll', 'payroll/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('payroll.slip', 'show')"
-                                id="submenu5">
+                                id="submenu-payroll">
                                 <li style="margin-top: -15px"
                                     class="@active('payroll.index')">
                                     <a href="{{ route('payroll.index') }}">
@@ -273,13 +273,13 @@
                         {{-- Menu Gaji --}}
                         @can('gaji')
                         <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                            <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
+                            <a class="nav-link-item" href="#submenu-gaji" data-toggle="collapse" data-target="#submenu-gaji"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-credit-card " style="font-weight: bolder"></i>
                                 <span class="dropdown-toggle">Gaji</span>
                             </a>
                             <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
-                                id="submenu5">
+                                id="submenu-gaji">
                                 @can('gaji - lampiran gaji')
                                 <li style="margin-top: -15px"
                                     class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
