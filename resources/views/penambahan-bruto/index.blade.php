@@ -57,8 +57,8 @@
                                     </td>
                                     <td class="text-center">
                                         @can('setting - kantor pusat - penambahan bruto - edit penambahan bruto')
-                                            <a href="{{ route('penambahan-bruto.edit', $item->id) }}">
-                                                <button class="btn btn-warning">
+                                            <a href="{{ route('penambahan-bruto.edit', $item->id) }}" class="mb-3">
+                                                <button class="is-btn btn-warning">
                                                     Edit
                                                 </button>
                                             </a>

@@ -55,7 +55,7 @@
                                 @can('setting - master - kantor cabang - edit kantor cabang')
                                     <p style="margin-bottom: 0.4rem !important;">
                                     <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
-                                        <button class="btn btn-warning">
+                                        <button class="is-btn btn-warning">
                                         @if ($item->kode_cabang_profil) Edit @else Lengkapi Profil Kantor @endif
                                         </button>
                                     </a>

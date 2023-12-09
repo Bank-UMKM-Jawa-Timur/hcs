@@ -61,7 +61,7 @@ $profilKantor = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->find(
                                 <td class="text-center">
                                     @can('setting - kantor pusat - pengurangan bruto - edit pengurangan bruto')
                                     <a href="{{ route('pengurangan-bruto.edit', $item->id) }}">
-                                        <button class="btn btn-warning">
+                                        <button class="is-btn btn-warning">
                                             Edit
                                         </button>
                                     </a>

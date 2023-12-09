@@ -48,7 +48,7 @@
                                       {{-- <div class="row"> --}}
                                         @can('setting - master - jabatan - edit jabatan')
                                         <a href="{{ route('jabatan.edit', $item->kd_jabatan) }}">
-                                          <button class="btn btn-warning">
+                                          <button class="is-btn btn-warning">
                                             Edit
                                           </button>
                                         </a>

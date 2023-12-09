@@ -55,19 +55,19 @@
                                     {{-- @dd($item->kode) --}}
                                     <td>
                                         {{-- <div class="row"> --}}
-                                        <div class="d-flex ">
+                                        <div class="d-flex">
                                             @can('setting - master - penghasilan tanpa pajak - edit penghasilan tanpa pajak')
-                                            <div class="m-2">
-                                                <a class="btn btn-warning" href="{{ route('ptkp.edit', $item->id) }}">
+                                            <div class="m-3">
+                                                <a class="is-btn btn-warning" href="{{ route('ptkp.edit', $item->id) }}">
                                                     Edit
                                                 </a>
                                             </div>
                                             @endcan
-                                        <div class="m-2">
-                                            <a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
-                                                    Hapus
-                                            </a>
-                                        </div>
+                                            <div class="m-2">
+                                                <a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                        Hapus
+                                                </a>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

@@ -56,7 +56,7 @@
                                       {{-- <div class="row"> --}}
                                         @can('setting - master - pangkat & golongan - edit pangkat & golongan')
                                         <a href="{{ route('pangkat_golongan.edit', $item->golongan) }}">
-                                          <button class="btn btn-warning">
+                                          <button class="is-btn btn-warning">
                                             Edit
                                           </button>
                                         </a>

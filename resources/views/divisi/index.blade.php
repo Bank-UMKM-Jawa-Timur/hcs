@@ -54,7 +54,7 @@
                               {{-- <div class="row"> --}}
                                   @can('setting - master - divisi - edit divisi')
                                   <a href="{{ route('divisi.edit', $item['kd_divisi']) }}">
-                                    <button class="btn btn-warning">
+                                    <button class="is-btn btn-warning">
                                         Edit
                                     </button>
                                   </a>

@@ -49,7 +49,7 @@
                                                 {{-- <div class="row"> --}}
                                                     @can('setting - master - rentang umur - edit rentang umur')
                                                     <a href="{{ route('umur.edit', $item->id) }}">
-                                                        <button class="btn btn-warning">Edit</button>
+                                                        <button class="is-btn btn-warning">Edit</button>
                                                     </a>
                                                     @endcan
     
