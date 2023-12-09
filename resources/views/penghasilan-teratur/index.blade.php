@@ -78,21 +78,13 @@
                             @foreach ($data as $item)
                                 <tr>
                                     <td>{{ $i++ }}</td>
-                                    {{-- <td>{{ $item->nip_tunjangan }}</td> --}}
-                                    {{-- <td>{{ $item->nama_karyawan }}</td> --}}
                                     <td>{{ $item->nama_tunjangan }}</td>
-                                    <td>{{ number_format($item->total_nominal, 0, ".", ",") }}</td>
+                                    <td>{{ number_format($item->total_nominal, 0, ",", ".") }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                     <td>
                                         @can('penghasilan - import - penghasilan teratur - detail')
                                             <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-outline-info p-1">Detail</a>
                                         @endcan
-                                        {{-- @if ($item->nama_tunjangan == 'Vitamin')
-                                        <form action="{{route('penghasilan.cetak-vitamin')}}" method="post">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary">Cetak Vitamin</button>
-                                        </form>
-                                        @endif --}}
                                     </td>
                                 </tr>
                             @endforeach

@@ -67,7 +67,7 @@
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->nip_tunjangan }}</td>
                                         <td>{{ $item->nama_karyawan }}</td>
-                                        <td>{{ number_format($item->nominal, 0, ".", ",") }}</td>
+                                        <td>{{ number_format($item->nominal, 0, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                     </tr>
                                 @endforeach

@@ -47,18 +47,15 @@
                     <div class="custom-file">
                         <input type="file" name="upload_excel" class="custom-file-input form-control"  id="file-penghasilan"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="updateFileName()">
                         <label class="custom-file-label overflow-hidden" for="validatedCustomFile" id="file-label" style="padding: 10px 4px 30px 5px">Choose file...</label>
-                        {{-- <input type="file" name="upload_excel" class="custom-file-input form-control" id="file-penghasilan" accept=".xlsx, .xls" >
-                        <label class="custom-file-label overflow-hidden" for="file-penghasilan"  id="file-label">Choose Excel file...</label> --}}
                     </div>
                     <p class="text-danger d-none mt-2" id="error-file">File belum di pilih.</p>
                 </div>
             </div>
-            <div class="col-lg-2 mt-2">
-                <button class="btn btn-primary" id="filter">Tampilkan</button>
+            <div class="col-lg-2 align-items-center mt-4">
+                <button class="is-btn is-primary" id="filter">Import</button>
             </div>
         </div>
         <div id="alert-massage">
-
         </div>
         <div class="teks mt-4">
             <div class="col-md-4 align-self-center mt-4" id="grand"></div>
@@ -72,7 +69,7 @@
         <div class="d-flex justify-content-start">
             <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
         </div>
-        <div class="col-md-10" id="loading-message"></div>
+        <div class="col" id="loading-message"></div>
         <div class="row d-none" id="hasil-filter">
             <div class="col-lg-12">
                 <div class="card">

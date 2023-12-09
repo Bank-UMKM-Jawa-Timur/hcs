@@ -9,6 +9,7 @@ use App\Models\KaryawanModel;
 use App\Models\SpModel;
 use Illuminate\Http\Request;
 use App\Service\EntityService;
+use Carbon\Carbon;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\DB;
 use PDO;
@@ -152,7 +153,34 @@ class HomeController extends Controller
         ->orderBy('tanggal_sp', 'DESC')
         ->count();
 
-        return view('home', compact('totalKaryawan', 'dataGaji', 'gajiPerCabang', 'dataMutasi', 'totalDataMutasi', 'dataSP', 'totalDataSP'));
+        $tanggalAwal = date('Y-m-01');
+        $hari_ini = Carbon::now();
+        $bulan_ini = date('m');
+        $bulanReq = ($bulan_ini < 10) ? ltrim($bulan_ini, '0') : $bulan_ini;
+
+        $tunjangan = GajiPerBulanModel::select(
+            DB::raw('round(SUM(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_perumahan + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_transport + tj_pulsa + tj_vitamin + uang_makan), 0) as total_gaji'),
+            DB::raw('round(AVG(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_perumahan + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_transport + tj_pulsa + tj_vitamin + uang_makan), 0) as rata_rata'),
+            DB::raw('round(AVG(gj_pokok), 0) as gj_pokok'),
+            DB::raw('round(AVG(gj_penyesuaian), 0) as gj_penyesuaian'),
+            DB::raw('round(AVG(tj_keluarga), 0) as tj_keluarga'),
+            DB::raw('round(AVG(tj_telepon), 0) as tj_telepon'),
+            DB::raw('round(AVG(tj_jabatan), 0) as tj_jabatan'),
+            DB::raw('round(AVG(tj_perumahan), 0) as tj_perumahan'),
+            DB::raw('round(AVG(tj_kemahalan), 0) as tj_kemahalan'),
+            DB::raw('round(AVG(tj_pelaksana), 0) as tj_pelaksana'),
+            DB::raw('round(AVG(tj_kesejahteraan), 0) as tj_kesejahteraan'),
+            DB::raw('round(AVG(tj_multilevel), 0) as tj_multilevel'),
+            DB::raw('round(AVG(tj_transport), 0) as tj_transport'),
+            DB::raw('round(AVG(tj_pulsa), 0) as tj_pulsa'),
+            DB::raw('round(AVG(tj_vitamin), 0) as tj_vitamin'),
+            DB::raw('round(AVG(uang_makan), 0) as uang_makan'),
+        )
+        ->whereDate('created_at', '>=', $tanggalAwal)
+        ->whereDate('created_at', '<=', $hari_ini)
+        ->first();
+
+        return view('home', compact('tunjangan','totalKaryawan', 'dataGaji', 'gajiPerCabang', 'dataMutasi', 'totalDataMutasi', 'dataSP', 'totalDataSP'));
     }
 
     public function perCabang(){

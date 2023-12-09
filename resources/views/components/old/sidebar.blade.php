@@ -198,7 +198,7 @@
                             </a>
                         </li>
                         @endcan
-                        @can('penghasilan - tambah penghasilan')
+                        {{--  @can('penghasilan - tambah penghasilan')
                         <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
                             <a href="{{ route('pajak_penghasilan.create') }}">
                                 <i class="nc-icon nc-ruler-pencil"></i>
@@ -206,7 +206,7 @@
                                 <p></p>
                             </a>
                         </li>
-                        @endcan
+                        @endcan  --}}
                         {{-- Menu Import --}}
                         @can('penghasilan - import')
                         <li class="@active('payroll') {{ request()->is('payroll', 'payroll/*') ? 'active' : '' }}">
