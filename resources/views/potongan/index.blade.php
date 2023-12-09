@@ -26,12 +26,16 @@
         <div class="card-body">
             <div class="col">
                 <div class="row">
+                    @can('penghasilan - import - potongan - import')
                     <a class="mb-3" href="{{ route('potongan.create') }}">
                       <button class="btn btn-primary">Tambah</button>
                     </a>
+                    @endcan
+                    @can('penghasilan - import - potongan - import')
                     <a class="ml-3" href="{{ route('import-potongan') }}">
                       <button class="btn btn-primary">Import</button>
                     </a>
+                    @endcan
                     <div class="table-responsive overflow-hidden content-center">
                       <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -117,11 +121,13 @@
                                   <td style="min-width: 130px">
                                     <div class="container">
                                         <div class="row">
+                                            @can('penghasilan - import - potongan - detail')
                                             <a href="{{ route('detail-potongan', ['bulan' => $item->bulan, 'tahun' => $item->tahun]) }}"
                                                 class="btn btn-outline-info p-1"
                                                 style="min-width: 60px">
                                                 Detail
                                             </a>
+                                            @endcan
                                         </div>
                                     </div>
                                   </td>

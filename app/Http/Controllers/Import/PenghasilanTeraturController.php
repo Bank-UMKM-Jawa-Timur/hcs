@@ -16,6 +16,7 @@ use App\Exports\KaryawanExport;
 use App\Exports\ExportVitamin;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class PenghasilanTeraturController extends Controller
 {
@@ -27,6 +28,9 @@ class PenghasilanTeraturController extends Controller
     public function index(Request $request)
     {
         // Need permission
+        if (!Auth::user()->can('penghasilan - import - penghasilan teratur')) {
+            return view('roles.forbidden');
+        }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -44,6 +48,9 @@ class PenghasilanTeraturController extends Controller
     public function create()
     {
         // Need permission
+        if (!Auth::user()->can('penghasilan - import - penghasilan teratur - import')) {
+            return view('roles.forbidden');
+        }
         $penghasilan = TunjanganModel::where('kategori', 'teratur')->where('is_import', 1)->get();
         return view('penghasilan-teratur.create', compact('penghasilan'));
     }
@@ -199,6 +206,9 @@ class PenghasilanTeraturController extends Controller
     public function details($idTunjangan, $createdAt)
     {
         // Need permission
+        if (!Auth::user()->can('penghasilan - import - penghasilan teratur - detail')) {
+            return view('roles.forbidden');
+        }
         $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;
         $page = Request()->has('page') ? Request()->get('page') : 1;
 

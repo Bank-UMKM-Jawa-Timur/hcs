@@ -7,6 +7,7 @@ use App\Repository\PayrollRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -17,6 +18,9 @@ class PayrollController extends Controller
 
     public function index(Request $request) {
         // Need permission
+        if (!Auth::user()->can('penghasilan - payroll - list payroll')) {
+            return view('roles.forbidden');
+        }
         FacadesSession::forget('kategori');
         FacadesSession::forget('kantor');
         FacadesSession::forget('month');
@@ -114,6 +118,9 @@ class PayrollController extends Controller
 
     public function slip(Request $request) {
         // Need permission
+        if (!Auth::user()->can('penghasilan - payroll - slip gaji')) {
+            return view('roles.forbidden');
+        }
         FacadesSession::forget('kantor');
         FacadesSession::forget('month');
         FacadesSession::forget('year');

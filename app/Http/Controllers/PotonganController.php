@@ -8,6 +8,7 @@ use App\Repository\PotonganRepository;
 use Exception;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -27,6 +28,9 @@ class PotonganController extends Controller
     public function index(Request $request)
     {
         // Need permission
+        if (!Auth::user()->can('penghasilan - import - potongan')) {
+            return view('roles.forbidden');
+        }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -44,6 +48,9 @@ class PotonganController extends Controller
     public function create()
     {
         // Need permission
+        if (!Auth::user()->can('penghasilan - import - potongan - import')) {
+            return view('roles.forbidden');
+        }
         return view('potongan.add');
     }
 
@@ -84,6 +91,9 @@ class PotonganController extends Controller
 
     public function importPotongan(){
         // Need permission
+        if (!Auth::user()->can('penghasilan - import - potongan - import')) {
+            return view('roles.forbidden');
+        }
         return view('potongan.import-potongan');
     }
 
@@ -165,6 +175,9 @@ class PotonganController extends Controller
 
     public function detail($bulan, $tahun){
         // Need permission
+        if (!Auth::user()->can('penghasilan - import - potongan - detail')) {
+            return view('roles.forbidden');
+        }
         $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;
         $search = Request()->get('q');
 

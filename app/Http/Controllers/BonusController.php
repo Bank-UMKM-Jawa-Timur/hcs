@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Repository\PenghasilanTidakTeraturRepository;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
 class BonusController extends Controller
@@ -31,6 +32,9 @@ class BonusController extends Controller
     public function index(Request $request)
     {
         // Need permission
+        if (!Auth::user()->can('penghasilan - import - bonus')) {
+            return view('roles.forbidden');
+        }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -47,6 +51,9 @@ class BonusController extends Controller
     public function create()
     {
         // Need permission
+        if (!Auth::user()->can('penghasilan - import - bonus - import')) {
+            return view('roles.forbidden');
+        }
         $tunjangan = TunjanganModel::select('nama_tunjangan','id')->where('kategori','bonus')->where('is_import',1)->get();
         return view('bonus.import',[
             'data_tunjangan' => $tunjangan
@@ -108,6 +115,9 @@ class BonusController extends Controller
     public function detail(Request $request,$id, $tgl)
     {
         // Need permission
+        if (!Auth::user()->can('penghasilan - import - bonus - detail')) {
+            return view('roles.forbidden');
+        }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
