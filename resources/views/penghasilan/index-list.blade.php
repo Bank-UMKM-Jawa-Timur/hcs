@@ -12,9 +12,11 @@
 <div class="card-body">
     <div class="row">
         <div class="col">
-            <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.create') }}">
+            @can('penghasilan - import - penghasilan teratur - detail')
+            <a class="mb-3" href="{{ route('penghasilan - import - penghasilan tidak teratur - import') }}">
                 <button class="is-btn is-primary">import</button>
             </a>
+            @endcan
         </div>
         <div class="col-lg-12">
             <div class="table-responsive overflow-hidden content-center">
@@ -75,11 +77,13 @@
                                     <td>Rp {{ formatRupiah($item->grand_total) }}</td>
                                     <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
                                     <td class="text-center">
+                                        @can('penghasilan - import - penghasilan tidak teratur - detail')
                                         <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->id_tunjangan }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @empty
-                                
+
                             @endforelse
                         </tbody>
                     </table>

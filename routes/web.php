@@ -137,8 +137,8 @@ Route::prefix('graph')->group(function () {
     Route::get('/detail-per-cabang', [HomeController::class, 'perCabang'])->name('per-cabang');
     Route::get('/list-karyawan-by-cabang/{kd_cabang}', [HomeController::class, 'listKaryawanByCabang'])->name('list-karyawan-by-cabang');
     Route::get('/list-karyawan-by-sub-divisi/{sub_divisi}', [HomeController::class, 'listKaryawanBySubDivisi'])->name('list-karyawan-by-sub-divisi');
-    Route::get('/per-devisi', [HomeController::class, 'perDevisi'])->name('per-devisi');
-    Route::get('/sub-devisi/{kode}', [HomeController::class, 'subDevisi'])->name('sub-devisi');
+    Route::get('/per-divisi', [HomeController::class, 'perDivisi'])->name('per-divisi');
+    Route::get('/sub-divisi/{kode}', [HomeController::class, 'subDivisi'])->name('sub-divisi');
 
     Route::get('/per-bagian', function(){
         return view('graph.per-bagian');

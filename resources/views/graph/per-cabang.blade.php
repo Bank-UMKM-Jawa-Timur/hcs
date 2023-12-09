@@ -41,7 +41,7 @@
                                     <td>{{$item['cabang']}}</td>
                                     <td>{{$item['total_karyawan']}}</td>
                                     @if ($item['kode_cabang'] == '000')
-                                        <td><a href="{{route('per-devisi')}}" class="btn-sm btn-info">Selengkapnya</a></td>
+                                        <td><a href="{{route('per-divisi')}}" class="btn-sm btn-info">Selengkapnya</a></td>
                                     @else
                                         <td><a href="list-karyawan-by-cabang/{{$item['kode_cabang']}}" class="btn-sm btn-info">Selengkapnya</a></td>
                                     @endif

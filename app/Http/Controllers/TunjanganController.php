@@ -21,6 +21,7 @@ class TunjanganController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = DB::table('mst_tunjangan')
             ->get();
 
@@ -34,6 +35,7 @@ class TunjanganController extends Controller
      */
     public function create()
     {
+        // Need permission
         return view('tunjangan.add');
     }
 
@@ -90,6 +92,7 @@ class TunjanganController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = DB::table('mst_tunjangan')
             ->where('id', $id)
             ->first();
@@ -141,6 +144,7 @@ class TunjanganController extends Controller
      */
     public function destroy($id)
     {
+        // Need permission
         try{
             DB::table('mst_tunjangan')
                 ->where('id', $id)

@@ -21,6 +21,7 @@ class JabatanController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = DB::table('mst_jabatan')
             ->get();
         return view('jabatan.index', ['data' => $data]);
@@ -90,6 +91,7 @@ class JabatanController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = DB::table('mst_jabatan')
             ->where('kd_jabatan', $id)
             ->first();
@@ -141,6 +143,7 @@ class JabatanController extends Controller
      */
     public function destroy($id)
     {
+        // Need permission
         try{
             DB::table('mst_jabatan')
                 ->where('id', $id)

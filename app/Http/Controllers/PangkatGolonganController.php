@@ -21,6 +21,7 @@ class PangkatGolonganController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = DB::table('mst_pangkat_golongan')
             ->get();
 
@@ -34,6 +35,7 @@ class PangkatGolonganController extends Controller
      */
     public function create()
     {
+        // Need permission
         return view('pangkat_golongan.add');
     }
 
@@ -90,6 +92,7 @@ class PangkatGolonganController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = DB::table('mst_pangkat_golongan')
             ->where('golongan', $id)
             ->first();
@@ -141,6 +144,7 @@ class PangkatGolonganController extends Controller
      */
     public function destroy($id)
     {
+        // Need permission
         
         try{
             DB::table('mst_pangkat_golongan')

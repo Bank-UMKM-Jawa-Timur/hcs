@@ -8,7 +8,7 @@
         <p class="card-title"><a href="/">Dashboard</a> > Penghasilan Teratur</p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        @can('manajemen karyawan - data karyawan - create karyawan')
+        @can('penghasilan - import - penghasilan teratur - import')
             <a class="ml-3" href="{{ route('penghasilan.import-penghasilan-teratur.create') }}">
                 <button class="is-btn is-primary">Import</button>
             </a>
@@ -82,7 +82,9 @@
                                     <td>{{ number_format($item->total_nominal, 0, ",", ".") }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                     <td>
-                                        <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-outline-info p-1">Detail</a>
+                                        @can('penghasilan - import - penghasilan teratur - detail')
+                                            <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-outline-info p-1">Detail</a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

@@ -12,6 +12,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ProfilKantorPusatController extends Controller
 {
     public function index() {
+        // Need permission
         $data = DB::table('mst_cabang')
             ->select(
                 'mst_cabang.*',

@@ -21,6 +21,7 @@ class TunjanganKaryawanController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = DB::table('tunjangan_karyawan')
             ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
             ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
@@ -53,6 +54,7 @@ class TunjanganKaryawanController extends Controller
      */
     public function create()
     {
+        // Need permission
         $data = DB::table('mst_tunjangan')
             ->get();
 
@@ -67,6 +69,7 @@ class TunjanganKaryawanController extends Controller
      */
     public function store(Request $request)
     {
+        // Need permission
         try{
             DB::table('tunjangan_karyawan')
                 ->insert([

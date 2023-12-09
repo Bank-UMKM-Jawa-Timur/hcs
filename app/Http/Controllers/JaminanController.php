@@ -16,7 +16,6 @@ class JaminanController extends Controller
 
     public function getJamsostek(Request $request)
     {
-
         return view('jaminan.index', [
             'status' => null
         ]);

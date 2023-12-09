@@ -21,6 +21,7 @@ class DatabaseController extends Controller
 
     public function index()
     {
+        // Need permission
         return view('database.index', [
             'database' => $this->repo->get(),
         ]);
@@ -28,6 +29,7 @@ class DatabaseController extends Controller
 
     public function restore($id)
     {
+        // Need permission
         $backup = $this->repo->getById($id, BackupType::BACKUPS);
         if (!$backup) return abort(404);
 
@@ -43,6 +45,7 @@ class DatabaseController extends Controller
 
     public function rollback($id)
     {
+        // Need permission
         $backup = $this->repo->getById($id, BackupType::ROLLBACKS);
         if (!$backup) return abort(404);
 
@@ -58,6 +61,7 @@ class DatabaseController extends Controller
 
     public function checkout()
     {
+        // Need permission
         $this->repo->checkout();
 
         Alert::success('Berhasil checkout database');
