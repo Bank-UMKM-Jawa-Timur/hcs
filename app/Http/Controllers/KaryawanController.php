@@ -672,6 +672,14 @@ class KaryawanController extends Controller
         ]);
 
         try {
+            $idTkDeleted = explode(',', $request->get('idTkDeleted'));
+            if(count($idTkDeleted) > 0){
+                foreach($idTkDeleted as $key => $item){
+                    DB::table('tunjangan_karyawan')
+                        ->where('id', $item)
+                        ->delete();
+                }
+            }
             $id_is = $request->get('id_pasangan');
             if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
                 if ($request->get('id_pasangan') == null) {
