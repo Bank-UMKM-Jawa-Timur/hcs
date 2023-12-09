@@ -172,7 +172,7 @@
                 {{-- Menu Penghasilan --}}
                 @can('penghasilan')
                 <li
-                    class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*', 'bonus', 'bonus/*') ? 'active' : '' }}">
+                    class="@active('pajak_penghasilan') {{ request()->is('penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*','gaji_perbulan', 'gaji_perbulan/*', 'penghasilan/import-penghasilan-teratur', 'penghasilan/import-penghasilan-teratur/*','pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }}">
                     <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
                         style="font-weight: bolder">
                         <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
@@ -206,13 +206,13 @@
                         </li>
                         @endcan  --}}
                         {{-- Menu Import --}}
-                        <li class="@active('penghasilan.import-penghasilan-teratur', 'penghasilan.import-penghasilan-teratur/*', 'penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*') {{ request()->is('penghasilan.import-penghasilan-teratur', 'penghasilan.import-penghasilan-teratur/*', 'penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*') ? 'active' : '' }}">
+                        <li class="{{ request()->is('penghasilan.import-penghasilan-teratur', 'penghasilan.import-penghasilan-teratur/*', 'penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*') ? 'active' : '' }}">
                             <a class="nav-link-item" href="#submenu-import" data-toggle="collapse" data-target="#submenu-import"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
                                 <span class="dropdown-toggle">Import</span>
                             </a>
-                            <ul class="sub-menu {{ request()->is('payroll', 'payroll/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('payroll.slip', 'show')"
+                            <ul class="sub-menu {{ request()->is('penghasilan.import-penghasilan-teratur', 'penghasilan.import-penghasilan-teratur/*', 'penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('payroll.slip', 'show')"
                                 id="submenu-import">
                                 <li style="margin-top: -15px"
                                     class="@active('penghasilan.import-penghasilan-teratur.index')">
