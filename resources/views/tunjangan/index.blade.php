@@ -1,20 +1,25 @@
 @extends('layouts.template')
 
 @section('content')
+<div class="d-lg-flex justify-content-between w-100 p-3">
     <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title font-weight-bold">Data Tunjangan</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('tunjangan.index') }}">Tunjangan</a></p>
-        </div>
+        <h5 class="card-title font-weight-bold">Data Tunjangan</h5>
+        <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('tunjangan.index') }}">Tunjangan</a></p>
+    </div>
+    <div class="card-header row mt-3 mr-8 pr-5">
+      @can('setting - master - tunjangan - create tunjangan')
+        <a class="mb-3" href="{{ route('tunjangan.create') }}">
+          <button class="is-btn is-primary">tambah tunjangan</button>
+        </a>
+      @endcan
+    </div>
+</div>
+        
 
-        <div class="card-body">
+        <div class="card-body p-3">
             <div class="col">
                 <div class="row">
-                    @can('setting - master - tunjangan - create tunjangan')
-                    <a class="mb-3" href="{{ route('tunjangan.create') }}">
-                      <button class="is-btn is-primary">tambah tunjangan</button>
-                    </a>
-                    @endcan
+                  <div class="col-lg-12">
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
                           <thead class=" text-primary">
@@ -61,11 +66,11 @@
                                 </tr>
                             @endforeach
                           </tbody>
-                        </table>
-                </div>
+                    </table>
+                    </div>
+                  </div>
             </div>
         </div>
-    </div>
 @endsection
 
 @section('custom_script')

@@ -8,19 +8,16 @@
                 <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang > <a href="" class="text-secondary">Penambahan Bruto</a></p>
             </div>
             <div class="card-header row mt-3 mr-8 pr-5" >
+                @can('setting - kantor pusat - penambahan bruto - create penambahan bruto')
                 <a class="mb-3" href="{{ route('penambahan-bruto.create') }}?profil_kantor={{$_GET['profil_kantor']}}">
                     <button class="is-btn is-primary">Tambah</button>
                 </a>
+                @endcan
             </div>
         </div>
         <div class="card-body p-4">
             <div class="col">
                 <div class="row">
-                    @can('setting - kantor pusat - penambahan bruto - create penambahan bruto')
-                    <a class="mb-3" href="{{ route('penambahan-bruto.create') }}?profil_kantor={{$_GET['profil_kantor']}}">
-                        <button class="btn btn-primary">Tambah</button>
-                    </a>
-                    @endcan
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class=" text-primary">
