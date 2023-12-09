@@ -7,12 +7,12 @@
             <h5 class="card-title font-weight-bold">Dashboard</h5>
             <p class="card-title"><a href="/">Dashboard </a></p>
         </div>
+        <div class="mt-4">
+            <a href="{{ route('per-cabang') }}" class="is-btn btn-info">Detail</a>
+        </div>
     </div>
 </div>
 <div class="card-body">
-    <div class="d-flex justify-content-end">
-        <a href="{{ route('per-cabang') }}" class="is-btn btn-info">Detail</a>
-    </div>
     <div class="row mb-4">
         <div class="col-md-12">
             <div class="card"  style="border: 1px solid #dcdcdc">
