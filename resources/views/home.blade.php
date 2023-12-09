@@ -11,7 +11,7 @@
 </div>
 <div class="card-body">
     <div class="d-flex justify-content-end">
-        <a href="{{ route('per-cabang') }}" class="is-btn btn-info">Detail</a>
+        <a href="{{ route('per-cabang') }}" class="is-btn is-primary">Detail</a>
     </div>
     <div class="row mb-4">
         <div class="col-md-12">
