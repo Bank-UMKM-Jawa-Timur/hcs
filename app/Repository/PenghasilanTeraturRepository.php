@@ -85,7 +85,7 @@ class PenghasilanTeraturRepository
             ->where('bulan', $bulan)->where('tahun', $tahun)
             ->where(function ($query) use ($cabang) {
                 $query->whereNull('k.kd_entitas')
-                    ->whereNotIn('k.kd_entitas', $cabang);
+                    ->orWhereNotIn('k.kd_entitas', $cabang);
             })->get();
 
         return $data;
