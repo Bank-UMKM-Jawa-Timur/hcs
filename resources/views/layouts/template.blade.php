@@ -249,7 +249,12 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                @endcan
+                                <li class="@active('penghasilan-lainnya') {{ request()->is('bonus', 'bonus/*') ? 'active' : '' }}">
+                                    <a href="{{ route('bonus.index') }}" style="font-weight: bolder">
+                                        <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
+                                        <p>Import Bonus</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         {{-- Menu Histori --}}
@@ -363,6 +368,7 @@ Coded by www.creative-tim.com
                             </ul>
                         </li>
                         @endcan
+
                         {{-- Menu Migrasi Data --}}
                         <li class="@active('migrasi')">
                             <a class="nav-link" href="#submenu8" data-toggle="collapse" data-target="#submenu8"
@@ -670,7 +676,6 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
-    @stack('script')
 </body>
 
 </html>
