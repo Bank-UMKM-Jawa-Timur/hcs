@@ -196,6 +196,7 @@ class PayrollRepository
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
+                                ->whereNull('tanggal_penonaktifan')
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
                                         $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
@@ -959,6 +960,7 @@ class PayrollRepository
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
+                                ->whereNull('tanggal_penonaktifan')
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
                                         $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
@@ -1697,6 +1699,7 @@ class PayrollRepository
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
+                                ->whereNull('tanggal_penonaktifan')
                                 ->where(function($q) use ($kantor, $kode_cabang_arr) {
                                     if ($kantor == 'pusat') {
                                         $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
@@ -2256,5 +2259,4 @@ class PayrollRepository
         }
         return $data;
     }
-
 }
