@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\KaryawanModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Repository\UserRepository;
+use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 
 
@@ -57,7 +59,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->param->store($request->all());
+        $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
+        User::create([
+            'name' => $nama->nama_karyawan,
+            'username' => $nama->nama_karyawan,
+            'email' => $request->username,
+            'password' =>  Hash::make($request->password),
+        ]);
         Alert::success('Berhasil Menambahkan User.');
         return redirect()->route('user.index');
     }
@@ -81,11 +89,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        return $id;
         $data = $this->param->dataByid($id);
-
+        $karyawan = $this->param->getDataKaryawan();
         return view('user.edit', [
-            'data' => $data
+            'data' => $data,
+            'karyawan' => $karyawan
         ]);
     }
 
@@ -98,7 +106,14 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->param->update($request->all(), $id);
+        // return $request;  
+        $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
+        User::where('id', $id)->update([
+            'name' => $nama->nama_karyawan,
+            'username' => $nama->nama_karyawan,
+            'email' => $request->username,
+            'password' =>  Hash::make($request->name),
+        ]);
         Alert::success('Berhasil Mengubah User.');
         return redirect()->route('user.index');
     }

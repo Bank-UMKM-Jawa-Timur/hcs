@@ -20,7 +20,7 @@
                             <label for="name">Nama</label>
                             <select name="name" id="nama-karyawan" class="@error('name') is_invalid @enderror form-control">
                                 @foreach ($karyawan as $item)
-                                    <option value="{{$item->nama_karyawan}}" {{$data->name == $item->nama_karyawan ? 'selected' : ''}}>{{$item->nip}} - {{$item->nama_karyawan}}</option>
+                                    <option value="{{$item->nip}}" {{$data->name == $item->nama_karyawan ? 'selected' : ''}}>{{$item->nip}} - {{$item->nama_karyawan}}</option>
                                 @endforeach
                             </select>
                             @error('name')
@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-md-5">
                             <label for="username">Username</label>
-                            <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ old($data->email) }}">
+                            <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ $data->email }}">
                             @error('username')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror

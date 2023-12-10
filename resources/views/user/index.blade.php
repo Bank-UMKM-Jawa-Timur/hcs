@@ -69,8 +69,8 @@
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>
-                                            <a href="{{ route('user.edit', $item->id) }}">
-                                                <button class="is-btn btn-warning">Edit</button>
+                                            <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
+                                                Edit
                                             </a>
                                         </td>
                                     </tr>

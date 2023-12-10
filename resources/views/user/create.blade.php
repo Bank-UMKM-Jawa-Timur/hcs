@@ -20,7 +20,7 @@
                             <select name="name" id="nama-karyawan" class="@error('name') is_invalid @enderror form-control">
                                 <option value="">Pilih Karyawan</option>
                                 @foreach ($karyawan as $item)
-                                    <option value="{{$item->nama_karyawan}}">{{$item->nip}} - {{$item->nama_karyawan}}</option>
+                                    <option value="{{$item->nip}}">{{$item->nip}} - {{$item->nama_karyawan}}</option>
                                 @endforeach
                             </select>
                             @error('name')

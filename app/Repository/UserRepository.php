@@ -28,6 +28,7 @@ class UserRepository
     }
 
     public function store(array $data){
+        $nama = KaryawanModel::where('nip', $data['name'])->first();
         return User::create([
             'name' => $data['name'],
             'username' => $data['name'],
