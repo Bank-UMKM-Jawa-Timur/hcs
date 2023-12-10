@@ -299,7 +299,7 @@
                 <div class="d-flex justify-content-start hidden">
                     <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
                     <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
-                    <button type="submit" class="btn btn-info hidden" id="button-simpan">Simpan</button>
+                    <button type="submit" class="is-btn btn-info hidden" id="button-simpan">Simpan</button>
                 </div>
             </div>
             <div class="col-md-12 px-4" id="loading-message">
