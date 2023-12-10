@@ -90,7 +90,7 @@
         <div class="col-md-12">
             @php
                 $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
-                $total_ket = 1;
+                $total_ket = 0;
                 $status = 'TK';
                 if ($karyawan->status == 'K' || $karyawan->status == 'Kawin') {
                     $anak = DB::table('mst_karyawan')
@@ -609,14 +609,14 @@
                                             $total_tj_vitamin += $gj[$i]['tj_vitamin'];
                                             $total_tj_transport += $gj[$i]['tj_transport'];
 
-                                            $total_gaji =  $total_gj_pokok + $total_tj_keluarga + $total_tj_jabatan + $total_gj_penyesuaian 
+                                            $total_gaji =  $total_gj_pokok + $total_tj_keluarga + $total_tj_jabatan + $total_gj_penyesuaian
                                                            + $total_tj_perumahan + $total_tj_telepon + $total_tj_pelaksana + $total_tj_kemahalan
                                                            + $total_tj_kesejahteraan;
 
                                             $total_gaji_bln = ($gj[$i]['gj_pokok']) + ($gj[$i]['tj_keluarga']) + ($gj[$i]['tj_jabatan']) + ($gj[$i]['gj_penyesuaian'])
                                                               + ($gj[$i]['tj_perumahan']) + ($gj[$i]['tj_telepon']) + ($gj[$i]['tj_pelaksana']) + ( $gj[$i]['tj_kemahalan'])
                                                               + ($gj[$i]['tj_kesejahteraan']);
-                                        @endphp             
+                                        @endphp
                                             <tr>
                                                 <td>{{ $bulan[$i] }}</td>
                                                 <td>{{ ($gj[$i]['gj_pokok'] != 0) ? rupiah($gj[$i]['gj_pokok']) : '-' }}</td>
