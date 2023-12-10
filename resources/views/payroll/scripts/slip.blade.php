@@ -57,11 +57,11 @@
             }
             loadKaryawan()
         })
-        
+
         // Divisi onchange
         $('#divisi').on('change', function() {
             const selected = $(this).val()
-            
+
             // Show sub divisi input
             $('.sub-divisi-input').removeClass('d-none')
 
@@ -71,14 +71,14 @@
         // Divisi onchange
         $('#sub_divisi').on('change', function() {
             const selected = $(this).val()
-            
+
             loadBagian(selected)
         })
 
         // Cabang onchange
         $('#cabang').on('change', function() {
             const selected = $(this).val()
-            
+
             loadBagian(selected)
             loadKaryawan()
         })
@@ -86,7 +86,7 @@
         // Bagian onchange
         $('#bagian').on('change', function() {
             const selected = $(this).val()
-            
+
             loadKaryawan()
         })
 
@@ -190,24 +190,29 @@
 
             $('#nip').empty()
             // Load karyawan options
-            if ((cabang == '0' || !cabang) &&
-                (divisi == '0' || !divisi) &&
-                (sub_divisi == '0' || !sub_divisi) &&
-                (bagian == '0' || !bagian)) {
-                    $('#nip').select2({
-                        ajax: {
-                            url: '{{ route('api.select2.karyawan') }}',
-                            data: {
-                                'kantor': kantor,
-                            },
-                        },
-                        templateResult: function(data) {
-                            if(data.loading) return data.text;
-                            return $(`
-                                <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
-                            `);
+            if ((cabang == '0' || !cabang) && (divisi == '0' || !divisi) && (sub_divisi == '0' || !sub_divisi) && (bagian == '0' || !bagian)) {
+
+                $('#nip').select2({
+                    ajax: {
+                        url: '{{ route('api.select2.karyawan.jabatan') }}',
+                        data: function (params) {
+                        var query = {
+                            search: params.term,
+                            kantor:kantor,
+                            page: params.page
                         }
-                    });
+
+                        // Query parameters will be ?search=[term]&page=[page]
+                        return query;
+                        }
+                    },
+                    templateResult: function(data) {
+                        if(data.loading) return data.text;
+                        return $(`
+                            <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
+                        `);
+                    }
+                });
             }
             else {
                 var item = {
@@ -222,15 +227,23 @@
 
                 $.ajax({
                     url: '{{ route('api.select2.list_karyawan') }}',
-                    data: {
-                        'cabang': cabang,
-                        'divisi': divisi,
-                        'sub_divisi': sub_divisi,
-                        'bagian': bagian,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            cabang: cabang,
+                            divisi: divisi,
+                            sub_divisi: sub_divisi,
+                            bagian: bagian,
+                            page: params.page
+                        }
+
+                        // Query parameters will be ?search=[term]&page=[page]
+                        return query;
                     },
+
                     success: function(response) {
                         var data = response.results
-    
+
                         $.each(data, function(i, item) {
                             var option = new Option(item.text, item.id, false, selected == item.kode);
                             arrOption.push(option)
