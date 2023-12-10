@@ -14,15 +14,6 @@
   background-color: #777777;
 }
 
-.reduce-line-height {
-    display: flex;
-    gap: 4px;
-}
-.reduce-line-height span,
-p {
-    line-height: 1rem;
-}
-
 .typography-line {
   padding-left: 25%;
   margin-bottom: 35px;
