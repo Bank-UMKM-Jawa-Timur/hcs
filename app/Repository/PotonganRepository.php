@@ -16,10 +16,10 @@ class PotonganRepository
             'p.bulan',
             'p.tahun',
             'k.nama_karyawan',
-            'p.kredit_koperasi',
-            'p.iuran_koperasi',
-            'p.kredit_pegawai',
-            'p.iuran_ik',
+            DB::raw('SUM(p.kredit_koperasi) as kredit_koperasi'),
+            DB::raw('SUM(p.iuran_koperasi) as iuran_koperasi'),
+            DB::raw('SUM(p.kredit_pegawai) as kredit_pegawai'),
+            DB::raw('SUM(p.iuran_ik) as iuran_ik'),
             )
             ->join('mst_karyawan as k','p.nip','=','k.nip')
             ->where(function ($query) use ($search) {
@@ -30,7 +30,10 @@ class PotonganRepository
                   ->orWhere('p.kredit_pegawai', 'like', "%$search%")
                   ->orWhere('p.iuran_ik', 'like', "%$search%");
           })
-            ->orderBy('p.id', 'ASC')
+            ->groupBy('p.bulan')
+            ->groupBy('p.tahun')
+            ->orderBy('p.bulan')
+            ->orderBy('p.tahun')
             ->paginate($limit);
 
         return $potongan;
@@ -78,7 +81,7 @@ class PotonganRepository
             'iuran_ik' => str_replace(".","", $data['iuran_ik']),
         ]);
     }
-    
+
     public function dataFileExcel()
     {
         $karyawan = KaryawanModel::select(
