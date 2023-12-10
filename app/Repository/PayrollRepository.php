@@ -1125,7 +1125,7 @@ class PayrollRepository
             $karyawan->total_potongan = $total_potongan;
 
             // Get total yg diterima
-            $total_yg_diterima = $total_gaji - $total_potongan;
+            $total_yg_diterima = $gaji - $total_potongan;
             $karyawan->total_yg_diterima = $total_yg_diterima;
 
             $karyawan->penghasilan_rutin = $penghasilan_rutin;

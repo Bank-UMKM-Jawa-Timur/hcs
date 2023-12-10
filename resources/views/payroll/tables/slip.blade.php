@@ -21,7 +21,7 @@
         @forelse ($data as $key => $item)
             @php
                 $norek = $item->no_rekening ? $item->no_rekening : '-';
-                $total_gaji = $item->gaji ? number_format($item->gaji->total_gaji, 0, ',', '.') : 0;
+                $total_gaji = $item->gaji ? number_format($item->gaji->gaji, 0, ',', '.') : 0;
                 $dpp = $item->potongan ? number_format($item->potongan->dpp, 0, ',', '.') : 0;
                 $bpjs_tk = $item->bpjs_tk ? number_format($item->bpjs_tk, 0, ',', '.') : 0;
                 $kredit_koperasi = $item->potonganGaji ? number_format($item->potonganGaji->kredit_koperasi, 0, ',', '.') : 0;
@@ -50,9 +50,7 @@
                     data-target="#exampleModal"
                     data-target-id="slipGaji-{{ $item->id }}"
                     data-json="{{ $data[$key] }}"
-                    {{-- onclick="showModal(this)" --}}
                     class="is-btn btn-sm is-primary p-1 show-data">Slip</button>
-                    {{-- <button class="btn btn-sm btn-primary">Slip</button> --}}
                 </td>
             </tr>
         @empty
