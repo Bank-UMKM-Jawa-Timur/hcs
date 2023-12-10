@@ -40,7 +40,7 @@
                                     <td>{{$item->kode}}</td>
                                     <td>{{$item->nama_divisi}}</td>
                                     <td>{{$item->jumlah_karyawan}}</td>
-                                    <td><a href="sub-devisi/{{$item->kode}}" class="btn-sm btn-info">Selengkapnya</a></td>
+                                    <td><a href="sub-divisi/{{$item->kode}}" class="btn-sm btn-info">Selengkapnya</a></td>
                                 </tr>
                             @empty
                                 <tr>

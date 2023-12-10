@@ -227,7 +227,7 @@
                 <div class="d-flex justify-content-end">
                     <div>
                         <input type="text" id="id_nip" name="id_nip" hidden>
-                        <button class="btn btn-primary" id="cetak-gaji">Cetak Gaji</button>
+                        <button class="is-btn is-primary" id="cetak-gaji">Cetak Gaji</button>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start">

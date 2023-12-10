@@ -373,6 +373,10 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function lists(Request $request)
     {
+        if (!Auth::user()->can('penghasilan - import - penghasilan tidak teratur')) {
+            return view('roles.forbidden');
+        }
+
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->get('q');
@@ -389,6 +393,9 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
+            return view('roles.forbidden');
+        }
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
 
         return view('penghasilan.add', compact('data'));
@@ -456,6 +463,9 @@ class PenghasilanTidakTeraturController extends Controller
     public function show(Request $request)
     {
         try{
+            if (!Auth::user()->can('penghasilan - import - penghasilan tidak teratur - detail')) {
+                return view('roles.forbidden');
+            }
             $idTunjangan = $request->get('idTunjangan');
             $tanggal = $request->get('tanggal');
             $limit = $request->has('page_length') ? $request->get('page_length') : 10;

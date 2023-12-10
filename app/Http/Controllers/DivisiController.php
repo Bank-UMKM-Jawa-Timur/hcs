@@ -23,7 +23,7 @@ class DivisiController extends Controller
      */
     public function index()
     {
-        //
+        // Need permission
         $data = DivisiModel::select()->get();
 
         return view('divisi.index', ['data' => $data]);
@@ -36,6 +36,7 @@ class DivisiController extends Controller
      */
     public function create()
     {
+        // Need permission
         return view('divisi.add');
     }
 
@@ -95,6 +96,7 @@ class DivisiController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = DivisiModel::where('kd_divisi', $id)
             ->first();
 
@@ -147,6 +149,7 @@ class DivisiController extends Controller
      */
     public function destroy($id)
     {
+        // Need permission
         try{
             DB::table('mst_divisi')
             ->where('id', $id)

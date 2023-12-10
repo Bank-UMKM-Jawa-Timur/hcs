@@ -199,7 +199,7 @@
             <div class="modal-body">
                 <div class="d-flex justify-content-end">
                     <div>
-                        <button type="button" class="btn btn-primary">Cetak Gaji</button>
+                        <button type="button" class="is-btn is-primary">Cetak Gaji</button>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start">

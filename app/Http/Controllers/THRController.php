@@ -25,6 +25,7 @@ class THRController extends Controller
      */
     public function index()
     {
+        // Need permission
         return view('bonus.thr');
     }
 

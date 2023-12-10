@@ -58,12 +58,13 @@ class KaryawanController extends Controller
 
     public function listKaryawan()
     {
+        // Need permission
         return view('karyawan.list');
     }
 
     public function listKaryawanJson(Request $request) {
         $karyawanRepo = new KaryawanRepository();
-        $data = $karyawanRepo->getAllKaryawan();
+        $data = $karyawanRepo->getAllKaryawan('');
         $data = DataTables::collection($data)->toJson();
         // $data = DataTables::of($data)->make(true);
         return $data;
@@ -71,6 +72,7 @@ class KaryawanController extends Controller
 
     public function importStatusIndex()
     {
+        // Need permission
         return view('karyawan.import_update_status');
     }
 
@@ -86,6 +88,7 @@ class KaryawanController extends Controller
 
     public function importNpwpRekeningIndex()
     {
+        // Need permission
         return view('karyawan.import_npwp_rekening');
     }
 
@@ -863,6 +866,7 @@ class KaryawanController extends Controller
 
     public function importKeluargaIndex()
     {
+        // Need permission
         return view('karyawan.import_data_keluarga');
     }
 
@@ -972,6 +976,7 @@ class KaryawanController extends Controller
 
     public function exportCV($id)
     {
+        // Need permission
         $data_suis = null;
         $karyawan = KaryawanModel::findOrFail($id);
         $data_suis = DB::table('keluarga')

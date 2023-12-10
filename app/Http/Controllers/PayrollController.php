@@ -7,6 +7,7 @@ use App\Repository\PayrollRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -16,6 +17,10 @@ class PayrollController extends Controller
     public $param;
 
     public function index(Request $request) {
+        // Need permission
+        if (!Auth::user()->can('penghasilan - payroll - list payroll')) {
+            return view('roles.forbidden');
+        }
         FacadesSession::forget('kategori');
         FacadesSession::forget('kantor');
         FacadesSession::forget('month');
@@ -107,11 +112,16 @@ class PayrollController extends Controller
         $page = null;
 
         $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, null, 'cetak');
+        
         return view('payroll.tables.slip-pdf', ['data' => $data]);
 
     }
 
     public function slip(Request $request) {
+        // Need permission
+        if (!Auth::user()->can('penghasilan - payroll - slip gaji')) {
+            return view('roles.forbidden');
+        }
         FacadesSession::forget('kantor');
         FacadesSession::forget('month');
         FacadesSession::forget('year');
@@ -157,9 +167,9 @@ class PayrollController extends Controller
         // Retrieve cabang data
         $cabangRepo = new CabangRepository;
         $cabang = $cabangRepo->listCabang();
-
+        
         $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, $limit,null);
-
+        
         return view('payroll.slip', compact('data', 'cabang'));
     }
 
