@@ -163,6 +163,7 @@ class BonusController extends Controller
 
     function fileExcel() {
         // Need permission
-        return Excel::download(new KaryawanExport,'template_import_bonus.xlsx');
+        $filename = Carbon::now()->format('his').'-bonus'.'.'.'xlsx';
+        return Excel::download(new KaryawanExport,$filename);
     }
 }
