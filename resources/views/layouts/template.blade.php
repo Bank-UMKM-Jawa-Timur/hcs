@@ -242,6 +242,7 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
+                                @endcan
                             </ul>
                         </li>
                         {{-- Menu Histori --}}
@@ -361,6 +362,7 @@ Coded by www.creative-tim.com
                                 </li>
                             </ul>
                         </li>
+                        @endcan
                         {{-- Menu Migrasi Data --}}
                         <li class="@active('migrasi')">
                             <a class="nav-link" href="#submenu8" data-toggle="collapse" data-target="#submenu8"
