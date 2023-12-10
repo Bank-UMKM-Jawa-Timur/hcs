@@ -50,9 +50,9 @@ class GajiPerBulanController extends Controller
             ->where('tahun', $tahun)
             ->distinct()
             ->get('bulan');
-        if(count($bulan) > 0){
+        if (count($bulan) > 0) {
             return response()->json($bulan);
-        } else{
+        } else {
             return null;
         }
     }
@@ -84,7 +84,8 @@ class GajiPerBulanController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $bulan = $request->bulan;
         $tahun = $request->tahun;
         $cabang = array();
@@ -93,7 +94,7 @@ class GajiPerBulanController extends Controller
         $cbg = DB::table('mst_cabang')
             ->select('kd_cabang')
             ->get();
-        foreach($cbg as $item){
+        foreach ($cbg as $item) {
             array_push($cabang, $item->kd_cabang);
         }
 
@@ -109,12 +110,12 @@ class GajiPerBulanController extends Controller
 
         // Get Penghasilan from mst_karyawan + tunjangan karyawan + penghasilan tidak teratur
         $item_penghasilan_teratur = TunjanganModel::select('id', 'kategori', 'status')
-                                                ->where('kategori', 'teratur')
-                                                ->orWhereNull('kategori')
-                                                ->orderBy('id')
-                                                ->get();
+            ->where('kategori', 'teratur')
+            ->orWhereNull('kategori')
+            ->orderBy('id')
+            ->get();
 
-        foreach($karyawan as $key => $item){
+        foreach ($karyawan as $key => $item) {
             unset($tunjangan);
             unset($tjJamsostek);
             $tjJamsostek = array();
@@ -142,7 +143,7 @@ class GajiPerBulanController extends Controller
                 if ($anak != null && $anak->jml_anak > 3) {
                     $status = 'K/3';
                 } else if ($anak != null) {
-                    $status = 'K/'.$anak->jml_anak;
+                    $status = 'K/' . $anak->jml_anak;
                 } else {
                     $status = 'K/0';
                 }
@@ -154,7 +155,7 @@ class GajiPerBulanController extends Controller
                 ->first();
 
             // Get penambah & pengurang bruto
-            if(in_array($item->kd_entitas, $cabang)){
+            if (in_array($item->kd_entitas, $cabang)) {
                 $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                     ->where('kd_cabang', $item->kd_entitas)
                     ->where('active', 1)
@@ -192,6 +193,7 @@ class GajiPerBulanController extends Controller
             $this->param['batasBawah'] = $hitungan_penambah->kesehatan_batas_bawah;
             $this->param['jpJanFeb'] = $hitungan_pengurang->jp_jan_feb;
             $this->param['jpMarDes'] = $hitungan_pengurang->jp_mar_des;
+            $this->param['nominalJp'] = 0;
 
             array_push($pph, [
                 'nip' => $item->nip,
@@ -227,26 +229,27 @@ class GajiPerBulanController extends Controller
             ]);
         }
 
-        try{
+        try {
             GajiPerBulanModel::insert($employee);
             PPHModel::insert($pph);
             DB::commit();
             Alert::success('Berhasil', 'Berhasil Melakukan Pembayaran Gaji Karyawan.');
             return redirect()->back();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('gaji_perbulan.index');
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
             DB::rollBack();
             Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('gaji_perbulan.index');
         }
     }
 
-    function getPPHBulanIni($bulan, $tahun, $karyawan, $ptkp) : int{
+    function getPPHBulanIni($bulan, $tahun, $karyawan, $ptkp): int
+    {
         $pph = 0;
-        if($bulan > 1){
+        if ($bulan > 1) {
             $tunjangan = array();
             $tunjanganJamsostek = array();
             $pengurang = array();
@@ -256,13 +259,13 @@ class GajiPerBulanController extends Controller
             $tunjanganBulanIni = array();
             $tjJamsostekBulanIni = array();
             $totalGajiBulanIni = 0;
-            for($i = 1; $i <= 14; $i++){
+            for ($i = 1; $i <= 14; $i++) {
                 $tjBulanIni = DB::table('tunjangan_karyawan')
                     ->where('nip', $karyawan->nip)
                     ->where('id_tunjangan', $i)
                     ->first();
                 array_push($tunjanganBulanIni, $tjBulanIni != null ? $tjBulanIni->nominal : 0);
-                if($i < 10) array_push($tjJamsostekBulanIni, $tjBulanIni != null ? $tjBulanIni->nominal : 0);
+                if ($i < 10) array_push($tjJamsostekBulanIni, $tjBulanIni != null ? $tjBulanIni->nominal : 0);
             }
             $penghasilanTidakTeraturBulanIni = DB::table('penghasilan_tidak_teratur')
                 ->where('bulan', $bulan)
@@ -290,7 +293,7 @@ class GajiPerBulanController extends Controller
                 ->orWhere('id_tunjangan', '26')
                 ->sum('nominal');
 
-            foreach($dataGaji as $key => $gaji){
+            foreach ($dataGaji as $key => $gaji) {
                 $this->param['nominalJp'] = ($key < 2) ? $this->param['jpJanFeb'] : $this->param['jpMarDes'];
                 unset($tunjangan);
                 unset($tunjanganJamsostek);
@@ -302,9 +305,9 @@ class GajiPerBulanController extends Controller
                     ->where('bulan', $key + 1)
                     ->sum('nominal');
 
-                foreach($this->param['namaTunjangan'] as $keyTunjangan => $item){
+                foreach ($this->param['namaTunjangan'] as $keyTunjangan => $item) {
                     array_push($tunjangan, $gaji->$item);
-                    if($keyTunjangan < 9)
+                    if ($keyTunjangan < 9)
                         array_push($tunjanganJamsostek, $gaji->$item);
                 }
 
@@ -336,13 +339,13 @@ class GajiPerBulanController extends Controller
             $tunjanganBulanIni = array();
             $tjJamsostekBulanIni = array();
             $totalGajiBulanIni = 0;
-            for($i = 1; $i <= 15; $i++){
+            for ($i = 1; $i <= 15; $i++) {
                 $tjBulanIni = DB::table('tunjangan_karyawan')
                     ->where('nip', $karyawan->nip)
                     ->where('id_tunjangan', $i)
                     ->first();
                 array_push($tunjanganBulanIni, $tjBulanIni != null ? $tjBulanIni->nominal : 0);
-                if($i < 10) array_push($tjJamsostekBulanIni, $tjBulanIni != null ? $tjBulanIni->nominal : 0);
+                if ($i < 10) array_push($tjJamsostekBulanIni, $tjBulanIni != null ? $tjBulanIni->nominal : 0);
             }
             $penghasilanTidakTeraturBulanIni = DB::table('penghasilan_tidak_teratur')
                 ->where('bulan', $bulan)
@@ -371,7 +374,7 @@ class GajiPerBulanController extends Controller
         $lima_persen = ceil(0.05 * array_sum($totalGaji));
         $keterangan = 500000 * $bulan;
         $biaya_jabatan = 0;
-        if($lima_persen > $keterangan){
+        if ($lima_persen > $keterangan) {
             $biaya_jabatan = $keterangan;
         } else {
             $biaya_jabatan = $lima_persen;
@@ -379,7 +382,7 @@ class GajiPerBulanController extends Controller
         $rumus_14 = 0;
         if (0.05 * (array_sum($totalGaji)) > $keterangan) {
             $rumus_14 = ceil($keterangan);
-        } else{
+        } else {
             $rumus_14 = ceil(0.05 * (array_sum($totalGaji)));
         }
         $no_14 = round((array_sum($totalGaji) - $bonus - array_sum($pengurang) - $biaya_jabatan) / $bulan * 12 + $bonus + ($biaya_jabatan - $rumus_14));
@@ -387,7 +390,7 @@ class GajiPerBulanController extends Controller
         $persen5 = 0;
         if (($no_14 - $ptkp?->ptkp_tahun) > 0) {
             if (($no_14 - $ptkp?->ptkp_tahun) <= 60000000) {
-                $persen5 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000) * 0.05 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000) * 0.06;
+                $persen5 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000) * 0.05 : (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000) * 0.06;
             } else {
                 $persen5 = ($karyawan->npwp != null) ? 60000000 * 0.05 : 60000000 * 0.06;
             }
@@ -397,7 +400,7 @@ class GajiPerBulanController extends Controller
         $persen15 = 0;
         if (($no_14 - $ptkp?->ptkp_tahun) > 60000000) {
             if (($no_14 - $ptkp?->ptkp_tahun) <= 250000000) {
-                $persen15 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 60000000) * 0.15 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000- 60000000) * 0.18;
+                $persen15 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 60000000) * 0.15 : (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 60000000) * 0.18;
             } else {
                 $persen15 = 190000000 * 0.15;
             }
@@ -407,7 +410,7 @@ class GajiPerBulanController extends Controller
         $persen25 = 0;
         if (($no_14 - $ptkp?->ptkp_tahun) > 250000000) {
             if (($no_14 - $ptkp?->ptkp_tahun) <= 500000000) {
-                $persen25 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.25 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.3;
+                $persen25 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.25 : (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 250000000) * 0.3;
             } else {
                 $persen25 = 250000000 * 0.25;
             }
@@ -417,7 +420,7 @@ class GajiPerBulanController extends Controller
         $persen30 = 0;
         if (($no_14 - $ptkp?->ptkp_tahun) > 500000000) {
             if (($no_14 - $ptkp?->ptkp_tahun) <= 5000000000) {
-                $persen30 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.3 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.36;
+                $persen30 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.3 : (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 500000000) * 0.36;
             } else {
                 $persen30 = 4500000000 * 0.30;
             }
@@ -426,7 +429,7 @@ class GajiPerBulanController extends Controller
         }
         $persen35 = 0;
         if (($no_14 - $ptkp?->ptkp_tahun) > 5000000000) {
-                $persen35 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 5000000000) * 0.35 :  (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 5000000000) * 0.42;
+            $persen35 = ($karyawan->npwp != null) ? (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 5000000000) * 0.35 : (floor(($no_14 - $ptkp?->ptkp_tahun) / 1000) * 1000 - 5000000000) * 0.42;
         } else {
             $persen35 = 0;
         }
@@ -434,7 +437,7 @@ class GajiPerBulanController extends Controller
         $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
 
         $pph = ceil(($no17 / 12) * $bulan);
-        if($bulan > 1){
+        if ($bulan > 1) {
             $pphTerbayar = DB::table('pph_yang_dilunasi')
                 ->where('nip', $karyawan->nip)
                 ->where('tahun', $tahun)
@@ -444,14 +447,15 @@ class GajiPerBulanController extends Controller
         return $pph;
     }
 
-    function getPengurang($status, $tjKeluarga, $tjKesejahteraan, $totalGajiJamsostek, $gajiPokok) : int {
+    function getPengurang($status, $tjKeluarga, $tjKesejahteraan, $totalGajiJamsostek, $gajiPokok): int
+    {
         $pengurang = 0;
         // Perhitungan pengurangan bruto
-        if($status == 'IKJP'){
+        if ($status == 'IKJP') {
             $pengurang = ($this->param['persenJpPengurang'] / 100) * $totalGajiJamsostek;
-        } else{
+        } else {
             $dpp = ((($gajiPokok + $tjKeluarga) + ($tjKesejahteraan * 0.5)) * 0.05);
-            if($totalGajiJamsostek >= $this->param['nominalJp']){
+            if ($totalGajiJamsostek >= $this->param['nominalJp']) {
                 $dppExtra = $this->param['nominalJp'] * ($this->param['persenJpPengurang'] / 100);
             } else {
                 $dppExtra = $totalGajiJamsostek * ($this->param['persenJpPengurang'] / 100);
@@ -462,7 +466,8 @@ class GajiPerBulanController extends Controller
         return $pengurang;
     }
 
-    function getPenambah($totalGajiJamsostek, $jkn) : int {
+    function getPenambah($totalGajiJamsostek, $jkn): int
+    {
         $penambah = 0;
 
         // Perhitungan penambah bruto
@@ -470,15 +475,15 @@ class GajiPerBulanController extends Controller
         $jht = round((floatval($this->param['persenJht']) / 100) * floatval($totalGajiJamsostek));
         $jkm = round((floatval($this->param['persenJkm']) / 100) * floatval($totalGajiJamsostek));
         $jp = round((floatval($this->param['persenJpPenambah']) / 100) * floatval($totalGajiJamsostek));
-        if($jkn != null){
-            if(floatval($totalGajiJamsostek) > floatval($this->param['batasAtas'])) {
+        if ($jkn != null) {
+            if (floatval($totalGajiJamsostek) > floatval($this->param['batasAtas'])) {
                 $kesehatan = round(floatval($this->param['batasAtas']) * (floatval($this->param['persenKesehatan']) / 100));
-            } else if(floatval($totalGajiJamsostek) < floatval($this->param['batasBawah'])) {
+            } else if (floatval($totalGajiJamsostek) < floatval($this->param['batasBawah'])) {
                 $kesehatan = round(floatval($this->param['batasBawah']) * (floatval($this->param['persenKesehatan']) / 100));
-            } else{
+            } else {
                 $kesehatan = round(floatval($totalGajiJamsostek) * (floatval($this->param['persenKesehatan']) / 100));
             }
-        } else{
+        } else {
             $kesehatan = 0;
         }
 
@@ -531,7 +536,8 @@ class GajiPerBulanController extends Controller
         //
     }
 
-    public function importPPH(Request $request){
+    public function importPPH(Request $request)
+    {
         // Need permission
         $file = $request->file('upload_csv');
         $import = new ImportPPH21;
