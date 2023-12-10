@@ -72,9 +72,12 @@
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>{{ $item->role }}</td>
-                                        <td>
-                                            <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
+                                        <td class="d-flex">
+                                            <a class="is-btn is-warning m-1" href="{{ route('user.edit', $item->id) }}">
                                                 Edit
+                                            </a>
+                                            <a class="is-btn is-primary m-1" href="{{ route('resetPass', $item->id) }}">
+                                                Reset Pass
                                             </a>
                                         </td>
                                     </tr>

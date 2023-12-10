@@ -183,7 +183,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/bagian', BagianController::class);
     Route::resource('/pajak_penghasilan', PenghasilanTidakTeraturController::class);
     Route::resource('/user', UserController::class);
-    Route::get('/get-nip-by-karyawan', [UserController::class, 'getKaryawanBynama'])->name('nip-by-karyawan');
+    Route::get('/reset-pass/{id}', [UserController::class, 'resetPass'])->name('resetPass');
+    Route::post('/reset-password/{id}', [UserController::class, 'updatePass'])->name("updatePass");
 
     Route::resource('/potongan', PotonganController::class);
     Route::get('/get-karyawan-by-nip', [PotonganController::class, 'getKaryawanByNip'])->name('karyawan-by-entitas');

@@ -124,6 +124,27 @@ class UserController extends Controller
         return redirect()->route('user.index');
     }
 
+    public function resetPass($id) {
+        $user = User::find($id);
+        return view('user.reset-password', compact('user'));
+    }
+
+    public function updatePass(Request $request, $id) {
+        $request->validate([
+            'password' => 'required|min:8',
+            'password_confirmation' => 'required|same:password',
+        ]);
+
+        $pass = Hash::make(Request()->password);
+
+        User::where('id', $id)->update([
+            'password' => $pass
+        ]);
+
+        Alert::success('Berhasil Mengubah Password.');
+        return redirect()->route('user.index');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
