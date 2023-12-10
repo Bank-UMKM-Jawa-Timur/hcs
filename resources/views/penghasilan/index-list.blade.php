@@ -9,7 +9,7 @@
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
         @can('penghasilan - import - penghasilan teratur - import')
-            <a class="mb-3" href="{{ route('penghasilan - import - penghasilan tidak teratur - import') }}">
+            <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.create') }}">
                 <button class="is-btn is-primary">import</button>
             </a>
         @endcan
@@ -61,9 +61,6 @@
                             </thead>
                             <tbody>
                                 @php
-                                    function formatRupiah($num){
-                                        return number_format($num, 0, '.', '.');
-                                    }
                                     $page = isset($_GET['page']) ? $_GET['page'] : 1;
                                     $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
                                     $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
@@ -75,14 +72,14 @@
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->nama_tunjangan }}</td>
                                         <td>{{ $item->total }}</td>
-                                        <td>Rp {{ formatRupiah($item->grand_total) }}</td>
+                                        <td>Rp {{ $item->grand_total ? number_format($item->grand_total, 0, '.', '.') : 0}}</td>
                                         <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
                                         <td class="text-center">
                                             <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->id_tunjangan }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
                                         </td>
                                     </tr>
                                 @empty
-                                    
+
                                 @endforelse
                             </tbody>
                         </table>

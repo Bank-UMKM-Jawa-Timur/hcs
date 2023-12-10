@@ -74,7 +74,8 @@ class PenghasilanTidakTeraturRepository
                     ->paginate($limit);
 
           return $bonus;
-      }
+    }
+
     public function dataFileExcel() {
         $karyawan = KaryawanModel::select(
                     'mst_karyawan.nip',
@@ -83,6 +84,7 @@ class PenghasilanTidakTeraturRepository
                 ->get();
         return $karyawan;
     }
+    
     public function getTHP($nip):int {
         $karyawan = KaryawanModel::where('nip', $nip)
           ->first();
