@@ -7,6 +7,9 @@
             <h5 class="card-title font-weight-bold">Dashboard</h5>
             <p class="card-title"><a href="/">Dashboard </a></p>
         </div>
+        <div class="mt-4">
+            <a href="{{ route('per-cabang') }}" class="is-btn btn-info">Detail</a>
+        </div>
     </div>
 </div>
 <div class="card-body">
@@ -46,52 +49,52 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex">
-                        <h2 class="font-weight-bold" style="letter-spacing: -2px;">Rp {{number_format($tunjangan->rata_rata ?? 0)}}</h2>
+                        <h2 class="font-weight-bold" style="letter-spacing: -2px;">{{ $tunjangan->rata_rata ? number_format($tunjangan->rata_rata, 0, ',', '.') : 0}}</h2>
                     </div>
                     <div class="col-lg-12">
                         <table class="table">
                             <tbody>
                                 <tr>
                                     <td><p class="font-weight-bold">Gaji Pokok</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->gj_pokok ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->gj_pokok ? number_format($tunjangan->gj_pokok, 0, ',', '.') : 0}}</p></td>
                                     <td><p class="font-weight-bold">Tunjangan Pelaksana</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_pelaksana ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_pelaksana ? number_format($tunjangan->tj_pelaksana, 0, ',', '.') : 0}}</p></td>
                                 </tr>
                                 <tr>
                                     <td><p class="font-weight-bold">Gaji Penyesuaian</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->gj_penyesuaian ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->gj_penyesuaian ? number_format($tunjangan->gj_penyesuaian, 0, ',', '.') : 0}}</p></td>
                                     <td><p class="font-weight-bold">Tunjangan Kesejahteraan</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_kesejahteraan ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_kesejahteraan ? number_format($tunjangan->tj_kesejahteraan, 0, ',', '.') : 0}}</p></td>
                                 </tr>
                                 <tr>
                                     <td><p class="font-weight-bold">Tunjangan Keluarga</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_keluarga ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_keluarga ? number_format($tunjangan->tj_keluarga, 0, ',', '.') : 0}}</p></td>
                                     <td><p class="font-weight-bold">Tunjangan Multilevel</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_multilevel ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_multilevel ? number_format($tunjangan->tj_multilevel, 0, ',', '.') : 0}}</p></td>
                                 </tr>
                                 <tr>
                                     <td><p class="font-weight-bold">Tunjangan Telepon</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_telepon ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_telepon ? number_format($tunjangan->tj_telepon, 0, ',', '.') : 0}}</p></td>
                                     <td><p class="font-weight-bold">Tunjangan Pulsa</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_pulsa ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_pulsa ? number_format($tunjangan->tj_pulsa, 0, ',', '.') : 0}}</p></td>
                                 </tr>
                                 <tr>
                                     <td><p class="font-weight-bold">Tunjangan Jabatan</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_jabatan ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_jabatan ? number_format($tunjangan->tj_jabatan, 0, ',', '.') : 0}}</p></td>
                                     <td><p class="font-weight-bold">Tunjangan Transport</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_transport ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_transport ? number_format($tunjangan->tj_transport, 0, ',', '.') : 0}}</p></td>
                                 </tr>
                                 <tr>
                                     <td><p class="font-weight-bold">Tunjangan Perumahan</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_perumahan ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_perumahan ? number_format($tunjangan->tj_perumahan, 0, ',', '.') : 0}}</p></td>
                                     <td><p class="font-weight-bold">Tunjangan Vitamin</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_vitamin ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_vitamin ? number_format($tunjangan->tj_vitamin, 0, ',', '.') : 0}}</p></td>
                                 </tr>
                                 <tr>
                                     <td><p class="font-weight-bold">Tunjangan Kemahalan</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->tj_kemahalan ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->tj_kemahalan ? number_format($tunjangan->tj_kemahalan, 0, ',', '.') : 0}}</p></td>
                                     <td><p class="font-weight-bold">Uang Makan</p></td>
-                                    <td><p class="text-success">Rp {{number_format($tunjangan->uang_makan ?? 0)}}</p></td>
+                                    <td><p class="text-success">{{ $tunjangan->uang_makan ? number_format($tunjangan->uang_makan, 0, ',', '.') : 0}}</p></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -137,7 +140,7 @@
             endingShape: 'rounded'
           },
         },
-        colors: ['#00E396'],
+        colors: ['#b3221a'],
         dataLabels: {
           enabled: false
         },

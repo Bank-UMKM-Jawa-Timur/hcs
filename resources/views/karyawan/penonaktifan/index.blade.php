@@ -1,19 +1,23 @@
 @extends('layouts.template')
 @section('content')
-<div class="card-header">
-    <div class="card-header">
-      <h5 class="card-title">Penonaktifan Karyawan</h5>
-      <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > Penonaktifan Karyawan</p>
-    </div>
+<div class="d-lg-flex justify-content-between w-100 p-3">
+  <div class="card-header">
+    <h5 class="card-title">Penonaktifan Karyawan</h5>
+    <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > Penonaktifan Karyawan</p>
+  </div>
+  <div class="card-header row mt-3 mr-8 pr-5">
+    @can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')
+      <a class="mb-3" href="{{ route('penonaktifan.create') }}">
+        <button class="is-btn is-primary">tambah penonaktifan</button>
+      </a>
+    @endcan
+  </div>
+</div>
 
-    <div class="card-body">
+    <div class="card-body p-3">
         <div class="col">
             <div class="row">
-                @can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')
-                <a class="mb-3" href="{{ route('penonaktifan.create') }}">
-                  <button class="btn btn-primary">tambah penonaktifan</button>
-                </a>
-                @endcan
+              <div class="col-lg-12">
                 <div class="table-responsive overflow-hidden content-center">
                     <table class="table whitespace-nowrap" id="table" style="width: 100%">
                       <thead class="text-primary">
@@ -86,10 +90,11 @@
                         @endforeach
                       </tbody>
                     </table>
+                </div>
+              </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 @section('custom_script')
   <script>

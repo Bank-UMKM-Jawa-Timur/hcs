@@ -1,19 +1,19 @@
 @extends('layouts.template')
 @section('content')
+<div class="d-lg-flex justify-content-between w-100 p-3">
     <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title font-weiht-bold">Lampiran Gaji</h5>
-            <p class="card-title"><a href="">Gaji</a> > Lampiran Gaji</p>
-        </div>
+        <h5 class="card-title font-weiht-bold">Lampiran Gaji</h5>
+        <p class="card-title"><a href="">Gaji</a> > Lampiran Gaji</p>
     </div>
+    <div class="card-header row mt-3 mr-8 pr-5" >
+        <a href="{{ route('gaji.create') }}" class="ml-3">
+            <button class="is-btn is-primary">import potongan</button>
+        </a>
+    </div>
+</div>
 
     <div class="card-body">
         <div class="row m-0">
-            <div class="col-lg-4">
-                <a href="{{ route('gaji.create') }}">
-                    <button class="btn btn-info">import potongan</button>
-                </a>
-            </div>
             <div class="col-lg-12">
                 @php
                     $already_selected_value = date('y');

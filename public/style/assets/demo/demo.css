@@ -2,10 +2,6 @@
     margin-bottom: 20px;
 }
 
-.gap-3 {
-    gap: 4rem;
-}
-
 .loader-wrapper {
     background-color: rgba(0, 0, 0, 0.4);
     width: 100%;
@@ -21,14 +17,17 @@
 .loaders img {
     width: 150px;
 }
+
 .page-item.active .page-link {
     background-color: #da271f !important;
     border: 1px solid #da271f !important;
     color: white !important;
 }
+
 .page-item .page-link {
     color: #da271f !important;
 }
+
 .tim-white-buttons {
     background-color: #777777;
 }
@@ -40,14 +39,19 @@
 .text-is-dark {
     color: #333;
 }
+
 .sub-menu {
     width: 100%;
     background-color: #f2f2f2;
+    margin-top: 1rem;
+    margin-left: 1rem;
 }
+
 .reduce-line-height {
     display: flex;
     gap: 4px;
 }
+
 .is-breadcrumb {
     padding: 10px;
     list-style: none;
@@ -55,23 +59,28 @@
     justify-content: start;
     gap: 2rem;
 }
+
 .is-breadcrumb a {
     color: gray;
     font-weight: 700;
     font-family: "Plus Jakarta Sans", sans-serif;
 }
+
 .is-breadcrumb a.is-active-pages {
     color: #da241c;
     font-family: "Plus Jakarta Sans", sans-serif;
 }
+
 .sidebar .nav .icon {
     font-size: 22px;
     margin-top: 4px;
 }
+
 .sidebar .nav span {
     margin-left: 1rem;
     margin-top: 1px;
 }
+
 .is-btn {
     padding: 10px 20px;
     text-transform: capitalize;
@@ -81,12 +90,8 @@
     font-weight: 700;
     transition: 0.2s ease-in-out;
     border-radius: 4px !important;
-    margin: 4px;
 }
 
-a.is-btn {
-    text-decoration: none !important;
-}
 .is-primary {
     background-color: #da271f;
     color: #fff;
@@ -103,6 +108,7 @@ a.is-btn {
     border: none !important;
     color: #fff !important;
 }
+
 .is-primary {
     background-color: #da271f;
     color: #fff;
@@ -110,6 +116,7 @@ a.is-btn {
     border-radius: 4px;
     border: 1px solid #da271f;
 }
+
 .is-primary-light {
     background-color: #fff;
     color: #da241c;
@@ -117,6 +124,7 @@ a.is-btn {
     border-radius: 4px;
     border: 1px solid #da271f;
 }
+
 .is-primary:hover {
     background-color: #b3221a;
     color: #fff;
@@ -139,29 +147,37 @@ a.is-btn {
 .is-table-responsive {
     overflow-x: auto;
 }
+
 .form-control {
     font-family: "Plus Jakarta Sans", sans-serif;
 }
+
 .nav-link:hover {
     color: #da241c !important;
 }
+
 .nav-link:active {
     color: #da241c !important;
 }
+
 .nav-link:focus {
     color: #da241c !important;
 }
+
 .dropdown-item:hover {
     background-color: #da241c !important;
     color: #fff !important;
 }
+
 .reduce-line-height span,
 p {
     line-height: 1rem;
 }
+
 .sub-menu li a p {
     margin-top: 0.5rem;
 }
+
 .typography-line {
     padding-left: 25%;
     margin-bottom: 35px;
@@ -206,7 +222,7 @@ p {
 }
 
 @media all and (min-width: 992px) {
-    .sidebar .nav > li.active-pro {
+    .sidebar .nav>li.active-pro {
         position: absolute;
         width: 100%;
         bottom: 0;
@@ -231,16 +247,20 @@ p {
     border-radius: 2px !important;
     color: #da241c !important;
 }
+
 .sub-menu li.active {
     background-color: transparent !important;
     color: #da241c !important;
 }
+
 ul.sub-menu li.active a {
     color: #da241c !important;
 }
+
 ul.sub-menu li.active i {
     color: #da241c !important;
 }
+
 .demo-icons body {
     font-size: 1.6rem;
     font-family: sans-serif;
@@ -359,4 +379,14 @@ ul.sub-menu li.active i {
     box-shadow: none;
     outline: none;
     display: none;
+}
+
+@media (max-width: 767px) {
+    .wizard-add .nav-tabs>li a i {
+        display: none;
+    }
+
+    .wizard-edit .nav-tabs>li a i {
+        display: none;
+    }
 }

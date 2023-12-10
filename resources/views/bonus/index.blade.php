@@ -1,6 +1,7 @@
 @extends('layouts.template')
 
 @section('content')
+<div class="d-lg-flex justify-content-between w-100 p-3">
     <div class="card-header">
         <h5 class="card-title">Bonus</h5>
         <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> >Bonus</p>
@@ -8,8 +9,14 @@
         <a href="{{ route('bonus.create') }}" class="btn is-btn is-primary">Import Bonus</a>
         @endcan
     </div>
+    <div class="card-header row mt-3 mr-8 pr-5">
+        <a href="{{ route('bonus.create') }}" class="mb-3">
+            <button class="is-btn is-primary">Import Bonus</button>
+        </a>
+    </div>
+</div>
 
-    <div class="card-body">
+    <div class="card-body p-3">
         <div class="col">
             <div class="row">
                 <div class="table-responsive overflow-hidden content-center">

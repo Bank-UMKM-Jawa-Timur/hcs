@@ -17,25 +17,29 @@
             '12' => 'Desember',
         ];
     @endphp
-      <div class="card-header">
+    <div class="d-lg-flex justify-content-between w-100 p-3">
         <div class="card-header">
             <h5 class="card-title">Input dan Import Potongan</h5>
             <p class="card-title"><a href="/">Dashboard</a> >Import Potongan</p>
         </div>
+        <div class="card-header row mt-3 mr-8 pr-5" >
+          @can('penghasilan - import - potongan - import')
+            <a class="mb-3" href="{{ route('potongan.create') }}">
+              <button class="btn btn-primary">Tambah</button>
+            </a>
+          @endcan
+          @can('penghasilan - import - potongan - import')
+            <a class="ml-3" href="{{ route('import-potongan') }}">
+              <button class="btn btn-primary">Import</button>
+            </a>
+          @endcan
+        </div>
+    </div>
 
-        <div class="card-body">
+        <div class="card-body p-3">
             <div class="col">
                 <div class="row">
-                    @can('penghasilan - import - potongan - import')
-                    <a class="mb-3" href="{{ route('potongan.create') }}">
-                      <button class="btn btn-primary">Tambah</button>
-                    </a>
-                    @endcan
-                    @can('penghasilan - import - potongan - import')
-                    <a class="ml-3" href="{{ route('import-potongan') }}">
-                      <button class="btn btn-primary">Import</button>
-                    </a>
-                    @endcan
+                  <div class="col-lg-12">
                     <div class="table-responsive overflow-hidden content-center">
                       <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -145,8 +149,9 @@
                           {{ $data->links('pagination::bootstrap-4') }}
                           @endif
                         </div>
-                      </div>
-              </div>
+                    </div>
+                  </div>
+                </div>
             </div>
         </div>
     </div>

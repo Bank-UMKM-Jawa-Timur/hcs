@@ -55,7 +55,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-info">Simpan</button>
+                    <button class="is-btn btn-primary">Simpan</button>
                 </form>
             </div>
         </div>

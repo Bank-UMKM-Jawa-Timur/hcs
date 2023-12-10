@@ -52,8 +52,9 @@
                     @error('jp_mar_des')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
-
-                    <button class="is-btn is-primary">Simpan</button>
+                    <div class="pt-3 pb-3">
+                        <button class="is-btn is-primary">Simpan</button>
+                    </div>
                 </form>
             </div>
         </div>
