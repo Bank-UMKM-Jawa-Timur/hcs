@@ -429,8 +429,6 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                     <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                        <a class="dropdown-item @active('role.index')"
-                                            href="{{ route('role.index') }}">Roles</a>
                                         <a class="dropdown-item @active('cabang.index')"
                                             href="{{ route('cabang.index') }}">Kantor Cabang</a>
                                         <a class="dropdown-item @active('divisi.index')"
