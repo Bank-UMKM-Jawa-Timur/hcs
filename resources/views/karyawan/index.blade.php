@@ -77,36 +77,28 @@
                                   $i = $page == 1 ? 1 : $start;
                                 @endphp
                                 @foreach ($karyawan as $krywn)
-                                    <tr>
-                                        <td>{{ $i++ }}</td>
-                                        <td>{{ $krywn->nip }}</td>
-                                        <td>{{ $krywn->nik }}</td>
-                                        <td>{{ $krywn->nama_karyawan }}</td>
-                                        <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
-                                        </td>
-                                        <td>{{$krywn->display_jabatan}}</td>
-                                        <td style="min-width: 130px">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <a href="{{ route('karyawan.edit', $krywn->nip) }}">
-                                                        <button class="btn btn-outline-warning p-1 mr-2"
-                                                            style="min-width: 60px">
-                                                            Edit
-                                                        </button>
-                                                    </a>
+                                    @if ($krywn->tanggal_penonaktifan === null)
+                                        <tr>
+                                            <td>{{ $i++ }}</td>
+                                            <td>{{ $krywn->nip }}</td>
+                                            <td>{{ $krywn->nik }}</td>
+                                            <td>{{ $krywn->nama_karyawan }}</td>
+                                            <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
+                                            </td>
+                                            @php
+                                                $prefix = match ($krywn->status_jabatan) {
+                                                    'Penjabat' => 'Pj. ',
+                                                    'Penjabat Sementara' => 'Pjs. ',
+                                                    default => '',
+                                                };
 
-                                                    <a href="{{ route('karyawan.show', $krywn->nip) }}">
-                                                        <button class="btn btn-outline-info p-1"
-                                                            style="min-width: 60px">
-                                                            Detail
-                                                        </button>
-                                                    </a>
-                                                </div>
-                                            </div>
+                                                if ($krywn->jabatan) {
+                                                    $jabatan = $krywn->jabatan->nama_jabatan;
+                                                } else {
+                                                    $jabatan = 'undifined';
+                                                }
 
-                                            {{-- <form action="{{ route('karyawan.destroy', $krywn->nip) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
+                                                $ket = $krywn->ket_jabatan ? "({$krywn->ket_jabatan})" : '';
 
                                                 if (isset($krywn->entitas->subDiv)) {
                                                     $entitas = $krywn->entitas->subDiv->nama_subdivisi;
@@ -131,22 +123,19 @@
                                             <td style="min-width: 130px">
                                                 <div class="container">
                                                     <div class="row">
-                                                        @can('manajemen karyawan - data karyawan - edit karyawan')
-                                                            <a href="{{ route('karyawan.edit', $krywn->nip) }}">
-                                                                <button class="btn btn-outline-warning p-1 mr-2"
-                                                                    style="min-width: 60px">
-                                                                    Edit
-                                                                </button>
-                                                            </a>
-                                                        @endcan
-                                                        @can('manajemen karyawan - data karyawan - detail karyawan')
-                                                            <a href="{{ route('karyawan.show', $krywn->nip) }}">
-                                                                <button class="btn btn-outline-info p-1"
-                                                                    style="min-width: 60px">
-                                                                    Detail
-                                                                </button>
-                                                            </a>
-                                                        @endcan
+                                                        <a href="{{ route('karyawan.edit', $krywn->nip) }}">
+                                                            <button class="btn btn-outline-warning p-1 mr-2"
+                                                                style="min-width: 60px">
+                                                                Edit
+                                                            </button>
+                                                        </a>
+
+                                                        <a href="{{ route('karyawan.show', $krywn->nip) }}">
+                                                            <button class="btn btn-outline-info p-1"
+                                                                style="min-width: 60px">
+                                                                Detail
+                                                            </button>
+                                                        </a>
                                                     </div>
                                                 </div>
 
