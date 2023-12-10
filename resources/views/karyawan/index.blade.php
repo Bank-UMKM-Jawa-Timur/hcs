@@ -88,15 +88,18 @@
                                         <td style="min-width: 130px">
                                             <div class="container">
                                                 <div class="row">
-                                                    <a href="{{ route('karyawan.edit', $krywn->nip) }}"
-                                                        class="btn btn-outline-warning p-1 mr-2"
-                                                        style="min-width: 60px">
-                                                        Edit
+                                                    <a href="{{ route('karyawan.edit', $krywn->nip) }}">
+                                                        <button class="btn btn-outline-warning p-1 mr-2"
+                                                            style="min-width: 60px">
+                                                            Edit
+                                                        </button>
                                                     </a>
-                                                    <a href="{{ route('karyawan.show', $krywn->nip) }}"
-                                                        class="btn btn-outline-info p-1"
-                                                        style="min-width: 60px">
-                                                        Detail
+
+                                                    <a href="{{ route('karyawan.show', $krywn->nip) }}">
+                                                        <button class="btn btn-outline-info p-1"
+                                                            style="min-width: 60px">
+                                                            Detail
+                                                        </button>
                                                     </a>
                                                 </div>
                                             </div>

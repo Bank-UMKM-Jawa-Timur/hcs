@@ -27,8 +27,7 @@ Coded by www.creative-tim.com
     <!--     Fonts and icons     -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    {{-- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"> --}}
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <!-- CSS Files -->
@@ -82,7 +81,7 @@ Coded by www.creative-tim.com
                         <img src="{{ asset('style/assets/img/logo.png') }}">
                     </div>
                 </a>
-                <a href="" class="simple-text logo-normal font-weight-bold" style="font-size: 13px;">
+                <a href="" class="simple-text logo-normal" style="font-size: 13px;">
                     Human Capital System
                 </a>
             </div>
@@ -91,10 +90,10 @@ Coded by www.creative-tim.com
                 <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar"
                     role="navigation">
                     <ul class="nav flex-column sticky-top pl-2 mt-0">
-                        <li class="@active('home')" class="">
+                        <li class="@active('home')">
                             <a href="{{ route('home') }}" style="font-weight: bolder">
                                 <i class="nc-icon nc-bank" style="font-weight: bolder"></i>
-                                <p class="mt-2">Dashboard</p>
+                                <p>Dashboard</p>
                             </a>
                         </li>
                         {{-- Menu Manajemen Karyawan --}}
@@ -148,20 +147,21 @@ Coded by www.creative-tim.com
                                 ? 'show'
                                 : '' }}"
                                 id="submenu1">
-                                <li style="" class="@active('karyawan.index,karyawan.create,karyawan.edit,karyawan.show,import,klasifikasi')">
+                                <li style="margin-top: -15px" class="@active('karyawan.index,karyawan.create,karyawan.edit,karyawan.show,import,klasifikasi')">
                                     <a href="{{ route('karyawan.index') }}">
                                         <i class="nc-icon nc-badge"></i>
                                         <p>Karyawan </p>
+                                        <p></p>
                                     </a>
                                 </li>
-                                <li style="" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
+                                <li style="margin-top: -15px" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
                                     <a href="{{ route('reminder-pensiun.index') }}">
                                         <i class="nc-icon nc-badge"></i>
                                         <p>Data Masa Pensiun</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
+                                <li style="margin-top: -15px" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
                                     <a href="{{ route('pengkinian_data.index') }}">
                                         <i class="nc-icon nc-ruler-pencil"></i>
                                         <p>Pengkinian Data </p>
@@ -180,7 +180,7 @@ Coded by www.creative-tim.com
                                 )
                                     ? 'active'
                                     : '' }}"
-                                    style="">
+                                    style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-chart-bar-32"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
@@ -197,14 +197,14 @@ Coded by www.creative-tim.com
                                             href="{{ route('penonaktifan.index') }}">Penonaktifan</a>
                                     </div>
                                 </li>
-                                <li style="" class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">
+                                <li style="margin-top: -15px" class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">
                                     <a href="{{ route('pejabat-sementara.index') }}">
                                         <i class="nc-icon nc-tie-bow"></i>
                                         <p>Penjabat Sementara</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" style="">
+                                <li class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-bell-55"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Reward & Punishment
@@ -220,7 +220,7 @@ Coded by www.creative-tim.com
                         </li>
                         {{-- Menu Penghasilan --}}
                         <li
-                            class="@active('pajak_penghasilan')">
+                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
@@ -228,14 +228,21 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
                                 id="submenu2">
-                                <li style="" class="@active('pajak_penghasilan')">
+                                <li style="margin-top: -15px" class="@active('gaji_perbulan')">
+                                    <a href="{{ route('gaji_perbulan.index') }}">
+                                        <i class="nc-icon nc-money-coins"></i>
+                                        <p>Proses Penghasilan</p>
+                                        <p></p>
+                                    </a>
+                                </li>
+                                <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
                                     <a href="{{ route('pajak_penghasilan.index') }}">
                                         <i class="nc-icon nc-scissors"></i>
                                         <p>Pajak Penghasilan</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="" class="@active('pajak_penghasilan.create')">
+                                <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
                                     <a href="{{ route('pajak_penghasilan.create') }}">
                                         <i class="nc-icon nc-ruler-pencil"></i>
                                         <p>Tambah Penghasilan</p>
@@ -254,21 +261,21 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('history', 'show')"
                                 id="submenu3">
-                                <li style="" class="@active('history_jabatan')">
+                                <li style="margin-top: -15px" class="@active('history_jabatan')">
                                     <a href="{{ route('history_jabatan.index') }}">
                                         <i class="nc-icon nc-briefcase-24"></i>
                                         <p>Jabatan</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="" class="@active('pejabat-sementara.history')">
+                                <li style="margin-top: -15px" class="@active('pejabat-sementara.history')">
                                     <a href="{{ route('pejabat-sementara.history') }}">
                                         <i class="nc-icon nc-tie-bow"></i>
                                         <p>Penjabat Sementara</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="" class="@active('surat-peringatan.history')">
+                                <li style="margin-top: -15px" class="@active('surat-peringatan.history')">
                                     <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}">
                                         <i class="nc-icon nc-email-85"></i>
                                         <p>Surat Peringatan</p>
@@ -295,7 +302,7 @@ Coded by www.creative-tim.com
                                 )
                                     ? 'active'
                                     : '' }}"
-                                    style="">
+                                    style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-single-copy-04"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan Pergerakan
@@ -313,14 +320,14 @@ Coded by www.creative-tim.com
                                             href="{{ route('laporan-penonaktifan.index') }}">Laporan Penonaktifan</a>
                                     </div>
                                 </li>
-                                <li style="" class="@active('laporan_jamsostek')">
+                                <li style="margin-top: -15px" class="@active('laporan_jamsostek')">
                                     <a href="{{ route('laporan_jamsostek.index') }}">
                                         <i class="nc-icon nc-single-copy-04"></i>
                                         <p>Laporan Jamsostek</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="" class="@active('index_dpp')">
+                                <li style="margin-top: -15px" class="@active('index_dpp')">
                                     <a href="{{ route('index_dpp') }}">
                                         <i class="nc-icon nc-single-copy-04"></i>
                                         <p>Laporan DPP</p>
@@ -330,22 +337,15 @@ Coded by www.creative-tim.com
                             </ul>
                         </li>
                         {{-- Menu Gaji --}}
-                        <li class="@active('gaji.*, slipIndex.*, gaji_perbulan.*')">
+                        <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
                                 style="font-weight: bolder">
                                 <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
                                 Gaji
                             </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2  @active('gaji.*, slipIndex.*, gaji_perbulan.*', 'show')"
+                            <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
                                 id="submenu5">
-                                <li style="" class="@active('gaji_perbulan.*')">
-                                    <a href="{{ route('gaji_perbulan.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Proses Penghasilan</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style=""
+                                <li style="margin-top: -15px"
                                     class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                                     <a href="{{ route('gaji.index') }}">
                                         <i class="nc-icon nc-money-coins"></i>
@@ -353,7 +353,7 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="" class="@active('slipIndex')">
+                                <li style="margin-top: -15px" class="@active('slipIndex')">
                                     <a href="{{ route('slipIndex') }}">
                                         <i class="nc-icon nc-money-coins"></i>
                                         <p>Slip Jurnal</p>
@@ -372,21 +372,21 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('migrasi')"
                                 id="submenu8">
-                                <li style="" class="@active('migrasiJabatan')">
+                                <li style="margin-top: -15px" class="@active('migrasiJabatan')">
                                     <a href="{{ route('migrasiJabatan') }}">
                                         <i class="nc-icon nc-cloud-upload-94"></i>
                                         <p>Jabatan</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="" class="@active('migrasiPJS')">
+                                <li style="margin-top: -15px" class="@active('migrasiPJS')">
                                     <a href="{{ route('migrasiPJS') }}">
                                         <i class="nc-icon nc-cloud-upload-94"></i>
                                         <p>Penjabat Sementara</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="" class="@active('migrasiSP')">
+                                <li style="margin-top: -15px" class="@active('migrasiSP')">
                                     <a href="{{ route('migrasiSP') }}">
                                         <i class="nc-icon nc-cloud-upload-94"></i>
                                         <p>Surat Peringatan</p>
@@ -404,7 +404,7 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6"
                                 aria-expanded="false">
-                                <li style="">
+                                <li style="margin-top: -15px">
                                     <a href="#">
                                         <i class="nc-icon nc-refresh-69"></i>
                                         <p>Log Aktivitas</p>
@@ -424,7 +424,7 @@ Coded by www.creative-tim.com
                             {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show') --}}
                             "
                                 id="submenu7">
-                                <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="">
+                                <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-box"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Master </p>
@@ -456,7 +456,7 @@ Coded by www.creative-tim.com
                                 @endphp
                                 <li class="dropdown
                                 {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show') --}}
-                                " style="">
+                                " style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-bank"></i>
                                         <p class="dropdown-toggle" id="navbarDropdownMenuLink">Kantor Pusat </p>
@@ -471,14 +471,14 @@ Coded by www.creative-tim.com
                                             href="{{ route('pengurangan-bruto.index') }}?profil_kantor={{$profilKantorPusat ? $profilKantorPusat->id : ''}}">Pengurangan Bruto</a>
                                     </div>
                                 </li>
-                                <li style="">
+                                <li style="margin-top: -15px">
                                     <a href="#">
                                         <i class="nc-icon nc-single-02"></i>
                                         <p>User Akses</p>
                                         <p></p>
                                     </a>
                                 </li>
-                                <li style="" class="@active('database')">
+                                <li style="margin-top: -15px" class="@active('database')">
                                     <a href="{{ route('database.index') }}">
                                         <i class="nc-icon nc-vector"></i>
                                         <p>Database</p>
@@ -526,7 +526,7 @@ Coded by www.creative-tim.com
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="nc-icon nc-single-02"></i>
                                     {{-- @if (session('status')) --}}
-                                    <p>Welcome, {{ auth()->user()->name }}</p>
+                                    <p>Halo, {{ auth()->user()->name }}</p>
                                     <p></p>
                                     {{-- @endif --}}
                                 </a>
@@ -602,7 +602,7 @@ Coded by www.creative-tim.com
     <!--  Notifications Plugin    -->
     <script src="{{ asset('style/assets/js/plugins/bootstrap-notify.js') }}"></script>
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
-    {{-- <script src="{{ asset('style/assets/js/paper-dashboard.min.js') }}" type="text/javascript"></script> --}}
+    <script src="{{ asset('style/assets/js/paper-dashboard.min.js') }}" type="text/javascript"></script>
     <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
     <script src="{{ asset('style/assets/demo/demo.js') }}"></script>
     <!-- Jam Realtime -->
@@ -610,12 +610,11 @@ Coded by www.creative-tim.com
     <script src="{{ asset('style/assets/js/Datatables.js') }}"></script>
     <script src="{{ asset('style/assets/js/ReorderWithResize.js') }}"></script>
     <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-    <script src="{{ asset('vendor/apexchart/apexcharts.js') }}"></script>
     <script>
-        // $(document).ready(function() {
-        //     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
-        //     demo.initChartsPages();
-        // });
+        $(document).ready(function() {
+            demo.initChartsPages();
+        });
+
         var url = window.location;
 
         // for sidebar menu entirely but not cover treeview
@@ -671,6 +670,7 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
+    @stack('script')
 </body>
 
 </html>
