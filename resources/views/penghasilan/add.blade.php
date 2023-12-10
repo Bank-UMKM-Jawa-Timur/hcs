@@ -115,9 +115,13 @@
                                     }
                                 })
                                 var grand_total = 0;
-                                console.log(dataNip);
+                                $.ajaxSetup({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    }
+                                });
                                 $.ajax({
-                                        type: "GET",
+                                        type: "POST",
                                         url: url,
                                         data: {
                                             nip: JSON.stringify(dataNip)

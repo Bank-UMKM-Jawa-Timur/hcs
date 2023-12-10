@@ -243,7 +243,7 @@
             }
         }
 
-        function alertSuccess(message) { 
+        function alertSuccess(message) {
             let msg = `<div class="alert alert-success alert-dismissible fade show" role="alert">
                         ${message}
                         <button type="button" class="close" data-dismiss="alert" aria-label="close">
@@ -251,10 +251,10 @@
                         </button>
                     </div>`;
             return msg;
-            
+
         }
 
-        function alertDanger(message) { 
+        function alertDanger(message) {
             let msg = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         ${message}
                         <button type="button" class="close" data-dismiss="alert" aria-label="close">
@@ -306,9 +306,13 @@
             })
 
             var dataExcel = true;
-
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: `{{ url('/get-karyawan-by-nip') }}`,
                 data: {
                     nip: JSON.stringify(dataNip),
