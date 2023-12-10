@@ -22,25 +22,18 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-<<<<<<< Updated upstream
-            RoleSeeder::class,
             UserSeeder::class,
-=======
+            KantorSeeder::class,
+            DivisiSeeder::class,
+            CabangSeeder::class,
+            SubDivisiSeeder::class,
+            JabatanSeeder::class,
+            BagianSeeder::class,
+            PanggolSeeder::class,
+            AgamaSeeder::class,
             TunjanganSeeder::class,
-            SetKategoriOnTunjanganSeeder::class,
-            // UserSeeder::class,
->>>>>>> Stashed changes
-            // KantorSeeder::class,
-            // DivisiSeeder::class,
-            // CabangSeeder::class,
-            // SubDivisiSeeder::class,
-            // JabatanSeeder::class,
-            // BagianSeeder::class,
-            // PanggolSeeder::class,
-            // AgamaSeeder::class,
-            // TunjanganSeeder::class,
-            // KantorPusatSeeder::class,
-            // ProfilKantorPusatSeeder::class,
+            KantorPusatSeeder::class,
+            ProfilKantorPusatSeeder::class,
         ]);
     }
 }

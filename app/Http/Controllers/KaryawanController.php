@@ -45,7 +45,7 @@ class KaryawanController extends Controller
 
         $karyawanRepo = new KaryawanRepository();
         $search = $request->get('q');
-        $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
+        $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);  
 
         return view('karyawan.index', [
             'karyawan' => $data,

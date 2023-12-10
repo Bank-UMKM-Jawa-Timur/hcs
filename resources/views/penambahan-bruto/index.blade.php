@@ -9,11 +9,9 @@
         <div class="card-body">
             <div class="col">
                 <div class="row">
-                    @can('setting - kantor pusat - penambahan bruto - create penambahan bruto')
                     <a class="mb-3" href="{{ route('penambahan-bruto.create') }}?profil_kantor={{$_GET['profil_kantor']}}">
                         <button class="btn btn-primary">Tambah</button>
                     </a>
-                    @endcan
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class=" text-primary">
@@ -52,21 +50,17 @@
                                         <input type="checkbox" name="check" id="check" @if($item->active) checked @endif>
                                     </td>
                                     <td class="text-center">
-                                        @can('setting - kantor pusat - penambahan bruto - edit penambahan bruto')
-                                            <a href="{{ route('penambahan-bruto.edit', $item->id) }}">
-                                                <button class="btn btn-warning">
-                                                    Edit
-                                                </button>
-                                            </a>
-                                        @endcan
-                                        @can('setting - kantor pusat - penambahan bruto - delete penambahan bruto')
-                                            <form action="{{ route('penambahan-bruto.destroy', $item->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <input type="hidden" name="id_profil_kantor" value="{{$item->id_profil_kantor}}">
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
-                                        @endcan
+                                        <a href="{{ route('penambahan-bruto.edit', $item->id) }}">
+                                            <button class="btn btn-warning">
+                                                Edit
+                                            </button>
+                                        </a>
+                                        <form action="{{ route('penambahan-bruto.destroy', $item->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="id_profil_kantor" value="{{$item->id_profil_kantor}}">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

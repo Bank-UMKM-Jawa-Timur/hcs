@@ -59,7 +59,7 @@ class PenghasilanTidakTeraturController extends Controller
         foreach($cbg as $item){
             array_push($cabang, $item->kd_cabang);
         }
-
+        
         $tahun = $request->get('tahun');
         $mode = $request->get('mode');
         $nip = $request->get('nip');
@@ -262,7 +262,7 @@ class PenghasilanTidakTeraturController extends Controller
                     $jkm = round(($persen_jkm / 100) * $item);
                     $jp_penambah = round(($persen_jp_penambah / 100) * $item);
                 }
-
+    
                 if($karyawan->jkn != null){
                     if($item > $batas_atas){
                         $kesehatan = round($batas_atas * ($persen_kesehatan / 100));
@@ -423,6 +423,7 @@ class PenghasilanTidakTeraturController extends Controller
                         ]);
                 }
             }
+
             Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan');
             return redirect()->route('penghasilan.index');
         } catch(Exception $e){

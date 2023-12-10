@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
-use App\Http\Controllers\BonusController;
 use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
@@ -125,7 +124,6 @@ Route::get('/', function () {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('/kantor', KantorController::class);
-    Route::resource('role', RoleMasterController::class);
     Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);
     Route::resource('/sub_divisi', \App\Http\Controllers\SubdivisiController::class);
     Route::resource('/jabatan', \App\Http\Controllers\JabatanController::class);
@@ -286,10 +284,6 @@ Route::group(['middleware' => 'auth'], function () {
         return view('gaji_perbulan.import');
     });
     Route::post('post-import-pph', [GajiPerBulanController::class, 'importPPH'])->name('import-pph');
-
-    // Bonus
-    Route::resource('bonus',BonusController::class);
-
 });
 Auth::routes();
 

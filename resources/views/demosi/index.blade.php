@@ -9,11 +9,9 @@
         <div class="card-body">
             <div class="col">
                 <div class="row">
-                    @can('manajemen karyawan - pergerakan karir - data demosi - create demosi')
                     <a class="mb-3" href="{{ route('demosi.create') }}">
                         <button  class="btn btn-primary">Tambah Demosi</button>
                     </a>
-                    @endcan
                     <div class="table-responsive">
                         <table class="table" id="table">
                             <thead class="text-primary">

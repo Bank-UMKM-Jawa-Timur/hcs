@@ -12,9 +12,7 @@
         <div class="card-body">
             <div class="col">
                 <div class="row">
-                    @can('manajemen karyawan - reward & punishment - surat peringatan - create')
                     <a href="{{ route('surat-peringatan.create') }}" class="btn btn-primary mr-3">Tambah Surat Peringatan</a>
-                    @endcan
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="sp-table">
                             <thead class="text-primary">
@@ -38,9 +36,7 @@
                                         <td>{{ $sp->tanggal_sp->format('d M Y') }}</td>
                                         <td>{{ $sp->pelanggaran }}</td>
                                         <td class="d-flex">
-                                            @can('manajemen karyawan - reward & punishment - surat peringatan - detail')
                                             <a href="{{ route('surat-peringatan.show', $sp) }}" class="btn btn-outline-info p-1" style="min-width: 60px;">Detail</a>
-                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

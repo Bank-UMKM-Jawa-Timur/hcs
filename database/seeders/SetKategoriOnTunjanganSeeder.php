@@ -16,7 +16,7 @@ class SetKategoriOnTunjanganSeeder extends Seeder
     public function run()
     {
         $table = 'mst_tunjangan';
-
+        
         $tunjangan_arr = [
             "Keluarga",
             "Telpon, Air dan Listrik",
@@ -81,7 +81,7 @@ class SetKategoriOnTunjanganSeeder extends Seeder
 
         \DB::beginTransaction();
         try {
-            for ($i=0; $i < count($tunjangan_arr); $i++) {
+            for ($i=0; $i < count($tunjangan_arr); $i++) { 
                 DB::table($table)
                     ->where('nama_tunjangan', $tunjangan_arr[$i])
                     ->whereNull('kategori')

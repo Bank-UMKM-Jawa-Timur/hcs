@@ -6,15 +6,13 @@
             <h5 class="card-title">Data Bagian</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('bagian.index') }}">Bagian</a></p>
         </div>
-
+        
         <div class="card-body">
             <div class="col">
                 <div class="row">
-                    @can('setting - master - bagian - create bagian')
                     <a class="mb-3" href="{{ route('bagian.create') }}">
                       <button class="btn btn-primary">tambah bagian</button>
                     </a>
-                    @endcan
                     <div class="table-responsive overflow-hidden content-center">
                       <table class="table whitespace-nowrap" id="table" style="width: 100%">
                           <thead class=" text-primary">
@@ -75,18 +73,16 @@
                                     </td>
                                     <td>
                                       {{-- <div class="row"> --}}
-                                        @can('setting - master - bagian - edit bagian')
-                                            <a href="{{ route('bagian.edit', $item->kd_bagian) }}">
-                                            <button class="btn btn-warning">
-                                                Edit
-                                            </button>
-                                            </a>
-                                        @endcan
-
+                                        <a href="{{ route('bagian.edit', $item->kd_bagian) }}">
+                                          <button class="btn btn-warning">
+                                            Edit
+                                          </button>
+                                        </a>
+                                        
                                         {{-- <form action="{{ route('cabang.destroy', $item->id) }}" method="POST">
                                           @csrf
                                           @method('DELETE')
-
+                                      
                                           <button type="submit" class="btn btn-danger btn-block">Delete</button>
                                         </form> --}}
                                       {{-- </div> --}}
@@ -113,4 +109,4 @@
         });
     });
   </script>
-@endsection
+@endsection 

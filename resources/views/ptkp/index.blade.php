@@ -10,11 +10,9 @@
         <div class="card-body">
             <div class="col">
                 <div class="row">
-                    @can('setting - master - penghasilan tanpa pajak - create penghasilan tanpa pajak')
                     <a class="mb-3" href="{{ route('ptkp.create') }}">
                         <button class="btn btn-primary">Tambah Data</button>
                     </a>
-                    @endcan
                     <div class="table-responsive overflow-hidden content-center">
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class="text-primary">
@@ -52,13 +50,11 @@
                                         <td>
                                             {{-- <div class="row"> --}}
                                             <div class="d-flex ">
-                                                @can('setting - master - penghasilan tanpa pajak - edit penghasilan tanpa pajak')
                                                 <div class="m-2">
                                                     <a class="btn btn-warning" href="{{ route('ptkp.edit', $item->id) }}">
-                                                        Edit
-                                                    </a>
+                                                    Edit
+                                                </a>
                                                 </div>
-                                                @endcan
                                             <div class="m-2">
                                                 <a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
                                                         Hapus
