@@ -9,11 +9,11 @@
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
         @can('penghasilan - import - penghasilan teratur - import')
-            <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.create') }}">
-                <button class="is-btn is-primary">import</button>
-            </a>
             <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.input-tidak-teratur') }}">
                 <button class="is-btn is-primary">Tambah</button>
+            </a>
+            <a class="mb-3 ml-2" href="{{ route('penghasilan-tidak-teratur.create') }}">
+                <button class="is-btn is-primary">import</button>
             </a>
         @endcan
         {{-- <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.create') }}">
