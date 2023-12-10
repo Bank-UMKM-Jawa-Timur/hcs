@@ -341,12 +341,13 @@ class PenghasilanTidakTeraturController extends Controller
                     'nominal' => str_replace('.', '', $request->nominal),
                     'bulan' => $bulan,
                     'tahun' => $tahun,
+                    'keterangan' => $request->keterangan,
                     'created_at' => $request->tanggal
                 ]);
 
             DB::commit();
             Alert::success('Berhasil', 'Berhasil menambahkan data.');
-            return redirect()->route('pajak_penghasilan.create');
+            return redirect()->route('penghasilan-tidak-teratur.index');
         } catch(Exception $e){
             DB::rollBack();
             Alert::error('Gagal', 'Terjadi kesalahan.'.$e->getMessage());
@@ -399,6 +400,12 @@ class PenghasilanTidakTeraturController extends Controller
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
 
         return view('penghasilan.add', compact('data'));
+    }
+
+    public function createTidakTeratur()
+    {
+        $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
+        return view('penghasilan.add-input-tidak-teratur', compact('data'));
     }
 
     /**

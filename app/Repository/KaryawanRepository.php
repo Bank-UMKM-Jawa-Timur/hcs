@@ -126,6 +126,8 @@ class KaryawanRepository
             $display_jabatan = $prefix . ' ' . $jabatan . ' ' . $entitas . ' ' . $value?->bagian?->nama_bagian . ' ' . $ket;
             $value->display_jabatan = $display_jabatan;
         }
+
+        // dd($karyawan);
         return $karyawan;
     }
 

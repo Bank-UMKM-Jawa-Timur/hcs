@@ -12,7 +12,13 @@
             <a class="mb-3" href="{{ route('penghasilan - import - penghasilan tidak teratur - import') }}">
                 <button class="is-btn is-primary">import</button>
             </a>
+            <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.input-tidak-teratur') }}">
+                <button class="is-btn is-primary">Tambah</button>
+            </a>
         @endcan
+        {{-- <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.create') }}">
+            <button class="is-btn is-primary">import</button>
+        </a> --}}
     </div>
 </div>
 
