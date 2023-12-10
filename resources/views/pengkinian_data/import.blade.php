@@ -11,9 +11,9 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
-                <div class="container m-0">
+                <div class="container m-0 mb-3">
                     <a href="{{ asset('template_import.xlsx') }}" download>
-                        <button class="btn btn-primary">Download Template Excel</button>
+                        <button class="is-btn is-primary">Download Template Excel</button>
                     </a>
                 </div>
 
