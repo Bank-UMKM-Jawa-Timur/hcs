@@ -161,17 +161,25 @@
                     <div class="col-sm-5">
                         <input type="text" disabled class="form-control" value="{{ $karyawan->nik }}">
                     </div>
+                    <label class="col-sm-2 mt-2 text-left">BPJSTK :</label>
+                    <div class="col-sm-3">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->kpj }}">
+                    </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">NAMA</label>
                     <div class="col-sm-5">
                         <input type="text" disabled class="form-control" value="{{ $karyawan->nama_karyawan }}">
                     </div>
+                    <label class="col-sm-2 mt-2 text-left">BPKSKES :</label>
+                    <div class="col-sm-3">
+                        <input type="text" disabled class="form-control" value="{{ $karyawan->jkn }}">
+                    </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">ALAMAT</label>
-                    <div class="col-sm-7">
-                        <input type="text" disabled class="form-control" value="{{ $karyawan->alamat_ktp }}">
+                    <div class="col-sm-5">
+                        <textarea type="textarea" disabled class="form-control pl-2">{{ $karyawan->alamat_ktp }}</textarea>
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
@@ -185,19 +193,11 @@
                     <div class="col-sm-5">
                         <input type="text" disabled class="form-control" value="{{ $karyawan->nama_jabatan }}">
                     </div>
-                    <label class="col-sm-2 mt-2 text-left">BPJSTK :</label>
-                    <div class="col-sm-3">
-                        <input type="text" disabled class="form-control" value="{{ $karyawan->kpj }}">
-                    </div>
                 </div>
                 <div class="row m-0 mt-2">
                     <label class="col-sm-2 mt-2">STATUS PERKAWINAN</label>
                     <div class="col-sm-5">
                         <input type="text" disabled class="form-control" value="{{ $status }}">
-                    </div>
-                    <label class="col-sm-2 mt-2 text-left">BPKSKES :</label>
-                    <div class="col-sm-3">
-                        <input type="text" disabled class="form-control" value="{{ $karyawan->jkn }}">
                     </div>
                 </div>
                 <div class="row m-0 mt-2">
