@@ -227,6 +227,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store', 'store')->name('store');
             Route::get('/detail', 'show')->name('detail');
             Route::get('/input-tidak-teratur', 'createTidakTeratur')->name('input-tidak-teratur');
+            Route::get('template-tidak-teratur','templateTidakTeratur')->name('templateTidakTeratur');
+            Route::get('template-biaya-kesehatan','templateBiayaKesehatan')->name('templateBiayaKesehatan');
+            Route::get('template-uang-duka','templateBiayaDuka')->name('templateBiayaDuka');
         });
 
     // Penonaktifan Karyawan

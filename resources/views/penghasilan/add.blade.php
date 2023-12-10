@@ -35,11 +35,11 @@
                 var value = $(this).val();
                 kategori = value.toLowerCase()
                 if(value == 'pengganti biaya kesehatan'){
-                    $('#btnDownloadTemplate').attr('href', "{{ asset('template_penghasilan_tidak_teratur-pengganti_biaya_kesehatan.xlsx') }}");
+                    $('#btnDownloadTemplate').attr('href', "{{ route('penghasilan-tidak-teratur.templateBiayaKesehatan') }}");
                 } else if(value == 'uang duka'){
-                    $('#btnDownloadTemplate').attr('href', "{{ asset('template_penghasilan_tidak_teratur-uang_duka.xlsx') }}");
+                    $('#btnDownloadTemplate').attr('href', "{{ route('penghasilan-tidak-teratur.templateBiayaDuka') }}");
                 } else{
-                    $('#btnDownloadTemplate').attr('href', "{{ asset('template_penghasilan_tidak_teratur.xlsx') }}");
+                    $('#btnDownloadTemplate').attr('href', "{{ route('penghasilan-tidak-teratur.templateTidakTeratur') }}");
                 }
             })
 
@@ -265,7 +265,7 @@
             @csrf
             <div class="row">
                 <div class="col">
-                    <a href="{{ asset('template_penghasilan_tidak_teratur.xlsx') }}" class="btn is-btn is-primary" id="btnDownloadTemplate" download>Download Template Excel</a>
+                    <a href="{{ route('penghasilan-tidak-teratur.templateTidakTeratur') }}" class="btn is-btn is-primary" id="btnDownloadTemplate" download>Download Template Excel</a>
                 </div>
             </div>
             <div class="row">

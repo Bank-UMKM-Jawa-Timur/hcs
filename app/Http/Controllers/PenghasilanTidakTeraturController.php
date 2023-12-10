@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportBiayaDuka;
+use App\Exports\ExportBiayaKesehatan;
+use App\Exports\ExportBiayaTidakTeratur;
 use App\Imports\PenghasilanImport;
 use App\Models\ImportPenghasilanTidakTeraturModel;
 use App\Models\PPHModel;
@@ -523,5 +526,20 @@ class PenghasilanTidakTeraturController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    function templateTidakTeratur() {
+        $filename = Carbon::now()->format('his').'-penghasilan_tidak_teratur'.'.'.'xlsx';
+        return Excel::download(new ExportBiayaTidakTeratur,$filename);
+    }
+
+    function templateBiayaKesehatan() {
+        $filename = Carbon::now()->format('his').'-penghasilan_tidak_teratur_biaya_kesehatan'.'.'.'xlsx';
+        return Excel::download(new ExportBiayaKesehatan,$filename);
+    }
+
+    function templateBiayaDuka() {
+        $filename = Carbon::now()->format('his').'-penghasilan_tidak_teratur_uang_duka'.'.'.'xlsx';
+        return Excel::download(new ExportBiayaDuka,$filename);
     }
 }
