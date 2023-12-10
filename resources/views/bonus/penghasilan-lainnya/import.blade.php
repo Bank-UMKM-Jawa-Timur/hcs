@@ -102,14 +102,6 @@
                             },
                             success: function (res) {
                                 var nama = res != 'null' ? res : '-';
-                                if (res != 'null') {
-                                    console.log('agaag');
-                                    $('#table_item tbody tr:eq(' + index + ') span').removeClass('hidden');
-                                } else {
-                                    $('#table_item tbody tr:eq(' + index + ') span').addClass('hidden')
-
-                                }
-
                                 createTableRow(row, nama,index);
                             },
                             complete: function () {
@@ -130,7 +122,6 @@
                     <tr>
                         <td>
                             <input type="text" name="nip[]" class="typeahead form-control nip-input" value="${row[0]}" readonly>
-                            <small class="hidden" id="alert">Data NIP tidak ditemukan</small>
                         </td>
                         <td>
                             <input type="text" name="nama[]" class="form-control nama-input" value="${nama}" readonly>
@@ -182,13 +173,13 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Import Bonus</h5>
-            <p class="card-title"><a href="">Dashboard</a> > <a href="{{ route('bonus.index') }}">Bonus</a> >Import</p>
+            <h5 class="card-title">Import Penghasilan Lainnya</h5>
+            <p class="card-title"><a href="">Dashboard</a> > <a href="{{ route('penghasilan-lainnya.index') }}">Penghasilan Lainnya</a> > Import</p>
         </div>
     </div>
 
     <div class="card-body">
-        <form action="{{ route('bonus.store') }}" enctype="multipart/form-data" method="POST" class="form-group mt-4">
+        <form action="{{ route('penghasilan-lainnya.store') }}" enctype="multipart/form-data" method="POST" class="form-group mt-4">
             @csrf
         <div class="row">
            <div class="col-md-12 justify-content-center">
@@ -211,14 +202,6 @@
             <div class="col-md-12">
                     <div class="form-row">
                         <div class="col">
-                            <label for="">Kategori</label>
-                            <select name="kategori_bonus" id="kategori" class="form-control">
-                                <option value="jaspro">Jaspro DanKes</option>
-                                <option value="thr">Import THR </option>
-                                <option value="penghasilan-lainnya">Import Penghasilan Lainnya</option>
-                            </select>
-                        </div>
-                        <div class="col">
                             <label for="">Data Excel</label>
                             <div class="custom-file col-md-12">
                                 <input type="file" name="upload_csv" class="custom-file-input" id="upload_csv"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -229,7 +212,7 @@
                             <button type="button" class="btn btn-info btn-import">Import</button>
                             <a href="{{ asset('template_penghasilan_lainnya.xlsx') }}" download>Download Template Excel</a>
                         </div>
-                    </div>
+                      </div>
             </div>
             <div class="col-md-12 my-5 hidden" id="table-data">
                 <div class="table-responsive overflow-hidden content-center">
