@@ -57,10 +57,17 @@
     </script>
 @endpush
 @section('content')
-    <div class="card-header">
+    <div class="d-lg-flex justify-content-between w-100 p-3">
         <div class="card-header">
             <h5 class="card-title">Edit Roles</h5>
             <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('role.index') }}">Roles</a> > <a>Edit</a></p>
+        </div>
+        <div class="card-header row mr-8 pr-5">
+            <form id="form" method="get">
+                <label for="q">Cari</label>
+                <input type="search" name="q" id="q" placeholder="Cari disini..."
+                    class="form-control p-2" value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
+            </form>
         </div>
     </div>
     <div class="card-body ml-3 mr-3">
@@ -86,7 +93,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($dataPermissions as $item)
+                                    @forelse ($dataPermissions as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td> {{ ucwords(str_replace('-','/',$item->name)) }}</td>
@@ -97,7 +104,11 @@
                                                         <input type="hidden" name="fieldToInsert[]" value="{{ $item->id }}" id="fieldToInsert-{{ $item->id }}" disabled>
                                                     @endif
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center text-primary">Data Kosong</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
