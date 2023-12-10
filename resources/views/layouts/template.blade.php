@@ -249,7 +249,6 @@ Coded by www.creative-tim.com
                                         <p></p>
                                     </a>
                                 </li>
-                                @endcan
                             </ul>
                         </li>
                         {{-- Menu Histori --}}
@@ -362,7 +361,6 @@ Coded by www.creative-tim.com
                                 </li>
                             </ul>
                         </li>
-                        @endcan
                         {{-- Menu Bonus  --}}
                         <li class="@active('penghasilan-lainnya') {{ request()->is('bonus', 'bonus/*') ? 'active' : '' }}">
                             <a class="nav-link" href="#bonus" data-toggle="collapse" data-target="#bonus"
@@ -396,7 +394,6 @@ Coded by www.creative-tim.com
                                 </li>
                             </ul>
                         </li>
-
                         {{-- Menu Migrasi Data --}}
                         <li class="@active('migrasi')">
                             <a class="nav-link" href="#submenu8" data-toggle="collapse" data-target="#submenu8"
@@ -704,6 +701,7 @@ Coded by www.creative-tim.com
         });
     </script>
     @yield('custom_script')
+    @stack('script')
 </body>
 
 </html>
