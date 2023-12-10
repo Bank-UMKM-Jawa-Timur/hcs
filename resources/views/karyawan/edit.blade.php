@@ -13,6 +13,7 @@
         <form action="{{ route('karyawan.update', $data->nip) }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
             @csrf
             @method('PUT')
+            <input type="hidden" name="idTkDeleted" id="idTkDeleted">
             <div id="accordion">
                 <div class="card p-2 ml-3 mr-3 shadow">
                     <div class="card-header" id="headingOne">
@@ -406,7 +407,7 @@
                                     </button>
                                 </div>
                                 <div class="col-md-1 mt-3">
-                                    <button class="btn btn-info" type="button" id="btn-delete">
+                                    <button class="btn btn-info btn-delete" type="button" id="btn-delete">
                                         <i class="bi-dash-lg"></i>
                                     </button>
                                 </div>
@@ -431,6 +432,7 @@
         var subdiv;
         var bag;
         let kd_divisi;
+        var idDeleted = []
         kantorChange();
         getKantor();
         cekStatus();
@@ -806,25 +808,18 @@
         $('#collapseFour').on('click', "#btn-delete", function(){
             var row = $(this).closest('.row')
             var value = row.children('#id_tk').val()
-            console.log(value);
             if(x > 1){
                 if(value != null){
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('deleteEditTunjangan') }}?id_tk="+value,
-                        datatype: "json",
-                        success: function(res){
-                            if(res == "sukses"){
-                                row.remove()
-                                x--;
-                            }
-                        }
-                    })
+                    idDeleted.push(value)
+                    row.remove()
+                    x--;
+                    $("#idTkDeleted").val(idDeleted)
                 } else{
                     $(this).closest('.row').remove()
                     x--;
                 }
             }
+            console.log(idDeleted);
         })
 
         function updateBagianDirectly(divisi) {
