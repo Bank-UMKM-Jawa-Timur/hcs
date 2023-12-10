@@ -9,7 +9,6 @@
     <div class="card-header row mt-3 mr-8 pr-5">
         @can('setting - master - rentang umur - create rentang umur')
             <a class="mb-3" href="{{ route('umur.create') }}">
-        
                 <button class="is-btn is-primary">Tambah Rentang Umur</button>
             </a>
         @endcan
