@@ -25,6 +25,7 @@ class SPDController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = TunjanganModel::where('nama_tunjangan', 'like', "%spd%")
             ->get();
         return view('penghasilan.import_tidak_teratur.spd', compact('data'));

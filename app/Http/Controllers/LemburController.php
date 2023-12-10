@@ -24,6 +24,7 @@ class LemburController extends Controller
      */
     public function index()
     {
+        // Need permission
         return view('penghasilan.import_tidak_teratur.lembur');
     }
 
@@ -45,6 +46,7 @@ class LemburController extends Controller
      */
     public function store(LemburRequest $request)
     {
+        // Need permission
         try{
             $this->repo->store($request->all());
 

@@ -22,6 +22,7 @@ class KantorCabangController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = DB::table('mst_cabang')
                 ->select(
                     'mst_cabang.*',
@@ -42,6 +43,7 @@ class KantorCabangController extends Controller
      */
     public function create()
     {
+        // Need permission
         return view('cabang.add');
     }
 
@@ -101,6 +103,7 @@ class KantorCabangController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = DB::table('mst_cabang')
             ->select(
                 'mst_cabang.*',
@@ -254,6 +257,7 @@ class KantorCabangController extends Controller
      */
     public function destroy($id)
     {
+        // Need permission
         try{
             DB::table('mst_cabang')
                 ->where('kd_cabang', $id)

@@ -15,7 +15,7 @@ class PenggantiBiayaKesehatanController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     private PenghasilanTidakTeraturRepository $repo;
+    private PenghasilanTidakTeraturRepository $repo;
 
     public function __construct()
     {
@@ -23,6 +23,7 @@ class PenggantiBiayaKesehatanController extends Controller
     }
     public function index()
     {
+        // Need permission
         return view('penghasilan.import_tidak_teratur.pengganti_biaya_kesehatan');
     }
 

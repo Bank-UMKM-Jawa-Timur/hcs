@@ -22,6 +22,7 @@ class SubdivisiController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = DB::table('mst_sub_divisi')
             ->select(
                 'mst_divisi.kd_divisi',
@@ -45,6 +46,7 @@ class SubdivisiController extends Controller
      */
     public function create()
     {
+        // Need permission
         $divisi = DivisiModel::get();
 
         return view('sub_divisi.add', ['divisi' => $divisi]);
@@ -113,6 +115,7 @@ class SubdivisiController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = DB::table('mst_sub_divisi')
             ->where('mst_sub_divisi.kd_subdiv', $id)
             ->select(
@@ -178,6 +181,7 @@ class SubdivisiController extends Controller
      */
     public function destroy($id)
     {
+        // Need permission
         try{
             DB::table('mst_sub_divisi')
                 ->where('id', $id)

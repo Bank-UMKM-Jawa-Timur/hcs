@@ -24,6 +24,7 @@ class UangDukaController extends Controller
     
     public function index()
     {
+        // Need permission
         return view('penghasilan.import_tidak_teratur.uang_duka');
     }
 

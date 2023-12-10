@@ -188,6 +188,8 @@
                                 <p></p>
                             </a>
                         </li>
+                        @endcan
+                        @can('penghasilan - pajak penghasilan')
                         <li style="margin-top: -15px" class="@active('pajak_penghasilan.index') @active('get-penghasilan')">
                             <a href="{{ route('pajak_penghasilan.index') }}">
                                 <i class="nc-icon nc-scissors"></i>
@@ -206,6 +208,7 @@
                         </li>
                         @endcan  --}}
                         {{-- Menu Import --}}
+                        @can('penghasilan - import')
                         <li class="{{ request()->is('penghasilan.import-penghasilan-teratur', 'penghasilan.import-penghasilan-teratur/*', 'penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*') ? 'active' : '' }}">
                             <a class="nav-link-item" href="#submenu-import" data-toggle="collapse" data-target="#submenu-import"
                                 style="font-weight: bolder">
@@ -214,6 +217,7 @@
                             </a>
                             <ul class="sub-menu {{ request()->is('penghasilan.import-penghasilan-teratur', 'penghasilan.import-penghasilan-teratur/*', 'penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('payroll.slip', 'show')"
                                 id="submenu-import">
+                                @can('penghasilan - import - penghasilan teratur')
                                 <li style="margin-top: -15px"
                                     class="@active('penghasilan.import-penghasilan-teratur.index')">
                                     <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}" style="font-weight: bolder">
@@ -221,6 +225,8 @@
                                         <p>Penghasilan Teratur</p>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('penghasilan - import - penghasilan tidak teratur')
                                 <li style="margin-top: -15px"
                                     class="@active('penghasilan-tidak-teratur.index')">
                                     <a href="{{ route('penghasilan-tidak-teratur.index') }}" style="font-weight: bolder">
@@ -229,6 +235,8 @@
                                         <p></p>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('penghasilan - import - bonus')
                                 <li style="margin-top: -15px"
                                     class="@active('bonus.index')">
                                     <a href="{{ route('bonus.index') }}" style="font-weight: bolder">
@@ -236,6 +244,8 @@
                                         <p>Bonus</p>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('penghasilan - import - potongan')
                                 <li style="margin-top: -15px"
                                     class="@active('potongan.index')">
                                     <a href="{{ route('potongan.index') }}" style="font-weight: bolder">
@@ -244,9 +254,12 @@
                                         <p></p>
                                     </a>
                                 </li>
+                                @endcan
                             </ul>
                         </li>
+                        @endcan
                         {{-- Menu Payroll --}}
+                        @can('penghasilan - payroll')
                         <li class="@active('payroll') {{ request()->is('payroll', 'payroll/*') ? 'active' : '' }}">
                             <a class="nav-link-item" href="#submenu-payroll" data-toggle="collapse" data-target="#submenu-payroll"
                                 style="font-weight: bolder">
@@ -255,6 +268,7 @@
                             </a>
                             <ul class="sub-menu {{ request()->is('payroll', 'payroll/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('payroll.slip', 'show')"
                                 id="submenu-payroll">
+                                @can('penghasilan - payroll - list payroll')
                                 <li style="margin-top: -15px"
                                     class="@active('payroll.index')">
                                     <a href="{{ route('payroll.index') }}">
@@ -262,16 +276,20 @@
                                         <p>Payroll</p>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('penghasilan - payroll - slip gaji')
                                 <li style="margin-top: -15px" class="@active('payroll.slip')">
                                     <a href="{{ route('payroll.slip') }}">
                                         <i class="nc-icon nc-money-coins"></i>
                                         <p>Slip Gaji</p>
                                     </a>
                                 </li>
+                                @endcan
                             </ul>
                         </li>
+                        @endcan
                         {{-- Menu Gaji --}}
-                        @can('gaji')
+                        @can('penghasilan - gaji')
                         <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                             <a class="nav-link-item" href="#submenu-gaji" data-toggle="collapse" data-target="#submenu-gaji"
                                 style="font-weight: bolder">
@@ -280,7 +298,7 @@
                             </a>
                             <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
                                 id="submenu-gaji">
-                                @can('gaji - lampiran gaji')
+                                @can('penghasilan - gaji - lampiran gaji')
                                 <li style="margin-top: -15px"
                                     class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                                     <a href="{{ route('gaji.index') }}">
@@ -290,7 +308,7 @@
                                     </a>
                                 </li>
                                 @endcan
-                                @can('gaji - slip jurnal')
+                                @can('penghasilan - gaji - slip gaji')
                                 <li style="margin-top: -15px" class="@active('slipIndex')">
                                     <a href="{{ route('slipIndex') }}">
                                         <i class="nc-icon nc-money-coins"></i>
@@ -373,14 +391,22 @@
                                 <p></p>
                             </a>
                             <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                                @can('laporan - laporan pergerakan karir - laporan mutasi')
                                 <a class="dropdown-item" href="{{ route('laporan-mutasi.index') }}">Laporan
                                     Mutasi</a>
+                                @endcan
+                                @can('laporan - laporan pergerakan karir - laporan demosi')
                                 <a class="dropdown-item" href="{{ route('laporan-demosi.index') }}">Laporan
                                     Demosi</a>
+                                @endcan
+                                @can('laporan - laporan pergerakan karir - laporan promosi')
                                 <a class="dropdown-item" href="{{ route('laporan-promosi.index') }}">Laporan
                                     Promosi</a>
+                                @endcan
+                                @can('laporan - laporan pergerakan karir - laporan penonaktifan')
                                 <a class="dropdown-item"
                                     href="{{ route('laporan-penonaktifan.index') }}">Laporan Penonaktifan</a>
+                                @endcan
                             </div>
                         </li>
                         @endcan

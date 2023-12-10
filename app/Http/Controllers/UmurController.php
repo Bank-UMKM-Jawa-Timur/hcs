@@ -23,6 +23,7 @@ class UmurController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = DB::table('mst_ru')
             ->get();
 
@@ -36,6 +37,7 @@ class UmurController extends Controller
      */
     public function create()
     {
+        // Need permission
         return view('umur.add');
     }
 
@@ -92,6 +94,7 @@ class UmurController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = DB::table('mst_ru')
             ->where('id', $id)
             ->first();
@@ -143,6 +146,7 @@ class UmurController extends Controller
      */
     public function destroy($id)
     {
+        // Need permission
         try{
             DB::table('mst_ru')
                 ->where('id', $id)

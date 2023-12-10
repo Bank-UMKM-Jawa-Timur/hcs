@@ -59,6 +59,7 @@ class GajiPerBulanController extends Controller
 
     public function index()
     {
+        // Need permission
         $data = DB::table('gaji_per_bulan')
             ->selectRaw('DISTINCT(bulan), tahun')
             ->orderBy('created_at', 'desc')
@@ -531,6 +532,7 @@ class GajiPerBulanController extends Controller
     }
 
     public function importPPH(Request $request){
+        // Need permission
         $file = $request->file('upload_csv');
         $import = new ImportPPH21;
         $import = $import->import($file);

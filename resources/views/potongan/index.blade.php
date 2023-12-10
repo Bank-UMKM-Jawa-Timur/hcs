@@ -23,12 +23,16 @@
             <p class="card-title"><a href="/">Dashboard</a> >Import Potongan</p>
         </div>
         <div class="card-header row mt-3 mr-8 pr-5" >
-          <a class="mb-3" href="{{ route('potongan.create') }}">
-            <button class="is-btn is-primary">Tambah</button>
-          </a>
-          <a class="ml-3" href="{{ route('import-potongan') }}">
-            <button class="is-btn is-primary">Import</button>
-          </a>
+          @can('penghasilan - import - potongan - import')
+            <a class="mb-3" href="{{ route('potongan.create') }}">
+              <button class="btn btn-primary">Tambah</button>
+            </a>
+          @endcan
+          @can('penghasilan - import - potongan - import')
+            <a class="ml-3" href="{{ route('import-potongan') }}">
+              <button class="btn btn-primary">Import</button>
+            </a>
+          @endcan
         </div>
     </div>
 
@@ -121,11 +125,13 @@
                                   <td style="min-width: 130px">
                                     <div class="container">
                                         <div class="row">
+                                            @can('penghasilan - import - potongan - detail')
                                             <a href="{{ route('detail-potongan', ['bulan' => $item->bulan, 'tahun' => $item->tahun]) }}"
                                                 class="btn btn-outline-info p-1"
                                                 style="min-width: 60px">
                                                 Detail
                                             </a>
+                                            @endcan
                                         </div>
                                     </div>
                                   </td>

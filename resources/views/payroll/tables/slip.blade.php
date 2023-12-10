@@ -51,7 +51,7 @@
                     data-target-id="slipGaji-{{ $item->id }}"
                     data-json="{{ $data[$key] }}"
                     {{-- onclick="showModal(this)" --}}
-                    class="btn btn-sm btn-primary p-1 show-data">Slip</button>
+                    class="is-btn btn-sm is-primary p-1 show-data">Slip</button>
                     {{-- <button class="btn btn-sm btn-primary">Slip</button> --}}
                 </td>
             </tr>

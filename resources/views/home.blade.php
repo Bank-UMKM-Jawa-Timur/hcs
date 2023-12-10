@@ -7,15 +7,27 @@
             <h5 class="card-title font-weight-bold">Dashboard</h5>
             <p class="card-title"><a href="/">Dashboard </a></p>
         </div>
-        <div class="mt-4">
+        {{-- <div class="mt-4">
             <a href="{{ route('per-cabang') }}" class="is-btn btn-info">Detail</a>
-        </div>
+        </div> --}}
     </div>
 </div>
 <div class="card-body">
     <div class="row mb-4">
         <div class="col-md-12">
             <div class="card"  style="border: 1px solid #dcdcdc">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">
+                                Total Karyawan Per Cabang
+                            </h6>
+                        </div>
+                        <div class="mt-2">
+                            <a href="{{ route('per-cabang') }}" class="is-btn is-primary">Detail</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
                 <div id="cabang-graph" class="w-100 mt-3"></div >
                 </div>
@@ -117,10 +129,10 @@
           height: 350,
           fontFamily: 'Plus Jakarta Sans, sans-serif'
         },
-        title: {
+        {{--  title: {
             text: 'Total Karyawan Per Cabang',
             align: 'left'
-        },
+        },  --}}
         plotOptions: {
           bar: {
             horizontal: false,

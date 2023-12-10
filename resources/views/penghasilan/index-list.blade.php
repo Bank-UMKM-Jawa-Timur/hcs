@@ -8,9 +8,11 @@
         <p class="card-title"><a href="">Penghasilan </a> > Penghasilan Tidak Teratur</p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.create') }}">
-            <button class="is-btn is-primary">import</button>
-        </a>
+        @can('penghasilan - import - penghasilan teratur - import')
+            <a class="mb-3" href="{{ route('penghasilan - import - penghasilan tidak teratur - import') }}">
+                <button class="is-btn is-primary">import</button>
+            </a>
+        @endcan
     </div>
 </div>
 

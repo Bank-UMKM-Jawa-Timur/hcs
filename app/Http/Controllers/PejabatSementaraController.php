@@ -86,6 +86,7 @@ class PejabatSementaraController extends Controller
 
     public function destroy(Request $request, $id)
     {
+        // Need permission
         $pjs = PjsModel::findOrFail($id);
         if($pjs->tanggal_mulai < $request->tgl_berakhir){
             $this->repo->deactivate($pjs, $request->tgl_berakhir);
