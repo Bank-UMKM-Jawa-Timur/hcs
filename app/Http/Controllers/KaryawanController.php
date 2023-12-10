@@ -675,6 +675,14 @@ class KaryawanController extends Controller
         ]);
 
         try {
+            $idTkDeleted = explode(',', $request->get('idTkDeleted'));
+            if(count($idTkDeleted) > 0){
+                foreach($idTkDeleted as $key => $item){
+                    DB::table('tunjangan_karyawan')
+                        ->where('id', $item)
+                        ->delete();
+                }
+            }
             $id_is = $request->get('id_pasangan');
             if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
                 if ($request->get('id_pasangan') == null) {
@@ -706,18 +714,8 @@ class KaryawanController extends Controller
                         ]);
                 }
             }
-            $entitas = null;
-            if($request->kd_bagian && !isset($request->kd_cabang)){
-                $entitas = null;
-            }
-            else if ($request->get('subdiv') != null) {
-                $entitas = $request->get('subdiv');
-            } else if ($request->get('cabang') != null) {
-                $entitas = $request->get('cabang');
-            } else {
-                $entitas = $request->get('divisi');
-            }
-
+            $entitas = EntityService::getEntityFromRequestEdit($request);
+// return $entitas;
             $karyawan = DB::table('mst_karyawan')
                 ->where('nip', $id)
                 ->first();

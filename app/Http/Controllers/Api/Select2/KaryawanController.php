@@ -17,13 +17,39 @@ use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class KaryawanController extends Controller
 {
+    public function paginateResponse(Paginator $karyawan)
+    {
+        return [
+            'results' => KaryawanResource::collection($karyawan),
+            'pagination' => [
+                'more' => !empty($karyawan->nextPageUrl())
+            ]
+        ];
+    }
+
     public function karyawan(Request $request)
     {
+
+        $query = $request->q ?? $request->search;
+
+        $karyawan = KaryawanModel::with('jabatan')
+            ->where(function (Builder $builder) use ($query) {
+                $builder->orWhere('nip', 'LIKE', "%{$query}%");
+                $builder->orWhere('nama_karyawan', 'LIKE', "%{$query}%");
+            })
+            ->where('status_karyawan', '!=', 'Nonaktif')
+            ->orderBy('nama_karyawan', 'ASC')
+            ->simplePaginate();
+
+        return $this->paginateResponse($karyawan);
+    }
+
+    public function karyawanJabatan(Request $request)  {
         $query = $request->q ?? $request->search;
         $kantor = $request->get('kantor');
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
-
+        $query = $request->q ?? $request->search;
         $karyawan = KaryawanModel::with('jabatan')
             ->where(function (Builder $builder) use ($query) {
                 $builder->orWhere('nip', 'LIKE', "%{$query}%");
@@ -32,21 +58,24 @@ class KaryawanController extends Controller
             ->where(function ($query) {
                 $query->where('status_karyawan', '!=', 'Nonaktif')
                     ->whereNull('tanggal_penonaktifan');
-            })
-            ->where(function($q) use ($kantor, $kode_cabang_arr) {
-                if ($kantor != '0') {
-                    if ($kantor == 'pusat') {
-                        $q->whereNotIn('kd_entitas', $kode_cabang_arr);
-                    }
-                    else {
+            });
+            if ($kantor != 0) {
+                $karyawan->where(function($q) use ($kantor, $kode_cabang_arr) {
+                    if ($kantor != 'pusat') {
                         $q->orWhereIn('kd_entitas', $kode_cabang_arr);
                     }
-                }
-            })
-            ->orderBy('nama_karyawan', 'ASC')
-            ->simplePaginate();
 
-        return $this->response($karyawan, KaryawanResource::collection($karyawan));
+                    // else {
+                    //     $q->whereNotIn('kd_entitas', $kode_cabang_arr);
+                    // }
+                    // if ($kantor != '0') {
+                    // }
+                });
+            }
+            $data = $karyawan->orderBy('nama_karyawan', 'ASC')
+                                ->simplePaginate();
+
+        return $this->response($data, KaryawanResource::collection($data));
     }
 
     public function listKaryawan(Request $request)

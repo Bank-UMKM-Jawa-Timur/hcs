@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('select2')->name('api.select2.')->group(function () {
     Route::controller(KaryawanController::class)->group(function () {
         Route::get('employees', 'karyawan')->name('karyawan');
+        Route::get('employees-jabatan', 'karyawanJabatan')->name('karyawan.jabatan');
         Route::get('employees-list', 'listKaryawan')->name('list_karyawan');
         Route::get('employees/pjs', 'karyawanPjs')->name('karyawan.pjs');
     });
@@ -43,7 +44,7 @@ Route::prefix('select2')->name('api.select2.')->group(function () {
 
 Route::name('api.')->group(function () {
     Route::get('karyawan', ApiKaryawanController::class)->name('karyawan');
-    Route::get('get-karyawan',[ApiKaryawanController::class,'getKaryawan'])->name('get.karyawan');
+    Route::post('get-karyawan',[ApiKaryawanController::class,'getKaryawan'])->name('get.karyawan');
     Route::get('get-autocomplete',[ApiKaryawanController::class,'autocomplete'])->name('get.autocomplete');
     Route::get('get-thr',[ApiKaryawanController::class,'getTHR'])->name('get.thr');
 });

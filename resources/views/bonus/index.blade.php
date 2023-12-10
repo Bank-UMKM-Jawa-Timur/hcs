@@ -9,11 +9,6 @@
         <a href="{{ route('bonus.create') }}" class="btn is-btn is-primary">Import Bonus</a>
         @endcan
     </div>
-    <div class="card-header row mt-3 mr-8 pr-5">
-        <a href="{{ route('bonus.create') }}" class="mb-3">
-            <button class="is-btn is-primary">Import Bonus</button>
-        </a>
-    </div>
 </div>
 
     <div class="card-body p-3">
