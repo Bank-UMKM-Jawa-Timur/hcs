@@ -112,6 +112,7 @@ class PayrollController extends Controller
         $page = null;
 
         $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, null, 'cetak');
+        
         return view('payroll.tables.slip-pdf', ['data' => $data]);
 
     }
@@ -166,9 +167,9 @@ class PayrollController extends Controller
         // Retrieve cabang data
         $cabangRepo = new CabangRepository;
         $cabang = $cabangRepo->listCabang();
-
+        
         $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, $limit,null);
-
+        
         return view('payroll.slip', compact('data', 'cabang'));
     }
 

@@ -113,12 +113,14 @@
                         </div>
                         <div class="d-flex justify-content-end">
                             @if (\Request::has('kantor') && count($data) > 0)
-                                <div class="mr-2">
-                                    <a href="{{ route('payroll.pdf') }}" target="_blank"  class="btn btn-warning">Cetak PDF</a>
+                                <div class="mr-2 mt-3">
+                                    <a href="{{ route('payroll.pdf') }}" target="_blank" class="is-btn is-warning p-warning">
+                                        Cetak PDF
+                                    </a>
                                 </div>
                             @endif
                             <div>
-                                <input type="submit" value="Tampilkan" class="btn btn-primary">
+                                <input type="submit" value="Tampilkan" class="is-btn is-primary">
                             </div>
                         </div>
                         @if (\Request::has('kantor'))
@@ -195,7 +197,7 @@
             <div class="modal-body">
                 <div class="d-flex justify-content-end">
                     <div>
-                        <button type="button" class="btn btn-primary">Cetak Gaji</button>
+                        <button type="button" class="is-btn is-primary">Cetak Gaji</button>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start">
