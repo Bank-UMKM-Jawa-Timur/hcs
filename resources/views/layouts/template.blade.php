@@ -228,13 +228,6 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
                                 id="submenu2">
-                                <li style="margin-top: -15px" class="@active('gaji_perbulan')">
-                                    <a href="{{ route('gaji_perbulan.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Proses Penghasilan</p>
-                                        <p></p>
-                                    </a>
-                                </li>
                                 <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
                                     <a href="{{ route('pajak_penghasilan.index') }}">
                                         <i class="nc-icon nc-scissors"></i>
@@ -344,6 +337,13 @@ Coded by www.creative-tim.com
                             </a>
                             <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
                                 id="submenu5">
+                                <li style="margin-top: -15px" class="@active('gaji_perbulan.*')">
+                                    <a href="{{ route('gaji_perbulan.index') }}">
+                                        <i class="nc-icon nc-money-coins"></i>
+                                        <p>Proses Penghasilan</p>
+                                        <p></p>
+                                    </a>
+                                </li>
                                 <li style="margin-top: -15px"
                                     class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                                     <a href="{{ route('gaji.index') }}">
