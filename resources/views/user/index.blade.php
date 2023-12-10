@@ -13,7 +13,7 @@
                     <button class="is-btn is-primary">Tambah Data User</button>
                 </a>
             </div>
-            <div class="row"> 
+            <div class="row">
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -52,6 +52,9 @@
                                     Username
                                 </th>
                                 <th>
+                                    Role
+                                </th>
+                                <th>
                                     Aksi
                                 </th>
                             </thead>
@@ -68,6 +71,7 @@
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->email }}</td>
+                                        <td>{{ $item->role }}</td>
                                         <td>
                                             <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
                                                 Edit

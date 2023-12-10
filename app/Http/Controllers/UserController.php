@@ -34,7 +34,7 @@ class UserController extends Controller
         $data = $this->param->getListUser($search, $limit, $page);
         return view('user.index', [
             'data' => $data,
-        ]    
+        ]
     );
     }
 
@@ -46,8 +46,10 @@ class UserController extends Controller
     public function create()
     {
         $karyawan = $this->param->getDataKaryawan();
+        $role = $this->param->getRole();
         return view('user.create', [
-            'karyawan' => $karyawan
+            'karyawan' => $karyawan,
+            'role' => $role
         ]);
     }
 
@@ -59,11 +61,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
+        // return $request;
+        $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
         User::create([
-            'name' => $nama->nama_karyawan,
-            'username' => $nama->nama_karyawan,
+            'name' => $karyawan->nama_karyawan,
+            'username' => $request->name,
             'email' => $request->username,
+            'role' => $request->role,
             'password' =>  Hash::make($request->password),
         ]);
         Alert::success('Berhasil Menambahkan User.');
@@ -91,9 +95,11 @@ class UserController extends Controller
     {
         $data = $this->param->dataByid($id);
         $karyawan = $this->param->getDataKaryawan();
+        $role = $this->param->getRole();
         return view('user.edit', [
             'data' => $data,
-            'karyawan' => $karyawan
+            'karyawan' => $karyawan,
+            'role' => $role
         ]);
     }
 
@@ -106,13 +112,13 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $request;  
+        // return $request;
         $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
         User::where('id', $id)->update([
             'name' => $nama->nama_karyawan,
             'username' => $nama->nama_karyawan,
             'email' => $request->username,
-            'password' =>  Hash::make($request->name),
+            'role' => $request->role,
         ]);
         Alert::success('Berhasil Mengubah User.');
         return redirect()->route('user.index');

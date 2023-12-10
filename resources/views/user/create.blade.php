@@ -15,7 +15,7 @@
                 <form action="{{ route('user.store') }}" class="form-group" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label for="name">Nama</label>
                             <select name="name" id="nama-karyawan" class="@error('name') is_invalid @enderror form-control">
                                 <option value="">Pilih Karyawan</option>
@@ -27,10 +27,22 @@
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label for="username">Username</label>
                             <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ old('username') }}">
                             @error('username')
+                                <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label for="role">Role</label>
+                            <select name="role" id="role" class="@error('role') is_invalid @enderror form-control">
+                                <option value="">Pilih Role</option>
+                                @foreach ($role as $item)
+                                    <option value="{{$item->id}}">{{$item->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('role')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
@@ -53,6 +65,6 @@
             console.log(karyawan);
             $('#nip-for-password').val(karyawan);
         })
-    </script>   
+    </script>
     @endpush
 @endsection
