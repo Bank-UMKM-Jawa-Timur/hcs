@@ -131,6 +131,16 @@ class PenghasilanTeraturController extends Controller
     {
         // Need permission
         try {
+            $tanggalVal = GajiPerBulanModel::where('bulan', Carbon::now()->format('m'))
+                ->where('tahun', Carbon::now()->format('Y'))
+                ->first();
+
+            if($tanggalVal != null){
+                if(Carbon::now() > Carbon::parse($tanggalVal->created_at) && Carbon::now()->format('m') == Carbon::parse($tanggalVal->created_at)->format('m')){
+                    Alert::error('Terjadi keselahan', 'Proses import tidak dapat dilakukan karena gaji bulan ini telah diproses.');
+                    return redirect()->back();
+                }
+            }
             $id_tunjangan = $request->get('tunjangan');
             $nominal = explode(',', $request->get('nominal'));
             $nip = explode(',', $request->get('nip'));
