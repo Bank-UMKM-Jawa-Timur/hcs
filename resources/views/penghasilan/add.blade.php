@@ -35,11 +35,11 @@
                 var value = $(this).val();
                 kategori = value.toLowerCase()
                 if(value == 'pengganti biaya kesehatan'){
-                    $('#btnDownloadTemplate').attr('href', "{{ asset('template_penghasilan_tidak_teratur-pengganti_biaya_kesehatan.xlsx') }}");
+                    $('#btnDownloadTemplate').attr('href', "{{ route('penghasilan-tidak-teratur.templateBiayaKesehatan') }}");
                 } else if(value == 'uang duka'){
-                    $('#btnDownloadTemplate').attr('href', "{{ asset('template_penghasilan_tidak_teratur-uang_duka.xlsx') }}");
+                    $('#btnDownloadTemplate').attr('href', "{{ route('penghasilan-tidak-teratur.templateBiayaDuka') }}");
                 } else{
-                    $('#btnDownloadTemplate').attr('href', "{{ asset('template_penghasilan_tidak_teratur.xlsx') }}");
+                    $('#btnDownloadTemplate').attr('href', "{{ route('penghasilan-tidak-teratur.templateTidakTeratur') }}");
                 }
             })
 
@@ -115,9 +115,13 @@
                                     }
                                 })
                                 var grand_total = 0;
-                                console.log(dataNip);
+                                $.ajaxSetup({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    }
+                                });
                                 $.ajax({
-                                        type: "GET",
+                                        type: "POST",
                                         url: url,
                                         data: {
                                             nip: JSON.stringify(dataNip)
@@ -261,7 +265,7 @@
             @csrf
             <div class="row">
                 <div class="col">
-                    <a href="{{ asset('template_penghasilan_tidak_teratur.xlsx') }}" class="btn is-btn is-primary" id="btnDownloadTemplate" download>Download Template Excel</a>
+                    <a href="{{ route('penghasilan-tidak-teratur.templateTidakTeratur') }}" class="btn is-btn is-primary" id="btnDownloadTemplate" download>Download Template Excel</a>
                 </div>
             </div>
             <div class="row">
@@ -326,7 +330,7 @@
                         <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
                         <input type="text" name="keterangan" class="form-control keterangan-input" value="" readonly hidden>
                         <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
-                        <button type="submit" class="btn btn-info hidden" id="button-simpan">Simpan</button>
+                        <button type="submit" class="is-btn btn-info hidden" id="button-simpan">Simpan</button>
                     </div>
                 </div>
                 <div class="col-md-12" id="loading-message">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\KaryawanExportForPotongan;
 use App\Models\KaryawanModel;
 use App\Repository\PotonganRepository;
+use Carbon\Carbon;
 use Exception;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
@@ -214,6 +215,7 @@ class PotonganController extends Controller
 
     public function templateExcel()
     {
-        return Excel::download(new KaryawanExportForPotongan(), 'template_import_potongan.xlsx');
+        $filename = Carbon::now()->format('his').'template_import_potongan'.'.'.'xlsx';
+        return Excel::download(new KaryawanExportForPotongan(), $filename);
     }
 }

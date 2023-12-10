@@ -48,12 +48,12 @@ class RoleMasterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         if (!Auth::user()->can('setting - master - role - create role')) {
             return view('roles.forbidden');
         }
-        return view('roles.add',['data' => $this->param->getPermission()]);
+        return view('roles.add',['data' => $this->param->getPermission2($request->q)]);
     }
 
     /**
@@ -106,12 +106,12 @@ class RoleMasterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         if (!Auth::user()->can('setting - master - role - detail role')) {
             return view('roles.forbidden');
         }
-        return view('roles.show',$this->param->getRoleId($id));
+        return view('roles.show',$this->param->getRoleId($id, $request->q));
     }
 
     /**
@@ -120,12 +120,12 @@ class RoleMasterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         if (!Auth::user()->can('setting - master - role - edit role')) {
             return view('roles.forbidden');
         }
-        return view('roles.edit',$this->param->getRoleId($id));
+        return view('roles.edit',$this->param->getRoleId($id, $request->q));
     }
 
     /**

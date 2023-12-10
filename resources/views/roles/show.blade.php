@@ -1,11 +1,19 @@
 @extends('layouts.template')
 @section('content')
+<div class="d-lg-flex justify-content-between w-100 p-3">
     <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title">Show Roles</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('role.index') }}">Roles</a> > <a>Show Data</a></p>
-        </div>
+        <h5 class="card-title">Show Roles</h5>
+        <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('role.index') }}">Roles</a> > <a>Show Data</a></p>
     </div>
+    <div class="card-header row mr-8 pr-5">
+        <form id="form" method="get">
+            @csrf
+            <label for="q">Cari</label>
+            <input type="search" name="q" id="q" placeholder="Cari disini..."
+                class="form-control p-2" value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
+        </form>
+    </div>
+</div>
     <div class="card-body ml-3 mr-3">
         <div class="row">
             <div class="col">
@@ -36,4 +44,11 @@
             </div>
         </div>
     </div>
+@endsection
+@section('custom_script')
+    <script>
+        $('#page_length').on('change', function() {
+            $('#form').submit()
+        })
+    </script>
 @endsection

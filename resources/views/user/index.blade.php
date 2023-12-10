@@ -1,19 +1,19 @@
 @extends('layouts.template')
 
 @section('content')
-<div class="d-lg-flex justify-content-between w-100 p-3">
     <div class="card-header">
-        <h5 class="card-title">Bonus</h5>
-        <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> >Bonus</p>
-        @can('penghasilan - import - bonus - import')
-        <a href="{{ route('bonus.create') }}" class="btn is-btn is-primary">Import Bonus</a>
-        @endcan
+        <h5 class="card-title">Data User</h5>
+        <p class="card-title"><a href="/">Dashboard</a> > <a href="{{route('user.index')}}">user</a></p>
     </div>
-</div>
 
-    <div class="card-body p-3">
+    <div class="card-body">
         <div class="col">
             <div class="row">
+                <a href="{{ route('user.create') }}">
+                    <button class="is-btn is-primary">Tambah Data User</button>
+                </a>
+            </div>
+            <div class="row"> 
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -45,11 +45,15 @@
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                             <thead class="text-primary">
                                 <th>No</th>
-                                <th>Tunjangan</th>
-                                <th>Total Data</th>
-                                <th>Grand Total</th>
-                                <th>Tanggal</th>
-                                <th>Aksi</th>
+                                <th>
+                                    Nama
+                                </th>
+                                <th>
+                                    Username
+                                </th>
+                                <th>
+                                    Aksi
+                                </th>
                             </thead>
                             <tbody>
                                 @php
@@ -62,14 +66,12 @@
                                 @foreach ($data as $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
-                                        <td>{{ $item->nama_tunjangan }}</td>
-                                        <td>{{ $item->total_data }}</td>
-                                        <td>{{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('d F Y') }}</td>
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->email }}</td>
                                         <td>
-                                            @can('penghasilan - import - bonus - detail')
-                                            <a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}" class="btn btn-outline-info p-1">Detail</a>
-                                            @endcan
+                                            <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
+                                                Edit
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -77,9 +79,7 @@
                         </table>
                         <div class="d-flex justify-content-between">
                           <div>
-                            Showing
-                            {{$start}} to {{$end}}
-                             of {{$data->total()}} entries
+                            Showing {{$start}} to {{$end}} of {{$data->total()}} entries
                           </div>
                           <div>
                             @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)

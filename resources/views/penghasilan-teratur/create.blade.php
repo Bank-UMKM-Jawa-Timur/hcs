@@ -324,9 +324,13 @@
                         dataNominal.push(value['Nominal'])
                     }
                 })
-
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
                 $.ajax({
-                    type: "GET",
+                    type: "POST",
                     url: `{{ url('penghasilan/get-karyawan-by-entitas') }}`,
                     data: {
                         nip: JSON.stringify(dataNip),

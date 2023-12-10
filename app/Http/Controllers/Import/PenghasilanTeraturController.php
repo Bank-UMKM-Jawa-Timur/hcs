@@ -257,7 +257,8 @@ class PenghasilanTeraturController extends Controller
     public function templateExcel()
     {
         // Need permission
-        return Excel::download(new KaryawanExport(), 'template_import_penghasilan_teratur.xlsx');
+        $filename = Carbon::now()->format('his').'_template_import_penghasilan_teratur'.'.'.'xlsx';
+        return Excel::download(new KaryawanExport(), $filename);
     }
 
     public function cetakVitamin(Request $request)

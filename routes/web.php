@@ -37,6 +37,7 @@ use App\Http\Controllers\SuratPeringatanController;
 use App\Http\Controllers\THRController;
 use App\Http\Controllers\TunjanganKaryawanController;
 use App\Http\Controllers\RoleMasterController;
+use App\Http\Controllers\UserController;
 use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
@@ -181,9 +182,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
     Route::resource('/pajak_penghasilan', PenghasilanTidakTeraturController::class);
+    Route::resource('/user', UserController::class);
+    Route::get('/get-nip-by-karyawan', [UserController::class, 'getKaryawanBynama'])->name('nip-by-karyawan');
 
     Route::resource('/potongan', PotonganController::class);
-    Route::get('/get-karyawan-by-nip', [PotonganController::class, 'getKaryawanByNip'])->name('karyawan-by-entitas');
+    Route::post('/get-karyawan-by-nip', [PotonganController::class, 'getKaryawanByNip'])->name('karyawan-by-entitas');
     Route::get('import-potongan', [\App\Http\Controllers\PotonganController::class, 'importPotongan'])->name('import-potongan');
     Route::get('/potongan-template-excel', [PotonganController::class, 'templateExcel'])->name('template-excel-potongan');
     Route::post('import-potongan-post', [\App\Http\Controllers\PotonganController::class, 'importPotonganPost'])->name('import-potongan-post');
@@ -191,7 +194,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::prefix('penghasilan')->name('penghasilan.')->group(function() {
         Route::resource('import-penghasilan-teratur', \App\Http\Controllers\Import\PenghasilanTeraturController::class);
-        Route::get('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
+        Route::post('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
         Route::get('/get-karyawan-search', [PenghasilanTeraturController::class, 'getKaryawanSearch'])->name('karyawan-search');
         Route::get('/details/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'details'])->name('details');
         Route::post('/cetak-vitamin', [PenghasilanTeraturController::class, 'cetakVitamin'])->name('cetak-vitamin');
@@ -227,6 +230,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store', 'store')->name('store');
             Route::get('/detail', 'show')->name('detail');
             Route::get('/input-tidak-teratur', 'createTidakTeratur')->name('input-tidak-teratur');
+            Route::get('template-tidak-teratur','templateTidakTeratur')->name('templateTidakTeratur');
+            Route::get('template-biaya-kesehatan','templateBiayaKesehatan')->name('templateBiayaKesehatan');
+            Route::get('template-uang-duka','templateBiayaDuka')->name('templateBiayaDuka');
         });
 
     // Penonaktifan Karyawan
