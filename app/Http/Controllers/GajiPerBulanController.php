@@ -105,7 +105,6 @@ class GajiPerBulanController extends Controller
             ->whereNull('tanggal_penonaktifan')
             ->whereNotIn('kd_entitas', $cabang)
             ->orWhere('kd_entitas', null)
-            ->whereIn('nip', ['01474'])
             ->get();
 
         // Get Penghasilan from mst_karyawan + tunjangan karyawan + penghasilan tidak teratur
