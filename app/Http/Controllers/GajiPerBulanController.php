@@ -146,7 +146,7 @@ class GajiPerBulanController extends Controller
                     $status = 'K/0';
                 }
             }
-            
+
             // Get PTKP
             $ptkp = DB::table('set_ptkp')
                 ->where('kode', $status)
@@ -288,7 +288,7 @@ class GajiPerBulanController extends Controller
                 ->whereBetween('id_tunjangan', [22, 24])
                 ->orWhere('id_tunjangan', '26')
                 ->sum('nominal');
-    
+
             foreach($dataGaji as $key => $gaji){
                 $this->param['nominalJp'] = ($key < 2) ? $this->param['jpJanFeb'] : $this->param['jpMarDes'];
                 unset($tunjangan);
@@ -303,7 +303,7 @@ class GajiPerBulanController extends Controller
 
                 foreach($this->param['namaTunjangan'] as $keyTunjangan => $item){
                     array_push($tunjangan, $gaji->$item);
-                    if($keyTunjangan < 9) 
+                    if($keyTunjangan < 9)
                         array_push($tunjanganJamsostek, $gaji->$item);
                 }
 
@@ -319,12 +319,13 @@ class GajiPerBulanController extends Controller
             $totalGjJamsostekBulanIni = $totalGajiBulanIni + array_sum($tjJamsostekBulanIni);
             $totalGajiBulanIni += $penghasilanTidakTeraturBulanIni + array_sum($tunjanganBulanIni)  + $this->getPenambah($totalGjJamsostekBulanIni, $karyawan->jkn);
             $bonus += $bonusBulanIni;
-            
+
             array_push($pengurang, $this->getPengurang($karyawan->status_karyawan, $tunjanganBulanIni[0], $tunjanganBulanIni[7], $totalGjJamsostekBulanIni, $karyawan->gj_pokok));
             array_push($totalGaji, $totalGajiBulanIni);
             array_push($totalGajiJamsostek, $totalGjJamsostekBulanIni);
             array_push($penambah, $this->getPenambah($totalGjJamsostekBulanIni, $karyawan->jkn));
         } else {
+            $this->param['nominalJp'] = ($bulan <= 2) ? $this->param['jpJanFeb'] : $this->param['jpMarDes'];
             $tunjangan = array();
             $tunjanganJamsostek = array();
             $pengurang = array();
@@ -358,7 +359,7 @@ class GajiPerBulanController extends Controller
             $totalGajiBulanIni = $karyawan->gj_pokok + $karyawan->gj_penyesuaian;
             $totalGjJamsostekBulanIni = $totalGajiBulanIni + array_sum($tjJamsostekBulanIni);
             $totalGajiBulanIni += $penghasilanTidakTeraturBulanIni + array_sum($tunjanganBulanIni) + $this->getPenambah($totalGjJamsostekBulanIni, $karyawan->jkn);
-            
+
             array_push($pengurang, $this->getPengurang($karyawan->status_karyawan, $tunjanganBulanIni[0], $tunjanganBulanIni[7], $totalGjJamsostekBulanIni, $karyawan->gj_pokok));
             array_push($totalGaji, $totalGajiBulanIni);
             array_push($totalGajiJamsostek, $totalGjJamsostekBulanIni);
@@ -381,7 +382,7 @@ class GajiPerBulanController extends Controller
             $rumus_14 = ceil(0.05 * (array_sum($totalGaji)));
         }
         $no_14 = round((array_sum($totalGaji) - $bonus - array_sum($pengurang) - $biaya_jabatan) / $bulan * 12 + $bonus + ($biaya_jabatan - $rumus_14));
-        
+
         $persen5 = 0;
         if (($no_14 - $ptkp?->ptkp_tahun) > 0) {
             if (($no_14 - $ptkp?->ptkp_tahun) <= 60000000) {
@@ -458,7 +459,7 @@ class GajiPerBulanController extends Controller
         }
 
         return $pengurang;
-    } 
+    }
 
     function getPenambah($totalGajiJamsostek, $jkn) : int {
         $penambah = 0;
@@ -467,7 +468,7 @@ class GajiPerBulanController extends Controller
         $jkk = round((floatval($this->param['persenJkk']) / 100) * floatval($totalGajiJamsostek));
         $jht = round((floatval($this->param['persenJht']) / 100) * floatval($totalGajiJamsostek));
         $jkm = round((floatval($this->param['persenJkm']) / 100) * floatval($totalGajiJamsostek));
-        $jp = round((floatval($this->param['persenJpPenambah']) / 100) * floatval($totalGajiJamsostek)); 
+        $jp = round((floatval($this->param['persenJpPenambah']) / 100) * floatval($totalGajiJamsostek));
         if($jkn != null){
             if(floatval($totalGajiJamsostek) > floatval($this->param['batasAtas'])) {
                 $kesehatan = round(floatval($this->param['batasAtas']) * (floatval($this->param['persenKesehatan']) / 100));
