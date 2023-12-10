@@ -37,6 +37,7 @@ use App\Http\Controllers\SuratPeringatanController;
 use App\Http\Controllers\THRController;
 use App\Http\Controllers\TunjanganKaryawanController;
 use App\Http\Controllers\RoleMasterController;
+use App\Http\Controllers\UserController;
 use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
@@ -181,6 +182,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/tunjangan_karyawan', TunjanganKaryawanController::class);
     Route::resource('/bagian', BagianController::class);
     Route::resource('/pajak_penghasilan', PenghasilanTidakTeraturController::class);
+    Route::resource('/user', UserController::class);
+    Route::get('/get-nip-by-karyawan', [UserController::class, 'getKaryawanBynama'])->name('nip-by-karyawan');
 
     Route::resource('/potongan', PotonganController::class);
     Route::post('/get-karyawan-by-nip', [PotonganController::class, 'getKaryawanByNip'])->name('karyawan-by-entitas');
