@@ -212,20 +212,10 @@
                     <div class="form-row">
                         <div class="col">
                             <label for="">Kategori</label>
-                            <select name="kategori_bonus" id="kategori-bonus" class="form-control">
+                            <select name="kategori_bonus" id="kategori" class="form-control">
                                 <option value="jaspro">Jaspro DanKes</option>
                                 <option value="thr">Import THR </option>
                                 <option value="penghasilan-lainnya">Import Penghasilan Lainnya</option>
-                            </select>
-                        </div>
-                        <div class="col hidden kategori-tunjangan-select">
-                            <label for="">Kategori Tunjangan</label>
-                            <select name="kategori_tunjangan" id="kategori" class="form-control">
-                                @forelse ($data_tunjangan as $item)
-                                    <option value="{{ $item->id }}">{{ ucwords($item->nama_tunjangan) }}</option>
-                                @empty
-
-                                @endforelse
                             </select>
                         </div>
                         <div class="col">
