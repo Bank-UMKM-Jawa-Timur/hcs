@@ -420,7 +420,14 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function store(Request $request)
     {
-        // dd(explode(',', $request->get('nip')));
+        $request->validate([
+            'tanggal' => 'required',
+            'nip' => 'required',
+            'nominal' => 'required',
+            'keterangan' => 'required',
+        ], [
+            'required' => 'Data harus diisi.'
+        ]);
         DB::beginTransaction();
         try{
             $tanggalVal = GajiPerBulanModel::where('bulan', Carbon::parse($request->get('tanggal'))->format('m'))

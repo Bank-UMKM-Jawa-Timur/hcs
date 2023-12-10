@@ -83,8 +83,10 @@ class PenghasilanTeraturRepository
         )
             ->join('mst_karyawan as k', 'k.nip', 'gaji_per_bulan.nip')
             ->where('bulan', $bulan)->where('tahun', $tahun)
-            ->whereNotIn('k.kd_entitas', $cabang)
-            ->get();
+            ->where(function ($query) use ($cabang) {
+                $query->whereNull('k.kd_entitas')
+                    ->orWhereNotIn('k.kd_entitas', $cabang);
+            })->get();
 
         return $data;
     }

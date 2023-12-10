@@ -20,7 +20,10 @@
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="tanggal">Tanggal:</label>
-                    <input type="date" name="tanggal" id="" class="form-control">
+                    <input type="date" name="tanggal" id="" class="form-control" required>
+                    @error('tanggal')
+                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="id_tunjangan">Penghasilan:</label>
@@ -33,11 +36,17 @@
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="nominal">Nominal:</label>
-                    <input type="text" name="nominal" class="form-control rupiah">
+                    <input type="text" name="nominal" class="form-control rupiah" required>
+                    @error('nominal')
+                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="nominal">Keterangan:</label>
-                    <input type="text" name="keterangan" class="form-control">
+                    <input type="text" name="keterangan" class="form-control" required>
+                    @error('keterangan')
+                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 

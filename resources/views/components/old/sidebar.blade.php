@@ -407,7 +407,7 @@
                 @endcan
 
                 {{-- Menu Migrasi Data --}}
-                @can('migrasi')
+                {{-- @can('migrasi')
                 <li class="@active('migrasi')">
                     <a class="nav-link" href="#submenu8" data-toggle="collapse" data-target="#submenu8"
                         style="font-weight: bolder">
@@ -445,7 +445,7 @@
                         @endcan
                     </ul>
                 </li>
-                @endcan
+                @endcan --}}
                 {{-- Menu Log Aktivitas --}}
                 @can('log')
                 <li>
