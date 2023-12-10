@@ -55,11 +55,11 @@
                                                     Edit
                                                 </a>
                                                 </div>
-                                            <div class="m-2">
-                                                <a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
-                                                        Hapus
-                                                </a>
-                                            </div>
+                                                {{-- <div class="m-2">
+                                                    <a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                            Hapus
+                                                    </a>
+                                                </div> --}}
                                             </div>
                                         </td>
                                     </tr>
