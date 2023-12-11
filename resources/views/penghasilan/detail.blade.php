@@ -49,6 +49,7 @@
                                 <th>Nama Karyawan</th>
                                 <th>Jabatan</th>
                                 <th>Kantor</th>
+                                <th>Tunjangan</th>
                                 <th>Nominal</th>
                             </tr>
                         </thead>
@@ -70,6 +71,7 @@
                                     <td>{{ $item->nama_karyawan }}</td>
                                     <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}</td>
                                     <td>{{$item->display_jabatan}}</td>
+                                    <td>{{ $item->nama_tunjangan }}</td>
                                     <td>{{ rupiah($item->nominal) }}</td>
                                 </tr>
                             @empty
