@@ -25,12 +25,12 @@
         <div class="card-header row mt-3 mr-8 pr-5" >
           @can('penghasilan - import - potongan - import')
             <a class="mb-3" href="{{ route('potongan.create') }}">
-              <button class="btn btn-primary">Tambah</button>
+              <button class="is-btn is-primary">Tambah</button>
             </a>
           @endcan
           @can('penghasilan - import - potongan - import')
             <a class="ml-3" href="{{ route('import-potongan') }}">
-              <button class="btn btn-primary">Import</button>
+              <button class="is-btn is-primary">Import</button>
             </a>
           @endcan
         </div>
@@ -77,12 +77,13 @@
                             <th>
                                 Tahun
                             </th>
-                            <th>
+                            {{-- <th>
                               JP
                             </th>
                             <th>
                               DPP
-                            </th>
+                            </th> --}}
+                            <th>Total Data</th>
                             <th>
                               Kredit Koprasi
                             </th>
@@ -116,8 +117,8 @@
                                   <td>{{ $i++ }}</td>
                                   <td>{{ $bulanNama[$item->bulan] }}</td>
                                   <td>{{ $item->tahun }}</td>
-                                  <td> - </td>
-                                  <td> - </td>
+                                  <td>{{ $item->total_data }}</td>
+                                  {{-- <td> - </td> --}}
                                   <td>Rp {{ number_format($item->kredit_koperasi,0,',','.') }}</td>
                                   <td>Rp {{ number_format($item->iuran_koperasi,0,',','.') }}</td>
                                   <td>Rp {{ number_format($item->kredit_pegawai,0,',','.') }}</td>
