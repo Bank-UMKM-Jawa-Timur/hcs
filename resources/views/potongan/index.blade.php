@@ -77,12 +77,12 @@
                             <th>
                                 Tahun
                             </th>
-                            <th>
+                            {{-- <th>
                               JP
                             </th>
                             <th>
                               DPP
-                            </th>
+                            </th> --}}
                             <th>
                               Kredit Koprasi
                             </th>
@@ -116,8 +116,8 @@
                                   <td>{{ $i++ }}</td>
                                   <td>{{ $bulanNama[$item->bulan] }}</td>
                                   <td>{{ $item->tahun }}</td>
-                                  <td> - </td>
-                                  <td> - </td>
+                                  {{-- <td> - </td> --}}
+                                  {{-- <td> - </td> --}}
                                   <td>Rp {{ number_format($item->kredit_koperasi,0,',','.') }}</td>
                                   <td>Rp {{ number_format($item->iuran_koperasi,0,',','.') }}</td>
                                   <td>Rp {{ number_format($item->kredit_pegawai,0,',','.') }}</td>

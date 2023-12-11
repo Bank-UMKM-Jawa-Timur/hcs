@@ -1,3 +1,4 @@
+@include('penghasilan-teratur.modal.loading')
 @extends('layouts.template')
 @push('style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
@@ -28,7 +29,7 @@
 
     <div class="card-body">
         <a class="btn is-btn is-primary" href="{{ route('template-excel-potongan') }}" download>Download Template Excel</a>
-        <div class="Container" id="alert-content">
+        <div class="mt-2 mb-2" id="alert-content">
         </div>
         <div class="row">
             <div class="col-lg-3">
@@ -97,7 +98,7 @@
             <div class="d-flex justify-content-start">
                 <button type="submit" class="btn is-btn is-primary d-none" id="btn-simpan">Simpan</button>
             </div>
-            <div class="col-md-10" id="loading-message"></div>
+            <div class="col" id="loading-message"></div>
             <div class="row d-none" id="hasil-import">
                 <div class="col-lg-12">
                     <div class="card">
@@ -451,6 +452,13 @@
             // Start processing rows
             // handleRow(0);
         }
+
+         $('#btn-simpan').on('click', function(){
+            $("#loadingModal").modal({
+                keyboard: false
+            });
+            $("#loadingModal").modal("show");
+        })
 
         function formatNumber(number) {
             number = number.toString();
