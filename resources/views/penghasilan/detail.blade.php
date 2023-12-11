@@ -8,6 +8,9 @@
             <p class="card-title"><a href="">Penghasilan </a> > <a href="{{ route('penghasilan-tidak-teratur.index') }}">Penghasilan Tidak Teratur</a> > Detail</p>
         </div>
     </div>
+    <div class="card-header">
+        <h6> Tunjangan : {{ $tunjangan }}</h6>
+    </div>
 </div>
 
 <div class="card-body">
@@ -49,7 +52,6 @@
                                 <th>Nama Karyawan</th>
                                 <th>Jabatan</th>
                                 <th>Kantor</th>
-                                <th>Tunjangan</th>
                                 <th>Nominal</th>
                             </tr>
                         </thead>
@@ -71,7 +73,6 @@
                                     <td>{{ $item->nama_karyawan }}</td>
                                     <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}</td>
                                     <td>{{$item->display_jabatan}}</td>
-                                    <td>{{ $item->nama_tunjangan }}</td>
                                     <td>{{ rupiah($item->nominal) }}</td>
                                 </tr>
                             @empty
