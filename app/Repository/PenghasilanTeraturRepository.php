@@ -21,7 +21,8 @@ class PenghasilanTeraturRepository
                     'mst_karyawan.nama_karyawan',
                     'mst_tunjangan.nama_tunjangan',
                     DB::raw('DATE(tunjangan_karyawan.created_at) as tanggal'),
-                    DB::raw('SUM(tunjangan_karyawan.nominal) as total_nominal')
+                    DB::raw('SUM(tunjangan_karyawan.nominal) as total_nominal'),
+                    DB::raw('COUNT(tunjangan_karyawan.id) as total_data'),
                 )
                 ->join('mst_karyawan', 'mst_karyawan.nip', 'tunjangan_karyawan.nip')
                 ->join('mst_tunjangan', 'mst_tunjangan.id', 'tunjangan_karyawan.id_tunjangan')

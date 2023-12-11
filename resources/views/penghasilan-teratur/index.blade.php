@@ -59,6 +59,9 @@
                                     Tunjangan
                                 </th>
                                 <th>
+                                    Total Data
+                                </th>
+                                <th>
                                     Grand Nominal
                                 </th>
                                 <th>
@@ -80,6 +83,7 @@
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->nama_tunjangan }}</td>
+                                        <td>{{ $item->total_data }}</td>
                                         <td>{{ number_format($item->total_nominal, 0, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                         <td>
