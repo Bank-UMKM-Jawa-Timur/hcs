@@ -1121,4 +1121,12 @@ class KaryawanController extends Controller
 
         return $month;
     }
+
+    public function getNameKaryawan($nip){
+        $karyawan = DB::table('mst_karyawan')->select('nip', 'nama_karyawan')->where('nip', $nip)->get();
+
+        return response()->json([
+            'data' => $karyawan
+        ]);
+    }
 }
