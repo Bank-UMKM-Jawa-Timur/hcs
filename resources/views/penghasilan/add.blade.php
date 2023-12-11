@@ -306,7 +306,7 @@
                             </div>
                             <div class="col">
                                 <label for="tanggal">Tanggal</label>
-                                <input type="date" class="form-control" name="tanggal">
+                                <input type="date" class="form-control" name="tanggal" required>
                             </div>
                             <div class="col">
                                 <label for="">Data Excel</label>
