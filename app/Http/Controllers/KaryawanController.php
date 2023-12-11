@@ -13,6 +13,7 @@ use App\Models\JabatanModel;
 use App\Models\KaryawanModel;
 use App\Models\PanggolModel;
 use App\Models\PjsModel;
+use App\Models\PotonganModel;
 use App\Models\SpModel;
 use App\Models\UmurModel;
 use App\Repository\KaryawanRepository;
@@ -584,6 +585,10 @@ class KaryawanController extends Controller
             $totalDppPerhitungan = ($gjPokok + $tjKeluarga + 0.5 * $tjKesejahteraan) * 0.05;
         }
 
+        $potongan = PotonganModel::where('nip', $karyawan->nip)
+                                ->orderBy('id', 'DESC')
+                                ->first();
+
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,
@@ -592,6 +597,7 @@ class KaryawanController extends Controller
             'pjs' => $historyJabatan,
             'sp' => $sp,
             'dpp_perhitungan' => $totalDppPerhitungan,
+            'potongan' => $potongan,
         ]);
     }
 
