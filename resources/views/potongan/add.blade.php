@@ -5,13 +5,15 @@
     $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
 @endphp
 <div class="card-header">
-    <div class="card-header">
-        <h5 class="card-title">Tambah Potongan</h5>
-        <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> > Tambah Potongan</p>
+    <div class="card-body">
+        <div class="card-header">
+            <h5 class="card-title">Tambah Potongan</h5>
+            <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> > Tambah Potongan</p>
+        </div>
     </div>
 
     <div class="card-body">
-        <div class="row m-0">
+        <div class="row m-0 ml-0">
             {{-- <div class="col">
                 <a class="mb-3" href="{{ route('import-penghasilan-index') }}">
                     <button class="btn btn-primary">Import penghasilan</button>
@@ -49,8 +51,10 @@
                 </div>
             </div>
 
-            <div class="row m-0">
-                <button class="is-btn is-info">Tambah</button>
+            <div class="card-body">
+                <div class="row m-0">
+                    <button class="is-btn is-primary">Tambah</button>
+                </div>
             </div>
         </form>
     </div>

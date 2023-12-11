@@ -423,7 +423,6 @@ class PenghasilanTidakTeraturController extends Controller
             'tanggal' => 'required',
             'nip' => 'required',
             'nominal' => 'required',
-            'keterangan' => 'required',
         ], [
             'required' => 'Data harus diisi.'
         ]);
