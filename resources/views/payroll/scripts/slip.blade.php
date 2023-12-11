@@ -1,14 +1,19 @@
 @push('script')
     <script>
+        var nipKaryawan = "";
+        var namaKaryawan = '';
         loadKaryawan()
 
         function loadKaryawan() {
             const selected = "{{\Request::get('nip')}}"
+            const name = "{{\Request::get('nama_karyawan')}}"
             const kantor = $('#kantor').val()
             const cabang = $('#cabang').val()
             const divisi = $('#divisi').val()
             const sub_divisi = $('#sub_divisi').val()
             const bagian = $('#bagian').val()
+
+            nipKaryawan = selected;
 
             $('#nip').empty()
             // Load karyawan options
@@ -21,7 +26,6 @@
                             kantor:kantor,
                             page: params.page
                         }
-
                         // Query parameters will be ?search=[term]&page=[page]
                         return query;
                     }
@@ -87,5 +91,19 @@
                 btn_pagination[i].href += `&q=${$('#q').val()}`
             }
         })
+
+        $.ajax({
+            type: "GET",
+            url: "/get-name-karyawan/" + nipKaryawan,
+            success: function (response) {
+                console.log("RESPONNYA");
+                namaKaryawan = response.data[0].nama_karyawan;
+                $('#select2-nip-container').html(nipKaryawan + ' - ' +namaKaryawan)
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+        
     </script>
 @endpush
