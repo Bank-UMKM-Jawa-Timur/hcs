@@ -9,6 +9,7 @@
     <div class="card-body">
         <div class="col">
             <div class="row">
+                <h6> Tunjangan : {{$tunjangan->nama_tunjangan}}</h6>
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">

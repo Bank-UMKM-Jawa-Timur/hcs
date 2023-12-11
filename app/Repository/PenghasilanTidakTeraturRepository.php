@@ -42,6 +42,12 @@ class PenghasilanTidakTeraturRepository
 
         return $bonus;
     }
+
+    public function getNameTunjangan($id){
+        $data = DB::table('mst_tunjangan')->select('nama_tunjangan')->where('id', $id)->first();
+        return $data;
+    }
+
     public function getDetailBonus($search, $limit=10, $page=1, $id, $tgl) {
         $format_tgl = Carbon::parse($tgl)->format('y-m-d');
         $bonus = DB::table('penghasilan_tidak_teratur')
@@ -84,7 +90,7 @@ class PenghasilanTidakTeraturRepository
                 ->get();
         return $karyawan;
     }
-    
+
     public function getTHP($nip):int {
         $karyawan = KaryawanModel::where('nip', $nip)
           ->first();
