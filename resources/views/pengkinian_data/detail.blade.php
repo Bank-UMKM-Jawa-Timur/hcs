@@ -17,10 +17,6 @@
             </div>
             @php
                 $no = 1;
-                function rupiah($angka){
-                    $hasil_rupiah = number_format($angka, 0, ",", ".");
-                    return $hasil_rupiah;
-                }
                 $tj = DB::table('history_pengkinian_tunjangan_karyawan')
                     ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'history_pengkinian_tunjangan_karyawan.id_tunjangan')
                     ->where('nip', $karyawan->nip)
@@ -236,7 +232,7 @@
                 <label class="col-sm-2 mt-2">Gaji Pokok</label>
                 <div class="col-sm-10">
                     @if (isset($karyawan->gj_pokok) != null)
-                        <input type="text" disabled class="form-control" value="{{ rupiah($karyawan->gj_pokok) }}">
+                        <input type="text" disabled class="form-control" value="{{ number_format($karyawan->gj_pokok, 0, ",", ".") }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
@@ -246,7 +242,7 @@
                 <label class="col-sm-2 mt-2">Gaji Penyesuaian</label>
                 <div class="col-sm-10">
                     @if (isset($karyawan->gj_penyesuaian) != null)
-                        <input type="text" disabled class="form-control" value="{{ rupiah($karyawan->gj_penyesuaian) }}">
+                        <input type="text" disabled class="form-control" value="{{ number_format($karyawan->gj_penyesuaian, 0, ",", ".") }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
@@ -261,7 +257,7 @@
                                 <input type="text" disabled class="form-control" value="{{ $item->nama_tunjangan }}">
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" disabled class="form-control" value="Rp. {{ rupiah($item->nominal) }}">
+                                <input type="text" disabled class="form-control" value="Rp. {{ number_format($item->nominal, 0, ",", ".") }}">
                             </div>
                         </div>
                     @endforeach
