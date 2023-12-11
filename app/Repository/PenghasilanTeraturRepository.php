@@ -75,18 +75,17 @@ class PenghasilanTeraturRepository
 
     public function excelVitamin($bulan, $tahun){
         $cabang = CabangModel::select('kd_cabang')->pluck('kd_cabang');
-        $data = GajiPerBulanModel::select(
-            'gaji_per_bulan.nip',
+        $data = DB::table('tunjangan_karyawan')->select(
+            'tunjangan_karyawan.nip',
             'k.nama_karyawan',
             'k.no_rekening',
-            'gaji_per_bulan.tj_vitamin as vitamin'
+            'tunjangan_karyawan.nominal as vitamin'
         )
-            ->join('mst_karyawan as k', 'k.nip', 'gaji_per_bulan.nip')
-            ->where('bulan', $bulan)->where('tahun', $tahun)
-            ->where(function ($query) use ($cabang) {
-                $query->whereNull('k.kd_entitas')
-                    ->orWhereNotIn('k.kd_entitas', $cabang);
-            })->get();
+            ->join('mst_karyawan as k', 'k.nip', 'tunjangan_karyawan.nip')
+            ->where('id_tunjangan', 13) //vitamin
+            ->whereMonth('tunjangan_karyawan.created_at', $bulan)
+            ->whereYear('tunjangan_karyawan.created_at', $tahun)
+            ->get();
 
         return $data;
     }

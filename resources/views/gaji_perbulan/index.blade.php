@@ -12,6 +12,9 @@
         $earliest_year = 2022;
     @endphp
     <div class="card-body">
+        <div class="alert alert-success" role="alert">
+            Harap cek kembali data tunjangan sebelum melakukan proses tunjangan
+        </div>
         <form id="form" action="{{ route('gaji_perbulan.store') }}"
             method="POST" enctype="multipart/form-data">
             @csrf
