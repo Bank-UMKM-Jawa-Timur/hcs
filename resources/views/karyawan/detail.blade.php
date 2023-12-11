@@ -39,7 +39,7 @@
                 $tj = DB::table('tunjangan_karyawan')
                     ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
                     ->where('nip', $karyawan->nip)
-                    ->groupBy('mst_tunjangan.nama_tunjangan')s
+                    ->groupBy('mst_tunjangan.nama_tunjangan')
                     ->get();
             @endphp
             <div class="row m-0 mt-2">
