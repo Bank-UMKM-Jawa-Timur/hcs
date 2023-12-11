@@ -226,7 +226,6 @@
                 });
                 $("#loadingModal").modal("show");
             })
-
         })
     </script>
 @endpush

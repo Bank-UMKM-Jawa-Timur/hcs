@@ -199,6 +199,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/details/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'details'])->name('details');
         Route::post('/cetak-vitamin', [PenghasilanTeraturController::class, 'cetakVitamin'])->name('cetak-vitamin');
         Route::get('/template-excel', [PenghasilanTeraturController::class, 'templateExcel'])->name('template-excel');
+        Route::post('/lock', [PenghasilanTeraturController::class, 'lock'])->name('lock');
+        Route::get('/edit-tunjangan/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'editTunjangan'])->name('edit-tunjangan');
+        Route::post('/edit-tunjangan-post', [PenghasilanTeraturController::class, 'editTunjanganPost'])->name('edit-tunjangan-post');
     });
 
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);

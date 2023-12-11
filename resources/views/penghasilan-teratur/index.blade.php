@@ -87,6 +87,15 @@
                                         <td>{{ number_format($item->total_nominal, 0, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                         <td>
+                                            @if ($item->is_lock != 1)
+                                            <form action="{{route('penghasilan.lock')}}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="id_tunjangan" value="{{$item->id_tunjangan_karyawan}}">
+                                                <input type="hidden" name="tanggal" value="{{\Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')}}">
+                                                <button type="submit" class="btn btn-success p-1">Lock</button>
+                                            </form>
+                                                <a href="{{ route('penghasilan.edit-tunjangan', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-outline-warning p-1">Edit</a>
+                                            @endif
                                             @can('penghasilan - import - penghasilan teratur - detail')
                                                 <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-outline-info p-1">Detail</a>
                                             @endcan

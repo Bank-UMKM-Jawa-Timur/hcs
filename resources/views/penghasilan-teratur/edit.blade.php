@@ -21,8 +21,8 @@
 
     <div class="card-header">
         <div class="card-title">
-            <h5 class="card-title">Import Penghasilan</h5>
-            <p class="card-title"><a href="/">Dashboard </a> > <a href="{{route('penghasilan.import-penghasilan-teratur.index')}}">Penghasilan Teratur</a> > Import Penghasilan Teratur</p>
+            <h5 class="card-title">Edit Penghasilan</h5>
+            <p class="card-title"><a href="/">Dashboard </a> > <a href="{{route('penghasilan.import-penghasilan-teratur.index')}}">Penghasilan Teratur</a> > Edit Penghasilan Teratur</p>
         </div>
     </div>
 
@@ -32,11 +32,8 @@
             <div class="col-lg-5">
                 <div class="form-group">
                     <label for="">Kategori penghasilan teratur</label>
-                    <select name="penghasilan" class="form-control" id="penghasilan">
-                        <option value="">==Pilih Kategori==</option>
-                        @foreach ($penghasilan as $item)
-                            <option value="{{$item->id}}">{{$item->nama_tunjangan}}</option>
-                        @endforeach
+                    <select name="penghasilan" class="form-control" id="penghasilan" @readonly(true)>
+                        <option value="{{$penghasilan->id}}">{{$penghasilan->nama_tunjangan}}</option>
                     </select>
                     <p class="text-danger d-none mt-2" id="error-penghasilan"></p>
                 </div>
@@ -61,11 +58,13 @@
             <div class="col-md-4 align-self-center mt-4" id="grand"></div>
         </div>
 
-        <form action="{{route('penghasilan.import-penghasilan-teratur.store')}}" method="POST">
+        <form action="{{route('penghasilan.edit-tunjangan-post')}}" method="POST">
         @csrf
         <input type="hidden" name="nominal" class="form-control nominal-input" value="" readonly>
         <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
         <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
+        <input type="hidden" name="old_tanggal" value="{{$old_created_at}}"s>
+        <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
         <div class="d-flex justify-content-start">
             <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
         </div>
@@ -130,8 +129,7 @@
             $('#penghasilan').on('change', function(){
                 var value = $("#penghasilan").val()
                 var hari_ini = new Date();
-                // var tanggal = hari_ini.getDate();
-                var tanggal = 25;
+                var tanggal = hari_ini.getDate();
                 var message = '';
                 var nmbr = 0;
 
@@ -361,16 +359,10 @@
                                     hasError = true;
                                     hasNip = true;
                                     hasTunjangan = false;
-                                } else if (value.cek_tunjangan == true) {
-                                    checkNipTunjangan.push(value.nip);
-                                    namaTunjangan.push(value.tunjangan.nama_tunjangan);
-                                    hasError = true;
-                                    hasTunjangan = true;
-                                    hasNip = false;
                                 }
                                 grandTotalNominal += parseInt(dataNominal[key])
                                 new_body_tr += `
-                                     <tr class="${value.cek_nip == false || value.cek_tunjangan == true ? 'table-danger' : ''}">
+                                     <tr class="${value.cek_nip == false ? 'table-danger' : ''}">
                                         <td>
                                             ${no}
                                         </td>
@@ -391,10 +383,6 @@
                                 if (hasNip == true) {
                                     message += `${checkNip}`
                                     tittleMessage += `Tidak ditemukan`
-                                }
-                                if (hasTunjangan == true) {
-                                    message += `${checkNipTunjangan}`
-                                    tittleMessage += `Sudah terdaftar di tunjangan ${namaTunjangan[0]}`
                                 }
                                 $('#alert-massage').html(`
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
