@@ -14,6 +14,7 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="idTkDeleted" id="idTkDeleted">
+            <input type="hidden" name="idPotDeleted" id="idPotDeleted">
             <div id="accordion">
                 <div class="card p-2 ml-3 mr-3 shadow">
                     <div class="card-header" id="headingOne">
@@ -425,11 +426,11 @@
                     <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
                         @if (count($data->potongan) < 1)
                         <div class="row m-0 pb-3 col-md-12" id="row_potongan">
-                            <input type="hidden" name="id_pot[]" id="id_pot" value="{{$pot->id}}">
+                            <input type="hidden" name="id_pot[]" id="id_pot" value="">
                             <div class="col col-md-4 col-sm-6">
                                 <div class="form-group">
                                     <label for="is">Tahun</label>
-                                    <select name="potongan_tahun" id="potongan_tahun"
+                                    <select name="potongan_tahun[]" id="potongan_tahun"
                                         class="form-control">
                                         <option value="0">-- Pilih tahun --</option>
                                         @php
@@ -446,7 +447,7 @@
                             <div class="col col-md-4 col-sm-6">
                                 <div class="form-group">
                                     <label for="is">Bulan</label>
-                                    <select name="potongan_bulan" id="potongan_bulan"
+                                    <select name="potongan_bulan[]" id="potongan_bulan"
                                         class="form-control">
                                         <option value="0">-- Pilih bulan --</option>
                                         <option value="1">Januari</option>
@@ -501,13 +502,16 @@
                             </div>
                         </div>
                         @endif
-                        @foreach ($data->potongan as $pot)
+                        @foreach ($data->potongan as $key => $pot)
+                            @if ($key > 0)
+                                <hr class="mx-4">
+                            @endif
                             <div class="row m-0 pb-3 col-md-12" id="row_potongan">
                                 <input type="hidden" name="id_pot[]" id="id_pot" value="{{$pot->id}}">
                                 <div class="col col-md-4 col-sm-6">
                                     <div class="form-group">
                                         <label for="is">Tahun</label>
-                                        <select name="potongan_tahun" id="potongan_tahun"
+                                        <select name="potongan_tahun[]" id="potongan_tahun"
                                             class="form-control">
                                             <option value="0">-- Pilih tahun --</option>
                                             @php
@@ -524,7 +528,7 @@
                                 <div class="col col-md-4 col-sm-6">
                                     <div class="form-group">
                                         <label for="is">Bulan</label>
-                                        <select name="potongan_bulan" id="potongan_bulan"
+                                        <select name="potongan_bulan[]" id="potongan_bulan"
                                             class="form-control">
                                             <option value="0">-- Pilih bulan --</option>
                                             <option value="1" @if($pot->bulan == '1') selected @endif>Januari</option>
@@ -542,7 +546,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <input type="hidden" name="id_pot[]" id="id_pot" value="">
                                 <div class="col col-md-4 col-sm-6">
                                     <div class="form-group">
                                         <label for="is_nama">Kredit Koperasi</label>
@@ -599,6 +602,8 @@
         var bag;
         let kd_divisi;
         var idDeleted = []
+        var idPotonganDeleted = []
+        var countIdPotongan = {{ count($data->potongan) }}
         kantorChange();
         getKantor();
         cekStatus();
@@ -992,11 +997,11 @@
             $('#collapseFive').append(`
                 <hr class="mx-4">
                 <div class="row m-0 pb-3 col-md-12" id="row_tunjangan">
-                    <input type="hidden" name="id_pot[]" id="id_pot" value="{{$pot->id}}">
+                    <input type="hidden" name="id_pot[]" id="id_pot" value="">
                     <div class="col col-md-4 col-sm-6">
                         <div class="form-group">
                             <label for="is">Tahun</label>
-                            <select name="potongan_tahun" id="potongan_tahun"
+                            <select name="potongan_tahun[]" id="potongan_tahun"
                                 class="form-control">
                                 <option value="0">-- Pilih tahun --</option>
                                 @php
@@ -1013,7 +1018,7 @@
                     <div class="col col-md-4 col-sm-6">
                         <div class="form-group">
                             <label for="is">Bulan</label>
-                            <select name="potongan_bulan" id="potongan_bulan"
+                            <select name="potongan_bulan[]" id="potongan_bulan"
                                 class="form-control">
                                 <option value="0">-- Pilih bulan --</option>
                                 <option value="1">Januari</option>
@@ -1031,7 +1036,6 @@
                             </select>
                         </div>
                     </div>
-                    <input type="hidden" name="id_pot[]" id="id_pot" value="">
                     <div class="col col-md-4 col-sm-6">
                         <div class="form-group">
                             <label for="is_nama">Kredit Koperasi</label>
@@ -1068,24 +1072,24 @@
                     </div>
                 </div>
             `);
-            x++
+            countIdPotongan++
         });
 
         $('#collapseFive').on('click', "#btn-delete-potongan", function(){
             var row = $(this).closest('.row')
             var hr = row.parent().find('hr').remove()
             var value = row.children('#id_pot').val()
-            if(x > 1){
+            if(countIdPotongan > 1){
                 if(value != null){
-                    idDeleted.push(value)
+                    idPotonganDeleted.push(value)
                     row.remove()
                     hr.remove()
-                    x--;
-                    $("#idTkDeleted").val(idDeleted)
+                    countIdPotongan--;
+                    $("#idPotDeleted").val(idPotonganDeleted)
                 } else{
                     $(this).closest('.row').remove()
                     $(this).closest('.row').parent().find('hr').remove()
-                    x--;
+                    countIdPotongan--;
                 }
             }
         })
