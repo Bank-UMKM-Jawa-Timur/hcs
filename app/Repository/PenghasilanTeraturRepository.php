@@ -20,7 +20,7 @@ class PenghasilanTeraturRepository
                     'mst_karyawan.nama_karyawan',
                     'mst_tunjangan.nama_tunjangan',
                     'tunjangan_lainnya.is_lock',
-                    DB::raw('DATE(tunjangan_lainnya.tanggal)'),
+                    DB::raw('DATE(tunjangan_lainnya.tanggal) as tanggal'),
                     DB::raw('SUM(tunjangan_lainnya.nominal) as total_nominal'),
                     DB::raw('COUNT(tunjangan_lainnya.id) as total_data'),
                 )
@@ -41,6 +41,7 @@ class PenghasilanTeraturRepository
             $bulan = date("m", strtotime($value->tanggal));
             $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
             $tahun = date("Y", strtotime($value->tanggal));
+
             $value->gajiPerBulan = GajiPerBulanModel::where('nip', $value->nip_tunjangan)
             ->whereRaw('MONTH(bulan) = ?', [$bulanReq])
             ->whereRaw('YEAR(tahun) = ?', [$tahun])

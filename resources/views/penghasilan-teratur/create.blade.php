@@ -130,47 +130,18 @@
             $('#penghasilan').on('change', function(){
                 var value = $("#penghasilan").val()
                 var hari_ini = new Date();
-                // var tanggal = hari_ini.getDate();
-                var tanggal = 25;
+                var tanggal = hari_ini.getDate();
                 var message = '';
                 var nmbr = 0;
 
                 // 11 = tranport, 12 = pulsa, 13 = vitamin, 14 = uang makan
 
-                if (value == 11 || value == 14) {
-                    if (tanggal == 25) {
-                        var message = "success"
-                        $('#error-penghasilan').addClass('d-none')
-                    } else {
-                        if (value == 12) {
-                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
-                            nmbr++
-                        } else if (value == 13) {
-                            var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
-                            nmbr++
-                        } else if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        }
-                        // alertWarning(message)
-                        $('#error-penghasilan').removeClass('d-none').html(message)
-                        $("#penghasilan").val("")
-                    }
-                } else if (value == 12) {
+                if (value == 12) {
                     if (tanggal >= 1 && tanggal <= 10){
                         var message = "success"
                         $('#error-penghasilan').addClass('d-none')
                     } else {
-                        if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 12) {
+                        if (value == 12) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                         } else if (value == 13 && tanggal > 5) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
@@ -186,23 +157,19 @@
                         $('#error-penghasilan').addClass('d-none')
                     }
                     else {
-                        if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 12) {
+                        if (value == 12) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                             nmbr++
                         } else if (value == 13) {
                             var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
                             nmbr++
                         }
                         // alertWarning(message)
                         $('#error-penghasilan').removeClass('d-none').html(message)
                         $("#penghasilan").val("")
                     }
+                } else {
+                    $('#error-penghasilan').addClass('d-none')
                 }
             })
 
