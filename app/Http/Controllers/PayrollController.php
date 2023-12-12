@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KaryawanModel;
 use App\Repository\CabangRepository;
 use App\Repository\PayrollRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -144,7 +145,9 @@ class PayrollController extends Controller
 
         $data = $this->listSlipGaji($nip, $year, null);
 
-        return view('payroll.slip', compact('data', 'cabang'));
+        $karyawan = KaryawanModel::where('nip', $nip)->first();
+
+        return view('payroll.slip', compact('data', 'cabang', 'karyawan'));
     }
 
     public function listSlipGaji($nip, $year, $cetak) {
