@@ -20,6 +20,7 @@ class PenghasilanTeraturRepository
                     'mst_karyawan.nama_karyawan',
                     'mst_tunjangan.nama_tunjangan',
                     'transaksi_tunjangan.is_lock',
+                    'transaksi_tunjangan.bulan',
                     DB::raw('DATE(transaksi_tunjangan.tanggal) as tanggal'),
                     DB::raw('SUM(transaksi_tunjangan.nominal) as total_nominal'),
                     DB::raw('COUNT(transaksi_tunjangan.id) as total_data'),

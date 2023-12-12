@@ -202,7 +202,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/template-excel', [PenghasilanTeraturController::class, 'templateExcel'])->name('template-excel');
         Route::get('/lock', [PenghasilanTeraturController::class, 'lock'])->name('lock');
         Route::get('/unlock', [PenghasilanTeraturController::class, 'unlock'])->name('unlock');
-        Route::get('/edit-tunjangan/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'editTunjangan'])->name('edit-tunjangan');
+        Route::get('/edit-tunjangan', [PenghasilanTeraturController::class, 'editTunjangan'])->name('edit-tunjangan');
         Route::post('/edit-tunjangan-post', [PenghasilanTeraturController::class, 'editTunjanganPost'])->name('edit-tunjangan-post');
     });
 

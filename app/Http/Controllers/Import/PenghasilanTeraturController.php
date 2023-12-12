@@ -121,11 +121,13 @@ class PenghasilanTeraturController extends Controller
             $nominal = explode(',', $request->get('nominal'));
             $nip = explode(',', $request->get('nip'));
             $total = count($nip);
-            $tanggal = date('Y-m-d');
-
-            $bulan = date("m", strtotime($tanggal));
+            $bulan = $request->get('bulan');
             $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
+
+            $tanggal = date('Y-m-d', strtotime(date('Y') . '-' . $bulan . '-' . date('d')));
             $tahun = date("Y", strtotime($tanggal));
+
+            // return ['bulan' => $bulanReq, 'tanggal' => $tanggal];
 
             if ($nip) {
                 if (is_array($nip)) {
@@ -135,6 +137,7 @@ class PenghasilanTeraturController extends Controller
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $id_tunjangan,
                             'tanggal' => $tanggal,
+                            'bulan' => $bulanReq,
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]);
@@ -196,27 +199,31 @@ class PenghasilanTeraturController extends Controller
         return redirect()->route('penghasilan.import-penghasilan-teratur.index');
     }
 
-    public function editTUnjangan($idTunjangan, $createdAt){
-        $id = $idTunjangan;
+    public function editTUnjangan(Request $request){
+        $id = $request->get('idTunjangan');
+        $tanggal = $request->get('createdAt');
+        $bulan = $request->get('bulan');
         $repo = new PenghasilanTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
         return view('penghasilan-teratur.edit', [
             'penghasilan' => $penghasilan,
             'old_id' =>$id,
-            'old_tanggal' => $createdAt
+            'old_tanggal' => $tanggal,
+            'bulan' => $bulan
         ]);
     }
 
     public function editTunjanganPost(Request $request){
         try {
+            // return $request;
             $id_tunjangan = $request->get('tunjangan');
             $nominal = explode(',', $request->get('nominal'));
             $nip = explode(',', $request->get('nip'));
             $total = count($nip);
-            $tanggal = date('Y-m-d H:i:s');
-
-            $bulan = date("m", strtotime($tanggal));
+            $bulan = $request->get('bulan');
             $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
+
+            $tanggal = date('Y-m-d', strtotime(date('Y') . '-' . $bulan . '-' . date('d')));
             $tahun = date("Y", strtotime($tanggal));
 
             $old_tunjangan = $request->get('old_tunjangan');
@@ -235,9 +242,11 @@ class PenghasilanTeraturController extends Controller
                         DB::table('transaksi_tunjangan')->insert([
                             'nip' => $nip[$i],
                             'nominal' => $nominal[$i],
-                            'id_tunjangan' => $old_tunjangan,
-                            'tanggal' => $old_tanggal,
-                            'updated_at' => $old_tanggal,
+                            'id_tunjangan' => $id_tunjangan,
+                            'tanggal' => $tanggal,
+                            'bulan' => $bulanReq,
+                            'created_at' => now(),
+                            'updated_at' => now(),
                         ]);
 
                         $gaji = GajiPerBulanModel::where('nip', $nip[$i])
@@ -248,19 +257,19 @@ class PenghasilanTeraturController extends Controller
                         if ($gaji) {
                             if ($tunjangan->nama_tunjangan == 'Transport') {
                                 $gaji->update([
-                                    'tj_transport' => $nominal[$i]
+                                    'tj_transport' => $nominal[$i] + $gaji->tj_transport
                                 ]);
                             } elseif ($tunjangan->nama_tunjangan == 'Pulsa') {
                                 $gaji->update([
-                                    'tj_pulsa' => $nominal[$i]
+                                    'tj_pulsa' => $nominal[$i] + $gaji->tj_pulsa
                                 ]);
                             } elseif ($tunjangan->nama_tunjangan == 'Vitamin') {
                                 $gaji->update([
-                                    'tj_vitamin' => $nominal[$i]
+                                    'tj_vitamin' => $nominal[$i] + $gaji->tj_vitamin
                                 ]);
                             } elseif ($tunjangan->nama_tunjangan == 'Uang Makan') {
                                 $gaji->update([
-                                    'uang_makan' => $nominal[$i]
+                                    'uang_makan' => $nominal[$i] + $gaji->uang_makan
                                 ]);
                             }
                         }
