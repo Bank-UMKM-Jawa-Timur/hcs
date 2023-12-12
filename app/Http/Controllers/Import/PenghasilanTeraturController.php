@@ -142,12 +142,13 @@ class PenghasilanTeraturController extends Controller
     public function store(Request $request)
     {
         // Need permission
+        DB::beginTransaction();
         try {
             $id_tunjangan = $request->get('tunjangan');
             $nominal = explode(',', $request->get('nominal'));
             $nip = explode(',', $request->get('nip'));
             $total = count($nip);
-            $tanggal = date('Y-m-d H:i:s');
+            $tanggal = date('Y-m-d');
 
             $bulan = date("m", strtotime($tanggal));
             $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
@@ -160,31 +161,32 @@ class PenghasilanTeraturController extends Controller
                             'nip' => $nip[$i],
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $id_tunjangan,
-                            'tanggal' => now(),
+                            'tanggal' => $tanggal,
+                            'created_at' => now(),
                             'updated_at' => now(),
                         ]);
 
                         $gaji = GajiPerBulanModel::where('nip', $nip[$i])
-                            ->where('bulan', $bulanReq)
-                            ->where('tahun', $tahun)
-                            ->first();
+                                                ->where('bulan', $bulanReq)
+                                                ->where('tahun', $tahun)
+                                                ->first();
                         $tunjangan = TunjanganModel::find($id_tunjangan);
                         if ($gaji) {
                             if ($tunjangan->nama_tunjangan == 'Transport') {
                                 $gaji->update([
-                                    'tj_transport' => $nominal[$i]
+                                    'tj_transport' => $nominal[$i] + $gaji->tj_transport
                                 ]);
                             } elseif ($tunjangan->nama_tunjangan == 'Pulsa') {
                                 $gaji->update([
-                                    'tj_pulsa' => $nominal[$i]
+                                    'tj_pulsa' => $nominal[$i] + $gaji->tj_pulsa
                                 ]);
                             } elseif ($tunjangan->nama_tunjangan == 'Vitamin') {
                                 $gaji->update([
-                                    'tj_vitamin' => $nominal[$i]
+                                    'tj_vitamin' => $nominal[$i] + $gaji->tj_vitamin
                                 ]);
                             } elseif ($tunjangan->nama_tunjangan == 'Uang Makan') {
                                 $gaji->update([
-                                    'uang_makan' => $nominal[$i]
+                                    'uang_makan' => $nominal[$i] + $gaji->uang_makan
                                 ]);
                             }
                         }
@@ -193,12 +195,15 @@ class PenghasilanTeraturController extends Controller
             }
 
             Alert::success('Success', 'Berhasil menyimpan data');
+            DB::commit();
 
             return redirect()->route('penghasilan.import-penghasilan-teratur.index');
         } catch (\Exception $e) {
+            DB::rollBack();
             Alert::error('Error', $e->getMessage());
             return back();
         } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
             Alert::error('Error', $e->getMessage());
             return back();
         }
