@@ -77,10 +77,17 @@
         <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Slip Gaji</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+                <h5 class="modal-title" id="exampleModalLabel">
+                    <p>
+                        Slip Gaji
+                    </p>
+                    <p class="periode">
+                        Periode 
+                    </p>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="d-flex justify-content-end">
@@ -91,8 +98,9 @@
                 </div>
                 <div class="d-flex justify-content-start">
                     <div>
-                        <img src="{{ asset('style/assets/img/logo.png') }}" width="100px" class="img-fluid">
-                        <p class="pt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+
+                        {{--  <img src="{{ asset('style/assets/img/logo.png') }}" width="100px" class="img-fluid">
+                        <p class="pt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>  --}}
                     </div>
                 </div>
                 <hr>
@@ -296,6 +304,8 @@
             const norek = $(this).data("no_rekening");
             const data = $(this).data('json');
             const bulan = data.bulan;
+            const bulanName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+            $('.periode').html(`Periode ${bulanName[bulan]} ${tahun}`)
             
             $('#cetak-gaji').on('click',function(e) {
                 $.ajax({
