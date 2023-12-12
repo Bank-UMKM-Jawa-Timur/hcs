@@ -20,6 +20,7 @@ class PenghasilanTeraturRepository
                     'tunjangan_karyawan.created_at',
                     'mst_karyawan.nama_karyawan',
                     'mst_tunjangan.nama_tunjangan',
+                    'tunjangan_karyawan.is_lock',
                     DB::raw('DATE(tunjangan_karyawan.created_at) as tanggal'),
                     DB::raw('SUM(tunjangan_karyawan.nominal) as total_nominal'),
                     DB::raw('COUNT(tunjangan_karyawan.id) as total_data'),
@@ -88,6 +89,20 @@ class PenghasilanTeraturRepository
             ->whereYear('tunjangan_karyawan.created_at', $tahun)
             ->get();
 
+        return $data;
+    }
+
+    public function lock(array $data){
+        $idTunjangan = $data['id_tunjangan'];
+        $createdAt = $data['tanggal'];
+        return DB::table('tunjangan_karyawan')->where('id_tunjangan', $idTunjangan)
+        ->where(DB::raw('DATE(tunjangan_karyawan.created_at)'), $createdAt)->update([
+            'is_lock' => 1
+        ]);
+    }
+
+    public function TunjanganSelected($id){
+        $data = TunjanganModel::find($id);
         return $data;
     }
 }
