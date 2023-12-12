@@ -173,11 +173,11 @@
             var tableTunjangan = ``;
 
             // Gaji Pokok
-            if (data.total_gaji > 0) {
+            if (data.gj_pokok > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
                         <td>Gaji Pokok</td>
-                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.total_gaji)}</td>
+                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gj_pokok)}</td>
                     </tr>
                 `
             }
@@ -272,7 +272,7 @@
                 `
             }
             // T. Teller
-            if (data.tj_teller > 0) {
+            /*if (data.tj_teller > 0) {
                 tableTunjangan += `
                     ${
                         !data.hasOwnProperty('tj_teller') ? (
@@ -283,25 +283,7 @@
                         ) : null
                     }
                 `
-            }
-            // T. Transport
-            if (data.tj_transport > 0) {
-                tableTunjangan += `
-                    <tr style="border:1px solid #e3e3e3">
-                        <td>Transport</td>
-                        <td class="text-right">${formatRupiahPayroll(data.tj_transport)}</td>
-                    </tr>
-                `
-            }
-            // T. Vitamin
-            if (data.tj_vitamin > 0) {
-                tableTunjangan += `
-                    <tr style="border:1px solid #e3e3e3">
-                        <td>Vitamin</td>
-                        <td class="text-right">${formatRupiahPayroll(data.tj_vitamin)}</td>
-                    </tr>
-                `
-            }
+            }*/
 
             return tableTunjangan;
         }
@@ -356,8 +338,8 @@
 
             var tableTotalTunjanganTeratur = `
                 <tr>
-                    <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
-                    <th class="text-right ">${formatRupiahPayroll(data.gaji)}</th>
+                    <th width="60%">Total (THP)</th>
+                    <th class="text-right ">${formatRupiahPayroll(data.total_gaji)}</th>
                 </tr>
             `
             $("#table-tunjangan-total thead").append(tableTotalTunjanganTeratur);
@@ -368,12 +350,12 @@
             var kredit_pegawai = data.kredit_pegawai ? data.kredit_pegawai : 0;
             var iuran_ik = data.iuran_ik ? data.iuran_ik : 0;
             var total_potongan = parseInt(data.bpjs_tk) + parseInt(data.potongan.dpp) + parseInt(kredit_koperasi) + parseInt(iuran_koperasi) + parseInt(kredit_pegawai) + parseInt(iuran_ik);
-            var total_diterima = parseInt(data.gaji) - total_potongan;
+            var total_diterima = parseInt(data.total_gaji) - total_potongan;
 
             var potongan = `
                 <tr style="border:1px solid #e3e3e3">
                     <td>JP BPJS TK 1%</td>
-                    <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.bpjs_tk)}</td>
+                    <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(parseInt(data.bpjs_tk))}</td>
                 </tr>
                 <tr style="border:1px solid #e3e3e3">
                     <td>DPP 5%</td>
