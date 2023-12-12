@@ -116,17 +116,17 @@
                     <tr>
                         <td class="fw-bold">NIP</td>
                         <td>:</td>
-                        <td>{{ $data[0]->nip }}</td>
+                        <td>{{ $data->nip }}</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">Nama</td>
                         <td>:</td>
-                        <td>{{ $data[0]->nama_karyawan }}</td>
+                        <td>{{ $data->nama_karyawan }}</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">No Rekening</td>
                         <td>:</td>
-                        <td>{{ $data[0]->no_rekening }}</td>
+                        <td>{{ $data->no_rekening }}</td>
                     </tr>
                 </table>
             </div>
@@ -142,63 +142,69 @@
                     <tbody>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Gaji Pokok</td>
-                            <td id="gaji_pokok" class="text-end">{{ number_format($data[0]->gaji->gj_pokok , 0, ',', '.')}}</td>
+                            <td id="gaji_pokok" class="text-end">{{ number_format($data->gaji->gj_pokok , 0, ',', '.')}}</td>
                         </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Jabatan</td>
-                            <td id="gaji_pokok" class="text-end">{{ number_format($data[0]->gaji->tj_jabatan , 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Penyesuaian</td>
-                            <td id="gaji_pokok" class="text-end">{{ number_format($data[0]->gaji->gj_penyesuaian , 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Keluarga</td>
-                            <td id="gaji_pokok" class="text-end">{{ number_format($data[0]->gaji->tj_keluarga, 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Kemahalan</td>
-                            <td class="text-end">{{ number_format($data[0]->gaji->tj_kemahalan, 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Kesejahteraan</td>
-                            <td class="text-end">{{ number_format($data[0]->gaji->tj_kesejahteraan, 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Multilevel</td>
-                            <td class="text-end">{{ number_format($data[0]->gaji->tj_multilevel, 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Pelaksana</td>
-                            <td class="text-end">{{ number_format($data[0]->gaji->tj_pelaksana, 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Perumahan</td>
-                            <td class="text-end">{{ number_format($data[0]->gaji->tj_perumahan, 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Pulsa</td>
-                            <td class="text-end">{{ number_format($data[0]->gaji->tj_pulsa, 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Telepon</td>
-                            <td class="text-end">{{ number_format($data[0]->gaji->tj_telepon, 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Transport</td>
-                            <td class="text-end">{{ number_format($data[0]->gaji->tj_transport, 0, ',', '.')}}</td>
-                        </tr>
-                        <tr style="border:1px solid #e3e3e3">
-                            <td>Vitamin</td>
-                            <td class="text-end">{{ number_format($data[0]->gaji->tj_vitamin, 0, ',', '.')}}</td>
-                        </tr>
+                        @if ($data->gaji->tj_jabatan)
+                            <tr style="border:1px solid #e3e3e3">
+                                <td>Jabatan</td>
+                                <td id="gaji_pokok" class="text-end">{{ number_format($data->gaji->tj_jabatan , 0, ',', '.')}}</td>
+                            </tr>
+                        @endif
+                        @if ($data->gaji->gj_penyesuaian)
+                            <tr style="border:1px solid #e3e3e3">
+                                <td>Penyesuaian</td>
+                                <td id="gaji_pokok" class="text-end">{{ number_format($data->gaji->gj_penyesuaian , 0, ',', '.')}}</td>
+                            </tr>
+                        @endif
+                        @if ($data->gaji->tj_keluarga)
+                            <tr style="border:1px solid #e3e3e3">
+                                <td>Keluarga</td>
+                                <td id="gaji_pokok" class="text-end">{{ number_format($data->gaji->tj_keluarga, 0, ',', '.')}}</td>
+                            </tr>
+                        @endif
+                        @if ($data->gaji->tj_kemahalan)
+                            <tr style="border:1px solid #e3e3e3">
+                                <td>Kemahalan</td>
+                                <td class="text-end">{{ number_format($data->gaji->tj_kemahalan, 0, ',', '.')}}</td>
+                            </tr>
+                        @endif
+                        @if ($data->gaji->tj_kesejahteraan)
+                            <tr style="border:1px solid #e3e3e3">
+                                <td>Kesejahteraan</td>
+                                <td class="text-end">{{ number_format($data->gaji->tj_kesejahteraan, 0, ',', '.')}}</td>
+                            </tr>
+                        @endif
+                        @if ($data->gaji->tj_multilevel)
+                            <tr style="border:1px solid #e3e3e3">
+                                <td>Multilevel</td>
+                                <td class="text-end">{{ number_format($data->gaji->tj_multilevel, 0, ',', '.')}}</td>
+                            </tr>
+                        @endif
+                        @if ($data->gaji->tj_pelaksana)
+                            <tr style="border:1px solid #e3e3e3">
+                                <td>Pelaksana</td>
+                                <td class="text-end">{{ number_format($data->gaji->tj_pelaksana, 0, ',', '.')}}</td>
+                            </tr>
+                        @endif
+                        @if ($data->gaji->tj_perumahan)
+                            <tr style="border:1px solid #e3e3e3">
+                                <td>Perumahan</td>
+                                <td class="text-end">{{ number_format($data->gaji->tj_perumahan, 0, ',', '.')}}</td>
+                            </tr>
+                        @endif
+                        @if ($data->gaji->tj_telepon)
+                            <tr style="border:1px solid #e3e3e3">
+                                <td>Telepon</td>
+                                <td class="text-end">{{ number_format($data->gaji->tj_telepon, 0, ',', '.')}}</td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
                 <table class="table table-borderless" id="table-tunjangan-total">
                     <thead>
                         <tr>
                             <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
-                            <th class="text-end">{{ number_format($data[0]->gaji->total_gaji , 0, ',', '.')}}</th>
+                            <th class="text-end">{{ number_format($data->gaji->total_gaji , 0, ',', '.')}}</th>
                         </tr>
                     </thead>
                 </table>
@@ -215,27 +221,27 @@
                     <tbody>
                         <tr style="border:1px solid #e3e3e3">
                             <td>JP BPJS TK 1%</td>
-                            <td id="gaji_pokok" class="text-end">{{ number_format($data[0]->potongan->jp_1_persen, 0, ',', '.') }}</td>
+                            <td id="gaji_pokok" class="text-end">{{ number_format(intval($data->bpjs_tk), 0, ',', '.') }}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>DPP 5%</td>
-                            <td id="gaji_pokok" class="text-end">{{ number_format($data[0]->potongan->dpp, 0, ',', '.') }}</td>
+                            <td id="gaji_pokok" class="text-end">{{ $data->potongan ? number_format($data->potongan->dpp, 0, ',', '.') : 0 }}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>KREDIT KOPERASI</td>
-                            <td id="gaji_pokok" class="text-end">{{ $data[0]->potongan_gaji ? number_format($data->potongan_gaji->kredit_koperasi, 0, ',', '.') : 0}}</td>
+                            <td id="gaji_pokok" class="text-end">{{ $data->potongan_gaji ? number_format($data->potongan_gaji->kredit_koperasi, 0, ',', '.') : 0}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>IUARAN KOPERASI	</td>
-                            <td id="gaji_pokok" class="text-end">{{ $data[0]->potongan_gaji ? number_format($data->potongan_gaji->iuran_koperasi, 0, ',', '.') : 0}}</td>
+                            <td id="gaji_pokok" class="text-end">{{ $data->potongan_gaji ? number_format($data->potongan_gaji->iuran_koperasi, 0, ',', '.') : 0}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>KREDIT PEGAWAI	</td>
-                            <td id="gaji_pokok" class="text-end">{{ $data[0]->potongan_gaji ? number_format($data->potongan_gaji->kredit_pegawai, 0, ',', '.') : 0}}</td>
+                            <td id="gaji_pokok" class="text-end">{{ $data->potongan_gaji ? number_format($data->potongan_gaji->kredit_pegawai, 0, ',', '.') : 0}}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>IURAN IK</td>
-                            <td id="gaji_pokok" class="text-end">{{ $data[0]->potongan_gaji ? number_format($data->potongan_gaji->iuran_ik, 0, ',', '.') : 0}}</td>
+                            <td id="gaji_pokok" class="text-end">{{ $data->potongan_gaji ? number_format($data->potongan_gaji->iuran_ik, 0, ',', '.') : 0}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -243,16 +249,19 @@
                     <thead>
                         <tr>
                             <th width="60%">TOTAL POTONGAN</th>
-                            <th class="text-end">{{ number_format($data[0]->total_potongan, 0, ',', '.')  }}</th>
+                            <th class="text-end">{{ number_format($data->total_potongan, 0, ',', '.')  }}</th>
                         </tr>
                     </thead>
                 </table>
                 <hr>
                 <table class="table table-borderless" id="table-tunjangan-total">
                     <thead>
+                        @php
+                            $total_diterima = $data->gaji->total_gaji - $data->total_potongan;
+                        @endphp
                         <tr>
                             <th width="60%">TOTAL YANG DITERIMA</th>
-                            <th class="text-end">{{ $data[0]->total_yg_diterima > 0 ? number_format($data[0]->total_yg_diterima, 0, ',', '.') : '-'}}</th>
+                            <th class="text-end">{{ $total_diterima > 0 ? number_format($total_diterima, 0, ',', '.') : '-'}}</th>
                         </tr>
                     </thead>
                 </table>

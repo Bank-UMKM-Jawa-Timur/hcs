@@ -105,7 +105,6 @@ class GajiPerBulanController extends Controller
             ->whereNull('tanggal_penonaktifan')
             ->whereNotIn('kd_entitas', $cabang)
             ->orWhere('kd_entitas', null)
-            // ->whereIn('nip', ['00126', '00273'])
             ->get();
 
         // Get Penghasilan from mst_karyawan + tunjangan karyawan + penghasilan tidak teratur
@@ -126,6 +125,8 @@ class GajiPerBulanController extends Controller
                 $tj = DB::table('tunjangan_karyawan')
                     ->where('nip', $item->nip)
                     ->where('id_tunjangan', $tunj->id)
+                    ->whereMonth('created_at', $bulan)
+                    ->whereYear('created_at', $tahun)
                     ->first();
                 array_push($tunjangan, ($tj != null) ? $tj->nominal : 0);
                 if ($tunj->status) {

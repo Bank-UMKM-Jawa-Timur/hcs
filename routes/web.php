@@ -174,6 +174,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
     Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
     Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
+    Route::get('/get-name-karyawan/{nip}', [\App\Http\Controllers\KaryawanController::class, 'getNameKaryawan']);
     Route::get('list-karyawan', [\App\Http\Controllers\KaryawanController::class, 'listKaryawan']);
     Route::resource('/mutasi', \App\Http\Controllers\MutasiController::class);
     Route::resource('/umur', \App\Http\Controllers\UmurController::class);
@@ -187,7 +188,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/reset-password/{id}', [UserController::class, 'updatePass'])->name("updatePass");
 
     Route::resource('/potongan', PotonganController::class);
-    Route::get('/get-karyawan-by-nip', [PotonganController::class, 'getKaryawanByNip'])->name('karyawan-by-entitas');
+    Route::post('/get-karyawan-by-nip', [PotonganController::class, 'getKaryawanByNip'])->name('karyawan-by-entitas');
     Route::get('import-potongan', [\App\Http\Controllers\PotonganController::class, 'importPotongan'])->name('import-potongan');
     Route::get('/potongan-template-excel', [PotonganController::class, 'templateExcel'])->name('template-excel-potongan');
     Route::post('import-potongan-post', [\App\Http\Controllers\PotonganController::class, 'importPotonganPost'])->name('import-potongan-post');
@@ -195,11 +196,15 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::prefix('penghasilan')->name('penghasilan.')->group(function() {
         Route::resource('import-penghasilan-teratur', \App\Http\Controllers\Import\PenghasilanTeraturController::class);
-        Route::get('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
+        Route::post('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
         Route::get('/get-karyawan-search', [PenghasilanTeraturController::class, 'getKaryawanSearch'])->name('karyawan-search');
         Route::get('/details/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'details'])->name('details');
         Route::post('/cetak-vitamin', [PenghasilanTeraturController::class, 'cetakVitamin'])->name('cetak-vitamin');
         Route::get('/template-excel', [PenghasilanTeraturController::class, 'templateExcel'])->name('template-excel');
+        Route::get('/lock', [PenghasilanTeraturController::class, 'lock'])->name('lock');
+        Route::get('/unlock', [PenghasilanTeraturController::class, 'unlock'])->name('unlock');
+        Route::get('/edit-tunjangan/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'editTunjangan'])->name('edit-tunjangan');
+        Route::post('/edit-tunjangan-post', [PenghasilanTeraturController::class, 'editTunjanganPost'])->name('edit-tunjangan-post');
     });
 
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
@@ -214,6 +219,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
     Route::resource('/lembur', LemburController::class);
     Route::resource('/spd', SPDController::class);
+
     // Bonus Data
     Route::get('bonus/excel',[BonusController::class,'fileExcel'])->name('bonus.excel');
     Route::get('bonus/{id}/{tgl}',[BonusController::class,'detail'])->name('bonus.detail');
@@ -221,6 +227,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/thr', THRController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
+    Route::get('/bonus-lock', [BonusController::class, 'lock'])->name('bonus-lock');
+    Route::get('/bonus-unlock', [BonusController::class, 'unlock'])->name('bonus-unlock');
+    Route::get('/edit-tunjangan-bonus/{idTunjangan}/{tanggal}', [BonusController::class, 'editTunjangan'])->name('edit-tunjangan-bonus');
+    Route::post('/edit-tunjangan-bonus/post', [BonusController::class, 'editTunjanganPost'])->name('edit-tunjangan-bonus-post');
 
     Route::prefix('penghasilan-tidak-teratur')
         ->name('penghasilan-tidak-teratur.')
@@ -231,6 +241,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store', 'store')->name('store');
             Route::get('/detail', 'show')->name('detail');
             Route::get('/input-tidak-teratur', 'createTidakTeratur')->name('input-tidak-teratur');
+            Route::get('template-tidak-teratur','templateTidakTeratur')->name('templateTidakTeratur');
+            Route::get('template-biaya-kesehatan','templateBiayaKesehatan')->name('templateBiayaKesehatan');
+            Route::get('template-uang-duka','templateBiayaDuka')->name('templateBiayaDuka');
+            Route::get('/lock', 'lock')->name('lock');
+            Route::get('/unlock', 'unlock')->name('unlock');
+            Route::get('/edit-tunjangan/{idTunjangan}/{tanggal}', 'editTunjangan')->name('edit-tunjangan-tidak-teratur');
+            Route::post('/edit-tunjangan/post', 'editTunjanganPost')->name('edit-tunjangan-tidak-teratur-post');
         });
 
     // Penonaktifan Karyawan

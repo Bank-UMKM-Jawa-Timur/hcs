@@ -12,7 +12,11 @@
         $earliest_year = 2022;
     @endphp
     <div class="card-body">
-        <form action="{{ route('gaji_perbulan.store') }}" method="POST" enctype="multipart/form-data">
+        <div class="alert alert-success" role="alert">
+            Harap cek kembali data tunjangan sebelum melakukan proses tunjangan
+        </div>
+        <form id="form" action="{{ route('gaji_perbulan.store') }}"
+            method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row m-0">
                 <div class="col-md-6">
@@ -49,7 +53,7 @@
             </div>
             <div class="row m-0">
                 <div class="col-md-5 pt-4 pb-4">
-                    <button class="is-btn is-primary">proses</button>
+                    <button class="is-btn is-primary" id="btn-submit">proses</button>
                 </div>
             </div>
         </form>
@@ -119,6 +123,11 @@
                     })
                 }
             })
+        })
+        $('#btn-submit').on('click', function(e) {
+            e.preventDefault();
+            $('.loader-wrapper').removeAttr('style')
+            $('#form').submit()
         })
     </script>
 @endsection

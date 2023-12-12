@@ -55,7 +55,7 @@
                 <td align="center">{{ $loop->iteration }}</td>
                 <td>{{ $item->nama_karyawan }}</td>
                 <td align="center">{{ $item->no_rekening ? $item->no_rekening : '-' }}</td>
-                <td align="right">{{ $item->vitamin ? number_format($item->vitamin, 2, ',', '.') : '0' }}</td>
+                <td align="right">{{ $item->vitamin ? number_format($item->vitamin, 0, ',', ',') : '0' }}</td>
             </tr>
         @php
             $jumlah += $item->vitamin;
@@ -66,7 +66,7 @@
         <tr>
             <td align="center" colspan="2" style="font-weight: bold ">JUMLAH</td>
             <td></td>
-            <td align="right" style="font-weight: bold;">{{$jumlah}}</td>
+            <td align="right" style="font-weight: bold;">{{ number_format($jumlah, 0, ',', ',') }}</td>
         </tr>
     </tfoot>
 </table>

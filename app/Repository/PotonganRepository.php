@@ -16,6 +16,7 @@ class PotonganRepository
             'p.bulan',
             'p.tahun',
             'k.nama_karyawan',
+            DB::raw('COUNT(p.id) as total_data'),
             DB::raw('SUM(p.kredit_koperasi) as kredit_koperasi'),
             DB::raw('SUM(p.iuran_koperasi) as iuran_koperasi'),
             DB::raw('SUM(p.kredit_pegawai) as kredit_pegawai'),

@@ -39,6 +39,8 @@ Coded by www.creative-tim.com
     <link rel="stylesheet" href="{{ asset('style/assets/css/loading.css') }}">
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
+    {{-- Set Token --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <style>
         /* Chrome, Safari, Edge, Opera */
@@ -108,7 +110,7 @@ Coded by www.creative-tim.com
     </div>
 
     @include('components.old.loader')
-    
+
     <!--   Core JS Files   -->
     <script src="{{ asset('style/assets/js/core/jquery.min.js') }}"></script>
     <script src="{{ asset('style/assets/js/core/popper.min.js') }}"></script>

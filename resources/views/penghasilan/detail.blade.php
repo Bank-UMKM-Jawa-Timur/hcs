@@ -8,6 +8,9 @@
             <p class="card-title"><a href="">Penghasilan </a> > <a href="{{ route('penghasilan-tidak-teratur.index') }}">Penghasilan Tidak Teratur</a> > Detail</p>
         </div>
     </div>
+    <div class="card-header">
+        <h6> Tunjangan : {{ $tunjangan }}</h6>
+    </div>
 </div>
 
 <div class="card-body">

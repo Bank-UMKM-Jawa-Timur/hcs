@@ -9,11 +9,6 @@
         <a href="{{ route('bonus.create') }}" class="btn is-btn is-primary">Import Bonus</a>
         @endcan
     </div>
-    <div class="card-header row mt-3 mr-8 pr-5">
-        <a href="{{ route('bonus.create') }}" class="mb-3">
-            <button class="is-btn is-primary">Import Bonus</button>
-        </a>
-    </div>
 </div>
 
     <div class="card-body p-3">
@@ -72,6 +67,16 @@
                                         <td>{{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('d F Y') }}</td>
                                         <td>
+                                            @if ($item->is_lock != 1)
+                                                <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
+                                                    class="btn btn-success p-1">Lock</a>
+                                                <a href="{{ route('edit-tunjangan-bonus', [
+                                                    'idTunjangan' => $item->id_tunjangan,
+                                                    'tanggal' => \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') ])}}" class="btn btn-outline-warning p-1">Edit</a>
+                                            @else
+                                                <a href="{{route('bonus-unlock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
+                                                    class="btn btn-success p-1">Unlock</a>
+                                            @endif
                                             @can('penghasilan - import - bonus - detail')
                                             <a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}" class="btn btn-outline-info p-1">Detail</a>
                                             @endcan

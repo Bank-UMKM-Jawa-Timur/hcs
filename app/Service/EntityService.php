@@ -62,7 +62,22 @@ class EntityService
         $subdiv = $request->kd_subdiv;
         $branch = $request->kd_cabang;
 
-        if($request->kd_bagian && !isset($request->kd_cabang)) return null;
+        if($request->kd_bagian && !$branch) return null;
+        if ($division && $subdiv) return $subdiv;
+        if ($division) return $division;
+        if ($branch) return $branch;
+
+        return false;
+    }
+
+    public static function getEntityFromRequestEdit(Request $request)
+    {
+        $division = $request->divisi;
+        $subdiv = $request->subdiv;
+        $branch = $request->cabang;
+        // dd($request->all());
+
+        if($request->bagian && $branch == null) return null;
         if ($division && $subdiv) return $subdiv;
         if ($division) return $division;
         if ($branch) return $branch;

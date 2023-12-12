@@ -22,7 +22,6 @@
             var kategori;
             var totalDataInput = 1;
             var grandTotalNominal = 0;
-            $("#kategori").select2();
 
             $("input[type=file]").on('change', function(){
                 var input = document.getElementById('upload_csv');
@@ -34,9 +33,9 @@
             $("#kategori").on('change', function(){
                 var value = $(this).val();
                 kategori = value.toLowerCase()
-                if(value == 'pengganti biaya kesehatan'){
+                if(value == 17){
                     $('#btnDownloadTemplate').attr('href', "{{ route('penghasilan-tidak-teratur.templateBiayaKesehatan') }}");
-                } else if(value == 'uang duka'){
+                } else if(value == 18){
                     $('#btnDownloadTemplate').attr('href', "{{ route('penghasilan-tidak-teratur.templateBiayaDuka') }}");
                 } else{
                     $('#btnDownloadTemplate').attr('href', "{{ route('penghasilan-tidak-teratur.templateTidakTeratur') }}");
@@ -268,7 +267,7 @@
         <p class="card-title"><a href="{{ route('home') }}">Dashboard</a> > <a href="{{ route('penghasilan-tidak-teratur.index') }}">Penghasilan Tidak Teratur</a> >Import</p>
     </div>
     <div class="card-body p-3">
-        <form action="{{ route('pajak_penghasilan.store') }}" enctype="multipart/form-data" method="POST" class="form-group">
+        <form action="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur-post') }}" enctype="multipart/form-data" method="POST" class="form-group">
             @csrf
             <div class="row">
                 <div class="col">
@@ -302,13 +301,8 @@
                             </div>
                             <div class="col">
                                 <label for="">Kategori</label>
-                                <select name="kategori" id="kategori" class="form-control">
-                                    <option value="">-- Pilih Kategori --</option>
-                                    @forelse ($data as $item)
-                                        <option value="{{ strtolower($item->nama_tunjangan) }}">{{ $item->nama_tunjangan }}</option>
-                                    @empty
-
-                                    @endforelse
+                                <select name="kategori" id="kategori" class="form-control" readonly>
+                                    <option value="{{ $penghasilan->id }}">{{ $penghasilan->nama_tunjangan }}</option>
                                 </select>
                             </div>
                             <div class="col">
@@ -337,6 +331,8 @@
                         <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
                         <input type="text" name="keterangan" class="form-control keterangan-input" value="" readonly hidden>
                         <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
+                        <input type="hidden" name="old_tanggal" value="{{$old_created_at}}">
+                        <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
                         <button type="submit" class="is-btn btn-info hidden" id="button-simpan">Simpan</button>
                     </div>
                 </div>

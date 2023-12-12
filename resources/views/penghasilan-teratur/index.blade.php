@@ -59,6 +59,9 @@
                                     Tunjangan
                                 </th>
                                 <th>
+                                    Total Data
+                                </th>
+                                <th>
                                     Grand Nominal
                                 </th>
                                 <th>
@@ -80,9 +83,20 @@
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->nama_tunjangan }}</td>
+                                        <td>{{ $item->total_data }}</td>
                                         <td>{{ number_format($item->total_nominal, 0, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                         <td>
+                                            @if ($item->gajiPerBulan == null)
+                                                @if ($item->is_lock != 1)
+                                                    <a href="{{route('penghasilan.lock')}}?id_tunjangan={{$item->id_tunjangan_karyawan}}&tanggal={{\Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')}}"
+                                                        class="btn btn-success p-1">Lock</a>
+                                                    <a href="{{ route('penghasilan.edit-tunjangan', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-outline-warning p-1">Edit</a>
+                                                @else
+                                                    <a href="{{route('penghasilan.unlock')}}?id_tunjangan={{$item->id_tunjangan_karyawan}}&tanggal={{\Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')}}"
+                                                        class="btn btn-success p-1">Unlock</a>
+                                                @endif
+                                            @endif
                                             @can('penghasilan - import - penghasilan teratur - detail')
                                                 <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_tunjangan_karyawan, 'createdAt' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('Y-m-d')]) }}" class="btn btn-outline-info p-1">Detail</a>
                                             @endcan

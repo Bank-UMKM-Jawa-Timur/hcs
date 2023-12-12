@@ -201,8 +201,8 @@
                         @can('penghasilan - import - penghasilan teratur')
                         <li style="margin-top: -15px"
                             class="@active('penghasilan.import-penghasilan-teratur.index')">
-                            <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}" style="font-weight: bolder">
-                                <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
+                            <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}">
+                                <i class="nc-icon nc-credit-card"></i>
                                 <p>Penghasilan Teratur</p>
                             </a>
                         </li>
@@ -210,32 +210,32 @@
                         @can('penghasilan - import - penghasilan tidak teratur')
                         <li style="margin-top: -15px"
                             class="@active('penghasilan-tidak-teratur.index')">
-                            <a href="{{ route('penghasilan-tidak-teratur.index') }}" style="font-weight: bolder">
-                                <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
+                            <a href="{{ route('penghasilan-tidak-teratur.index') }}">
+                                <i class="nc-icon nc-credit-card"></i>
                                 <p>Penghasilan Tidak Teratur</p>
                                 <p></p>
                             </a>
                         </li>
                         @endcan
                         @can('penghasilan - import - bonus')
-                        <li style="margin-top: -15px"
+                        <li style="margin-top: -15px !important"
                             class="@active('bonus.index')">
-                            <a href="{{ route('bonus.index') }}" style="font-weight: bolder">
-                                <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
+                            <a href="{{ route('bonus.index') }}">
+                                <i class="nc-icon nc-credit-card"></i>
                                 <p>Bonus</p>
                             </a>
                         </li>
                         @endcan
-                        @can('penghasilan - import - potongan')
+                        {{--  @can('penghasilan - import - potongan')
                         <li style="margin-top: -15px"
                             class="@active('potongan.index')">
-                            <a href="{{ route('potongan.index') }}" style="font-weight: bolder">
-                                <i class="nc-icon nc-credit-card style="font-weight: bolder""></i>
+                            <a href="{{ route('potongan.index') }}">
+                                <i class="nc-icon nc-credit-card"></i>
                                 <p>Potongan</p>
                                 <p></p>
                             </a>
                         </li>
-                        @endcan
+                        @endcan  --}}
                         @can('penghasilan - payroll - list payroll')
                         <li style="margin-top: -15px"
                             class="@active('payroll.index')">
@@ -254,27 +254,12 @@
                             </a>
                         </li>
                         @endcan  --}}
-                        {{-- Menu Payroll --}}
-                        {{-- @can('penghasilan - payroll')
-                        <li class="@active('payroll') {{ request()->is('payroll', 'payroll/*') ? 'active' : '' }}">
-                            <a class="nav-link-item" href="#submenu-payroll" data-toggle="collapse" data-target="#submenu-payroll"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
-                                <span class="dropdown-toggle">Payroll</span>
-                            </a>
-                            <ul class="sub-menu {{ request()->is('payroll', 'payroll/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('payroll.slip', 'show')"
-                                id="submenu-payroll">
-
-
-                            </ul>
-                        </li>
-                        @endcan --}}
                         {{-- Menu Gaji --}}
                         @can('penghasilan - gaji')
                         <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                             <a class="nav-link-item" href="#submenu-gaji" data-toggle="collapse" data-target="#submenu-gaji"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-credit-card " style="font-weight: bolder"></i>
+                               >
+                                <i class="nc-icon nc-credit-card "></i>
                                 <span class="dropdown-toggle">Gaji</span>
                             </a>
                             <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
@@ -422,7 +407,7 @@
                 @endcan
 
                 {{-- Menu Migrasi Data --}}
-                @can('migrasi')
+                {{-- @can('migrasi')
                 <li class="@active('migrasi')">
                     <a class="nav-link" href="#submenu8" data-toggle="collapse" data-target="#submenu8"
                         style="font-weight: bolder">
@@ -460,7 +445,7 @@
                         @endcan
                     </ul>
                 </li>
-                @endcan
+                @endcan --}}
                 {{-- Menu Log Aktivitas --}}
                 @can('log')
                 <li>

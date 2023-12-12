@@ -13,6 +13,7 @@ use App\Models\JabatanModel;
 use App\Models\KaryawanModel;
 use App\Models\PanggolModel;
 use App\Models\PjsModel;
+use App\Models\PotonganModel;
 use App\Models\SpModel;
 use App\Models\UmurModel;
 use App\Repository\KaryawanRepository;
@@ -584,6 +585,10 @@ class KaryawanController extends Controller
             $totalDppPerhitungan = ($gjPokok + $tjKeluarga + 0.5 * $tjKesejahteraan) * 0.05;
         }
 
+        $potongan = PotonganModel::where('nip', $karyawan->nip)
+                                ->orderBy('id', 'DESC')
+                                ->first();
+
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,
@@ -592,6 +597,7 @@ class KaryawanController extends Controller
             'pjs' => $historyJabatan,
             'sp' => $sp,
             'dpp_perhitungan' => $totalDppPerhitungan,
+            'potongan' => $potongan,
         ]);
     }
 
@@ -675,6 +681,14 @@ class KaryawanController extends Controller
         ]);
 
         try {
+            $idTkDeleted = explode(',', $request->get('idTkDeleted'));
+            if(count($idTkDeleted) > 0){
+                foreach($idTkDeleted as $key => $item){
+                    DB::table('tunjangan_karyawan')
+                        ->where('id', $item)
+                        ->delete();
+                }
+            }
             $id_is = $request->get('id_pasangan');
             if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
                 if ($request->get('id_pasangan') == null) {
@@ -706,18 +720,8 @@ class KaryawanController extends Controller
                         ]);
                 }
             }
-            $entitas = null;
-            if($request->kd_bagian && !isset($request->kd_cabang)){
-                $entitas = null;
-            }
-            else if ($request->get('subdiv') != null) {
-                $entitas = $request->get('subdiv');
-            } else if ($request->get('cabang') != null) {
-                $entitas = $request->get('cabang');
-            } else {
-                $entitas = $request->get('divisi');
-            }
-
+            $entitas = EntityService::getEntityFromRequestEdit($request);
+// return $entitas;
             $karyawan = DB::table('mst_karyawan')
                 ->where('nip', $id)
                 ->first();
@@ -1116,5 +1120,13 @@ class KaryawanController extends Controller
         }
 
         return $month;
+    }
+
+    public function getNameKaryawan($nip){
+        $karyawan = DB::table('mst_karyawan')->select('nip', 'nama_karyawan')->where('nip', $nip)->get();
+
+        return response()->json([
+            'data' => $karyawan
+        ]);
     }
 }

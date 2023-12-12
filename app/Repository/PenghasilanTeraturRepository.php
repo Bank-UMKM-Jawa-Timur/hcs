@@ -20,8 +20,10 @@ class PenghasilanTeraturRepository
                     'tunjangan_karyawan.created_at',
                     'mst_karyawan.nama_karyawan',
                     'mst_tunjangan.nama_tunjangan',
+                    'tunjangan_karyawan.is_lock',
                     DB::raw('DATE(tunjangan_karyawan.created_at) as tanggal'),
-                    DB::raw('SUM(tunjangan_karyawan.nominal) as total_nominal')
+                    DB::raw('SUM(tunjangan_karyawan.nominal) as total_nominal'),
+                    DB::raw('COUNT(tunjangan_karyawan.id) as total_data'),
                 )
                 ->join('mst_karyawan', 'mst_karyawan.nip', 'tunjangan_karyawan.nip')
                 ->join('mst_tunjangan', 'mst_tunjangan.id', 'tunjangan_karyawan.id_tunjangan')
@@ -36,6 +38,15 @@ class PenghasilanTeraturRepository
                     ->groupBy('tunjangan_karyawan.id_tunjangan', 'tanggal')
                     ->orderBy('tanggal')
                     ->paginate($limit);
+        foreach ($data as $key => $value) {
+            $bulan = date("m", strtotime($value->tanggal));
+            $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
+            $tahun = date("Y", strtotime($value->tanggal));
+            $value->gajiPerBulan = GajiPerBulanModel::where('nip', $value->nip_tunjangan)
+            ->whereRaw('MONTH(bulan) = ?', [$bulanReq])
+            ->whereRaw('YEAR(tahun) = ?', [$tahun])
+            ->first();
+        }
         return $data;
     }
 
@@ -75,17 +86,40 @@ class PenghasilanTeraturRepository
 
     public function excelVitamin($bulan, $tahun){
         $cabang = CabangModel::select('kd_cabang')->pluck('kd_cabang');
-        $data = GajiPerBulanModel::select(
-            'gaji_per_bulan.nip',
+        $data = DB::table('tunjangan_karyawan')->select(
+            'tunjangan_karyawan.nip',
             'k.nama_karyawan',
             'k.no_rekening',
-            'gaji_per_bulan.tj_vitamin as vitamin'
+            'tunjangan_karyawan.nominal as vitamin'
         )
-            ->join('mst_karyawan as k', 'k.nip', 'gaji_per_bulan.nip')
-            ->where('bulan', $bulan)->where('tahun', $tahun)
-            ->whereNotIn('k.kd_entitas', $cabang)
+            ->join('mst_karyawan as k', 'k.nip', 'tunjangan_karyawan.nip')
+            ->where('id_tunjangan', 13) //vitamin
+            ->whereMonth('tunjangan_karyawan.created_at', $bulan)
+            ->whereYear('tunjangan_karyawan.created_at', $tahun)
             ->get();
 
+        return $data;
+    }
+
+    public function lock(array $data){
+        $idTunjangan = $data['id_tunjangan'];
+        $createdAt = $data['tanggal'];
+        return DB::table('tunjangan_karyawan')->where('id_tunjangan', $idTunjangan)
+        ->where(DB::raw('DATE(tunjangan_karyawan.created_at)'), $createdAt)->update([
+            'is_lock' => 1
+        ]);
+    }
+    public function unlock(array $data){
+        $idTunjangan = $data['id_tunjangan'];
+        $createdAt = $data['tanggal'];
+        return DB::table('tunjangan_karyawan')->where('id_tunjangan', $idTunjangan)
+        ->where(DB::raw('DATE(tunjangan_karyawan.created_at)'), $createdAt)->update([
+            'is_lock' => 0
+        ]);
+    }
+
+    public function TunjanganSelected($id){
+        $data = TunjanganModel::find($id);
         return $data;
     }
 }
