@@ -68,14 +68,20 @@
                                         <td>{{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('d F Y') }}</td>
                                         <td>
                                             @if ($item->is_lock != 1)
-                                                <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
-                                                    class="btn btn-success p-1">Lock</a>
-                                                <a href="{{ route('edit-tunjangan-bonus', [
-                                                    'idTunjangan' => $item->id_tunjangan,
-                                                    'tanggal' => \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') ])}}" class="btn btn-outline-warning p-1">Edit</a>
+                                                @can('penghasilan - lock - bonus')
+                                                    <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
+                                                        class="btn btn-success p-1">Lock</a>
+                                                @endcan
+                                                @can('penghasilan - edit - bonus')
+                                                    <a href="{{ route('edit-tunjangan-bonus', [
+                                                        'idTunjangan' => $item->id_tunjangan,
+                                                        'tanggal' => \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') ])}}" class="btn btn-outline-warning p-1">Edit</a>
+                                                @endcan
                                             @else
-                                                <a href="{{route('bonus-unlock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
-                                                    class="btn btn-success p-1">Unlock</a>
+                                                @can('penghasilan - unlock - bonus')
+                                                    <a href="{{route('bonus-unlock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
+                                                        class="btn btn-success p-1">Unlock</a>
+                                                @endcan
                                             @endif
                                             @can('penghasilan - import - bonus - detail')
                                             <a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}" class="btn btn-outline-info p-1">Detail</a>

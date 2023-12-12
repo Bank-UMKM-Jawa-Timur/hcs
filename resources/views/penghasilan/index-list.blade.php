@@ -82,14 +82,20 @@
                                         <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
                                         <td class="text-center">
                                             @if ($item->is_lock != 1)
-                                                <a href="{{route('penghasilan-tidak-teratur.lock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
-                                                    class="btn btn-success p-1">Lock</a>
-                                                <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur', [
-                                                    'idTunjangan' => $item->tunjangan_id,
-                                                    'tanggal' => $item->tanggal ])}}" class="btn btn-outline-warning p-1">Edit</a>
+                                                @can('penghasilan - lock - penghasilan tidak teratur')
+                                                    <a href="{{route('penghasilan-tidak-teratur.lock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
+                                                        class="btn btn-success p-1">Lock</a>
+                                                @endcan
+                                                @can('penghasilan - edit - penghasilan tidak teratur')
+                                                    <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur', [
+                                                        'idTunjangan' => $item->tunjangan_id,
+                                                        'tanggal' => $item->tanggal ])}}" class="btn btn-outline-warning p-1">Edit</a>
+                                                @endcan
                                             @else
-                                                <a href="{{route('penghasilan-tidak-teratur.unlock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
-                                                    class="btn btn-success p-1">Unlock</a>
+                                                @can('penghasilan - unlock - penghasilan tidak teratur')
+                                                    <a href="{{route('penghasilan-tidak-teratur.unlock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
+                                                        class="btn btn-success p-1">Unlock</a>
+                                                @endcan
                                             @endif
                                             <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->tunjangan_id }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
                                         </td>
