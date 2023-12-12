@@ -125,8 +125,6 @@ class GajiPerBulanController extends Controller
                 $tj = DB::table('tunjangan_karyawan')
                     ->where('nip', $item->nip)
                     ->where('id_tunjangan', $tunj->id)
-                    ->whereMonth('created_at', $bulan)
-                    ->whereYear('created_at', $tahun)
                     ->first();
                 array_push($tunjangan, ($tj != null) ? $tj->nominal : 0);
                 if ($tunj->status) {

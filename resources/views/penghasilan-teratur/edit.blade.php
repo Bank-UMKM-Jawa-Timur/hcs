@@ -63,7 +63,7 @@
         <input type="hidden" name="nominal" class="form-control nominal-input" value="" readonly>
         <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
         <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
-        <input type="hidden" name="old_tanggal" value="{{$old_created_at}}">
+        <input type="hidden" name="old_tanggal" value="{{$old_tanggal}}">
         <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
         <div class="d-flex justify-content-start">
             <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
@@ -135,40 +135,12 @@
 
                 // 11 = tranport, 12 = pulsa, 13 = vitamin, 14 = uang makan
 
-                if (value == 11 || value == 14) {
-                    if (tanggal == 25) {
-                        var message = "success"
-                        $('#error-penghasilan').addClass('d-none')
-                    } else {
-                        if (value == 12) {
-                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
-                            nmbr++
-                        } else if (value == 13) {
-                            var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
-                            nmbr++
-                        } else if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        }
-                        // alertWarning(message)
-                        $('#error-penghasilan').removeClass('d-none').html(message)
-                        $("#penghasilan").val("")
-                    }
-                } else if (value == 12) {
+                if (value == 12) {
                     if (tanggal >= 1 && tanggal <= 10){
                         var message = "success"
                         $('#error-penghasilan').addClass('d-none')
                     } else {
-                        if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 12) {
+                        if (value == 12) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                         } else if (value == 13 && tanggal > 5) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
@@ -184,23 +156,19 @@
                         $('#error-penghasilan').addClass('d-none')
                     }
                     else {
-                        if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 12) {
+                        if (value == 12) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                             nmbr++
                         } else if (value == 13) {
                             var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
                             nmbr++
                         }
                         // alertWarning(message)
                         $('#error-penghasilan').removeClass('d-none').html(message)
                         $("#penghasilan").val("")
                     }
+                } else {
+                    $('#error-penghasilan').addClass('d-none')
                 }
             })
 
