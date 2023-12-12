@@ -17,6 +17,7 @@ class PenghasilanTidakTeraturRepository
                     ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                     ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
                     ->select(
+                        'penghasilan_tidak_teratur.is_lock',
                         'penghasilan_tidak_teratur.id',
                         'penghasilan_tidak_teratur.id_tunjangan',
                         'penghasilan_tidak_teratur.nip',
