@@ -78,7 +78,7 @@ class PenghasilanTeraturController extends Controller
 
                 $nip_exist = $data->where('nip', $nip)->first();
 
-                $tunjangan = DB::table('tunjangan_lainnya AS tk')
+                $tunjangan = DB::table('transaksi_tunjangan AS tk')
                     ->select('m.nama_tunjangan')
                     ->join('mst_tunjangan AS m', 'm.id', 'tk.id_tunjangan')
                     ->where('tk.nip', $nip)
@@ -130,7 +130,7 @@ class PenghasilanTeraturController extends Controller
             if ($nip) {
                 if (is_array($nip)) {
                     for ($i = 0; $i < $total; $i++) {
-                        DB::table('tunjangan_lainnya')->insert([
+                        DB::table('transaksi_tunjangan')->insert([
                             'nip' => $nip[$i],
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $id_tunjangan,
@@ -222,9 +222,9 @@ class PenghasilanTeraturController extends Controller
             $old_tunjangan = $request->get('old_tunjangan');
             $old_tanggal = $request->get('old_tanggal');
 
-            DB::table('tunjangan_lainnya')
+            DB::table('transaksi_tunjangan')
             ->where('id_tunjangan', $old_tunjangan)
-            ->where(DB::raw('DATE(tunjangan_lainnya.tanggal)'), $old_tanggal)
+            ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $old_tanggal)
             ->delete();
 
             if ($nip) {
@@ -232,7 +232,7 @@ class PenghasilanTeraturController extends Controller
                     for ($i = 0; $i < $total; $i++) {
 
 
-                        DB::table('tunjangan_lainnya')->insert([
+                        DB::table('transaksi_tunjangan')->insert([
                             'nip' => $nip[$i],
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $old_tunjangan,
