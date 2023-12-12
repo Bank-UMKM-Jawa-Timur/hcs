@@ -38,7 +38,7 @@
             @if ($data->allGajiByKaryawan)
                 @forelse ($data->allGajiByKaryawan as $item)
                     @php
-                        $total_gaji = $item->gaji ? number_format($item->gaji, 0, ',', '.') : 0;
+                        $total_gaji = $item->total_gaji ? number_format($item->total_gaji, 0, ',', '.') : 0;
                         $bpjs_tk = $item->bpjs_tk ? $item->bpjs_tk : 0;
                         $dpp = $item->potongan ? $item->potongan->dpp : 0;
                         $kredit_koperasi = $item->kredit_koperasi ? $item->kredit_koperasi : 0;
@@ -46,7 +46,7 @@
                         $kredit_pegawai = $item->kredit_pegawai ? $item->kredit_pegawai : 0;
                         $iuran_ik = $item->iuran_ik ? $item->iuran_ik : 0;
                         $total_potongan = $bpjs_tk + $dpp + $kredit_koperasi + $iuran_koperasi + $kredit_pegawai + $iuran_ik;
-                        $total_diterima = $item->gaji - $total_potongan;
+                        $total_diterima = $item->total_gaji - $total_potongan;
 
                         // count total
                         $footer_total_gaji += str_replace('.', '', $total_gaji);
@@ -83,7 +83,6 @@
             @endif
         @endif
     </tbody>
-    <p>{{ $footer_total_potongan2 }}</p>
     <tfoot>
         <tr>
             <th colspan="2" class="text-center">Jumlah</th>

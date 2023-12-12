@@ -240,7 +240,7 @@
     </div>
 
     <div class="card-body">
-        <form action="{{ route('bonus.store') }}" enctype="multipart/form-data" method="POST" class="form-group mt-4">
+        <form action="{{ route('edit-tunjangan-bonus-post') }}" enctype="multipart/form-data" method="POST" class="form-group mt-4">
             @csrf
         <div class="row px-3">
             <div class="col-md-12">
@@ -269,13 +269,8 @@
                     <div class="form-row mb-3">
                         <div class="col">
                             <label for="">Kategori</label>
-                            <select name="kategori_bonus" id="kategori-bonus" class="form-control">
-                                <option value="">Pilih Kategori Tunjangan</option>
-                                @forelse ($data_tunjangan as $item)
-                                    <option value="{{ $item->id }}">{{ ucwords($item->nama_tunjangan) }}</option>
-                                @empty
-                                    <option value="">Tidak Ada Tunjangan</option>
-                                @endforelse
+                            <select name="kategori_bonus" id="kategori-bonus" class="form-control" @readonly(true)>
+                                <option value="{{ $penghasilan->id }}">{{ ucwords($penghasilan->nama_tunjangan) }}</option>
                             </select>
                         </div>
                         <div class="col kategori-tunjangan-select">
@@ -306,6 +301,8 @@
                 <div class="d-flex justify-content-start hidden">
                     <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
                     <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
+                    <input type="hidden" name="old_tanggal" value="{{$old_created_at}}">
+                    <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
                     <button type="submit" class="is-btn btn-info hidden" id="button-simpan">Simpan</button>
                 </div>
             </div>

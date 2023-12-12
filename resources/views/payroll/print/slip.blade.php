@@ -142,7 +142,7 @@
                     <tbody>
                         <tr style="border:1px solid #e3e3e3">
                             <td>Gaji Pokok</td>
-                            <td id="gaji_pokok" class="text-end">{{ number_format($data->gaji->total_gaji , 0, ',', '.')}}</td>
+                            <td id="gaji_pokok" class="text-end">{{ number_format($data->gaji->gj_pokok , 0, ',', '.')}}</td>
                         </tr>
                         {{-- @if ($data->gaji->tj_keluarga) --}}
                             <tr style="border:1px solid #e3e3e3">
@@ -192,28 +192,10 @@
                                 <td class="text-end">{{ number_format($data->gaji->tj_multilevel, 0, ',', '.')}}</td>
                             </tr>
                         @endif
-                        @if ($data->gaji->tj_pulsa)
-                            <tr style="border:1px solid #e3e3e3">
-                                <td>Pulsa</td>
-                                <td class="text-end">{{ number_format($data->gaji->tj_pulsa, 0, ',', '.')}}</td>
-                            </tr>
-                        @endif
                         @if ($data->gaji->tj_telepon)
                             <tr style="border:1px solid #e3e3e3">
                                 <td>Telepon</td>
                                 <td class="text-end">{{ number_format($data->gaji->tj_telepon, 0, ',', '.')}}</td>
-                            </tr>
-                        @endif
-                        @if ($data->gaji->tj_transport)
-                            <tr style="border:1px solid #e3e3e3">
-                                <td>Transport</td>
-                                <td class="text-end">{{ number_format($data->gaji->tj_transport, 0, ',', '.')}}</td>
-                            </tr>
-                        @endif
-                        @if ($data->gaji->tj_vitamin)
-                            <tr style="border:1px solid #e3e3e3">
-                                <td>Vitamin</td>
-                                <td class="text-end">{{ number_format($data->gaji->tj_vitamin, 0, ',', '.')}}</td>
                             </tr>
                         @endif
                     </tbody>
@@ -222,7 +204,7 @@
                     <thead>
                         <tr>
                             <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
-                            <th class="text-end">{{ number_format($data->gaji->gaji , 0, ',', '.')}}</th>
+                            <th class="text-end">{{ number_format($data->gaji->total_gaji , 0, ',', '.')}}</th>
                         </tr>
                     </thead>
                 </table>
@@ -239,7 +221,7 @@
                     <tbody>
                         <tr style="border:1px solid #e3e3e3">
                             <td>JP BPJS TK 1%</td>
-                            <td id="gaji_pokok" class="text-end">{{ number_format($data->bpjs_tk, 0, ',', '.') }}</td>
+                            <td id="gaji_pokok" class="text-end">{{ number_format(intval($data->bpjs_tk), 0, ',', '.') }}</td>
                         </tr>
                         <tr style="border:1px solid #e3e3e3">
                             <td>DPP 5%</td>
@@ -274,9 +256,12 @@
                 <hr>
                 <table class="table table-borderless" id="table-tunjangan-total">
                     <thead>
+                        @php
+                            $total_diterima = $data->gaji->total_gaji - $data->total_potongan;
+                        @endphp
                         <tr>
                             <th width="60%">TOTAL YANG DITERIMA</th>
-                            <th class="text-end">{{ $data->total_yg_diterima > 0 ? number_format($data->total_yg_diterima, 0, ',', '.') : '-'}}</th>
+                            <th class="text-end">{{ $total_diterima > 0 ? number_format($total_diterima, 0, ',', '.') : '-'}}</th>
                         </tr>
                     </thead>
                 </table>

@@ -8,6 +8,7 @@ use App\Models\SpModel;
 use Carbon\Carbon;
 use App\Models\TunjanganModel;
 use Carbon\CarbonPeriod;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 
 class PenghasilanTidakTeraturRepository
@@ -17,6 +18,7 @@ class PenghasilanTidakTeraturRepository
                     ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                     ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
                     ->select(
+                        'penghasilan_tidak_teratur.is_lock',
                         'penghasilan_tidak_teratur.id',
                         'penghasilan_tidak_teratur.id_tunjangan',
                         'penghasilan_tidak_teratur.nip',
@@ -24,9 +26,8 @@ class PenghasilanTidakTeraturRepository
                         'mst_tunjangan.nama_tunjangan',
                         'nominal',
                         'bulan',
-                        'penghasilan_tidak_teratur.created_at',
+                        'penghasilan_tidak_teratur.created_at as new_date',
                         DB::raw('SUM(nominal) as jumlah_nominal'),
-                        DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
                         DB::raw('COUNT(penghasilan_tidak_teratur.id) as total_data'),
                         'tahun',
                         'keterangan',
@@ -62,7 +63,6 @@ class PenghasilanTidakTeraturRepository
                           'nominal',
                           'keterangan',
                           'penghasilan_tidak_teratur.created_at',
-                          DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
                       )
                     //   ->groupBy('new_date')
                     ->where('mst_tunjangan.kategori','bonus')
@@ -139,7 +139,7 @@ class PenghasilanTidakTeraturRepository
 
     public function getPenghasilan($search, $limit=10, $page=1){
         $data = ImportPenghasilanTidakTeraturModel::join('mst_tunjangan', 'mst_tunjangan.id', 'penghasilan_tidak_teratur.id_tunjangan')
-            ->selectRaw("bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan, SUM(penghasilan_tidak_teratur.nominal) as grand_total")
+            ->selectRaw("mst_tunjangan.id as tunjangan_id, is_lock, bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan, SUM(penghasilan_tidak_teratur.nominal) as grand_total")
             ->having('grand_total', '>', 0)
             ->groupBy('bulan')
             ->groupBy('tahun')
@@ -196,7 +196,7 @@ class PenghasilanTidakTeraturRepository
             })
             ->orderBy('penghasilan_tidak_teratur.created_at', 'desc')
             ->paginate($limit);
-            
+
             $karyawanRepo->getEntity($penghasilan);
 
             foreach ($penghasilan as $key => $value) {
@@ -236,5 +236,57 @@ class PenghasilanTidakTeraturRepository
                 $value->display_jabatan = $display_jabatan;
             }
             return $penghasilan;
+    }
+
+    public function lockBonus(array $data){
+        $idTunjangan = $data['id_tunjangan'];
+        $tanggal = $data['tanggal'];
+        return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
+            ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'), $tanggal)
+            ->update([
+                'is_lock' => 1
+            ]);
+    }
+    public function unlockBonus(array $data){
+        $idTunjangan = $data['id_tunjangan'];
+        $tanggal = $data['tanggal'];
+        return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
+            ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'), $tanggal)
+            ->update([
+                'is_lock' => 0
+            ]);
+    }
+
+    public function lock(array $data)
+    {
+        $idTunjangan = $data['id_tunjangan'];
+        $tanggal = $data['tanggal'];
+        $bulan = date("m", strtotime($tanggal));
+        $tahun = date("Y", strtotime($tanggal));
+        return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
+            ->where('bulan', $bulan)
+            ->where('tahun', $tahun)
+            ->update([
+                'is_lock' => 1
+            ]);
+    }
+    public function unlock(array $data)
+    {
+        $idTunjangan = $data['id_tunjangan'];
+        $tanggal = $data['tanggal'];
+        $bulan = date("m", strtotime($tanggal));
+        $tahun = date("Y", strtotime($tanggal));
+        return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
+            ->where('bulan', $bulan)
+            ->where('tahun', $tahun)
+            ->update([
+                'is_lock' => 0
+            ]);
+    }
+
+    public function TunjanganSelected($id)
+    {
+        $data = TunjanganModel::find($id);
+        return $data;
     }
 }

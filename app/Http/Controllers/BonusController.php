@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Repository\PenghasilanTidakTeraturRepository;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -58,6 +59,10 @@ class BonusController extends Controller
         return view('bonus.import',[
             'data_tunjangan' => $tunjangan
         ]);
+    }
+
+    public function show($id){
+
     }
 
     /**
@@ -166,5 +171,79 @@ class BonusController extends Controller
         // Need permission
         $filename = Carbon::now()->format('his').'-bonus'.'.'.'xlsx';
         return Excel::download(new KaryawanExport,$filename);
+    }
+
+    public function lock(Request $request){
+        // return $request;
+        $repo = new PenghasilanTidakTeraturRepository;
+        $repo->lockBonus($request->all());
+        Alert::success('Berhasil lock tunjangan.');
+        return redirect()->route('bonus.index');
+    }
+    public function unlock(Request $request){
+        // return $request;
+        $repo = new PenghasilanTidakTeraturRepository;
+        $repo->unlockBonus($request->all());
+        Alert::success('Berhasil unlock tunjangan.');
+        return redirect()->route('bonus.index');
+    }
+
+    public function editTunjangan($idTunjangan, $tanggal)
+    {
+        $id = $idTunjangan;
+        $repo = new PenghasilanTidakTeraturRepository;
+        $penghasilan = $repo->TunjanganSelected($id);
+        return view('bonus.edit', [
+            'penghasilan' => $penghasilan,
+            'old_id' => $id,
+            'old_created_at' => $tanggal
+        ]);
+    }
+    public function editTunjanganPost(Request $request)
+    {
+        $request->validate([
+            'upload_csv' => 'required|mimes:xlsx,xls',
+            'nip' => 'required',
+            'kategori_bonus' => 'required',
+            'nominal' => 'required',
+        ], [
+            'kategori_bonus' => ':attribute harus terisi.'
+        ], [
+            'kategori_bonus' => 'Kategori',
+            'nip' => 'NIP'
+        ]);
+        try {
+            \DB::beginTransaction();
+            $data_nominal = explode(',', $request->get('nominal'));
+            $data_nip = explode(',', $request->get('nip'));
+            $tunjangan = TunjanganModel::where('id', $request->get('kategori_bonus'))->first();
+            $old_tunjangan = $request->get('old_tunjangan');
+            $old_tanggal = $request->get('old_tanggal');
+            $datetime = new DateTime($old_tanggal);
+            $new_tanggal = $datetime->format('Y-m-d');
+
+            DB::table('penghasilan_tidak_teratur')
+            ->where('id_tunjangan', $old_tunjangan)
+            ->where(DB::raw('DATE(created_at)'), $new_tanggal)
+            ->delete();
+            for ($i = 0; $i < count($data_nip); $i++) {
+                DB::table('penghasilan_tidak_teratur')
+                ->insert([
+                    'nip' => $data_nip[$i],
+                    'id_tunjangan' => $tunjangan->id,
+                    'nominal' => $data_nominal[$i],
+                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
+                    'created_at' => Carbon::parse($request->get('tanggal'))
+                ]);
+            }
+            \DB::commit();
+
+            Alert::success('Berhasil', 'Berhasil menambahkan bonus.');
+            return redirect()->route('bonus.index');
+        } catch (Exception $th) {
+            \DB::rollBack();
+            return $th;
+        }
     }
 }

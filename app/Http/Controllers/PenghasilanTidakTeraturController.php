@@ -147,7 +147,7 @@ class PenghasilanTidakTeraturController extends Controller
             $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
             $jp_mar_des = $hitungan_pengurang->jp_mar_des;
         }
-        // $nominal_jp = ($request->get('bulan') < 3) ? $jp_jan_feb : $jp_mar_des;
+
         // Get gaji secara bulanan
         for($i = 1; $i <= 12; $i++){
             $pph = PPHModel::where('nip', $nip)
@@ -159,30 +159,6 @@ class PenghasilanTidakTeraturController extends Controller
                 ->where('nip', $nip)
                 ->where('bulan', $i)
                 ->where('tahun', $tahun)
-                ->first();
-            $tj_trans =  DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $nip)
-                ->where('id_tunjangan', 11)
-                ->where('tahun', $tahun)
-                ->where('bulan', $i)
-                ->first();
-            $tj_pulsa =  DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $nip)
-                ->where('id_tunjangan', 12)
-                ->where('tahun', $tahun)
-                ->where('bulan', $i)
-                ->first();
-            $tj_vitamin =  DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $nip)
-                ->where('id_tunjangan', 13)
-                ->where('tahun', $tahun)
-                ->where('bulan', $i)
-                ->first();
-            $tj_uang_makan =  DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $nip)
-                ->where('id_tunjangan', 14)
-                ->where('tahun', $tahun)
-                ->where('bulan', $i)
                 ->first();
 
             $gj[$i - 1] = [
@@ -205,23 +181,23 @@ class PenghasilanTidakTeraturController extends Controller
             ];
 
             $total_gj[$i-1] = [
-            'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
-            'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
-            'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
-            'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
-            'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
-            'tj_telepon' => ($data != null) ? $data->tj_telepon : 0,
-            'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
-            'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
-            'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
-           ];
-           array_push($gaji, $gj[$i-1]);
-           array_push($total_gaji, array_sum($total_gj[$i-1]));
-        // Get Penghasilan tidak teratur karyawan (exclude bonus)
+                'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
+                'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
+                'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
+                'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
+                'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
+                'tj_telepon' => ($data != null) ? $data->tj_telepon : 0,
+                'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
+                'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
+                'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
+            ];
+            array_push($gaji, $gj[$i-1]);
+            array_push($total_gaji, array_sum($total_gj[$i-1]));
+            // Get Penghasilan tidak teratur karyawan (exclude bonus)
             $id_ptt = TunjanganModel::where('kategori', 'tidak teratur')
                                     ->orderBy('id')
                                     ->pluck('id');
-           $k = 0;
+            $k = 0;
             for($j = 0; $j < count($id_ptt); $j++){
                 $penghasilan = DB::table('penghasilan_tidak_teratur')
                     ->where('nip', $nip)
@@ -237,8 +213,8 @@ class PenghasilanTidakTeraturController extends Controller
             // Get Bonus Karyawan
             $l = 0;
             $id_bonus = TunjanganModel::where('kategori', 'bonus')
-                                     ->orderBy('id')
-                                     ->pluck('id');
+                                        ->orderBy('id')
+                                        ->pluck('id');
 
             // for($j = 22; $j <= 24; $j++){
             for($j = 0; $j < count($id_bonus); $j++){
@@ -534,6 +510,94 @@ class PenghasilanTidakTeraturController extends Controller
     {
         //
     }
+
+    public function lock(Request $request)
+    {
+        $repo = new PenghasilanTidakTeraturRepository;
+        $repo->lock($request->all());
+        Alert::success('Berhasil lock tunjangan.');
+        return redirect()->route('penghasilan-tidak-teratur.index');
+    }
+    public function unlock(Request $request)
+    {
+        $repo = new PenghasilanTidakTeraturRepository;
+        $repo->unlock($request->all());
+        Alert::success('Berhasil unlock tunjangan.');
+        return redirect()->route('penghasilan-tidak-teratur.index');
+    }
+
+    public function editTunjangan($idTunjangan, $tanggal)
+    {
+        $id = $idTunjangan;
+        $repo = new PenghasilanTidakTeraturRepository;
+        $penghasilan = $repo->TunjanganSelected($id);
+        return view('penghasilan.edit', [
+            'penghasilan' => $penghasilan,
+            'old_id' => $id,
+            'old_created_at' => $tanggal
+        ]);
+    }
+
+    public function editTunjanganPost(Request $request)
+    {
+        $request->validate([
+            'tanggal' => 'required',
+            'nip' => 'required',
+            'nominal' => 'required',
+        ], [
+            'required' => 'Data harus diisi.'
+        ]);
+        DB::beginTransaction();
+        try {
+            $nip = explode(',', $request->get('nip'));
+            $nominal = explode(',', $request->get('nominal'));
+            $keterangan = [];
+            if (strlen($request->get('keterangan')) > 0) {
+                $keterangan = explode(',', $request->get('keterangan'));
+            }
+            $inserted = array();
+            $tunjangan = $request->get('kategori');
+            if ($tunjangan == 'spd') {
+                $tunjangan = $request->get('kategori_spd');
+            }
+            $idTunjangan = TunjanganModel::where('nama_tunjangan', 'like', "%$tunjangan%")->first();
+
+            $old_tunjangan = $request->get('old_tunjangan');
+            $old_tanggal = $request->get('old_tanggal');
+
+            DB::table('penghasilan_tidak_teratur')
+            ->where('id_tunjangan', $old_tunjangan)
+            ->where(DB::raw('DATE(created_at)'), $old_tanggal)
+            ->delete();
+            foreach ($nip as $key => $item) {
+                array_push($inserted, [
+                    'nip' => $item,
+                    'id_tunjangan' => $old_tunjangan,
+                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
+                    'nominal' => str_replace('.', '', $nominal[$key]),
+                    'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
+                    'created_at' => $request->get('tanggal')
+                ]);
+            }
+
+            ImportPenghasilanTidakTeraturModel::insert($inserted);
+            DB::commit();
+
+            Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan');
+            return redirect()->route('penghasilan-tidak-teratur.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('pajak_penghasilan.create');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('pajak_penghasilan.create');
+        }
+    }
+
 
     function templateTidakTeratur() {
         $filename = Carbon::now()->format('his').'-penghasilan_tidak_teratur'.'.'.'xlsx';

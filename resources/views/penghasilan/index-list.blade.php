@@ -81,7 +81,23 @@
                                         <td>Rp {{ $item->grand_total ? number_format($item->grand_total, 0, '.', '.') : 0}}</td>
                                         <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->id_tunjangan }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
+                                            @if ($item->is_lock != 1)
+                                                @can('penghasilan - lock - penghasilan tidak teratur')
+                                                    <a href="{{route('penghasilan-tidak-teratur.lock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
+                                                        class="btn btn-success p-1">Lock</a>
+                                                @endcan
+                                                @can('penghasilan - edit - penghasilan tidak teratur')
+                                                    <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur', [
+                                                        'idTunjangan' => $item->tunjangan_id,
+                                                        'tanggal' => $item->tanggal ])}}" class="btn btn-outline-warning p-1">Edit</a>
+                                                @endcan
+                                            @else
+                                                @can('penghasilan - unlock - penghasilan tidak teratur')
+                                                    <a href="{{route('penghasilan-tidak-teratur.unlock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
+                                                        class="btn btn-success p-1">Unlock</a>
+                                                @endcan
+                                            @endif
+                                            <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->tunjangan_id }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
                                         </td>
                                     </tr>
                                 @empty
