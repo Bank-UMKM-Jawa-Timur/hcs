@@ -102,10 +102,8 @@ class GajiPerBulanController extends Controller
         $employee = array();
         $pph = array();
         $karyawan = DB::table('mst_karyawan')
-            ->whereNull('tanggal_penonaktifan')
-            ->whereNotIn('kd_entitas', $cabang)
-            ->orWhere('kd_entitas', null)
-            ->get();
+                    ->whereNull('tanggal_penonaktifan')
+                    ->get();
 
         // Get Penghasilan from mst_karyawan + tunjangan karyawan + penghasilan tidak teratur
         $item_penghasilan_teratur = TunjanganModel::select('id', 'kategori', 'status')
