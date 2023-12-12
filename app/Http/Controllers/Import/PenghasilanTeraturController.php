@@ -37,7 +37,34 @@ class PenghasilanTeraturController extends Controller
         $search = $request->get('q');
 
         $repo = new PenghasilanTeraturRepository;
-        $data = $repo->getPenghasilanTeraturImport($search, $limit, $page);
+        // $data = $repo->getPenghasilanTeraturImport($search, $limit, $page);
+        $data = DB::table('tunjangan_lainnya')
+        ->select(
+            'tunjangan_lainnya.nip as nip_tunjangan',
+            'tunjangan_lainnya.id_tunjangan as id_tunjangan_lainnya',
+            'tunjangan_lainnya.nominal',
+            'mst_karyawan.nama_karyawan',
+            'mst_tunjangan.nama_tunjangan',
+            'tunjangan_lainnya.is_lock',
+            DB::raw('DATE(tunjangan_lainnya.tanggal)'),
+            DB::raw('SUM(tunjangan_lainnya.nominal) as total_nominal'),
+            DB::raw('COUNT(tunjangan_lainnya.id) as total_data'),
+        )
+        ->join('mst_karyawan', 'mst_karyawan.nip', 'tunjangan_lainnya.nip')
+            ->join('mst_tunjangan', 'mst_tunjangan.id', 'tunjangan_lainnya.id_tunjangan')
+            ->where('mst_tunjangan.kategori', 'teratur')
+            ->where('mst_tunjangan.is_import', 1)
+            ->where(function ($query) use ($search) {
+                $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.nip', 'like', "%$search%")
+                    ->orWhere('tunjangan_lainnya.nominal', 'like', "%$search%")
+                    ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%");
+            })
+            ->groupBy('tunjangan_lainnya.id_tunjangan', 'tanggal')
+            ->orderBy('tunjangan_lainnya.tanggal')
+            ->paginate($limit);
+
+        return $data;
         return view('penghasilan-teratur.index', ['data' => $data]);
     }
 
@@ -78,13 +105,13 @@ class PenghasilanTeraturController extends Controller
 
                 $nip_exist = $data->where('nip', $nip)->first();
 
-                $tunjangan = DB::table('tunjangan_karyawan AS tk')
+                $tunjangan = DB::table('tunjangan_lainnya AS tk')
                     ->select('m.nama_tunjangan')
                     ->join('mst_tunjangan AS m', 'm.id', 'tk.id_tunjangan')
                     ->where('tk.nip', $nip)
                     ->where('tk.id_tunjangan', $id_tunjangan)
-                    ->whereMonth('tk.created_at', date('m', strtotime($tanggal)))
-                    ->whereYear('tk.created_at', date('Y', strtotime($tanggal)))
+                    ->whereMonth('tk.tanggal', date('m', strtotime($tanggal)))
+                    ->whereYear('tk.tanggal', date('Y', strtotime($tanggal)))
                     ->first();
 
                 return [
@@ -103,22 +130,6 @@ class PenghasilanTeraturController extends Controller
         } catch (Exception $e) {
             return $e;
         }
-    }
-
-    public function getKaryawanSearch(Request $request)
-    {
-        $data = KaryawanModel::select("nama_karyawan", "nip")
-            ->where('nip', 'LIKE', '%' . $request->get('search') . '%')
-            ->get();
-        foreach ($data as $item) {
-            $usersArray[] = array(
-                "label" => $item->nip . '-' . $item->nama_karyawan,
-                "value" => $item->nip,
-                "nama" => $item->nama_karyawan,
-            );
-        }
-
-        return response()->json($usersArray);
     }
 
 
@@ -145,11 +156,11 @@ class PenghasilanTeraturController extends Controller
             if ($nip) {
                 if (is_array($nip)) {
                     for ($i = 0; $i < $total; $i++) {
-                        DB::table('tunjangan_karyawan')->insert([
+                        DB::table('tunjangan_lainnya')->insert([
                             'nip' => $nip[$i],
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $id_tunjangan,
-                            'created_at' => now(),
+                            'tanggal' => now(),
                             'updated_at' => now(),
                         ]);
 
@@ -214,7 +225,7 @@ class PenghasilanTeraturController extends Controller
         return view('penghasilan-teratur.edit', [
             'penghasilan' => $penghasilan,
             'old_id' =>$id,
-            'old_created_at' => $createdAt
+            'old_tanggal' => $createdAt
         ]);
     }
 
@@ -233,9 +244,9 @@ class PenghasilanTeraturController extends Controller
             $old_tunjangan = $request->get('old_tunjangan');
             $old_tanggal = $request->get('old_tanggal');
 
-            DB::table('tunjangan_karyawan')
+            DB::table('tunjangan_lainnya')
             ->where('id_tunjangan', $old_tunjangan)
-            ->where(DB::raw('DATE(tunjangan_karyawan.created_at)'), $old_tanggal)
+            ->where(DB::raw('DATE(tunjangan_lainnya.tanggal)'), $old_tanggal)
             ->delete();
 
             if ($nip) {
@@ -243,11 +254,11 @@ class PenghasilanTeraturController extends Controller
                     for ($i = 0; $i < $total; $i++) {
 
 
-                        DB::table('tunjangan_karyawan')->insert([
+                        DB::table('tunjangan_lainnya')->insert([
                             'nip' => $nip[$i],
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $old_tunjangan,
-                            'created_at' => $old_tanggal,
+                            'tanggal' => $old_tanggal,
                             'updated_at' => $old_tanggal,
                         ]);
 
