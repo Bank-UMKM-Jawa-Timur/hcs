@@ -63,7 +63,7 @@
         <input type="hidden" name="nominal" class="form-control nominal-input" value="" readonly>
         <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
         <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
-        <input type="hidden" name="old_tanggal" value="{{$old_created_at}}">
+        <input type="hidden" name="old_tanggal" value="{{$old_tanggal}}">
         <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
         <div class="d-flex justify-content-start">
             <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
