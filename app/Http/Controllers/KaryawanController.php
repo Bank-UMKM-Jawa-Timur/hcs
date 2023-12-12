@@ -620,6 +620,9 @@ class KaryawanController extends Controller
             ->select('tunjangan_karyawan.*')
             ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
             ->get();
+        $data->potongan = DB::table('potongan_gaji')
+                            ->where('nip', $data->nip)
+                            ->get();
         $data->count_tj = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
             ->count('*');
