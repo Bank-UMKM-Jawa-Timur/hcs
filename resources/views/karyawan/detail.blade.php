@@ -333,7 +333,8 @@
                             <input type="text" disabled class="form-control" value="{{ $item->nama_tunjangan }}">
                         </div>
                         <div class="col-sm-5">
-                            <input type="text" disabled class="form-control" value="Rp. {{ ($item->nama_tunjangan != 'DPP') ? number_format($item->nominal, 0, ",", ".") : number_format($dpp_perhitungan) }}"                            </div>
+                            <input type="text" disabled class="form-control" value="Rp. {{ ($item->nama_tunjangan != 'DPP') ? number_format($item->nominal, 0, ",", ".") : number_format($dpp_perhitungan) }}" />
+                        </div>
                     </div>
                     @php
                         if($item->nama_tunjangan != 'DPP'){
@@ -346,7 +347,8 @@
             <div class="row m-0 mt-2">
                 <label for="" class="col-sm-2 mt-2">Total Gaji</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="Rp. {{ number_format($totalGaji) }}"                </div>
+                    <input type="text" disabled class="form-control" value="Rp. {{ number_format($totalGaji) }}" />
+                </div>
             </div>
             @if ($potongan != null)
                 @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi
@@ -411,7 +413,8 @@
                     <div class="row m-0 mt-2">
                         <label class="col-sm-2 mt-0">Total Potongan</label>
                         <div class="col-sm-10">
-                            <input type="text" disabled class="form-control" value="Rp. {{ number_format($total_potongan) }}"                    </div>
+                            <input type="text" disabled class="form-control" value="Rp. {{ number_format($total_potongan) }}"
+                        </div>
                     </div>
                 @endif
             @endif
