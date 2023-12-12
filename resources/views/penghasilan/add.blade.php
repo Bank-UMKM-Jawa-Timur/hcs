@@ -252,6 +252,13 @@
                 `);
             }
 
+            $('#button-simpan').on('click', function(){
+                $("#loadingModal").modal({
+                    keyboard: false
+                });
+                $("#loadingModal").modal("show");
+            })
+
         })
     </script>
 @endpush

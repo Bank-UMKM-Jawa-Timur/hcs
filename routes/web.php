@@ -174,6 +174,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
     Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
     Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
+    Route::get('/get-name-karyawan/{nip}', [\App\Http\Controllers\KaryawanController::class, 'getNameKaryawan']);
     Route::get('list-karyawan', [\App\Http\Controllers\KaryawanController::class, 'listKaryawan']);
     Route::resource('/mutasi', \App\Http\Controllers\MutasiController::class);
     Route::resource('/umur', \App\Http\Controllers\UmurController::class);
@@ -199,6 +200,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/details/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'details'])->name('details');
         Route::post('/cetak-vitamin', [PenghasilanTeraturController::class, 'cetakVitamin'])->name('cetak-vitamin');
         Route::get('/template-excel', [PenghasilanTeraturController::class, 'templateExcel'])->name('template-excel');
+        Route::get('/lock', [PenghasilanTeraturController::class, 'lock'])->name('lock');
+        Route::get('/unlock', [PenghasilanTeraturController::class, 'unlock'])->name('unlock');
+        Route::get('/edit-tunjangan/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'editTunjangan'])->name('edit-tunjangan');
+        Route::post('/edit-tunjangan-post', [PenghasilanTeraturController::class, 'editTunjanganPost'])->name('edit-tunjangan-post');
     });
 
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);

@@ -36,8 +36,9 @@ class PenghasilanTeraturController extends Controller
 
         $search = $request->get('q');
 
-        $data = new PenghasilanTeraturRepository;
-        return view('penghasilan-teratur.index', ['data' => $data->getPenghasilanTeraturImport($search, $limit, $page)]);
+        $repo = new PenghasilanTeraturRepository;
+        $data = $repo->getPenghasilanTeraturImport($search, $limit, $page);
+        return view('penghasilan-teratur.index', ['data' => $data]);
     }
 
     /**
@@ -192,6 +193,104 @@ class PenghasilanTeraturController extends Controller
         }
     }
 
+    public function lock(Request $request){
+        $repo = new PenghasilanTeraturRepository;
+        $repo->lock($request->all());
+        Alert::success('Berhasil lock tunjangan.');
+        return redirect()->route('penghasilan.import-penghasilan-teratur.index');
+    }
+
+    public function unlock(Request $request){
+        $repo = new PenghasilanTeraturRepository;
+        $repo->unlock($request->all());
+        Alert::success('Berhasil unlock tunjangan.');
+        return redirect()->route('penghasilan.import-penghasilan-teratur.index');
+    }
+
+    public function editTUnjangan($idTunjangan, $createdAt){
+        $id = $idTunjangan;
+        $repo = new PenghasilanTeraturRepository;
+        $penghasilan = $repo->TunjanganSelected($id);
+        return view('penghasilan-teratur.edit', [
+            'penghasilan' => $penghasilan,
+            'old_id' =>$id,
+            'old_created_at' => $createdAt
+        ]);
+    }
+
+    public function editTunjanganPost(Request $request){
+        try {
+            $id_tunjangan = $request->get('tunjangan');
+            $nominal = explode(',', $request->get('nominal'));
+            $nip = explode(',', $request->get('nip'));
+            $total = count($nip);
+            $tanggal = date('Y-m-d H:i:s');
+
+            $bulan = date("m", strtotime($tanggal));
+            $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
+            $tahun = date("Y", strtotime($tanggal));
+
+            $old_tunjangan = $request->get('old_tunjangan');
+            $old_tanggal = $request->get('old_tanggal');
+
+            DB::table('tunjangan_karyawan')
+            ->where('id_tunjangan', $old_tunjangan)
+            ->where(DB::raw('DATE(tunjangan_karyawan.created_at)'), $old_tanggal)
+            ->delete();
+
+            if ($nip) {
+                if (is_array($nip)) {
+                    for ($i = 0; $i < $total; $i++) {
+
+
+                        DB::table('tunjangan_karyawan')->insert([
+                            'nip' => $nip[$i],
+                            'nominal' => $nominal[$i],
+                            'id_tunjangan' => $old_tunjangan,
+                            'created_at' => $old_tanggal,
+                            'updated_at' => $old_tanggal,
+                        ]);
+
+                        $gaji = GajiPerBulanModel::where('nip', $nip[$i])
+                            ->where('bulan', $bulanReq)
+                            ->where('tahun', $tahun)
+                            ->first();
+                        $tunjangan = TunjanganModel::find($old_tunjangan);
+                        if ($gaji) {
+                            if ($tunjangan->nama_tunjangan == 'Transport') {
+                                $gaji->update([
+                                    'tj_transport' => $nominal[$i]
+                                ]);
+                            } elseif ($tunjangan->nama_tunjangan == 'Pulsa') {
+                                $gaji->update([
+                                    'tj_pulsa' => $nominal[$i]
+                                ]);
+                            } elseif ($tunjangan->nama_tunjangan == 'Vitamin') {
+                                $gaji->update([
+                                    'tj_vitamin' => $nominal[$i]
+                                ]);
+                            } elseif ($tunjangan->nama_tunjangan == 'Uang Makan') {
+                                $gaji->update([
+                                    'uang_makan' => $nominal[$i]
+                                ]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            Alert::success('Success', 'Berhasil menyimpan data');
+
+            return redirect()->route('penghasilan.import-penghasilan-teratur.index');
+        } catch (\Exception $e) {
+            Alert::error('Error', $e->getMessage());
+            return back();
+        } catch (\Illuminate\Database\QueryException $e) {
+            Alert::error('Error', $e->getMessage());
+            return back();
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -200,7 +299,6 @@ class PenghasilanTeraturController extends Controller
      */
     public function show($id)
     {
-
     }
 
     public function details($idTunjangan, $createdAt)
