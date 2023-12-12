@@ -61,6 +61,7 @@
                                 <input type="submit" value="Tampilkan" class="is-btn is-primary">
                             </div>
                             @if (\Request::has('nip') && \Request::has('tahun'))
+                                <h5>Slip Gaji {{$karyawan->nama_karyawan}} Tahun {{\Request::get('tahun')}}.</h5>
                                 <div class="table-responsive">
                                     @include('payroll.tables.slip', ['data' => $data])
                                 </div>
