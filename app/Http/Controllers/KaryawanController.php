@@ -434,6 +434,22 @@ class KaryawanController extends Controller
                     ]);
             }
 
+            if(count($request->get('potongan_kredit_koperasi')) > 0){
+                foreach($request->get('potongan_kredit_koperasi') as $key => $item){
+                    DB::table('potongan_gaji')
+                        ->insert([
+                            'nip' => $request->nip,
+                            'bulan' => $request->get('potongan_bulan')[$key],
+                            'tahun' => $request->get('potongan_tahun')[$key],
+                            'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')[$key]),
+                            'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')[$key]),
+                            'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')[$key]),
+                            'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')[$key]),
+                            'created_at' => now()
+                        ]);
+                }
+            }
+
             Alert::success('Berhasil', 'Berhasil menambah karyawan.');
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
