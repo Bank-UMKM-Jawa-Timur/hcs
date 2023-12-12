@@ -46,7 +46,7 @@
                         $kredit_pegawai = $item->kredit_pegawai ? $item->kredit_pegawai : 0;
                         $iuran_ik = $item->iuran_ik ? $item->iuran_ik : 0;
                         $total_potongan = $bpjs_tk + $dpp + $kredit_koperasi + $iuran_koperasi + $kredit_pegawai + $iuran_ik;
-                        $total_diterima = $item->gaji - $total_potongan;
+                        $total_diterima = $item->total_gaji - $total_potongan;
 
                         // count total
                         $footer_total_gaji += str_replace('.', '', $total_gaji);
