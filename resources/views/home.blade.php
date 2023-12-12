@@ -158,7 +158,7 @@
             gaji_pokok.push(item.gaji_pokok);
          })
         var optionsPe = {
-          series: [{
+            series: [{
                 name: "Total",
                 data: gaji_pokok
             }],
@@ -190,9 +190,11 @@
                 categories: cabang,
             }
         };
-
-        var perCabangGraph = new ApexCharts(document.querySelector("#percabang-graph"), optionsPe);
-        perCabangGraph.render();
+        var perCabangGraphSelector = document.querySelector('#percabang-graph');
+        if (perCabangGraphSelector) {
+            var perCabangGraph = new ApexCharts(perCabangGraphSelector, optionsPe);
+            perCabangGraph.render();
+        }
 
         //chart gaji perbulan dalam setahun
         var tanggal = new Date();
@@ -209,7 +211,7 @@
         })
         var optionsPerGaji = {
             series: [{
-                name: "Desktops",
+                name: "Total",
                 data: total_salary
             }],
             chart: {
