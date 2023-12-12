@@ -535,6 +535,94 @@ class PenghasilanTidakTeraturController extends Controller
         //
     }
 
+    public function lock(Request $request)
+    {
+        $repo = new PenghasilanTidakTeraturRepository;
+        $repo->lock($request->all());
+        Alert::success('Berhasil lock tunjangan.');
+        return redirect()->route('penghasilan-tidak-teratur.index');
+    }
+    public function unlock(Request $request)
+    {
+        $repo = new PenghasilanTidakTeraturRepository;
+        $repo->unlock($request->all());
+        Alert::success('Berhasil unlock tunjangan.');
+        return redirect()->route('penghasilan-tidak-teratur.index');
+    }
+
+    public function editTunjangan($idTunjangan, $tanggal)
+    {
+        $id = $idTunjangan;
+        $repo = new PenghasilanTidakTeraturRepository;
+        $penghasilan = $repo->TunjanganSelected($id);
+        return view('penghasilan.edit', [
+            'penghasilan' => $penghasilan,
+            'old_id' => $id,
+            'old_created_at' => $tanggal
+        ]);
+    }
+
+    public function editTunjanganPost(Request $request)
+    {
+        $request->validate([
+            'tanggal' => 'required',
+            'nip' => 'required',
+            'nominal' => 'required',
+        ], [
+            'required' => 'Data harus diisi.'
+        ]);
+        DB::beginTransaction();
+        try {
+            $nip = explode(',', $request->get('nip'));
+            $nominal = explode(',', $request->get('nominal'));
+            $keterangan = [];
+            if (strlen($request->get('keterangan')) > 0) {
+                $keterangan = explode(',', $request->get('keterangan'));
+            }
+            $inserted = array();
+            $tunjangan = $request->get('kategori');
+            if ($tunjangan == 'spd') {
+                $tunjangan = $request->get('kategori_spd');
+            }
+            $idTunjangan = TunjanganModel::where('nama_tunjangan', 'like', "%$tunjangan%")->first();
+
+            $old_tunjangan = $request->get('old_tunjangan');
+            $old_tanggal = $request->get('old_tanggal');
+
+            DB::table('penghasilan_tidak_teratur')
+            ->where('id_tunjangan', $old_tunjangan)
+            ->where(DB::raw('DATE(created_at)'), $old_tanggal)
+            ->delete();
+            foreach ($nip as $key => $item) {
+                array_push($inserted, [
+                    'nip' => $item,
+                    'id_tunjangan' => $old_tunjangan,
+                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
+                    'nominal' => str_replace('.', '', $nominal[$key]),
+                    'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
+                    'created_at' => $request->get('tanggal')
+                ]);
+            }
+
+            ImportPenghasilanTidakTeraturModel::insert($inserted);
+            DB::commit();
+
+            Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan');
+            return redirect()->route('penghasilan-tidak-teratur.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('pajak_penghasilan.create');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('pajak_penghasilan.create');
+        }
+    }
+
+
     function templateTidakTeratur() {
         $filename = Carbon::now()->format('his').'-penghasilan_tidak_teratur'.'.'.'xlsx';
         return Excel::download(new ExportBiayaTidakTeratur,$filename);
