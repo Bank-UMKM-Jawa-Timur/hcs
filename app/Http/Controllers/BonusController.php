@@ -174,14 +174,16 @@ class BonusController extends Controller
     }
 
     public function lock(Request $request){
+        // return $request;
         $repo = new PenghasilanTidakTeraturRepository;
-        $repo->lock($request->all());
+        $repo->lockBonus($request->all());
         Alert::success('Berhasil lock tunjangan.');
         return redirect()->route('bonus.index');
     }
     public function unlock(Request $request){
+        // return $request;
         $repo = new PenghasilanTidakTeraturRepository;
-        $repo->unlock($request->all());
+        $repo->unlockBonus($request->all());
         Alert::success('Berhasil unlock tunjangan.');
         return redirect()->route('bonus.index');
     }
@@ -191,7 +193,6 @@ class BonusController extends Controller
         $id = $idTunjangan;
         $repo = new PenghasilanTidakTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
-
         return view('bonus.edit', [
             'penghasilan' => $penghasilan,
             'old_id' => $id,
