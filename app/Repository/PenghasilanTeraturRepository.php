@@ -38,6 +38,15 @@ class PenghasilanTeraturRepository
                     ->groupBy('tunjangan_karyawan.id_tunjangan', 'tanggal')
                     ->orderBy('tanggal')
                     ->paginate($limit);
+        foreach ($data as $key => $value) {
+            $bulan = date("m", strtotime($value->tanggal));
+            $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
+            $tahun = date("Y", strtotime($value->tanggal));
+            $value->gajiPerBulan = GajiPerBulanModel::where('nip', $value->nip_tunjangan)
+            ->whereRaw('MONTH(bulan) = ?', [$bulanReq])
+            ->whereRaw('YEAR(tahun) = ?', [$tahun])
+            ->first();
+        }
         return $data;
     }
 
@@ -98,6 +107,14 @@ class PenghasilanTeraturRepository
         return DB::table('tunjangan_karyawan')->where('id_tunjangan', $idTunjangan)
         ->where(DB::raw('DATE(tunjangan_karyawan.created_at)'), $createdAt)->update([
             'is_lock' => 1
+        ]);
+    }
+    public function unlock(array $data){
+        $idTunjangan = $data['id_tunjangan'];
+        $createdAt = $data['tanggal'];
+        return DB::table('tunjangan_karyawan')->where('id_tunjangan', $idTunjangan)
+        ->where(DB::raw('DATE(tunjangan_karyawan.created_at)'), $createdAt)->update([
+            'is_lock' => 0
         ]);
     }
 

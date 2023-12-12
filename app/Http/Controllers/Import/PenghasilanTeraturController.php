@@ -36,8 +36,9 @@ class PenghasilanTeraturController extends Controller
 
         $search = $request->get('q');
 
-        $data = new PenghasilanTeraturRepository;
-        return view('penghasilan-teratur.index', ['data' => $data->getPenghasilanTeraturImport($search, $limit, $page)]);
+        $repo = new PenghasilanTeraturRepository;
+        $data = $repo->getPenghasilanTeraturImport($search, $limit, $page);
+        return view('penghasilan-teratur.index', ['data' => $data]);
     }
 
     /**
@@ -196,6 +197,13 @@ class PenghasilanTeraturController extends Controller
         $repo = new PenghasilanTeraturRepository;
         $repo->lock($request->all());
         Alert::success('Berhasil lock tunjangan.');
+        return redirect()->route('penghasilan.import-penghasilan-teratur.index');
+    }
+
+    public function unlock(Request $request){
+        $repo = new PenghasilanTeraturRepository;
+        $repo->unlock($request->all());
+        Alert::success('Berhasil unlock tunjangan.');
         return redirect()->route('penghasilan.import-penghasilan-teratur.index');
     }
 
