@@ -31,10 +31,6 @@
             </div>
             @php
                 $no = 1;
-                function rupiah($angka){
-                    $hasil_rupiah = number_format($angka, 0, ",", ".");
-                    return $hasil_rupiah;
-                }
                 $totalGaji = $karyawan->gj_pokok + $karyawan->gj_penyesuaian;
                 $tj = DB::table('tunjangan_karyawan')
                     ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
@@ -310,7 +306,7 @@
                 <label class="col-sm-2 mt-2">Honorarium</label>
                 <div class="col-sm-10">
                     @if (isset($karyawan->gj_pokok) != null)
-                        <input type="text" disabled class="form-control" value="{{ rupiah($karyawan->gj_pokok) }}">
+                        <input type="text" disabled class="form-control" value="{{ number_format($karyawan->gj_pokok, 0, ",", ".") }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
@@ -320,7 +316,7 @@
                 <label class="col-sm-2 mt-2">Honorarium Penyesuaian</label>
                 <div class="col-sm-10">
                     @if (isset($karyawan->gj_penyesuaian) != null)
-                        <input type="text" disabled class="form-control" value="{{ rupiah($karyawan->gj_penyesuaian) }}">
+                        <input type="text" disabled class="form-control" value="{{ number_format($karyawan->gj_penyesuaian, 0, ",", ".") }}">
                     @else
                         <input type="text" disabled class="form-control" value="-">
                     @endif
@@ -337,8 +333,7 @@
                                 <input type="text" disabled class="form-control" value="{{ $item->nama_tunjangan }}">
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" disabled class="form-control" value="Rp. {{ ($item->nama_tunjangan != 'DPP') ? rupiah($item->nominal) : rupiah($dpp_perhitungan) }}">
-                            </div>
+                                <input type="text" disabled class="form-control" value="Rp. {{ ($item->nama_tunjangan != 'DPP') ? number_format($item->nominal, 0, ",", ".") : number_format($dpp_perhitungan) }}">, 0, ",", ".")                            </div>
                         </div>
                         @php
                             if($item->nama_tunjangan != 'DPP'){
@@ -351,74 +346,74 @@
             <div class="row m-0 mt-2">
                 <label for="" class="col-sm-2 mt-2">Total Gaji</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="Rp. {{ rupiah($totalGaji) }}">
-                </div>
+                    <input type="text" disabled class="form-control" value="Rp. {{ number_format($totalGaji) }}">, 0, ",", ".")                </div>
             </div>
-            @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi
-                || $potongan->kredit_pegawai || $potongan->iuran_ik)
-                <hr>
-                <div class="row m-0 ">
-                    <div class="col-lg-12">
-                        <h6>Data Potongan</h6>
-                    </div>
-                </div>
-            @endif
-            @if ($potongan->kredit_koperasi)
-                @if ($potongan->kredit_koperasi > 0)
-                    <div class="row m-0 mt-2">
-                        <label class="col-sm-2 mt-0">Kredit Koperasi</label>
-                        <div class="col-sm-10">
-                            <input type="text" disabled class="form-control" value="Rp. {{ rupiah($potongan->kredit_koperasi) }}">
+            @if ($potongan != null)
+                @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi
+                    || $potongan->kredit_pegawai || $potongan->iuran_ik)
+                    <hr>
+                    <div class="row m-0 ">
+                        <div class="col-lg-12">
+                            <h6>Data Potongan</h6>
                         </div>
                     </div>
                 @endif
-            @endif
-            @if ($potongan->iuran_koperasi)
-                @if ($potongan->iuran_koperasi > 0)
-                    <div class="row m-0 mt-2">
-                        <label class="col-sm-2 mt-0">Iuran Koperasi</label>
-                        <div class="col-sm-10">
-                            <input type="text" disabled class="form-control" value="Rp. {{ rupiah($potongan->iuran_koperasi) }}">
+                @if ($potongan->kredit_koperasi)
+                    @if ($potongan->kredit_koperasi > 0)
+                        <div class="row m-0 mt-2">
+                            <label class="col-sm-2 mt-0">Kredit Koperasi</label>
+                            <div class="col-sm-10">
+                                <input type="text" disabled class="form-control" value="Rp. {{ number_format($potongan->kredit_koperasi, 0, ",", ".") }}">
+                            </div>
                         </div>
+                    @endif
+                @endif
+                @if ($potongan->iuran_koperasi)
+                    @if ($potongan->iuran_koperasi > 0)
+                        <div class="row m-0 mt-2">
+                            <label class="col-sm-2 mt-0">Iuran Koperasi</label>
+                            <div class="col-sm-10">
+                                <input type="text" disabled class="form-control" value="Rp. {{ number_format($potongan->iuran_koperasi, 0, ",", ".") }}">
+                            </div>
+                        </div>
+                    @endif
+                @endif
+                @if ($potongan->kredit_pegawai)
+                    @if ($potongan->kredit_pegawai > 0)
+                        <div class="row m-0 mt-2">
+                            <label class="col-sm-2 mt-0">Kredit Pegawai</label>
+                            <div class="col-sm-10">
+                                <input type="text" disabled class="form-control" value="Rp. {{ number_format($potongan->kredit_pegawai, 0, ",", ".") }}">
+                            </div>
+                        </div>
+                    @endif
+                @endif
+                @if ($potongan->iuran_ik)
+                    @if ($potongan->iuran_ik > 0)
+                        <div class="row m-0 mt-2">
+                            <label class="col-sm-2 mt-0">Iuran IK</label>
+                            <div class="col-sm-10">
+                                <input type="text" disabled class="form-control" value="Rp. {{ number_format($potongan->iuran_ik, 0, ",", ".") }}">
+                            </div>
+                        </div>
+                    @endif
+                @endif
+                @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi
+                    || $potongan->kredit_pegawai || $potongan->iuran_ik)
+                    @php
+                        $kredit_koperasi = $potongan->kredit_koperasi;
+                        $iuran_koperasi = $potongan->iuran_koperasi;
+                        $kredit_pegawai = $potongan->kredit_pegawai;
+                        $iuran_ik = $potongan->iuran_ik;
+                        $total_potongan = $kredit_koperasi + $iuran_koperasi + $kredit_pegawai + $iuran_ik;
+                    @endphp
+                    <br>
+                    <div class="row m-0 mt-2">
+                        <label class="col-sm-2 mt-0">Total Potongan</label>
+                        <div class="col-sm-10">
+                            <input type="text" disabled class="form-control" value="Rp. {{ number_format($total_potongan) }}">, 0, ",", ".")                    </div>
                     </div>
                 @endif
-            @endif
-            @if ($potongan->kredit_pegawai)
-                @if ($potongan->kredit_pegawai > 0)
-                    <div class="row m-0 mt-2">
-                        <label class="col-sm-2 mt-0">Kredit Pegawai</label>
-                        <div class="col-sm-10">
-                            <input type="text" disabled class="form-control" value="Rp. {{ rupiah($potongan->kredit_pegawai) }}">
-                        </div>
-                    </div>
-                @endif
-            @endif
-            @if ($potongan->iuran_ik)
-                @if ($potongan->iuran_ik > 0)
-                    <div class="row m-0 mt-2">
-                        <label class="col-sm-2 mt-0">Iuran IK</label>
-                        <div class="col-sm-10">
-                            <input type="text" disabled class="form-control" value="Rp. {{ rupiah($potongan->iuran_ik) }}">
-                        </div>
-                    </div>
-                @endif
-            @endif
-            @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi
-                || $potongan->kredit_pegawai || $potongan->iuran_ik)
-                @php
-                    $kredit_koperasi = $potongan->kredit_koperasi;
-                    $iuran_koperasi = $potongan->iuran_koperasi;
-                    $kredit_pegawai = $potongan->kredit_pegawai;
-                    $iuran_ik = $potongan->iuran_ik;
-                    $total_potongan = $kredit_koperasi + $iuran_koperasi + $kredit_pegawai + $iuran_ik;
-                @endphp
-                <br>
-                <div class="row m-0 mt-2">
-                    <label class="col-sm-2 mt-0">Total Potongan</label>
-                    <div class="col-sm-10">
-                        <input type="text" disabled class="form-control" value="Rp. {{ rupiah($total_potongan) }}">
-                    </div>
-                </div>
             @endif
 
             @if ($karyawan->status == 'Kawin' && $suis != null)

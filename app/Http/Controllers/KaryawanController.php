@@ -576,7 +576,7 @@ class KaryawanController extends Controller
                 )
                 ->where('nip', $id)
                 ->first();
-        
+
         $totalDppPerhitungan = 0;
         if ($dppPerhitungan) {
             $gjPokok = $dppPerhitungan->gj_pokok;
@@ -588,7 +588,6 @@ class KaryawanController extends Controller
         $potongan = PotonganModel::where('nip', $karyawan->nip)
                                 ->orderBy('id', 'DESC')
                                 ->first();
-
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,
