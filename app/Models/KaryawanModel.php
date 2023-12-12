@@ -7,9 +7,12 @@ use App\Service\EntityService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
-class KaryawanModel extends Model
+class KaryawanModel extends Authenticatable
 {
+    use HasRoles;
     use HasFactory;
 
     protected $table = 'mst_karyawan';

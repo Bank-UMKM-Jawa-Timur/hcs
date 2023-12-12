@@ -26,6 +26,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $karyawan = KaryawanModel::where('nip', '01474')->first();
+        $role = $karyawan->getRoleNames();
+        // return $role;s
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -67,7 +70,6 @@ class UserController extends Controller
             'name' => $karyawan->nama_karyawan,
             'username' => $request->name,
             'email' => $request->username,
-            'role' => $request->role,
             'password' =>  Hash::make($request->password),
         ]);
         Alert::success('Berhasil Menambahkan User.');
@@ -118,7 +120,6 @@ class UserController extends Controller
             'name' => $nama->nama_karyawan,
             'username' => $nama->nama_karyawan,
             'email' => $request->username,
-            'role' => $request->role,
         ]);
         Alert::success('Berhasil Mengubah User.');
         return redirect()->route('user.index');

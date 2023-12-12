@@ -52,9 +52,6 @@
                                     Username
                                 </th>
                                 <th>
-                                    Role
-                                </th>
-                                <th>
                                     Aksi
                                 </th>
                             </thead>
@@ -71,7 +68,6 @@
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->email }}</td>
-                                        <td>{{ $item->role }}</td>
                                         <td class="d-flex">
                                             <a class="is-btn is-warning m-1" href="{{ route('user.edit', $item->id) }}">
                                                 Edit

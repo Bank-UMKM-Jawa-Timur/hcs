@@ -12,8 +12,7 @@ class UserRepository
 {
     private $param;
     public function getListUser($search, $limit=10, $page=1) {
-        $this->param['data'] = DB::table('users')->select('users.id', 'users.name', 'users.email', 'r.name as role')
-        ->join('roles as r', 'users.role_id', 'r.id')
+        $this->param['data'] = DB::table('users')->select('users.id', 'users.name', 'users.email', )
         ->when($search, function ($query) use ($search) {
             $query->where('users.name', 'like', "%$search%")
             ->orWhere('users.email', 'like', "%$search%")
