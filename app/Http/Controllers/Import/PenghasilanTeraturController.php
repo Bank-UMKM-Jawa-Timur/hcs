@@ -37,34 +37,7 @@ class PenghasilanTeraturController extends Controller
         $search = $request->get('q');
 
         $repo = new PenghasilanTeraturRepository;
-        // $data = $repo->getPenghasilanTeraturImport($search, $limit, $page);
-        $data = DB::table('tunjangan_lainnya')
-        ->select(
-            'tunjangan_lainnya.nip as nip_tunjangan',
-            'tunjangan_lainnya.id_tunjangan as id_tunjangan_lainnya',
-            'tunjangan_lainnya.nominal',
-            'mst_karyawan.nama_karyawan',
-            'mst_tunjangan.nama_tunjangan',
-            'tunjangan_lainnya.is_lock',
-            DB::raw('DATE(tunjangan_lainnya.tanggal)'),
-            DB::raw('SUM(tunjangan_lainnya.nominal) as total_nominal'),
-            DB::raw('COUNT(tunjangan_lainnya.id) as total_data'),
-        )
-        ->join('mst_karyawan', 'mst_karyawan.nip', 'tunjangan_lainnya.nip')
-            ->join('mst_tunjangan', 'mst_tunjangan.id', 'tunjangan_lainnya.id_tunjangan')
-            ->where('mst_tunjangan.kategori', 'teratur')
-            ->where('mst_tunjangan.is_import', 1)
-            ->where(function ($query) use ($search) {
-                $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
-                    ->orWhere('mst_karyawan.nip', 'like', "%$search%")
-                    ->orWhere('tunjangan_lainnya.nominal', 'like', "%$search%")
-                    ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%");
-            })
-            ->groupBy('tunjangan_lainnya.id_tunjangan', 'tanggal')
-            ->orderBy('tunjangan_lainnya.tanggal')
-            ->paginate($limit);
-
-        return $data;
+        $data = $repo->getPenghasilanTeraturImport($search, $limit, $page);
         return view('penghasilan-teratur.index', ['data' => $data]);
     }
 
@@ -161,6 +134,7 @@ class PenghasilanTeraturController extends Controller
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $id_tunjangan,
                             'tanggal' => now(),
+                            'created_at' => now(),
                             'updated_at' => now(),
                         ]);
 
