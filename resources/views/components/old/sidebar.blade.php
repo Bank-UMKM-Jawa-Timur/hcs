@@ -226,7 +226,7 @@
                             </a>
                         </li>
                         @endcan
-                        @can('penghasilan - import - potongan')
+                        {{--  @can('penghasilan - import - potongan')
                         <li style="margin-top: -15px"
                             class="@active('potongan.index')">
                             <a href="{{ route('potongan.index') }}">
@@ -235,7 +235,7 @@
                                 <p></p>
                             </a>
                         </li>
-                        @endcan
+                        @endcan  --}}
                         @can('penghasilan - payroll - list payroll')
                         <li style="margin-top: -15px"
                             class="@active('payroll.index')">

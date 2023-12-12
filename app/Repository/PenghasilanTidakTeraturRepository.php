@@ -196,7 +196,7 @@ class PenghasilanTidakTeraturRepository
             })
             ->orderBy('penghasilan_tidak_teratur.created_at', 'desc')
             ->paginate($limit);
-
+            
             $karyawanRepo->getEntity($penghasilan);
 
             foreach ($penghasilan as $key => $value) {
