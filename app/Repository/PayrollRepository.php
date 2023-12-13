@@ -1712,6 +1712,8 @@ class PayrollRepository
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
+                                'status_jabatan',
+                                'tanggal_pengangkat',
                                 DB::raw("
                                     IF(
                                         status = 'Kawin',
