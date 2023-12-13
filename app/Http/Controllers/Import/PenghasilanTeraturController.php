@@ -135,6 +135,7 @@ class PenghasilanTeraturController extends Controller
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $id_tunjangan,
                             'tanggal' => $tanggal,
+                            'is_lock' => 1,
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]);
