@@ -59,7 +59,7 @@
                             <div class="custom-checkbox col-6">
                               <input type="checkbox" class="custom-control-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                               <label class="custom-control-label" for="remember">Remember me</label>
-                            </div>              
+                            </div>
                           </div>
                         </div>
                         <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login">
