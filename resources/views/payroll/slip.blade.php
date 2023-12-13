@@ -92,7 +92,7 @@
                 <div class="d-flex justify-content-start">
                     <div>
                         <img src="{{ asset('style/assets/img/logo.png') }}" width="100px" class="img-fluid">
-                        <p class="pt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+                        <p class="pt-3">SLIP GAJI PEGAWAI. </p>
                     </div>
                 </div>
                 <hr>
@@ -104,16 +104,25 @@
                                     <td class="fw-bold">NIP</td>
                                     <td>:</td>
                                     <td id="data-nip"></td>
+                                    <td class="fw-bold">Jabatan</td>
+                                    <td>:</td>
+                                    <td id="data-jabatan"></td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Nama Karyawan</td>
                                     <td>:</td>
                                     <td id="nama"></td>
+                                    <td class="fw-bold">Tanggal Bergabung</td>
+                                    <td>:</td>
+                                    <td id="tanggal-bergabung"></td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">No Rekening</td>
                                     <td>:</td>
                                     <td id="no_rekening"></td>
+                                    <td class="fw-bold">Lama Kerja</td>
+                                    <td>:</td>
+                                    <td id="lama-kerja"></td>
                                 </tr>
                             </table>
                             <hr>
@@ -121,7 +130,10 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 m-0">
-                            <h4 class="font-weight-bold">Pendapatan</h4>
+                            <div class="d-flex justify-content-around bg-primary text-white p-1 rounded">
+                                <h4 class="font-weight-bold ">Pendapatan</h4>
+                                <h4 class="font-weight-bold ">Jumlah</h4>
+                            </div>
                             <table class="table table-borderless m-0" style="border:1px solid #e3e3e3" id="table-tunjangan">
                                 <tbody>
 
@@ -132,7 +144,10 @@
                             </table>
                         </div>
                         <div class="col-md-6">
-                            <h4 class="font-weight-bold">Potongan</h4>
+                            <div class="d-flex justify-content-around bg-primary text-white p-1 rounded">
+                                <h4 class="font-weight-bold ">Potongan</h4>
+                                <h4 class="font-weight-bold ">Jumlah</h4>
+                            </div>
                             <table class="table table-borderless m-0" style="border:1px solid #e3e3e3" id="table-potongan">
                                 <tbody>
 
@@ -145,8 +160,7 @@
 
                             </table>
                         </div>
-                    </div>
-                    <div class="row">
+                        <br>
                         <div class="col-md-12">
                             <table class="table table-borderless m-0" style="border:1px solid #e3e3e3" id="table-total-diterima">
                                 <thead>
@@ -168,6 +182,48 @@
 @endsection
 @push('script')
     <script>
+        function convertToTerbilang(number) {
+            var bilangan = [
+                '',
+                'Satu',
+                'Dua',
+                'Tiga',
+                'Empat',
+                'Lima',
+                'Enam',
+                'Tujuh',
+                'Delapan',
+                'Sembilan',
+                'Sepuluh',
+                'Sebelas'
+            ];
+
+            var terbilang = '';
+
+            if (number < 12) {
+                terbilang = bilangan[number];
+            } else if (number < 20) {
+                terbilang = convertToTerbilang(number - 10) + ' Belas';
+            } else if (number < 100) {
+                terbilang = convertToTerbilang(Math.floor(number / 10)) + ' Puluh ' + convertToTerbilang(number % 10);
+            } else if (number < 200) {
+                terbilang = ' Seratus ' + convertToTerbilang(number - 100);
+            } else if (number < 1000) {
+                terbilang = convertToTerbilang(Math.floor(number / 100)) + ' Ratus ' + convertToTerbilang(number % 100);
+            } else if (number < 2000) {
+                terbilang = ' Seribu ' + convertToTerbilang(number - 1000);
+            } else if (number < 1000000) {
+                terbilang = convertToTerbilang(Math.floor(number / 1000)) + ' Ribu ' + convertToTerbilang(number % 1000);
+            } else if (number < 1000000000) {
+                terbilang = convertToTerbilang(Math.floor(number / 1000000)) + ' Juta ' + convertToTerbilang(number % 1000000);
+            } else if (number < 1000000000000) {
+                terbilang = convertToTerbilang(Math.floor(number / 1000000000)) + ' Miliar ' + convertToTerbilang(number % 1000000000);
+            } else if (number < 1000000000000000) {
+                terbilang = convertToTerbilang(Math.floor(number / 1000000000000)) + ' Triliun ' + convertToTerbilang(number % 1000000000000);
+            }
+
+            return terbilang ;
+        }
 
         function generatePendapatanItem(data) {
             var tableTunjangan = ``;
@@ -288,15 +344,43 @@
             return tableTunjangan;
         }
 
+        function lamaBekerja(date) {
+            var dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+
+            if (!date.match(dateFormat)) {
+                console.error("Please use the format 'Y-m-d'.");
+                return null;
+            }
+
+            var dateParts = date.split("-");
+            var mulaiKerja = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
+            var now = new Date();
+
+            var differenceInMilliseconds = now - mulaiKerja;
+
+            var years = Math.floor(differenceInMilliseconds / (365.25 * 24 * 60 * 60 * 1000));
+            var months = Math.floor((differenceInMilliseconds % (365.25 * 24 * 60 * 60 * 1000)) / (30.44 * 24 * 60 * 60 * 1000));
+
+            return {
+                tahun: years,
+                bulan: months,
+            };
+        }
+
         $('.show-data').on('click',function(e) {
             const targetId = $(this).data("target-id");
             const nip = "{{\Request::get('nip')}}";
             const tahun = "{{\Request::get('tahun')}}";
             const nama = $(this).data("nama");
             const norek = $(this).data("no_rekening");
+            const jabatan = $(this).data("status_jabatan");
+            const tanggalPengangkat = $(this).data("tanggal_pengangkat");
+            const result = lamaBekerja(tanggalPengangkat);
             const data = $(this).data('json');
             const bulan = data.bulan;
-            
+
+
             $('#cetak-gaji').on('click',function(e) {
                 $.ajax({
                         type: "GET",
@@ -329,6 +413,16 @@
             $('#data-nip').html(`${nip}`)
             $('#nama').html(`${nama}`)
             $('#no_rekening').html(`${norek != null ? norek : '-'}`)
+            $('#data-jabatan').html(`${jabatan}`)
+            $('#tanggal-bergabung').html(`${tanggalPengangkat}`)
+
+            if (result !== null) {
+                const { tahun, bulan } = result;
+                const settDate = `${tahun} tahun, ${bulan} bulan`;
+                $('#lama-kerja').html(settDate);
+            } else {
+                $('#lama-kerja').html("Invalid date format");
+            }
 
             var nominal = 0;
             // Tunjangan
@@ -387,11 +481,20 @@
             `
             $("#table-total-potongan thead").append(tableTotalPotongan);
             // END POTONGAN
+            var totalGaji = total_diterima > 0 ? formatRupiahPayroll(total_diterima.toString()) : '-';
+            var terbilang = total_diterima > 0 ? total_diterima : '-';
             var tableTotalDiterima = `
-                <tr>
-                    <th width="60%">Total Yang Diterima</th>
-                    <th class="text-right ">${total_diterima > 0 ? formatRupiahPayroll(total_diterima.toString()) : '-'}</th>
+                <tr class="bg-primary text-white p-1 rounded">
+                    <th colspan="2" width="40%">Total Yang Diterima</th>
                 </tr>
+                <tr>
+                    <th width="40%">Jumlah</th>
+                    <th>${totalGaji}</th>
+                </tr
+                <tr>
+                    <th width="40%">Terbilang</th>
+                    <th>${convertToTerbilang(terbilang) + " Rupiah"}</th>
+                </tr
             `
             $("#table-total-diterima thead").append(tableTotalDiterima);
         })

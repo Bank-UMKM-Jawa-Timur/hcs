@@ -100,7 +100,7 @@
                         <h4 class="fw-bold p-3"> PT HCS</h4>
                     </center>
                     <div class="content col">
-                        <p class="text-start">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto facere ipsam quod laudantium voluptates commodi error aperiam libero, esse suscipit dicta deleniti consequatur eos, nostrum odit, nemo quas neque? Magnam.</p>
+                        <p class="text-start">SLIP GAJI PEGAWAI.</p>
                     </div>
                 </div>
             </div>

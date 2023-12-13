@@ -116,7 +116,7 @@ class PayrollController extends Controller
         $page = null;
 
         $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, null, 'cetak');
-        
+
         return view('payroll.tables.slip-pdf', ['data' => $data]);
 
     }

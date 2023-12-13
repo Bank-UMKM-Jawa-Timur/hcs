@@ -53,7 +53,7 @@
                         $footer_total_potongan += str_replace('.', '', $total_potongan);
                         $footer_total_diterima += str_replace('.', '', $total_diterima);
                         $footer_total_gaji_bersih += str_replace('.', '', $total_diterima);
-                        
+
                         $footer_total_potongan2 += $total_potongan;
                         $footer_total_gaji_bersih2 += $total_diterima;
                     @endphp
@@ -71,7 +71,10 @@
                             data-nip="{{$data->nip}}"
                             data-nama="{{$data->nama_karyawan}}"
                             data-no_rekening="{{$data->no_rekening}}"
+                            data-status_jabatan={{$data->status_jabatan}}
+                            data-tanggal_pengangkat={{$data->tanggal_pengangkat}}
                             data-json="{{ $item }}"
+                            data-bulan="{{$item->bulan}}"
                             class="is-btn btn-sm is-primary p-1 show-data">Slip</button>
                         </td>
                     </tr>
