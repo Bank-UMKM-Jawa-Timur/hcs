@@ -393,6 +393,16 @@
                         xhrFields: {
                             responseType: 'blob'
                         },
+                        // beforeSend: function () {
+                        //     $('#loading-message').html(`
+                        //             <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        //                 Loading Data...
+                        //                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        //                     <span aria-hidden="true">&times;</span>
+                        //                 </button>
+                        //             </div>
+                        //     `);
+                        // },
                         success: function(response){
                             var blob = new Blob([response]);
                             var link = document.createElement('a');
@@ -443,35 +453,53 @@
             var iuran_koperasi = data.iuran_koperasi ? data.iuran_koperasi : 0;
             var kredit_pegawai = data.kredit_pegawai ? data.kredit_pegawai : 0;
             var iuran_ik = data.iuran_ik ? data.iuran_ik : 0;
+            var bpjs_tk = data.bpjs_tk ? data.bpjs_tk : 0;
+            var potongan_dpp = data.potongan.dpp ? data.potongan.dpp : 0;
             var total_potongan = parseInt(data.bpjs_tk) + parseInt(data.potongan.dpp) + parseInt(kredit_koperasi) + parseInt(iuran_koperasi) + parseInt(kredit_pegawai) + parseInt(iuran_ik);
             var total_diterima = parseInt(data.total_gaji) - total_potongan;
+            var potongan = ``;
 
-            var potongan = `
+            if (bpjs_tk > 0 ) {
+                potongan += `
                 <tr style="border:1px solid #e3e3e3">
                     <td>JP BPJS TK 1%</td>
                     <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(parseInt(data.bpjs_tk))}</td>
-                </tr>
+                </tr>`
+            }
+            if (potongan_dpp > 0) {
+                potongan += `
                 <tr style="border:1px solid #e3e3e3">
                     <td>DPP 5%</td>
                     <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.potongan.dpp)}</td>
-                </tr>
+                </tr>`
+            }
+            if (kredit_koperasi > 0) {
+                potongan += `
                 <tr style="border:1px solid #e3e3e3">
                     <td>KREDIT KOPERASI</td>
-                    <td id="gaji_pokok" class="text-right">${data.kredit_koperasi ? formatRupiahPayroll(parseInt(data.kredit_koperasi)) : 0}</td>
-                </tr>
-                <tr style="border:1px solid #e3e3e3">
+                    <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(parseInt(data.kredit_koperasi))}</td>
+                </tr>`
+            }
+            if (iuran_koperasi > 0) {
+                potongan += `<tr style="border:1px solid #e3e3e3">
                     <td>IUARAN KOPERASI	</td>
-                    <td id="gaji_pokok" class="text-right">${data.iuran_koperasi ? formatRupiahPayroll(parseInt(data.iuran_koperasi)) : 0}</td>
-                </tr>
+                    <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(parseInt(data.iuran_koperasi))}</td>
+                </tr>`
+            }
+            if (kredit_pegawai > 0) {
+                potongan += `
                 <tr style="border:1px solid #e3e3e3">
                     <td>KREDIT PEGAWAI	</td>
-                    <td id="gaji_pokok" class="text-right">${data.kredit_pegawai ? formatRupiahPayroll(parseInt(data.kredit_pegawai)) : 0}</td>
-                </tr>
+                    <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(parseInt(data.kredit_pegawai))}</td>
+                </tr>`
+            }
+            if (iuran_ik > 0) {
+                potongan += `
                 <tr style="border:1px solid #e3e3e3">
                     <td>IURAN IK</td>
-                    <td id="gaji_pokok" class="text-right">${data.iuran_ik ? formatRupiahPayroll(parseInt(data.iuran_ik)) : 0}</td>
-                </tr>
-            `
+                    <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(parseInt(data.iuran_ik))}</td>
+                </tr>`
+            }
             $('#table-potongan tbody').append(potongan);
             var tableTotalPotongan = `
                 <tr>
