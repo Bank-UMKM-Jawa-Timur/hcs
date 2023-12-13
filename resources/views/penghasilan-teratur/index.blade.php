@@ -94,7 +94,7 @@
                                                             class="btn btn-success p-1">Lock</a>
                                                     @endcan
                                                     @can('penghasilan - edit - penghasilan teratur')
-                                                        <a href="{{ route('penghasilan.edit-tunjangan', ['idTunjangan' => $item->id_transaksi_tunjangan, 'createdAt' => \Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')]) }}" class="btn btn-outline-warning p-1">Edit</a>
+                                                        <a href="{{ route('penghasilan.edit-tunjangan')}}?idTunjangan={{$item->id_transaksi_tunjangan}}&bulan={{$item->bulan}}&createdAt={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}" class="btn btn-outline-warning p-1">Edit</a>
                                                     @endcan
                                                 @else
                                                     @can('penghasilan - unlock - penghasilan teratur')
