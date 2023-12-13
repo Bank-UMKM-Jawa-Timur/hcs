@@ -364,6 +364,91 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="card p-2 ml-3 mr-3 shadow">
+                    <div class="card-header" id="headingFive">
+                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">Data Potongan</a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                        <div class="row m-0 pb-3 col-md-12" id="row_potongan">
+                            <div class="col col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label for="is">Tahun</label>
+                                    <select name="potongan_tahun[]" id="potongan_tahun"
+                                        class="form-control">
+                                        <option value="0">-- Pilih tahun --</option>
+                                        @php
+                                            $sekarang = date('Y');
+                                            $awal = $sekarang - 5;
+                                            $akhir = $sekarang + 5;
+                                        @endphp
+                                        @for($i=$awal;$i<=$akhir;$i++)
+                                            <option value="{{$i}}">{{$i}}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label for="is">Bulan</label>
+                                    <select name="potongan_bulan[]" id="potongan_bulan"
+                                        class="form-control">
+                                        <option value="0">-- Pilih bulan --</option>
+                                        <option value="1">Januari</option>
+                                        <option value="2">Februari</option>
+                                        <option value="3">Maret</option>
+                                        <option value="4">April</option>
+                                        <option value="5">Mei</option>
+                                        <option value="6">Juni</option>
+                                        <option value="7">Juli</option>
+                                        <option value="8">Agustus</option>
+                                        <option value="9">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">Desember</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label for="is_nama">Kredit Koperasi</label>
+                                    <input type="number" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi[]" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="col col-md-3 col-sm-6">
+                                <div class="form-group">
+                                    <label for="is_nama">Iuran Koperasi</label>
+                                    <input type="number" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi[]" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="col col-md-3 col-sm-6">
+                                <div class="form-group">
+                                    <label for="is_nama">Kredit Pegawai</label>
+                                    <input type="number" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai[]" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="col col-md-3 col-sm-6">
+                                <div class="form-group">
+                                    <label for="is_nama">Iuran IK</label>
+                                    <input type="number" id="potongan_iuran_ik" name="potongan_iuran_ik[]" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="col col-md-1">
+                                <button class="btn btn-info mt-3" type="button" id="btn-add-potongan">
+                                    <i class="bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            <div class="col col-md-1">
+                                <button class="btn btn-info mt-3" type="button" id="btn-delete-potongan">
+                                    <i class="bi-dash-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="row m-3">
@@ -379,6 +464,7 @@
         let status = $('#status');
         $('#kantor').attr("disabled", "disabled");
         var x =1;
+        var countIdPotongan = 1
 
         $("#is_jml_anak").keyup(function(){
             $("#row_anak").empty();
@@ -650,6 +736,98 @@
             if(y > 1){
                 $(this).closest('.card').remove()
                 y--;
+            }
+        })
+
+        $('#collapseFive').on('click', "#btn-add-potongan", function(){
+            $('#collapseFive').append(`
+                <hr class="mx-4">
+                <div class="row m-0 pb-3 col-md-12" id="row_tunjangan">
+                    <div class="col col-md-4 col-sm-6">
+                        <div class="form-group">
+                            <label for="is">Tahun</label>
+                            <select name="potongan_tahun[]" id="potongan_tahun"
+                                class="form-control">
+                                <option value="0">-- Pilih tahun --</option>
+                                @php
+                                    $sekarang = date('Y');
+                                    $awal = $sekarang - 5;
+                                    $akhir = $sekarang + 5;
+                                @endphp
+                                @for($i=$awal;$i<=$akhir;$i++)
+                                    <option value="{{$i}}">{{$i}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col col-md-4 col-sm-6">
+                        <div class="form-group">
+                            <label for="is">Bulan</label>
+                            <select name="potongan_bulan[]" id="potongan_bulan"
+                                class="form-control">
+                                <option value="0">-- Pilih bulan --</option>
+                                <option value="1">Januari</option>
+                                <option value="2">Februari</option>
+                                <option value="3">Maret</option>
+                                <option value="4">April</option>
+                                <option value="5">Mei</option>
+                                <option value="6">Juni</option>
+                                <option value="7">Juli</option>
+                                <option value="8">Agustus</option>
+                                <option value="9">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col col-md-4 col-sm-6">
+                        <div class="form-group">
+                            <label for="is_nama">Kredit Koperasi</label>
+                            <input type="number" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi[]" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="col col-md-3 col-sm-6">
+                        <div class="form-group">
+                            <label for="is_nama">Iuran Koperasi</label>
+                            <input type="number" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi[]" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="col col-md-3 col-sm-6">
+                        <div class="form-group">
+                            <label for="is_nama">Kredit Pegawai</label>
+                            <input type="number" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai[]" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="col col-md-3 col-sm-6">
+                        <div class="form-group">
+                            <label for="is_nama">Iuran IK</label>
+                            <input type="number" id="potongan_iuran_ik" name="potongan_iuran_ik[]" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="col col-md-1">
+                        <button class="btn btn-info mt-3" type="button" id="btn-add-potongan">
+                            <i class="bi-plus-lg"></i>
+                        </button>
+                    </div>
+                    <div class="col col-md-1">
+                        <button class="btn btn-info mt-3" type="button" id="btn-delete-potongan">
+                            <i class="bi-dash-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            `);
+            countIdPotongan++
+        });
+
+        $('#collapseFive').on('click', "#btn-delete-potongan", function(){
+            var row = $(this).closest('.row')
+            var hr = row.parent().find('hr').remove()
+            var value = row.children('#id_pot').val()
+            if(countIdPotongan > 1){
+                $(this).closest('.row').remove()
+                $(this).closest('.row').parent().find('hr').remove()
+                countIdPotongan--;
             }
         })
     </script>
