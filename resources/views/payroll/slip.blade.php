@@ -179,8 +179,8 @@
 
         function generatePendapatanItem(data) {
             var tableTunjangan = ``;
-
             // Gaji Pokok
+            // if (data.total_gaji > 0) {
             if (data.gj_pokok > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
@@ -188,76 +188,84 @@
                         <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gj_pokok)}</td>
                     </tr>
                 `
-            }
-            // Jabatan
-            if (data.tj_jabatan > 0) {
-                tableTunjangan += `
-                    <tr style="border:1px solid #e3e3e3">
-                        <td>Jabatan</td>
-                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.tj_jabatan)}</td>
-                    </tr>
-                `
-            }
-            // Gaji Penyesuaian
-            if (data.gj_penyesuaian > 0) {
-                tableTunjangan += `
-                    <tr style="border:1px solid #e3e3e3">
-                        <td>Penyesuaian</td>
-                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gj_penyesuaian)}</td>
-                    </tr>
-                `
-            }
+            // }
             // T. Keluarga
-            if (data.tj_keluarga > 0) {
+            // if (data.tj_keluarga > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
                         <td>Keluarga</td>
                         <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.tj_keluarga)}</td>
                     </tr>
                 `
-            }
-            // T. Kemahalan
-            if (data.tj_kemahalan > 0) {
+            // }
+            // Jabatan
+            // if (data.tj_jabatan > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td>Kemahalan</td>
-                        <td class="text-right">${formatRupiahPayroll(data.tj_kemahalan)}</td>
+                        <td>Jabatan</td>
+                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.tj_jabatan)}</td>
                     </tr>
                 `
-            }
-            // T. Kesejahteraan
-            if (data.tj_kesejahteraan > 0) {
+            // }
+            // Gaji Penyesuaian
+            // if (data.gj_penyesuaian > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td>Kesejahteraan</td>
-                        <td class="text-right">${formatRupiahPayroll(data.tj_kesejahteraan)}</td>
+                        <td>Penyesuaian</td>
+                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gj_penyesuaian)}</td>
                     </tr>
                 `
-            }
-            // T. Multilevel
-            if (data.tj_multilevel > 0) {
+            // }
+            // T. Perumahan
+            // if (data.tj_perumahan > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td>Multilevel</td>
-                        <td class="text-right">${formatRupiahPayroll(data.tj_multilevel)}</td>
+                        <td>Perumahan</td>
+                        <td class="text-right">${formatRupiahPayroll(data.tj_perumahan)}</td>
                     </tr>
                 `
-            }
+            // }
+             // // Listrik & Air
+            //  tableTunjangan += `
+            //         <tr style="border:1px solid #e3e3e3">
+            //             <td>Listrik & Air</td>
+            //             <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.total_gaji)}</td>
+            //         </tr>
+            //     `
             // T. Pelaksana
-            if (data.tj_pelaksana > 0) {
+            // if (data.tj_pelaksana > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
                         <td>Pelaksana</td>
                         <td class="text-right">${formatRupiahPayroll(data.tj_pelaksana)}</td>
                     </tr>
                 `
-            }
-            // T. Perumahan
-            if (data.tj_perumahan > 0) {
+            // }
+           
+            // T. Kemahalan
+            // if (data.tj_kemahalan > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td>Perumahan</td>
-                        <td class="text-right">${formatRupiahPayroll(data.tj_perumahan)}</td>
+                        <td>Kemahalan</td>
+                        <td class="text-right">${formatRupiahPayroll(data.tj_kemahalan)}</td>
+                    </tr>
+                `
+            // }
+            // T. Kesejahteraan
+            // if (data.tj_kesejahteraan > 0) {
+                tableTunjangan += `
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Kesejahteraan</td>
+                        <td class="text-right">${formatRupiahPayroll(data.tj_kesejahteraan)}</td>
+                    </tr>
+                `
+            // }
+            // T. Multilevel
+            if (data.tj_multilevel > 0) {
+                tableTunjangan += `
+                    <tr style="border:1px solid #e3e3e3">
+                        <td>Multilevel</td>
+                        <td class="text-right">${formatRupiahPayroll(data.tj_multilevel)}</td>
                     </tr>
                 `
             }
