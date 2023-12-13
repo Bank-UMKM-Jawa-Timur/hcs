@@ -272,7 +272,6 @@
 
                 $hitung = $waktuSekarang->diff($mulaKerja);
                 $masaKerja = $hitung->format('%y Tahun | %m Bulan | %d Hari');
-
             @endphp
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Masa Kerja</label>

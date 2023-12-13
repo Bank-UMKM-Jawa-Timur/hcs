@@ -93,15 +93,11 @@ class PayrollController extends Controller
         $year = $request->get('request_year');
         $data = $payrollRepository->getSlipCetak($nip, $month, $year);
 
-        $pdf = Pdf::loadview('payroll.print.slip',[
+        $pdf = PDF::loadview('payroll.print.slip', [
             'data' => $data
         ]);
-
-        $fileName =  time().'.'. 'pdf' ;
-        $pdf->save(public_path() . '/' . $fileName);
-
-        $pdf = public_path($fileName);
-        return response()->download($pdf);
+        $fileName =  time() . '.' . 'pdf';
+        return $pdf->download($fileName);
     }
 
     function slipPDF() {
@@ -116,7 +112,7 @@ class PayrollController extends Controller
         $page = null;
 
         $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, null, 'cetak');
-        
+
         return view('payroll.tables.slip-pdf', ['data' => $data]);
 
     }
