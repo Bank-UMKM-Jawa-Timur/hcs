@@ -64,11 +64,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        'karyawan' => [
+            'driver' => 'eloquent',
+            'table' => App\Models\KaryawanModel::class,
+        ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
