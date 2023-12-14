@@ -29,6 +29,7 @@ use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenggantiBiayaKesehatanController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PengkinianDataController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilKantorPusatController;
 use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\SlipGajiController;
