@@ -5,9 +5,9 @@
     <div class="card-header">
         <h5 class="card-title">Bonus</h5>
         <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> >Bonus</p>
-        @can('penghasilan - import - bonus - import')
-        <a href="{{ route('bonus.create') }}" class="btn is-btn is-primary">Import Bonus</a>
-        @endcan
+        @if (auth()->user()->hasRole(['kepegawaian']))
+            <a href="{{ route('bonus.create') }}" class="btn is-btn is-primary">Import Bonus</a>
+        @endif
     </div>
 </div>
 
@@ -68,24 +68,22 @@
                                         <td>{{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('d F Y') }}</td>
                                         <td>
                                             @if ($item->is_lock != 1)
-                                                @can('penghasilan - lock - bonus')
+                                                @if (auth()->user()->hasRole(['kepegawaian']))
                                                     <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
                                                         class="btn btn-success p-1">Lock</a>
-                                                @endcan
-                                                @can('penghasilan - edit - bonus')
                                                     <a href="{{ route('edit-tunjangan-bonus', [
                                                         'idTunjangan' => $item->id_tunjangan,
                                                         'tanggal' => \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') ])}}" class="btn btn-outline-warning p-1">Edit</a>
-                                                @endcan
+                                                @endif
                                             @else
-                                                @can('penghasilan - unlock - bonus')
+                                                @if (auth()->user()->hasRole(['kepegawaian','admin']))
                                                     <a href="{{route('bonus-unlock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
                                                         class="btn btn-success p-1">Unlock</a>
-                                                @endcan
+                                                @endif
                                             @endif
-                                            @can('penghasilan - import - bonus - detail')
-                                            <a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}" class="btn btn-outline-info p-1">Detail</a>
-                                            @endcan
+                                            @if (auth()->user()->hasRole(['kepegawaian']))
+                                                <a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}" class="btn btn-outline-info p-1">Detail</a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

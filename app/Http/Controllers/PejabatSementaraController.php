@@ -24,7 +24,7 @@ class PejabatSementaraController extends Controller
 
     public function index()
     {
-        if (!Auth::user()->can('manajemen karyawan - data penjabat sementara')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $pjs = PjsModel::with(['karyawan', 'jabatan'])->get();
@@ -33,7 +33,7 @@ class PejabatSementaraController extends Controller
 
     public function create()
     {
-        if (!Auth::user()->can('manajemen karyawan - tambah penjabat sementara')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         $jabatan = JabatanModel::whereNotIn('kd_jabatan', [
@@ -60,7 +60,7 @@ class PejabatSementaraController extends Controller
 
     public function history(Request $request)
     {
-        if (!Auth::user()->can('histori - penjabat sementara')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $pjs = $karyawan = null;

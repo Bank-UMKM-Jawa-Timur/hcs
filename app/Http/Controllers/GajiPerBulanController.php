@@ -59,6 +59,9 @@ class GajiPerBulanController extends Controller
 
     public function index()
     {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+            return view('roles.forbidden');
+        }
         // Need permission
         $data = DB::table('gaji_per_bulan')
             ->selectRaw('DISTINCT(bulan), tahun')

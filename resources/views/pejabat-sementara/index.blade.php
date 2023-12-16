@@ -7,11 +7,11 @@
             <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="{{ route('pejabat-sementara.index') }}">Penjabat Sementara</a></p>
         </div>
         <div class="card-header row mt-3 mr-8 pl-4" >
-            @can('manajemen karyawan - tambah penjabat sementara')
-            <a href="{{ route('pejabat-sementara.create') }}" class="mb-3">
-                <button class="is-btn is-primary">Tambah PJS</button>
-            </a>
-            @endcan
+            @if (auth()->user()->hasRole(['hrd']))
+                <a href="{{ route('pejabat-sementara.create') }}" class="mb-3">
+                    <button class="is-btn is-primary">Tambah PJS</button>
+                </a>
+            @endif
         </div>
     </div>
     <div class="card-body">
@@ -30,7 +30,9 @@
                                     <th>Mulai</th>
                                     <th>Berakhir</th>
                                     <th>Status</th>
+                                    @if (auth()->user()->hasRole(['hrd']))
                                     <th>Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,13 +46,15 @@
                                         <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
                                         <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
                                         <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
-                                        <td class="d-flex justify-content-center">
-                                            @if(!$data->tanggal_berakhir)
-                                                <a href="#" data-toggle="modal" data-id="{{ $data->id }}" data-target="#exampleModal-{{ $data->id }}" class="btn btn-info">nonaktifkan</a>
-                                            @else
-                                            -
-                                            @endif
-                                        </td>
+                                        @if (auth()->user()->hasRole(['hrd']))
+                                            <td class="d-flex justify-content-center">
+                                                @if(!$data->tanggal_berakhir)
+                                                    <a href="#" data-toggle="modal" data-id="{{ $data->id }}" data-target="#exampleModal-{{ $data->id }}" class="btn btn-info">nonaktifkan</a>
+                                                @else
+                                                -
+                                                @endif
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

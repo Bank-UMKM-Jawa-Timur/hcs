@@ -12,32 +12,43 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
+    
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): RedirectResponse
+    // public function store(LoginRequest $request): RedirectResponse
+    // {
+    //     $request->authenticate();
+
+    //     $request->session()->regenerate();
+
+    //     return redirect()->intended(RouteServiceProvider::HOME);
+    // } 
+
+    public function store(Request $request)
     {
-        $request->authenticate();
+        $request->validate([
+            'email'=>'required|string',
+            'password'=>'required'
+         ]);
 
-        $request->session()->regenerate();
+        if (Auth::guard('karyawan')->attempt(['nip' => $request->email, 'password' => $request->password])) {
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }elseif(Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
 
-        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        if (Auth::guard('user')->check()) {
+            Auth::guard('user')->logout();
+        }elseif(Auth::guard('karyawan')->check()){
+            Auth::guard('karyawan')->logout();
+        }
 
         $request->session()->invalidate();
 

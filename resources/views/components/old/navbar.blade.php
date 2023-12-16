@@ -32,8 +32,11 @@
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="nc-icon nc-single-02"></i>
                             {{-- @if (session('status')) --}}
-                            <p class="font-weight-bold">Selamat datang,{{ auth()->user()->name }}</p>
-                            <p></p>
+                            @if (Str::length(Auth::guard('karyawan')->user()) > 0)
+                            <p class="font-weight-bold">Selamat datang,{{ Auth::guard('karyawan')->user()->nama_karyawan }}</p>
+                            @elseif(Str::length(Auth::guard('user')->user()) > 0)
+                            <p class="font-weight-bold">Selamat datang,{{ Auth::guard('user')->user()->name }}</p>
+                            @endif
                             {{-- @endif --}}
                         </a>
                         <div class="dropdown-menu dropdown-primary dropdown-menu-right"

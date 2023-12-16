@@ -17,7 +17,8 @@
                 {{-- @php
                     $has_permission_dashboard = \App\Http\Controllers\Controller::hasPermission('dashboard');
                 @endphp --}}
-                @if (auth()->user()->can('dashboard'))
+
+                @if (auth()->user()->hasRole(['admin','hrd','cabang','kepegawaian','user']))
                     <li class="@active('home')">
                         <a class="nav-link" href="{{ route('home') }}" style="font-weight: bolder">
                             <div class="d-flex">
@@ -28,7 +29,7 @@
                     </li>
                 @endif
                 {{-- Menu Manajemen Karyawan --}}
-                @if (auth()->user()->can('manajemen karyawan'))
+                @if (auth()->user()->hasRole(['admin','hrd','kepegawaian']))
                     <li
                         class="{{ request()->is(
                             'karyawan',
@@ -76,7 +77,8 @@
                             ? 'show'
                             : '' }}"
                             id="submenu1">
-                            @if (auth()->user()->can('manajemen karyawan - data karyawan'))
+
+                        @if (auth()->user()->hasRole(['admin','hrd','kepegawaian']))
                                 <li style="margin-top: -15px" class="@active('karyawan.index,karyawan.create,karyawan.edit,karyawan.show,import,klasifikasi')">
                                     <a href="{{ route('karyawan.index') }}">
                                         <i class="nc-icon nc-badge"></i>
@@ -84,8 +86,8 @@
                                         <p></p>
                                     </a>
                                 </li>
-                            @endif
-                            @can('manajemen karyawan - data masa pensiunan')
+                        @endif
+                        @if (auth()->user()->hasRole(['admin','hrd']))
                                 <li style="" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
                                     <a href="{{ route('reminder-pensiun.index') }}">
                                         <i class="nc-icon nc-badge"></i>
@@ -93,8 +95,7 @@
                                         <p></p>
                                     </a>
                                 </li>
-                            @endcan
-                            @can('manajemen karyawan - pengkinian data')
+
                             <li style="" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
                                 <a href="{{ route('pengkinian_data.index') }}">
                                     <i class="nc-icon nc-ruler-pencil"></i>
@@ -102,8 +103,7 @@
                                     <p></p>
                                 </a>
                             </li>
-                            @endcan
-                            @can('manajemen karyawan - pergerakan karir')
+
                             <li class="dropdown {{ request()->is(
                                     'mutasi',
                                     'mutasi/*',
@@ -123,27 +123,19 @@
                                     <p></p>
                                 </a>
                                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                    @can('manajemen karyawan - pergerakan karir - data mutasi')
                                         <a class="dropdown-item @active('mutasi.index')"
                                             href="{{ route('mutasi.index') }}">Mutasi</a>
-                                    @endcan
-                                    @can('manajemen karyawan - pergerakan karir - data demosi')
+
                                         <a class="dropdown-item @active('demosi.index')"
                                         href="{{ route('demosi.index') }}">Demosi</a>
-                                    @endcan
-                                    @can('manajemen karyawan - pergerakan karir - data promosi')
+
                                         <a class="dropdown-item @active('promosi.index')"
                                             href="{{ route('promosi.index') }}">Promosi</a>
 
-                                    @endcan
-                                    @can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan')
                                         <a class="dropdown-item @active('karyawan.penonaktifan')"
                                             href="{{ route('penonaktifan.index') }}">Penonaktifan</a>
-                                    @endcan
                                 </div>
                             </li>
-                            @endcan
-                            @can('manajemen karyawan - data penjabat sementara')
                                 <li style="margin-top: -15px" class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">
                                     <a href="{{ route('pejabat-sementara.index') }}">
                                         <i class="nc-icon nc-tie-bow"></i>
@@ -151,8 +143,6 @@
                                         <p></p>
                                     </a>
                                 </li>
-                            @endcan
-                            @can('manajemen karyawan - reward & punishment')
                                 <li class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
                                         <i class="nc-icon nc-bell-55"></i>
@@ -165,178 +155,151 @@
                                             href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
                                     </div>
                                 </li>
-                            @endcan
+                        @endif
                         </ul>
                     </li>
                 @endif
                 {{-- Menu Penghasilan --}}
-                @can('penghasilan')
-                <li
-                    class="@active('pajak_penghasilan') {{ request()->is('penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*','gaji_perbulan', 'gaji_perbulan/*', 'penghasilan/import-penghasilan-teratur', 'penghasilan/import-penghasilan-teratur/*','pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }}">
-                    <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
-                        style="font-weight: bolder">
-                        <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
-                        Penghasilan
-                    </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'bonus/*', 'show')"
-                        id="submenu2">
-                        @can('penghasilan - proses penghasilan')
-                        <li style="margin-top: -15px" class="@active('gaji_perbulan')">
-                            <a href="{{ route('gaji_perbulan.index') }}">
-                                <i class="nc-icon nc-money-coins"></i>
-                                <p>Proses Penghasilan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('penghasilan - pajak penghasilan')
-                        <li style="margin-top: -15px" class="@active('pajak_penghasilan.index') @active('get-penghasilan')">
-                            <a href="{{ route('pajak_penghasilan.index') }}">
-                                <i class="nc-icon nc-scissors"></i>
-                                <p>Pajak</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('penghasilan - import - penghasilan teratur')
-                        <li style="margin-top: -15px"
-                            class="@active('penghasilan.import-penghasilan-teratur.index')">
-                            <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}">
-                                <i class="nc-icon nc-credit-card"></i>
-                                <p>Penghasilan Teratur</p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('penghasilan - import - penghasilan tidak teratur')
-                        <li style="margin-top: -15px"
-                            class="@active('penghasilan-tidak-teratur.index')">
-                            <a href="{{ route('penghasilan-tidak-teratur.index') }}">
-                                <i class="nc-icon nc-credit-card"></i>
-                                <p>Penghasilan Tidak Teratur</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('penghasilan - import - bonus')
-                        <li style="margin-top: -15px !important"
-                            class="@active('bonus.index')">
-                            <a href="{{ route('bonus.index') }}">
-                                <i class="nc-icon nc-credit-card"></i>
-                                <p>Bonus</p>
-                            </a>
-                        </li>
-                        @endcan
-                        {{--  @can('penghasilan - import - potongan')
-                        <li style="margin-top: -15px"
-                            class="@active('potongan.index')">
-                            <a href="{{ route('potongan.index') }}">
-                                <i class="nc-icon nc-credit-card"></i>
-                                <p>Potongan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan  --}}
-                        @can('penghasilan - payroll - list payroll')
-                        <li style="margin-top: -15px"
-                            class="@active('payroll.index')">
-                            <a href="{{ route('payroll.index') }}">
-                                <i class="nc-icon nc-money-coins"></i>
-                                <p>Payroll</p>
-                            </a>
-                        </li>
-                        @endcan
-                        {{--  @can('penghasilan - tambah penghasilan')
-                        <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
-                            <a href="{{ route('pajak_penghasilan.create') }}">
-                                <i class="nc-icon nc-ruler-pencil"></i>
-                                <p>Tambah Penghasilan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan  --}}
-                        {{-- Menu Gaji --}}
-                        @can('penghasilan - gaji')
-                        <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                            <a class="nav-link-item" href="#submenu-gaji" data-toggle="collapse" data-target="#submenu-gaji"
-                               >
-                                <i class="nc-icon nc-credit-card "></i>
-                                <span class="dropdown-toggle">Gaji</span>
-                            </a>
-                            <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
-                                id="submenu-gaji">
-                                @can('penghasilan - gaji - lampiran gaji')
-                                <li style="margin-top: -15px"
-                                    class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                                    <a href="{{ route('gaji.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Lampiran Gaji</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                @endcan
-                                @can('penghasilan - gaji - slip gaji')
-                                <li style="margin-top: -15px" class="@active('slipIndex')">
-                                    <a href="{{ route('slipIndex') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Slip Jurnal</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                @endcan
-                                @can('penghasilan - payroll - slip gaji')
-                                <li style="margin-top: -15px" class="@active('payroll.slip')">
-                                    <a href="{{ route('payroll.slip') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Slip Gaji</p>
-                                    </a>
-                                </li>
-                                @endcan
-                            </ul>
-                        </li>
-                        @endcan
-                    </ul>
-                </li>
-                @endcan
+                @if (auth()->user()->hasRole(['admin','kepegawaian']))
+                    <li
+                        class="@active('pajak_penghasilan') {{ request()->is('penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*','gaji_perbulan', 'gaji_perbulan/*', 'penghasilan/import-penghasilan-teratur', 'penghasilan/import-penghasilan-teratur/*','pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }}">
+                        <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
+                            style="font-weight: bolder">
+                            <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
+                            Penghasilan
+                        </a>
+                        <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'bonus/*', 'show')"
+                            id="submenu2">
+                            <li style="margin-top: -15px" class="@active('gaji_perbulan')">
+                                <a href="{{ route('gaji_perbulan.index') }}">
+                                    <i class="nc-icon nc-money-coins"></i>
+                                    <p>Proses Penghasilan</p>
+                                    <p></p>
+                                </a>
+                            </li>
+                            <li style="margin-top: -15px" class="@active('pajak_penghasilan.index') @active('get-penghasilan')">
+                                <a href="{{ route('pajak_penghasilan.index') }}">
+                                    <i class="nc-icon nc-scissors"></i>
+                                    <p>Pajak</p>
+                                    <p></p>
+                                </a>
+                            </li>
+                            <li style="margin-top: -15px"
+                                class="@active('penghasilan.import-penghasilan-teratur.index')">
+                                <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}">
+                                    <i class="nc-icon nc-credit-card"></i>
+                                    <p>Penghasilan Teratur</p>
+                                </a>
+                            </li>
+                            <li style="margin-top: -15px"
+                                class="@active('penghasilan-tidak-teratur.index')">
+                                <a href="{{ route('penghasilan-tidak-teratur.index') }}">
+                                    <i class="nc-icon nc-credit-card"></i>
+                                    <p>Penghasilan Tidak Teratur</p>
+                                    <p></p>
+                                </a>
+                            </li>
+                            <li style="margin-top: -15px !important"
+                                class="@active('bonus.index')">
+                                <a href="{{ route('bonus.index') }}">
+                                    <i class="nc-icon nc-credit-card"></i>
+                                    <p>Bonus</p>
+                                </a>
+                            </li>
+                            {{-- <li style="margin-top: -15px"
+                                class="@active('potongan.index')">
+                                <a href="{{ route('potongan.index') }}">
+                                    <i class="nc-icon nc-credit-card"></i>
+                                    <p>Potongan</p>
+                                    <p></p>
+                                </a>
+                            </li> --}}
+                            <li style="margin-top: -15px"
+                                class="@active('payroll.index')">
+                                <a href="{{ route('payroll.index') }}">
+                                    <i class="nc-icon nc-money-coins"></i>
+                                    <p>Payroll</p>
+                                </a>
+                            </li>
+                            {{--  @can('penghasilan - tambah penghasilan')
+                            <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
+                                <a href="{{ route('pajak_penghasilan.create') }}">
+                                    <i class="nc-icon nc-ruler-pencil"></i>
+                                    <p>Tambah Penghasilan</p>
+                                    <p></p>
+                                </a>
+                            </li>
+                            @endcan  --}}
+                            {{-- Menu Gaji --}}
+                            <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
+                                <a class="nav-link-item" href="#submenu-gaji" data-toggle="collapse" data-target="#submenu-gaji"
+                                >
+                                    <i class="nc-icon nc-credit-card "></i>
+                                    <span class="dropdown-toggle">Gaji</span>
+                                </a>
+                                <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
+                                    id="submenu-gaji">
+                                    <li style="margin-top: -15px"
+                                        class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
+                                        <a href="{{ route('gaji.index') }}">
+                                            <i class="nc-icon nc-money-coins"></i>
+                                            <p>Lampiran Gaji</p>
+                                            <p></p>
+                                        </a>
+                                    </li>
+                                    <li style="margin-top: -15px" class="@active('slipIndex')">
+                                        <a href="{{ route('slipIndex') }}">
+                                            <i class="nc-icon nc-money-coins"></i>
+                                            <p>Slip Jurnal</p>
+                                            <p></p>
+                                        </a>
+                                    </li>
+                                    <li style="margin-top: -15px" class="@active('payroll.slip')">
+                                        <a href="{{ route('payroll.slip') }}">
+                                            <i class="nc-icon nc-money-coins"></i>
+                                            <p>Slip Gaji</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li> 
+                @endif
+
                 {{-- Menu Histori --}}
-                @can('histori')
-                <li class="@active('history')">
-                    <a class="nav-link" href="#submenu3" data-toggle="collapse" data-target="#submenu3"
-                        style="font-weight: bolder">
-                        <i class="nc-icon nc-compass-05" style="font-weight: bolder"></i>
-                        Histori
-                    </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('history', 'show')"
-                        id="submenu3">
-                        @can('histori - jabatan')
-                        <li style="margin-top: -15px" class="@active('history_jabatan')">
-                            <a href="{{ route('history_jabatan.index') }}">
-                                <i class="nc-icon nc-briefcase-24"></i>
-                                <p>Jabatan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('histori - penjabat sementara')
-                        <li style="margin-top: -15px" class="@active('pejabat-sementara.history')">
-                            <a href="{{ route('pejabat-sementara.history') }}">
-                                <i class="nc-icon nc-tie-bow"></i>
-                                <p>Penjabat Sementara</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('histori - surat peringatan')
-                        <li style="margin-top: -15px" class="@active('surat-peringatan.history')">
-                            <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}">
-                                <i class="nc-icon nc-email-85"></i>
-                                <p>Surat Peringatan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                    </ul>
-                </li>
-                @endcan
+                @if (auth()->user()->hasRole(['admin','hrd']))
+                    <li class="@active('history')">
+                        <a class="nav-link" href="#submenu3" data-toggle="collapse" data-target="#submenu3"
+                            style="font-weight: bolder">
+                            <i class="nc-icon nc-compass-05" style="font-weight: bolder"></i>
+                            Histori
+                        </a>
+                        <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('history', 'show')"
+                            id="submenu3">
+                            <li style="margin-top: -15px" class="@active('history_jabatan')">
+                                <a href="{{ route('history_jabatan.index') }}">
+                                    <i class="nc-icon nc-briefcase-24"></i>
+                                    <p>Jabatan</p>
+                                    <p></p>
+                                </a>
+                            </li>
+                            <li style="margin-top: -15px" class="@active('pejabat-sementara.history')">
+                                <a href="{{ route('pejabat-sementara.history') }}">
+                                    <i class="nc-icon nc-tie-bow"></i>
+                                    <p>Penjabat Sementara</p>
+                                    <p></p>
+                                </a>
+                            </li>
+                            <li style="margin-top: -15px" class="@active('surat-peringatan.history')">
+                                <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}">
+                                    <i class="nc-icon nc-email-85"></i>
+                                    <p>Surat Peringatan</p>
+                                    <p></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
                 {{-- Menu Laporan --}}
                 @can('laporan')
                 <li

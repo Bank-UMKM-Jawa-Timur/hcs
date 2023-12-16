@@ -58,8 +58,14 @@ use Maatwebsite\Excel\Row;
 Route::get('/', function () {
     return redirect('/login');
 });
+Route::get('/dashboard', function () {
+    return view('welcome');
+});
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::middleware('auth:user,karyawan')->group(function () {
+    
+// });
 
 Route::prefix('graph')->group(function () {
     Route::get('/detail-per-cabang', [HomeController::class, 'perCabang'])->name('per-cabang');
@@ -91,7 +97,7 @@ Route::prefix('graph')->group(function () {
     });
 });
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => 'auth:user,karyawan'], function () {
     Route::resource('/kantor', KantorController::class);
     Route::resource('role', RoleMasterController::class);
     Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);
