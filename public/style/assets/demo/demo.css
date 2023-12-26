@@ -72,13 +72,14 @@
 }
 
 .sidebar .nav .icon {
-    font-size: 22px;
-    margin-top: 4px;
+    font-size: 22px !important;
+    margin-left: 1px;
+    margin-top: 3px !important;
 }
 
 .sidebar .nav span {
     margin-left: 1rem;
-    margin-top: 1px;
+    margin-top: 2px;
 }
 
 .is-btn {
@@ -136,9 +137,8 @@
     border-radius: 4px;
     border: 1px solid #fbc658;
 }
-.p-warning{
+.p-warning {
     padding: 12px 15px;
-
 }
 .is-warning:hover {
     background-color: #eab13f;
@@ -222,7 +222,7 @@ p {
 }
 
 @media all and (min-width: 992px) {
-    .sidebar .nav>li.active-pro {
+    .sidebar .nav > li.active-pro {
         position: absolute;
         width: 100%;
         bottom: 0;
@@ -326,6 +326,10 @@ ul.sub-menu li.active i {
     user-select: none;
     overflow: hidden;
 }
+#sidebar .nav-link .icon {
+    font-size: 30px;
+    margin-top: 1px;
+}
 
 .demo-icons ul li:hover {
     background: #f4f4f4;
@@ -382,11 +386,11 @@ ul.sub-menu li.active i {
 }
 
 @media (max-width: 767px) {
-    .wizard-add .nav-tabs>li a i {
+    .wizard-add .nav-tabs > li a i {
         display: none;
     }
 
-    .wizard-edit .nav-tabs>li a i {
+    .wizard-edit .nav-tabs > li a i {
         display: none;
     }
 }
