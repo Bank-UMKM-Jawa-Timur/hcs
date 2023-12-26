@@ -29,7 +29,7 @@
     <div class="card-body">
         <a class="btn is-btn is-primary" href="{{ route('penghasilan.template-excel') }}" download>Download Template Excel</a>
         <div class="row">
-            <div class="col-lg-5">
+            <div class="col-lg-4">
                 <div class="form-group">
                     <label for="">Kategori penghasilan teratur</label>
                     <select name="penghasilan" class="form-control" id="penghasilan">
@@ -41,7 +41,21 @@
                     <p class="text-danger d-none mt-2" id="error-penghasilan"></p>
                 </div>
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="bulan">Bulan</label>
+                    <select id="bulan" class="form-control" name="bulan" >
+                        <option value="">==Pilih Bulan==</option>
+                        @for ($i = 1; $i <= 12; $i++)
+                            <option {{ Request()->bulan == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}
+                                value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}">
+                                {{ date('F', mktime(0, 0, 0, $i, 1)) }}</option>
+                        @endfor
+                    </select>
+                    <p class="text-danger d-none mt-2" id="error-bulan">Bulan belum di pilih</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
                 <div class="form-group">
                     <label for="">File</label>
                     <div class="custom-file">
@@ -66,6 +80,7 @@
         <input type="hidden" name="nominal" class="form-control nominal-input" value="" readonly>
         <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
         <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
+        <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
         <div class="d-flex justify-content-start">
             <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
         </div>
@@ -127,50 +142,23 @@
     <script>
         $(document).ready(function() {
             var grandTotalNominal = 0;
+            var penghasilan = '';
             $('#penghasilan').on('change', function(){
                 var value = $("#penghasilan").val()
                 var hari_ini = new Date();
-                // var tanggal = hari_ini.getDate();
-                var tanggal = 25;
+                var tanggal = hari_ini.getDate();
                 var message = '';
                 var nmbr = 0;
+                penghasilan = value;
 
                 // 11 = tranport, 12 = pulsa, 13 = vitamin, 14 = uang makan
 
-                if (value == 11 || value == 14) {
-                    if (tanggal == 25) {
-                        var message = "success"
-                        $('#error-penghasilan').addClass('d-none')
-                    } else {
-                        if (value == 12) {
-                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
-                            nmbr++
-                        } else if (value == 13) {
-                            var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
-                            nmbr++
-                        } else if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        }
-                        // alertWarning(message)
-                        $('#error-penghasilan').removeClass('d-none').html(message)
-                        $("#penghasilan").val("")
-                    }
-                } else if (value == 12) {
+                if (value == 12) {
                     if (tanggal >= 1 && tanggal <= 10){
                         var message = "success"
                         $('#error-penghasilan').addClass('d-none')
                     } else {
-                        if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 12) {
+                        if (value == 12) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                         } else if (value == 13 && tanggal > 5) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
@@ -186,23 +174,19 @@
                         $('#error-penghasilan').addClass('d-none')
                     }
                     else {
-                        if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 12) {
+                        if (value == 12) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                             nmbr++
                         } else if (value == 13) {
                             var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
                             nmbr++
                         }
                         // alertWarning(message)
                         $('#error-penghasilan').removeClass('d-none').html(message)
                         $("#penghasilan").val("")
                     }
+                } else {
+                    $('#error-penghasilan').addClass('d-none')
                 }
             })
 
@@ -210,22 +194,32 @@
                 // console.log('askdaskdjasldjldj');
                 var penghasilan = $('#penghasilan').val();
                 var filePenghasilan = $('#file-penghasilan').val();
+                var bulanInput = $('#bulan').val();
 
-                if (penghasilan && filePenghasilan) {
+                if (penghasilan && filePenghasilan && bulanInput) {
                     importExcel();
                     $('#table_item tbody').empty();
                     $('#error-penghasilan').addClass('d-none')
                     $('#error-file').addClass('d-none')
+                    $('#error-bulan').addClass('d-none')
                 } else {
-                    if (penghasilan == "" && filePenghasilan) {
+                    if (penghasilan == "" && filePenghasilan && bulanInput) {
                         $('#error-penghasilan').removeClass('d-none').html('Kategori belum di pilih.')
                         $('#error-file').addClass('d-none')
+                        $('#error-bulan').addClass('d-none')
                     }
-                    else if (!filePenghasilan && penghasilan){
+                    else if (!filePenghasilan && penghasilan && bulanInput){
                         $('#error-file').removeClass('d-none')
                         $('#error-penghasilan').addClass('d-none')
+                        $('#error-bulan').addClass('d-none')
+                    }
+                    else if (bulanInput = "" && filePenghasilan && penghasilan){
+                        $('#error-file').addClass('d-none')
+                        $('#error-penghasilan').addClass('d-none')
+                        $('#error-bulan').removeClass('d-none')
                     }
                     else {
+                        $('#error-bulan').removeClass('d-none')
                         $('#error-penghasilan').removeClass('d-none').html('Kategori belum di pilih.')
                         $('#error-file').removeClass('d-none')
                     }
@@ -302,6 +296,7 @@
                 var no = 0;
                 var grandTotalNominal = 0;
                 var id_tunjangan = $('#penghasilan').val()
+                var bulanReq = $('#bulan').val()
                 var date = new Date();
                 var hari_ini = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
@@ -427,6 +422,7 @@
                                 $('.nominal-input').val(dataNominal)
                                 $('.nip-input').val(nipDataRequest);
                                 $('.tunjangan-input').val(id_tunjangan);
+                                $('.bulan-input').val(bulanReq);
 
                                 $('#table_item tbody').append(new_body_tr);
                                 $('#btn-simpan').removeClass('d-none');

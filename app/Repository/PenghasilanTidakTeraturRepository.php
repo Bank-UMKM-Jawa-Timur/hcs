@@ -8,6 +8,7 @@ use App\Models\SpModel;
 use Carbon\Carbon;
 use App\Models\TunjanganModel;
 use Carbon\CarbonPeriod;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 
 class PenghasilanTidakTeraturRepository
@@ -25,9 +26,8 @@ class PenghasilanTidakTeraturRepository
                         'mst_tunjangan.nama_tunjangan',
                         'nominal',
                         'bulan',
-                        'penghasilan_tidak_teratur.created_at',
+                        'penghasilan_tidak_teratur.created_at as new_date',
                         DB::raw('SUM(nominal) as jumlah_nominal'),
-                        DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
                         DB::raw('COUNT(penghasilan_tidak_teratur.id) as total_data'),
                         'tahun',
                         'keterangan',
@@ -63,7 +63,6 @@ class PenghasilanTidakTeraturRepository
                           'nominal',
                           'keterangan',
                           'penghasilan_tidak_teratur.created_at',
-                          DB::raw("DATE_FORMAT(penghasilan_tidak_teratur.created_at, '%d-%m-%Y') new_date"),
                       )
                     //   ->groupBy('new_date')
                     ->where('mst_tunjangan.kategori','bonus')
@@ -237,6 +236,25 @@ class PenghasilanTidakTeraturRepository
                 $value->display_jabatan = $display_jabatan;
             }
             return $penghasilan;
+    }
+
+    public function lockBonus(array $data){
+        $idTunjangan = $data['id_tunjangan'];
+        $tanggal = $data['tanggal'];
+        return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
+            ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'), $tanggal)
+            ->update([
+                'is_lock' => 1
+            ]);
+    }
+    public function unlockBonus(array $data){
+        $idTunjangan = $data['id_tunjangan'];
+        $tanggal = $data['tanggal'];
+        return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
+            ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'), $tanggal)
+            ->update([
+                'is_lock' => 0
+            ]);
     }
 
     public function lock(array $data)

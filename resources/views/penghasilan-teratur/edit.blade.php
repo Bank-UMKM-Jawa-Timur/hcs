@@ -29,7 +29,7 @@
     <div class="card-body">
         <a class="btn is-btn is-primary" href="{{ route('penghasilan.template-excel') }}" download>Download Template Excel</a>
         <div class="row">
-            <div class="col-lg-5">
+            <div class="col-lg-4">
                 <div class="form-group">
                     <label for="">Kategori penghasilan teratur</label>
                     <select name="penghasilan" class="form-control" id="penghasilan" @readonly(true)>
@@ -38,7 +38,21 @@
                     <p class="text-danger d-none mt-2" id="error-penghasilan"></p>
                 </div>
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="bulan">Bulan</label>
+                    <select id="bulan" class="form-control" name="bulan" >
+                        <option value="">==Pilih Bulan==</option>
+                        @for ($i = 1; $i <= 12; $i++)
+                            <option {{ Request()->bulan == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}
+                                value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}" {{ str_pad($i, 2, '0', STR_PAD_LEFT) == $bulan ? 'selected' : '' }}>
+                                {{ date('F', mktime(0, 0, 0, $i, 1)) }}</option>
+                        @endfor
+                    </select>
+                    <p class="text-danger d-none mt-2" id="error-bulan">Bulan belum di pilih</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
                 <div class="form-group">
                     <label for="">File</label>
                     <div class="custom-file">
@@ -63,8 +77,9 @@
         <input type="hidden" name="nominal" class="form-control nominal-input" value="" readonly>
         <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
         <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
-        <input type="hidden" name="old_tanggal" value="{{$old_created_at}}">
+        <input type="hidden" name="old_tanggal" value="{{$old_tanggal}}">
         <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
+        <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
         <div class="d-flex justify-content-start">
             <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
         </div>
@@ -135,40 +150,12 @@
 
                 // 11 = tranport, 12 = pulsa, 13 = vitamin, 14 = uang makan
 
-                if (value == 11 || value == 14) {
-                    if (tanggal == 25) {
-                        var message = "success"
-                        $('#error-penghasilan').addClass('d-none')
-                    } else {
-                        if (value == 12) {
-                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
-                            nmbr++
-                        } else if (value == 13) {
-                            var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
-                            nmbr++
-                        } else if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        }
-                        // alertWarning(message)
-                        $('#error-penghasilan').removeClass('d-none').html(message)
-                        $("#penghasilan").val("")
-                    }
-                } else if (value == 12) {
+                if (value == 12) {
                     if (tanggal >= 1 && tanggal <= 10){
                         var message = "success"
                         $('#error-penghasilan').addClass('d-none')
                     } else {
-                        if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 12) {
+                        if (value == 12) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                         } else if (value == 13 && tanggal > 5) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
@@ -184,23 +171,19 @@
                         $('#error-penghasilan').addClass('d-none')
                     }
                     else {
-                        if (value == 11) {
-                            var message = 'Transaksi transport hanya bisa dilakukan pada tanggal 25'
-                            nmbr++
-                        } else if (value == 12) {
+                        if (value == 12) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                             nmbr++
                         } else if (value == 13) {
                             var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
-                            nmbr++
-                        } else if (value == 14) {
-                            var message = 'Transaksi uang makan hanya bisa dilakukan pada tanggal 25'
                             nmbr++
                         }
                         // alertWarning(message)
                         $('#error-penghasilan').removeClass('d-none').html(message)
                         $("#penghasilan").val("")
                     }
+                } else {
+                    $('#error-penghasilan').addClass('d-none')
                 }
             })
 
@@ -300,6 +283,8 @@
                 var no = 0;
                 var grandTotalNominal = 0;
                 var id_tunjangan = $('#penghasilan').val()
+                var bulanReq = $('#bulan').val()
+
                 var date = new Date();
                 var hari_ini = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
@@ -359,10 +344,16 @@
                                     hasError = true;
                                     hasNip = true;
                                     hasTunjangan = false;
+                                } else if (value.cek_tunjangan == true) {
+                                    checkNipTunjangan.push(value.nip);
+                                    namaTunjangan.push(value.tunjangan.nama_tunjangan);
+                                    hasError = true;
+                                    hasTunjangan = true;
+                                    hasNip = false;
                                 }
                                 grandTotalNominal += parseInt(dataNominal[key])
                                 new_body_tr += `
-                                     <tr class="${value.cek_nip == false ? 'table-danger' : ''}">
+                                     <tr class="${value.cek_nip == false || value.cek_tunjangan == true ? 'table-danger' : ''}">
                                         <td>
                                             ${no}
                                         </td>
@@ -383,6 +374,10 @@
                                 if (hasNip == true) {
                                     message += `${checkNip}`
                                     tittleMessage += `Tidak ditemukan`
+                                }
+                                if (hasTunjangan == true) {
+                                    message += `${checkNipTunjangan}`
+                                    tittleMessage += `Sudah terdaftar di tunjangan ${namaTunjangan[0]}`
                                 }
                                 $('#alert-massage').html(`
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -415,6 +410,7 @@
                                 $('.nominal-input').val(dataNominal)
                                 $('.nip-input').val(nipDataRequest);
                                 $('.tunjangan-input').val(id_tunjangan);
+                                $('.bulan-input').val(bulanReq);
 
                                 $('#table_item tbody').append(new_body_tr);
                                 $('#btn-simpan').removeClass('d-none');

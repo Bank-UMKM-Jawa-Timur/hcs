@@ -434,6 +434,22 @@ class KaryawanController extends Controller
                     ]);
             }
 
+            if(count($request->get('potongan_kredit_koperasi')) > 0){
+                foreach($request->get('potongan_kredit_koperasi') as $key => $item){
+                    DB::table('potongan_gaji')
+                        ->insert([
+                            'nip' => $request->nip,
+                            'bulan' => $request->get('potongan_bulan')[$key],
+                            'tahun' => $request->get('potongan_tahun')[$key],
+                            'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')[$key]),
+                            'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')[$key]),
+                            'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')[$key]),
+                            'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')[$key]),
+                            'created_at' => now()
+                        ]);
+                }
+            }
+
             Alert::success('Berhasil', 'Berhasil menambah karyawan.');
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
@@ -576,7 +592,7 @@ class KaryawanController extends Controller
                 )
                 ->where('nip', $id)
                 ->first();
-        
+
         $totalDppPerhitungan = 0;
         if ($dppPerhitungan) {
             $gjPokok = $dppPerhitungan->gj_pokok;
@@ -588,7 +604,6 @@ class KaryawanController extends Controller
         $potongan = PotonganModel::where('nip', $karyawan->nip)
                                 ->orderBy('id', 'DESC')
                                 ->first();
-
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,
@@ -621,6 +636,9 @@ class KaryawanController extends Controller
             ->select('tunjangan_karyawan.*')
             ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
             ->get();
+        $data->potongan = DB::table('potongan_gaji')
+                            ->where('nip', $data->nip)
+                            ->get();
         $data->count_tj = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
             ->count('*');
@@ -661,7 +679,7 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
+        // dd($request->get('potongan_tahun'));
         $request->validate([
             'nip' => 'required',
             'nik' => 'required',
@@ -680,11 +698,20 @@ class KaryawanController extends Controller
             'tgl_mulai' => 'required'
         ]);
 
+        DB::beginTransaction();
         try {
             $idTkDeleted = explode(',', $request->get('idTkDeleted'));
+            $idPotDeleted = explode(',', $request->get('idPotDeleted'));
             if(count($idTkDeleted) > 0){
                 foreach($idTkDeleted as $key => $item){
                     DB::table('tunjangan_karyawan')
+                        ->where('id', $item)
+                        ->delete();
+                }
+            }
+            if(count($idPotDeleted) > 0){
+                foreach($idPotDeleted as $key => $item){
+                    DB::table('potongan_gaji')
                         ->where('id', $item)
                         ->delete();
                 }
@@ -808,16 +835,45 @@ class KaryawanController extends Controller
                 }
             }
 
+            foreach($request->get('id_pot') as $key => $item){
+                if ($item == null){
+                    DB::table('potongan_gaji')
+                        ->insert([
+                            'nip' => $request->nip,
+                            'bulan' => $request->get('potongan_bulan')[$key],
+                            'tahun' => $request->get('potongan_tahun')[$key],
+                            'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')[$key]),
+                            'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')[$key]),
+                            'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')[$key]),
+                            'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')[$key]),
+                            'created_at' => now()
+                        ]);
+                } else{
+                    DB::table('potongan_gaji')
+                        ->where('id', $item)
+                        ->update([
+                            'bulan' => $request->get('potongan_bulan')[$key],
+                            'tahun' => $request->get('potongan_tahun')[$key],
+                            'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')[$key]),
+                            'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')[$key]),
+                            'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')[$key]),
+                            'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')[$key]),
+                            'created_at' => now()
+                        ]);
+                }
+            }
+
+            DB::commit();
             Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e);
-            dd($e);
+            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
+            return redirect()->back();
         } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e);
-            dd($e);
+            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
+            return redirect()->back();
         }
     }
 
