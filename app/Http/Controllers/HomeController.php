@@ -33,10 +33,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // dd(auth()->user()->getRoleNames());
-        // dd(auth()->user()->hasRole(['hrd']));
-        // dd(auth('user')->user()->can('dashboard'));
-        // dd(auth()->user()->can('dashboard'));
         // Need permission
         $dataCabang = CabangModel::orderBy('kd_cabang')->get();
         $karyawanByCabang = [];

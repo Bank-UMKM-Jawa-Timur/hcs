@@ -97,7 +97,7 @@ Route::prefix('graph')->group(function () {
     });
 });
 
-Route::group(['middleware' => 'auth:user,karyawan'], function () {
+Route::group(['middleware' => 'auth'], function () {
     Route::resource('/kantor', KantorController::class);
     Route::resource('role', RoleMasterController::class);
     Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);

@@ -40,8 +40,8 @@ class AuthenticatedSessionController extends Controller
                     return redirect('first-login?id=' . $user->id);
                 } else {
                     $request->authenticate();
-    
                     $request->session()->regenerate();
+
                     return redirect()->intended(RouteServiceProvider::HOME);
                 }
             }
@@ -54,8 +54,6 @@ class AuthenticatedSessionController extends Controller
             Alert::warning('Peringatan', $e->getMessage());
             return back();
         }
-
-        return view('login');
     }
 
     public function destroy(Request $request)

@@ -14,9 +14,6 @@
         <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar"
             role="navigation">
             <ul class="nav flex-column sticky-top pl-2 mt-0">
-                @can('dashboard')
-                    dashboard
-                @endcan
                 @if (auth()->user()->can('dashboard'))
                     <li style="margin-top: -15px" class="@active('home')">
                         <a class="nav-link" href="{{ route('home') }}" style="font-weight: bolder">
