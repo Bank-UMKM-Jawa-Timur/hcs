@@ -118,7 +118,7 @@ class JaminanController extends Controller
 
     public function index()
     {
-        if (!Auth::user()->can('laporan - laporan jamsostek')) {
+        if (!auth()->user()->hasRole(['admin'])) {
             return view('roles.forbidden');
         }
         return view('jaminan.index', [
@@ -129,7 +129,7 @@ class JaminanController extends Controller
 
     public function filter(Request $request)
     {
-        if (!Auth::user()->can('laporan - laporan jamsostek')) {
+        if (!auth()->user()->hasRole(['admin'])) {
             return view('roles.forbidden');
         }
         $kantor = $request->kantor;
@@ -364,7 +364,7 @@ class JaminanController extends Controller
 
     public function dppIndex()
     {
-        if (!Auth::user()->can('laporan - laporan dpp')) {
+        if (!auth()->user()->hasRole(['admin'])) {
             return view('roles.forbidden');
         }
         return view('jaminan.dpp_index');

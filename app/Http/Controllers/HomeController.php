@@ -36,7 +36,7 @@ class HomeController extends Controller
         // dd(auth()->user()->getRoleNames());
         // dd(auth()->user()->hasRole(['hrd']));
         // dd(auth('user')->user()->can('dashboard'));
-        // dump(auth('user')->user()->hasRole(['admin','hrd']));
+        // dd(auth()->user()->can('dashboard'));
         // Need permission
         $dataCabang = CabangModel::orderBy('kd_cabang')->get();
         $karyawanByCabang = [];

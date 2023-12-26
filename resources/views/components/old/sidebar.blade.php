@@ -301,7 +301,7 @@
                     </li>
                 @endif
                 {{-- Menu Laporan --}}
-                @can('laporan')
+                @if (auth()->user()->hasRole(['admin']))
                 <li
                     class="{{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek') ? 'active' : '' }}">
                     <a class="nav-link" href="#submenu4" data-toggle="collapse" data-target="#submenu4"
@@ -311,7 +311,6 @@
                     </a>
                     <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('laporan,index_dpp', 'show')"
                         id="submenu4">
-                        @can('laporan - laporan pergerakan karir')
                         <li class="dropdown {{ request()->is(
                                 'laporan-pergerakan-karir/laporan-mutasi',
                                 'laporan-pergerakan-karir/laporan-demosi',
@@ -328,26 +327,16 @@
                                 <p></p>
                             </a>
                             <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                @can('laporan - laporan pergerakan karir - laporan mutasi')
                                 <a class="dropdown-item" href="{{ route('laporan-mutasi.index') }}">Laporan
                                     Mutasi</a>
-                                @endcan
-                                @can('laporan - laporan pergerakan karir - laporan demosi')
                                 <a class="dropdown-item" href="{{ route('laporan-demosi.index') }}">Laporan
                                     Demosi</a>
-                                @endcan
-                                @can('laporan - laporan pergerakan karir - laporan promosi')
                                 <a class="dropdown-item" href="{{ route('laporan-promosi.index') }}">Laporan
                                     Promosi</a>
-                                @endcan
-                                @can('laporan - laporan pergerakan karir - laporan penonaktifan')
                                 <a class="dropdown-item"
                                     href="{{ route('laporan-penonaktifan.index') }}">Laporan Penonaktifan</a>
-                                @endcan
                             </div>
                         </li>
-                        @endcan
-                        @can('laporan - laporan jamsostek')
                         <li style="margin-top: -15px" class="@active('laporan_jamsostek')">
                             <a href="{{ route('laporan_jamsostek.index') }}">
                                 <i class="nc-icon nc-single-copy-04"></i>
@@ -355,8 +344,6 @@
                                 <p></p>
                             </a>
                         </li>
-                        @endcan
-                        @can('laporan - laporan dpp')
                         <li style="margin-top: -15px" class="@active('index_dpp')">
                             <a href="{{ route('index_dpp') }}">
                                 <i class="nc-icon nc-single-copy-04"></i>
@@ -364,10 +351,9 @@
                                 <p></p>
                             </a>
                         </li>
-                        @endcan
                     </ul>
                 </li>
-                @endcan
+                @endif
 
                 {{-- Menu Migrasi Data --}}
                 {{-- @can('migrasi')
@@ -410,14 +396,13 @@
                 </li>
                 @endcan --}}
                 {{-- Menu Log Aktivitas --}}
-                @can('log')
+                @if (auth()->user()->hasRole(['admin']))
                 <li>
                     <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu6"
                         style="font-weight: bolder">
                         <i class="nc-icon nc-tap-01" style="font-weight: bolder"></i>
                         Log
                     </a>
-                    @can('log - log aktivitas')
                     <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6"
                         aria-expanded="false">
                         <li style="margin-top: -15px">
@@ -428,11 +413,10 @@
                             </a>
                         </li>
                     </ul>
-                    @endcan
                 </li>
-                @endcan
+                @endif
                 {{-- Menu Setting --}}
-                @can('setting')
+                @if (auth()->user()->hasRole(['admin']))
                 <li class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database')">
                     <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu7"
                         style="font-weight: bolder">
@@ -443,7 +427,7 @@
                     {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show') --}}
                     "
                         id="submenu7">
-                        @can('setting - master')
+                        @if (auth()->user()->hasRole(['admin']))
                             <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
                                 <a data-toggle="dropdown" aria-expanded="false">
                                     <i class="nc-icon nc-box"></i>
@@ -453,53 +437,33 @@
                                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                                     <a class="dropdown-item @active('role.index')"
                                         href="{{ route('user.index') }}">User</a>
-                                    @can('setting - master - role')
                                     <a class="dropdown-item @active('role.index')"
                                         href="{{ route('role.index') }}">Roles</a>
-                                    @endcan
-                                    @can('setting - master - kantor cabang')
                                     <a class="dropdown-item @active('cabang.index')"
                                         href="{{ route('cabang.index') }}">Kantor Cabang</a>
-                                    @endcan
-                                    @can('setting - master - divisi')
                                     <a class="dropdown-item @active('divisi.index')"
                                         href="{{ route('divisi.index') }}">Divisi</a>
-                                    @endcan
-                                    @can('setting - master - sub divisi')
                                     <a class="dropdown-item @active('sub_divisi.index')"
                                         href="{{ route('sub_divisi.index') }}">Sub Divisi</a>
-                                    @endcan
-                                    @can('setting - master - bagian')
                                     <a class="dropdown-item @active('bagian.index')"
                                         href="{{ route('bagian.index') }}">Bagian</a>
-                                    @endcan
-                                    @can('setting - master - jabatan')
                                     <a class="dropdown-item @active('jabatan.index')"
                                         href="{{ route('jabatan.index') }}">Jabatan</a>
-                                    @endcan
-                                    @can('setting - master - pangkat & golongan')
                                     <a class="dropdown-item @active('pangkat_golongan.index')"
                                         href="{{ route('pangkat_golongan.index') }}">Pangkat & Golongan</a>
-                                    @endcan
-                                    @can('setting - master - tunjangan')
                                     <a class="dropdown-item @active('tunjangan.index')"
                                         href="{{ route('tunjangan.index') }}">Tunjangan</a>
-                                    @endcan
-                                    @can('setting - master - rentang umur')
                                     <a class="dropdown-item @active('umur.index')"
                                         href="{{ route('umur.index') }}">Rentang Umur</a>
-                                    @endcan
-                                    @can('setting - master - penghasilan tanpa pajak')
                                     <a class="dropdown-item @active('umur.index')"
                                         href="{{ route('ptkp.index') }}">Penghasilan tanpa Pajak</a>
-                                    @endcan
                                 </div>
                             </li>
-                        @endcan
+                        @endif
                         @php
                             $profilKantorPusat = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->where('kd_cabang', '000')->first();
                         @endphp
-                        @can('setting - kantor pusat')
+                        @if (auth()->user()->hasRole(['admin']))
                         <li class="dropdown
                             {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show') --}}
                             " style="margin-top: -15px">
@@ -509,22 +473,16 @@
                                 <p></p>
                             </a>
                             <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                @can('setting - kantor pusat - profil')
                                     <a class="dropdown-item @active('cabang.index')"
                                         href="{{ route('profil-kantor-pusat.index') }}">Profil</a>
-                                @endcan
-                                @can('setting - kantor pusat - penambahan bruto')
                                     <a class="dropdown-item @active('divisi.index')"
                                         href="{{ route('penambahan-bruto.index') }}?profil_kantor={{$profilKantorPusat ? $profilKantorPusat->id : ''}}">Penambahan Bruto</a>
-                                @endcan
-                                @can('setting - kantor pusat - pengurangan bruto')
                                     <a class="dropdown-item @active('sub_divisi.index')"
                                         href="{{ route('pengurangan-bruto.index') }}?profil_kantor={{$profilKantorPusat ? $profilKantorPusat->id : ''}}">Pengurangan Bruto</a>
-                                @endcan
                             </div>
                         </li>
-                        @endcan
-                        @can('setting - database')
+                        @endif
+                        @if (auth()->user()->hasRole(['admin']))
                         <li style="margin-top: -15px" class="@active('database')">
                             <a href="{{ route('database.index') }}">
                                 <i class="nc-icon nc-vector"></i>
@@ -532,10 +490,10 @@
                                 <p></p>
                             </a>
                         </li>
-                        @endcan
+                        @endif
                     </ul>
                 </li>
-                @endcan
+                @endif
             </ul>
         </div>
     </div>
