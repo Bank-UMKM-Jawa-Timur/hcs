@@ -340,8 +340,8 @@
                         @endcan  --}}
                         {{-- Menu Gaji --}}
                         @can('penghasilan - gaji')
-                        <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                            <a class="nav-link-item" href="#submenu-gaji" data-toggle="collapse" data-target="#submenu-gaji">
+                        <li class=" dropdown @active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
+                            <a href="#submenu-gaji" data-toggle="dropdown" aria-expanded="false">
                             <div class="d-flex justify-content-start">
                                 <span class="icon">
                                     <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
@@ -349,36 +349,17 @@
                                 <span class="dropdown-toggle">Gaji</span>
                             </div>
                             </a>
-                            <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
-                                id="submenu-gaji">
+                            <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                                 @can('penghasilan - gaji - lampiran gaji')
-                                <li style="margin-top: -15px"
-                                    class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                                    <a href="{{ route('gaji.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Lampiran Gaji</p>
-                                        <p></p>
-                                    </a>
-                                </li>
+                                <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
                                 @endcan
                                 @can('penghasilan - gaji - slip gaji')
-                                <li style="margin-top: -15px" class="@active('slipIndex')">
-                                    <a href="{{ route('slipIndex') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Slip Jurnal</p>
-                                        <p></p>
-                                    </a>
-                                </li>
+                                <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
                                 @endcan
                                 @can('penghasilan - payroll - slip gaji')
-                                <li style="margin-top: -15px" class="@active('payroll.slip')">
-                                    <a href="{{ route('payroll.slip') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Slip Gaji</p>
-                                    </a>
-                                </li>
+                                <a class="dropdown-item" href="{{ route('payroll.slip') }}">Slip Gaji</a>
                                 @endcan
-                            </ul>
+                            </div>
                         </li>
                         @endcan
                     </ul>
