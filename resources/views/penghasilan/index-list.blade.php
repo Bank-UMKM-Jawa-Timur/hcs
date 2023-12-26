@@ -8,17 +8,14 @@
         <p class="card-title"><a href="">Penghasilan </a> > Penghasilan Tidak Teratur</p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        @can('penghasilan - import - penghasilan teratur - import')
+        @if (auth()->user()->hasRole(['kepegawaian']))
             <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.input-tidak-teratur') }}">
                 <button class="is-btn is-primary">Tambah</button>
             </a>
             <a class="mb-3 ml-2" href="{{ route('penghasilan-tidak-teratur.create') }}">
                 <button class="is-btn is-primary">import</button>
             </a>
-        @endcan
-        {{-- <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.create') }}">
-            <button class="is-btn is-primary">import</button>
-        </a> --}}
+        @endif
     </div>
 </div>
 
@@ -81,7 +78,23 @@
                                         <td>Rp {{ $item->grand_total ? number_format($item->grand_total, 0, '.', '.') : 0}}</td>
                                         <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->id_tunjangan }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
+                                            @if ($item->is_lock != 1)
+                                                @if (auth()->user()->hasRole(['kepegawaian']))
+                                                    <a href="{{route('penghasilan-tidak-teratur.lock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
+                                                        class="btn btn-success p-1">Lock</a>
+                                                    <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur', [
+                                                        'idTunjangan' => $item->tunjangan_id,
+                                                        'tanggal' => $item->tanggal ])}}" class="btn btn-outline-warning p-1">Edit</a>
+                                                @endif
+                                            @else
+                                                @if (auth()->user()->hasRole(['kepegawaian','admin']))
+                                                    <a href="{{route('penghasilan-tidak-teratur.unlock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
+                                                        class="btn btn-success p-1">Unlock</a>
+                                                @endif
+                                            @endif
+                                            @if (auth()->user()->hasRole(['kepegawaian','admin']))
+                                                <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->tunjangan_id }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty

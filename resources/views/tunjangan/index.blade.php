@@ -7,11 +7,11 @@
         <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('tunjangan.index') }}">Tunjangan</a></p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5">
-      @can('setting - master - tunjangan - create tunjangan')
+      @if(auth()->user()->hasRole(['admin']))
         <a class="mb-3" href="{{ route('tunjangan.create') }}">
           <button class="is-btn is-primary">tambah tunjangan</button>
         </a>
-      @endcan
+      @endif
     </div>
 </div>
         
@@ -47,13 +47,13 @@
                                     </td>
                                     <td>
                                       {{-- <div class="row"> --}}
-                                        @can('setting - master - tunjangan - edit tunjangan')
+                                        @if(auth()->user()->hasRole(['admin']))
                                         <a href="{{ route('tunjangan.edit', $item->id) }}">
                                           <button class="is-btn btn-warning">
                                             Edit
                                           </button>
                                         </a>
-                                        @endcan
+                                        @endif
 
                                         {{-- <form action="{{ route('tunjangan.destroy', $item->id) }}" method="POST">
                                           @csrf

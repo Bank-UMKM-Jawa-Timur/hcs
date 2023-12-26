@@ -7,13 +7,13 @@
         <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="">Reward & Punishment</a> > <a href="/surat-peringatan">Surat Peringatan</a></p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5">
-        @can('manajemen karyawan - reward & punishment - surat peringatan - create')
-            <a href="{{ route('surat-peringatan.create') }}" class="mb-3">
-                <button class="is-btn is-primary ">
-                    Tambah Surat Peringatan
-                </button>
-            </a>
-        @endcan
+        @if (auth()->user()->hasRole(['hrd']))
+        <a href="{{ route('surat-peringatan.create') }}" class="mb-3">
+            <button class="is-btn is-primary ">
+                Tambah Surat Peringatan
+            </button>
+        </a>
+        @endif
     </div>
 </div>
 
@@ -31,7 +31,9 @@
                                         <th>Nama Karyawan</th>
                                         <th>Tanggal SP</th>
                                         <th>Pelanggaran</th>
-                                        <th>Aksi</th>
+                                        @if (auth()->user()->hasRole(['hrd']))
+                                            <th>Aksi</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody class="">
@@ -43,11 +45,11 @@
                                             <td>{{ $sp->karyawan->nama_karyawan }}</td>
                                             <td>{{ $sp->tanggal_sp->format('d M Y') }}</td>
                                             <td>{{ $sp->pelanggaran }}</td>
-                                            <td class="d-flex">
-                                                @can('manajemen karyawan - reward & punishment - surat peringatan - detail')
-                                                <a href="{{ route('surat-peringatan.show', $sp) }}" class="btn btn-outline-info p-1" style="min-width: 60px;">Detail</a>
-                                                @endcan
-                                            </td>
+                                            @if (auth()->user()->hasRole(['hrd']))
+                                                <td class="d-flex">
+                                                    <a href="{{ route('surat-peringatan.show', $sp) }}" class="btn btn-outline-info p-1" style="min-width: 60px;">Detail</a>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

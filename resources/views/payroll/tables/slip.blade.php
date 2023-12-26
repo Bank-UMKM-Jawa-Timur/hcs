@@ -2,8 +2,7 @@
     <thead class="text-primary" style="border:1px solid #e3e3e3 !important">
         <tr>
             <th class="text-center">No</th>
-            <th class="text-center">Nama karyawan</th>
-            <th class="text-center">No Rek</th>
+            <th class="text-center">Bulan</th>
             <th class="text-center">Gaji</th>
             <th class="text-center">Total Potongan</th>
             <th class="text-center">Gaji Bersih</th>
@@ -12,59 +11,87 @@
     </thead>
     <tbody>
         @php
-            $number = $page == 1 ? 1 : $start;
             $footer_total_gaji = 0;
             $footer_total_potongan = 0;
+            $footer_total_potongan2 = 0;
             $footer_total_diterima = 0;
             $footer_total_gaji_bersih = 0;
+            $footer_total_gaji_bersih2 = 0;
         @endphp
-        @forelse ($data as $key => $item)
+        @if ($data)
             @php
-                $norek = $item->no_rekening ? $item->no_rekening : '-';
-                $total_gaji = $item->gaji ? number_format($item->gaji->gaji, 0, ',', '.') : 0;
-                $dpp = $item->potongan ? number_format($item->potongan->dpp, 0, ',', '.') : 0;
-                $bpjs_tk = $item->bpjs_tk ? number_format($item->bpjs_tk, 0, ',', '.') : 0;
-                $kredit_koperasi = $item->potonganGaji ? number_format($item->potonganGaji->kredit_koperasi, 0, ',', '.') : 0;
-                $iuran_koperasi = $item->potonganGaji ? number_format($item->potonganGaji->iuran_koperasi, 0, ',', '.') : 0;
-                $kredit_pegawai = $item->potonganGaji ? number_format($item->potonganGaji->kredit_pegawai, 0, ',', '.') : 0;
-                $iuran_ik = $item->potonganGaji ? number_format($item->potonganGaji->iuran_ik, 0, ',', '.') : 0;
-                $total_potongan = number_format($item->total_potongan, 0, ',', '.');
-                $total_diterima = $item->total_yg_diterima ? $item->total_yg_diterima : 0;
-
-                // count total
-                $footer_total_gaji += str_replace('.', '', $total_gaji);
-                $footer_total_potongan += str_replace('.', '', $total_potongan);
-                $footer_total_diterima += str_replace('.', '', $total_diterima);
-                $footer_total_gaji_bersih += str_replace('.', '', $total_diterima);
+                $month_arr = [
+                    'Januari',
+                    'Februari',
+                    'Maret',
+                    'April',
+                    'Mei',
+                    'Juni',
+                    'Juli',
+                    'Agustus',
+                    'September',
+                    'Oktober',
+                    'November',
+                    'Desember'
+                ];
             @endphp
-            <tr>
-                <td class="text-center">{{ $number++ }}</td>
-                <td>{{ $item->nama_karyawan }}</td>
-                <td class="text-center">{{ $norek }}</td>
-                <td class="text-right">{{ $total_gaji }}</td>
-                <td class="text-right">{{ $total_potongan }}</td>
-                <td class="text-right">{{ $total_diterima > 0 ? number_format($total_diterima, 0, ',', '.') : '-' }}</td>
-                <td class="text-center">
-                    <button type="button"
-                    data-toggle="modal"
-                    data-target="#exampleModal"
-                    data-target-id="slipGaji-{{ $item->id }}"
-                    data-json="{{ $data[$key] }}"
-                    class="is-btn btn-sm is-primary p-1 show-data">Slip</button>
-                </td>
-            </tr>
-        @empty
-            <tr>
-                <td class="text-center" colspan="12">Data tidak tersedia.</td>
-            </tr>
-        @endforelse
+            @if ($data->allGajiByKaryawan)
+                @forelse ($data->allGajiByKaryawan as $item)
+                    @php
+                        $total_gaji = $item->total_gaji ? number_format($item->total_gaji, 0, ',', '.') : 0;
+                        $bpjs_tk = $item->bpjs_tk ? $item->bpjs_tk : 0;
+                        $dpp = $item->potongan ? $item->potongan->dpp : 0;
+                        $kredit_koperasi = $item->kredit_koperasi ? $item->kredit_koperasi : 0;
+                        $iuran_koperasi = $item->iuran_koperasi ? $item->iuran_koperasi : 0;
+                        $kredit_pegawai = $item->kredit_pegawai ? $item->kredit_pegawai : 0;
+                        $iuran_ik = $item->iuran_ik ? $item->iuran_ik : 0;
+                        $total_potongan = $bpjs_tk + $dpp + $kredit_koperasi + $iuran_koperasi + $kredit_pegawai + $iuran_ik;
+                        $total_diterima = $item->total_gaji - $total_potongan;
+
+                        // count total
+                        $footer_total_gaji += str_replace('.', '', $total_gaji);
+                        $footer_total_potongan += str_replace('.', '', $total_potongan);
+                        $footer_total_diterima += str_replace('.', '', $total_diterima);
+                        $footer_total_gaji_bersih += str_replace('.', '', $total_diterima);
+
+                        $footer_total_potongan2 += $total_potongan;
+                        $footer_total_gaji_bersih2 += $total_diterima;
+                    @endphp
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $month_arr[($item->bulan - 1)] }}</td>
+                        <td class="text-right">{{ $total_gaji }}</td>
+                        <td class="text-right">{{ $total_potongan > 0 ? number_format($total_potongan, 0, ',', '.') : '-' }}</td>
+                        <td class="text-right">{{ $total_diterima > 0 ? number_format($total_diterima, 0, ',', '.') : '-' }}</td>
+                        <td class="text-center">
+                            <button type="button"
+                            data-toggle="modal"
+                            data-target="#exampleModal"
+                            data-target-id="slipGaji-{{ $item->id }}"
+                            data-nip="{{$data->nip}}"
+                            data-nama="{{$data->nama_karyawan}}"
+                            data-no_rekening="{{$data->no_rekening}}"
+                            data-status_jabatan={{$data->status_jabatan}}
+                            data-tanggal_pengangkat={{$data->tanggal_pengangkat}}
+                            data-json="{{ $item }}"
+                            data-bulan="{{$item->bulan}}"
+                            class="is-btn btn-sm is-primary p-1 show-data">Slip</button>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td class="text-center" colspan="12">Data tidak tersedia.</td>
+                    </tr>
+                @endforelse
+            @endif
+        @endif
     </tbody>
     <tfoot>
         <tr>
-            <th colspan="3" class="text-center">Jumlah</th>
+            <th colspan="2" class="text-center">Jumlah</th>
             <th class="text-right">{{ number_format($footer_total_gaji, 0, ',', '.') }}</th>
-            <th class="text-right">{{ number_format($footer_total_potongan, 0, ',', '.') }}</th>
-            <th class="text-right">{{ number_format($footer_total_gaji_bersih, 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($footer_total_potongan2, 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($footer_total_gaji_bersih2, 0, ',', '.') }}</th>
             <th></th>
         </tr>
     </tfoot>

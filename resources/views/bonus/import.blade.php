@@ -1,3 +1,4 @@
+@include('penghasilan-teratur.modal.loading')
 @extends('layouts.template')
 @push('style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
@@ -219,6 +220,12 @@
                 `);
             }
 
+            $('#button-simpan').on('click', function(){
+                $("#loadingModal").modal({
+                    keyboard: false
+                });
+                $("#loadingModal").modal("show");
+            })
         })
     </script>
 @endpush

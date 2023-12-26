@@ -13,6 +13,7 @@ use App\Models\JabatanModel;
 use App\Models\KaryawanModel;
 use App\Models\PanggolModel;
 use App\Models\PjsModel;
+use App\Models\PotonganModel;
 use App\Models\SpModel;
 use App\Models\UmurModel;
 use App\Repository\KaryawanRepository;
@@ -41,7 +42,7 @@ class KaryawanController extends Controller
      */
     public function index(Request $request)
     {
-        if (!Auth::user()->can('manajemen karyawan - data karyawan')) {
+        if (!auth()->user()->hasRole(['admin','hrd','kepegawaian'])) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -104,7 +105,7 @@ class KaryawanController extends Controller
 
     public function import()
     {
-        if (!Auth::user()->can('manajemen karyawan - data karyawan - import karyawan')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         return view('karyawan.import');
@@ -299,7 +300,7 @@ class KaryawanController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->can('manajemen karyawan - data karyawan - create karyawan')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         $data_panggol = DB::table('mst_pangkat_golongan')
@@ -433,6 +434,22 @@ class KaryawanController extends Controller
                     ]);
             }
 
+            if(count($request->get('potongan_kredit_koperasi')) > 0){
+                foreach($request->get('potongan_kredit_koperasi') as $key => $item){
+                    DB::table('potongan_gaji')
+                        ->insert([
+                            'nip' => $request->nip,
+                            'bulan' => $request->get('potongan_bulan')[$key],
+                            'tahun' => $request->get('potongan_tahun')[$key],
+                            'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')[$key]),
+                            'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')[$key]),
+                            'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')[$key]),
+                            'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')[$key]),
+                            'created_at' => now()
+                        ]);
+                }
+            }
+
             Alert::success('Berhasil', 'Berhasil menambah karyawan.');
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
@@ -454,7 +471,7 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
-        if (!Auth::user()->can('manajemen karyawan - data karyawan - detail karyawan')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $data_suis = null;
@@ -575,7 +592,7 @@ class KaryawanController extends Controller
                 )
                 ->where('nip', $id)
                 ->first();
-        
+
         $totalDppPerhitungan = 0;
         if ($dppPerhitungan) {
             $gjPokok = $dppPerhitungan->gj_pokok;
@@ -584,6 +601,9 @@ class KaryawanController extends Controller
             $totalDppPerhitungan = ($gjPokok + $tjKeluarga + 0.5 * $tjKesejahteraan) * 0.05;
         }
 
+        $potongan = PotonganModel::where('nip', $karyawan->nip)
+                                ->orderBy('id', 'DESC')
+                                ->first();
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,
@@ -592,6 +612,7 @@ class KaryawanController extends Controller
             'pjs' => $historyJabatan,
             'sp' => $sp,
             'dpp_perhitungan' => $totalDppPerhitungan,
+            'potongan' => $potongan,
         ]);
     }
 
@@ -603,7 +624,7 @@ class KaryawanController extends Controller
      */
     public function edit($id)
     {
-        if (!Auth::user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         $data = DB::table('mst_karyawan')
@@ -615,6 +636,9 @@ class KaryawanController extends Controller
             ->select('tunjangan_karyawan.*')
             ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
             ->get();
+        $data->potongan = DB::table('potongan_gaji')
+                            ->where('nip', $data->nip)
+                            ->get();
         $data->count_tj = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
             ->count('*');
@@ -655,7 +679,7 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
+        // dd($request->get('potongan_tahun'));
         $request->validate([
             'nip' => 'required',
             'nik' => 'required',
@@ -674,11 +698,20 @@ class KaryawanController extends Controller
             'tgl_mulai' => 'required'
         ]);
 
+        DB::beginTransaction();
         try {
             $idTkDeleted = explode(',', $request->get('idTkDeleted'));
+            $idPotDeleted = explode(',', $request->get('idPotDeleted'));
             if(count($idTkDeleted) > 0){
                 foreach($idTkDeleted as $key => $item){
                     DB::table('tunjangan_karyawan')
+                        ->where('id', $item)
+                        ->delete();
+                }
+            }
+            if(count($idPotDeleted) > 0){
+                foreach($idPotDeleted as $key => $item){
+                    DB::table('potongan_gaji')
                         ->where('id', $item)
                         ->delete();
                 }
@@ -802,16 +835,45 @@ class KaryawanController extends Controller
                 }
             }
 
+            foreach($request->get('id_pot') as $key => $item){
+                if ($item == null){
+                    DB::table('potongan_gaji')
+                        ->insert([
+                            'nip' => $request->nip,
+                            'bulan' => $request->get('potongan_bulan')[$key],
+                            'tahun' => $request->get('potongan_tahun')[$key],
+                            'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')[$key]),
+                            'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')[$key]),
+                            'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')[$key]),
+                            'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')[$key]),
+                            'created_at' => now()
+                        ]);
+                } else{
+                    DB::table('potongan_gaji')
+                        ->where('id', $item)
+                        ->update([
+                            'bulan' => $request->get('potongan_bulan')[$key],
+                            'tahun' => $request->get('potongan_tahun')[$key],
+                            'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')[$key]),
+                            'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')[$key]),
+                            'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')[$key]),
+                            'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')[$key]),
+                            'created_at' => now()
+                        ]);
+                }
+            }
+
+            DB::commit();
             Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e);
-            dd($e);
+            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
+            return redirect()->back();
         } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e);
-            dd($e);
+            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
+            return redirect()->back();
         }
     }
 
@@ -833,7 +895,7 @@ class KaryawanController extends Controller
 
     public function penonaktifanAdd()
     {
-        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         return view('karyawan.penonaktifan.penonaktifan');
@@ -841,7 +903,7 @@ class KaryawanController extends Controller
 
     public function indexPenonaktifan()
     {
-        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $karyawanRepo = new KaryawanRepository();
@@ -880,7 +942,7 @@ class KaryawanController extends Controller
 
     public function reminderPensiunIndex()
     {
-        if (!Auth::user()->can('manajemen karyawan - data masa pensiunan')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $jabatan = JabatanModel::all();
@@ -1114,5 +1176,13 @@ class KaryawanController extends Controller
         }
 
         return $month;
+    }
+
+    public function getNameKaryawan($nip){
+        $karyawan = DB::table('mst_karyawan')->select('nip', 'nama_karyawan')->where('nip', $nip)->get();
+
+        return response()->json([
+            'data' => $karyawan
+        ]);
     }
 }

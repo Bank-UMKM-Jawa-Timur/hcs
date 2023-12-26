@@ -59,6 +59,9 @@ class GajiPerBulanController extends Controller
 
     public function index()
     {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+            return view('roles.forbidden');
+        }
         // Need permission
         $data = DB::table('gaji_per_bulan')
             ->selectRaw('DISTINCT(bulan), tahun')
@@ -102,11 +105,8 @@ class GajiPerBulanController extends Controller
         $employee = array();
         $pph = array();
         $karyawan = DB::table('mst_karyawan')
-            ->whereNull('tanggal_penonaktifan')
-            ->whereNotIn('kd_entitas', $cabang)
-            ->orWhere('kd_entitas', null)
-            // ->whereIn('nip', ['00126', '00273'])
-            ->get();
+                    ->whereNull('tanggal_penonaktifan')
+                    ->get();
 
         // Get Penghasilan from mst_karyawan + tunjangan karyawan + penghasilan tidak teratur
         $item_penghasilan_teratur = TunjanganModel::select('id', 'kategori', 'status')

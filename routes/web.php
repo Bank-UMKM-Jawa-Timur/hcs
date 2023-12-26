@@ -29,6 +29,7 @@ use App\Http\Controllers\PejabatSementaraController;
 use App\Http\Controllers\PenggantiBiayaKesehatanController;
 use App\Http\Controllers\PenghasilanTidakTeraturController;
 use App\Http\Controllers\PengkinianDataController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilKantorPusatController;
 use App\Http\Controllers\PromosiController;
 use App\Http\Controllers\SlipGajiController;
@@ -42,97 +43,29 @@ use App\Imports\ImportNpwpRekening;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
 |
 */
 
-// Route::get('/', function () {
-//     return view('login');
-// });
-
-// Route::get('home', function() {
-//     return view('main');
-// });
-
-// Route::get('data_master', function() {
-//     return view('data_master');
-// });
-
-// Route::get('data_table', function() {
-//     return view('data_table');
-// });
-
-// Route::get('data_karyawan', function() {
-//     return view('karyawan/index');
-// });
-
-// Route::get('data_karyawan/add', function() {
-//     return view('karyawan/add');
-// });
-
-// Route::get('mutasi', function() {
-//     return view('mutasi/index');
-// });
-
-// Route::get('mutasi/add', function() {
-//     return view('mutasi/add');
-// });
-
-// Route::get('demosi', function () {
-//     return view('demosi/index');
-// });
-
-// Route::get('demosi/add', function() {
-//     return view('demosi/add');
-// });
-
-// Route::get('promosi', function () {
-//     return view('promosi/index');
-// });
-
-// Route::get('promosi/add', function () {
-//     return view('promosi/add');
-// });
-
-// Route::get('karyawan/detail', function() {
-//     return view('karyawan/detail');
-// });
-
-// Route::get('penghasilan', function() {
-//     return view('penghasilan/index');
-// });
-
-// Route::get('penghasilan/add', function() {
-//     return view('penghasilan/add');
-// });
-
-// Route::get('penghasilan/gajipajak', function() {
-//     return view('penghasilan/gajipajak');
-// });
-
-// Route::get('umur/add', function() {
-//     return view('umur/add');
-// });
-
-// Route::get('umur', function () {
-//     return view('umur/add');
-// });
-
-
-// Route::get('karyawan/klasifikasi', function() {
-//     return view('karyawan/klasifikasi');
-// });
-
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect('/login');
 });
+Route::get('/dashboard', function () {
+    return view('welcome');
+});
+
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::middleware('auth:user,karyawan')->group(function () {
+    
+// });
 
 Route::prefix('graph')->group(function () {
     Route::get('/detail-per-cabang', [HomeController::class, 'perCabang'])->name('per-cabang');
@@ -141,25 +74,25 @@ Route::prefix('graph')->group(function () {
     Route::get('/per-divisi', [HomeController::class, 'perDivisi'])->name('per-divisi');
     Route::get('/sub-divisi/{kode}', [HomeController::class, 'subDivisi'])->name('sub-divisi');
 
-    Route::get('/per-bagian', function(){
+    Route::get('/per-bagian', function () {
         return view('graph.per-bagian');
     });
-    Route::get('/per-golongan', function(){
+    Route::get('/per-golongan', function () {
         return view('graph.per-golongan');
     });
-    Route::get('/per-pendidikan', function(){
+    Route::get('/per-pendidikan', function () {
         return view('graph.per-pendidikan');
     });
-    Route::get('/gaji', function(){
+    Route::get('/gaji', function () {
         return view('graph.per-gaji');
     });
-    Route::get('/table-karyawan', function(){
+    Route::get('/table-karyawan', function () {
         return view('graph.table-karyawan');
     });
-    Route::get('/gaji-percabang', function(){
+    Route::get('/gaji-percabang', function () {
         return view('graph.gaji-percabang');
     });
-    Route::get('/table-karyawan-sp', function(){
+    Route::get('/table-karyawan-sp', function () {
         return view('graph.table-karyawan-sp');
     });
 });
@@ -174,6 +107,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
     Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
     Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
+    Route::get('/get-name-karyawan/{nip}', [\App\Http\Controllers\KaryawanController::class, 'getNameKaryawan']);
     Route::get('list-karyawan', [\App\Http\Controllers\KaryawanController::class, 'listKaryawan']);
     Route::resource('/mutasi', \App\Http\Controllers\MutasiController::class);
     Route::resource('/umur', \App\Http\Controllers\UmurController::class);
@@ -192,13 +126,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('import-potongan-post', [\App\Http\Controllers\PotonganController::class, 'importPotonganPost'])->name('import-potongan-post');
     Route::get('/detail/{bulan}/{tahun}', [PotonganController::class, 'detail'])->name('detail-potongan');
 
-    Route::prefix('penghasilan')->name('penghasilan.')->group(function() {
+    Route::prefix('penghasilan')->name('penghasilan.')->group(function () {
         Route::resource('import-penghasilan-teratur', \App\Http\Controllers\Import\PenghasilanTeraturController::class);
         Route::post('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
         Route::get('/get-karyawan-search', [PenghasilanTeraturController::class, 'getKaryawanSearch'])->name('karyawan-search');
         Route::get('/details/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'details'])->name('details');
         Route::post('/cetak-vitamin', [PenghasilanTeraturController::class, 'cetakVitamin'])->name('cetak-vitamin');
         Route::get('/template-excel', [PenghasilanTeraturController::class, 'templateExcel'])->name('template-excel');
+        Route::get('/lock', [PenghasilanTeraturController::class, 'lock'])->name('lock');
+        Route::get('/unlock', [PenghasilanTeraturController::class, 'unlock'])->name('unlock');
+        Route::get('/edit-tunjangan', [PenghasilanTeraturController::class, 'editTunjangan'])->name('edit-tunjangan');
+        Route::post('/edit-tunjangan-post', [PenghasilanTeraturController::class, 'editTunjanganPost'])->name('edit-tunjangan-post');
     });
 
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
@@ -213,26 +151,35 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
     Route::resource('/lembur', LemburController::class);
     Route::resource('/spd', SPDController::class);
+
     // Bonus Data
-    Route::get('bonus/excel',[BonusController::class,'fileExcel'])->name('bonus.excel');
-    Route::get('bonus/{id}/{tgl}',[BonusController::class,'detail'])->name('bonus.detail');
+    Route::get('bonus/excel', [BonusController::class, 'fileExcel'])->name('bonus.excel');
+    Route::get('bonus/{id}/{tgl}', [BonusController::class, 'detail'])->name('bonus.detail');
     Route::resource('bonus', BonusController::class);
     Route::resource('/thr', THRController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
+    Route::get('/bonus-lock', [BonusController::class, 'lock'])->name('bonus-lock');
+    Route::get('/bonus-unlock', [BonusController::class, 'unlock'])->name('bonus-unlock');
+    Route::get('/edit-tunjangan-bonus/{idTunjangan}/{tanggal}', [BonusController::class, 'editTunjangan'])->name('edit-tunjangan-bonus');
+    Route::post('/edit-tunjangan-bonus/post', [BonusController::class, 'editTunjanganPost'])->name('edit-tunjangan-bonus-post');
 
     Route::prefix('penghasilan-tidak-teratur')
         ->name('penghasilan-tidak-teratur.')
         ->controller(PenghasilanTidakTeraturController::class)
-        ->group(function(){
+        ->group(function () {
             Route::get('/', 'lists')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
             Route::get('/detail', 'show')->name('detail');
             Route::get('/input-tidak-teratur', 'createTidakTeratur')->name('input-tidak-teratur');
-            Route::get('template-tidak-teratur','templateTidakTeratur')->name('templateTidakTeratur');
-            Route::get('template-biaya-kesehatan','templateBiayaKesehatan')->name('templateBiayaKesehatan');
-            Route::get('template-uang-duka','templateBiayaDuka')->name('templateBiayaDuka');
+            Route::get('template-tidak-teratur', 'templateTidakTeratur')->name('templateTidakTeratur');
+            Route::get('template-biaya-kesehatan', 'templateBiayaKesehatan')->name('templateBiayaKesehatan');
+            Route::get('template-uang-duka', 'templateBiayaDuka')->name('templateBiayaDuka');
+            Route::get('/lock', 'lock')->name('lock');
+            Route::get('/unlock', 'unlock')->name('unlock');
+            Route::get('/edit-tunjangan/{idTunjangan}/{tanggal}', 'editTunjangan')->name('edit-tunjangan-tidak-teratur');
+            Route::post('/edit-tunjangan/post', 'editTunjanganPost')->name('edit-tunjangan-tidak-teratur-post');
         });
 
     // Penonaktifan Karyawan
@@ -367,14 +314,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('laporan-penonaktifan', [LaporanPenonaktifanController::class, 'index'])->name('laporan-penonaktifan.index');
     });
 
-    Route::get('/import-pph', function(){
+    Route::get('/import-pph', function () {
         return view('gaji_perbulan.import');
     });
     Route::post('post-import-pph', [GajiPerBulanController::class, 'importPPH'])->name('import-pph');
 
     Route::prefix('payroll')
         ->name('payroll.')
-        ->group(function() {
+        ->group(function () {
             Route::get('/', [PayrollController::class, 'index'])->name('index');
             Route::get('pdf', [PayrollController::class, 'cetak'])->name('pdf');
             Route::get('/cetak-slip', [PayrollController::class, 'cetakSlip'])->name('cetak_slip');
@@ -382,10 +329,4 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/slip/pdf', [PayrollController::class, 'slipPDF'])->name('slip.pdf');
         });
 });
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+require __DIR__.'/auth.php';

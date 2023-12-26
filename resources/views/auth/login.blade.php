@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="{{ asset('style/assets/css/login.css') }}"/>
 </head>
 <body>
+  @include('sweetalert::alert')
   <main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
     <div class="container all-card">
       <div class="card login-card">
@@ -42,10 +43,21 @@
                         @csrf
                         <div class="row">
                           <div class="col">
+                            @if (Session::has('status'))
+                                <div class="alert alert-danger h-0 p-1" role="alert">
+                                    {{ Session::get('message') }}
+                                </div>
+                            @endif
                             <div class="form-group">
                               <label for="email" class="sr-only">Email</label>
-                              <input autofocus placeholder="Masukkan email" id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                              @error('email')
+                              <input autofocus placeholder="Masukkan Email atau NIP" id="email" type="text" class="form-control @error('input_type') is-invalid @enderror" name="input_type" value="{{ old('input_type') }}" required autocomplete="email" autofocus>
+                              @if ($errors->get('email'))
+                                  <span class="text-theme-primary">{{ $errors->get('email')[0] }}</span>
+                              @endif
+                              @if ($errors->get('username'))
+                                  <span class="text-theme-primary">{{ $errors->get('username')[0] }}</span>
+                              @endif
+                              @error('input_type')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
                                   </span>
@@ -63,7 +75,7 @@
                             <div class="custom-checkbox col-6">
                               <input type="checkbox" class="custom-control-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                               <label class="custom-control-label" for="remember">Remember me</label>
-                            </div>              
+                            </div>
                           </div>
                         </div>
                         <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login">
@@ -71,13 +83,9 @@
                     </div>
                   </div>
                 </div>
-                {{-- <a href="#!" class="forgot-password-link">Forgot password?</a>
-                <p class="login-card-footer-text">Don't have an account? <a href="#!" class="text-reset">Register here</a></p> --}}
                 <nav class="login-card-footer-nav">
                   <span class="copyright">
-                    © <script>
-                      document.write(new Date().getFullYear())
-                    </script>, BANK UMKM JATIM
+                    © 2022 PT. BPR Jatim
                   </span>
                 </nav>
             </div>

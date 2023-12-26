@@ -25,7 +25,6 @@ class ExportVitamin implements FromView
         $data = $this->repo->excelVitamin($bulan, $tahun);
         return view('exports.vitamin', [
             'data' => $data,
-            // 'data' => $data,
             'bulan' => $bulan,
             'tahun' => $tahun
         ]);

@@ -1,258 +1,42 @@
 @push('script')
     <script>
-        /**
-        * new Option(id, text, false, checked)
-        **/
-        $('#cabang').select2({})
-        var selected_kantor = $('#kantor').val()
-        if (selected_kantor == '0' || selected_kantor == 'pusat') {
-            // Hide cabang
-            $('.cabang-input').addClass('d-none')
-            $('.divisi-input').removeClass('d-none')
-            $('.sub-divisi-input').removeClass('d-none')
-
-            // Load divisi options
-            loadDivisi()
-
-            // Load sub divisi options
-            const kode_div = "{{\Request::get('divisi')}}"
-            if (kode_div) {
-                loadSubDivisi(kode_div)
-            }
-
-            // Load bagian
-            const selected_cabang = "{{\Request::get('cabang')}}"
-            const selected_kd_subdiv = "{{\Request::get('sub_divisi')}}"
-            let kd_entitas = '';
-            if (selected_cabang != '0' && selected_kd_subdiv == '0') {
-                kd_entitas = selected_cabang;
-            }
-            if (selected_cabang == '0' && selected_kd_subdiv != '0') {
-                kd_entitas = selected_kd_subdiv;
-            }
-            loadBagian(kd_entitas)
-        }
-        else {
-            // Show cabang
-            $('.cabang-input').removeClass('d-none')
-        }
-
+        var nipKaryawan = "";
+        var namaKaryawan = '';
         loadKaryawan()
-
-        $('#kantor').on('change', function() {
-            const selected = $(this).val()
-
-            if (selected == 'cabang') {
-                $('.cabang-input').removeClass('d-none')
-                $('.divisi-input').addClass('d-none')
-                $('.sub-divisi-input').addClass('d-none')
-            }
-            else {
-                $('.cabang-input').addClass('d-none')
-                $('.divisi-input').removeClass('d-none')
-                $('.sub-divisi-input').removeClass('d-none')
-
-                // Load divisi options
-                loadDivisi()
-            }
-            loadKaryawan()
-        })
-
-        // Divisi onchange
-        $('#divisi').on('change', function() {
-            const selected = $(this).val()
-
-            // Show sub divisi input
-            $('.sub-divisi-input').removeClass('d-none')
-
-            loadSubDivisi(selected)
-        })
-
-        // Divisi onchange
-        $('#sub_divisi').on('change', function() {
-            const selected = $(this).val()
-
-            loadBagian(selected)
-        })
-
-        // Cabang onchange
-        $('#cabang').on('change', function() {
-            const selected = $(this).val()
-
-            loadBagian(selected)
-            loadKaryawan()
-        })
-
-        // Bagian onchange
-        $('#bagian').on('change', function() {
-            const selected = $(this).val()
-
-            loadKaryawan()
-        })
-
-        function loadDivisi() {
-            const selected = "{{\Request::get('divisi')}}"
-            $('#divisi').empty()
-            var item = {
-                id: 0,
-                text: '-- Semua Divisi --'
-            };
-            var newOption = new Option(item.text, item.id, false, false);
-            var arrOption =[]
-            arrOption.push(newOption)
-
-            $.ajax({
-                url: '{{ route('api.select2.divisi') }}',
-                success: function(response) {
-                    var data = response.results
-                    $.each(data, function(i, item) {
-                        var option = new Option(item.text, item.id, false, selected == item.kode);
-                        arrOption.push(option)
-                    })
-                    $('#divisi').append(arrOption)
-                    $('#divisi').select2({})
-                }
-            })
-
-            loadKaryawan()
-        }
-
-        function loadSubDivisi(kode_div) {
-            const selected = "{{\Request::get('sub_divisi')}}"
-            // Load divisi options
-            $('#sub_divisi').empty()
-            var item = {
-                id: 0,
-                text: '-- Semua Sub Divisi --'
-            };
-            var newOption = new Option(item.text, item.id, false, false);
-            var arrOption =[]
-            arrOption.push(newOption)
-
-            $.ajax({
-                url: `{{ url('/api/select2/sub-divisi') }}/${kode_div}`,
-                success: function(response) {
-                    var data = response.results
-
-                    $.each(data, function(i, item) {
-                        var option = new Option(item.text, item.id, false, selected == item.kode);
-                        arrOption.push(option)
-                    })
-                    $('#sub_divisi').append(arrOption)
-                    $('#sub_divisi').select2({})
-                }
-            })
-
-            loadKaryawan()
-        }
-
-        function loadBagian(kd_entitas) {
-            const selected = "{{\Request::get('bagian')}}"
-            const is_cabang = $('#kantor').val() == 'cabang'
-
-            // Reset option
-            $('#bagian').empty()
-            var item = {
-                id: 0,
-                text: '-- Semua Bagian --'
-            };
-            var newOption = new Option(item.text, item.id, false, false);
-            var arrOption =[]
-            arrOption.push(newOption)
-
-            // Load bagian options
-            $.ajax({
-                url: `{{ url('/api/select2/bagian') }}`,
-                data: {
-                    'kd_entitas': kd_entitas,
-                    'is_cabang': is_cabang
-                },
-                success: function(response) {
-                    var data = response.results
-
-                    $.each(data, function(i, item) {
-                        var option = new Option(item.text, item.id, false, selected == item.kode);
-                        arrOption.push(option)
-                    })
-                    $('#bagian').append(arrOption)
-                    $('#bagian').select2({})
-                }
-            })
-        }
 
         function loadKaryawan() {
             const selected = "{{\Request::get('nip')}}"
+            const name = "{{\Request::get('nama_karyawan')}}"
             const kantor = $('#kantor').val()
             const cabang = $('#cabang').val()
             const divisi = $('#divisi').val()
             const sub_divisi = $('#sub_divisi').val()
             const bagian = $('#bagian').val()
 
+            nipKaryawan = selected;
+
             $('#nip').empty()
             // Load karyawan options
-            if ((cabang == '0' || !cabang) && (divisi == '0' || !divisi) && (sub_divisi == '0' || !sub_divisi) && (bagian == '0' || !bagian)) {
-
-                $('#nip').select2({
-                    ajax: {
-                        url: '{{ route('api.select2.karyawan.jabatan') }}',
-                        data: function (params) {
+            $('#nip').select2({
+                ajax: {
+                    url: '{{ route('api.select2.karyawan.jabatan') }}',
+                    data: function (params) {
                         var query = {
                             search: params.term,
                             kantor:kantor,
                             page: params.page
                         }
-
                         // Query parameters will be ?search=[term]&page=[page]
                         return query;
-                        }
-                    },
-                    templateResult: function(data) {
-                        if(data.loading) return data.text;
-                        return $(`
-                            <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
-                        `);
                     }
-                });
-            }
-            else {
-                var item = {
-                    id: 0,
-                    text: '-- Semua Karyawan --'
-                };
-
-                var newOption = new Option(item.text, item.id, false, false);
-                var arrOption =[]
-                arrOption.push(newOption)
-                $('#nip').append(newOption)
-
-                $.ajax({
-                    url: '{{ route('api.select2.list_karyawan') }}',
-                    data: function (params) {
-                        var query = {
-                            search: params.term,
-                            cabang: cabang,
-                            divisi: divisi,
-                            sub_divisi: sub_divisi,
-                            bagian: bagian,
-                            page: params.page
-                        }
-
-                        // Query parameters will be ?search=[term]&page=[page]
-                        return query;
-                    },
-
-                    success: function(response) {
-                        var data = response.results
-
-                        $.each(data, function(i, item) {
-                            var option = new Option(item.text, item.id, false, selected == item.kode);
-                            arrOption.push(option)
-                        })
-                        $('#nip').append(arrOption)
-                        $('#nip').select2()
-                    }
-                })
-            }
+                },
+                templateResult: function(data) {
+                    if(data.loading) return data.text;
+                    return $(`
+                        <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
+                    `);
+                }
+            });
         }
 
         const formatRupiahPayroll = (angka) => {
@@ -307,5 +91,19 @@
                 btn_pagination[i].href += `&q=${$('#q').val()}`
             }
         })
+
+        $.ajax({
+            type: "GET",
+            url: "/get-name-karyawan/" + nipKaryawan,
+            success: function (response) {
+                console.log("RESPONNYA");
+                namaKaryawan = response.data[0].nama_karyawan;
+                $('#select2-nip-container').html(nipKaryawan + ' - ' +namaKaryawan)
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+        
     </script>
 @endpush

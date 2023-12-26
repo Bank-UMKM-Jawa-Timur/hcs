@@ -7,11 +7,11 @@
       <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang</p>
   </div>
   <div class="card-header row mt-3 mr-8 pr-5">
-    @can('setting - master - kantor cabang - create kantor cabang')
+    @if(auth()->user()->hasRole(['admin']))
         <a class="mb-3" href="{{ route('cabang.create') }}">
         <button class="is-btn is-primary">tambah cabang</button>
         </a>
-    @endcan
+    @endif
   </div>
 </div>
 
@@ -52,7 +52,7 @@
                             </td>
                             <td class="text-center">
                               {{-- <div class="row"> --}}
-                                @can('setting - master - kantor cabang - edit kantor cabang')
+                                @if(auth()->user()->hasRole(['admin']))
                                     <p style="margin-bottom: 0.4rem !important;">
                                     <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
                                         <button class="is-btn btn-warning">
@@ -60,7 +60,7 @@
                                         </button>
                                     </a>
                                     </p>
-                                @endcan
+                                @endif
                                 @if ($item->kode_cabang_profil)
                                   <a href="{{ route('penambahan-bruto.index') }}?profil_kantor={{$item->profil_id}}" class="mt-2">
                                     <button class="btn btn-info">

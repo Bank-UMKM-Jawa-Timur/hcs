@@ -6,11 +6,11 @@
         <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('sub_divisi.index') }}">Sub Divisi</a></p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5">
-        @can('setting - master - sub divisi - create sub divisi')
+        @if(auth()->user()->hasRole(['admin']))
             <a class="mb-3" href="{{ route('sub_divisi.create') }}">
                 <button class="is-btn is-primary">tambah sub divisi</button>
             </a>
-        @endcan
+        @endif
     </div>
 </div>
 
@@ -54,13 +54,13 @@
                                 </td>
                                 <td>
                                     {{-- <div class="row"> --}}
-                                    @can('setting - master - sub divisi - edit sub divisi')
+                                    @if(auth()->user()->hasRole(['admin']))
                                         <a href="{{ route('sub_divisi.edit', $item->kd_subdiv) }}">
                                         <button class="is-btn btn-warning">
                                             Edit
                                         </button>
                                         </a>
-                                    @endcan
+                                    @endif
     
                                     {{-- <form action="{{ route('sub_divisi.destroy', $item->id) }}" method="POST">
                                         @csrf

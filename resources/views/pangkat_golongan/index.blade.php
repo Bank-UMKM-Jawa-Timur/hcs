@@ -7,13 +7,13 @@
     <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('pangkat_golongan.index') }}">Pangkat Dan Golongan</a></p>
   </div>
   <div class="card-header row mt-3 mr-8 pr-5">
-    @can('setting - master - pangkat & golongan - create pangkat & golongan')
+    @if(auth()->user()->hasRole(['admin']))
       <a class="mb-3" href="{{ route('pangkat_golongan.create') }}">
         <div class="pt-2 pb-3">
         <button class="is-btn is-primary">tambah pangkat dan golongan</button>
         </div>
       </a>
-    @endcan
+    @endif
   </div>
 </div>
 
@@ -54,13 +54,13 @@
                                     </td>
                                     <td>
                                       {{-- <div class="row"> --}}
-                                        @can('setting - master - pangkat & golongan - edit pangkat & golongan')
+                                        @if(auth()->user()->hasRole(['admin']))
                                         <a href="{{ route('pangkat_golongan.edit', $item->golongan) }}">
                                           <button class="is-btn btn-warning">
                                             Edit
                                           </button>
                                         </a>
-                                        @endcan
+                                        @endif
 
                                         {{-- <form action="{{ route('pangkat_golongan.destroy', $item->golongan) }}" method="POST">
                                           @csrf

@@ -17,7 +17,7 @@ class SlipGajiController extends Controller
      */
     public function index()
     {
-        if (!Auth::user()->can('gaji - lampiran gaji')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.laporan_gaji', ['data' => null, 'kategori' => null, 'request' => null]);
@@ -25,7 +25,7 @@ class SlipGajiController extends Controller
 
     public function slipJurnalIndex()
     {
-        if (!Auth::user()->can('gaji - slip jurnal')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.slip_jurnal', ['data' => null, 'kategori' => null, 'request' => null]);

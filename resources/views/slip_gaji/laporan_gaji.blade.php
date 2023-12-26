@@ -6,9 +6,11 @@
         <p class="card-title"><a href="">Gaji</a> > Lampiran Gaji</p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        <a href="{{ route('gaji.create') }}" class="ml-3">
-            <button class="is-btn is-primary">import potongan</button>
-        </a>
+        @if (auth()->user()->hasRole(['kepegawaian']))
+            <a href="{{ route('gaji.create') }}" class="ml-3">
+                <button class="is-btn is-primary">import potongan</button>
+            </a>
+        @endif
     </div>
 </div>
 

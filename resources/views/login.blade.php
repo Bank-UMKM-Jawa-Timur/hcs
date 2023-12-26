@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="{{ asset('style/assets/css/login.css') }}"/>
 </head>
 <body>
+  @include('sweetalert::alert')
   <main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
     <div class="container all-card">
       <div class="card login-card">
@@ -40,8 +41,16 @@
                           <div class="col">
                             <div class="form-group">
                               <label for="email" class="col-md-4 col-form-label text-md-end">Email</label>
-                              <input autofocus placeholder="Masukkan email" id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                              <input autofocus placeholder="Masukkan email" id="email" type="text" class="form-control @error('input_type') is-invalid @enderror" name="input_type" value="{{ old('input_type') }}" required autocomplete="email" autofocus>
                               @error('email')
+                                {{$message}}
+                                  <span class="invalid-feedback" role="alert">
+                                      <strong>{{ $message }}</strong>
+                                  </span>
+                              @enderror
+                              @error('username')
+                              username
+                                {{$message}}
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
                                   </span>
@@ -59,7 +68,7 @@
                             <div class="custom-checkbox col-6">
                               <input type="checkbox" class="custom-control-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                               <label class="custom-control-label" for="remember">Remember me</label>
-                            </div>              
+                            </div>
                           </div>
                         </div>
                         <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login">
