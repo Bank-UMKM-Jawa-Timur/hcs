@@ -240,22 +240,22 @@ class PenghasilanTidakTeraturController extends Controller
                 $kesehatan = 0;
                 $jp_penambah = 0;
                 if($karyawan->tanggal_penonaktifan == null){
-                    $jkk = round(($persen_jkk / 100) * $item);
-                    $jht = round(($persen_jht / 100) * $item);
-                    $jkm = round(($persen_jkm / 100) * $item);
-                    $jp_penambah = round(($persen_jp_penambah / 100) * $item);
+                    $jkk = ($persen_jkk / 100) * $item;
+                    $jht = ($persen_jht / 100) * $item;
+                    $jkm = ($persen_jkm / 100) * $item;
+                    $jp_penambah = ($persen_jp_penambah / 100) * $item;
                 }
 
                 if($karyawan->jkn != null){
                     if($item > $batas_atas){
-                        $kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                        $kesehatan = ($batas_atas * ($persen_kesehatan / 100));
                     } else if($item < $batas_bawah){
-                        $kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                        $kesehatan = ($batas_bawah * ($persen_kesehatan / 100));
                     } else{
-                        $kesehatan = round($item * ($persen_kesehatan / 100));
+                        $kesehatan = ($item * ($persen_kesehatan / 100));
                     }
                 }
-                array_push($jamsostek, ($jkk + $jht + $jkm + $kesehatan + $jp_penambah));
+                array_push($jamsostek, round($jkk + $jht + $jkm + $kesehatan + $jp_penambah));
             } else {
                 array_push($jamsostek, 0);
             }
