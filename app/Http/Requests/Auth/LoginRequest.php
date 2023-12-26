@@ -11,6 +11,9 @@ use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
+    protected $loginField;
+    protected $loginValue;
+
     public function authorize(): bool
     {
         return true;
@@ -19,7 +22,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string'],
+            'email' => ['required_without:username', 'string', 'email'],
+            'username' => ['required_without:email', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -28,15 +32,14 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
         
-        if (!Auth::guard('karyawan')->attempt(['nip' => $this->input('email'), 'password' => $this->input('password')])) {
-            if (!Auth::guard('web')->attempt(['email' => $this->input('email'), 'password' => $this->input('password')])) {
-                RateLimiter::hit($this->throttleKey());
-    
-                throw ValidationException::withMessages([
-                    'email' => trans('auth.failed'),
-                ]);
-            }
+        if (!Auth::attempt($this->only($this->loginField, 'password'), $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'input_type' => 'Kredensial ini tidak cocok dengan data kami.',
+            ]);
         }
+
         RateLimiter::clear($this->throttleKey());
     }
 
@@ -61,5 +64,15 @@ class LoginRequest extends FormRequest
     public function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->loginField = filter_var(
+            $this->input('input_type'),
+            FILTER_VALIDATE_EMAIL
+        ) ? 'email' : 'username';
+        $this->loginValue = $this->input('input_type');
+        $this->merge([$this->loginField => $this->loginValue]);
     }
 }
