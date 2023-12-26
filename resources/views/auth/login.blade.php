@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="{{ asset('style/assets/css/login.css') }}"/>
 </head>
 <body>
+  @include('sweetalert::alert')
   <main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
     <div class="container all-card">
       <div class="card login-card">
@@ -49,7 +50,13 @@
                             @endif
                             <div class="form-group">
                               <label for="email" class="sr-only">Email</label>
-                              <input autofocus placeholder="Masukkan Email atau NIP" id="email" type="text" class="form-control @error('input_type') is-invalid @enderror" name="email" value="{{ old('input_type') }}" required autocomplete="email" autofocus>
+                              <input autofocus placeholder="Masukkan Email atau NIP" id="email" type="text" class="form-control @error('input_type') is-invalid @enderror" name="input_type" value="{{ old('input_type') }}" required autocomplete="email" autofocus>
+                              @if ($errors->get('email'))
+                                  <span class="text-theme-primary">{{ $errors->get('email')[0] }}</span>
+                              @endif
+                              @if ($errors->get('username'))
+                                  <span class="text-theme-primary">{{ $errors->get('username')[0] }}</span>
+                              @endif
                               @error('input_type')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
@@ -78,9 +85,7 @@
                 </div>
                 <nav class="login-card-footer-nav">
                   <span class="copyright">
-                    © <script>
-                      document.write(new Date().getFullYear())
-                    </script>, BANK UMKM JATIM
+                    © 2022 PT. BPR Jatim
                   </span>
                 </nav>
             </div>
