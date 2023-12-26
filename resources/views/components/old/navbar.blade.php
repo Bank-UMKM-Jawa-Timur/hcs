@@ -27,15 +27,16 @@
                     </li>
                 </ul>
                 <ul class=" m-sm-1 navbar-nav">
-                    <li class="nav-item btn-rotate dropdown">
+                    <li class="nav-item btn-rotate dropdown d-flex">
+                        
                         <a class="nav nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="nc-icon nc-single-02"></i>
+                                <p class="font-weight-bold">Selamat datang,{{ auth()->user()->name }}</p>
+                                <img class="ml-2 mr-2 " src="https://ui-avatars.com/api/?background=DA271F&color=FFFFFF&name={{ auth()->user()->name }}" style="width: 30px; border-radius: 100%;" alt="">
                             {{-- @if (session('status')) --}}
-                            <p class="font-weight-bold">Selamat datang,{{ auth()->user()->name }}</p>
-                            <p></p>
                             {{-- @endif --}}
                         </a>
+            
                         <div class="dropdown-menu dropdown-primary dropdown-menu-right"
                             aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="{{ route('logout') }}"
