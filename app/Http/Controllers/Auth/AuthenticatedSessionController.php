@@ -18,17 +18,8 @@ class AuthenticatedSessionController extends Controller
     
     public function create(): View
     {
-        return view('login');
+        return view('auth.login');
     }
-
-    // public function store(LoginRequest $request): RedirectResponse
-    // {
-    //     $request->authenticate();
-
-    //     $request->session()->regenerate();
-
-    //     return redirect()->intended(RouteServiceProvider::HOME);
-    // } 
 
     public function store(LoginRequest $request)
     {
@@ -58,11 +49,7 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
-        if (Auth::guard('user')->check()) {
-            Auth::guard('user')->logout();
-        }elseif(Auth::guard('karyawan')->check()){
-            Auth::guard('karyawan')->logout();
-        }
+        Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
