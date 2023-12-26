@@ -965,6 +965,8 @@ class PayrollRepository
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
+                                'status_jabatan',
+                                'tanggal_pengangkat',
                                 DB::raw("
                                     IF(
                                         status = 'Kawin',
@@ -1007,7 +1009,7 @@ class PayrollRepository
             $penghasilan_tidak_teratur = 0;
             $bonus = 0;
             $tunjangan_teratur_import = 0; // Uang makan, vitamin, transport & pulsa
-            
+
             if ($karyawan->allGajiByKaryawan) {
                 foreach ($karyawan->allGajiByKaryawan as $key => $value) {
                     $potongan = new \stdClass();
@@ -1710,6 +1712,8 @@ class PayrollRepository
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
+                                'status_jabatan',
+                                'tanggal_pengangkat',
                                 DB::raw("
                                     IF(
                                         status = 'Kawin',

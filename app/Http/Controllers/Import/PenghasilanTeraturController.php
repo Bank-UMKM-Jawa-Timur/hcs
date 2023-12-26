@@ -138,6 +138,7 @@ class PenghasilanTeraturController extends Controller
                             'id_tunjangan' => $id_tunjangan,
                             'tanggal' => $tanggal,
                             'bulan' => $bulanReq,
+                            'is_lock' => 1,
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]);
