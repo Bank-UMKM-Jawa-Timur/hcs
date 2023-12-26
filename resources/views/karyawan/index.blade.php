@@ -7,21 +7,17 @@
         <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="/karyawan">Karyawan</a></p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        @can('manajemen karyawan - data karyawan - create karyawan')
+        @if (auth()->user()->hasRole(['hrd']))
             <a class="mb-3" href="{{ route('karyawan.create') }}">
                 <button class="is-btn is-primary">Tambah</button>
             </a>
-        @endcan
-        @can('manajemen karyawan - data karyawan - import karyawan')
             <a class="ml-3" href="{{ route('import') }}">
                 <button class="is-btn is-primary">Import</button>
             </a>
-        @endcan
-        @can('manajemen karyawan - data karyawan - export karyawan')
             <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
                 <button class="is-btn is-primary">Export</button>
             </a>
-        @endcan
+        @endif
     </div>
 </div>
 <div class="card-body p-3">
@@ -98,20 +94,20 @@
                                         <td style="min-width: 130px">
                                             <div class="container">
                                                 <div class="row">
-                                                    @can('manajemen karyawan - data karyawan - edit karyawan')
+                                                    @if (auth()->user()->hasRole(['hrd']))
                                                         <a href="{{ route('karyawan.edit', $krywn->nip) }}"
                                                             class="btn btn-outline-warning p-1 mr-2"
                                                             style="min-width: 60px">
                                                             Edit
                                                         </a>
-                                                    @endcan
-                                                    @can('manajemen karyawan - data karyawan - detail karyawan')
+                                                    @endif
+                                                    @if (auth()->user()->hasRole(['hrd','admin']))
                                                         <a href="{{ route('karyawan.show', $krywn->nip) }}"
                                                             class="btn btn-outline-info p-1"
                                                             style="min-width: 60px">
                                                             Detail
                                                         </a>
-                                                    @endcan
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>
@@ -130,16 +126,20 @@
                                     <td style="min-width: 130px">
                                         <div class="container">
                                             <div class="row">
-                                                <a href="{{ route('karyawan.edit', $krywn->nip) }}"
-                                                    class="btn btn-outline-warning p-1 mr-2"
-                                                    style="min-width: 60px">
-                                                    Edit
-                                                </a>
-                                                <a href="{{ route('karyawan.show', $krywn->nip) }}"
-                                                    class="btn btn-outline-info p-1"
-                                                    style="min-width: 60px">
-                                                    Detail
-                                                </a>
+                                                @if (auth()->user()->hasRole(['hrd']))
+                                                        <a href="{{ route('karyawan.edit', $krywn->nip) }}"
+                                                            class="btn btn-outline-warning p-1 mr-2"
+                                                            style="min-width: 60px">
+                                                            Edit
+                                                        </a>
+                                                    @endif
+                                                    @if (auth()->user()->hasRole(['hrd','admin','kepegawaian']))
+                                                        <a href="{{ route('karyawan.show', $krywn->nip) }}"
+                                                            class="btn btn-outline-info p-1"
+                                                            style="min-width: 60px">
+                                                            Detail
+                                                        </a>
+                                                    @endif
                                             </div>
                                         </div>
                                     </td>

@@ -33,8 +33,6 @@
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <p class="font-weight-bold">Selamat datang,{{ auth()->user()->name }}</p>
                                 <img class="ml-2 mr-2 " src="https://ui-avatars.com/api/?background=DA271F&color=FFFFFF&name={{ auth()->user()->name }}" style="width: 30px; border-radius: 100%;" alt="">
-                            {{-- @if (session('status')) --}}
-                            {{-- @endif --}}
                         </a>
             
                         <div class="dropdown-menu dropdown-primary dropdown-menu-right"

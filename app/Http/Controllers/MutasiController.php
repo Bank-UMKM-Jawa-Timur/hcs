@@ -65,7 +65,7 @@ class MutasiController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $search = $request->get('q');
 
-        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data mutasi')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $data = DB::table('demosi_promosi_pangkat')
@@ -136,7 +136,7 @@ class MutasiController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data mutasi - create mutasi')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         $data = DB::table('mst_karyawan')

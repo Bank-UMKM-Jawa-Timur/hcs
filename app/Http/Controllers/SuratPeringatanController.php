@@ -23,7 +23,7 @@ class SuratPeringatanController extends Controller
 
     public function index()
     {
-        if (!Auth::user()->can('manajemen karyawan - reward & punishment - surat peringatan')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $sps = SpModel::with('karyawan')->orderBy('tanggal_sp', 'DESC')->get();
@@ -33,7 +33,7 @@ class SuratPeringatanController extends Controller
 
     public function show($id)
     {
-        if (!Auth::user()->can('manajemen karyawan - reward & punishment - surat peringatan - detail')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $sp = SpModel::findOrFail($id);
@@ -43,7 +43,7 @@ class SuratPeringatanController extends Controller
 
     public function create()
     {
-        if (!Auth::user()->can('manajemen karyawan - reward & punishment - surat peringatan - create')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         return view('karyawan.surat-peringatan.add');
@@ -75,7 +75,7 @@ class SuratPeringatanController extends Controller
 
     public function history(HistoryRequest $request)
     {
-        if (!Auth::user()->can('histori - surat peringatan')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         return view('karyawan.surat-peringatan.history', [

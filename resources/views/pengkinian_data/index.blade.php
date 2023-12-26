@@ -7,16 +7,14 @@
     <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > Pengkinian Data</p>
   </div>
   <div class="card-header row mt-3 mr-8 pr-5">
-      @can('manajemen karyawan - pengkinian data - update pengkinian data')
+    @if (auth()->user()->hasRole(['hrd']))
         <a class="mb-3" href="{{ route('pengkinian_data.create') }}">
-          <button class="is-btn is-primary">Pengkinian Data</button>
+        <button class="is-btn is-primary">Pengkinian Data</button>
         </a>
-      @endcan
-      @can('manajemen karyawan - pengkinian data - import pengkinian data')
         <a class="ml-3" href="{{ route('pengkinian-data-import-index') }}">
-          <button class="is-btn is-primary">Import Pengkinian</button>
+        <button class="is-btn is-primary">Import Pengkinian</button>
         </a>
-      @endcan
+    @endif
   </div>
 </div>
 <div class="card-body p-3">
@@ -102,13 +100,13 @@
                               </td>
                               <td style="min-width: 130px">
                                   <div class="container">
-                                      @can('manajemen karyawan - pengkinian data - detail pengkinian data')
-                                          <a href="{{ route('pengkinian_data.show', $item->nip) }}">
-                                              <button class="btn btn-outline-info p-1" style="min-width: 60px">
-                                                  Detail
-                                              </button>
-                                          </a>
-                                      @endcan
+                                    @if (auth()->user()->hasRole(['hrd','admin']))
+                                        <a href="{{ route('pengkinian_data.show', $item->nip) }}">
+                                            <button class="btn btn-outline-info p-1" style="min-width: 60px">
+                                                Detail
+                                            </button>
+                                        </a>
+                                    @endif
                                   </div>
                               </td>
                           </tr>
@@ -174,13 +172,13 @@
                                     </td>
                                     <td style="min-width: 130px">
                                         <div class="container">
-                                            @can('manajemen karyawan - pengkinian data - detail pengkinian data')
+                                            @if (auth()->user()->hasRole(['hrd','admin']))
                                                 <a href="{{ route('pengkinian_data.show', $i->nip) }}">
                                                     <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                                         Detail
                                                     </button>
                                                 </a>
-                                            @endcan
+                                            @endif
                                         </div>
                                     </td>
                                   </tr>

@@ -19,7 +19,7 @@ class PayrollController extends Controller
 
     public function index(Request $request) {
         // Need permission
-        if (!Auth::user()->can('penghasilan - payroll - list payroll')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         FacadesSession::forget('kategori');
@@ -119,7 +119,7 @@ class PayrollController extends Controller
 
     public function slip(Request $request) {
         // Need permission
-        if (!Auth::user()->can('penghasilan - payroll - slip gaji')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         FacadesSession::forget('year');

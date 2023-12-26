@@ -43,7 +43,7 @@ class PengkinianDataController extends Controller
 
     public function pengkinian_data_index()
     {
-        if (!Auth::user()->can('manajemen karyawan - pengkinian data - import pengkinian data')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         return view('pengkinian_data.import');
@@ -55,7 +55,7 @@ class PengkinianDataController extends Controller
      */
     public function index(Request $request)
     {
-        if (!Auth::user()->can('manajemen karyawan - pengkinian data')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         // Laravel pagination
@@ -88,7 +88,7 @@ class PengkinianDataController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->can('manajemen karyawan - pengkinian data - create pengkinian data')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         $data_panggol = DB::table('mst_pangkat_golongan')
@@ -364,7 +364,7 @@ class PengkinianDataController extends Controller
      */
     public function show($id)
     {
-        if (!Auth::user()->can('manajemen karyawan - pengkinian data - detail pengkinian data')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $data_suis = null;

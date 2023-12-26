@@ -28,7 +28,7 @@ class PenghasilanTeraturController extends Controller
     public function index(Request $request)
     {
         // Need permission
-        if (!Auth::user()->can('penghasilan - import - penghasilan teratur')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -49,7 +49,7 @@ class PenghasilanTeraturController extends Controller
     public function create()
     {
         // Need permission
-        if (!Auth::user()->can('penghasilan - import - penghasilan teratur - import')) {
+        if (!auth()->user()->hasRole(['kepegawaian'])) {
             return view('roles.forbidden');
         }
         $penghasilan = TunjanganModel::where('kategori', 'teratur')->where('is_import', 1)->get();
@@ -187,6 +187,9 @@ class PenghasilanTeraturController extends Controller
     }
 
     public function lock(Request $request){
+        if (!auth()->user()->hasRole(['kepegawaian'])) {
+            return view('roles.forbidden');
+        }
         $repo = new PenghasilanTeraturRepository;
         $repo->lock($request->all());
         Alert::success('Berhasil lock tunjangan.');
@@ -194,6 +197,9 @@ class PenghasilanTeraturController extends Controller
     }
 
     public function unlock(Request $request){
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+            return view('roles.forbidden');
+        }
         $repo = new PenghasilanTeraturRepository;
         $repo->unlock($request->all());
         Alert::success('Berhasil unlock tunjangan.');
@@ -303,7 +309,7 @@ class PenghasilanTeraturController extends Controller
     public function details($idTunjangan, $createdAt)
     {
         // Need permission
-        if (!Auth::user()->can('penghasilan - import - penghasilan teratur - detail')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;

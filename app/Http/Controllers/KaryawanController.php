@@ -42,7 +42,7 @@ class KaryawanController extends Controller
      */
     public function index(Request $request)
     {
-        if (!Auth::user()->can('manajemen karyawan - data karyawan')) {
+        if (!auth()->user()->hasRole(['admin','hrd','kepegawaian'])) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -105,7 +105,7 @@ class KaryawanController extends Controller
 
     public function import()
     {
-        if (!Auth::user()->can('manajemen karyawan - data karyawan - import karyawan')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         return view('karyawan.import');
@@ -300,7 +300,7 @@ class KaryawanController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->can('manajemen karyawan - data karyawan - create karyawan')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         $data_panggol = DB::table('mst_pangkat_golongan')
@@ -471,7 +471,7 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
-        if (!Auth::user()->can('manajemen karyawan - data karyawan - detail karyawan')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $data_suis = null;
@@ -624,7 +624,7 @@ class KaryawanController extends Controller
      */
     public function edit($id)
     {
-        if (!Auth::user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         $data = DB::table('mst_karyawan')
@@ -895,7 +895,7 @@ class KaryawanController extends Controller
 
     public function penonaktifanAdd()
     {
-        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         return view('karyawan.penonaktifan.penonaktifan');
@@ -903,7 +903,7 @@ class KaryawanController extends Controller
 
     public function indexPenonaktifan()
     {
-        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $karyawanRepo = new KaryawanRepository();
@@ -942,7 +942,7 @@ class KaryawanController extends Controller
 
     public function reminderPensiunIndex()
     {
-        if (!Auth::user()->can('manajemen karyawan - data masa pensiunan')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $jabatan = JabatanModel::all();

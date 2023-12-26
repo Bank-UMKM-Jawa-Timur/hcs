@@ -33,7 +33,7 @@ class BonusController extends Controller
     public function index(Request $request)
     {
         // Need permission
-        if (!Auth::user()->can('penghasilan - import - bonus')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -52,7 +52,7 @@ class BonusController extends Controller
     public function create()
     {
         // Need permission
-        if (!Auth::user()->can('penghasilan - import - bonus - import')) {
+        if (!Aauth()->user()->hasRole(['kepegawaian'])) {
             return view('roles.forbidden');
         }
         $tunjangan = TunjanganModel::select('nama_tunjangan','id')->where('kategori','bonus')->where('is_import',1)->get();
@@ -120,7 +120,7 @@ class BonusController extends Controller
     public function detail(Request $request,$id, $tgl)
     {
         // Need permission
-        if (!Auth::user()->can('penghasilan - import - bonus - detail')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;

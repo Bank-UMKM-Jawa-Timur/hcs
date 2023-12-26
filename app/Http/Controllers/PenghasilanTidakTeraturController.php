@@ -301,7 +301,7 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function import() {
-        if (!Auth::user()->can('penghasilan - tambah penghasilan - import penghasilan')) {
+        if (!auth()->user()->hasRole(['kepegawaian'])) {
             return view('roles.forbidden');
         }
         return view('penghasilan.import');
@@ -345,7 +345,7 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function index()
     {
-        if (!Auth::user()->can('penghasilan - tambah penghasilan')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         return view('penghasilan.index');
@@ -353,7 +353,7 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function lists(Request $request)
     {
-        if (!Auth::user()->can('penghasilan - import - penghasilan tidak teratur')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
 
@@ -373,7 +373,7 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
+        if (!auth()->user()->hasRole(['kepegawaian'])) {
             return view('roles.forbidden');
         }
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
@@ -455,7 +455,7 @@ class PenghasilanTidakTeraturController extends Controller
     public function show(Request $request)
     {
         try{
-            if (!Auth::user()->can('penghasilan - import - penghasilan tidak teratur - detail')) {
+            if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
                 return view('roles.forbidden');
             }
             $idTunjangan = $request->get('idTunjangan');

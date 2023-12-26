@@ -11,54 +11,56 @@
         $already_selected_value = date('Y');
         $earliest_year = 2022;
     @endphp
-    <div class="card-body">
-        <div class="alert alert-success" role="alert">
-            Harap cek kembali data tunjangan sebelum melakukan proses tunjangan
+    @if (auth()->user()->hasRole(['kepegawaian']))
+        <div class="card-body">
+            <div class="alert alert-success" role="alert">
+                Harap cek kembali data tunjangan sebelum melakukan proses tunjangan
+            </div>
+            <form id="form" action="{{ route('gaji_perbulan.store') }}"
+                method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="row m-0">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nama_bulan">Tahun</label>
+                            <select name="tahun" id="tahun" class="form-control">
+                                <option value="">--- Pilih Tahun ---</option>
+                                @foreach (range(date('Y'), $earliest_year) as $x)
+                                    <option value="{{ $x }}">{{ $x }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Bulan">Bulan</label>
+                            <select name="bulan" id="bulan" class="form-control">
+                                <option value="">--- Pilih Bulan ---</option>
+                                <option value='1'>Januari</option>
+                                <option value='2'>Februari </option>
+                                <option value='3'>Maret</option>
+                                <option value='4'>April</option>
+                                <option value='5'>Mei</option>
+                                <option value='6'>Juni</option>
+                                <option value='7'>Juli</option>
+                                <option value='8'>Agustus</option>
+                                <option value='9'>September</option>
+                                <option value='10'>Oktober</option>
+                                <option value='11'>November</option>
+                                <option value='12'>Desember</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-0">
+                    <div class="col-md-5 pt-4 pb-4">
+                        <button class="is-btn is-primary" id="btn-submit">proses</button>
+                    </div>
+                </div>
+            </form>
+            <hr>
         </div>
-        <form id="form" action="{{ route('gaji_perbulan.store') }}"
-            method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="row m-0">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="nama_bulan">Tahun</label>
-                        <select name="tahun" id="tahun" class="form-control">
-                            <option value="">--- Pilih Tahun ---</option>
-                            @foreach (range(date('Y'), $earliest_year) as $x)
-                                <option value="{{ $x }}">{{ $x }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="Bulan">Bulan</label>
-                        <select name="bulan" id="bulan" class="form-control">
-                            <option value="">--- Pilih Bulan ---</option>
-                            <option value='1'>Januari</option>
-                            <option value='2'>Februari </option>
-                            <option value='3'>Maret</option>
-                            <option value='4'>April</option>
-                            <option value='5'>Mei</option>
-                            <option value='6'>Juni</option>
-                            <option value='7'>Juli</option>
-                            <option value='8'>Agustus</option>
-                            <option value='9'>September</option>
-                            <option value='10'>Oktober</option>
-                            <option value='11'>November</option>
-                            <option value='12'>Desember</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row m-0">
-                <div class="col-md-5 pt-4 pb-4">
-                    <button class="is-btn is-primary" id="btn-submit">proses</button>
-                </div>
-            </div>
-        </form>
-        <hr>
-    </div>
+    @endif
 
     <div class="card-body ">
         <div class="card shadow">

@@ -14,9 +14,6 @@
         <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar"
             role="navigation">
             <ul class="nav flex-column sticky-top pl-2 mt-0">
-                {{-- @php
-                    $has_permission_dashboard = \App\Http\Controllers\Controller::hasPermission('dashboard');
-                @endphp --}}
                 @if (auth()->user()->can('dashboard'))
                     <li style="margin-top: -15px" class="@active('home')">
                         <a class="nav-link" href="{{ route('home') }}" style="font-weight: bolder">
@@ -30,7 +27,7 @@
                     </li>
                 @endif
                 {{-- Menu Manajemen Karyawan --}}
-                @if (auth()->user()->can('manajemen karyawan'))
+                @can('manajemen karyawan')
                     <li
                         class="{{ request()->is(
                             'karyawan',
@@ -210,7 +207,7 @@
                             @endcan
                         </ul>
                     </li>
-                @endif
+                @endcan
                 {{-- Menu Penghasilan --}}
                 @can('penghasilan')
                 <li
@@ -304,16 +301,6 @@
                             </a>
                         </li>
                         @endcan
-                        {{--  @can('penghasilan - import - potongan')
-                        <li style="margin-top: -15px"
-                            class="@active('potongan.index')">
-                            <a href="{{ route('potongan.index') }}">
-                                <i class="nc-icon nc-credit-card"></i>
-                                <p>Potongan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan  --}}
                         @can('penghasilan - payroll - list payroll')
                         <li style="margin-top: -15px"
                             class="@active('payroll.index')">
@@ -329,15 +316,6 @@
                             </a>
                         </li>
                         @endcan
-                        {{--  @can('penghasilan - tambah penghasilan')
-                        <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
-                            <a href="{{ route('pajak_penghasilan.create') }}">
-                                <i class="nc-icon nc-ruler-pencil"></i>
-                                <p>Tambah Penghasilan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan  --}}
                         {{-- Menu Gaji --}}
                         @can('penghasilan - gaji')
                         <li class=" dropdown @active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
@@ -521,47 +499,6 @@
                     </ul>
                 </li>
                 @endcan
-
-                {{-- Menu Migrasi Data --}}
-                {{-- @can('migrasi')
-                <li class="@active('migrasi')">
-                    <a class="nav-link" href="#submenu8" data-toggle="collapse" data-target="#submenu8"
-                        style="font-weight: bolder">
-                        <i class="nc-icon nc-cloud-upload-94" style="font-weight: bolder"></i>
-                        Migrasi
-                    </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('migrasi')"
-                        id="submenu8">
-                        @can('migrasi - jabatan')
-                        <li style="margin-top: -15px" class="@active('migrasiJabatan')">
-                            <a href="{{ route('migrasiJabatan') }}">
-                                <i class="nc-icon nc-cloud-upload-94"></i>
-                                <p>Jabatan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('migrasi - penjabat sementara')
-                        <li style="margin-top: -15px" class="@active('migrasiPJS')">
-                            <a href="{{ route('migrasiPJS') }}">
-                                <i class="nc-icon nc-cloud-upload-94"></i>
-                                <p>Penjabat Sementara</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('migrasi - surat peringatan')
-                        <li style="margin-top: -15px" class="@active('migrasiSP')">
-                            <a href="{{ route('migrasiSP') }}">
-                                <i class="nc-icon nc-cloud-upload-94"></i>
-                                <p>Surat Peringatan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                    </ul>
-                </li>
-                @endcan --}}
                 {{-- Menu Log Aktivitas --}}
                 @can('log')
                 <li>
@@ -710,5 +647,4 @@
             </ul>
         </div>
     </div>
-
 </div>

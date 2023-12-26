@@ -60,7 +60,7 @@ class PromosiController extends Controller
      */
     public function index()
     {
-        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data promosi')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $data = DB::table('demosi_promosi_pangkat')
@@ -121,7 +121,7 @@ class PromosiController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data promosi - create promosi')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         $data = DB::table('mst_karyawan')
