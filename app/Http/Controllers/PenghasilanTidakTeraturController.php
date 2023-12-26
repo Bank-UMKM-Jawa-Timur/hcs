@@ -6,6 +6,7 @@ use App\Exports\ExportBiayaDuka;
 use App\Exports\ExportBiayaKesehatan;
 use App\Exports\ExportBiayaTidakTeratur;
 use App\Imports\PenghasilanImport;
+use App\Models\GajiPerBulanModel;
 use App\Models\ImportPenghasilanTidakTeraturModel;
 use App\Models\PPHModel;
 use App\Models\TunjanganModel;
@@ -404,6 +405,15 @@ class PenghasilanTidakTeraturController extends Controller
         ]);
         DB::beginTransaction();
         try{
+            $tanggalVal = GajiPerBulanModel::where('bulan', Carbon::parse($request->get('tanggal'))->format('m'))
+                ->where('tahun', Carbon::parse($request->get('tanggal'))->format('Y'))
+                ->first();
+            if($tanggalVal != null){
+                if(Carbon::parse($tanggalVal->created_at) > Carbon::parse($request->get('tanggal')) && Carbon::parse($request->get('tanggal'))->format('d') <= 25 && Carbon::parse($request->get('tanggal'))->format('m') == Carbon::parse($tanggalVal->created_at)->format('m')){
+                    Alert::error('Terjadi keselahan', 'Proses import tidak dapat dilakukan karena gaji bulan ini telah diproses.');
+                    return redirect()->back();
+                }
+            }
             $nip = explode(',', $request->get('nip'));
             $nominal = explode(',', $request->get('nominal'));
             $keterangan = [];
@@ -436,7 +446,6 @@ class PenghasilanTidakTeraturController extends Controller
             return redirect()->route('penghasilan-tidak-teratur.index');
         } catch(Exception $e){
             DB::rollBack();
-            dd($e);
             Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('pajak_penghasilan.create');
         } catch(QueryException $e){
