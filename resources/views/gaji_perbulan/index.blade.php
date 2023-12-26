@@ -13,8 +13,8 @@
     @endphp
     @if (auth()->user()->hasRole(['kepegawaian']))
         <div class="card-body">
-            <div class="alert alert-success" role="alert">
-                Harap cek kembali data tunjangan sebelum melakukan proses tunjangan
+            <div class="alert alert-info mx-3" role="alert">
+                Harap cek kembali data tunjangan sebelum melakukan proses tunjangan.
             </div>
             <form id="form" action="{{ route('gaji_perbulan.store') }}"
                 method="POST" enctype="multipart/form-data">
