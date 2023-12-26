@@ -61,16 +61,16 @@
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
                                   </span>
-                              @enderror --}}
+                              @enderror
                             </div>
                             <div class="form-group">
                               <label for="password" class="sr-only">Password</label>
                               <input id="password" placeholder="Masukkan password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                              {{-- @error('password')
+                              @error('password')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
                                   </span>
-                              @enderror --}}
+                              @enderror
                             </div>
                             <div class="custom-checkbox col-6">
                               <input type="checkbox" class="custom-control-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
