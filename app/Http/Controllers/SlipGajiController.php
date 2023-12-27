@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Imports\ImportPotonganGaji;
+use App\Models\KaryawanModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Session as FacadesSession;
+use App\Repository\CabangRepository;
+use App\Repository\SlipGajiRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SlipGajiController extends Controller
 {
@@ -337,48 +341,70 @@ class SlipGajiController extends Controller
         return redirect()->route('slip_gaji.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function slip(Request $request) {
+        // Need permission
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+            return view('roles.forbidden');
+        }
+        FacadesSession::forget('year');
+        FacadesSession::forget('nip');
+        $this->validate($request, [
+            'nip' => 'not_in:0',
+            'tahun' => 'not_in:0'
+        ]);
+
+        $nip = $request->get('nip');
+        $year = $request->get('tahun');
+
+        FacadesSession::put('nip',$nip);
+        FacadesSession::put('year',$year);
+
+        // Retrieve cabang data
+        $cabangRepo = new CabangRepository;
+        $cabang = $cabangRepo->listCabang();
+
+        $data = $this->listSlipGaji($nip, $year, null);
+
+        $karyawan = KaryawanModel::where('nip', $nip)->first();
+
+        return view('slip_gaji.slip', compact('data', 'cabang', 'karyawan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+    public function listSlipGaji($nip, $year, $cetak) {
+        $slipRepository = new SlipGajiRepository;
+        $data = $slipRepository->getSlip($nip, $year, $cetak);
+
+        return $data;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+    function slipPDF() {
+        $kantor = FacadesSession::get('kantor');
+        $month = FacadesSession::get('month');
+        $year = FacadesSession::get('year');
+        $divisi = FacadesSession::get('divisi');
+        $sub_divisi = FacadesSession::get('sub_divisi');
+        $bagian = FacadesSession::get('bagian');
+        $nip = FacadesSession::get('nip');
+        $search = null;
+        $page = null;
+
+        $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, null, 'cetak');
+
+        return view('slip_gaji.tables.slip-pdf', ['data' => $data]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    public function cetakSlip(Request $request){
+        $slipRepository = new SlipGajiRepository;
+        $nip = $request->get('request_nip');
+        $month = $request->get('request_month');
+        $year = $request->get('request_year');
+        $data = $slipRepository->getSlipCetak($nip, $month, $year);
+
+        return view('slip_gaji.print.slip', compact('data'));
+        $pdf = PDF::loadview('slip_gaji.print.slip', [
+            'data' => $data
+        ]);
+        $fileName =  time() . '.' . 'pdf';
+        return $pdf->download($fileName);
     }
 }

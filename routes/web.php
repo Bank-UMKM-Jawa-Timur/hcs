@@ -283,6 +283,13 @@ Route::group(['middleware' => 'auth'], function () {
     // SlipJurnal
     Route::get('/slip_jurnal', [SlipGajiController::class, 'slipJurnalIndex'])->name('slipIndex');
     Route::post('/slip_jurnal/getSlip', [SlipGajiController::class, 'slipJurnal'])->name('getSlip');
+    
+    // Slip gaji
+    Route::prefix('slip')->name('slip.')->group(function() {
+        Route::get('', [SlipGajiController::class, 'slip'])->name('index');
+        Route::get('/cetak-slip', [SlipGajiController::class, 'cetakSlip'])->name('cetak_slip');
+        Route::get('/slip/pdf', [SlipGajiController::class, 'slipPDF'])->name('slip.pdf');
+    });
 
     Route::prefix('/migrasi')->group(function () {
         Route::get('/jabatan', [MigrasiController::class, 'migrasiJabatan'])->name('migrasiJabatan');
@@ -324,9 +331,6 @@ Route::group(['middleware' => 'auth'], function () {
         ->group(function () {
             Route::get('/', [PayrollController::class, 'index'])->name('index');
             Route::get('pdf', [PayrollController::class, 'cetak'])->name('pdf');
-            Route::get('/cetak-slip', [PayrollController::class, 'cetakSlip'])->name('cetak_slip');
-            Route::get('/slip', [PayrollController::class, 'slip'])->name('slip');
-            Route::get('/slip/pdf', [PayrollController::class, 'slipPDF'])->name('slip.pdf');
         });
 });
 require __DIR__.'/auth.php';

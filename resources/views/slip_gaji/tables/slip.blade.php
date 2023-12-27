@@ -75,7 +75,7 @@
                             data-tanggal_pengangkat={{$data->tanggal_pengangkat}}
                             data-json="{{ $item }}"
                             data-bulan="{{$item->bulan}}"
-                            class="is-btn btn-sm is-primary p-1 show-data">Slip</button>
+                            class="is-btn btn-sm is-primary p-1 show-data">Rincian</button>
                         </td>
                     </tr>
                 @empty
