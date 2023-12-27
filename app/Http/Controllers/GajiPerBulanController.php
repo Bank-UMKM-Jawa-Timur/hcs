@@ -521,23 +521,23 @@ class GajiPerBulanController extends Controller
         $penambah = 0;
 
         // Perhitungan penambah bruto
-        $jkk = round((floatval($this->param['persenJkk']) / 100) * floatval($totalGajiJamsostek));
-        $jht = round((floatval($this->param['persenJht']) / 100) * floatval($totalGajiJamsostek));
-        $jkm = round((floatval($this->param['persenJkm']) / 100) * floatval($totalGajiJamsostek));
-        $jp = round((floatval($this->param['persenJpPenambah']) / 100) * floatval($totalGajiJamsostek));
+        $jkk = ((floatval($this->param['persenJkk']) / 100) * floatval($totalGajiJamsostek));
+        $jht = ((floatval($this->param['persenJht']) / 100) * floatval($totalGajiJamsostek));
+        $jkm = ((floatval($this->param['persenJkm']) / 100) * floatval($totalGajiJamsostek));
+        $jp = ((floatval($this->param['persenJpPenambah']) / 100) * floatval($totalGajiJamsostek));
         if ($jkn != null) {
             if (floatval($totalGajiJamsostek) > floatval($this->param['batasAtas'])) {
-                $kesehatan = round(floatval($this->param['batasAtas']) * (floatval($this->param['persenKesehatan']) / 100));
+                $kesehatan = (floatval($this->param['batasAtas']) * (floatval($this->param['persenKesehatan']) / 100));
             } else if (floatval($totalGajiJamsostek) < floatval($this->param['batasBawah'])) {
-                $kesehatan = round(floatval($this->param['batasBawah']) * (floatval($this->param['persenKesehatan']) / 100));
+                $kesehatan = (floatval($this->param['batasBawah']) * (floatval($this->param['persenKesehatan']) / 100));
             } else {
-                $kesehatan = round(floatval($totalGajiJamsostek) * (floatval($this->param['persenKesehatan']) / 100));
+                $kesehatan = (floatval($totalGajiJamsostek) * (floatval($this->param['persenKesehatan']) / 100));
             }
         } else {
             $kesehatan = 0;
         }
 
-        $penambah = $jkk + $jht + $jkm + $jp + $kesehatan;
+        $penambah = round($jkk + $jht + $jkm + $jp + $kesehatan);
         return $penambah;
     }
 
