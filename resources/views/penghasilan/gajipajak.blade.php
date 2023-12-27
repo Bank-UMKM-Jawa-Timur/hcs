@@ -367,7 +367,7 @@
 
                     $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
 
-                    $no19 = ceil(($no17 / 12) * $total_ket);
+                    $no19 = floor(($no17 / 12) * $total_ket);
                 @endphp
 
                 <div class="row m-0 ">

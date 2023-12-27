@@ -431,9 +431,9 @@ class GajiPerBulanController extends Controller
         }
         $rumus_14 = 0;
         if (0.05 * (array_sum($totalGaji)) > $keterangan) {
-            $rumus_14 = ceil($keterangan);
+            $rumus_14 = round($keterangan);
         } else {
-            $rumus_14 = ceil(0.05 * (array_sum($totalGaji)));
+            $rumus_14 = round(0.05 * (array_sum($totalGaji)));
         }
         $no_14 = round((array_sum($totalGaji) - $bonus - array_sum($pengurang) - $biaya_jabatan) / $bulan * 12 + $bonus + ($biaya_jabatan - $rumus_14));
 
@@ -486,7 +486,7 @@ class GajiPerBulanController extends Controller
 
         $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
 
-        $pph = ceil(($no17 / 12) * $bulan);
+        $pph = floor(($no17 / 12) * $bulan);
         if ($bulan > 1) {
             $pphTerbayar = DB::table('pph_yang_dilunasi')
                 ->where('nip', $karyawan->nip)
@@ -497,7 +497,7 @@ class GajiPerBulanController extends Controller
         return $pph;
     }
 
-    function getPengurang($status, $tjKeluarga, $tjKesejahteraan, $totalGajiJamsostek, $gajiPokok): int
+    function getPengurang($status, $tjKeluarga, $tjKesejahteraan, $totalGajiJamsostek, $gajiPokok)
     {
         $pengurang = 0;
         // Perhitungan pengurangan bruto
@@ -516,22 +516,22 @@ class GajiPerBulanController extends Controller
         return $pengurang;
     }
 
-    function getPenambah($totalGajiJamsostek, $jkn): int
+    function getPenambah($totalGajiJamsostek, $jkn)
     {
         $penambah = 0;
 
         // Perhitungan penambah bruto
-        $jkk = ((floatval($this->param['persenJkk']) / 100) * floatval($totalGajiJamsostek));
-        $jht = ((floatval($this->param['persenJht']) / 100) * floatval($totalGajiJamsostek));
-        $jkm = ((floatval($this->param['persenJkm']) / 100) * floatval($totalGajiJamsostek));
-        $jp = ((floatval($this->param['persenJpPenambah']) / 100) * floatval($totalGajiJamsostek));
+        $jkk = ($this->param['persenJkk'] / 100) * $totalGajiJamsostek;
+        $jht = ($this->param['persenJht'] / 100) * $totalGajiJamsostek;
+        $jkm = ($this->param['persenJkm'] / 100) * $totalGajiJamsostek;
+        $jp = ($this->param['persenJpPenambah'] / 100) * $totalGajiJamsostek;
         if ($jkn != null) {
-            if (floatval($totalGajiJamsostek) > floatval($this->param['batasAtas'])) {
-                $kesehatan = (floatval($this->param['batasAtas']) * (floatval($this->param['persenKesehatan']) / 100));
-            } else if (floatval($totalGajiJamsostek) < floatval($this->param['batasBawah'])) {
-                $kesehatan = (floatval($this->param['batasBawah']) * (floatval($this->param['persenKesehatan']) / 100));
+            if ($totalGajiJamsostek > $this->param['batasAtas']) {
+                $kesehatan = $this->param['batasAtas'] * ($this->param['persenKesehatan'] / 100);
+            } else if ($totalGajiJamsostek < $this->param['batasBawah']) {
+                $kesehatan = $this->param['batasBawah'] * ($this->param['persenKesehatan'] / 100);
             } else {
-                $kesehatan = (floatval($totalGajiJamsostek) * (floatval($this->param['persenKesehatan']) / 100));
+                $kesehatan = $totalGajiJamsostek * ($this->param['persenKesehatan'] / 100);
             }
         } else {
             $kesehatan = 0;
