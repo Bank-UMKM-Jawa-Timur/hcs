@@ -11,7 +11,7 @@
         $already_selected_value = date('Y');
         $earliest_year = 2022;
     @endphp
-    {{--  @if (auth()->user()->hasRole(['kepegawaian']))  --}}
+    @if (auth()->user()->hasRole(['kepegawaian']))
         <div class="card-body">
             <div class="alert alert-info mx-3" role="alert">
                 Harap cek kembali data tunjangan sebelum melakukan proses tunjangan.
@@ -60,7 +60,7 @@
             </form>
             <hr>
         </div>
-    {{--  @endif  --}}
+    @endif
 
     <div class="card-body ">
         <div class="card shadow">
