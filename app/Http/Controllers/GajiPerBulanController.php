@@ -302,10 +302,10 @@ class GajiPerBulanController extends Controller
             $penghasilanTidakTeraturBulanIni = DB::table('penghasilan_tidak_teratur')
                 ->join('mst_tunjangan AS m', 'm.id', 'penghasilan_tidak_teratur.id_tunjangan')
                 ->where('m.kategori', 'tidak teratur')
-                ->where('bulan', $bulan)
-                ->where('tahun', $tahun)
-                ->whereDate('created_at', '<', 26)
-                ->sum('nominal');
+                ->where('penghasilan_tidak_teratur.bulan', $bulan)
+                ->where('penghasilan_tidak_teratur.tahun', $tahun)
+                ->whereDate('penghasilan_tidak_teratur.created_at', '<', 26)
+                ->sum('penghasilan_tidak_teratur.nominal');
             $dataGaji = DB::table('gaji_per_bulan')
                 ->where('nip', $karyawan->nip)
                 ->where('tahun', $tahun)
@@ -314,20 +314,20 @@ class GajiPerBulanController extends Controller
             $bonusBulanIni = DB::table('penghasilan_tidak_teratur')
                 ->join('mst_tunjangan AS m', 'm.id', 'penghasilan_tidak_teratur.id_tunjangan')
                 ->where('m.kategori', 'bonus')
-                ->where('nip', $karyawan->nip)
-                ->where('tahun', $tahun)
-                ->where('bulan', $bulan)
-                ->whereDate('created_at', '<', 26)
-                ->sum('nominal');
+                ->where('penghasilan_tidak_teratur.nip', $karyawan->nip)
+                ->where('penghasilan_tidak_teratur.tahun', $tahun)
+                ->where('penghasilan_tidak_teratur.bulan', $bulan)
+                ->whereDate('penghasilan_tidak_teratur.created_at', '<', 26)
+                ->sum('penghasilan_tidak_teratur.nominal');
 
             // Bonus bulan sebelumnya
             $bonus = DB::table('penghasilan_tidak_teratur')
                 ->join('mst_tunjangan AS m', 'm.id', 'penghasilan_tidak_teratur.id_tunjangan')
                 ->where('m.kategori', 'bonus')
-                ->where('nip', $karyawan->nip)
-                ->where('tahun', $tahun)
-                ->where('bulan', '<', $bulan)
-                ->sum('nominal');
+                ->where('penghasilan_tidak_teratur.nip', $karyawan->nip)
+                ->where('penghasilan_tidak_teratur.tahun', $tahun)
+                ->where('penghasilan_tidak_teratur.bulan', '<', $bulan)
+                ->sum('penghasilan_tidak_teratur.nominal');
 
             foreach ($dataGaji as $key => $gaji) {
                 $this->param['nominalJp'] = ($key < 2) ? $this->param['jpJanFeb'] : $this->param['jpMarDes'];
