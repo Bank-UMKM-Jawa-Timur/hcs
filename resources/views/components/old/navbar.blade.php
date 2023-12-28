@@ -37,6 +37,9 @@
             
                         <div class="dropdown-menu dropdown-primary dropdown-menu-right"
                             aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{{ route('password.request') }}">
+                                Ganti Password
+                            </a>
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">

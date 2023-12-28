@@ -23,6 +23,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
+    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+                ->name('password.request');
+    Route::post('update-password', [PasswordResetLinkController::class, 'updatePassword'])->name('password.update');
 });
 
 // Route::middleware(['check.karyawan.guard'])->group(function () {

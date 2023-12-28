@@ -48,6 +48,11 @@
                                     {{ Session::get('message') }}
                                 </div>
                             @endif
+                            @if (session('success'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
                             <div class="form-group">
                               <label for="email" class="sr-only">Email</label>
                               <input autofocus placeholder="Masukkan Email atau NIP" id="email" type="text" class="form-control @error('input_type') is-invalid @enderror" name="input_type" value="{{ old('input_type') }}" required autocomplete="email" autofocus>
