@@ -624,7 +624,7 @@ class KaryawanController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->hasRole(['hrd'])) {
+        if (!auth()->user()->hasRole(['kepegawaian'])) {
             return view('roles.forbidden');
         }
         $data = DB::table('mst_karyawan')
