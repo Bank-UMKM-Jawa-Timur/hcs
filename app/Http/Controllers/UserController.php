@@ -26,6 +26,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        if (!auth()->user()->can('setting - master - user')) {
+            return view('roles.forbidden');
+        }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -45,6 +48,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('setting - master - user - create user')) {
+            return view('roles.forbidden');
+        }
         $karyawan = $this->param->getDataKaryawan();
         return view('user.create', [
             'karyawan' => $karyawan
@@ -59,6 +65,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->can('setting - master - user - create user')) {
+            return view('roles.forbidden');
+        }
         $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
         User::create([
             'name' => $nama->nama_karyawan,
@@ -89,6 +98,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        if (!auth()->user()->can('setting - master - user - edit user')) {
+            return view('roles.forbidden');
+        }
         $data = $this->param->dataByid($id);
         $karyawan = $this->param->getDataKaryawan();
         return view('user.edit', [
@@ -106,7 +118,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $request;  
+        if (!auth()->user()->can('setting - master - user - edit user')) {
+            return view('roles.forbidden');
+        }
         $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
         User::where('id', $id)->update([
             'name' => $nama->nama_karyawan,
