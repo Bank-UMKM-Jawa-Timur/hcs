@@ -70,6 +70,7 @@ class RoleSeeder extends Seeder
             'penghasilan - import - penghasilan teratur - import',
             'penghasilan - import - penghasilan teratur - detail',
             'penghasilan - import - penghasilan tidak teratur',
+            'penghasilan - import - penghasilan tidak teratur - create',
             'penghasilan - import - penghasilan tidak teratur - import',
             'penghasilan - import - penghasilan tidak teratur - detail',
             'penghasilan - import - bonus',
@@ -115,6 +116,11 @@ class RoleSeeder extends Seeder
             // SETTING
             'setting',
             'setting - master',
+            'setting - master - user',
+            'setting - master - user - create user',
+            'setting - master - user - edit user',
+            'setting - master - user - detail user',
+            'setting - master - user - delete user',
             'setting - master - role',
             'setting - master - role - create role',
             'setting - master - role - edit role',
@@ -177,6 +183,7 @@ class RoleSeeder extends Seeder
             'manajemen karyawan - reward & punishment',
             'manajemen karyawan - reward & punishment - surat peringatan',
             'penghasilan',
+            'penghasilan - proses penghasilan',
             'penghasilan - pajak penghasilan',
             'penghasilan - import',
             'penghasilan - import - penghasilan teratur',
@@ -214,6 +221,11 @@ class RoleSeeder extends Seeder
             'log - log aktivitas',
             'setting',
             'setting - master',
+            'setting - master - user',
+            'setting - master - user - create user',
+            'setting - master - user - edit user',
+            'setting - master - user - detail user',
+            'setting - master - user - delete user',
             'setting - master - role',
             'setting - master - role - create role',
             'setting - master - role - edit role',
@@ -267,11 +279,36 @@ class RoleSeeder extends Seeder
             'manajemen karyawan - data karyawan - detail karyawan',
             'manajemen karyawan - data karyawan - import karyawan',
             'manajemen karyawan - data karyawan - export karyawan',
+            'manajemen karyawan - data masa pensiunan',
+            'manajemen karyawan - update data masa pensiunan',
+            'manajemen karyawan - import data masa pensiunan',
+            'manajemen karyawan - detail data masa pensiunan',
+            'manajemen karyawan - pengkinian data',
+            'manajemen karyawan - pengkinian data - create pengkinian data',
+            'manajemen karyawan - pengkinian data - update pengkinian data',
+            'manajemen karyawan - pengkinian data - import pengkinian data',
+            'manajemen karyawan - pengkinian data - detail pengkinian data',
+            'manajemen karyawan - pergerakan karir',
+            'manajemen karyawan - pergerakan karir - data mutasi',
+            'manajemen karyawan - pergerakan karir - data mutasi - create mutasi',
+            'manajemen karyawan - pergerakan karir - data demosi',
+            'manajemen karyawan - pergerakan karir - data demosi - create demosi',
+            'manajemen karyawan - pergerakan karir - data promosi',
+            'manajemen karyawan - pergerakan karir - data promosi - create promosi',
+            'manajemen karyawan - pergerakan karir - data penonaktifan karyawan',
+            'manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan',
+            'manajemen karyawan - data penjabat sementara',
+            'manajemen karyawan - tambah penjabat sementara',
+            'manajemen karyawan - reward & punishment',
+            'manajemen karyawan - reward & punishment - surat peringatan',
+            'manajemen karyawan - reward & punishment - surat peringatan - create',
+            'manajemen karyawan - reward & punishment - surat peringatan - detail',
         ];
         $kepegawaian_permissions = [
             'dashboard',
             'manajemen karyawan',
             'manajemen karyawan - data karyawan',
+            'manajemen karyawan - data karyawan - edit karyawan - edit potongan',
             'manajemen karyawan - data karyawan - detail karyawan',
             'penghasilan',
             'penghasilan - proses penghasilan',
@@ -283,6 +320,7 @@ class RoleSeeder extends Seeder
             'penghasilan - import - penghasilan teratur - import',
             'penghasilan - import - penghasilan teratur - detail',
             'penghasilan - import - penghasilan tidak teratur',
+            'penghasilan - import - penghasilan tidak teratur - create',
             'penghasilan - import - penghasilan tidak teratur - import',
             'penghasilan - import - penghasilan tidak teratur - detail',
             'penghasilan - import - bonus',
@@ -309,13 +347,24 @@ class RoleSeeder extends Seeder
             'penghasilan - edit - penghasilan tidak teratur',
             'penghasilan - edit - bonus',
         ];
-        $cabang_and_user_permissions = [
+        $cabang_permissions = [
             'dashboard',
             'manajemen karyawan',
             'manajemen karyawan - data karyawan',
             'manajemen karyawan - data karyawan - detail karyawan',
             'manajemen karyawan - data karyawan - import karyawan',
             'manajemen karyawan - data karyawan - export karyawan',
+            'penghasilan',
+            'penghasilan - gaji',
+            'penghasilan - gaji - lampiran gaji',
+            'penghasilan - gaji - slip jurnal',
+            'penghasilan - gaji - slip gaji',
+            'penghasilan - gaji - slip gaji - rincian',
+            'penghasilan - gaji - slip gaji - rincian - download pdf',
+        ];
+        $user_permissions = [
+            'dashboard',
+            'penghasilan',
             'penghasilan - gaji',
             'penghasilan - gaji - lampiran gaji',
             'penghasilan - gaji - slip jurnal',
@@ -337,8 +386,11 @@ class RoleSeeder extends Seeder
             else if ($role_name[$i] == 'kepegawaian') {
                 $role_akses->givePermissionTo($kepegawaian_permissions);
             }
-            else if ($role_name[$i] == 'cabang' || $role_name[$i] == 'user') {
-                $role_akses->givePermissionTo($cabang_and_user_permissions);
+            else if ($role_name[$i] == 'cabang') {
+                $role_akses->givePermissionTo($cabang_permissions);
+            }
+            else if ($role_name[$i] == 'user') {
+                $role_akses->givePermissionTo($user_permissions);
             }
             else {
                 $role_akses->givePermissionTo(['dashboard','setting - master - role','setting - master - role - create role']);

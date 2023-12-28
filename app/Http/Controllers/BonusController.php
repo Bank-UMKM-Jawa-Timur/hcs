@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\KaryawanExport;
 use App\Models\KaryawanModel;
+use App\Models\PPHModel;
 use App\Models\TunjanganModel;
 use Carbon\Carbon;
 use Exception;
@@ -33,7 +34,7 @@ class BonusController extends Controller
     public function index(Request $request)
     {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - import - bonus')) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -52,7 +53,7 @@ class BonusController extends Controller
     public function create()
     {
         // Need permission
-        if (!Aauth()->user()->hasRole(['kepegawaian'])) {
+        if (!auth()->user()->can('penghasilan - import - bonus - import')) {
             return view('roles.forbidden');
         }
         $tunjangan = TunjanganModel::select('nama_tunjangan','id')->where('kategori','bonus')->where('is_import',1)->get();
@@ -73,6 +74,10 @@ class BonusController extends Controller
      */
     public function store(Request $request)
     {
+        // Need permission
+        if (!auth()->user()->can('penghasilan - import - bonus - import')) {
+            return view('roles.forbidden');
+        }
         $request->validate([
             'upload_csv' => 'required|mimes:xlsx,xls',
             'nip' => 'required',
@@ -102,6 +107,21 @@ class BonusController extends Controller
 
             }
             \DB::commit();
+            if(Carbon::parse($request->get('tanggal'))->format('m') == 12 && Carbon::now()->format('d') > 25){
+                \DB::beginTransaction();
+                $gajiPerBulanController = new GajiPerBulanController;
+                foreach($data_nip as $key => $item){
+                    $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($request->get('tanggal'))->format('Y'), Carbon::parse($request->get('tanggal'))->format('m'));
+                    PPHModel::where('nip', $request->nip)
+                        ->where('tahun', Carbon::parse($request->get('tanggal'))->format('Y'))
+                        ->where('bulan', 12)
+                        ->update([
+                            'total_pph' => $pphTerutang,
+                            'updated_at' => null
+                        ]);
+                }
+                \DB::commit();
+            }
 
             Alert::success('Berhasil', 'Berhasil menambahkan bonus.');
             return redirect()->route('bonus.index');
@@ -120,7 +140,7 @@ class BonusController extends Controller
     public function detail(Request $request,$id, $tgl)
     {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - import - bonus - detail')) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -174,14 +194,22 @@ class BonusController extends Controller
     }
 
     public function lock(Request $request){
-        // return $request;
+        // Need permission
+        if (!auth()->user()->can('penghasilan - lock - bonus')) {
+            return view('roles.forbidden');
+        }
+        
         $repo = new PenghasilanTidakTeraturRepository;
         $repo->lockBonus($request->all());
         Alert::success('Berhasil lock tunjangan.');
         return redirect()->route('bonus.index');
     }
     public function unlock(Request $request){
-        // return $request;
+        // Need permission
+        if (!auth()->user()->can('penghasilan - unlock - bonus')) {
+            return view('roles.forbidden');
+        }
+
         $repo = new PenghasilanTidakTeraturRepository;
         $repo->unlockBonus($request->all());
         Alert::success('Berhasil unlock tunjangan.');
@@ -190,6 +218,10 @@ class BonusController extends Controller
 
     public function editTunjangan($idTunjangan, $tanggal)
     {
+        // Need permission
+        if (!auth()->user()->can('penghasilan - edit - bonus')) {
+            return view('roles.forbidden');
+        }
         $id = $idTunjangan;
         $repo = new PenghasilanTidakTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
@@ -201,6 +233,10 @@ class BonusController extends Controller
     }
     public function editTunjanganPost(Request $request)
     {
+        // Need permission
+        if (!auth()->user()->can('penghasilan - edit - bonus')) {
+            return view('roles.forbidden');
+        }
         $request->validate([
             'upload_csv' => 'required|mimes:xlsx,xls',
             'nip' => 'required',

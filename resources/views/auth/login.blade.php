@@ -15,32 +15,43 @@
 <body class="bg-gray-50 ">
     <div class="flex w-full h-screen gap-5">
         <div class="bg-white lg:w-[40%] w-full border-r">
-           <div class="form-login mt-[10vh] space-y-2">
-            <div class="flex justify-center gap-4">
-                <img src="{{ asset('style/assets/img/logo.png') }}" alt="logo" class="w-[30px] mt-[5px]">
-                <div>
-                  <h2 class="mt-3 font-bold text-xs tracking-tighter uppercase">  Human Capital System</h2>
+            <div class="form-login mt-[10vh] space-y-2">
+                <div class="flex justify-center gap-4">
+                    <img src="{{ asset('style/assets/img/logo.png') }}" alt="logo" class="w-[30px] mt-[5px]">
+                    <div>
+                    <h2 class="mt-3 font-bold text-xs tracking-tighter uppercase">  Human Capital System</h2>
+                    </div>
                 </div>
+                <div class="text-center space-y-2 pb-3 pt-3">
+                    <h2 class="font-bold tracking-tighter text-3xl text-[#1F2937]">Selamat datang! </h2>
+                    <p class="text-xs text-gray-400">Silahkan masuk untuk melanjutkan!</p>
+                </div>
+                <form action="{{ route('login') }}" method="POST" class="space-y-5">
+                    @csrf
+                    <div class="input-box">
+                        <label for="email">Email atau NIP</label>
+                        <input type="text" class="form-input" placeholder=""
+                            id="email" name="input_type" value="{{ old('input_type') }}">
+                        @error('email')
+                            <span>{{ $message }}</span>
+                        @enderror
+                        @error('username')
+                            <span>{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="input-box">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="">
+                        @error('password')
+                            <span>{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <button type="submit" class="btn-login bg-theme-primary text-sm drop-shadow-lg text-white w-full">Masuk</button>
+                    <div class="copyright text-center text-xs    font-semibold text-neutral-800">
+                        &copy; Copyright 2022 - {{ date('Y') }} PT. BPR Jatim
+                    </div>
+                </form>
             </div>
-            <div class="text-center space-y-2 pb-3 pt-3">
-                <h2 class="font-bold tracking-tighter text-3xl text-[#1F2937]">Selamat datang! </h2>
-                <p class="text-xs text-gray-400">Silahkan masuk untuk melanjutkan!</p>
-            </div>
-            <form action="" method="" class="space-y-5">
-                <div class="input-box">
-                    <label for="">Email atau NIP</label>
-                    <input type="text" class="form-input" placeholder="">
-                </div>
-                <div class="input-box">
-                    <label for="">Password</label>
-                    <input type="text" class="form-input" placeholder="">
-                </div>
-                <button class="btn-login bg-theme-primary text-sm drop-shadow-lg text-white w-full">Masuk</button>
-                <div class="copyright text-center text-xs    font-semibold text-neutral-800">
-                    &copy; Copyright 2022 - {{ date('Y') }} PT. BPR Jatim
-                  </div>
-            </form>
-           </div>
         </div>
         <div class="bg-gray-50 w-full lg:block hidden">
             <img src="{{ asset('style/assets/img/login.svg') }}"  class="max-w-3xl mx-auto" alt="">
