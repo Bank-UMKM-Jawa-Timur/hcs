@@ -98,7 +98,7 @@
                                         <td style="min-width: 130px">
                                             <div class="container">
                                                 <div class="row">
-                                                    @if (auth()->user()->hasRole(['hrd']))
+                                                    @can('manajemen karyawan - data karyawan - edit karyawan')
                                                         <a href="{{ route('karyawan.edit', $krywn->nip) }}"
                                                             class="btn btn-outline-warning p-1 mr-2"
                                                             style="min-width: 60px">
@@ -119,7 +119,7 @@
                                                             style="min-width: 60px">
                                                             Detail
                                                         </a>
-                                                    @endif
+                                                    @endcan
                                                 </div>
                                             </div>
                                         </td>
