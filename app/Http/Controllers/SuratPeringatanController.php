@@ -77,7 +77,7 @@ class SuratPeringatanController extends Controller
 
     public function history(HistoryRequest $request)
     {
-        if (!auth()->user()->hasRole(['hrd','admin'])) {
+        if (!auth()->user()->hasRole(['admin'])) {
             return view('roles.forbidden');
         }
         return view('karyawan.surat-peringatan.history', [
