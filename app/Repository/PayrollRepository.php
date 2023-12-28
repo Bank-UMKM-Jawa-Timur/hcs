@@ -154,19 +154,16 @@ class PayrollRepository
                                         ->where('mst_tunjangan.kategori', 'bonus');
                                 },
                                 'potonganGaji' => function($query) use ($month, $year) {
-                                        $query->select(
-                                            'potongan_gaji.nip',
-                                            DB::raw('SUM(potongan_gaji.kredit_koperasi) AS kredit_koperasi'),
-                                            DB::raw('SUM(potongan_gaji.iuran_koperasi) AS iuran_koperasi'),
-                                            DB::raw('SUM(potongan_gaji.kredit_pegawai) AS kredit_pegawai'),
-                                            DB::raw('SUM(potongan_gaji.iuran_ik) AS iuran_ik'),
-                                            DB::raw('(SUM(potongan_gaji.kredit_koperasi) + SUM(potongan_gaji.iuran_koperasi) + SUM(potongan_gaji.kredit_pegawai) + SUM(potongan_gaji.iuran_ik)) AS total_potongan'),
-                                        )
-                                        ->where('potongan_gaji.bulan', $month)
-                                        ->where('potongan_gaji.tahun', $year)
-                                        ->groupBy('potongan_gaji.bulan')
-                                        ->groupBy('potongan_gaji.tahun')
-                                        ->sum('potongan_gaji.kredit_koperasi');
+                                    $query->select(
+                                        'potongan_gaji.nip',
+                                        DB::raw('potongan_gaji.kredit_koperasi AS kredit_koperasi'),
+                                        DB::raw('potongan_gaji.iuran_koperasi AS iuran_koperasi'),
+                                        DB::raw('potongan_gaji.kredit_pegawai AS kredit_pegawai'),
+                                        DB::raw('potongan_gaji.iuran_ik AS iuran_ik'),
+                                        DB::raw('(potongan_gaji.kredit_koperasi + potongan_gaji.iuran_koperasi + potongan_gaji.kredit_pegawai + potongan_gaji.iuran_ik) AS total_potongan'),
+                                    )
+                                    ->where('potongan_gaji.bulan', $month)
+                                    ->where('potongan_gaji.tahun', $year);
                                 }
                             ])
                             ->select(
@@ -969,6 +966,8 @@ class PayrollRepository
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
+                                'status_jabatan',
+                                'tanggal_pengangkat',
                                 DB::raw("
                                     IF(
                                         status = 'Kawin',
@@ -1011,7 +1010,7 @@ class PayrollRepository
             $penghasilan_tidak_teratur = 0;
             $bonus = 0;
             $tunjangan_teratur_import = 0; // Uang makan, vitamin, transport & pulsa
-            
+
             if ($karyawan->allGajiByKaryawan) {
                 foreach ($karyawan->allGajiByKaryawan as $key => $value) {
                     $potongan = new \stdClass();
@@ -1695,19 +1694,15 @@ class PayrollRepository
                                         ->where('mst_tunjangan.kategori', 'bonus');
                                 },
                                 'potonganGaji' => function($query) use ($month, $year) {
-                                        $query->select(
-                                            'potongan_gaji.nip',
-                                            DB::raw('SUM(potongan_gaji.kredit_koperasi) AS kredit_koperasi'),
-                                            DB::raw('SUM(potongan_gaji.iuran_koperasi) AS iuran_koperasi'),
-                                            DB::raw('SUM(potongan_gaji.kredit_pegawai) AS kredit_pegawai'),
-                                            DB::raw('SUM(potongan_gaji.iuran_ik) AS iuran_ik'),
-                                            DB::raw('(SUM(potongan_gaji.kredit_koperasi) + SUM(potongan_gaji.iuran_koperasi) + SUM(potongan_gaji.kredit_pegawai) + SUM(potongan_gaji.iuran_ik)) AS total_potongan'),
-                                        )
-                                        ->where('potongan_gaji.bulan', $month)
-                                        ->where('potongan_gaji.tahun', $year)
-                                        ->groupBy('potongan_gaji.bulan')
-                                        ->groupBy('potongan_gaji.tahun')
-                                        ->sum('potongan_gaji.kredit_koperasi');
+                                    $query->select(
+                                        'potongan_gaji.nip',
+                                        DB::raw('potongan_gaji.kredit_koperasi AS kredit_koperasi'),
+                                        DB::raw('potongan_gaji.iuran_koperasi AS iuran_koperasi'),
+                                        DB::raw('potongan_gaji.kredit_pegawai AS kredit_pegawai'),
+                                        DB::raw('potongan_gaji.iuran_ik AS iuran_ik'),
+                                        DB::raw('(potongan_gaji.kredit_koperasi + potongan_gaji.iuran_koperasi + potongan_gaji.kredit_pegawai + potongan_gaji.iuran_ik) AS total_potongan'),
+                                    )
+                                    ->where('potongan_gaji.tahun', $year);
                                 }
                             ])
                             ->select(
@@ -1718,6 +1713,8 @@ class PayrollRepository
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
+                                'status_jabatan',
+                                'tanggal_pengangkat',
                                 DB::raw("
                                     IF(
                                         status = 'Kawin',

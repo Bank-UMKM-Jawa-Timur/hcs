@@ -6,6 +6,7 @@ use App\Exports\ExportBiayaDuka;
 use App\Exports\ExportBiayaKesehatan;
 use App\Exports\ExportBiayaTidakTeratur;
 use App\Imports\PenghasilanImport;
+use App\Models\GajiPerBulanModel;
 use App\Models\ImportPenghasilanTidakTeraturModel;
 use App\Models\PPHModel;
 use App\Models\TunjanganModel;
@@ -147,7 +148,7 @@ class PenghasilanTidakTeraturController extends Controller
             $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
             $jp_mar_des = $hitungan_pengurang->jp_mar_des;
         }
-        // $nominal_jp = ($request->get('bulan') < 3) ? $jp_jan_feb : $jp_mar_des;
+
         // Get gaji secara bulanan
         for($i = 1; $i <= 12; $i++){
             $pph = PPHModel::where('nip', $nip)
@@ -159,30 +160,6 @@ class PenghasilanTidakTeraturController extends Controller
                 ->where('nip', $nip)
                 ->where('bulan', $i)
                 ->where('tahun', $tahun)
-                ->first();
-            $tj_trans =  DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $nip)
-                ->where('id_tunjangan', 11)
-                ->where('tahun', $tahun)
-                ->where('bulan', $i)
-                ->first();
-            $tj_pulsa =  DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $nip)
-                ->where('id_tunjangan', 12)
-                ->where('tahun', $tahun)
-                ->where('bulan', $i)
-                ->first();
-            $tj_vitamin =  DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $nip)
-                ->where('id_tunjangan', 13)
-                ->where('tahun', $tahun)
-                ->where('bulan', $i)
-                ->first();
-            $tj_uang_makan =  DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $nip)
-                ->where('id_tunjangan', 14)
-                ->where('tahun', $tahun)
-                ->where('bulan', $i)
                 ->first();
 
             $gj[$i - 1] = [
@@ -205,23 +182,23 @@ class PenghasilanTidakTeraturController extends Controller
             ];
 
             $total_gj[$i-1] = [
-            'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
-            'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
-            'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
-            'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
-            'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
-            'tj_telepon' => ($data != null) ? $data->tj_telepon : 0,
-            'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
-            'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
-            'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
-           ];
-           array_push($gaji, $gj[$i-1]);
-           array_push($total_gaji, array_sum($total_gj[$i-1]));
-        // Get Penghasilan tidak teratur karyawan (exclude bonus)
+                'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
+                'tj_keluarga' => ($data != null) ? $data->tj_keluarga : 0,
+                'tj_jabatan' => ($data != null) ? $data->tj_jabatan : 0,
+                'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
+                'tj_perumahan' => ($data != null) ? $data->tj_perumahan : 0,
+                'tj_telepon' => ($data != null) ? $data->tj_telepon : 0,
+                'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
+                'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
+                'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
+            ];
+            array_push($gaji, $gj[$i-1]);
+            array_push($total_gaji, array_sum($total_gj[$i-1]));
+            // Get Penghasilan tidak teratur karyawan (exclude bonus)
             $id_ptt = TunjanganModel::where('kategori', 'tidak teratur')
                                     ->orderBy('id')
                                     ->pluck('id');
-           $k = 0;
+            $k = 0;
             for($j = 0; $j < count($id_ptt); $j++){
                 $penghasilan = DB::table('penghasilan_tidak_teratur')
                     ->where('nip', $nip)
@@ -237,8 +214,8 @@ class PenghasilanTidakTeraturController extends Controller
             // Get Bonus Karyawan
             $l = 0;
             $id_bonus = TunjanganModel::where('kategori', 'bonus')
-                                     ->orderBy('id')
-                                     ->pluck('id');
+                                        ->orderBy('id')
+                                        ->pluck('id');
 
             // for($j = 22; $j <= 24; $j++){
             for($j = 0; $j < count($id_bonus); $j++){
@@ -264,22 +241,22 @@ class PenghasilanTidakTeraturController extends Controller
                 $kesehatan = 0;
                 $jp_penambah = 0;
                 if($karyawan->tanggal_penonaktifan == null){
-                    $jkk = round(($persen_jkk / 100) * $item);
-                    $jht = round(($persen_jht / 100) * $item);
-                    $jkm = round(($persen_jkm / 100) * $item);
-                    $jp_penambah = round(($persen_jp_penambah / 100) * $item);
+                    $jkk = ($persen_jkk / 100) * $item;
+                    $jht = ($persen_jht / 100) * $item;
+                    $jkm = ($persen_jkm / 100) * $item;
+                    $jp_penambah = ($persen_jp_penambah / 100) * $item;
                 }
 
                 if($karyawan->jkn != null){
                     if($item > $batas_atas){
-                        $kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                        $kesehatan = ($batas_atas * ($persen_kesehatan / 100));
                     } else if($item < $batas_bawah){
-                        $kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                        $kesehatan = ($batas_bawah * ($persen_kesehatan / 100));
                     } else{
-                        $kesehatan = round($item * ($persen_kesehatan / 100));
+                        $kesehatan = ($item * ($persen_kesehatan / 100));
                     }
                 }
-                array_push($jamsostek, ($jkk + $jht + $jkm + $kesehatan + $jp_penambah));
+                array_push($jamsostek, round($jkk + $jht + $jkm + $kesehatan + $jp_penambah));
             } else {
                 array_push($jamsostek, 0);
             }
@@ -325,7 +302,7 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function import() {
-        if (!Auth::user()->can('penghasilan - tambah penghasilan - import penghasilan')) {
+        if (!auth()->user()->hasRole(['kepegawaian'])) {
             return view('roles.forbidden');
         }
         return view('penghasilan.import');
@@ -369,7 +346,7 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function index()
     {
-        if (!Auth::user()->can('penghasilan - tambah penghasilan')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         return view('penghasilan.index');
@@ -377,7 +354,7 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function lists(Request $request)
     {
-        if (!Auth::user()->can('penghasilan - import - penghasilan tidak teratur')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
 
@@ -397,7 +374,7 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
+        if (!auth()->user()->hasRole(['kepegawaian'])) {
             return view('roles.forbidden');
         }
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
@@ -428,6 +405,15 @@ class PenghasilanTidakTeraturController extends Controller
         ]);
         DB::beginTransaction();
         try{
+            $tanggalVal = GajiPerBulanModel::where('bulan', Carbon::parse($request->get('tanggal'))->format('m'))
+                ->where('tahun', Carbon::parse($request->get('tanggal'))->format('Y'))
+                ->first();
+            if($tanggalVal != null){
+                if(Carbon::parse($tanggalVal->created_at) > Carbon::parse($request->get('tanggal')) && Carbon::parse($request->get('tanggal'))->format('d') <= 25 && Carbon::parse($request->get('tanggal'))->format('m') == Carbon::parse($tanggalVal->created_at)->format('m')){
+                    Alert::error('Terjadi keselahan', 'Proses import tidak dapat dilakukan karena gaji bulan ini telah diproses.');
+                    return redirect()->back();
+                }
+            }
             $nip = explode(',', $request->get('nip'));
             $nominal = explode(',', $request->get('nominal'));
             $keterangan = [];
@@ -460,7 +446,6 @@ class PenghasilanTidakTeraturController extends Controller
             return redirect()->route('penghasilan-tidak-teratur.index');
         } catch(Exception $e){
             DB::rollBack();
-            dd($e);
             Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('pajak_penghasilan.create');
         } catch(QueryException $e){
@@ -479,7 +464,7 @@ class PenghasilanTidakTeraturController extends Controller
     public function show(Request $request)
     {
         try{
-            if (!Auth::user()->can('penghasilan - import - penghasilan tidak teratur - detail')) {
+            if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
                 return view('roles.forbidden');
             }
             $idTunjangan = $request->get('idTunjangan');

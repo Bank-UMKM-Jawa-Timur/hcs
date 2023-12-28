@@ -30,7 +30,7 @@ class DemosiController extends Controller
      */
     public function index()
     {
-        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data demosi')) {
+        if (!auth()->user()->hasRole(['hrd','admin'])) {
             return view('roles.forbidden');
         }
         $data = DB::table('demosi_promosi_pangkat')
@@ -91,7 +91,7 @@ class DemosiController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->can('manajemen karyawan - pergerakan karir - data demosi - create demosi')) {
+        if (!auth()->user()->hasRole(['hrd'])) {
             return view('roles.forbidden');
         }
         $data = DB::table('mst_karyawan')

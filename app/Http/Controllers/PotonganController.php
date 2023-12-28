@@ -218,4 +218,19 @@ class PotonganController extends Controller
         $filename = Carbon::now()->format('his').'template_import_potongan'.'.'.'xlsx';
         return Excel::download(new KaryawanExportForPotongan(), $filename);
     }
+
+    public function getPotongan(Request $request)
+    {
+        $tahun = $request->get('tahun');
+
+        $bulan = DB::table('potongan_gaji')
+                    ->where('tahun', $tahun)
+                    ->distinct()
+                    ->get('bulan');
+        if (count($bulan) > 0) {
+            return response()->json($bulan);
+        } else {
+            return null;
+        }
+    }
 }

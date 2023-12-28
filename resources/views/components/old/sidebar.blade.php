@@ -14,21 +14,20 @@
         <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar"
             role="navigation">
             <ul class="nav flex-column sticky-top pl-2 mt-0">
-                {{-- @php
-                    $has_permission_dashboard = \App\Http\Controllers\Controller::hasPermission('dashboard');
-                @endphp --}}
                 @if (auth()->user()->can('dashboard'))
-                    <li class="@active('home')">
+                    <li style="margin-top: -15px" class="@active('home')">
                         <a class="nav-link" href="{{ route('home') }}" style="font-weight: bolder">
-                            <div class="d-flex">
-                                <iconify-icon icon="akar-icons:dashboard" class="icon"></iconify-icon>
+                            <div class="d-flex justify-content-start">
+                                <span class="icon">
+                                    <iconify-icon icon="tdesign:dashboard-1" class="icon"></iconify-icon>                                                                     
+                                </span>
                                 <span> Dashboard</span>
                             </div>
                         </a>
                     </li>
                 @endif
                 {{-- Menu Manajemen Karyawan --}}
-                @if (auth()->user()->can('manajemen karyawan'))
+                @can('manajemen karyawan')
                     <li
                         class="{{ request()->is(
                             'karyawan',
@@ -52,8 +51,12 @@
                             : '' }}">
                         <a class="nav-link" href="#submenu1" data-toggle="collapse" data-target="#submenu1"
                             style="font-weight: bolder">
-                            <i class="nc-icon nc-tile-56" style="font-weight: bolder"></i>
-                            Manajemen Karyawan
+                            <div class="d-flex justify-content-start">
+                                <span class="icon">
+                                    <iconify-icon icon="heroicons:user-group" class="icon"></iconify-icon>                                                                    
+                                </span>
+                                <span> Manajemen Karyawan</span>
+                            </div>
                         </a>
                         <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is(
                             'karyawan',
@@ -79,26 +82,44 @@
                             @if (auth()->user()->can('manajemen karyawan - data karyawan'))
                                 <li style="margin-top: -15px" class="@active('karyawan.index,karyawan.create,karyawan.edit,karyawan.show,import,klasifikasi')">
                                     <a href="{{ route('karyawan.index') }}">
-                                        <i class="nc-icon nc-badge"></i>
-                                        <p>Karyawan </p>
+                                        <div class="d-flex justify-content-start">
+                                            <span class="icon">
+                                                <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                            </span>
+                                        <span>
+                                            <p>Karyawan </p>
+                                        </span>
+                                        </div>
                                         <p></p>
                                     </a>
                                 </li>
                             @endif
                             @can('manajemen karyawan - data masa pensiunan')
-                                <li style="" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
+                                <li style="margin-top: -15px" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
                                     <a href="{{ route('reminder-pensiun.index') }}">
-                                        <i class="nc-icon nc-badge"></i>
-                                        <p>Data Masa Pensiun</p>
+                                        <div class="d-flex justify-content-start">
+                                            <span class="icon">
+                                                <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                            </span>
+                                            <span>
+                                                <p>Data Masa Pensiun</p>
+                                            </span>
+                                        </div>
                                         <p></p>
                                     </a>
                                 </li>
                             @endcan
                             @can('manajemen karyawan - pengkinian data')
-                            <li style="" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
+                            <li style="margin-top: -15px" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
                                 <a href="{{ route('pengkinian_data.index') }}">
-                                    <i class="nc-icon nc-ruler-pencil"></i>
-                                    <p>Pengkinian Data </p>
+                                    <div class="d-flex justify-content-start">
+                                        <span class="icon">
+                                            <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                        </span>
+                                        <span>
+                                            <p>Pengkinian Data </p>
+                                        </span>                                        
+                                    </div>
                                     <p></p>
                                 </a>
                             </li>
@@ -118,8 +139,14 @@
                                 : '' }}"
                                 style="margin-top: -15px">
                                 <a data-toggle="dropdown" aria-expanded="false">
-                                    <i class="nc-icon nc-chart-bar-32"></i>
-                                    <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
+                                    <div class="d-flex justify-content-start">
+                                        <span class="icon">
+                                            <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                        </span>
+                                        <span>
+                                            <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
+                                        </span>
+                                    </div>
                                     <p></p>
                                 </a>
                                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
@@ -146,18 +173,30 @@
                             @can('manajemen karyawan - data penjabat sementara')
                                 <li style="margin-top: -15px" class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">
                                     <a href="{{ route('pejabat-sementara.index') }}">
-                                        <i class="nc-icon nc-tie-bow"></i>
-                                        <p>Penjabat Sementara</p>
+                                        <div class="d-flex justify-content-start">
+                                            <span class="icon">
+                                                <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                            </span>
+                                            <span>
+                                                <p>Penjabat Sementara</p>
+                                            </span>
+                                        </div>
                                         <p></p>
                                     </a>
                                 </li>
                             @endcan
                             @can('manajemen karyawan - reward & punishment')
-                                <li class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" style="margin-top: -15px">
+                                <li style="margin-top: -15px" class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" style="margin-top: -15px">
                                     <a data-toggle="dropdown" aria-expanded="false">
-                                        <i class="nc-icon nc-bell-55"></i>
-                                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Reward & Punishment
-                                        </p>
+                                    <div class="d-flex justify-content-start">
+                                        <span class="icon">
+                                            <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                        </span>
+                                        <span>
+                                            <p class="dropdown-toggle" id="navbarDropdownMenuLink">Reward & Punishment
+                                            </p>
+                                        </span>
+                                    </div>
                                         <p></p>
                                     </a>
                                     <div class="dropdown-menu dropdown-primary dropdown-menu-right">
@@ -168,23 +207,35 @@
                             @endcan
                         </ul>
                     </li>
-                @endif
+                @endcan
                 {{-- Menu Penghasilan --}}
                 @can('penghasilan')
                 <li
                     class="@active('pajak_penghasilan') {{ request()->is('penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*','gaji_perbulan', 'gaji_perbulan/*', 'penghasilan/import-penghasilan-teratur', 'penghasilan/import-penghasilan-teratur/*','pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }}">
                     <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
                         style="font-weight: bolder">
-                        <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
-                        Penghasilan
+                        <div class="d-flex justify-content-start">
+                            <span class="icon">
+                                    <iconify-icon icon="game-icons:cash" class="icon"></iconify-icon>
+                            </span>
+                            <span>
+                                Penghasilan
+                            </span>
+                        </div>
                     </a>
                     <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'bonus/*', 'show')"
                         id="submenu2">
                         @can('penghasilan - proses penghasilan')
                         <li style="margin-top: -15px" class="@active('gaji_perbulan')">
                             <a href="{{ route('gaji_perbulan.index') }}">
-                                <i class="nc-icon nc-money-coins"></i>
-                                <p>Proses Penghasilan</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Proses Penghasilan</p>
+                                    </span>
+                                </div>
                                 <p></p>
                             </a>
                         </li>
@@ -192,8 +243,14 @@
                         @can('penghasilan - pajak penghasilan')
                         <li style="margin-top: -15px" class="@active('pajak_penghasilan.index') @active('get-penghasilan')">
                             <a href="{{ route('pajak_penghasilan.index') }}">
-                                <i class="nc-icon nc-scissors"></i>
-                                <p>Pajak</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Pajak</p>
+                                    </span>
+                                </div>
                                 <p></p>
                             </a>
                         </li>
@@ -202,8 +259,14 @@
                         <li style="margin-top: -15px"
                             class="@active('penghasilan.import-penghasilan-teratur.index')">
                             <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}">
-                                <i class="nc-icon nc-credit-card"></i>
-                                <p>Penghasilan Teratur</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Penghasilan Teratur</p>
+                                    </span>
+                                </div>
                             </a>
                         </li>
                         @endcan
@@ -211,8 +274,14 @@
                         <li style="margin-top: -15px"
                             class="@active('penghasilan-tidak-teratur.index')">
                             <a href="{{ route('penghasilan-tidak-teratur.index') }}">
-                                <i class="nc-icon nc-credit-card"></i>
-                                <p>Penghasilan Tidak Teratur</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Penghasilan Tidak Teratur</p>
+                                    </span>
+                                </div>
                                 <p></p>
                             </a>
                         </li>
@@ -221,77 +290,54 @@
                         <li style="margin-top: -15px !important"
                             class="@active('bonus.index')">
                             <a href="{{ route('bonus.index') }}">
-                                <i class="nc-icon nc-credit-card"></i>
-                                <p>Bonus</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Bonus</p>
+                                    </span>
+                                </div>
                             </a>
                         </li>
                         @endcan
-                        {{--  @can('penghasilan - import - potongan')
-                        <li style="margin-top: -15px"
-                            class="@active('potongan.index')">
-                            <a href="{{ route('potongan.index') }}">
-                                <i class="nc-icon nc-credit-card"></i>
-                                <p>Potongan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan  --}}
                         @can('penghasilan - payroll - list payroll')
                         <li style="margin-top: -15px"
                             class="@active('payroll.index')">
                             <a href="{{ route('payroll.index') }}">
-                                <i class="nc-icon nc-money-coins"></i>
-                                <p>Payroll</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Payroll</p>
+                                    </span>
+                                </div>
                             </a>
                         </li>
                         @endcan
-                        {{--  @can('penghasilan - tambah penghasilan')
-                        <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
-                            <a href="{{ route('pajak_penghasilan.create') }}">
-                                <i class="nc-icon nc-ruler-pencil"></i>
-                                <p>Tambah Penghasilan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan  --}}
                         {{-- Menu Gaji --}}
                         @can('penghasilan - gaji')
-                        <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                            <a class="nav-link-item" href="#submenu-gaji" data-toggle="collapse" data-target="#submenu-gaji"
-                               >
-                                <i class="nc-icon nc-credit-card "></i>
+                        <li class=" dropdown @active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
+                            <a href="#submenu-gaji" data-toggle="dropdown" aria-expanded="false">
+                            <div class="d-flex justify-content-start">
+                                <span class="icon">
+                                    <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                </span>
                                 <span class="dropdown-toggle">Gaji</span>
+                            </div>
                             </a>
-                            <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
-                                id="submenu-gaji">
+                            <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                                 @can('penghasilan - gaji - lampiran gaji')
-                                <li style="margin-top: -15px"
-                                    class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                                    <a href="{{ route('gaji.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Lampiran Gaji</p>
-                                        <p></p>
-                                    </a>
-                                </li>
+                                <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
                                 @endcan
                                 @can('penghasilan - gaji - slip gaji')
-                                <li style="margin-top: -15px" class="@active('slipIndex')">
-                                    <a href="{{ route('slipIndex') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Slip Jurnal</p>
-                                        <p></p>
-                                    </a>
-                                </li>
+                                <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
                                 @endcan
                                 @can('penghasilan - payroll - slip gaji')
-                                <li style="margin-top: -15px" class="@active('payroll.slip')">
-                                    <a href="{{ route('payroll.slip') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Slip Gaji</p>
-                                    </a>
-                                </li>
+                                <a class="dropdown-item" href="{{ route('payroll.slip') }}">Slip Gaji</a>
                                 @endcan
-                            </ul>
+                            </div>
                         </li>
                         @endcan
                     </ul>
@@ -302,16 +348,28 @@
                 <li class="@active('history')">
                     <a class="nav-link" href="#submenu3" data-toggle="collapse" data-target="#submenu3"
                         style="font-weight: bolder">
-                        <i class="nc-icon nc-compass-05" style="font-weight: bolder"></i>
-                        Histori
+                        <div class="d-flex justify-content-start">
+                            <span class="icon">
+                                <iconify-icon icon="uis:history-alt" class="icon"></iconify-icon>
+                            </span>
+                            <span>
+                                Histori
+                            </span>
+                        </div>
                     </a>
                     <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('history', 'show')"
                         id="submenu3">
                         @can('histori - jabatan')
                         <li style="margin-top: -15px" class="@active('history_jabatan')">
                             <a href="{{ route('history_jabatan.index') }}">
-                                <i class="nc-icon nc-briefcase-24"></i>
-                                <p>Jabatan</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Jabatan</p>
+                                    </span>
+                                </div>
                                 <p></p>
                             </a>
                         </li>
@@ -319,8 +377,14 @@
                         @can('histori - penjabat sementara')
                         <li style="margin-top: -15px" class="@active('pejabat-sementara.history')">
                             <a href="{{ route('pejabat-sementara.history') }}">
-                                <i class="nc-icon nc-tie-bow"></i>
-                                <p>Penjabat Sementara</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Penjabat Sementara</p>
+                                    </span>
+                                </div>
                                 <p></p>
                             </a>
                         </li>
@@ -328,8 +392,14 @@
                         @can('histori - surat peringatan')
                         <li style="margin-top: -15px" class="@active('surat-peringatan.history')">
                             <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}">
-                                <i class="nc-icon nc-email-85"></i>
-                                <p>Surat Peringatan</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Surat Peringatan</p>
+                                    </span>
+                                </div>
                                 <p></p>
                             </a>
                         </li>
@@ -343,8 +413,14 @@
                     class="{{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek') ? 'active' : '' }}">
                     <a class="nav-link" href="#submenu4" data-toggle="collapse" data-target="#submenu4"
                         style="font-weight: bolder">
-                        <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
-                        Laporan
+                        <div class="d-flex justify-content-start">
+                            <span class="icon">
+                                <iconify-icon icon="icon-park-outline:table-report"></iconify-icon>
+                            </span>
+                            <span>
+                                Laporan
+                            </span>
+                        </div>
                     </a>
                     <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('laporan,index_dpp', 'show')"
                         id="submenu4">
@@ -359,9 +435,15 @@
                             : '' }}"
                             style="margin-top: -15px">
                             <a data-toggle="dropdown" aria-expanded="false">
-                                <i class="nc-icon nc-single-copy-04"></i>
-                                <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan Pergerakan
-                                    Karir </p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan Pergerakan
+                                            Karir </p>
+                                    </span>
+                                </div>
                                 <p></p>
                             </a>
                             <div class="dropdown-menu dropdown-primary dropdown-menu-right">
@@ -387,8 +469,14 @@
                         @can('laporan - laporan jamsostek')
                         <li style="margin-top: -15px" class="@active('laporan_jamsostek')">
                             <a href="{{ route('laporan_jamsostek.index') }}">
-                                <i class="nc-icon nc-single-copy-04"></i>
-                                <p>Laporan Jamsostek</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Laporan Jamsostek</p>
+                                    </span>
+                                </div>
                                 <p></p>
                             </a>
                         </li>
@@ -396,8 +484,14 @@
                         @can('laporan - laporan dpp')
                         <li style="margin-top: -15px" class="@active('index_dpp')">
                             <a href="{{ route('index_dpp') }}">
-                                <i class="nc-icon nc-single-copy-04"></i>
-                                <p>Laporan DPP</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Laporan DPP</p>
+                                    </span>
+                                </div>
                                 <p></p>
                             </a>
                         </li>
@@ -405,62 +499,33 @@
                     </ul>
                 </li>
                 @endcan
-
-                {{-- Menu Migrasi Data --}}
-                {{-- @can('migrasi')
-                <li class="@active('migrasi')">
-                    <a class="nav-link" href="#submenu8" data-toggle="collapse" data-target="#submenu8"
-                        style="font-weight: bolder">
-                        <i class="nc-icon nc-cloud-upload-94" style="font-weight: bolder"></i>
-                        Migrasi
-                    </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('migrasi')"
-                        id="submenu8">
-                        @can('migrasi - jabatan')
-                        <li style="margin-top: -15px" class="@active('migrasiJabatan')">
-                            <a href="{{ route('migrasiJabatan') }}">
-                                <i class="nc-icon nc-cloud-upload-94"></i>
-                                <p>Jabatan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('migrasi - penjabat sementara')
-                        <li style="margin-top: -15px" class="@active('migrasiPJS')">
-                            <a href="{{ route('migrasiPJS') }}">
-                                <i class="nc-icon nc-cloud-upload-94"></i>
-                                <p>Penjabat Sementara</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('migrasi - surat peringatan')
-                        <li style="margin-top: -15px" class="@active('migrasiSP')">
-                            <a href="{{ route('migrasiSP') }}">
-                                <i class="nc-icon nc-cloud-upload-94"></i>
-                                <p>Surat Peringatan</p>
-                                <p></p>
-                            </a>
-                        </li>
-                        @endcan
-                    </ul>
-                </li>
-                @endcan --}}
                 {{-- Menu Log Aktivitas --}}
                 @can('log')
                 <li>
                     <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu6"
                         style="font-weight: bolder">
-                        <i class="nc-icon nc-tap-01" style="font-weight: bolder"></i>
-                        Log
+                        <div class="d-flex justify-content-start">
+                            <span class="icon">
+                                <iconify-icon icon="pajamas:log" class="icon"></iconify-icon>
+                            </span>
+                            <span>
+                                <p class="mt-2">Log </p>
+                            </span>
+                        </div>
                     </a>
                     @can('log - log aktivitas')
                     <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6"
                         aria-expanded="false">
                         <li style="margin-top: -15px">
                             <a href="#">
-                                <i class="nc-icon nc-refresh-69"></i>
-                                <p>Log Aktivitas</p>
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Log Aktivitas</p>
+                                    </span>
+                                </div>
                                 <p></p>
                             </a>
                         </li>
@@ -473,8 +538,14 @@
                 <li class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database')">
                     <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu7"
                         style="font-weight: bolder">
-                        <i class="nc-icon nc-settings" style="font-weight: bolder"></i>
-                        Setting
+                        <div class="d-flex justify-content-start">
+                            <span class="icon">
+                                <iconify-icon icon="ant-design:setting-outlined" class="icon"></iconify-icon>
+                            </span>
+                            <span>
+                                Setting
+                            </span>
+                        </div>
                     </a>
                     <ul class="sub-menu list-unstyled flex-column collapse pl-2
                     {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show') --}}
@@ -576,5 +647,4 @@
             </ul>
         </div>
     </div>
-
 </div>

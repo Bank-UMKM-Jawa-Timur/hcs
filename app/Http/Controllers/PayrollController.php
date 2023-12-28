@@ -19,7 +19,7 @@ class PayrollController extends Controller
 
     public function index(Request $request) {
         // Need permission
-        if (!Auth::user()->can('penghasilan - payroll - list payroll')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         FacadesSession::forget('kategori');
@@ -93,15 +93,11 @@ class PayrollController extends Controller
         $year = $request->get('request_year');
         $data = $payrollRepository->getSlipCetak($nip, $month, $year);
 
-        $pdf = Pdf::loadview('payroll.print.slip',[
+        $pdf = PDF::loadview('payroll.print.slip', [
             'data' => $data
         ]);
-
-        $fileName =  time().'.'. 'pdf' ;
-        $pdf->save(public_path() . '/' . $fileName);
-
-        $pdf = public_path($fileName);
-        return response()->download($pdf);
+        $fileName =  time() . '.' . 'pdf';
+        return $pdf->download($fileName);
     }
 
     function slipPDF() {
@@ -116,14 +112,14 @@ class PayrollController extends Controller
         $page = null;
 
         $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, null, 'cetak');
-        
+
         return view('payroll.tables.slip-pdf', ['data' => $data]);
 
     }
 
     public function slip(Request $request) {
         // Need permission
-        if (!Auth::user()->can('penghasilan - payroll - slip gaji')) {
+        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
             return view('roles.forbidden');
         }
         FacadesSession::forget('year');
