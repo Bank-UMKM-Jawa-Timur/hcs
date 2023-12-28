@@ -24,7 +24,7 @@ class PejabatSementaraController extends Controller
 
     public function index()
     {
-        if (!auth()->user()->hasRole(['hrd','admin'])) {
+        if (!auth()->user()->can('manajemen karyawan - data penjabat sementara')) {
             return view('roles.forbidden');
         }
         $pjs = PjsModel::with(['karyawan', 'jabatan'])->get();
@@ -33,7 +33,7 @@ class PejabatSementaraController extends Controller
 
     public function create()
     {
-        if (!auth()->user()->hasRole(['hrd'])) {
+        if (!auth()->user()->can('manajemen karyawan - tambah penjabat sementara')) {
             return view('roles.forbidden');
         }
         $jabatan = JabatanModel::whereNotIn('kd_jabatan', [
@@ -45,6 +45,9 @@ class PejabatSementaraController extends Controller
 
     public function store(PejabatSementaraRequest $request)
     {
+        if (!auth()->user()->can('manajemen karyawan - tambah penjabat sementara')) {
+            return view('roles.forbidden');
+        }
         $request->merge([
             'kd_entitas' => EntityService::getEntityFromRequest($request),
         ]);
@@ -87,6 +90,9 @@ class PejabatSementaraController extends Controller
     public function destroy(Request $request, $id)
     {
         // Need permission
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')) {
+            return view('roles.forbidden');
+        }
         $pjs = PjsModel::findOrFail($id);
         if($pjs->tanggal_mulai < $request->tgl_berakhir){
             $this->repo->deactivate($pjs, $request->tgl_berakhir);

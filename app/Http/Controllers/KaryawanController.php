@@ -888,6 +888,9 @@ class KaryawanController extends Controller
 
     public function penonaktifan(PenonaktifanRequest $request)
     {
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')) {
+            return view('roles.forbidden');
+        }
         if($request->get('tanggal_penonaktifan') > now()) {
             Alert::error('Tanggal penonaktifan tidak boleh lebih dari hari ini.');
             return redirect()->route('penonaktifan.create');
@@ -904,7 +907,7 @@ class KaryawanController extends Controller
 
     public function penonaktifanAdd()
     {
-        if (!auth()->user()->hasRole(['hrd'])) {
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')) {
             return view('roles.forbidden');
         }
         return view('karyawan.penonaktifan.penonaktifan');
@@ -912,7 +915,7 @@ class KaryawanController extends Controller
 
     public function indexPenonaktifan()
     {
-        if (!auth()->user()->hasRole(['hrd','admin'])) {
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan')) {
             return view('roles.forbidden');
         }
         $karyawanRepo = new KaryawanRepository();
@@ -951,7 +954,7 @@ class KaryawanController extends Controller
 
     public function reminderPensiunIndex()
     {
-        if (!auth()->user()->hasRole(['hrd','admin'])) {
+        if (!auth()->user()->can('manajemen karyawan - data masa pensiunan')) {
             return view('roles.forbidden');
         }
         $jabatan = JabatanModel::all();
@@ -967,6 +970,9 @@ class KaryawanController extends Controller
 
     public function reminderPensiunShow(Request $request)
     {
+        if (!auth()->user()->can('manajemen karyawan - data masa pensiunan')) {
+            return view('roles.forbidden');
+        }
         $kantor = $request->kantor;
         $karyawan = collect();
         $status = 0;

@@ -7,14 +7,15 @@
     <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > Pengkinian Data</p>
   </div>
   <div class="card-header row mt-3 mr-8 pr-5">
-    @if (auth()->user()->hasRole(['hrd']))
+    @can('manajemen karyawan - pengkinian data - create pengkinian data')
         <a class="mb-3" href="{{ route('pengkinian_data.create') }}">
-        <button class="is-btn is-primary">Pengkinian Data</button>
+            <button class="is-btn is-primary">Pengkinian Data</button>
         </a>
+    @elsecan('manajemen karyawan - pengkinian data - import pengkinian data')
         <a class="ml-3" href="{{ route('pengkinian-data-import-index') }}">
         <button class="is-btn is-primary">Import Pengkinian</button>
         </a>
-    @endif
+    @endcan
   </div>
 </div>
 <div class="card-body p-3">
@@ -100,13 +101,13 @@
                               </td>
                               <td style="min-width: 130px">
                                   <div class="container">
-                                    @if (auth()->user()->hasRole(['hrd','admin']))
+                                    @can('manajemen karyawan - pengkinian data - detail pengkinian data')
                                         <a href="{{ route('pengkinian_data.show', $item->nip) }}">
                                             <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                                 Detail
                                             </button>
                                         </a>
-                                    @endif
+                                    @endcan
                                   </div>
                               </td>
                           </tr>

@@ -30,7 +30,8 @@ class DemosiController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->hasRole(['hrd','admin'])) {
+        // Need permission
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data demosi')) {
             return view('roles.forbidden');
         }
         $data = DB::table('demosi_promosi_pangkat')
@@ -91,7 +92,7 @@ class DemosiController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->hasRole(['hrd'])) {
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data demosi - create demosi')) {
             return view('roles.forbidden');
         }
         $data = DB::table('mst_karyawan')
@@ -115,6 +116,9 @@ class DemosiController extends Controller
      */
     public function store(DemosiRequest $request)
     {
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data demosi - create demosi')) {
+            return view('roles.forbidden');
+        }
         if($request->tunjangan != null){
             if(count($request->tunjangan) > 0){
                 foreach($request->tunjangan as $key => $item){
