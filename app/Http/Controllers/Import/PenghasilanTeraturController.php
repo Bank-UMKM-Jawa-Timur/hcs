@@ -199,7 +199,7 @@ class PenghasilanTeraturController extends Controller
     }
 
     public function lock(Request $request){
-        if (!auth()->user()->hasRole(['kepegawaian'])) {
+        if (!auth()->user()->can('penghasilan - lock - penghasilan teratur')) {
             return view('roles.forbidden');
         }
         $repo = new PenghasilanTeraturRepository;
@@ -209,7 +209,7 @@ class PenghasilanTeraturController extends Controller
     }
 
     public function unlock(Request $request){
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - unlock - penghasilan teratur')) {
             return view('roles.forbidden');
         }
         $repo = new PenghasilanTeraturRepository;
@@ -321,7 +321,7 @@ class PenghasilanTeraturController extends Controller
     public function details($idTunjangan, $createdAt)
     {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan teratur - detail')) {
             return view('roles.forbidden');
         }
         $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;

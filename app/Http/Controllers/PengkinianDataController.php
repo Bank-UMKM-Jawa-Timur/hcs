@@ -43,7 +43,7 @@ class PengkinianDataController extends Controller
 
     public function pengkinian_data_index()
     {
-        if (!auth()->user()->hasRole(['hrd'])) {
+        if (!auth()->user()->can('manajemen karyawan - pengkinian data - import pengkinian data')) {
             return view('roles.forbidden');
         }
         return view('pengkinian_data.import');
@@ -366,7 +366,7 @@ class PengkinianDataController extends Controller
      */
     public function show($id)
     {
-        if (!auth()->user()->hasRole(['hrd','admin'])) {
+        if (!auth()->user()->can('manajemen karyawan - pengkinian data - detail pengkinian data')) {
             return view('roles.forbidden');
         }
         $data_suis = null;

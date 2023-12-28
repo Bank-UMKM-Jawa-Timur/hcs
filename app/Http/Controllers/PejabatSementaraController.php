@@ -63,7 +63,7 @@ class PejabatSementaraController extends Controller
 
     public function history(Request $request)
     {
-        if (!auth()->user()->hasRole(['hrd','admin'])) {
+        if (!auth()->user()->can('histori - penjabat sementara')) {
             return view('roles.forbidden');
         }
         $pjs = $karyawan = null;

@@ -173,13 +173,13 @@
                                     </td>
                                     <td style="min-width: 130px">
                                         <div class="container">
-                                            @if (auth()->user()->hasRole(['hrd','admin']))
+                                            @can('manajemen karyawan - pengkinian data - detail pengkinian data')
                                                 <a href="{{ route('pengkinian_data.show', $i->nip) }}">
                                                     <button class="btn btn-outline-info p-1" style="min-width: 60px">
                                                         Detail
                                                     </button>
                                                 </a>
-                                            @endif
+                                            @endcan
                                         </div>
                                     </td>
                                   </tr>
