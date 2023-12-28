@@ -27,8 +27,7 @@ class AuthenticatedSessionController extends Controller
             $user = User::where('email', $request->input_type)->orWhere('username', $request->input_type)->first();
             if ($user) {
                 if ($user->first_login) {
-                    return 'change password page';
-                    return redirect('first-login?id=' . $user->id);
+                    return redirect()->route('password.reset', ['id' => $user->id]);
                 } else {
                     $request->authenticate();
                     $request->session()->regenerate();
