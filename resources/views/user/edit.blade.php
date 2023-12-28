@@ -16,7 +16,7 @@
                     @csrf
                     @method('PUT')
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <label for="name">Nama</label>
                             <select name="name" id="nama-karyawan" class="@error('name') is_invalid @enderror form-control">
                                 @foreach ($karyawan as $item)
@@ -27,7 +27,7 @@
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <label for="username">Username</label>
                             <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ $data->email }}">
                             @error('username')
@@ -53,6 +53,6 @@
             console.log(karyawan);
             $('#nip-for-password').val(karyawan);
         })
-    </script>   
+    </script>
     @endpush
 @endsection
