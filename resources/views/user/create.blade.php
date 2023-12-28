@@ -28,9 +28,23 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="username">Username</label>
-                            <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ old('username') }}">
+                            <label for="username">Email</label>
+                            <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ old('username') }}" value="" readonly>
                             @error('username')
+                                <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label for="username">Role</label>
+                            <select name="role" id="role-karyawan" class="@error('role') is_invalid @enderror form-control">
+                                <option value="">Pilih Role</option>
+                                @foreach ($role as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('role')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
@@ -52,6 +66,8 @@
             var karyawan = $(this).val();
             console.log(karyawan);
             $('#nip-for-password').val(karyawan);
+
+            document.getElementById('username').value = karyawan + "@mail.com"
         })
     </script>
     @endpush

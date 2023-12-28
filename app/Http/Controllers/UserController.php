@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\KaryawanModel;
+use App\Models\ModelHasRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Repository\UserRepository;
@@ -64,14 +65,34 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
-        $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
-        User::create([
-            'name' => $karyawan->nama_karyawan,
-            'username' => $request->name,
-            'email' => $request->username,
-            'password' =>  Hash::make($request->password),
+        $request->validate([
+            'username' => 'unique:users,username|required',
+        ], 
+        [
+            'username.unique' => 'User sudah terdaftar.',
         ]);
+
+        try {
+            $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
+
+            $dataUser = New User();
+            $dataUser->name = $karyawan->nama_karyawan;
+            $dataUser->username = $request->name;
+            $dataUser->email = $request->username;
+            $dataUser->password = Hash::make($request->password);
+            $dataUser->save();
+
+            $dataRole = New ModelHasRole();
+            $dataRole->role_id = $request->role;
+            $dataRole->model_type = 'App\Models\User';
+            $dataRole->model_id = $dataUser->id;
+            $dataRole->save();
+
+        } catch (\Throwable $th) {
+            Alert::error("User Sudah Terdaftar");
+            return redirect()->route('user.create');
+        }
+        
         Alert::success('Berhasil Menambahkan User.');
         return redirect()->route('user.index');
     }
