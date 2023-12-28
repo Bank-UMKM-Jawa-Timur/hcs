@@ -7,17 +7,21 @@
         <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="/karyawan">Karyawan</a></p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        @if (auth()->user()->hasRole(['hrd']))
+        @can('manajemen karyawan - data karyawan - create karyawan')
             <a class="mb-3" href="{{ route('karyawan.create') }}">
                 <button class="is-btn is-primary">Tambah</button>
             </a>
+        @endcan
+        @can('manajemen karyawan - data karyawan - import karyawan')
             <a class="ml-3" href="{{ route('import') }}">
                 <button class="is-btn is-primary">Import</button>
             </a>
+        @endcan
+        @can('manajemen karyawan - data karyawan - export karyawan')
             <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
                 <button class="is-btn is-primary">Export</button>
             </a>
-        @endif
+        @endcan
     </div>
 </div>
 <div class="card-body p-3">
@@ -94,7 +98,7 @@
                                         <td style="min-width: 130px">
                                             <div class="container">
                                                 <div class="row">
-                                                    @if (auth()->user()->hasRole(['hrd']))
+                                                    @can('manajemen karyawan - data karyawan - edit karyawan')
                                                         <a href="{{ route('karyawan.edit', $krywn->nip) }}"
                                                             class="btn btn-outline-warning p-1 mr-2"
                                                             style="min-width: 60px">
@@ -115,7 +119,7 @@
                                                             style="min-width: 60px">
                                                             Detail
                                                         </a>
-                                                    @endif
+                                                    @endcan
                                                 </div>
                                             </div>
                                         </td>

@@ -7,11 +7,11 @@
         <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('umur.index') }}">Rentang Umur</a></p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5">
-        @if(auth()->user()->hasRole(['admin']))
+        @can('setting - master - rentang umur - create rentang umur')
             <a class="mb-3" href="{{ route('umur.create') }}">
                 <button class="is-btn is-primary">Tambah Rentang Umur</button>
             </a>
-        @endif
+        @endcan
     </div>
 </div>
 
@@ -46,11 +46,11 @@
                                             <td>{{ $item->u_akhir }}</td>
                                             <td>
                                                 {{-- <div class="row"> --}}
-                                                    @if(auth()->user()->hasRole(['admin']))
+                                                    @can('setting - master - rentang umur - edit rentang umur')
                                                     <a href="{{ route('umur.edit', $item->id) }}">
                                                         <button class="is-btn btn-warning">Edit</button>
                                                     </a>
-                                                    @endif
+                                                    @endcan
     
                                                 {{-- <form action="{{ route('umur.destroy', $item->id) }}" method="POST">
                                                     @csrf

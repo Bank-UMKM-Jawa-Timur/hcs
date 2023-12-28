@@ -7,7 +7,7 @@
       <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang</p>
   </div>
   <div class="card-header row mt-3 mr-8 pr-5">
-    @if(auth()->user()->hasRole(['admin']))
+    @if(auth()->user()->can('setting - master - kantor cabang - create kantor cabang'))
         <a class="mb-3" href="{{ route('cabang.create') }}">
         <button class="is-btn is-primary">tambah cabang</button>
         </a>
@@ -52,7 +52,7 @@
                             </td>
                             <td class="text-center">
                               {{-- <div class="row"> --}}
-                                @if(auth()->user()->hasRole(['admin']))
+                                @if(auth()->user()->can('setting - master - kantor cabang - edit kantor cabang'))
                                     <p style="margin-bottom: 0.4rem !important;">
                                     <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
                                         <button class="is-btn btn-warning">

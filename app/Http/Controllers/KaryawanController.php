@@ -42,9 +42,10 @@ class KaryawanController extends Controller
      */
     public function index(Request $request)
     {
-        if (!auth()->user()->hasRole(['admin','hrd','kepegawaian'])) {
+        if (!auth()->user()->can('manajemen karyawan - data karyawan')) {
             return view('roles.forbidden');
         }
+
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -105,9 +106,10 @@ class KaryawanController extends Controller
 
     public function import()
     {
-        if (!auth()->user()->hasRole(['hrd'])) {
+        if (!auth()->user()->can('manajemen karyawan - data karyawan - import karyawan')) {
             return view('roles.forbidden');
         }
+
         return view('karyawan.import');
     }
 
@@ -300,7 +302,7 @@ class KaryawanController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->hasRole(['hrd'])) {
+        if (!auth()->user()->can('manajemen karyawan - data karyawan')) {
             return view('roles.forbidden');
         }
         $data_panggol = DB::table('mst_pangkat_golongan')

@@ -559,6 +559,8 @@
                                     <p></p>
                                 </a>
                                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                                    @can('setting - master - user')
+                                    @endcan
                                     <a class="dropdown-item @active('role.index')"
                                         href="{{ route('user.index') }}">User</a>
                                     @can('setting - master - role')

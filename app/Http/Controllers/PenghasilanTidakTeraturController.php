@@ -302,7 +302,7 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function import() {
-        if (!auth()->user()->hasRole(['kepegawaian'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
             return view('roles.forbidden');
         }
         return view('penghasilan.import');
@@ -504,9 +504,6 @@ class PenghasilanTidakTeraturController extends Controller
             return view('roles.forbidden');
         }
         try{
-            if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
-                return view('roles.forbidden');
-            }
             $idTunjangan = $request->get('idTunjangan');
             $tanggal = $request->get('tanggal');
             $limit = $request->has('page_length') ? $request->get('page_length') : 10;

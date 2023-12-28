@@ -7,13 +7,13 @@
             <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="">Reward & Punishment</a> > <a href="/surat-peringatan">Surat Peringatan</a></p>
         </div>
         <div class="card-header row mt-3 mr-8 pr-5">
-            @if (auth()->user()->hasRole(['hrd']))
+            @can('manajemen karyawan - reward & punishment - surat peringatan - create')
             <a href="{{ route('surat-peringatan.create') }}" class="mb-3">
                 <button class="is-btn is-primary ">
                     Tambah Surat Peringatan
                 </button>
             </a>
-            @endif
+            @endcan
         </div>
     </div>
     <div class="card-body">

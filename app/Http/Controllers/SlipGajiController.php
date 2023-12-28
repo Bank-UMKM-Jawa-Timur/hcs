@@ -21,7 +21,7 @@ class SlipGajiController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - gaji - slip gaji - rincian')) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.laporan_gaji', ['data' => null, 'kategori' => null, 'request' => null]);
