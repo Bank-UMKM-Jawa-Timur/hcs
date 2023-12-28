@@ -92,7 +92,7 @@
                                         <td>
                                             {{ $item->bukti_sk }}
                                         </td>
-    
+
                                     </tr>
                                 @endforeach
                             </tbody>

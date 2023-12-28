@@ -119,7 +119,7 @@ class SlipGajiController extends Controller
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;
                 $data[$i]['potongan'][4] = $pengurang->kredit_pegawai ?? 0;
                 $data[$i]['potongan'][5] = $pengurang->iuran_ik ?? 0;
-    
+
                 $value[0] += $totalGaji + array_sum($data[$i]['potongan']);
                 $value[1] += 0;
                 $value[2] += $totalGaji;
@@ -366,7 +366,6 @@ class SlipGajiController extends Controller
         $data = $this->listSlipGaji($nip, $year, null);
 
         $karyawan = KaryawanModel::where('nip', $nip)->first();
-
         return view('slip_gaji.slip', compact('data', 'cabang', 'karyawan'));
     }
 
@@ -394,17 +393,19 @@ class SlipGajiController extends Controller
     }
 
     public function cetakSlip(Request $request){
+        // return $request;
+        $param = [];
         $slipRepository = new SlipGajiRepository;
         $nip = $request->get('request_nip');
         $month = $request->get('request_month');
         $year = $request->get('request_year');
         $data = $slipRepository->getSlipCetak($nip, $month, $year);
-
-        return view('slip_gaji.print.slip', compact('data'));
-        $pdf = PDF::loadview('slip_gaji.print.slip', [
-            'data' => $data
-        ]);
-        $fileName =  time() . '.' . 'pdf';
-        return $pdf->download($fileName);
+        $param['data'] = $data;
+        $param['image'] = asset('style/assets/img/logo.png');
+        // return view('slip_gaji.print.slip', $param);
+        // $pdf = PDF::loadview('slip_gaji.print.slip', $param);
+        // return $pdf->download(time() . '.pdf');
+        $pdf = PDF::loadview('slip_gaji.print.test', $param);
+        return $pdf->download(time() . '.pdf');
     }
 }

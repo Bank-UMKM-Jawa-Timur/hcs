@@ -64,7 +64,7 @@ Route::get('/dashboard', function () {
 
 // Route::get('/home', [HomeController::class, 'index'])->name('home');
 // Route::middleware('auth:user,karyawan')->group(function () {
-    
+
 // });
 
 Route::prefix('graph')->group(function () {
@@ -283,7 +283,7 @@ Route::group(['middleware' => 'auth'], function () {
     // SlipJurnal
     Route::get('/slip_jurnal', [SlipGajiController::class, 'slipJurnalIndex'])->name('slipIndex');
     Route::post('/slip_jurnal/getSlip', [SlipGajiController::class, 'slipJurnal'])->name('getSlip');
-    
+
     // Slip gaji
     Route::prefix('slip')->name('slip.')->group(function() {
         Route::get('', [SlipGajiController::class, 'slip'])->name('index');
