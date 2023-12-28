@@ -29,7 +29,7 @@ class SlipGajiController extends Controller
 
     public function slipJurnalIndex()
     {
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.slip_jurnal', ['data' => null, 'kategori' => null, 'request' => null]);
@@ -119,7 +119,7 @@ class SlipGajiController extends Controller
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;
                 $data[$i]['potongan'][4] = $pengurang->kredit_pegawai ?? 0;
                 $data[$i]['potongan'][5] = $pengurang->iuran_ik ?? 0;
-    
+
                 $value[0] += $totalGaji + array_sum($data[$i]['potongan']);
                 $value[1] += 0;
                 $value[2] += $totalGaji;
@@ -166,29 +166,26 @@ class SlipGajiController extends Controller
 
     public function SlipJurnal(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
+            return view('roles.forbidden');
+        }
         $kantor = $request->kantor;
         $kategori = $request->kategori;
 
-        // if($kantor == 'pusat'){
-            $cabang = DB::table('mst_cabang')
-                ->select('kd_cabang')
-                ->get();
-            $cbg = [];
-            foreach($cabang as $i){
-                array_push($cbg, $i->kd_cabang);
-            }
-            $karyawan = DB::table('mst_karyawan')
-                ->whereNotIn('kd_entitas', $cbg)
-                ->orWhere('kd_entitas', null)
-                ->get();
-        // } else{
-        //     $karyawan = DB::table('mst_karyawan')
-        //         ->where('kd_entitas', $request->cabang)
-        //         ->get();
-        // }
+        $cabang = DB::table('mst_cabang')
+            ->select('kd_cabang')
+            ->get();
+        $cbg = [];
+        foreach($cabang as $i){
+            array_push($cbg, $i->kd_cabang);
+        }
+        $karyawan = DB::table('mst_karyawan')
+            ->whereNotIn('kd_entitas', $cbg)
+            ->orWhere('kd_entitas', null)
+            ->get();
 
         $data = $this->getSlipJurnal($request, $kategori, $karyawan);
-        // dd($data);
+
         return view('slip_gaji.slip_jurnal', compact('data', 'kategori', 'request'));
     }
 
@@ -305,6 +302,9 @@ class SlipGajiController extends Controller
 
     public function getLaporan(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - gaji - lampiran gaji')) {
+            return view('roles.forbidden');
+        }
         $kantor = $request->kantor;
         $Opsicabang = $request->cabang;
         $kategori = $request->kategori;
@@ -361,7 +361,8 @@ class SlipGajiController extends Controller
 
     public function slip(Request $request) {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        $user = auth()->user();
+        if (!$user->can('penghasilan - gaji - slip gaji')) {
             return view('roles.forbidden');
         }
         FacadesSession::forget('year');
@@ -370,16 +371,21 @@ class SlipGajiController extends Controller
             'nip' => 'not_in:0',
             'tahun' => 'not_in:0'
         ]);
+        $cabang = null;
+        if ($user->hasRole('cabang')) {
+            $karyawan = DB::table('users AS u')
+                            ->select('k.nip', 'k.kd_entitas')
+                            ->join('mst_karyawan AS k', 'k.nip', 'u.username')
+                            ->where('u.username', $user->username)
+                            ->first();
+            $cabang = $karyawan->kd_entitas;
+        }
 
-        $nip = $request->get('nip');
+        $nip = $user->hasRole('user') ? $user->username : $request->get('nip');
         $year = $request->get('tahun');
 
         FacadesSession::put('nip',$nip);
         FacadesSession::put('year',$year);
-
-        // Retrieve cabang data
-        $cabangRepo = new CabangRepository;
-        $cabang = $cabangRepo->listCabang();
 
         $data = $this->listSlipGaji($nip, $year, null);
 

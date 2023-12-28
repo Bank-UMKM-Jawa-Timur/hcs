@@ -5,14 +5,14 @@
 <div class="d-lg-flex justify-content-between w-100 p-3">
     <div class="card-header">
         <h5 class="card-title">Data Penghasilan Teratur</h5>
-        <p class="card-title"><a href="/">Dashboard</a> > Penghasilan Teratur</p>
+        <p class="card-title"><a href="/">Penghasilan</a> > Penghasilan Teratur</p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        @if (auth()->user()->hasRole(['kepegawaian']))
+        @can('penghasilan - import - penghasilan teratur - import')
             <a class="ml-3" href="{{ route('penghasilan.import-penghasilan-teratur.create') }}">
                 <button class="is-btn is-primary">Import</button>
             </a>
-        @endif
+        @endcan
         <a class="ml-3">
             <button type="button" class="is-btn is-primary ml-2" data-toggle="modal" data-target="#modal-cetak-vitamin">
                 Print vitamin
@@ -87,23 +87,43 @@
                                         <td>{{ number_format($item->total_nominal, 0, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
                                         <td>
+                                            @php
+                                                $cant_detail = false;
+                                                $cant_lock_edit = false;
+                                                $cant_unlock = false;
+                                            @endphp
                                             @if ($item->gajiPerBulan == null)
                                                 @if ($item->is_lock != 1)
-                                                    @if (auth()->user()->hasRole(['kepegawaian']))
+                                                    @can('penghasilan - lock - penghasilan teratur')
+                                                        @php
+                                                            $cant_lock_edit = true;
+                                                        @endphp
                                                         <a href="{{route('penghasilan.lock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}"
                                                             class="btn btn-success p-1">Lock</a>
+                                                    @elsecan('penghasilan - edit - penghasilan teratur')
+                                                        @php
+                                                            $cant_lock_edit = true;
+                                                        @endphp
                                                         <a href="{{ route('penghasilan.edit-tunjangan')}}?idTunjangan={{$item->id_transaksi_tunjangan}}&bulan={{$item->bulan}}&createdAt={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}" class="btn btn-outline-warning p-1">Edit</a>
-                                                    @endif
+                                                    @endcan
                                                 @else
-                                                    @if (auth()->user()->hasRole(['kepegawaian','admin']))
-                                                    <a href="{{route('penghasilan.unlock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}"
-                                                        class="btn btn-success p-1">Unlock</a>
-                                                    @endif
+                                                    @can('penghasilan - unlock - penghasilan teratur')
+                                                        @php
+                                                            $cant_unlock = true;
+                                                        @endphp
+                                                        <a href="{{route('penghasilan.unlock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}"
+                                                            class="btn btn-success p-1">Unlock</a>
+                                                    @endcan
                                                 @endif
                                             @endif
-
-                                            @if (auth()->user()->hasRole(['kepegawaian','admin']))
+                                            @can('penghasilan - import - penghasilan teratur - detail')
+                                                @php
+                                                    $cant_detail = true;
+                                                @endphp
                                                 <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_transaksi_tunjangan, 'createdAt' => \Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')]) }}" class="btn btn-outline-info p-1">Detail</a>
+                                            @endcan
+                                            @if (!$cant_detail && !$cant_lock_edit && !$cant_unlock)
+                                                -
                                             @endif
                                         </td>
                                     </tr>

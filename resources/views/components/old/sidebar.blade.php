@@ -14,7 +14,7 @@
         <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar"
             role="navigation">
             <ul class="nav flex-column sticky-top pl-2 mt-0">
-                @if (auth()->user()->can('dashboard'))
+                @can('dashboard')
                     <li style="margin-top: -15px" class="@active('home')">
                         <a class="nav-link" href="{{ route('home') }}" style="font-weight: bolder">
                             <div class="d-flex justify-content-start">
@@ -25,7 +25,7 @@
                             </div>
                         </a>
                     </li>
-                @endif
+                @endcan
                 {{-- Menu Manajemen Karyawan --}}
                 @can('manajemen karyawan')
                     <li
@@ -334,7 +334,7 @@
                                 @can('penghasilan - gaji - slip gaji')
                                     <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
                                 @endcan
-                                @can('penghasilan - payroll - slip gaji')
+                                @can('penghasilan - gaji - slip gaji')
                                     <a class="dropdown-item" href="{{ route('slip.index') }}">Slip Gaji</a>
                                 @endcan
                             </div>

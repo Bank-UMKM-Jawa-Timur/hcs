@@ -70,6 +70,7 @@ class RoleSeeder extends Seeder
             'penghasilan - import - penghasilan teratur - import',
             'penghasilan - import - penghasilan teratur - detail',
             'penghasilan - import - penghasilan tidak teratur',
+            'penghasilan - import - penghasilan tidak teratur - create',
             'penghasilan - import - penghasilan tidak teratur - import',
             'penghasilan - import - penghasilan tidak teratur - detail',
             'penghasilan - import - bonus',
@@ -177,6 +178,7 @@ class RoleSeeder extends Seeder
             'manajemen karyawan - reward & punishment',
             'manajemen karyawan - reward & punishment - surat peringatan',
             'penghasilan',
+            'penghasilan - proses penghasilan',
             'penghasilan - pajak penghasilan',
             'penghasilan - import',
             'penghasilan - import - penghasilan teratur',
@@ -272,6 +274,7 @@ class RoleSeeder extends Seeder
             'dashboard',
             'manajemen karyawan',
             'manajemen karyawan - data karyawan',
+            'manajemen karyawan - data karyawan - edit karyawan - edit potongan',
             'manajemen karyawan - data karyawan - detail karyawan',
             'penghasilan',
             'penghasilan - proses penghasilan',
@@ -283,6 +286,7 @@ class RoleSeeder extends Seeder
             'penghasilan - import - penghasilan teratur - import',
             'penghasilan - import - penghasilan teratur - detail',
             'penghasilan - import - penghasilan tidak teratur',
+            'penghasilan - import - penghasilan tidak teratur - create',
             'penghasilan - import - penghasilan tidak teratur - import',
             'penghasilan - import - penghasilan tidak teratur - detail',
             'penghasilan - import - bonus',
@@ -309,13 +313,24 @@ class RoleSeeder extends Seeder
             'penghasilan - edit - penghasilan tidak teratur',
             'penghasilan - edit - bonus',
         ];
-        $cabang_and_user_permissions = [
+        $cabang_permissions = [
             'dashboard',
             'manajemen karyawan',
             'manajemen karyawan - data karyawan',
             'manajemen karyawan - data karyawan - detail karyawan',
             'manajemen karyawan - data karyawan - import karyawan',
             'manajemen karyawan - data karyawan - export karyawan',
+            'penghasilan',
+            'penghasilan - gaji',
+            'penghasilan - gaji - lampiran gaji',
+            'penghasilan - gaji - slip jurnal',
+            'penghasilan - gaji - slip gaji',
+            'penghasilan - gaji - slip gaji - rincian',
+            'penghasilan - gaji - slip gaji - rincian - download pdf',
+        ];
+        $user_permissions = [
+            'dashboard',
+            'penghasilan',
             'penghasilan - gaji',
             'penghasilan - gaji - lampiran gaji',
             'penghasilan - gaji - slip jurnal',
@@ -337,8 +352,11 @@ class RoleSeeder extends Seeder
             else if ($role_name[$i] == 'kepegawaian') {
                 $role_akses->givePermissionTo($kepegawaian_permissions);
             }
-            else if ($role_name[$i] == 'cabang' || $role_name[$i] == 'user') {
-                $role_akses->givePermissionTo($cabang_and_user_permissions);
+            else if ($role_name[$i] == 'cabang') {
+                $role_akses->givePermissionTo($cabang_permissions);
+            }
+            else if ($role_name[$i] == 'user') {
+                $role_akses->givePermissionTo($user_permissions);
             }
             else {
                 $role_akses->givePermissionTo(['dashboard','setting - master - role','setting - master - role - create role']);

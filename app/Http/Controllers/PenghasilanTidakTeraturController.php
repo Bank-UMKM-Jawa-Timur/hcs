@@ -346,7 +346,7 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - pajak penghasilan')) {
             return view('roles.forbidden');
         }
         return view('penghasilan.index');
@@ -354,7 +354,7 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function lists(Request $request)
     {
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur')) {
             return view('roles.forbidden');
         }
 
@@ -374,7 +374,7 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->hasRole(['kepegawaian'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
             return view('roles.forbidden');
         }
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
@@ -384,6 +384,9 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function createTidakTeratur()
     {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
+            return view('roles.forbidden');
+        }
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
         return view('penghasilan.add-input-tidak-teratur', compact('data'));
     }
@@ -396,6 +399,9 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
+            return view('roles.forbidden');
+        }
         $request->validate([
             'tanggal' => 'required',
             'nip' => 'required',
@@ -463,6 +469,9 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function show(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - detail')) {
+            return view('roles.forbidden');
+        }
         try{
             if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
                 return view('roles.forbidden');
@@ -522,21 +531,38 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function lock(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - lock - penghasilan tidak teratur')) {
+            return view('roles.forbidden');
+        }
         $repo = new PenghasilanTidakTeraturRepository;
-        $repo->lock($request->all());
+        $body = [
+            'id_tunjangan' => $request->get('id_tunjangan'),
+            'tanggal' => $request->get('tanggal'),
+        ];
+        $repo->lock($body);
         Alert::success('Berhasil lock tunjangan.');
         return redirect()->route('penghasilan-tidak-teratur.index');
     }
     public function unlock(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - unlock - penghasilan tidak teratur')) {
+            return view('roles.forbidden');
+        }
         $repo = new PenghasilanTidakTeraturRepository;
-        $repo->unlock($request->all());
+        $body = [
+            'id_tunjangan' => $request->get('id_tunjangan'),
+            'tanggal' => $request->get('tanggal'),
+        ];
+        $repo->unlock($body);
         Alert::success('Berhasil unlock tunjangan.');
         return redirect()->route('penghasilan-tidak-teratur.index');
     }
 
     public function editTunjangan($idTunjangan, $tanggal)
     {
+        if (!auth()->user()->can('penghasilan - edit - penghasilan tidak teratur')) {
+            return view('roles.forbidden');
+        }
         $id = $idTunjangan;
         $repo = new PenghasilanTidakTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
@@ -549,6 +575,9 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function editTunjanganPost(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - edit - penghasilan tidak teratur')) {
+            return view('roles.forbidden');
+        }
         $request->validate([
             'tanggal' => 'required',
             'nip' => 'required',
@@ -606,7 +635,6 @@ class PenghasilanTidakTeraturController extends Controller
             return redirect()->route('pajak_penghasilan.create');
         }
     }
-
 
     function templateTidakTeratur() {
         $filename = Carbon::now()->format('his').'-penghasilan_tidak_teratur'.'.'.'xlsx';

@@ -47,31 +47,24 @@ class KaryawanController extends Controller
     public function karyawanJabatan(Request $request)  {
         $query = $request->q ?? $request->search;
         $kantor = $request->get('kantor');
+        $cabang = $request->get('cabang');
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
         $query = $request->q ?? $request->search;
         $karyawan = KaryawanModel::with('jabatan')
-            ->where(function (Builder $builder) use ($query) {
+            ->when($query, function (Builder $builder) use ($query) {
                 $builder->orWhere('nip', 'LIKE', "%{$query}%");
                 $builder->orWhere('nama_karyawan', 'LIKE', "%{$query}%");
             })
-            ->where(function ($query) {
-                $query->where('status_karyawan', '!=', 'Nonaktif')
-                    ->whereNull('tanggal_penonaktifan');
-            });
-            if ($kantor != 0) {
-                $karyawan->where(function($q) use ($kantor, $kode_cabang_arr) {
-                    if ($kantor != 'pusat') {
-                        $q->orWhereIn('kd_entitas', $kode_cabang_arr);
-                    }
-
-                    // else {
-                    //     $q->whereNotIn('kd_entitas', $kode_cabang_arr);
-                    // }
-                    // if ($kantor != '0') {
-                    // }
-                });
-            }
+            ->when($cabang, function($q) use ($cabang, $kode_cabang_arr) {
+                if ($cabang) {
+                    $q->where('kd_entitas', $cabang);
+                }
+                else {
+                    $q->whereIn('kd_entitas', $kode_cabang_arr);
+                }
+            })
+            ->whereNull('tanggal_penonaktifan');
             $data = $karyawan->orderBy('nama_karyawan', 'ASC')
                                 ->simplePaginate();
 

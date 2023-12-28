@@ -33,7 +33,7 @@ class BonusController extends Controller
     public function index(Request $request)
     {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - import - bonus')) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -52,7 +52,7 @@ class BonusController extends Controller
     public function create()
     {
         // Need permission
-        if (!Aauth()->user()->hasRole(['kepegawaian'])) {
+        if (!auth()->user()->can('penghasilan - import - bonus - import')) {
             return view('roles.forbidden');
         }
         $tunjangan = TunjanganModel::select('nama_tunjangan','id')->where('kategori','bonus')->where('is_import',1)->get();
@@ -73,6 +73,10 @@ class BonusController extends Controller
      */
     public function store(Request $request)
     {
+        // Need permission
+        if (!auth()->user()->can('penghasilan - import - bonus - import')) {
+            return view('roles.forbidden');
+        }
         $request->validate([
             'upload_csv' => 'required|mimes:xlsx,xls',
             'nip' => 'required',
@@ -120,7 +124,7 @@ class BonusController extends Controller
     public function detail(Request $request,$id, $tgl)
     {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - import - bonus - detail')) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -174,14 +178,22 @@ class BonusController extends Controller
     }
 
     public function lock(Request $request){
-        // return $request;
+        // Need permission
+        if (!auth()->user()->can('penghasilan - lock - bonus')) {
+            return view('roles.forbidden');
+        }
+        
         $repo = new PenghasilanTidakTeraturRepository;
         $repo->lockBonus($request->all());
         Alert::success('Berhasil lock tunjangan.');
         return redirect()->route('bonus.index');
     }
     public function unlock(Request $request){
-        // return $request;
+        // Need permission
+        if (!auth()->user()->can('penghasilan - unlock - bonus')) {
+            return view('roles.forbidden');
+        }
+
         $repo = new PenghasilanTidakTeraturRepository;
         $repo->unlockBonus($request->all());
         Alert::success('Berhasil unlock tunjangan.');
@@ -190,6 +202,10 @@ class BonusController extends Controller
 
     public function editTunjangan($idTunjangan, $tanggal)
     {
+        // Need permission
+        if (!auth()->user()->can('penghasilan - edit - bonus')) {
+            return view('roles.forbidden');
+        }
         $id = $idTunjangan;
         $repo = new PenghasilanTidakTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
@@ -201,6 +217,10 @@ class BonusController extends Controller
     }
     public function editTunjanganPost(Request $request)
     {
+        // Need permission
+        if (!auth()->user()->can('penghasilan - edit - bonus')) {
+            return view('roles.forbidden');
+        }
         $request->validate([
             'upload_csv' => 'required|mimes:xlsx,xls',
             'nip' => 'required',
