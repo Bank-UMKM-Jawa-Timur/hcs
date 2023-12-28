@@ -70,7 +70,6 @@
             font-family: 'Tinos', serif;
             font: 12pt;
         }
-
         * {
             box-sizing: border-box;
             -moz-box-sizing: border-box;

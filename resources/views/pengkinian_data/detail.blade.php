@@ -408,7 +408,7 @@
 
             <div class="row m-3">
                 <a href="{{ route('pengkinian_data.index') }}">
-                    <button type="button" class="btn btn-info">Kembali</button>
+                    <button type="button" class="is-btn is-primary">Kembali</button>
                 </a>
             </div>
         </form>

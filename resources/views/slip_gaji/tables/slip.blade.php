@@ -84,6 +84,10 @@
                     </tr>
                 @endforelse
             @endif
+        @else
+            <tr>
+                <td class="text-center" colspan="12">Data tidak tersedia.</td>
+            </tr>
         @endif
     </tbody>
     <tfoot>

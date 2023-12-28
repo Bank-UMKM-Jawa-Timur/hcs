@@ -412,7 +412,7 @@
                     <div class="row m-0 mt-2">
                         <label class="col-sm-2 mt-0">Total Potongan</label>
                         <div class="col-sm-10">
-                            <input type="text" disabled class="form-control" value="Rp. {{ number_format($total_potongan) }}"
+                            <input type="text" disabled class="form-control" value="Rp. {{ number_format($total_potongan, 0, ",", ".") }}"
                         </div>
                     </div>
                 @endif

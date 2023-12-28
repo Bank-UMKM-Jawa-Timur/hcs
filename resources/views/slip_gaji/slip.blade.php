@@ -1,6 +1,6 @@
 @extends('layouts.template')
 @include('vendor.select2')
-@include('payroll.scripts.slip')
+@include('slip_gaji.scripts.slip')
 @push('style')
     <style>
         table th {
@@ -22,13 +22,12 @@
 @endpush
 
 @section('content')
-<div class="d-lg-flex justify-content-between w-100 p-3">
-    <div class="card-header">
-        <h5 class="card-title">Gaji</h5>
-        <p class="card-title">Gaji > <a href="{{route('slip.index')}}">Slip Gaji</a></p>
+    <div class="d-lg-flex justify-content-between w-100 p-3">
+        <div class="card-header">
+            <h5 class="card-title">Gaji</h5>
+            <p class="card-title">Gaji > <a href="{{route('slip.index')}}">Slip Gaji</a></p>
+        </div>
     </div>
-</div>
-
     <div class="card-body">
         <div class="col">
             <div class="row">
@@ -36,18 +35,20 @@
                     <div class="table-responsive overflow-hidden content-center">
                         <form id="form" method="get">
                             <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="">Karyawan</label>
-                                        <select name="nip" id="nip"
-                                            class="form-control select2">
-                                            <option value="0">-- Pilih Semua Karyawan --</option>
-                                        </select>
-                                        @error('nip')
-                                            <small class="text-danger">{{ucfirst($message)}}</small>
-                                        @enderror
+                                @if (!auth()->user()->hasRole('user'))
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="">Karyawan</label>
+                                            <select name="nip" id="nip"
+                                                class="form-control select2">
+                                                <option value="0">-- Pilih Semua Karyawan --</option>
+                                            </select>
+                                            @error('nip')
+                                                <small class="text-danger">{{ucfirst($message)}}</small>
+                                            @enderror
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="">Tahun<span class="text-danger">*</span></label>
@@ -72,7 +73,7 @@
                             <div class="d-flex justify-content-end my-3">
                                 <input type="submit" value="Tampilkan" class="is-btn is-primary">
                             </div>
-                            @if (\Request::has('nip') && \Request::has('tahun'))
+                            @if ((!auth()->user()->hasRole('user') && \Request::has('nip') && \Request::has('tahun')) || (auth()->user()->hasRole('user') && \Request::has('tahun')))
                                 <h5>Slip Gaji {{$karyawan->nama_karyawan}} Tahun {{\Request::get('tahun')}}.</h5>
                                 <div class="table-responsive">
                                     @include('slip_gaji.tables.slip', ['data' => $data])
