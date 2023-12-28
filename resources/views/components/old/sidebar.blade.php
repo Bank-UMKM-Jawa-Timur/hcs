@@ -19,7 +19,7 @@
                         <a class="nav-link" href="{{ route('home') }}" style="font-weight: bolder">
                             <div class="d-flex justify-content-start">
                                 <span class="icon">
-                                    <iconify-icon icon="tdesign:dashboard-1" class="icon"></iconify-icon>                                                                     
+                                    <iconify-icon icon="tdesign:dashboard-1" class="icon"></iconify-icon>
                                 </span>
                                 <span> Dashboard</span>
                             </div>
