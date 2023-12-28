@@ -12,7 +12,7 @@ class LaporanMutasiController extends Controller
 {
     public function index(Request $request)
     {
-        if (!auth()->user()->hasRole(['admin'])) {
+        if (!auth()->user()->can('laporan - laporan pergerakan karir - laporan mutasi')) {
             return view('roles.forbidden');
         }
         $data = null;

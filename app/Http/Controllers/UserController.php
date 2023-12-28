@@ -27,9 +27,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $karyawan = KaryawanModel::where('nip', '01474')->first();
-        $role = $karyawan->getRoleNames();
-        // return $role;s
+        if (!auth()->user()->can('setting - master - user')) {
+            return view('roles.forbidden');
+        }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -49,6 +49,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('setting - master - user - create user')) {
+            return view('roles.forbidden');
+        }
         $karyawan = $this->param->getDataKaryawan();
         $role = $this->param->getRole();
         return view('user.create', [
@@ -65,11 +68,15 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'username' => 'unique:users,username|required',
-        ], 
-        [
-            'username.unique' => 'User sudah terdaftar.',
+        if (!auth()->user()->can('setting - master - user - create user')) {
+            return view('roles.forbidden');
+        }
+        $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
+        User::create([
+            'name' => $nama->nama_karyawan,
+            'username' => $nama->nama_karyawan,
+            'email' => $request->username,
+            'password' =>  Hash::make($request->password),
         ]);
 
         try {
@@ -116,6 +123,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        if (!auth()->user()->can('setting - master - user - edit user')) {
+            return view('roles.forbidden');
+        }
         $data = $this->param->dataByid($id);
         $karyawan = $this->param->getDataKaryawan();
         $role = $this->param->getRole();
@@ -135,7 +145,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $request;
+        if (!auth()->user()->can('setting - master - user - edit user')) {
+            return view('roles.forbidden');
+        }
         $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
         User::where('id', $id)->update([
             'name' => $nama->nama_karyawan,

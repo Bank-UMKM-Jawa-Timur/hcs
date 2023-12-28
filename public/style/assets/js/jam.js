@@ -17,7 +17,9 @@ function showTime(){
     var hariarray=new Array("Minggu,","Senin,","Selasa,","Rabu,","Kamis,","Jum'at,","Sabtu,");
     var bulanarray=new Array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember");
 
-    document.getElementById("DisplayClock").innerHTML = tanggal+" "+bulanarray[bulan]+" "+tahun+" | Jam " + time;
+    if (document.getElementById("DisplayClock")) {
+        document.getElementById("DisplayClock").innerHTML = tanggal+" "+bulanarray[bulan]+" "+tahun+" | Jam " + time;
+    }
     setTimeout(showTime, 1000);
 }
 

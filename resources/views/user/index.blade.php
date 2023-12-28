@@ -8,12 +8,14 @@
 
     <div class="card-body">
         <div class="col">
-            <div class="row">
-                <a href="{{ route('user.create') }}">
-                    <button class="is-btn is-primary">Tambah Data User</button>
-                </a>
-            </div>
-            <div class="row">
+            @can('setting - master - user - create user')
+                <div class="row">
+                    <a href="{{ route('user.create') }}">
+                        <button class="is-btn is-primary">Tambah Data User</button>
+                    </a>
+                </div>
+            @endcan
+            <div class="row"> 
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <div class="d-flex justify-content-between mb-4">
@@ -68,13 +70,14 @@
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->email }}</td>
-                                        <td class="d-flex">
-                                            <a class="is-btn is-warning m-1" href="{{ route('user.edit', $item->id) }}">
-                                                Edit
-                                            </a>
-                                            <a class="is-btn is-primary m-1" href="{{ route('resetPass', $item->id) }}">
-                                                Reset Pass
-                                            </a>
+                                        <td>
+                                            @can('setting - master - user - edit user')
+                                                <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
+                                                    Edit
+                                                </a>
+                                            @else
+                                                -
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
