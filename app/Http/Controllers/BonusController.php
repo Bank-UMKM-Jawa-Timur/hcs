@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\KaryawanExport;
 use App\Models\KaryawanModel;
+use App\Models\PPHModel;
 use App\Models\TunjanganModel;
 use Carbon\Carbon;
 use Exception;
@@ -102,6 +103,21 @@ class BonusController extends Controller
 
             }
             \DB::commit();
+            if(Carbon::parse($request->get('tanggal'))->format('m') == 12 && Carbon::now()->format('d') > 25){
+                \DB::beginTransaction();
+                $gajiPerBulanController = new GajiPerBulanController;
+                foreach($data_nip as $key => $item){
+                    $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($request->get('tanggal'))->format('Y'), Carbon::parse($request->get('tanggal'))->format('m'));
+                    PPHModel::where('nip', $request->nip)
+                        ->where('tahun', Carbon::parse($request->get('tanggal'))->format('Y'))
+                        ->where('bulan', 12)
+                        ->update([
+                            'total_pph' => $pphTerutang,
+                            'updated_at' => null
+                        ]);
+                }
+                \DB::commit();
+            }
 
             Alert::success('Berhasil', 'Berhasil menambahkan bonus.');
             return redirect()->route('bonus.index');
