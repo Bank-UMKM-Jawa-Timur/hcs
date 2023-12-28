@@ -104,7 +104,7 @@
                         $iuran_ik = $item->potonganGaji ? number_format($item->potonganGaji->iuran_ik, 0, ',', '.') : 0;
                         $total_potongan = number_format($item->total_potongan, 0, ',', '.');
                         $total_diterima = $item->total_yg_diterima ? $item->total_yg_diterima : 0;
-    
+
                         // count total
                         $footer_total_gaji += str_replace('.', '', $total_gaji);
                         $footer_total_potongan += str_replace('.', '', $total_potongan);

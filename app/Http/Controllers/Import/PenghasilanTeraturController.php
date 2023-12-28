@@ -28,7 +28,7 @@ class PenghasilanTeraturController extends Controller
     public function index(Request $request)
     {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan teratur')) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -49,7 +49,7 @@ class PenghasilanTeraturController extends Controller
     public function create()
     {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan teratur - import')) {
             return view('roles.forbidden');
         }
         $penghasilan = TunjanganModel::where('kategori', 'teratur')->where('is_import', 1)->get();
@@ -115,6 +115,9 @@ class PenghasilanTeraturController extends Controller
     public function store(Request $request)
     {
         // Need permission
+        if (!auth()->user()->can('penghasilan - import - penghasilan teratur - import')) {
+            return view('roles.forbidden');
+        }
         DB::beginTransaction();
         try {
             $tanggalVal = GajiPerBulanModel::where('bulan', Carbon::now()->format('m'))
@@ -137,7 +140,6 @@ class PenghasilanTeraturController extends Controller
             $tanggal = date('Y-m-d', strtotime(date('Y') . '-' . $bulan . '-' . date('d')));
             $tahun = date("Y", strtotime($tanggal));
 
-            // return ['bulan' => $bulanReq, 'tanggal' => $tanggal];
 
             if ($nip) {
                 if (is_array($nip)) {
@@ -216,7 +218,7 @@ class PenghasilanTeraturController extends Controller
         return redirect()->route('penghasilan.import-penghasilan-teratur.index');
     }
 
-    public function editTUnjangan(Request $request){
+    public function editTunjangan(Request $request){
         $id = $request->get('idTunjangan');
         $tanggal = $request->get('createdAt');
         $bulan = $request->get('bulan');

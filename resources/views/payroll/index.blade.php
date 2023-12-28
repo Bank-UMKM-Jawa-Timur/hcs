@@ -8,13 +8,12 @@
 @endpush
 
 @section('content')
-<div class="d-lg-flex justify-content-between w-100 p-3">
-    <div class="card-header">
-        <h5 class="card-title">Payroll</h5>
-        <p class="card-title"><a href="{{route('payroll.index')}}">Payroll</a></p>
+    <div class="d-lg-flex justify-content-between w-100 p-3">
+        <div class="card-header">
+            <h5 class="card-title">Payroll</h5>
+            <p class="card-title"><a href="">Penghasilan </a> > Payroll</p>
+        </div>
     </div>
-</div>
-
     <div class="card-body">
         <div class="col">
             <div class="row">

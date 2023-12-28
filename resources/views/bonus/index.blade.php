@@ -4,10 +4,10 @@
 <div class="d-lg-flex justify-content-between w-100 p-3">
     <div class="card-header">
         <h5 class="card-title">Bonus</h5>
-        <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Penghasilan </a> >Bonus</p>
-        @if (auth()->user()->hasRole(['kepegawaian']))
+        <p class="card-title"><a href="/">Penghasilan </a> > Bonus</p>
+        @can('penghasilan - import - bonus - import')
             <a href="{{ route('bonus.create') }}" class="btn is-btn is-primary">Import Bonus</a>
-        @endif
+        @endcan
     </div>
 </div>
 

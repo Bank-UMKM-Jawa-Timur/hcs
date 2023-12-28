@@ -60,7 +60,7 @@ class GajiPerBulanController extends Controller
 
     public function index()
     {
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - proses penghasilan')) {
             return view('roles.forbidden');
         }
         // Need permission
@@ -90,6 +90,10 @@ class GajiPerBulanController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - pajak penghasilan')) {
+            return view('roles.forbidden');
+        }
+
         $bulan = $request->bulan;
         $tahun = $request->tahun;
         $cabang = array();

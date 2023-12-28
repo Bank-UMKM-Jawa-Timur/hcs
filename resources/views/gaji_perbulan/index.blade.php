@@ -4,14 +4,14 @@
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title font-weight-bold">Proses Gaji Bulanan</h5>
-            <p class="card-title"><a href="">Penghasilan </a> > <a href="{{ route('gaji_perbulan.index') }}">Proses Gaji Bulanan</a></p>
+            <p class="card-title"><a href="">Penghasilan </a> > Proses Gaji Bulanan</p>
         </div>
     </div>
     @php
         $already_selected_value = date('Y');
         $earliest_year = 2022;
     @endphp
-    @if (auth()->user()->hasRole(['kepegawaian']))
+    @can('penghasilan - proses penghasilan')
         <div class="card-body">
             <div class="alert alert-info mx-3" role="alert">
                 Harap cek kembali data tunjangan sebelum melakukan proses tunjangan.
@@ -60,7 +60,7 @@
             </form>
             <hr>
         </div>
-    @endif
+    @endcan
 
     <div class="card-body ">
         <div class="card shadow">
