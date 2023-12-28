@@ -445,7 +445,7 @@
                                                 $akhir = $sekarang + 5;
                                             @endphp
                                             @for($i=$awal;$i<=$akhir;$i++)
-                                                <option value="{{$i}}">{{$i}}</option>
+                                                <option value="{{$i}}" @if($pot->tahun == $i) selected @endif>{{$i}}</option>
                                             @endfor
                                         </select>
                                     </div>
@@ -456,44 +456,43 @@
                                         <select name="potongan_bulan[]" id="potongan_bulan"
                                             class="form-control">
                                             <option value="0">-- Pilih bulan --</option>
-                                            <option value="1">Januari</option>
-                                            <option value="2">Februari</option>
-                                            <option value="3">Maret</option>
-                                            <option value="4">April</option>
-                                            <option value="5">Mei</option>
-                                            <option value="6">Juni</option>
-                                            <option value="7">Juli</option>
-                                            <option value="8">Agustus</option>
-                                            <option value="9">September</option>
-                                            <option value="10">Oktober</option>
-                                            <option value="11">November</option>
-                                            <option value="12">Desember</option>
+                                            <option value="1" @if($pot->bulan == '1') selected @endif>Januari</option>
+                                            <option value="2" @if($pot->bulan == '2') selected @endif>Februari</option>
+                                            <option value="3" @if($pot->bulan == '3') selected @endif>Maret</option>
+                                            <option value="4" @if($pot->bulan == '4') selected @endif>April</option>
+                                            <option value="5" @if($pot->bulan == '5') selected @endif>Mei</option>
+                                            <option value="6" @if($pot->bulan == '6') selected @endif>Juni</option>
+                                            <option value="7" @if($pot->bulan == '7') selected @endif>Juli</option>
+                                            <option value="8" @if($pot->bulan == '8') selected @endif>Agustus</option>
+                                            <option value="9" @if($pot->bulan == '9') selected @endif>September</option>
+                                            <option value="10" @if($pot->bulan == '10') selected @endif>Oktober</option>
+                                            <option value="11" @if($pot->bulan == '11') selected @endif>November</option>
+                                            <option value="12" @if($pot->bulan == '12') selected @endif>Desember</option>
                                         </select>
                                     </div>
                                 </div>
-                                <input type="hidden" name="id_pot[]" id="id_pot" value="">
                                 <div class="col col-md-4 col-sm-6">
                                     <div class="form-group">
                                         <label for="is_nama">Kredit Koperasi</label>
-                                        <input type="number" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi[]" class="form-control" value="">
+                                        <input type="number" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi[]" class="form-control" value="{{$pot->kredit_koperasi}}">
                                     </div>
                                 </div>
                                 <div class="col col-md-3 col-sm-6">
                                     <div class="form-group">
                                         <label for="is_nama">Iuran Koperasi</label>
-                                        <input type="number" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi[]" class="form-control" value="">
+                                        <input type="number" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi[]" class="form-control" value="{{$pot->iuran_koperasi}}">
                                     </div>
                                 </div>
                                 <div class="col col-md-3 col-sm-6">
                                     <div class="form-group">
                                         <label for="is_nama">Kredit Pegawai</label>
-                                        <input type="number" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai[]" class="form-control" value="">
+                                        <input type="number" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai[]" class="form-control" value="{{$pot->kredit_pegawai}}">
                                     </div>
                                 </div>
                                 <div class="col col-md-3 col-sm-6">
                                     <div class="form-group">
                                         <label for="is_nama">Iuran IK</label>
-                                        <input type="number" id="potongan_iuran_ik" name="potongan_iuran_ik[]" class="form-control" value="">
+                                        <input type="number" id="potongan_iuran_ik" name="potongan_iuran_ik[]" class="form-control" value="{{$pot->iuran_ik}}">
                                     </div>
                                 </div>
                                 <div class="col col-md-1">
@@ -507,90 +506,9 @@
                                     </button>
                                 </div>
                             </div>
-                            @endif
-                            @foreach ($data->potongan as $key => $pot)
-                                @if ($key > 0)
-                                    <hr class="mx-4">
-                                @endif
-                                <div class="row m-0 pb-3 col-md-12" id="row_potongan">
-                                    <input type="hidden" name="id_pot[]" id="id_pot" value="{{$pot->id}}">
-                                    <div class="col col-md-4 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="is">Tahun</label>
-                                            <select name="potongan_tahun[]" id="potongan_tahun"
-                                                class="form-control">
-                                                <option value="0">-- Pilih tahun --</option>
-                                                @php
-                                                    $sekarang = date('Y');
-                                                    $awal = $sekarang - 5;
-                                                    $akhir = $sekarang + 5;
-                                                @endphp
-                                                @for($i=$awal;$i<=$akhir;$i++)
-                                                    <option value="{{$i}}" @if($pot->tahun == $i) selected @endif>{{$i}}</option>
-                                                @endfor
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col col-md-4 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="is">Bulan</label>
-                                            <select name="potongan_bulan[]" id="potongan_bulan"
-                                                class="form-control">
-                                                <option value="0">-- Pilih bulan --</option>
-                                                <option value="1" @if($pot->bulan == '1') selected @endif>Januari</option>
-                                                <option value="2" @if($pot->bulan == '2') selected @endif>Februari</option>
-                                                <option value="3" @if($pot->bulan == '3') selected @endif>Maret</option>
-                                                <option value="4" @if($pot->bulan == '4') selected @endif>April</option>
-                                                <option value="5" @if($pot->bulan == '5') selected @endif>Mei</option>
-                                                <option value="6" @if($pot->bulan == '6') selected @endif>Juni</option>
-                                                <option value="7" @if($pot->bulan == '7') selected @endif>Juli</option>
-                                                <option value="8" @if($pot->bulan == '8') selected @endif>Agustus</option>
-                                                <option value="9" @if($pot->bulan == '9') selected @endif>September</option>
-                                                <option value="10" @if($pot->bulan == '10') selected @endif>Oktober</option>
-                                                <option value="11" @if($pot->bulan == '11') selected @endif>November</option>
-                                                <option value="12" @if($pot->bulan == '12') selected @endif>Desember</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col col-md-4 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="is_nama">Kredit Koperasi</label>
-                                            <input type="number" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi[]" class="form-control" value="{{$pot->kredit_koperasi}}">
-                                        </div>
-                                    </div>
-                                    <div class="col col-md-3 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="is_nama">Iuran Koperasi</label>
-                                            <input type="number" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi[]" class="form-control" value="{{$pot->iuran_koperasi}}">
-                                        </div>
-                                    </div>
-                                    <div class="col col-md-3 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="is_nama">Kredit Pegawai</label>
-                                            <input type="number" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai[]" class="form-control" value="{{$pot->kredit_pegawai}}">
-                                        </div>
-                                    </div>
-                                    <div class="col col-md-3 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="is_nama">Iuran IK</label>
-                                            <input type="number" id="potongan_iuran_ik" name="potongan_iuran_ik[]" class="form-control" value="{{$pot->iuran_ik}}">
-                                        </div>
-                                    </div>
-                                    <div class="col col-md-1">
-                                        <button class="btn btn-info mt-3" type="button" id="btn-add-potongan">
-                                            <i class="bi-plus-lg"></i>
-                                        </button>
-                                    </div>
-                                    <div class="col col-md-1">
-                                        <button class="btn btn-info mt-3" type="button" id="btn-delete-potongan">
-                                            <i class="bi-dash-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+                        @endforeach
                     </div>
-                @endcan
+                </div>
             </div>
 
             <div class="row m-3">
