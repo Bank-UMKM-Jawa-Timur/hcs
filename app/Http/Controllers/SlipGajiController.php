@@ -226,25 +226,42 @@ class SlipGajiController extends Controller
             $data[$i]['nama'] = $item->nama_karyawan;
 
             if($cek_data > 0){
-               $gaji = DB::table('gaji_per_bulan')
+                $gaji = DB::table('gaji_per_bulan')
                     ->where('nip', $item->nip)
                     ->where('tahun', $tahun)
                     ->where('bulan', $bulan)
                     ->first();
 
-                $data[$i]['gj_pokok'] = $gaji->gj_pokok;
-                $data[$i]['gj_penyesuaian'] = $gaji->gj_penyesuaian;
+                if ($gaji) {
+                    $data[$i]['gj_pokok'] = $gaji->gj_pokok;
+                    $data[$i]['gj_penyesuaian'] = $gaji->gj_penyesuaian;
 
-                $data[$i]['tunjangan'][0] = $gaji->tj_keluarga;
-                $data[$i]['tunjangan'][1] = $gaji->tj_teller;
-                $data[$i]['tunjangan'][2] = $gaji->tj_telepon;
-                $data[$i]['tunjangan'][3] = $gaji->tj_jabatan;
-                $data[$i]['tunjangan'][4] = $gaji->tj_perumahan;
-                $data[$i]['tunjangan'][5] = $gaji->tj_pelaksana;
-                $data[$i]['tunjangan'][6] = $gaji->tj_kemahalan;
-                $data[$i]['tunjangan'][7] = $gaji->tj_kesejahteraan;
+                    $data[$i]['tunjangan'][0] = $gaji->tj_keluarga;
+                    $data[$i]['tunjangan'][1] = $gaji->tj_teller;
+                    $data[$i]['tunjangan'][2] = $gaji->tj_telepon;
+                    $data[$i]['tunjangan'][3] = $gaji->tj_jabatan;
+                    $data[$i]['tunjangan'][4] = $gaji->tj_perumahan;
+                    $data[$i]['tunjangan'][5] = $gaji->tj_pelaksana;
+                    $data[$i]['tunjangan'][6] = $gaji->tj_kemahalan;
+                    $data[$i]['tunjangan'][7] = $gaji->tj_kesejahteraan;
 
-                $totalGaji = $gaji->gj_pokok + $gaji->gj_penyesuaian + array_sum($data[$i]['tunjangan']);
+                    $totalGaji = $gaji->gj_pokok + $gaji->gj_penyesuaian + array_sum($data[$i]['tunjangan']);
+                }
+                else {
+                    $data[$i]['gj_pokok'] = 0;
+                    $data[$i]['gj_penyesuaian'] = 0;
+
+                    $data[$i]['tunjangan'][0] = 0;
+                    $data[$i]['tunjangan'][1] = 0;
+                    $data[$i]['tunjangan'][2] = 0;
+                    $data[$i]['tunjangan'][3] = 0;
+                    $data[$i]['tunjangan'][4] = 0;
+                    $data[$i]['tunjangan'][5] = 0;
+                    $data[$i]['tunjangan'][6] = 0;
+                    $data[$i]['tunjangan'][7] = 0;
+
+                    $totalGaji = 0 + 0 + array_sum($data[$i]['tunjangan']);
+                }
             }
             else{
                 $data[$i]['gj_pokok'] = $item->gj_pokok;
@@ -311,6 +328,7 @@ class SlipGajiController extends Controller
                 // Comment by arsyad entitas terdapat pilihan untuk memilih cabang tertentu di kategori
                 ->get();
         }
+
         $data = $this->getLaporanGaji($karyawan, $kategori, $request);
         return view('slip_gaji.laporan_gaji', compact('data', 'kategori', 'request'));
     }
