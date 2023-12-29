@@ -6,6 +6,7 @@ use App\Exports\ExportBiayaDuka;
 use App\Exports\ExportBiayaKesehatan;
 use App\Exports\ExportBiayaTidakTeratur;
 use App\Imports\PenghasilanImport;
+use App\Models\GajiPerBulanModel;
 use App\Models\ImportPenghasilanTidakTeraturModel;
 use App\Models\PPHModel;
 use App\Models\TunjanganModel;
@@ -240,22 +241,22 @@ class PenghasilanTidakTeraturController extends Controller
                 $kesehatan = 0;
                 $jp_penambah = 0;
                 if($karyawan->tanggal_penonaktifan == null){
-                    $jkk = round(($persen_jkk / 100) * $item);
-                    $jht = round(($persen_jht / 100) * $item);
-                    $jkm = round(($persen_jkm / 100) * $item);
-                    $jp_penambah = round(($persen_jp_penambah / 100) * $item);
+                    $jkk = ($persen_jkk / 100) * $item;
+                    $jht = ($persen_jht / 100) * $item;
+                    $jkm = ($persen_jkm / 100) * $item;
+                    $jp_penambah = ($persen_jp_penambah / 100) * $item;
                 }
 
                 if($karyawan->jkn != null){
                     if($item > $batas_atas){
-                        $kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                        $kesehatan = ($batas_atas * ($persen_kesehatan / 100));
                     } else if($item < $batas_bawah){
-                        $kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                        $kesehatan = ($batas_bawah * ($persen_kesehatan / 100));
                     } else{
-                        $kesehatan = round($item * ($persen_kesehatan / 100));
+                        $kesehatan = ($item * ($persen_kesehatan / 100));
                     }
                 }
-                array_push($jamsostek, ($jkk + $jht + $jkm + $kesehatan + $jp_penambah));
+                array_push($jamsostek, round($jkk + $jht + $jkm + $kesehatan + $jp_penambah));
             } else {
                 array_push($jamsostek, 0);
             }
@@ -301,7 +302,7 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function import() {
-        if (!auth()->user()->hasRole(['kepegawaian'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
             return view('roles.forbidden');
         }
         return view('penghasilan.import');
@@ -310,7 +311,7 @@ class PenghasilanTidakTeraturController extends Controller
     public function insertPenghasilan(Request $request) {
         try{
             DB::beginTransaction();
-            $bulan = date('m', strtotime($request->tanggal));
+            $bulan = intval(date('m', strtotime($request->tanggal)));
             $tahun = date('Y', strtotime($request->tanggal));
 
             DB::table('penghasilan_tidak_teratur')
@@ -323,12 +324,27 @@ class PenghasilanTidakTeraturController extends Controller
                     'keterangan' => $request->keterangan,
                     'created_at' => $request->tanggal
                 ]);
-
             DB::commit();
+            
+            if($bulan == 12  && Carbon::now()->format('d') > 25){
+                DB::beginTransaction();
+                $gajiPerBulanController = new GajiPerBulanController;
+                $pphTerutang = $gajiPerBulanController->storePPHDesember($request->nip, $tahun, $bulan);
+                $test = PPHModel::where('nip', $request->nip)
+                    ->where('tahun', $tahun)
+                    ->where('bulan', 12)
+                    ->update([
+                        'total_pph' => $pphTerutang,
+                        'updated_at' => null
+                    ]);
+
+                DB::commit();
+            }
             Alert::success('Berhasil', 'Berhasil menambahkan data.');
             return redirect()->route('penghasilan-tidak-teratur.index');
         } catch(Exception $e){
             DB::rollBack();
+            return $e;
             Alert::error('Gagal', 'Terjadi kesalahan.'.$e->getMessage());
             return redirect()->back();
         } catch(QueryException $e){
@@ -345,7 +361,7 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - pajak penghasilan')) {
             return view('roles.forbidden');
         }
         return view('penghasilan.index');
@@ -353,7 +369,7 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function lists(Request $request)
     {
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur')) {
             return view('roles.forbidden');
         }
 
@@ -373,7 +389,7 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->hasRole(['kepegawaian'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
             return view('roles.forbidden');
         }
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
@@ -383,6 +399,9 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function createTidakTeratur()
     {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
+            return view('roles.forbidden');
+        }
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
         return view('penghasilan.add-input-tidak-teratur', compact('data'));
     }
@@ -395,6 +414,9 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
+            return view('roles.forbidden');
+        }
         $request->validate([
             'tanggal' => 'required',
             'nip' => 'required',
@@ -404,6 +426,15 @@ class PenghasilanTidakTeraturController extends Controller
         ]);
         DB::beginTransaction();
         try{
+            $tanggalVal = GajiPerBulanModel::where('bulan', Carbon::parse($request->get('tanggal'))->format('m'))
+                ->where('tahun', Carbon::parse($request->get('tanggal'))->format('Y'))
+                ->first();
+            if($tanggalVal != null){
+                if(Carbon::parse($tanggalVal->created_at) > Carbon::parse($request->get('tanggal')) && Carbon::parse($request->get('tanggal'))->format('d') <= 25 && Carbon::parse($request->get('tanggal'))->format('m') == Carbon::parse($tanggalVal->created_at)->format('m')){
+                    Alert::error('Terjadi keselahan', 'Proses import tidak dapat dilakukan karena gaji bulan ini telah diproses.');
+                    return redirect()->back();
+                }
+            }
             $nip = explode(',', $request->get('nip'));
             $nominal = explode(',', $request->get('nominal'));
             $keterangan = [];
@@ -432,11 +463,26 @@ class PenghasilanTidakTeraturController extends Controller
             ImportPenghasilanTidakTeraturModel::insert($inserted);
             DB::commit();
 
+            if(Carbon::parse($request->get('tanggal'))->format('m') == 12 && Carbon::now()->format('d') > 25){
+                $gajiPerBulanController = new GajiPerBulanController;
+                foreach($nip as $key => $item){
+                    DB::beginTransaction();
+                    $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($request->get('tanggal'))->format('Y'), Carbon::parse($request->get('tanggal'))->format('m'));
+                    PPHModel::where('nip', $request->nip)
+                        ->where('tahun', Carbon::parse($request->get('tanggal'))->format('Y'))
+                        ->where('bulan', 12)
+                        ->update([
+                            'total_pph' => $pphTerutang,
+                            'updated_at' => null
+                        ]);
+                    DB::commit();
+                }
+            }
+
             Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan');
             return redirect()->route('penghasilan-tidak-teratur.index');
         } catch(Exception $e){
             DB::rollBack();
-            dd($e);
             Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('pajak_penghasilan.create');
         } catch(QueryException $e){
@@ -454,10 +500,10 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function show(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - detail')) {
+            return view('roles.forbidden');
+        }
         try{
-            if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
-                return view('roles.forbidden');
-            }
             $idTunjangan = $request->get('idTunjangan');
             $tanggal = $request->get('tanggal');
             $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -513,21 +559,38 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function lock(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - lock - penghasilan tidak teratur')) {
+            return view('roles.forbidden');
+        }
         $repo = new PenghasilanTidakTeraturRepository;
-        $repo->lock($request->all());
+        $body = [
+            'id_tunjangan' => $request->get('id_tunjangan'),
+            'tanggal' => $request->get('tanggal'),
+        ];
+        $repo->lock($body);
         Alert::success('Berhasil lock tunjangan.');
         return redirect()->route('penghasilan-tidak-teratur.index');
     }
     public function unlock(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - unlock - penghasilan tidak teratur')) {
+            return view('roles.forbidden');
+        }
         $repo = new PenghasilanTidakTeraturRepository;
-        $repo->unlock($request->all());
+        $body = [
+            'id_tunjangan' => $request->get('id_tunjangan'),
+            'tanggal' => $request->get('tanggal'),
+        ];
+        $repo->unlock($body);
         Alert::success('Berhasil unlock tunjangan.');
         return redirect()->route('penghasilan-tidak-teratur.index');
     }
 
     public function editTunjangan($idTunjangan, $tanggal)
     {
+        if (!auth()->user()->can('penghasilan - edit - penghasilan tidak teratur')) {
+            return view('roles.forbidden');
+        }
         $id = $idTunjangan;
         $repo = new PenghasilanTidakTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
@@ -540,6 +603,9 @@ class PenghasilanTidakTeraturController extends Controller
 
     public function editTunjanganPost(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - edit - penghasilan tidak teratur')) {
+            return view('roles.forbidden');
+        }
         $request->validate([
             'tanggal' => 'required',
             'nip' => 'required',
@@ -597,7 +663,6 @@ class PenghasilanTidakTeraturController extends Controller
             return redirect()->route('pajak_penghasilan.create');
         }
     }
-
 
     function templateTidakTeratur() {
         $filename = Carbon::now()->format('his').'-penghasilan_tidak_teratur'.'.'.'xlsx';

@@ -6,7 +6,7 @@
     <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > Penonaktifan Karyawan</p>
   </div>
   <div class="card-header row mt-3 mr-8 pr-5">
-    @if (auth()->user()->hasRole(['hrd']))
+    @if (auth()->user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan'))
       <a class="mb-3" href="{{ route('penonaktifan.create') }}">
         <button class="is-btn is-primary">tambah penonaktifan</button>
       </a>

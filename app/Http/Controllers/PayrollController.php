@@ -5,11 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\KaryawanModel;
 use App\Repository\CabangRepository;
 use App\Repository\PayrollRepository;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -19,7 +15,7 @@ class PayrollController extends Controller
 
     public function index(Request $request) {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - payroll - list payroll')) {
             return view('roles.forbidden');
         }
         FacadesSession::forget('kategori');
@@ -84,72 +80,5 @@ class PayrollController extends Controller
             return redirect()->route('payroll.index');
         }
 
-    }
-
-    public function cetakSlip(Request $request){
-        $payrollRepository = new PayrollRepository;
-        $nip = $request->get('request_nip');
-        $month = $request->get('request_month');
-        $year = $request->get('request_year');
-        $data = $payrollRepository->getSlipCetak($nip, $month, $year);
-
-        $pdf = PDF::loadview('payroll.print.slip', [
-            'data' => $data
-        ]);
-        $fileName =  time() . '.' . 'pdf';
-        return $pdf->download($fileName);
-    }
-
-    function slipPDF() {
-        $kantor = FacadesSession::get('kantor');
-        $month = FacadesSession::get('month');
-        $year = FacadesSession::get('year');
-        $divisi = FacadesSession::get('divisi');
-        $sub_divisi = FacadesSession::get('sub_divisi');
-        $bagian = FacadesSession::get('bagian');
-        $nip = FacadesSession::get('nip');
-        $search = null;
-        $page = null;
-
-        $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, null, 'cetak');
-
-        return view('payroll.tables.slip-pdf', ['data' => $data]);
-
-    }
-
-    public function slip(Request $request) {
-        // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
-            return view('roles.forbidden');
-        }
-        FacadesSession::forget('year');
-        FacadesSession::forget('nip');
-        $this->validate($request, [
-            'nip' => 'not_in:0',
-            'tahun' => 'not_in:0'
-        ]);
-
-        $nip = $request->get('nip');
-        $year = $request->get('tahun');
-
-        FacadesSession::put('nip',$nip);
-        FacadesSession::put('year',$year);
-
-        // Retrieve cabang data
-        $cabangRepo = new CabangRepository;
-        $cabang = $cabangRepo->listCabang();
-
-        $data = $this->listSlipGaji($nip, $year, null);
-
-        $karyawan = KaryawanModel::where('nip', $nip)->first();
-
-        return view('payroll.slip', compact('data', 'cabang', 'karyawan'));
-    }
-
-    public function listSlipGaji($nip, $year, $cetak) {
-        $payrollRepository = new PayrollRepository;
-        $data = $payrollRepository->getSlip($nip, $year, $cetak);
-
-        return $data;
     }
 }

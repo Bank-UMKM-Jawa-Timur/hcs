@@ -14,18 +14,18 @@
         <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar"
             role="navigation">
             <ul class="nav flex-column sticky-top pl-2 mt-0">
-                @if (auth()->user()->can('dashboard'))
+                @can('dashboard')
                     <li style="margin-top: -15px" class="@active('home')">
                         <a class="nav-link" href="{{ route('home') }}" style="font-weight: bolder">
                             <div class="d-flex justify-content-start">
                                 <span class="icon">
-                                    <iconify-icon icon="tdesign:dashboard-1" class="icon"></iconify-icon>                                                                     
+                                    <iconify-icon icon="tdesign:dashboard-1" class="icon"></iconify-icon>
                                 </span>
                                 <span> Dashboard</span>
                             </div>
                         </a>
                     </li>
-                @endif
+                @endcan
                 {{-- Menu Manajemen Karyawan --}}
                 @can('manajemen karyawan')
                     <li
@@ -329,13 +329,13 @@
                             </a>
                             <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                                 @can('penghasilan - gaji - lampiran gaji')
-                                <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
+                                    <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
                                 @endcan
                                 @can('penghasilan - gaji - slip gaji')
-                                <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
+                                    <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
                                 @endcan
-                                @can('penghasilan - payroll - slip gaji')
-                                <a class="dropdown-item" href="{{ route('payroll.slip') }}">Slip Gaji</a>
+                                @can('penghasilan - gaji - slip gaji')
+                                    <a class="dropdown-item" href="{{ route('slip.index') }}">Slip Gaji</a>
                                 @endcan
                             </div>
                         </li>
@@ -559,6 +559,8 @@
                                     <p></p>
                                 </a>
                                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                                    @can('setting - master - user')
+                                    @endcan
                                     <a class="dropdown-item @active('role.index')"
                                         href="{{ route('user.index') }}">User</a>
                                     @can('setting - master - role')

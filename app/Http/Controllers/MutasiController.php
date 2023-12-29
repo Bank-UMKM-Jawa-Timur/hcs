@@ -62,12 +62,13 @@ class MutasiController extends Controller
     public function index(Request $request)
     {
         // Need permission
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data mutasi')) {
+            return view('roles.forbidden');
+        }
+
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $search = $request->get('q');
 
-        if (!auth()->user()->hasRole(['hrd','admin'])) {
-            return view('roles.forbidden');
-        }
         $data = DB::table('demosi_promosi_pangkat')
             ->where('keterangan', 'Mutasi')
             ->select(
@@ -136,7 +137,8 @@ class MutasiController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->hasRole(['hrd'])) {
+        // Need permission
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data mutasi - create mutasi')) {
             return view('roles.forbidden');
         }
         $data = DB::table('mst_karyawan')
@@ -160,6 +162,10 @@ class MutasiController extends Controller
      */
     public function store(MutasiRequest $request)
     {
+        // Need permission
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data mutasi - create mutasi')) {
+            return view('roles.forbidden');
+        }
         if($request->tunjangan != null){
             if(count($request->tunjangan) > 0){
                 foreach($request->tunjangan as $key => $item){

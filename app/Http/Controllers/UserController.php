@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\KaryawanModel;
+use App\Models\ModelHasRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Repository\UserRepository;
@@ -26,6 +27,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        if (!auth()->user()->can('setting - master - user')) {
+            return view('roles.forbidden');
+        }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -34,7 +38,7 @@ class UserController extends Controller
         $data = $this->param->getListUser($search, $limit, $page);
         return view('user.index', [
             'data' => $data,
-        ]    
+        ]
     );
     }
 
@@ -45,9 +49,14 @@ class UserController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('setting - master - user - create user')) {
+            return view('roles.forbidden');
+        }
         $karyawan = $this->param->getDataKaryawan();
+        $role = $this->param->getRole();
         return view('user.create', [
-            'karyawan' => $karyawan
+            'karyawan' => $karyawan,
+            'role' => $role
         ]);
     }
 
@@ -59,6 +68,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->can('setting - master - user - create user')) {
+            return view('roles.forbidden');
+        }
         $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
         User::create([
             'name' => $nama->nama_karyawan,
@@ -66,6 +78,28 @@ class UserController extends Controller
             'email' => $request->username,
             'password' =>  Hash::make($request->password),
         ]);
+
+        try {
+            $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
+
+            $dataUser = New User();
+            $dataUser->name = $karyawan->nama_karyawan;
+            $dataUser->username = $request->name;
+            $dataUser->email = $request->username;
+            $dataUser->password = Hash::make($request->password);
+            $dataUser->save();
+
+            $dataRole = New ModelHasRole();
+            $dataRole->role_id = $request->role;
+            $dataRole->model_type = 'App\Models\User';
+            $dataRole->model_id = $dataUser->id;
+            $dataRole->save();
+
+        } catch (\Throwable $th) {
+            Alert::error("User Sudah Terdaftar");
+            return redirect()->route('user.create');
+        }
+        
         Alert::success('Berhasil Menambahkan User.');
         return redirect()->route('user.index');
     }
@@ -89,11 +123,16 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        if (!auth()->user()->can('setting - master - user - edit user')) {
+            return view('roles.forbidden');
+        }
         $data = $this->param->dataByid($id);
         $karyawan = $this->param->getDataKaryawan();
+        $role = $this->param->getRole();
         return view('user.edit', [
             'data' => $data,
-            'karyawan' => $karyawan
+            'karyawan' => $karyawan,
+            'role' => $role
         ]);
     }
 
@@ -106,15 +145,37 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $request;  
+        if (!auth()->user()->can('setting - master - user - edit user')) {
+            return view('roles.forbidden');
+        }
         $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
         User::where('id', $id)->update([
             'name' => $nama->nama_karyawan,
             'username' => $nama->nama_karyawan,
             'email' => $request->username,
-            'password' =>  Hash::make($request->name),
         ]);
         Alert::success('Berhasil Mengubah User.');
+        return redirect()->route('user.index');
+    }
+
+    public function resetPass($id) {
+        $user = User::find($id);
+        return view('user.reset-password', compact('user'));
+    }
+
+    public function updatePass(Request $request, $id) {
+        $request->validate([
+            'password' => 'required|min:8',
+            'password_confirmation' => 'required|same:password',
+        ]);
+
+        $pass = Hash::make(Request()->password);
+
+        User::where('id', $id)->update([
+            'password' => $pass
+        ]);
+
+        Alert::success('Berhasil Mengubah Password.');
         return redirect()->route('user.index');
     }
 

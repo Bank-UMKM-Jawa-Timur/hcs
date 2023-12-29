@@ -39,53 +39,55 @@
     <div class="card-header">
         <div class="card-title">
             <h5 class="card-title font-weight-bold">Pajak Penghasilan</h5>
-            <p class="card-title"><a href="/">Dashboard </a> > <a href="{{ route('pajak_penghasilan.index') }}">Pajak Penghasilan </a></p>
+            <p class="card-title"><a href="/">Dashboard </a> > Pajak Penghasilan</p>
         </div>
     </div>
 </div>
 
 <div class="card-body">
-    <form action="{{ route('get-penghasilan') }}" method="post">
-        @csrf
-            <div class="row m-0">
+    @can('penghasilan - proses penghasilan')
+        <form action="{{ route('get-penghasilan') }}" method="post">
+            @csrf
+                <div class="row m-0">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="">Karyawan:</label>
+                            <select name="nip" id="nip" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label for="mode">Mode Lihat Data</label>
+                        <div class="form-group">
+                            <select name="mode" class="form-control">
+                                <option value="">--- Pilih Mode ---</option>
+                                <option value="1" {{ ($request->mode == 1) ? 'selected' : '' }}>Bukti Pembayaran Gaji Pajak</option>
+                                <option value="2" {{ ($request->mode == 2) ? 'selected' : '' }}>Detail Gaji Pajak</option>
+                            </select>
+                        </div>
+                    </div>
+                    @php
+                    $already_selected_value = date('y');
+                    $earliest_year = 2022;
+                    @endphp
+                    <div class="col-md-4">
+                        <label for="tahun">Tahun:</label>
+                        <div class="form-group">
+                            <select name="tahun" class="form-control">
+                                <option value="">--- Pilih Tahun ---</option>
+                                @foreach (range(date('Y'), $earliest_year) as $x)
+                                    <option value="{{ $x }}" @selected($request->tahun == $x)>{{ $x }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="">Karyawan:</label>
-                        <select name="nip" id="nip" class="form-control"></select>
-                    </div>
+                    <a href="penghasilan/gajipajak">
+                        <button class="is-btn is-primary" type="submit">Tampilkan</button>
+                    </a>
                 </div>
-                <div class="col-lg-4">
-                    <label for="mode">Mode Lihat Data</label>
-                    <div class="form-group">
-                        <select name="mode" class="form-control">
-                            <option value="">--- Pilih Mode ---</option>
-                            <option value="1" {{ ($request->mode == 1) ? 'selected' : '' }}>Bukti Pembayaran Gaji Pajak</option>
-                            <option value="2" {{ ($request->mode == 2) ? 'selected' : '' }}>Detail Gaji Pajak</option>
-                        </select>
-                    </div>
-                </div>
-                @php
-                $already_selected_value = date('y');
-                $earliest_year = 2022;
-                @endphp
-                <div class="col-md-4">
-                    <label for="tahun">Tahun:</label>
-                    <div class="form-group">
-                        <select name="tahun" class="form-control">
-                            <option value="">--- Pilih Tahun ---</option>
-                            @foreach (range(date('Y'), $earliest_year) as $x)
-                                <option value="{{ $x }}" @selected($request->tahun == $x)>{{ $x }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <a href="penghasilan/gajipajak">
-                    <button class="is-btn is-primary" type="submit">Tampilkan</button>
-                </a>
-            </div>
-    </form>
+        </form>
+    @endcan
     <div class="card ml-3 mr-3 mb-3 mt-4 shadow" id="reportPrinting">
         <div class="col-md-12">
             @php
@@ -367,7 +369,7 @@
 
                     $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
 
-                    $no19 = ceil(($no17 / 12) * $total_ket);
+                    $no19 = floor(($no17 / 12) * $total_ket);
                 @endphp
 
                 <div class="row m-0 ">

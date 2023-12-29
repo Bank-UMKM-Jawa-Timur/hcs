@@ -28,7 +28,7 @@ class PenghasilanTeraturController extends Controller
     public function index(Request $request)
     {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan teratur')) {
             return view('roles.forbidden');
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -49,7 +49,7 @@ class PenghasilanTeraturController extends Controller
     public function create()
     {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan teratur - import')) {
             return view('roles.forbidden');
         }
         $penghasilan = TunjanganModel::where('kategori', 'teratur')->where('is_import', 1)->get();
@@ -115,8 +115,21 @@ class PenghasilanTeraturController extends Controller
     public function store(Request $request)
     {
         // Need permission
+        if (!auth()->user()->can('penghasilan - import - penghasilan teratur - import')) {
+            return view('roles.forbidden');
+        }
         DB::beginTransaction();
         try {
+            $tanggalVal = GajiPerBulanModel::where('bulan', Carbon::now()->format('m'))
+                ->where('tahun', Carbon::now()->format('Y'))
+                ->first();
+
+            if($tanggalVal != null){
+                if(Carbon::now() > Carbon::parse($tanggalVal->created_at) && Carbon::now()->format('m') == Carbon::parse($tanggalVal->created_at)->format('m')){
+                    Alert::error('Terjadi keselahan', 'Proses import tidak dapat dilakukan karena gaji bulan ini telah diproses.');
+                    return redirect()->back();
+                }
+            }
             $id_tunjangan = $request->get('tunjangan');
             $nominal = explode(',', $request->get('nominal'));
             $nip = explode(',', $request->get('nip'));
@@ -127,7 +140,6 @@ class PenghasilanTeraturController extends Controller
             $tanggal = date('Y-m-d', strtotime(date('Y') . '-' . $bulan . '-' . date('d')));
             $tahun = date("Y", strtotime($tanggal));
 
-            // return ['bulan' => $bulanReq, 'tanggal' => $tanggal];
 
             if ($nip) {
                 if (is_array($nip)) {
@@ -187,7 +199,7 @@ class PenghasilanTeraturController extends Controller
     }
 
     public function lock(Request $request){
-        if (!auth()->user()->hasRole(['kepegawaian'])) {
+        if (!auth()->user()->can('penghasilan - lock - penghasilan teratur')) {
             return view('roles.forbidden');
         }
         $repo = new PenghasilanTeraturRepository;
@@ -197,7 +209,7 @@ class PenghasilanTeraturController extends Controller
     }
 
     public function unlock(Request $request){
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - unlock - penghasilan teratur')) {
             return view('roles.forbidden');
         }
         $repo = new PenghasilanTeraturRepository;
@@ -206,7 +218,7 @@ class PenghasilanTeraturController extends Controller
         return redirect()->route('penghasilan.import-penghasilan-teratur.index');
     }
 
-    public function editTUnjangan(Request $request){
+    public function editTunjangan(Request $request){
         $id = $request->get('idTunjangan');
         $tanggal = $request->get('createdAt');
         $bulan = $request->get('bulan');
@@ -309,7 +321,7 @@ class PenghasilanTeraturController extends Controller
     public function details($idTunjangan, $createdAt)
     {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - import - penghasilan teratur - detail')) {
             return view('roles.forbidden');
         }
         $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;

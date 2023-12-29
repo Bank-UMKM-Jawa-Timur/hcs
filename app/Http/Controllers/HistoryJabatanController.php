@@ -17,7 +17,7 @@ class HistoryJabatanController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->hasRole(['admin','hrd'])) {
+        if (!auth()->user()->can('histori - jabatan')) {
             return view('roles.forbidden');
         }
         return view('history.index');

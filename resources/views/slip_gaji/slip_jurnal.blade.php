@@ -480,91 +480,71 @@
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
-        $("#table").DataTable({
-
-        })
-        // $("#kantor").change(function(){
-        //     var value = $(this).val()
-        //     $("#cabang_col").empty()
-        //     if(value == 'cabang'){
-        //         $.ajax({
-        //             type: 'GET',
-        //             url: '/getcabang',
-        //             dataType: 'JSON',
-        //             success: (res) => {
-        //                 $('#cabang_col').append(`
-        //                     <div class="form-group">
-        //                         <label for="Cabang">Cabang</label>
-        //                         <select name="cabang" id="cabang" class="form-control">
-        //                             <option value="">--- Pilih Cabang ---</option>
-        //                         </select>
-        //                     </div>
-        //                 `);
-
-        //                 $.each(res[0], function(i, item){
-        //                     $("#cabang").append(`
-        //                         <option value="`+ item.kd_cabang +`">`+ item.kd_cabang +` - `+ item.nama_cabang +`</option>
-        //                     `)
-        //                 })
-        //             }
-        //         });
-        //     }
-        // })
+        $("#table").DataTable({})
 
         function printReport()
         {
             var prtContent = document.getElementById("reportPrinting");
-            var mywindow = window.open();
+            var mywindow = window;
+            var content = `
+                <html>
+                    <head>
+                        <title></title>
+                        <link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />
+                        <link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />
+                        <link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />
+                        <style> 
+                            .table-responsive {
+                                -ms-overflow-style: none; 
+                                scrollbar-width: none; 
+                            } 
+            
+                            .table-responsive::-webkit-scrollbar { 
+                                overflow-y: hidden; 
+                                overflow-x: scroll; 
+                            } 
+            
+                            #printPageButton { 
+                                display: none; 
+                            } 
+            
+                            .container {
+                                display: flex;
+                                align-items: left;
+                                justify-content: left;
+                                margin-top: 20px;
+                                margin-bottom: -85px;
+                                margin-left: -20px;
+                            }
+            
+                            .image {
+                                max-width: 60px; 
+                                max-height: 60px;
+                            }
+            
+                            .text {
+                                margin-top: 10px;
+                                font-weight: bold;
+                                padding-left: 12px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        ${prtContent.innerHTML}
+                    </body>
+                </html>`;
 
-            mywindow.document.write('<html><head><title></title>');
-            mywindow.document.write('<link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />');
-            mywindow.document.write('<link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />');
-            mywindow.document.write('<link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />');
-            mywindow.document.write(`<style> 
-                .table-responsive {
-                    -ms-overflow-style: none; 
-                    scrollbar-width: none; 
-                } 
-
-                .table-responsive::-webkit-scrollbar { 
-                    overflow-y: hidden; 
-                    overflow-x: scroll; 
-                } 
-
-                #printPageButton { 
-                    display: none; 
-                } 
-
-                .container {
-                    display: flex;
-                    align-items: left;
-                    justify-content: left;
-                    margin-top: 20px;
-                    margin-bottom: -85px;
-                    margin-left: -20px;
-                }
-
-                .image {
-                    max-width: 60px; 
-                    max-height: 60px;
-                }
-
-                .text {
-                    margin-top: 10px;
-                    font-weight: bold;
-                    padding-left: 12px;
-                }
-                </style>`);
-            mywindow.document.write('</head><body >');
-            mywindow.document.write(prtContent.innerHTML);
-            mywindow.document.write('</body></html>');
-
+            mywindow.document.write(content)
             setTimeout(function () {
-            mywindow.print();
-            mywindow.close();
-            }, 1000)
-            return true;
-
+                mywindow.print();
+            }, 1000);
+            
+            mywindow.onafterprint = function(){
+                setTimeout(function () {
+                    mywindow.close();
+                    location.reload()
+                }, 1000)
+            }
             return true;
         }
     </script>

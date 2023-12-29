@@ -7,7 +7,7 @@
         <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('role.index') }}">Roles</p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5">
-        @if(auth()->user()->hasRole(['admin']))
+        @if(auth()->user()->can('setting - master - role - create role'))
         <a class="mb-3" href="{{ route('role.create') }}">
             <button class="is-btn is-primary">tambah role</button>
         </a>
@@ -77,17 +77,17 @@
                                             <td style="min-width: 130px">
                                                 <div class="container">
                                                     <div class="row">
-                                                        @if(auth()->user()->hasRole(['admin']))
+                                                        @if(auth()->user()->can('setting - master - role - edit role'))
                                                         <a href="{{ route('role.edit', $item_roles->id) }}" class="btn btn-outline-warning p-1 mr-2">
                                                             Edit
                                                         </a>
                                                         @endif
-                                                        @if(auth()->user()->hasRole(['admin']))
+                                                        @if(auth()->user()->can('setting - master - role - detail role'))
                                                         <a href="{{ route('role.show', $item_roles->id) }}" class="btn btn-outline-info p-1 mr-2">
                                                             Detail
                                                         </a>
                                                         @endif
-                                                        @if(auth()->user()->hasRole(['admin']))
+                                                        @if(auth()->user()->can('setting - master - role - delete role'))
                                                         <a href="javascript:void(0)" class="btn btn-outline-danger p-1" data-toggle="modal" data-target="#confirmHapusModal{{$item_roles->id}}">
                                                                 Hapus
                                                         </a>

@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Imports\ImportPotonganGaji;
+use App\Models\KaryawanModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Session as FacadesSession;
+use App\Repository\CabangRepository;
+use App\Repository\SlipGajiRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SlipGajiController extends Controller
 {
@@ -17,7 +21,7 @@ class SlipGajiController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - gaji - slip gaji - rincian')) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.laporan_gaji', ['data' => null, 'kategori' => null, 'request' => null]);
@@ -25,7 +29,7 @@ class SlipGajiController extends Controller
 
     public function slipJurnalIndex()
     {
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.slip_jurnal', ['data' => null, 'kategori' => null, 'request' => null]);
@@ -115,7 +119,7 @@ class SlipGajiController extends Controller
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;
                 $data[$i]['potongan'][4] = $pengurang->kredit_pegawai ?? 0;
                 $data[$i]['potongan'][5] = $pengurang->iuran_ik ?? 0;
-    
+
                 $value[0] += $totalGaji + array_sum($data[$i]['potongan']);
                 $value[1] += 0;
                 $value[2] += $totalGaji;
@@ -162,29 +166,26 @@ class SlipGajiController extends Controller
 
     public function SlipJurnal(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
+            return view('roles.forbidden');
+        }
         $kantor = $request->kantor;
         $kategori = $request->kategori;
 
-        // if($kantor == 'pusat'){
-            $cabang = DB::table('mst_cabang')
-                ->select('kd_cabang')
-                ->get();
-            $cbg = [];
-            foreach($cabang as $i){
-                array_push($cbg, $i->kd_cabang);
-            }
-            $karyawan = DB::table('mst_karyawan')
-                ->whereNotIn('kd_entitas', $cbg)
-                ->orWhere('kd_entitas', null)
-                ->get();
-        // } else{
-        //     $karyawan = DB::table('mst_karyawan')
-        //         ->where('kd_entitas', $request->cabang)
-        //         ->get();
-        // }
+        $cabang = DB::table('mst_cabang')
+            ->select('kd_cabang')
+            ->get();
+        $cbg = [];
+        foreach($cabang as $i){
+            array_push($cbg, $i->kd_cabang);
+        }
+        $karyawan = DB::table('mst_karyawan')
+            ->whereNotIn('kd_entitas', $cbg)
+            ->orWhere('kd_entitas', null)
+            ->get();
 
         $data = $this->getSlipJurnal($request, $kategori, $karyawan);
-        // dd($data);
+
         return view('slip_gaji.slip_jurnal', compact('data', 'kategori', 'request'));
     }
 
@@ -222,25 +223,42 @@ class SlipGajiController extends Controller
             $data[$i]['nama'] = $item->nama_karyawan;
 
             if($cek_data > 0){
-               $gaji = DB::table('gaji_per_bulan')
+                $gaji = DB::table('gaji_per_bulan')
                     ->where('nip', $item->nip)
                     ->where('tahun', $tahun)
                     ->where('bulan', $bulan)
                     ->first();
 
-                $data[$i]['gj_pokok'] = $gaji->gj_pokok;
-                $data[$i]['gj_penyesuaian'] = $gaji->gj_penyesuaian;
+                if ($gaji) {
+                    $data[$i]['gj_pokok'] = $gaji->gj_pokok;
+                    $data[$i]['gj_penyesuaian'] = $gaji->gj_penyesuaian;
 
-                $data[$i]['tunjangan'][0] = $gaji->tj_keluarga;
-                $data[$i]['tunjangan'][1] = $gaji->tj_teller;
-                $data[$i]['tunjangan'][2] = $gaji->tj_telepon;
-                $data[$i]['tunjangan'][3] = $gaji->tj_jabatan;
-                $data[$i]['tunjangan'][4] = $gaji->tj_perumahan;
-                $data[$i]['tunjangan'][5] = $gaji->tj_pelaksana;
-                $data[$i]['tunjangan'][6] = $gaji->tj_kemahalan;
-                $data[$i]['tunjangan'][7] = $gaji->tj_kesejahteraan;
+                    $data[$i]['tunjangan'][0] = $gaji->tj_keluarga;
+                    $data[$i]['tunjangan'][1] = $gaji->tj_teller;
+                    $data[$i]['tunjangan'][2] = $gaji->tj_telepon;
+                    $data[$i]['tunjangan'][3] = $gaji->tj_jabatan;
+                    $data[$i]['tunjangan'][4] = $gaji->tj_perumahan;
+                    $data[$i]['tunjangan'][5] = $gaji->tj_pelaksana;
+                    $data[$i]['tunjangan'][6] = $gaji->tj_kemahalan;
+                    $data[$i]['tunjangan'][7] = $gaji->tj_kesejahteraan;
 
-                $totalGaji = $gaji->gj_pokok + $gaji->gj_penyesuaian + array_sum($data[$i]['tunjangan']);
+                    $totalGaji = $gaji->gj_pokok + $gaji->gj_penyesuaian + array_sum($data[$i]['tunjangan']);
+                }
+                else {
+                    $data[$i]['gj_pokok'] = 0;
+                    $data[$i]['gj_penyesuaian'] = 0;
+
+                    $data[$i]['tunjangan'][0] = 0;
+                    $data[$i]['tunjangan'][1] = 0;
+                    $data[$i]['tunjangan'][2] = 0;
+                    $data[$i]['tunjangan'][3] = 0;
+                    $data[$i]['tunjangan'][4] = 0;
+                    $data[$i]['tunjangan'][5] = 0;
+                    $data[$i]['tunjangan'][6] = 0;
+                    $data[$i]['tunjangan'][7] = 0;
+
+                    $totalGaji = 0 + 0 + array_sum($data[$i]['tunjangan']);
+                }
             }
             else{
                 $data[$i]['gj_pokok'] = $item->gj_pokok;
@@ -284,6 +302,9 @@ class SlipGajiController extends Controller
 
     public function getLaporan(Request $request)
     {
+        if (!auth()->user()->can('penghasilan - gaji - lampiran gaji')) {
+            return view('roles.forbidden');
+        }
         $kantor = $request->kantor;
         $Opsicabang = $request->cabang;
         $kategori = $request->kategori;
@@ -307,6 +328,7 @@ class SlipGajiController extends Controller
                 // Comment by arsyad entitas terdapat pilihan untuk memilih cabang tertentu di kategori
                 ->get();
         }
+
         $data = $this->getLaporanGaji($karyawan, $kategori, $request);
         return view('slip_gaji.laporan_gaji', compact('data', 'kategori', 'request'));
     }
@@ -337,48 +359,76 @@ class SlipGajiController extends Controller
         return redirect()->route('slip_gaji.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function slip(Request $request) {
+        // Need permission
+        $user = auth()->user();
+        if (!$user->can('penghasilan - gaji - slip gaji')) {
+            return view('roles.forbidden');
+        }
+        FacadesSession::forget('year');
+        FacadesSession::forget('nip');
+        $this->validate($request, [
+            'nip' => 'not_in:0',
+            'tahun' => 'not_in:0'
+        ]);
+        $cabang = null;
+        if ($user->hasRole('cabang')) {
+            $karyawan = DB::table('users AS u')
+                            ->select('k.nip', 'k.kd_entitas')
+                            ->join('mst_karyawan AS k', 'k.nip', 'u.username')
+                            ->where('u.username', $user->username)
+                            ->first();
+            $cabang = $karyawan->kd_entitas;
+        }
+
+        $nip = $user->hasRole('user') ? $user->username : $request->get('nip');
+        $year = $request->get('tahun');
+
+        FacadesSession::put('nip',$nip);
+        FacadesSession::put('year',$year);
+
+        $data = $this->listSlipGaji($nip, $year, null);
+
+        $karyawan = KaryawanModel::where('nip', $nip)->first();
+
+        return view('slip_gaji.slip', compact('data', 'cabang', 'karyawan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+    public function listSlipGaji($nip, $year, $cetak) {
+        $slipRepository = new SlipGajiRepository;
+        $data = $slipRepository->getSlip($nip, $year, $cetak);
+
+        return $data;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+    function slipPDF() {
+        $kantor = FacadesSession::get('kantor');
+        $month = FacadesSession::get('month');
+        $year = FacadesSession::get('year');
+        $divisi = FacadesSession::get('divisi');
+        $sub_divisi = FacadesSession::get('sub_divisi');
+        $bagian = FacadesSession::get('bagian');
+        $nip = FacadesSession::get('nip');
+        $search = null;
+        $page = null;
+
+        $data = $this->listSlipGaji($kantor, $divisi, $sub_divisi, $bagian, $nip, $month, $year, $search, $page, null, 'cetak');
+
+        return view('slip_gaji.tables.slip-pdf', ['data' => $data]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    public function cetakSlip(Request $request){
+        $slipRepository = new SlipGajiRepository;
+        $nip = $request->get('request_nip');
+        $month = $request->get('request_month');
+        $year = $request->get('request_year');
+        $data = $slipRepository->getSlipCetak($nip, $month, $year);
+
+        return view('slip_gaji.print.slip', compact('data'));
+        $pdf = PDF::loadview('slip_gaji.print.slip', [
+            'data' => $data
+        ]);
+        $fileName =  time() . '.' . 'pdf';
+        return $pdf->download($fileName);
     }
 }

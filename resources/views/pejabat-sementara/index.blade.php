@@ -7,11 +7,11 @@
             <p class="card-title"><a href="">Manajemen Karyawan </a> > <a href="{{ route('pejabat-sementara.index') }}">Penjabat Sementara</a></p>
         </div>
         <div class="card-header row mt-3 mr-8 pl-4" >
-            @if (auth()->user()->hasRole(['hrd']))
+            @can('manajemen karyawan - tambah penjabat sementara')
                 <a href="{{ route('pejabat-sementara.create') }}" class="mb-3">
                     <button class="is-btn is-primary">Tambah PJS</button>
                 </a>
-            @endif
+            @endcan
         </div>
     </div>
     <div class="card-body">
@@ -25,14 +25,13 @@
                                     <th>No</th>
                                     <th>NIP</th>
                                     <th>Nama</th>
-                                    {{-- <th>Jabatan Asli</th> --}}
                                     <th>Jabatan PJS</th>
                                     <th>Mulai</th>
                                     <th>Berakhir</th>
                                     <th>Status</th>
-                                    @if (auth()->user()->hasRole(['hrd']))
-                                    <th>Aksi</th>
-                                    @endif
+                                    @can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')
+                                        <th>Aksi</th>
+                                    @endcan
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,12 +40,11 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->nip }}</td>
                                         <td>{{ $data->karyawan->nama_karyawan }}</td>
-                                        {{-- <td>{{ jabatanLengkap($data->karyawan) }}</td> --}}
                                         <td>{{ jabatanLengkap($data) }}</td>
                                         <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
                                         <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
                                         <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
-                                        @if (auth()->user()->hasRole(['hrd']))
+                                        @can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')
                                             <td class="d-flex justify-content-center">
                                                 @if(!$data->tanggal_berakhir)
                                                     <a href="#" data-toggle="modal" data-id="{{ $data->id }}" data-target="#exampleModal-{{ $data->id }}" class="btn btn-info">nonaktifkan</a>
@@ -54,7 +52,7 @@
                                                 -
                                                 @endif
                                             </td>
-                                        @endif
+                                        @endcan
                                     </tr>
                                 @endforeach
                             </tbody>
