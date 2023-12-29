@@ -362,8 +362,10 @@ class SlipGajiController extends Controller
     public function slip(Request $request) {
         // Need permission
         $user = auth()->user();
-        if (!$user->can('penghasilan - gaji - slip gaji')) {
-            return view('roles.forbidden');
+        if (!$user->hasRole('user')) {
+            if (!$user->can('penghasilan - gaji - slip gaji')) {
+                return view('roles.forbidden');
+            }
         }
         FacadesSession::forget('year');
         FacadesSession::forget('nip');

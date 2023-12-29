@@ -331,12 +331,12 @@
                                 @can('penghasilan - gaji - lampiran gaji')
                                     <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
                                 @endcan
+                                <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
                                 @can('penghasilan - gaji - slip gaji')
-                                    <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
                                 @endcan
-                                @can('penghasilan - gaji - slip gaji')
+                                @if (auth()->user()->hasRole('user') || auth()->user()->can('penghasilan - gaji - slip gaji'))
                                     <a class="dropdown-item" href="{{ route('slip.index') }}">Slip Gaji</a>
-                                @endcan
+                                @endif
                             </div>
                         </li>
                         @endcan
