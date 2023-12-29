@@ -71,14 +71,12 @@ class UserController extends Controller
         if (!auth()->user()->can('setting - master - user - create user')) {
             return view('roles.forbidden');
         }
-        $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
-        User::create([
-            'name' => $nama->nama_karyawan,
-            'username' => $nama->nama_karyawan,
-            'email' => $request->username,
-            'password' =>  Hash::make($request->password),
+        $request->validate([
+            'username' => 'unique:users,username|required',
+        ], 
+        [
+            'username.unique' => 'User sudah terdaftar.',
         ]);
-
         try {
             $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
 
@@ -129,10 +127,12 @@ class UserController extends Controller
         $data = $this->param->dataByid($id);
         $karyawan = $this->param->getDataKaryawan();
         $role = $this->param->getRole();
+        $dataRoleId = ModelHasRole::where('model_id',$id)->first(); 
         return view('user.edit', [
             'data' => $data,
             'karyawan' => $karyawan,
-            'role' => $role
+            'role' => $role,
+            'dataRoleId' => $dataRoleId,
         ]);
     }
 
@@ -145,16 +145,27 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('setting - master - user - edit user')) {
-            return view('roles.forbidden');
+        $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
+        $userCheck = User::where('username', $request->name)->first();
+        if (empty($userCheck)) {
+            $dataUser = User::where('id',$id)->first();
+            $dataUser->name = $karyawan->nama_karyawan;
+            $dataUser->username = $request->name;
+            $dataUser->email = $request->username;
+            $dataUser->password = Hash::make($request->password);
+            $dataUser->save();
+    
+            ModelHasRole::where('model_id', $id)->update([
+                'role_id' => $request->role,
+                'model_type' => 'App\Models\User',
+                'model_id' => $dataUser->id,
+            ]);
+        }else{
+            Alert::error("User Sudah Terdaftar.");
+            return redirect()->route('user.edit', $id);
         }
-        $nama = KaryawanModel::select('nama_karyawan')->where('nip', $request->name)->first();
-        User::where('id', $id)->update([
-            'name' => $nama->nama_karyawan,
-            'username' => $nama->nama_karyawan,
-            'email' => $request->username,
-        ]);
-        Alert::success('Berhasil Mengubah User.');
+        
+        Alert::success('Berhasil Merubah User.');
         return redirect()->route('user.index');
     }
 
