@@ -915,15 +915,19 @@ class KaryawanController extends Controller
         return view('karyawan.penonaktifan.penonaktifan');
     }
 
-    public function indexPenonaktifan()
+    public function indexPenonaktifan(Request $request)
     {
         if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan')) {
             return view('roles.forbidden');
         }
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->has('q') ? $request->get('q') : null;
+
         $karyawanRepo = new KaryawanRepository();
 
         return view('karyawan.penonaktifan.index', [
-            'karyawan' => $karyawanRepo->getAllKaryawanNonaktif()
+            'karyawan' => $karyawanRepo->getAllKaryawanNonaktif($search, $limit)
         ]);
     }
 
