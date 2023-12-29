@@ -22,12 +22,18 @@ class PejabatSementaraController extends Controller
         $this->repo = new PejabatSementaraRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (!auth()->user()->can('manajemen karyawan - data penjabat sementara')) {
             return view('roles.forbidden');
         }
-        $pjs = PjsModel::with(['karyawan', 'jabatan'])->get();
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+
+        $karyawanRepo = new PejabatSementaraRepository();
+        $search = $request->get('q');
+        $pjs = $karyawanRepo->getAllPejabatSementara($search, $limit, $page);
+
         return view('pejabat-sementara.index', compact('pjs'));
     }
 
