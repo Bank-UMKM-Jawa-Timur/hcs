@@ -12,10 +12,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     @vite('resources/css/app.css')
 </head>
-<body class="bg-gray-50 ">
+@include('sweetalert::alert')
+<body class="bg-gray-50">
     <div class="flex w-full h-screen gap-5">
         <div class="bg-white lg:w-[40%] w-full border-r">
            <div class="form-login mt-[10vh] space-y-2">
+            @if (Session::has('status'))
+            <div class="border border-theme-primary text-theme-primary bg-theme-primary/10 text-center" role="alert">
+                {{ Session::get('message') }}
+            </div>
+         @endif
             <div class="flex justify-center gap-4">
                 <img src="{{ asset('style/assets/img/logo.png') }}" alt="logo" class="w-[30px] mt-[5px]">
                 <div>
@@ -26,16 +32,33 @@
                 <h2 class="font-bold tracking-tighter text-3xl text-[#1F2937]">Selamat datang! </h2>
                 <p class="text-xs text-gray-400">Silahkan masuk untuk melanjutkan!</p>
             </div>
-            <form action="" method="" class="space-y-5">
+            <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                @csrf
                 <div class="input-box">
                     <label for="">Email atau NIP</label>
-                    <input type="text" class="form-input" placeholder="">
+                    <input type="text" class="form-input @error('input_type') border border-theme-primary @enderror"  name="input_type" value="{{ old('input_type') }}" required autocomplete="email" autofocus>
+                    @if ($errors->get('email'))
+                    <span class="text-theme-primary">{{ $errors->get('email')[0] }}</span>
+                @endif
+                @if ($errors->get('username'))
+                    <span class="text-theme-primary">{{ $errors->get('username')[0] }}</span>
+                @endif
+                @error('input_type')
+                    <span class="text-theme-primary" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
                 </div>
                 <div class="input-box">
                     <label for="">Password</label>
-                    <input type="text" class="form-input" placeholder="">
+                    <input type="password" class="form-input @error('password') border border-theme-primary @enderror" name="password" required autocomplete="current-password">
+                    @error('password')
+                    <span class="text-theme-primary" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
                 </div>
-                <button class="btn-login bg-theme-primary text-sm drop-shadow-lg text-white w-full">Masuk</button>
+                <button type="submit" class="btn-login bg-theme-primary text-sm drop-shadow-lg text-white w-full">Masuk</button>
                 <div class="copyright text-center text-xs    font-semibold text-neutral-800">
                     &copy; Copyright 2022 - {{ date('Y') }} PT. BPR Jatim
                   </div>
