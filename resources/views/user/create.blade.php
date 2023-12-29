@@ -19,9 +19,18 @@
                             <label for="name">Nama</label>
                             <select name="name" id="nama-karyawan" class="@error('name') is_invalid @enderror form-control">
                                 <option value="">Pilih Karyawan</option>
-                                @foreach ($karyawan as $item)
-                                    <option value="{{$item->nip}}">{{$item->nip}} - {{$item->nama_karyawan}}</option>
+                                @foreach ($karyawan as $key => $item)
+                                    @php
+                                        $daftarUser = \App\Models\User::select('id','name','username','email')->where('username', $item->nip)->get();
+                                    @endphp
+                                    @if (count($daftarUser))
+                                    @else
+                                        <option value="{{$item->nip}}">{{$item->nip}} - {{$item->nama_karyawan}}</option>
+                                    @endif
                                 @endforeach
+                                {{-- @foreach ($karyawan as $item)
+                                    <option value="{{$item->nip}}">{{$item->nip}} - {{$item->nama_karyawan}}</option>
+                                @endforeach --}}
                             </select>
                             @error('name')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>

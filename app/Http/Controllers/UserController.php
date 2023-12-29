@@ -7,6 +7,9 @@ use App\Models\ModelHasRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Query\QueryException;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -36,6 +39,7 @@ class UserController extends Controller
         $search = $request->get('q');
 
         $data = $this->param->getListUser($search, $limit, $page);
+
         return view('user.index', [
             'data' => $data,
         ]
@@ -71,32 +75,21 @@ class UserController extends Controller
         if (!auth()->user()->can('setting - master - user - create user')) {
             return view('roles.forbidden');
         }
-        $request->validate([
-            'username' => 'unique:users,username|required',
-        ], 
-        [
-            'username.unique' => 'User sudah terdaftar.',
-        ]);
-        try {
-            $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
 
-            $dataUser = New User();
-            $dataUser->name = $karyawan->nama_karyawan;
-            $dataUser->username = $request->name;
-            $dataUser->email = $request->username;
-            $dataUser->password = Hash::make($request->password);
-            $dataUser->save();
+        $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
 
-            $dataRole = New ModelHasRole();
-            $dataRole->role_id = $request->role;
-            $dataRole->model_type = 'App\Models\User';
-            $dataRole->model_id = $dataUser->id;
-            $dataRole->save();
+        $dataUser = New User();
+        $dataUser->name = $karyawan->nama_karyawan;
+        $dataUser->username = $request->name;
+        $dataUser->email = $request->username;
+        $dataUser->password = Hash::make($request->password);
+        $dataUser->save();
 
-        } catch (\Throwable $th) {
-            Alert::error("User Sudah Terdaftar");
-            return redirect()->route('user.create');
-        }
+        $dataRole = New ModelHasRole();
+        $dataRole->role_id = $request->role;
+        $dataRole->model_type = 'App\Models\User';
+        $dataRole->model_id = $dataUser->id;
+        $dataRole->save();
         
         Alert::success('Berhasil Menambahkan User.');
         return redirect()->route('user.index');
@@ -146,25 +139,20 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
-        $userCheck = User::where('username', $request->name)->first();
-        if (empty($userCheck)) {
-            $dataUser = User::where('id',$id)->first();
-            $dataUser->name = $karyawan->nama_karyawan;
-            $dataUser->username = $request->name;
-            $dataUser->email = $request->username;
-            $dataUser->password = Hash::make($request->password);
-            $dataUser->save();
-    
-            ModelHasRole::where('model_id', $id)->update([
-                'role_id' => $request->role,
-                'model_type' => 'App\Models\User',
-                'model_id' => $dataUser->id,
-            ]);
-        }else{
-            Alert::error("User Sudah Terdaftar.");
-            return redirect()->route('user.edit', $id);
-        }
-        
+
+        $dataUser = User::where('id',$id)->first();
+        $dataUser->name = $karyawan->nama_karyawan;
+        $dataUser->username = $request->name;
+        $dataUser->email = $request->username;
+        $dataUser->password = Hash::make($request->password);
+        $dataUser->save();
+
+        ModelHasRole::where('model_id', $id)->update([
+            'role_id' => $request->role,
+            'model_type' => 'App\Models\User',
+            'model_id' => $dataUser->id,
+        ]);
+
         Alert::success('Berhasil Merubah User.');
         return redirect()->route('user.index');
     }
@@ -198,6 +186,25 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (!auth()->user()->can('setting - master - user - delete user')) {
+            return view('roles.forbidden');
+        }
+        try{
+            DB::table('users')
+                ->where('id', $id)
+                ->delete();
+            DB::table('model_has_roles')
+                ->where('model_id', $id)
+                ->delete();
+
+            Alert::success('Berhasil', 'Berhasil Menghapus Data User.');
+            return redirect()->route('user.index');
+        } catch(Exception $e){
+            Alert::error('Terjadi Kesalahan', ''.$e);
+            return redirect()->route('user.index')->withStatus($e->getMessage());
+        } catch(QueryException $e){
+            Alert::error('Terjadi Kesalahan', ''.$e);
+            return redirect()->route('user.index')->withStatus($e->getMessage());
+        }
     }
 }
