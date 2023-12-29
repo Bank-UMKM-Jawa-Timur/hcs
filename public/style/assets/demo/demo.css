@@ -40,7 +40,7 @@
     color: #333;
 }
 
-.sub-menu {
+.inner {
     width: 100%;
     background-color: #f2f2f2;
     margin-top: 1rem;
@@ -152,15 +152,15 @@
     font-family: "Plus Jakarta Sans", sans-serif;
 }
 
-.nav-link:hover {
+.nav-link-btn:hover {
     color: #da241c !important;
 }
 
-.nav-link:active {
+.nav-link-btn:active {
     color: #da241c !important;
 }
 
-.nav-link:focus {
+.nav-link-btn:focus {
     color: #da241c !important;
 }
 
@@ -174,7 +174,7 @@ p {
     line-height: 1rem;
 }
 
-.sub-menu li a p {
+.inner li a p {
     margin-top: 0.5rem;
 }
 
@@ -240,7 +240,7 @@ p {
     font-size: 62.5%;
 }
 
-.sidebar .nav .active .nav-link {
+.sidebar .nav .active .nav-link-btn {
     width: 100% !important;
     border-left: 5px solid #da241c;
     background-color: rgba(217, 38, 28, 0.1) !important;
@@ -248,17 +248,20 @@ p {
     color: #da241c !important;
 }
 
-.sub-menu li.active {
+.inner li.active {
     background-color: transparent !important;
     color: #da241c !important;
 }
 
-ul.sub-menu li.active a {
+ul.inner li.active a {
     color: #da241c !important;
 }
 
-ul.sub-menu li.active i {
+ul.inner li.active i {
     color: #da241c !important;
+}
+ul.inner {
+    display: none;
 }
 
 .demo-icons body {
@@ -326,7 +329,7 @@ ul.sub-menu li.active i {
     user-select: none;
     overflow: hidden;
 }
-#sidebar .nav-link .icon {
+#sidebar .nav-link-btn .icon {
     font-size: 30px;
     margin-top: 1px;
 }

@@ -16,7 +16,7 @@
             <ul class="nav flex-column sticky-top pl-2 mt-0">
                 @can('dashboard')
                     <li style="margin-top: -15px" class="@active('home')">
-                        <a class="nav-link" href="{{ route('home') }}" style="font-weight: bolder">
+                        <a class="nav-link-btn" href="{{ route('home') }}" style="font-weight: bolder">
                             <div class="d-flex justify-content-start">
                                 <span class="icon">
                                     <iconify-icon icon="tdesign:dashboard-1" class="icon"></iconify-icon>
@@ -49,7 +49,7 @@
                         )
                             ? 'active'
                             : '' }}">
-                        <a class="nav-link" href="#submenu1" data-toggle="collapse" data-target="#submenu1"
+                        <a class="nav-link-btn" href="#submenu1"  data-target="#submenu1"
                             style="font-weight: bolder">
                             <div class="d-flex justify-content-start">
                                 <span class="icon">
@@ -58,7 +58,7 @@
                                 <span> Manajemen Karyawan</span>
                             </div>
                         </a>
-                        <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is(
+                        <ul class="inner list-unstyled flex-column  pl-2 {{ request()->is(
                             'karyawan',
                             'karyawan/*',
                             'reminder_pensiun',
@@ -212,7 +212,7 @@
                 @can('penghasilan')
                 <li
                     class="@active('pajak_penghasilan') {{ request()->is('penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*','gaji_perbulan', 'gaji_perbulan/*', 'penghasilan/import-penghasilan-teratur', 'penghasilan/import-penghasilan-teratur/*','pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }}">
-                    <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
+                    <a class="nav-link-btn" href="#submenu2"  data-target="#submenu2"
                         style="font-weight: bolder">
                         <div class="d-flex justify-content-start">
                             <span class="icon">
@@ -223,7 +223,7 @@
                             </span>
                         </div>
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'bonus/*', 'show')"
+                    <ul class="inner list-unstyled flex-column  pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'bonus/*', 'show')"
                         id="submenu2">
                         @can('penghasilan - proses penghasilan')
                         <li style="margin-top: -15px" class="@active('gaji_perbulan')">
@@ -346,7 +346,7 @@
                 {{-- Menu Histori --}}
                 @can('histori')
                 <li class="@active('history')">
-                    <a class="nav-link" href="#submenu3" data-toggle="collapse" data-target="#submenu3"
+                    <a class="nav-link-btn" href="#submenu3"  data-target="#submenu3"
                         style="font-weight: bolder">
                         <div class="d-flex justify-content-start">
                             <span class="icon">
@@ -357,7 +357,7 @@
                             </span>
                         </div>
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('history', 'show')"
+                    <ul class="inner list-unstyled flex-column  pl-2 @active('history', 'show')"
                         id="submenu3">
                         @can('histori - jabatan')
                         <li style="margin-top: -15px" class="@active('history_jabatan')">
@@ -411,7 +411,7 @@
                 @can('laporan')
                 <li
                     class="{{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek') ? 'active' : '' }}">
-                    <a class="nav-link" href="#submenu4" data-toggle="collapse" data-target="#submenu4"
+                    <a class="nav-link-btn" href="#submenu4"  data-target="#submenu4"
                         style="font-weight: bolder">
                         <div class="d-flex justify-content-start">
                             <span class="icon">
@@ -422,7 +422,7 @@
                             </span>
                         </div>
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('laporan,index_dpp', 'show')"
+                    <ul class="inner list-unstyled flex-column  pl-2 @active('laporan,index_dpp', 'show')"
                         id="submenu4">
                         @can('laporan - laporan pergerakan karir')
                         <li class="dropdown {{ request()->is(
@@ -502,7 +502,7 @@
                 {{-- Menu Log Aktivitas --}}
                 @can('log')
                 <li>
-                    <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu6"
+                    <a class="nav-link-btn" href="#submenu5"  data-target="#submenu6"
                         style="font-weight: bolder">
                         <div class="d-flex justify-content-start">
                             <span class="icon">
@@ -514,7 +514,7 @@
                         </div>
                     </a>
                     @can('log - log aktivitas')
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6"
+                    <ul class="inner list-unstyled flex-column  pl-2" id="submenu6"
                         aria-expanded="false">
                         <li style="margin-top: -15px">
                             <a href="#">
@@ -536,7 +536,7 @@
                 {{-- Menu Setting --}}
                 @can('setting')
                 <li class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database')">
-                    <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu7"
+                    <a class="nav-link-btn" href="#submenu6"  data-target="#submenu7"
                         style="font-weight: bolder">
                         <div class="d-flex justify-content-start">
                             <span class="icon">
@@ -547,7 +547,7 @@
                             </span>
                         </div>
                     </a>
-                    <ul class="sub-menu list-unstyled flex-column collapse pl-2
+                    <ul class="inner list-unstyled flex-column  pl-2
                     {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show') --}}
                     "
                         id="submenu7">
