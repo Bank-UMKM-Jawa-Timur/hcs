@@ -28,9 +28,23 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="username">Username</label>
+                            <label for="username">Email</label>
                             <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ $data->email }}">
                             @error('username')
+                                <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label for="username">Role</label>
+                            <select name="role" id="role-karyawan" class="@error('role') is_invalid @enderror form-control">
+                                <option value="">Pilih Role</option>
+                                @foreach ($role as $item)
+                                    <option value="{{ $item->id }}" {{ $dataRoleId->role_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('role')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
