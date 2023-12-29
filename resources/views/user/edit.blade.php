@@ -59,7 +59,7 @@
                         </div>
                     </div>
                     <div class="pt-3 pb-3">
-                        <input type="hidden" name="password" id="nip-for-password">
+                        <input type="hidden" name="password" id="nip-for-password" value="{{ $data->username }}">
                         <button class="is-btn is-primary" value="submit" type="submit" style="submit">Simpan</button>
                     </div>
                 </form>
