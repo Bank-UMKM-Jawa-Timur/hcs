@@ -8,7 +8,8 @@
             const selected = "{{\Request::get('nip')}}"
             const name = "{{\Request::get('nama_karyawan')}}"
             const kantor = $('#kantor').val()
-            const cabang = $('#cabang').val()
+            const cabang = "{{$cabang}}"
+            console.log(`cabang : ${cabang}`)
             const divisi = $('#divisi').val()
             const sub_divisi = $('#sub_divisi').val()
             const bagian = $('#bagian').val()
@@ -24,10 +25,16 @@
                         var query = {
                             search: params.term,
                             kantor:kantor,
+                            cabang:cabang,
                             page: params.page
                         }
                         // Query parameters will be ?search=[term]&page=[page]
                         return query;
+                    },
+                    success: function (response) {
+                        console.log('Response')
+                        console.log(response)
+                        console.log('End Response')
                     }
                 },
                 templateResult: function(data) {

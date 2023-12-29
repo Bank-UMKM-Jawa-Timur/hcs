@@ -15,7 +15,7 @@ class PayrollController extends Controller
 
     public function index(Request $request) {
         // Need permission
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - payroll - list payroll')) {
             return view('roles.forbidden');
         }
         FacadesSession::forget('kategori');

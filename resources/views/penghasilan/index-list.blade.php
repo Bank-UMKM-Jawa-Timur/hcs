@@ -8,14 +8,15 @@
         <p class="card-title"><a href="">Penghasilan </a> > Penghasilan Tidak Teratur</p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        @if (auth()->user()->hasRole(['kepegawaian']))
+        @can('penghasilan - import - penghasilan tidak teratur - create')
             <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.input-tidak-teratur') }}">
                 <button class="is-btn is-primary">Tambah</button>
             </a>
+        @elsecan('penghasilan - import - penghasilan tidak teratur - import')
             <a class="mb-3 ml-2" href="{{ route('penghasilan-tidak-teratur.create') }}">
-                <button class="is-btn is-primary">import</button>
+                <button class="is-btn is-primary">Import</button>
             </a>
-        @endif
+        @endcan
     </div>
 </div>
 
@@ -78,22 +79,43 @@
                                         <td>Rp {{ $item->grand_total ? number_format($item->grand_total, 0, '.', '.') : 0}}</td>
                                         <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
                                         <td class="text-center">
+                                            @php
+                                                $cant_detail = false;
+                                                $cant_lock_edit = false;
+                                                $cant_unlock = false;
+                                            @endphp
                                             @if ($item->is_lock != 1)
-                                                @if (auth()->user()->hasRole(['kepegawaian']))
+                                                @can('penghasilan - lock - penghasilan tidak teratur')
+                                                    @php
+                                                        $cant_lock_edit = true;
+                                                    @endphp
                                                     <a href="{{route('penghasilan-tidak-teratur.lock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
-                                                        class="btn btn-success p-1">Lock</a>
+                                                    class="btn btn-success p-1">Lock</a>
+                                                @elsecan('penghasilan - edit - penghasilan tidak teratur')
+                                                    @php
+                                                        $cant_lock_edit = true;
+                                                    @endphp
                                                     <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur', [
                                                         'idTunjangan' => $item->tunjangan_id,
                                                         'tanggal' => $item->tanggal ])}}" class="btn btn-outline-warning p-1">Edit</a>
-                                                @endif
+                                                @endcan
                                             @else
-                                                @if (auth()->user()->hasRole(['kepegawaian','admin']))
+                                                @can('penghasilan - unlock - penghasilan tidak teratur')
+                                                    @php
+                                                        $cant_unlock = true;
+                                                    @endphp
                                                     <a href="{{route('penghasilan-tidak-teratur.unlock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
                                                         class="btn btn-success p-1">Unlock</a>
-                                                @endif
+                                                @endcan
                                             @endif
-                                            @if (auth()->user()->hasRole(['kepegawaian','admin']))
+                                            @can('penghasilan - import - penghasilan tidak teratur - detail')
+                                                @php
+                                                    $cant_detail = true;
+                                                @endphp
                                                 <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->tunjangan_id }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
+                                            @endcan
+                                            @if (!$cant_detail && !$cant_lock_edit && !$cant_unlock)
+                                                -
                                             @endif
                                         </td>
                                     </tr>

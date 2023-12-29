@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Forbidden</title>
     <style>
         @import url(https://fonts.googleapis.com/css?family=Raleway:700);
         *, *:before, *:after {
@@ -82,19 +82,20 @@
 <body>
     <div class="text-wrapper">
         <div class="title" data-content="404">
-            403 - ACCESS DENIED
+            403 - TIDAK MEMILIKI AKSES
         </div>
 
         <div class="subtitle">
-            Oops, You don't have permission to access this page.
+            Anda tidak memiliki akses pada halaman ini.
         </div>
         <div class="isi">
-            A web server may return a 403 Forbidden HTTP status code in response to a request from a client for a web page or resource to indicate that the server can be reached and understood the request, but refuses to take any further action. Status code 403 responses are the result of the web server being configured to deny access, for some reason, to the requested resource by the client.
+            Server web dapat mengembalikan kode status HTTP 403 terlarang sebagai respon terhadap permintaan dari klien untuk halaman web atau sumber daya untuk menunjukkan bahwa server dapat dijangkau dan memahami permintaan tersebut, namun menolak untuk mengambil tindakan lebih lanjut. Respon status kode 403 adalah hasil dari server web yang dikonfigurasi untuk menolak akses, karena alasan tertentu, ke sumber daya yang diminta oleh klien.
         </div>
-
-        <div class="buttons">
-            <a class="button" href="{{route('home')}}">Go to homepage</a>
-        </div>
+        <a class="button" href="{{route('home')}}">
+            <div class="buttons">
+                Kembali ke Dashboard
+            </div>
+        </a>
     </div>
 </body>
 

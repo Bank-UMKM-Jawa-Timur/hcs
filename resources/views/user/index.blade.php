@@ -8,11 +8,13 @@
 
     <div class="card-body">
         <div class="col">
-            <div class="row">
-                <a href="{{ route('user.create') }}">
-                    <button class="is-btn is-primary">Tambah Data User</button>
-                </a>
-            </div>
+            @can('setting - master - user - create user')
+                <div class="row">
+                    <a href="{{ route('user.create') }}">
+                        <button class="is-btn is-primary">Tambah Data User</button>
+                    </a>
+                </div>
+            @endcan
             <div class="row"> 
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
@@ -69,9 +71,13 @@
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>
-                                            <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
-                                                Edit
-                                            </a>
+                                            @can('setting - master - user - edit user')
+                                                <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
+                                                    Edit
+                                                </a>
+                                            @else
+                                                -
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

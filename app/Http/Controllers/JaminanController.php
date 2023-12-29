@@ -118,7 +118,7 @@ class JaminanController extends Controller
 
     public function index()
     {
-        if (!auth()->user()->hasRole(['admin'])) {
+        if (!auth()->user()->can('laporan - laporan jamsostek')) {
             return view('roles.forbidden');
         }
         return view('jaminan.index', [
@@ -129,7 +129,7 @@ class JaminanController extends Controller
 
     public function filter(Request $request)
     {
-        if (!auth()->user()->hasRole(['admin'])) {
+        if (!auth()->user()->can('laporan - laporan jamsostek')) {
             return view('roles.forbidden');
         }
         $kantor = $request->kantor;
@@ -364,7 +364,7 @@ class JaminanController extends Controller
 
     public function dppIndex()
     {
-        if (!auth()->user()->hasRole(['admin'])) {
+        if (!auth()->user()->can('laporan - laporan dpp')) {
             return view('roles.forbidden');
         }
         return view('jaminan.dpp_index');
@@ -372,6 +372,9 @@ class JaminanController extends Controller
 
     public function getDPP(Request $request)
     {
+        if (!auth()->user()->can('laporan - laporan dpp')) {
+            return view('roles.forbidden');
+        }
         $kantor = $request->kantor;
         $kategori = $request->kategori;
         $tahun = $request->tahun;

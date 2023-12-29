@@ -261,7 +261,7 @@ class PenghasilanTidakTeraturRepository
     {
         $idTunjangan = $data['id_tunjangan'];
         $tanggal = $data['tanggal'];
-        $bulan = date("m", strtotime($tanggal));
+        $bulan = (int)date("m", strtotime($tanggal));
         $tahun = date("Y", strtotime($tanggal));
         return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
             ->where('bulan', $bulan)
@@ -274,7 +274,7 @@ class PenghasilanTidakTeraturRepository
     {
         $idTunjangan = $data['id_tunjangan'];
         $tanggal = $data['tanggal'];
-        $bulan = date("m", strtotime($tanggal));
+        $bulan = (int)date("m", strtotime($tanggal));
         $tahun = date("Y", strtotime($tanggal));
         return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
             ->where('bulan', $bulan)
