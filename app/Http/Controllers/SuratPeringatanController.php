@@ -21,14 +21,21 @@ class SuratPeringatanController extends Controller
         $this->repo = new SuratPeringatanRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (!auth()->user()->can('manajemen karyawan - reward & punishment - surat peringatan')) {
             return view('roles.forbidden');
         }
-        $sps = SpModel::with('karyawan')->orderBy('tanggal_sp', 'DESC')->get();
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
 
-        return view('karyawan.surat-peringatan.index', compact('sps'));
+        $karyawanRepo = new SuratPeringatanRepository();
+        $search = $request->get('q');
+        $data = $karyawanRepo->getAllSuratPeringatan($search, $limit, $page);
+
+        return view('karyawan.surat-peringatan.index', [
+            'sps' => $data,
+        ]);
     }
 
     public function show($id)

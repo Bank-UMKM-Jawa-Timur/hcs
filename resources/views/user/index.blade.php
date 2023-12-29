@@ -54,6 +54,12 @@
                                     Username
                                 </th>
                                 <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Role
+                                </th>
+                                <th>
                                     Aksi
                                 </th>
                             </thead>
@@ -68,8 +74,10 @@
                                 @foreach ($data as $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
-                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->name_user }}</td>
+                                        <td>{{ $item->username }}</td>
                                         <td>{{ $item->email }}</td>
+                                        <td>{{ $item->name_role }}</td>
                                         <td>
                                             @can('setting - master - user - edit user')
                                                 <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
@@ -77,6 +85,35 @@
                                                 </a>
                                             @else
                                                 -
+                                            @endcan
+                                            @can('setting - master - user - delete user')
+                                                <a class="is-btn is-primary ml-2" href="javascript:void(0)" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                    Delete
+                                                </a>
+                                                {{-- modal hapus --}}
+                                                <div class="modal fade" id="confirmHapusModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Hapus Data</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>Apakah Anda Yakin Ingin Menghapus User, <b>{{$item->name_user}}</b>?</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                                <form action="{{ route('user.destroy', $item->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             @endcan
                                         </td>
                                     </tr>

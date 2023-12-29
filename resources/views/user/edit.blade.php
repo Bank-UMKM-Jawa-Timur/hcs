@@ -19,8 +19,17 @@
                         <div class="col-md-6">
                             <label for="name">Nama</label>
                             <select name="name" id="nama-karyawan" class="@error('name') is_invalid @enderror form-control">
-                                @foreach ($karyawan as $item)
-                                    <option value="{{$item->nip}}" {{$data->name == $item->nama_karyawan ? 'selected' : ''}}>{{$item->nip}} - {{$item->nama_karyawan}}</option>
+                                @foreach ($karyawan as $key => $item)
+                                    @php
+                                        $userEdit = \App\Models\User::select('id','name','username','email')->where('username', $item->nip)->get();
+                                    @endphp
+                                    @if (count($userEdit))
+                                        @if ($data->name == $item->nama_karyawan)
+                                            <option value="{{$item->nip}}" {{$data->name == $item->nama_karyawan ? 'selected' : ''}}>{{$item->nip}} - {{$item->nama_karyawan}}</option>     
+                                        @endif
+                                    @else
+                                        <option value="{{$item->nip}}" {{$data->name == $item->nama_karyawan ? 'selected' : ''}}>{{$item->nip}} - {{$item->nama_karyawan}}</option>     
+                                    @endif
                                 @endforeach
                             </select>
                             @error('name')
@@ -50,7 +59,7 @@
                         </div>
                     </div>
                     <div class="pt-3 pb-3">
-                        <input type="hidden" name="password" id="nip-for-password">
+                        <input type="hidden" name="password" id="nip-for-password" value="{{ $data->username }}">
                         <button class="is-btn is-primary" value="submit" type="submit" style="submit">Simpan</button>
                     </div>
                 </form>
@@ -66,6 +75,8 @@
             var karyawan = $(this).val();
             console.log(karyawan);
             $('#nip-for-password').val(karyawan);
+
+            document.getElementById('username').value = karyawan + "@mail.com"
         })
     </script>
     @endpush

@@ -8,6 +8,33 @@ use Illuminate\Support\Facades\DB;
 
 class SuratPeringatanRepository
 {
+    public function getAllSuratPeringatan($search, $limit=10, $page=1) {
+        return $this->getDataSuratPeringatan($search, $limit, $page);
+    }
+
+    public function getDataSuratPeringatan($search, $limit=10, $page=1) {
+        $sps = SpModel::select(
+            'surat_peringatan.id',
+            'surat_peringatan.nip',
+            'surat_peringatan.tanggal_sp',
+            'surat_peringatan.no_sp',
+            'surat_peringatan.pelanggaran',
+            'surat_peringatan.sanksi',
+            'mst_karyawan.nama_karyawan',
+        )
+        ->join('mst_karyawan','surat_peringatan.nip','=','mst_karyawan.nip')
+        ->when($search, function ($query) use ($search) {
+            $query->where('surat_peringatan.nip', 'like', "%$search%")
+            ->orWhere('surat_peringatan.tanggal_sp', 'like', "%$search%")
+            ->orWhere('surat_peringatan.no_sp', 'like', "%$search%")
+            ->orWhere('surat_peringatan.pelanggaran', 'like', "%$search%")
+            ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%");
+        })
+        ->orderBy('tanggal_sp', 'DESC')
+        ->paginate($limit);
+
+        return $sps;
+    }
     public function store(array $data)
     {
         $filename = null;
