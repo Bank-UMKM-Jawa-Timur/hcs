@@ -256,12 +256,11 @@ class PenghasilanTeraturController extends Controller
             if ($nip) {
                 if (is_array($nip)) {
                     for ($i = 0; $i < $total; $i++) {
-
-
                         DB::table('transaksi_tunjangan')->insert([
                             'nip' => $nip[$i],
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $id_tunjangan,
+                            'tahun' => date('Y'),
                             'tanggal' => $tanggal,
                             'bulan' => $bulanReq,
                             'created_at' => now(),
