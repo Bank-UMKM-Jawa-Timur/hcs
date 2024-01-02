@@ -82,6 +82,23 @@
     margin-top: 2px;
 }
 
+.btn-scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    padding: 10px 20px;
+    outline: none !important;
+    border: none;
+    font-weight: 700;
+    transition: 0.2s ease-in-out;
+    border-radius: 4px !important;
+    border: 1px solid #da241c;
+    color: white;
+    background: #da241c;
+}
+
 .is-btn {
     padding: 10px 20px;
     text-transform: capitalize;

@@ -28,7 +28,13 @@
         </form>
     </div>
 </div>
+<button class="btn-scroll-to-top d-none">
+    To Top <iconify-icon icon="mdi:arrow-top" class="ml-2 mt-1"></iconify-icon>
+</button>
     <div class="card-body ml-3 mr-3">
+        <div class="pt-1 pb-5">
+            <button class="btn-save is-btn is-primary">Simpan</button>
+        </div>
         <div class="row">
             <div class="col">
                 <form action="{{ route('role.store') }}" id="save-data" method="POST" enctype="multipart/form-data" class="form-group" >
@@ -66,7 +72,6 @@
                         </div>
                     </div>
 
-                    <button class="btn-save" class="is-btn is-primary">Simpan</button>
                 </form>
             </div>
         </div>

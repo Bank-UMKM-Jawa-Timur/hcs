@@ -547,3 +547,18 @@ $(".nav-link-btn").on("click", function (e) {
         $this.next().slideToggle(350);
     }
 });
+
+$(".btn-scroll-to-top").on("click", function () {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+    });
+});
+
+$(window).scroll(function () {
+    if ($(window).scrollTop() > 300) {
+        $(".btn-scroll-to-top").removeClass("d-none");
+    } else {
+        $(".btn-scroll-to-top").addClass("d-none");
+    }
+});
