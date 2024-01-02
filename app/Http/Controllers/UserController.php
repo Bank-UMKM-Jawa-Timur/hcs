@@ -140,21 +140,37 @@ class UserController extends Controller
     {
         $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
 
-        $dataUser = User::where('id',$id)->first();
-        $dataUser->name = $karyawan->nama_karyawan;
-        $dataUser->username = $request->name;
-        $dataUser->email = $request->username;
-        $dataUser->password = Hash::make($request->password);
-        $dataUser->save();
-
-        ModelHasRole::where('model_id', $id)->update([
-            'role_id' => $request->role,
-            'model_type' => 'App\Models\User',
-            'model_id' => $dataUser->id,
+        $request->validate([
+            'username' => 'required|unique:users,email,'.$id,
+        ], 
+        [
+            'username.unique' => 'User sudah terdaftar.',
         ]);
 
-        Alert::success('Berhasil Merubah User.');
-        return redirect()->route('user.index');
+        try {
+            DB::beginTransaction();
+            $dataUser = User::where('id',$id)->first();
+            $dataUser->name = $karyawan->nama_karyawan;
+            $dataUser->username = $request->name;
+            $dataUser->email = $request->username;
+            $dataUser->password = Hash::make($request->password);
+            $dataUser->save();
+
+            ModelHasRole::where('model_id', $id)->update([
+                'role_id' => $request->role,
+                'model_type' => 'App\Models\User',
+                'model_id' => $dataUser->id,
+            ]);
+
+            DB::commit();
+            Alert::success('Berhasil Merubah User.');
+            return redirect()->route('user.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan '.$e->getMessage());
+            return redirect()->route('user.edit');
+        }
+
     }
 
     public function resetPass($id) {
@@ -207,4 +223,18 @@ class UserController extends Controller
             return redirect()->route('user.index')->withStatus($e->getMessage());
         }
     }
+
+
+    public function resetUser($id)
+    {
+        $user = User::select('name','username','email')->where('id',$id)->first();
+
+        $dataUser = User::where('id',$id)->first();
+        $dataUser->password = Hash::make($user->username);
+        $dataUser->save();
+
+        Alert::success('Berhasil Reset Password User.');
+        return redirect()->route('user.index');
+    }
+
 }

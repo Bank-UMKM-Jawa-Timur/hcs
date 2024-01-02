@@ -72,51 +72,84 @@
                                   $i = $page == 1 ? 1 : $start;
                                 @endphp
                                 @foreach ($data as $item)
-                                    <tr>
-                                        <td>{{ $i++ }}</td>
-                                        <td>{{ $item->name_user }}</td>
-                                        <td>{{ $item->username }}</td>
-                                        <td>{{ $item->email }}</td>
-                                        <td>{{ $item->name_role }}</td>
-                                        <td>
-                                            @can('setting - master - user - edit user')
-                                                <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
-                                                    Edit
-                                                </a>
-                                            @else
+                                    @if (auth()->user()->username != $item->username || auth()->user()->name != $item->name_user) 
+                                        <tr>
+                                            <td>{{ $i++ }}</td>
+                                            <td>{{ $item->name_user }}</td>
+                                            <td>{{ $item->username }}</td>
+                                            <td>{{ $item->email }}</td>
+                                            <td>{{ $item->name_role }}</td>
+                                            <td>
+                                                @if ($item->first_login)
                                                 -
-                                            @endcan
-                                            @can('setting - master - user - delete user')
-                                                <a class="is-btn is-primary ml-2" href="javascript:void(0)" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
-                                                    Delete
-                                                </a>
-                                                {{-- modal hapus --}}
-                                                <div class="modal fade" id="confirmHapusModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Hapus Data</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
+                                                @else
+                                                    @can('setting - master - user - edit user')
+                                                        <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
+                                                            Edit
+                                                        </a>
+                                                    @else
+                                                        -
+                                                    @endcan
+                                                    @can('setting - master - user - delete user')
+                                                        <a class="is-btn is-primary ml-2" href="javascript:void(0)" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                            Delete
+                                                        </a>
+                                                        {{-- modal hapus --}}
+                                                        <div class="modal fade" id="confirmHapusModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Hapus Data</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p>Apakah Anda Yakin Ingin Menghapus User, <b>{{$item->name_user}}</b>?</p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                                        <form action="{{ route('user.destroy', $item->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                            <button type="submit" class="btn btn-danger">Hapus</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div class="modal-body">
-                                                                <p>Apakah Anda Yakin Ingin Menghapus User, <b>{{$item->name_user}}</b>?</p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                                                                <form action="{{ route('user.destroy', $item->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                    <button type="submit" class="btn btn-danger">Hapus</button>
-                                                                </form>
+                                                        </div>
+                                                    @endcan
+                                                    <a class="is-btn btn-info ml-2" href="javascript:void(0)" data-toggle="modal" data-target="#confirmResetModal{{$item->id}}">
+                                                        Reset
+                                                    </a>
+                                                    {{-- modal hapus --}}
+                                                    <div class="modal fade" id="confirmResetModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Reset User</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p>Apakah Anda Yakin Ingin Mereset User, <b>{{$item->name_user}}</b> dengan nip, <b>{{ $item->username }}</b>?</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                                    <form action="{{ route('password.reset.user', $item->id) }}" method="POST">
+                                                                    @csrf
+                                                                    @method('POST')
+                                                                        <button type="submit" class="btn btn-danger">Reset</button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            @endcan
-                                        </td>
-                                    </tr>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>

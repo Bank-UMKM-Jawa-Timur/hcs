@@ -12,7 +12,7 @@ class UserRepository
 {
     private $param;
     public function getListUser($search, $limit=10, $page=1) {
-        $this->param['data'] = DB::table('roles')->select('users.id', 'users.name as name_user', 'users.email', 'users.username','roles.name as name_role')
+        $this->param['data'] = DB::table('roles')->select('users.id', 'users.name as name_user', 'users.email', 'users.username','users.first_login','roles.name as name_role')
         ->join('model_has_roles','model_has_roles.role_id','=','roles.id')
         ->join('users','model_has_roles.model_id','=','users.id')
         ->when($search, function ($query) use ($search) {
