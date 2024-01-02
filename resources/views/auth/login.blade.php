@@ -42,7 +42,7 @@
                   @csrf
                   <div class="input-box">
                       <label for="email">Email atau NIP</label>
-                      <input type="text" class="form-input" placeholder=""
+                      <input type="text" class="border rounded-md text-sm bg-gray-50/80 border-neutral-200 px-5 py-3 w-full outline-none focus:ring-2 focus:ring-blue-300" placeholder=""
                           id="email" name="input_type" value="{{ old('input_type') }}">
                       @error('email')
                           <span>{{ $message }}</span>
@@ -53,7 +53,7 @@
                   </div>
                   <div class="input-box">
                       <label for="password">Password</label>
-                      <input type="password" id="password" name="password" class="form-input" placeholder="">
+                      <input type="password" id="password" name="password" class="border rounded-md text-sm bg-gray-50/80 border-neutral-200 px-5 py-3 w-full outline-none focus:ring-2 focus:ring-blue-300" placeholder="">
                       @error('password')
                           <span>{{ $message }}</span>
                       @enderror

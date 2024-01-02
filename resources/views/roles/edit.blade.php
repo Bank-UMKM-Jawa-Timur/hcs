@@ -70,10 +70,16 @@
             </form>
         </div>
     </div>
+    <button class="btn-scroll-to-top d-none">
+        To Top <iconify-icon icon="mdi:arrow-top" class="ml-2 mt-1"></iconify-icon>
+    </button>
     <div class="card-body ml-3 mr-3">
+        <form action="{{ route('role.update',$data->id) }}" method="POST" enctype="multipart/form-data" class="form-group" >
+        <div class="pt-1 pb-5">
+            <button type="submit" class="btn-save is-btn is-primary">Simpan</button>
+        </div>
         <div class="row">
             <div class="col">
-                <form action="{{ route('role.update',$data->id) }}" method="POST" enctype="multipart/form-data" class="form-group" >
                     @method('put')
                     @csrf
                     <label for="name">Role</label>
@@ -113,8 +119,6 @@
                             </table>
                         </div>
                     </div>
-
-                    <button class="btn btn-info">Simpan</button>
                 </form>
             </div>
         </div>

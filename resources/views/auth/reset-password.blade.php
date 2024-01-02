@@ -4,9 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resset Password</title>
+    <title>Reset Password</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    {{-- <link rel="stylesheet" href="assets/css/style.css"> --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -38,19 +43,28 @@
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
                 <div class="form-group"><input class="form-control" type="password" name="confirmation" placeholder="Konfirmasi Password Baru"></div>
-                <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Reset Password</button></div>
+                <div class="form-group"><button class="btn btn-is-primary btn-block"  type="submit">Reset Password</button></div>
             </form>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+    <a href="/">
+        <button class="btn-previous">
+            <iconify-icon icon="ooui:arrow-previous-ltr"></iconify-icon>
+        </button>
+    </a>
 </body>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </html>
 
 <style>
-    .register-photo {
+    body{
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        -webkit-font-smoothing: antialiased;
         background: #f1f7fc;
+    }
+    .register-photo {
         margin-top: 0;
         display: flex;
         justify-content: center;
@@ -60,14 +74,14 @@
     .register-photo .image-holder {
         display: table-cell;
         width: auto;
-        background:url("{{ asset('style/assets/img/change-passoword-img.jpg') }}");
+        background:url("{{ asset('style/assets/img/change-password.jpg') }}");
         background-size: cover;
     }
 
     .register-photo .form-container {
         display: table;
         max-width: 900px;
-        margin-top: 25vh;
+        margin-top: 20vh;
         width: 100%;
         height: 50%;
         box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
@@ -76,6 +90,7 @@
     .register-photo form {
         display: table-cell;
         width: 400px;
+        vertical-align: middle;
         background-color: #ffffff;
         padding: 40px 60px;
         color: #505e6c;
@@ -83,7 +98,7 @@
 
     @media (max-width:991px) {
         .register-photo form {
-            padding: 40px;
+            padding: 20px;
         }
     }
 
@@ -95,11 +110,11 @@
 
     .register-photo form .form-control {
         background: #f7f9fc;
-        border: none;
-        border-bottom: 1px solid #dfe7f1;
-        border-radius: 0;
+        border: 1px solid #e8ecf0 !important;
+        border-radius: 4px;
         box-shadow: none;
         outline: none;
+        font-size: 15px;
         color: inherit;
         text-indent: 6px;
         height: 40px;
@@ -110,23 +125,25 @@
         line-height: 20px;
     }
 
-    .register-photo form .btn-primary {
-        background: #f4476b;
+    .register-photo form .btn-is-primary {
+        background: #DA271F;
         border: none;
         border-radius: 4px;
         padding: 11px;
+        color: #fff; 
+        font-weight: 700;
         box-shadow: none;
         margin-top: 35px;
         text-shadow: none;
         outline: none !important;
     }
 
-    .register-photo form .btn-primary:hover,
-    .register-photo form .btn-primary:active {
+    .register-photo form .btn-is-primary:hover,
+    .register-photo form .btn-is-primary:active {
         background: #eb3b60;
     }
 
-    .register-photo form .btn-primary:active {
+    .register-photo form .btn-is-primary:active {
         transform: translateY(1px);
     }
 
@@ -138,4 +155,20 @@
         opacity: 0.9;
         text-decoration: none;
     }
+    .btn-previous{
+        background: #DA271F;
+        border-radius: 50%;
+        border: none;
+        width: 70px;
+        height: 70px;
+        outline: none !important;
+        position: absolute;
+        left: 50%;
+        font-size: 20px; 
+        bottom: 10rem;
+        padding: 10px;
+        cursor: pointer;
+        color: #fff;
+    }
 </style>
+
