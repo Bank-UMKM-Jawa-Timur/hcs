@@ -225,6 +225,7 @@ class RoleSeeder extends Seeder
             'setting - master - user - edit user',
             'setting - master - user - detail user',
             'setting - master - user - delete user',
+            'setting - master - user - reset password',
             'setting - master - role',
             'setting - master - role - create role',
             'setting - master - role - edit role',

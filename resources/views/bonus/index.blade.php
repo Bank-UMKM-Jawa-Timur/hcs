@@ -68,22 +68,24 @@
                                         <td>{{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('d F Y') }}</td>
                                         <td>
                                             @if ($item->is_lock != 1)
-                                                @if (auth()->user()->can('penghasilan - lock - bonus'))
+                                                @can('penghasilan - lock - bonus')
                                                     <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
                                                         class="btn btn-success p-1">Lock</a>
+                                                @endcan
+                                                @can('penghasilan - edit - bonus')
                                                     <a href="{{ route('edit-tunjangan-bonus', [
                                                         'idTunjangan' => $item->id_tunjangan,
                                                         'tanggal' => \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') ])}}" class="btn btn-outline-warning p-1">Edit</a>
-                                                @endif
+                                                @endcan
                                             @else
-                                                @if (auth()->user()->can('penghasilan - unlock - bonus'))
+                                                @can('penghasilan - unlock - bonus')
                                                     <a href="{{route('bonus-unlock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
                                                         class="btn btn-success p-1">Unlock</a>
-                                                @endif
+                                                @endcan
                                             @endif
-                                            @if (auth()->user()->can('penghasilan - import - bonus - detail'))
+                                            @can('penghasilan - import - bonus - detail')
                                                 <a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}" class="btn btn-outline-info p-1">Detail</a>
-                                            @endif
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

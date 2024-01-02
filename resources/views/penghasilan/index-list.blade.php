@@ -91,15 +91,16 @@
                                                     @endphp
                                                     <a href="{{route('penghasilan-tidak-teratur.lock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
                                                     class="btn btn-success p-1">Lock</a>
-                                                @elsecan('penghasilan - edit - penghasilan tidak teratur')
+                                                @endcan
+                                                @can('penghasilan - edit - penghasilan tidak teratur')
                                                     @php
                                                         $cant_lock_edit = true;
                                                     @endphp
                                                     <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur', [
                                                         'idTunjangan' => $item->tunjangan_id,
                                                         'tanggal' => $item->tanggal ])}}" class="btn btn-outline-warning p-1">Edit</a>
-                                                @endif
-                                            @else
+                                                @endcan
+                                                    @else
                                                 @can('penghasilan - unlock - penghasilan tidak teratur')
                                                     @php
                                                         $cant_unlock = true;
