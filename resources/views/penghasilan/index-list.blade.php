@@ -100,7 +100,7 @@
                                                         'idTunjangan' => $item->tunjangan_id,
                                                         'tanggal' => $item->tanggal ])}}" class="btn btn-outline-warning p-1">Edit</a>
                                                 @endcan
-                                                    @else
+                                            @else
                                                 @can('penghasilan - unlock - penghasilan tidak teratur')
                                                     @php
                                                         $cant_unlock = true;
@@ -108,9 +108,6 @@
                                                     <a href="{{route('penghasilan-tidak-teratur.unlock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
                                                         class="btn btn-success p-1">Unlock</a>
                                                 @endif
-                                            @endif
-                                            @if (auth()->user()->hasRole(['kepegawaian','admin']))
-                                                <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->tunjangan_id }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
                                             @endif
                                             @can('penghasilan - import - penghasilan tidak teratur - detail')
                                                 @php
