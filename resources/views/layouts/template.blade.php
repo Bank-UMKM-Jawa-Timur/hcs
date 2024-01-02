@@ -94,8 +94,8 @@ Coded by www.creative-tim.com
             {{-- End Content --}}
             <footer class="footer footer-black border-top footer-white ">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="credits ml-auto">
+                    <div class="ml-4 d-flex justify-content-start">
+                        <div class="">
                             <span class="copyright">
                                 BANK UMKM JATIM ©
                                 <script>
