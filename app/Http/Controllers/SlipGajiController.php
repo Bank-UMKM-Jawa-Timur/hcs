@@ -21,7 +21,7 @@ class SlipGajiController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->hasRole(['kepegawaian','admin'])) {
+        if (!auth()->user()->can('penghasilan - gaji - slip gaji - rincian')) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.laporan_gaji', ['data' => null, 'kategori' => null, 'request' => null]);
@@ -362,8 +362,10 @@ class SlipGajiController extends Controller
     public function slip(Request $request) {
         // Need permission
         $user = auth()->user();
-        if (!$user->can('penghasilan - gaji - slip gaji')) {
-            return view('roles.forbidden');
+        if (!$user->hasRole('user')) {
+            if (!$user->can('penghasilan - gaji - slip gaji')) {
+                return view('roles.forbidden');
+            }
         }
         FacadesSession::forget('year');
         FacadesSession::forget('nip');

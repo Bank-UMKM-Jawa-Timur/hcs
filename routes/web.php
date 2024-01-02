@@ -117,7 +117,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/bagian', BagianController::class);
     Route::resource('/pajak_penghasilan', PenghasilanTidakTeraturController::class);
     Route::resource('/user', UserController::class);
-    Route::get('/get-nip-by-karyawan', [UserController::class, 'getKaryawanBynama'])->name('nip-by-karyawan');
+    Route::get('/reset-pass/{id}', [UserController::class, 'resetPass'])->name('resetPass');
+    Route::post('/reset-password/{id}', [UserController::class, 'updatePass'])->name("updatePass");
 
     Route::resource('/potongan', PotonganController::class);
     Route::post('/get-karyawan-by-nip', [PotonganController::class, 'getKaryawanByNip'])->name('karyawan-by-entitas');
@@ -283,7 +284,7 @@ Route::group(['middleware' => 'auth'], function () {
     // SlipJurnal
     Route::get('/slip_jurnal', [SlipGajiController::class, 'slipJurnalIndex'])->name('slipIndex');
     Route::post('/slip_jurnal/getSlip', [SlipGajiController::class, 'slipJurnal'])->name('getSlip');
-    
+
     // Slip gaji
     Route::prefix('slip')->name('slip.')->group(function() {
         Route::get('', [SlipGajiController::class, 'slip'])->name('index');
@@ -331,6 +332,9 @@ Route::group(['middleware' => 'auth'], function () {
         ->group(function () {
             Route::get('/', [PayrollController::class, 'index'])->name('index');
             Route::get('pdf', [PayrollController::class, 'cetak'])->name('pdf');
+            Route::get('/cetak-slip', [PayrollController::class, 'cetakSlip'])->name('cetak_slip');
+            Route::get('/slip', [PayrollController::class, 'slip'])->name('slip');
+            Route::get('/slip/pdf', [PayrollController::class, 'slipPDF'])->name('slip.pdf');
         });
 });
 require __DIR__.'/auth.php';

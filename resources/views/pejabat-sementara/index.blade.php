@@ -19,32 +19,42 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive overflow-hidden content-center">
-                        <table class="table whitespace-nowrap" id="pjs-table">
-                            <thead class="text-dark">
-                                <tr>
-                                    <th>No</th>
-                                    <th>NIP</th>
-                                    <th>Nama</th>
-                                    <th>Jabatan PJS</th>
-                                    <th>Mulai</th>
-                                    <th>Berakhir</th>
-                                    <th>Status</th>
-                                    @can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')
-                                        <th>Aksi</th>
-                                    @endcan
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($pjs as $data)
+                        <form id="form" method="get">
+                            @include('components.pagination.header')
+                            <table class="table whitespace-nowrap" id="pjs-table">
+                                <thead class="text-primary">
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->nip }}</td>
-                                        <td>{{ $data->karyawan->nama_karyawan }}</td>
-                                        <td>{{ jabatanLengkap($data) }}</td>
-                                        <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
-                                        <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
-                                        <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
-                                        @can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')
+                                        <th>No</th>
+                                        <th>NIP</th>
+                                        <th>Nama</th>
+                                        {{-- <th>Jabatan Asli</th> --}}
+                                        <th>Jabatan PJS</th>
+                                        <th>Mulai</th>
+                                        <th>Berakhir</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                        $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                                        $pagination = \App\Helpers\Pagination::generateNumber($page, $page_length);
+                                        $number = 1;
+                                        if ($pagination) {
+                                        $number = $pagination['iteration'];
+                                        }
+                                    @endphp
+                                    @foreach ($pjs as $data)
+                                        <tr>
+                                            <td>{{ $number++ }}</td>
+                                            <td>{{ $data->nip }}</td>
+                                            <td>{{ $data->karyawan->nama_karyawan }}</td>
+                                            {{-- <td>{{ jabatanLengkap($data->karyawan) }}</td> --}}
+                                            <td>{{ jabatanLengkap($data) }}</td>
+                                            <td>{{ $data->tanggal_mulai->format('d M Y') }}</td>
+                                            <td>{{ $data->tanggal_berakhir?->format('d M Y') ?? '-' }}</td>
+                                            <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
                                             <td class="d-flex justify-content-center">
                                                 @if(!$data->tanggal_berakhir)
                                                     <a href="#" data-toggle="modal" data-id="{{ $data->id }}" data-target="#exampleModal-{{ $data->id }}" class="btn btn-info">nonaktifkan</a>
@@ -52,11 +62,17 @@
                                                 -
                                                 @endif
                                             </td>
-                                        @endcan
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @include('components.pagination.table-info', [
+                            'obj' => $pjs,
+                            'page_length' => $pagination['page_length'],
+                            'start' => $pagination['start'],
+                            'end' => $pagination['end']
+                            ])
+                        </form>
                     </div>
                 </div>
             </div>

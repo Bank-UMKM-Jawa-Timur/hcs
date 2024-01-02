@@ -147,7 +147,10 @@ class KaryawanController extends Controller
         $message = '';
 
         try {
-            $data = KaryawanModel::with('jabatan')->where('nip', $nip)->first();
+            $data = KaryawanModel::select('mst_karyawan.*', 'cab.nama_cabang')
+                                ->leftJoin('mst_cabang AS cab', 'cab.kd_cabang', 'mst_karyawan.kd_entitas')
+                                ->with('jabatan')
+                                ->where('nip', $nip)->first();
             $req_status = HttpFoundationResponse::HTTP_OK;
             $status = 'success';
             $message = 'Berhasil';

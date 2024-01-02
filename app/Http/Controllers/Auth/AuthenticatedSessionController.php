@@ -9,6 +9,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -25,18 +26,16 @@ class AuthenticatedSessionController extends Controller
     {
         try {
             $user = User::where('email', $request->input_type)->orWhere('username', $request->input_type)->first();
-            if ($user) {
+            if ($user && Hash::check($request->password, $user->password)) {
                 if ($user->first_login) {
-                    return 'change password page';
-                    return redirect('first-login?id=' . $user->id);
+                    return redirect()->route('password.reset', ['id' => $user->id]);
                 } else {
                     $request->authenticate();
                     $request->session()->regenerate();
 
                     return redirect()->intended(RouteServiceProvider::HOME);
                 }
-            }
-            else {
+            }else{
                 Alert::warning('Peringatan', 'Akun tidak ditemukan');
                 return back();
             }

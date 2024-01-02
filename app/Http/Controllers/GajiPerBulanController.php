@@ -60,7 +60,7 @@ class GajiPerBulanController extends Controller
 
     public function index()
     {
-        if (!auth()->user()->can('penghasilan - proses penghasilan')) {
+        if (!auth()->user()->can('penghasilan')) {
             return view('roles.forbidden');
         }
         // Need permission
@@ -101,16 +101,14 @@ class GajiPerBulanController extends Controller
         $tjJamsostek = array();
         $cbg = DB::table('mst_cabang')
             ->select('kd_cabang')
-            ->get();
-        foreach ($cbg as $item) {
-            array_push($cabang, $item->kd_cabang);
-        }
+            ->pluck('kd_cabang');
 
         DB::beginTransaction();
         $employee = array();
         $pph = array();
         $karyawan = DB::table('mst_karyawan')
                     ->whereNull('tanggal_penonaktifan')
+                    ->whereNotIn('kd_entitas', $cbg)
                     ->get();
 
         // Get Penghasilan from mst_karyawan + tunjangan karyawan + penghasilan tidak teratur
@@ -239,7 +237,7 @@ class GajiPerBulanController extends Controller
                 'tj_jabatan' => $tunjangan[2],
                 'tj_teller' => $tunjangan[3],
                 'tj_perumahan' => $tunjangan[4],
-                'tj_kemahalan' => $tunjangan[15],
+                'tj_kemahalan' => $tunjangan[5],
                 'tj_pelaksana' => $tunjangan[6],
                 'tj_kesejahteraan' => $tunjangan[7],
                 'tj_multilevel' => $tunjangan[8],

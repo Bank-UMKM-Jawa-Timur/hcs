@@ -10,6 +10,14 @@
             font-size: 14px;
             font-weight: 700;
         }
+        </style>
+    <style>
+        @media print {
+            .modal-header,
+            .modal-footer {
+                display: none !important;
+            }
+        }
     </style>
 @endpush
 
@@ -87,21 +95,20 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="print-slip">
-                <div class="d-flex justify-content-between">
+            <div class="modal-body">
+                <div class="d-flex justify-content-between" id="print-slip">
                     <div class="d-flex flex-row">
                         <div class="img-logo">
-                            <img src="{{ asset('style/assets/img/logo.png') }}" width="100px" class="img-fluid">
+                            <img src="{{ asset('style/assets/img/logo.png') }}" width="100px" class="img-fluid" style="margin-left: 1rem">
                         </div>
-                        <div class="pl-2">
+                        <div class="pl-2" style="margin-left: 2rem;">
                             <h4 class="text-bold my-0">SLIP GAJI PEGAWAI</h4>
                             <h6 class="text-bold mt-2 mb-0 periode">Periode</h6>
                             <h6 class="text-bold mt-2 mb-0">Bank BPR Jatim</h6>
                         </div>
                     </div>
-                    <div class="p-2">
-                        <input type="text" id="id_nip" name="id_nip" hidden>
-                        <button class="is-btn is-primary" id="download-gaji">Download Slip Gaji</button>
+                    <div class="p-2" id="tombol-download">
+                        <button class="is-btn is-primary" id="print-gaji">Download Slip Gaji</button>
                     </div>
                 </div>
                 <hr>
@@ -139,8 +146,8 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 m-0">
-                            <table class="table table-bordered m-0" style="border:1px solid #e3e3e3" id="table-tunjangan">
-                                <thead class="bg-primary text-white">
+                            <table class="table table-bordered m-0" style=" border:1px solid #e3e3e3" id="table-tunjangan">
+                                <thead style="background-color: #da271f !important; color: white !important;">
                                     <tr>
                                         <th class="text-center px-3">Pendapatan</th>
                                         <th class="text-center px-3">Jumlah</th>
@@ -180,12 +187,12 @@
                             </table>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row mt-4" id="footer-1">
                         <div class="col">
                             *) Keterangan: Pajak PPh 21 ditanggung perusahaan.
                         </div>
                     </div>
-                    <div class="row mt-2">
+                    <div class="row mt-2 d-none" id="footer-2">
                         <div class="col">
                             Dicetak dengan <b>{{env('APP_NAME')}}</b>
                         </div>
@@ -373,6 +380,8 @@
             const data = $(this).data('json');
             const bulan = data.bulan;
             const bulanName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+            $('#request_month').val(bulan);
+
             $('.periode').html(`Periode ${bulanName[bulan]} ${tahun}`)
 
             $('#download-gaji').on('click',function(e) {
@@ -396,6 +405,7 @@
                     },
                 });
             })
+
             $('#table-tunjangan > tbody').empty();
             $('#table-tunjangan-total ').empty();
 
@@ -509,6 +519,30 @@
                 </tr
             `
             $("#table-total-diterima thead").append(tableTotalDiterima);
+
+            $("#print-gaji").on('click', function () {
+                $("#tombol-download").addClass('d-none');
+                $("#footer-1").removeClass('d-none');
+                $("#footer-2").removeClass('d-none');
+                var printContent = $(".modal-body").clone();
+                var printWindow = window.open('', '_blank');
+                printWindow.document.write('<html><head></head><body>');
+                printWindow.document.write('<link href="{{ asset('style/assets/css/bootstrap.min.css') }}" rel="stylesheet" />');
+                printWindow.document.write('<link href="{{ asset('style/assets/css/paper-dashboard.css') }}" rel="stylesheet" />');
+                printWindow.document.write('<link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />');
+                printWindow.document.write(printContent.html());
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+
+                printWindow.print();
+                printWindow.onafterprint = function () {
+                    printWindow.close();
+                    $("#tombol-download").removeClass('d-none');
+                    $("#footer-1").removeClass('d-none');
+                    $("#footer-2").addClass('d-none');
+                };
+            });
         })
+
     </script>
 @endpush

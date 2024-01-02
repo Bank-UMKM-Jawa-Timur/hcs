@@ -4,15 +4,21 @@ namespace App\Repository;
 
 use App\Models\KaryawanModel;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserRepository
 {
     private $param;
     public function getListUser($search, $limit=10, $page=1) {
-        $this->param['data'] = User::when($search, function ($query) use ($search) {
-            $query->where('name', 'like', "%$search%")
-            ->orWhere('email', 'like', "%$search%");
+        $this->param['data'] = DB::table('roles')->select('users.id', 'users.name as name_user', 'users.email', 'users.username','roles.name as name_role')
+        ->join('model_has_roles','model_has_roles.role_id','=','roles.id')
+        ->join('users','model_has_roles.model_id','=','users.id')
+        ->when($search, function ($query) use ($search) {
+            $query->where('users.name', 'like', "%$search%")
+            ->orWhere('users.email', 'like', "%$search%")
+            ->orWhere('r.name', 'like', "%$search%");
         })
         ->paginate($limit);
         return $this->param['data'];
@@ -23,6 +29,12 @@ class UserRepository
         ->orderBy('nip')
         ->whereNull('tanggal_penonaktifan')
         ->get();
+
+        return $this->param['data'];
+    }
+
+    public function getRole(){
+        $this->param['data'] = Role::all();
 
         return $this->param['data'];
     }

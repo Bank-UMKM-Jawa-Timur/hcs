@@ -7,7 +7,7 @@
     <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('divisi.index') }}">Divisi</a></p>
   </div>
   <div class="card-header row mt-3 mr-8 pr-5">
-    @if(auth()->user()->hasRole(['admin']))
+    @if(auth()->user()->can('setting - master - divisi - create divisi'))
     <a class="mb-3" href="{{ route('divisi.create') }}">
       <button class="is-btn is-primary">Tambah Divisi</button>
     </a>
@@ -52,7 +52,7 @@
                             </td>
                             <td>
                               {{-- <div class="row"> --}}
-                                  @if(auth()->user()->hasRole(['admin']))
+                                  @if(auth()->user()->can('setting - master - divisi - edit divisi'))
                                   <a href="{{ route('divisi.edit', $item['kd_divisi']) }}">
                                     <button class="is-btn btn-warning">
                                         Edit

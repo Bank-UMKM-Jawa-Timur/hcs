@@ -7,7 +7,7 @@
             <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="{{ route('mutasi.index') }}">Mutasi</a></p>
         </div>
         <div class="card-header row mt-3 mr-8 pr-5" >
-            @if (auth()->user()->can('manajemen karyawan - pergerakan karir - data mutasi - create mutasi'))
+            @if (auth()->user()->hasRole(['hrd']))
                 <a class="mb-3" href="{{ route('mutasi.create') }}">
                     <button  class="is-btn is-primary">Tambah Mutasi</button>
                 </a>
@@ -92,7 +92,7 @@
                                         <td>
                                             {{ $item->bukti_sk }}
                                         </td>
-    
+
                                     </tr>
                                 @endforeach
                             </tbody>

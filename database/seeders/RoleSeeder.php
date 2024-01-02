@@ -183,7 +183,6 @@ class RoleSeeder extends Seeder
             'manajemen karyawan - reward & punishment',
             'manajemen karyawan - reward & punishment - surat peringatan',
             'penghasilan',
-            'penghasilan - proses penghasilan',
             'penghasilan - pajak penghasilan',
             'penghasilan - import',
             'penghasilan - import - penghasilan teratur',

@@ -7,7 +7,7 @@
     <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('pangkat_golongan.index') }}">Pangkat Dan Golongan</a></p>
   </div>
   <div class="card-header row mt-3 mr-8 pr-5">
-    @if(auth()->user()->hasRole(['admin']))
+    @if(auth()->user()->can('setting - master - pangkat & golongan - create pangkat & golongan'))
       <a class="mb-3" href="{{ route('pangkat_golongan.create') }}">
         <div class="pt-2 pb-3">
         <button class="is-btn is-primary">tambah pangkat dan golongan</button>
@@ -54,7 +54,7 @@
                                     </td>
                                     <td>
                                       {{-- <div class="row"> --}}
-                                        @if(auth()->user()->hasRole(['admin']))
+                                        @if(auth()->user()->can('setting - master - pangkat & golongan - edit pangkat & golongan'))
                                         <a href="{{ route('pangkat_golongan.edit', $item->golongan) }}">
                                           <button class="is-btn btn-warning">
                                             Edit
