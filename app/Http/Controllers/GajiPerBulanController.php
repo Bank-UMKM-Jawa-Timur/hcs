@@ -96,19 +96,18 @@ class GajiPerBulanController extends Controller
 
         $bulan = $request->bulan;
         $tahun = $request->tahun;
-        $cabang = array();
         $tunjangan = array();
         $tjJamsostek = array();
-        $cbg = DB::table('mst_cabang')
+        $cabang = DB::table('mst_cabang')
             ->select('kd_cabang')
-            ->pluck('kd_cabang');
+            ->pluck('kd_cabang')
+            ->toArray();
 
         DB::beginTransaction();
         $employee = array();
         $pph = array();
         $karyawan = DB::table('mst_karyawan')
                     ->whereNull('tanggal_penonaktifan')
-                    ->whereNotIn('kd_entitas', $cbg)
                     ->get();
 
         // Get Penghasilan from mst_karyawan + tunjangan karyawan + penghasilan tidak teratur

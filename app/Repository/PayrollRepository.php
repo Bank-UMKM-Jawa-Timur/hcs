@@ -161,9 +161,7 @@ class PayrollRepository
                                         DB::raw('potongan_gaji.kredit_pegawai AS kredit_pegawai'),
                                         DB::raw('potongan_gaji.iuran_ik AS iuran_ik'),
                                         DB::raw('(potongan_gaji.kredit_koperasi + potongan_gaji.iuran_koperasi + potongan_gaji.kredit_pegawai + potongan_gaji.iuran_ik) AS total_potongan'),
-                                    )
-                                    ->where('potongan_gaji.bulan', $month)
-                                    ->where('potongan_gaji.tahun', $year);
+                                    );
                                 }
                             ])
                             ->select(
