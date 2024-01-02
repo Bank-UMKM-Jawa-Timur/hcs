@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="username">Email</label>
-                            <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ $data->email }}">
+                            <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ old('username') == null ? $data->email : old('username') }}">
                             @error('username')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
