@@ -26,19 +26,21 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="">Kantor</label>
-                                <select name="kantor" id="kantor" class="form-control">
-                                    <option value="">--- Pilih Kantor ---</option>
-                                    <option value="pusat" {{ $request?->kantor == "pusat" ? 'selected' : '' }}>Pusat</option>
-                                    <option value="cabang" {{ $request?->kantor == "cabang" ? 'selected' : '' }}>Cabang</option>
-                                </select>
+                        @if (!auth()->user()->hasRole('user'))
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Kantor</label>
+                                    <select name="kantor" id="kantor" class="form-control">
+                                        <option value="">--- Pilih Kantor ---</option>
+                                        <option value="pusat" {{ $request?->kantor == "pusat" ? 'selected' : '' }}>Pusat</option>
+                                        <option value="cabang" {{ $request?->kantor == "cabang" ? 'selected' : '' }}>Cabang</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4" id="cabang_col">
-                            
-                        </div>
+                            <div class="col-md-4" id="cabang_col">
+                                
+                            </div>
+                        @endif
                         <div class="col-md-4">
                             <label for="tahun">Tahun</label>
                             <div class="form-group">

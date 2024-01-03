@@ -183,10 +183,17 @@ class SlipGajiController extends Controller
         foreach($cabang as $i){
             array_push($cbg, $i->kd_cabang);
         }
-        $karyawan = DB::table('mst_karyawan')
-            ->whereNotIn('kd_entitas', $cbg)
-            ->orWhere('kd_entitas', null)
-            ->get();
+        if (auth()->user()->hasRole('user')) {
+            $karyawan = DB::table('mst_karyawan')
+                ->where('nip', auth()->user()->nip)
+                ->get();
+        }
+        else {
+            $karyawan = DB::table('mst_karyawan')
+                ->whereNotIn('kd_entitas', $cbg)
+                ->orWhere('kd_entitas', null)
+                ->get();
+        }
 
         $data = $this->getSlipJurnal($request, $kategori, $karyawan);
 
@@ -315,23 +322,31 @@ class SlipGajiController extends Controller
         $kategori = $request->kategori;
         $data = [];
 
-        if($kantor == 'cabang'){
+        if (auth()->user()->hasRole('user')) {
             $karyawan = DB::table('mst_karyawan')
-                ->where('kd_entitas', $Opsicabang)
-                ->get();
-        } else if($kantor == 'pusat'){
-            $cabang = DB::table('mst_cabang')
-                ->select('kd_cabang')
-                ->get();
-            $cbg = [];
-            foreach($cabang as $i){
-                array_push($cbg, $i->kd_cabang);
+                        ->where('nip', auth()->user()->nip)
+                        // Comment by arsyad entitas terdapat pilihan untuk memilih cabang tertentu di kategori
+                        ->get();
+        }
+        else {
+            if($kantor == 'cabang'){
+                $karyawan = DB::table('mst_karyawan')
+                    ->where('kd_entitas', $Opsicabang)
+                    ->get();
+            } else if($kantor == 'pusat'){
+                $cabang = DB::table('mst_cabang')
+                    ->select('kd_cabang')
+                    ->get();
+                $cbg = [];
+                foreach($cabang as $i){
+                    array_push($cbg, $i->kd_cabang);
+                }
+                $karyawan = DB::table('mst_karyawan')
+                    ->whereNotIn('kd_entitas', $cbg)
+                    ->orWhere('kd_entitas', null)
+                    // Comment by arsyad entitas terdapat pilihan untuk memilih cabang tertentu di kategori
+                    ->get();
             }
-            $karyawan = DB::table('mst_karyawan')
-                ->whereNotIn('kd_entitas', $cbg)
-                ->orWhere('kd_entitas', null)
-                // Comment by arsyad entitas terdapat pilihan untuk memilih cabang tertentu di kategori
-                ->get();
         }
 
         $data = $this->getLaporanGaji($karyawan, $kategori, $request);
@@ -384,12 +399,12 @@ class SlipGajiController extends Controller
             $karyawan = DB::table('users AS u')
                             ->select('k.nip', 'k.kd_entitas')
                             ->join('mst_karyawan AS k', 'k.nip', 'u.username')
-                            ->where('u.username', $user->username)
+                            ->where('u.username', $user->kd_cabang)
                             ->first();
             $cabang = $karyawan->kd_entitas;
         }
 
-        $nip = $user->hasRole('user') ? $user->username : $request->get('nip');
+        $nip = $user->hasRole('user') ? $user->nip : $request->get('nip');
         $year = $request->get('tahun');
 
         FacadesSession::put('nip',$nip);
