@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
 
             if (($user && Hash::check($request->password, $user->password)) || ($karyawan && Hash::check($request->password, $karyawan->password))) {
                 if (Auth::guard('karyawan')->attempt(['nip' => $request->input_type, 'password' => $request->password])) {
-                    $request->authenticate();
+                    // $request->authenticate();
                     $request->session()->regenerate();
 
                     return redirect()->route('password.reset');
