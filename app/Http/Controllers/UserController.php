@@ -58,9 +58,11 @@ class UserController extends Controller
         }
         $karyawan = $this->param->getDataKaryawan();
         $role = $this->param->getRole();
+        $cabang = $this->param->getCabang();
         return view('user.create', [
             'karyawan' => $karyawan,
-            'role' => $role
+            'role' => $role,
+            'cabang' => $cabang
         ]);
     }
 
@@ -82,6 +84,9 @@ class UserController extends Controller
         $dataUser->name = $karyawan->nama_karyawan;
         $dataUser->username = $request->name;
         $dataUser->email = $request->username;
+        if ($request->role == 4) {
+            $dataUser->kd_cabang = $request->data_cabang;
+        }
         $dataUser->password = Hash::make($request->password);
         $dataUser->save();
 
@@ -120,12 +125,14 @@ class UserController extends Controller
         $data = $this->param->dataByid($id);
         $karyawan = $this->param->getDataKaryawan();
         $role = $this->param->getRole();
-        $dataRoleId = ModelHasRole::where('model_id',$id)->first(); 
+        $dataRoleId = ModelHasRole::where('model_id',$id)->first();
+        $cabang = $this->param->getCabang();
         return view('user.edit', [
             'data' => $data,
             'karyawan' => $karyawan,
             'role' => $role,
             'dataRoleId' => $dataRoleId,
+            'cabang' => $cabang
         ]);
     }
 
@@ -153,6 +160,11 @@ class UserController extends Controller
             $dataUser->name = $karyawan->nama_karyawan;
             $dataUser->username = $request->name;
             $dataUser->email = $request->username;
+            if ($request->role == 4) {
+                $dataUser->kd_cabang = $request->data_cabang;
+            }else{
+                $dataUser->kd_cabang = null;
+            }
             $dataUser->password = Hash::make($request->password);
             $dataUser->save();
 

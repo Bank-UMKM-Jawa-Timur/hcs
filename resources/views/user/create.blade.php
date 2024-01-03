@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label for="name">Nama</label>
-                            <select name="name" id="nama-karyawan" class="@error('name') is_invalid @enderror form-control">
+                            <select name="name" id="nama-karyawan" class="@error('name') is_invalid @enderror form-control" required>
                                 <option value="">Pilih Karyawan</option>
                                 @foreach ($karyawan as $key => $item)
                                     @php
@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="username">Email</label>
-                            <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ old('username') }}" value="" readonly>
+                            <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ old('username') }}" value="" required>
                             @error('username')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
@@ -47,7 +47,7 @@
                     <div class="row mt-2">
                         <div class="col-md-6">
                             <label for="username">Role</label>
-                            <select name="role" id="role-karyawan" class="@error('role') is_invalid @enderror form-control">
+                            <select name="role" id="role-karyawan" class="@error('role') is_invalid @enderror form-control" required>
                                 <option value="">Pilih Role</option>
                                 @foreach ($role as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -56,6 +56,8 @@
                             @error('role')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
+                        </div>
+                        <div class="col-md-6" id="cabang">
                         </div>
                     </div>
                     <div class="pt-3 pb-3">
@@ -75,8 +77,27 @@
             var karyawan = $(this).val();
             console.log(karyawan);
             $('#nip-for-password').val(karyawan);
+            // document.getElementById('username').value = karyawan + "@mail.com"
+        })
 
-            document.getElementById('username').value = karyawan + "@mail.com"
+        $('#role-karyawan').on('change', function () { 
+            let kdCabang = $(this).val()
+            if (kdCabang == 4) {
+                $('#cabang').append(`
+                    <label for="username">Cabang</label>
+                    <select name="data_cabang" id="data-cabang" class="@error('role') is_invalid @enderror form-control" required>
+                        <option value="">Pilih Cabang</option>
+                        @foreach ($cabang as $item)
+                            <option value="{{ $item->kd_cabang }}">{{ $item->nama_cabang }}</option>
+                        @endforeach
+                    </select>
+                    @error('cabang')
+                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
+                `)
+            }else{
+                $('#cabang').empty();
+            }
         })
     </script>
     @endpush

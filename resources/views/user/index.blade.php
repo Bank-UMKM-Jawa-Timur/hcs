@@ -60,6 +60,9 @@
                                     Role
                                 </th>
                                 <th>
+                                    Cabang
+                                </th>
+                                <th>
                                     Aksi
                                 </th>
                             </thead>
@@ -79,6 +82,7 @@
                                             <td>{{ $item->username }}</td>
                                             <td>{{ $item->email }}</td>
                                             <td>{{ $item->name_role }}</td>
+                                            <td>{{ $item->nama_cabang ?? '-' }}</td>
                                             <td>
                                                 @if ($item->first_login)
                                                 -

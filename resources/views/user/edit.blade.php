@@ -57,6 +57,18 @@
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
+                            <div class="col-md-6" id="cabang">
+                                <label for="username">Cabang</label>
+                                <select name="data_cabang" id="data-cabang" class="@error('role') is_invalid @enderror form-control" required>
+                                    <option value="">Pilih Cabang</option>
+                                    @foreach ($cabang as $item)
+                                        <option value="{{ $item->kd_cabang }}" {{ $data->kd_cabang == $item->kd_cabang ? 'selected' : '' }}>{{ $item->nama_cabang }}</option>
+                                    @endforeach
+                                </select>
+                                @error('cabang')
+                                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                     </div>
                     <div class="pt-3 pb-3">
                         <input type="hidden" name="password" id="nip-for-password" value="{{ $data->username }}">
@@ -69,6 +81,13 @@
 
     @push('script')
     <script>
+        var roleKaryawan = $('#role-karyawan').find(":selected").val();
+        if (roleKaryawan != 4) {
+            $('#cabang').hide();
+        }else{
+            $('#cabang').show();
+        }
+
         $('#nama-karyawan').select2();
 
         $('#nama-karyawan').on('change', function(){
@@ -77,6 +96,27 @@
             $('#nip-for-password').val(karyawan);
 
             document.getElementById('username').value = karyawan + "@mail.com"
+        })
+
+        $('#role-karyawan').on('change', function () { 
+            let kdCabang = $(this).val()
+            if (kdCabang == 4) {
+                $('#cabang').show()
+                // $('#cabang').append(`
+                //         <label for="username">Cabang</label>
+                //         <select name="data_cabang" id="data-cabang" class="@error('role') is_invalid @enderror form-control" required>
+                //             <option value="">Pilih Cabang</option>
+                //             @foreach ($cabang as $item)
+                //                 <option value="{{ $item->kd_cabang }}" {{ $data->kd_cabang == $item->kd_cabang ? 'selected' : '' }}>{{ $item->nama_cabang }}</option>
+                //             @endforeach
+                //         </select>
+                //         @error('cabang')
+                //             <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                //         @enderror
+                // `)
+            }else{
+                $('#cabang').hide();
+            }
         })
     </script>
     @endpush

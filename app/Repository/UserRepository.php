@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Models\CabangModel;
 use App\Models\KaryawanModel;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -12,9 +13,10 @@ class UserRepository
 {
     private $param;
     public function getListUser($search, $limit=10, $page=1) {
-        $this->param['data'] = DB::table('roles')->select('users.id', 'users.name as name_user', 'users.email', 'users.username','users.first_login','roles.name as name_role')
+        $this->param['data'] = DB::table('roles')->select('users.id', 'users.name as name_user', 'users.email', 'users.username', 'users.kd_cabang', 'mst_cabang.nama_cabang', 'users.first_login','roles.name as name_role')
         ->join('model_has_roles','model_has_roles.role_id','=','roles.id')
         ->join('users','model_has_roles.model_id','=','users.id')
+        ->leftJoin('mst_cabang', 'users.kd_cabang', '=', 'mst_cabang.kd_cabang')
         ->when($search, function ($query) use ($search) {
             $query->where('users.name', 'like', "%$search%")
             ->orWhere('users.email', 'like', "%$search%")
@@ -61,5 +63,9 @@ class UserRepository
             'email' => $data['username'],
             'password' =>  Hash::make($data['password']),
         ]);
+    }
+
+    public function getCabang(){
+        return CabangModel::select('kd_cabang', 'nama_cabang', 'id_kantor')->get();
     }
 }
