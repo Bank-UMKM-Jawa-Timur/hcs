@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
                     // $request->authenticate();
                     $request->session()->regenerate();
 
-                    return redirect()->route('password.reset');
+                    return redirect()->intended(RouteServiceProvider::HOME);
                 } else {
                     if ($user->first_login) {
                         $request->authenticate();
