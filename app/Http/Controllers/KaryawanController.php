@@ -1033,6 +1033,43 @@ class KaryawanController extends Controller
             $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
             $karyawan->orderBy('tgl_lahir', 'asc');
             $karyawan = $karyawan->paginate(25);
+
+            if($request->kategori == 1){
+                $karyawan->appends([
+                    'kategori' => 1
+                ]);
+            } else if($request->kategori == 2){
+                $karyawan->appends([
+                    'kategori' => 2,
+                    'divisi' => $request->divisi
+                ]);
+            } else if($request->kategori == 3){
+                $karyawan->appends([
+                    'kategori' => 3,
+                    'divisi' => $request->divisi,
+                    'subDivisi' => $request->subDivisi
+                ]);
+            } else if($request->kategori == 4){
+                $karyawan->appends([
+                    'kategori' => 4,
+                    'divisi' => $request->divisi,
+                    'subDivisi' => $request->subDivisi,
+                    'bagian' => $request->bagian
+                ]);
+            } else if($request->kategori == 5){
+                if($kantor == 'cabang'){
+                    $karyawan->appends([
+                        'kategori' => 5,
+                        'kantor' => 'Cabang',
+                        'cabang' => $request->cabang
+                    ]);
+                } else{
+                    $karyawan->appends([
+                        'kategori' => 5,
+                        'kantor' => 'Pusat'
+                    ]);
+                }
+            } 
         }
 
         return view('karyawan.reminder-pensiun', [
