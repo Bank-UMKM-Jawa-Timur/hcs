@@ -59,7 +59,10 @@
                                 <th>
                                     Role
                                 </th>
-                                <th class="text-center">
+                                <th>
+                                    Cabang
+                                </th>
+                                <th>
                                     Aksi
                                 </th>
                             </thead>
@@ -79,7 +82,8 @@
                                             <td>{{ $item->username }}</td>
                                             <td>{{ $item->email }}</td>
                                             <td>{{ $item->name_role }}</td>
-                                            <td class="text-center">
+                                            <td>{{ $item->nama_cabang ?? '-' }}</td>
+                                            <td>
                                                 @if ($item->first_login)
                                                     @can('setting - master - user - edit user')
                                                         <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
