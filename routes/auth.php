@@ -19,10 +19,7 @@ Route::middleware('guest')->group(function () {
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 });
 
-Route::group(['middleware' => 'auth'], function () {
-    Route::get('reset-password', [PasswordResetLinkController::class, 'reset'])
-                ->name('password.reset');
-    Route::post('reset-password', [PasswordResetLinkController::class, 'resetPassword'])->name('password.reset');
+Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');

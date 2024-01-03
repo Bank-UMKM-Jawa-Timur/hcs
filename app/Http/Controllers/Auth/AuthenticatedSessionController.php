@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\KaryawanModel;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
@@ -25,29 +26,40 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         try {
-            $user = User::where('email', $request->input_type)->orWhere('username', $request->input_type)->first();
-            if ($user && Hash::check($request->password, $user->password)) {
-                if ($user->first_login) {
-                    $request->authenticate();
-                    $request->session()->regenerate();
-                    
-                    return redirect()->route('password.reset');
-                } else {
-                    $request->authenticate();
+            $user = User::where('email', $request->input_type)
+                ->orWhere('username', $request->input_type)
+                ->first();
+
+            $karyawan = KaryawanModel::where('nip', $request->input_type)
+                ->first();
+
+            if (($user && Hash::check($request->password, $user->password)) || ($karyawan && Hash::check($request->password, $karyawan->password))) {
+                if (Auth::guard('karyawan')->attempt(['nip' => $request->input_type, 'password' => $request->password])) {
+                    // dd(array_keys(config('auth.guards')));
+                    // $request->authenticate();
                     $request->session()->regenerate();
 
                     return redirect()->intended(RouteServiceProvider::HOME);
+                } else {
+                    if ($user->first_login) {
+                        return redirect()->route('password.reset', ['id' => $user->id]);
+                    } else {
+                        $request->authenticate();
+                        $request->session()->regenerate();
+
+                        return redirect()->intended(RouteServiceProvider::HOME);
+                    }
                 }
-            }else{
+            } else {
                 Alert::warning('Peringatan', 'Akun tidak ditemukan');
                 return back();
             }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Alert::warning('Peringatan', $e->getMessage());
             return back();
         }
     }
+
 
     public function destroy(Request $request)
     {
