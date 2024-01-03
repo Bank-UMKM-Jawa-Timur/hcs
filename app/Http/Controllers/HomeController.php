@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Service\EntityService;
 use Carbon\Carbon;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDO;
 
@@ -33,6 +35,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // dd(Auth::guard('web')->check());
+        // dd(\session()->all());
+        // dd(Auth::guard("karyawan")->check());
         // Need permission
         $dataCabang = CabangModel::orderBy('kd_cabang')->get();
         $karyawanByCabang = [];

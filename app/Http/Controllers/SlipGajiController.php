@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Session as FacadesSession;
 use App\Repository\CabangRepository;
 use App\Repository\SlipGajiRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class SlipGajiController extends Controller
 {
@@ -21,7 +22,8 @@ class SlipGajiController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('penghasilan - gaji - slip gaji - rincian')) {
+        if (Auth::guard("karyawan")->check()) {
+        }else if (!auth()->user()->can('penghasilan - gaji - slip gaji - rincian')) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.laporan_gaji', ['data' => null, 'kategori' => null, 'request' => null]);
@@ -29,7 +31,8 @@ class SlipGajiController extends Controller
 
     public function slipJurnalIndex()
     {
-        if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
+        if (Auth::guard("karyawan")->check()) {
+        }else if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.slip_jurnal', ['data' => null, 'kategori' => null, 'request' => null]);
@@ -166,7 +169,8 @@ class SlipGajiController extends Controller
 
     public function SlipJurnal(Request $request)
     {
-        if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
+        if (Auth::guard("karyawan")->check()) {
+        }else if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
             return view('roles.forbidden');
         }
         $kantor = $request->kantor;
@@ -302,7 +306,8 @@ class SlipGajiController extends Controller
 
     public function getLaporan(Request $request)
     {
-        if (!auth()->user()->can('penghasilan - gaji - lampiran gaji')) {
+        if (Auth::guard("karyawan")->check()) {
+        }else if (!auth()->user()->can('penghasilan - gaji - lampiran gaji')) {
             return view('roles.forbidden');
         }
         $kantor = $request->kantor;
@@ -362,7 +367,8 @@ class SlipGajiController extends Controller
     public function slip(Request $request) {
         // Need permission
         $user = auth()->user();
-        if (!$user->hasRole('user')) {
+        if (Auth::guard("karyawan")->check()) {
+        }else if (!$user->hasRole('user')) {
             if (!$user->can('penghasilan - gaji - slip gaji')) {
                 return view('roles.forbidden');
             }
