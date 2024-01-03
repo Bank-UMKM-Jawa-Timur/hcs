@@ -17,38 +17,24 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label for="name">Nama</label>
-                            <select name="name" id="nama-karyawan" class="@error('name') is_invalid @enderror form-control" required>
-                                <option value="">Pilih Karyawan</option>
-                                @foreach ($karyawan as $key => $item)
-                                    @php
-                                        $daftarUser = \App\Models\User::select('id','name','username','email')->where('username', $item->nip)->get();
-                                    @endphp
-                                    @if (count($daftarUser))
-                                    @else
-                                        <option value="{{$item->nip}}">{{$item->nip}} - {{$item->nama_karyawan}}</option>
-                                    @endif
-                                @endforeach
-                                {{-- @foreach ($karyawan as $item)
-                                    <option value="{{$item->nip}}">{{$item->nip}} - {{$item->nama_karyawan}}</option>
-                                @endforeach --}}
-                            </select>
+                            <input type="text" name="name" id="name" class="@error('name') is_invalid @enderror form-control" required />
                             @error('name')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="username">Email</label>
-                            <input type="text" name="username" id="username" class="@error('username') is_invalid @enderror form-control" value="{{ old('username') }}" value="" required>
-                            @error('username')
+                            <label for="email">Email</label>
+                            <input type="email" name="email" id="email" class="@error('email') is_invalid @enderror form-control" value="{{ old('email') }}" value="" required>
+                            @error('email')
                                 <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6">
-                            <label for="username">Role</label>
+                            <label for="role-karyawan">Role</label>
                             <select name="role" id="role-karyawan" class="@error('role') is_invalid @enderror form-control" required>
-                                <option value="">Pilih Role</option>
+                                <option value="0">Pilih Role</option>
                                 @foreach ($role as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
@@ -61,7 +47,6 @@
                         </div>
                     </div>
                     <div class="pt-3 pb-3">
-                        <input type="hidden" name="password" id="nip-for-password">
                         <button class="is-btn is-primary" value="submit" type="submit" style="submit">Simpan</button>
                     </div>
                 </form>
@@ -71,20 +56,11 @@
 
     @push('script')
     <script>
-        $('#nama-karyawan').select2();
-
-        $('#nama-karyawan').on('change', function(){
-            var karyawan = $(this).val();
-            console.log(karyawan);
-            $('#nip-for-password').val(karyawan);
-            // document.getElementById('username').value = karyawan + "@mail.com"
-        })
-
         $('#role-karyawan').on('change', function () { 
             let kdCabang = $(this).val()
             if (kdCabang == 4) {
                 $('#cabang').append(`
-                    <label for="username">Cabang</label>
+                    <label for="data-cabang">Cabang</label>
                     <select name="data_cabang" id="data-cabang" class="@error('role') is_invalid @enderror form-control" required>
                         <option value="">Pilih Cabang</option>
                         @foreach ($cabang as $item)

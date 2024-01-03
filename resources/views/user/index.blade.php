@@ -3,7 +3,7 @@
 @section('content')
     <div class="card-header">
         <h5 class="card-title">Data User</h5>
-        <p class="card-title"><a href="/">Dashboard</a> > <a href="{{route('user.index')}}">user</a></p>
+        <p class="card-title"><a href="/">Setting</a> > <a href="/">Master</a> > <a href="{{route('user.index')}}">User</a></p>
     </div>
 
     <div class="card-body">
@@ -51,9 +51,6 @@
                                     Nama
                                 </th>
                                 <th>
-                                    Username
-                                </th>
-                                <th>
                                     Email
                                 </th>
                                 <th>
@@ -75,28 +72,21 @@
                                   $i = $page == 1 ? 1 : $start;
                                 @endphp
                                 @foreach ($data as $item)
-                                    @if (auth()->user()->username != $item->username || auth()->user()->name != $item->name_user) 
-                                        <tr>
-                                            <td>{{ $i++ }}</td>
-                                            <td>{{ $item->name_user }}</td>
-                                            <td>{{ $item->username }}</td>
-                                            <td>{{ $item->email }}</td>
-                                            <td>{{ $item->name_role }}</td>
-                                            <td>{{ $item->nama_cabang ?? '-' }}</td>
-                                            <td>
-                                                @if ($item->first_login)
-                                                    @can('setting - master - user - edit user')
-                                                        <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
-                                                            Edit
-                                                        </a>
-                                                    @endcan
-                                                @else
-                                                    @can('setting - master - user - edit user')
-                                                        <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
-                                                            Edit
-                                                        </a>
-                                                    @endcan
-                                                    @can('setting - master - user - delete user')
+                                    <tr>
+                                        <td>{{ $i++ }}</td>
+                                        <td>{{ $item->name_user }}</td>
+                                        <td>{{ $item->email }}</td>
+                                        <td>{{ $item->name_role }}</td>
+                                        <td>{{ $item->nama_cabang ?? '-' }}</td>
+                                        <td>
+                                            @if ($item->first_login)
+                                                @can('setting - master - user - edit user')
+                                                    <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
+                                                        Edit
+                                                    </a>
+                                                @endcan
+                                                @can('setting - master - user - delete user')
+                                                    @if ($item->id != auth()->user()->id)
                                                         <a class="is-btn is-primary ml-2" href="javascript:void(0)" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
                                                             Hapus
                                                         </a>
@@ -124,38 +114,75 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    @endcan
-                                                    <a class="is-btn btn-info ml-2" href="javascript:void(0)" data-toggle="modal" data-target="#confirmResetModal{{$item->id}}">
-                                                        Reset Password
+                                                    @endif
+                                                @endcan
+                                            @else
+                                                @can('setting - master - user - edit user')
+                                                    <a class="is-btn is-warning" href="{{ route('user.edit', $item->id) }}">
+                                                        Edit
                                                     </a>
-                                                    {{-- modal hapus --}}
-                                                    <div class="modal fade" id="confirmResetModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Reset Password</h5>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p class="text-left">Apakah Anda yakin ingin mereset password pengguna, <b>{{$item->name_user}}</b> dengan nip, <b>{{ $item->username }}</b>?</p>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                                                                    <form action="{{ route('password.reset.user', $item->id) }}" method="POST">
-                                                                    @csrf
-                                                                    @method('POST')
-                                                                        <button type="submit" class="btn btn-danger">Reset</button>
-                                                                    </form>
+                                                @endcan
+                                                @can('setting - master - user - delete user')
+                                                    @if ($item->id != auth()->user()->id)
+                                                        <a class="is-btn is-primary ml-2" href="javascript:void(0)" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                            Hapus
+                                                        </a>
+                                                        {{-- modal hapus --}}
+                                                        <div class="modal fade" id="confirmHapusModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Hapus Data</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p class="text-left">Apakah Anda Yakin Ingin Menghapus User, <b>{{$item->name_user}}</b>?</p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                                        <form action="{{ route('user.destroy', $item->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                            <button type="submit" class="btn btn-danger">Hapus</button>
+                                                                        </form>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    @endif
+                                                @endcan
+                                                <a class="is-btn btn-info ml-2" href="javascript:void(0)" data-toggle="modal" data-target="#confirmResetModal{{$item->id}}">
+                                                    Reset Password
+                                                </a>
+                                                {{-- modal reset password --}}
+                                                <div class="modal fade" id="confirmResetModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Reset Password</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p class="text-left">Apakah Anda yakin ingin mereset password pengguna, <b>{{$item->name_user}}</b> dengan nip, <b>{{ $item->username }}</b>?</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                                <form action="{{ route('password.reset.user', $item->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('POST')
+                                                                    <button type="submit" class="btn btn-danger">Reset</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endif
+                                                </div>
+                                            @endif
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -165,7 +192,7 @@
                           </div>
                           <div>
                             @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                            {{ $data->links('pagination::bootstrap-4') }}
+                                {{ $data->links('pagination::bootstrap-4') }}
                             @endif
                           </div>
                         </div>
