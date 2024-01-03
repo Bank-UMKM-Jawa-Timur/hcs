@@ -28,7 +28,10 @@ class AuthenticatedSessionController extends Controller
             $user = User::where('email', $request->input_type)->orWhere('username', $request->input_type)->first();
             if ($user && Hash::check($request->password, $user->password)) {
                 if ($user->first_login) {
-                    return redirect()->route('password.reset', ['id' => $user->id]);
+                    $request->authenticate();
+                    $request->session()->regenerate();
+                    
+                    return redirect()->route('password.reset');
                 } else {
                     $request->authenticate();
                     $request->session()->regenerate();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,20 +99,16 @@ class PasswordResetLinkController extends Controller
     }
     public function resetPassword(Request $request)
     {
-        $idUser = $request->id_user;
-        $user = User::findOrFail($idUser);;
+        $idUser = auth()->user()->id;
+        $user = User::findOrFail($idUser);
         $old = $request->old_pass;
         $new = $request->password;
 
-        // if (!Hash::check($old, $user->password))
-        //     return redirect()->route('password.reset', ['id' => $idUser])->withError('Password lama tidak cocok.');
-
         if (Hash::check($new, $user->password))
-            return redirect()->route('password.reset', ['id' => $idUser])->withError('Password baru tidak boleh sama dengan password lama.');
+            return redirect()->route('password.reset')->withError('Password baru tidak boleh sama dengan password lama.');
 
         $validatedData = $request->validate(
             [
-                // 'old_pass' => 'required',
                 'password' => 'required',
                 'confirmation' => 'required|same:password'
             ],
@@ -121,7 +118,6 @@ class PasswordResetLinkController extends Controller
                 'same' => 'Konfirmasi password harus sesuai.'
             ],
             [
-                // 'old_pass' => 'Password lama',
                 'password' => 'Password baru',
                 'confirmation' => 'Konfirmasi password baru',
             ]
@@ -134,15 +130,14 @@ class PasswordResetLinkController extends Controller
             $user->save();
 
         } catch (\Exception $e) {
-            return redirect()->route('password.reset', ['id' => $idUser])->withError('Terjadi kesalahan.');
+            Alert::error('Error', $e->getMessage());
+            return redirect()->back();
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->route('password.reset', ['id' => $idUser])->withError('Terjadi kesalahan.');
+            Alert::error('Error', $e->getMessage());
+            return redirect()->back();
         }
 
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/login')->withSuccess('Berhasil reset password. Silahkan login ulang.');
+        Alert::success('Berhasil', 'Berhasil memperbarui password');
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 }
