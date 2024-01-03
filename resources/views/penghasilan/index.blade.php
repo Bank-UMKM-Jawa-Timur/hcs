@@ -73,7 +73,16 @@
 
 $('#nip').select2({
     ajax: {
-        url: '{{ route('api.select2.karyawan') }}'
+        url: '{{ route('api.select2.karyawan') }}',
+        data: function(params) {
+            const is_cabang = "{{auth()->user()->hasRole('cabang')}}"
+            const cabang = is_cabang ? "{{auth()->user()->kd_cabang}}" : null
+            return {
+                search: params.term || '',
+                page: params.page || 1,
+                cabang: cabang
+            }
+        },
     },
     templateResult: function(data) {
         if(data.loading) return data.text;

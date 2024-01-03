@@ -7,17 +7,21 @@
         <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="/karyawan">Karyawan</a></p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        @if (auth()->user()->hasRole(['hrd']))
+        @can('manajemen karyawan - data karyawan - create karyawan')
             <a class="mb-3" href="{{ route('karyawan.create') }}">
                 <button class="is-btn is-primary">Tambah</button>
             </a>
+        @endcan
+        @can('manajemen karyawan - data karyawan - import karyawan')
             <a class="ml-3" href="{{ route('import') }}">
                 <button class="is-btn is-primary">Import</button>
             </a>
+        @endcan
+        @can('manajemen karyawan - data karyawan - export karyawan')
             <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
                 <button class="is-btn is-primary">Export</button>
             </a>
-        @endif
+        @endcan
     </div>
 </div>
 <div class="card-body p-3">
@@ -106,8 +110,6 @@
                                                             style="min-width: 60px">
                                                             Edit Potongan
                                                         </a>
-                                                    @else
-                                                        -
                                                     @endcan
                                                     @can('manajemen karyawan - data karyawan - detail karyawan')
                                                         <a href="{{ route('karyawan.show', $krywn->nip) }}"
@@ -146,8 +148,6 @@
                                                         style="min-width: 60px">
                                                         Edit Potongan
                                                     </a>
-                                                @else
-                                                    -
                                                 @endcan
                                                 @can('manajemen karyawan - data karyawan - detail karyawan')
                                                     <a href="{{ route('karyawan.show', $krywn->nip) }}"
