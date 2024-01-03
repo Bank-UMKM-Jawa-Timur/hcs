@@ -54,8 +54,8 @@ class KaryawanRepository
         ->whereNull('tanggal_penonaktifan')
         ->where(function ($query) use ($search) {
             $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
-                ->orWhere('mst_karyawan.nik', 'like', "%$search%")
                 ->orWhere('mst_karyawan.nip', 'like', "%$search%")
+                ->orWhere('mst_karyawan.nik', 'like', "%$search%")
                 ->orWhere('mst_karyawan.kd_bagian', 'like', "%$search%")
                 ->orWhere('mst_karyawan.kd_jabatan', 'like', "%$search%")
                 ->orWhere('mst_karyawan.kd_entitas', 'like', "%$search%")

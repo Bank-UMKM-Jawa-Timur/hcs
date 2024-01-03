@@ -153,33 +153,35 @@
                                                         </div>
                                                     @endif
                                                 @endcan
-                                                <a class="is-btn btn-info ml-2" href="javascript:void(0)" data-toggle="modal" data-target="#confirmResetModal{{$item->id}}">
-                                                    Reset Password
-                                                </a>
-                                                {{-- modal reset password --}}
-                                                <div class="modal fade" id="confirmResetModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Reset Password</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p class="text-left">Apakah Anda yakin ingin mereset password pengguna, <b>{{$item->name_user}}</b> dengan nip, <b>{{ $item->username }}</b>?</p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                                                                <form action="{{ route('password.reset.user', $item->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('POST')
-                                                                    <button type="submit" class="btn btn-danger">Reset</button>
-                                                                </form>
+                                                @can('setting - master - user - reset password user')
+                                                    <a class="is-btn btn-info ml-2" href="javascript:void(0)" data-toggle="modal" data-target="#confirmResetModal{{$item->id}}">
+                                                        Reset Password
+                                                    </a>
+                                                    {{-- modal reset password --}}
+                                                    <div class="modal fade" id="confirmResetModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Reset Password</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p class="text-left">Apakah Anda yakin ingin mereset password pengguna, <b>{{$item->name_user}}</b> dengan nip, <b>{{ $item->username }}</b>?</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                                    <form action="{{ route('password.reset.user', $item->id) }}" method="POST">
+                                                                    @csrf
+                                                                    @method('POST')
+                                                                        <button type="submit" class="btn btn-danger">Reset</button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @endcan
                                             @endif
                                         </td>
                                     </tr>

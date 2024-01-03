@@ -25,6 +25,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -1195,5 +1196,18 @@ class KaryawanController extends Controller
         return response()->json([
             'data' => $karyawan
         ]);
+    }
+
+    public function resetPasswordKaryawan(Request $request){
+        $data = KaryawanModel::where('nip',$request->formId)->first();
+
+        DB::table('mst_karyawan')
+            ->where('nip', $request->formId)
+            ->update([
+                'password' => Hash::make($data->nip),
+            ]);
+
+        Alert::success('Berhasil', 'Berhasil Reset Password Karyawan ' . $data->nama_karyawan . ', nip ' . $data->nip);
+        return redirect()->route('karyawan.index');
     }
 }
