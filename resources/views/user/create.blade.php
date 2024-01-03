@@ -36,7 +36,9 @@
                             <select name="role" id="role-karyawan" class="@error('role') is_invalid @enderror form-control" required>
                                 <option value="0">Pilih Role</option>
                                 @foreach ($role as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @if ($item->name != 'user')
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('role')

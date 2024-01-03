@@ -38,7 +38,9 @@
                             <select name="role" id="role-karyawan" class="@error('role') is_invalid @enderror form-control">
                                 <option value="">Pilih Role</option>
                                 @foreach ($role as $item)
-                                    <option value="{{ $item->id }}" {{ $dataRoleId->role_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                    @if ($item->name != 'user')
+                                        <option value="{{ $item->id }}" {{ $dataRoleId->role_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('role')
