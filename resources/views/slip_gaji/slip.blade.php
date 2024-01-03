@@ -74,7 +74,7 @@
                                 <input type="submit" value="Tampilkan" class="is-btn is-primary">
                             </div>
                             @if ((!auth()->user()->hasRole('user') && \Request::has('nip') && \Request::has('tahun')) || (auth()->user()->hasRole('user') && \Request::has('tahun')))
-                                <h5>Slip Gaji {{$karyawan->nama_karyawan}} Tahun {{\Request::get('tahun')}}.</h5>
+                                <h5>Slip Gaji {{auth()->user()->nama_karyawan}} Tahun {{\Request::get('tahun')}}.</h5>
                                 <div class="table-responsive">
                                     @include('slip_gaji.tables.slip', ['data' => $data])
                                 </div>
