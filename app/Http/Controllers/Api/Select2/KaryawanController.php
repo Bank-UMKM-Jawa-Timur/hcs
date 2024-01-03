@@ -29,13 +29,16 @@ class KaryawanController extends Controller
 
     public function karyawan(Request $request)
     {
-
         $query = $request->q ?? $request->search;
+        $cabang = $request->has('cabang') ? $request->cabang : null;
 
         $karyawan = KaryawanModel::with('jabatan')
             ->where(function (Builder $builder) use ($query) {
                 $builder->orWhere('nip', 'LIKE', "%{$query}%");
                 $builder->orWhere('nama_karyawan', 'LIKE', "%{$query}%");
+            })
+            ->when($cabang, function($query) use($cabang) {
+                $query->where('kd_entitas', $cabang);
             })
             ->where('status_karyawan', '!=', 'Nonaktif')
             ->orderBy('nama_karyawan', 'ASC')

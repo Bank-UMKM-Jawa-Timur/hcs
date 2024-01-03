@@ -54,7 +54,7 @@
                 </div>
                 <div class="row m-0">
                     <div class="col-md-5 pt-4 pb-4">
-                        <button class="is-btn is-primary" id="btn-submit">proses</button>
+                        <button type="button" class="is-btn is-primary" id="btn-submit">proses</button>
                     </div>
                 </div>
             </form>
@@ -103,13 +103,13 @@
 
 @section('custom_script')
     <script>
-        $("#table").DataTable({
+        {{--  $("#table").DataTable({
             'autoWidth': false,
             'dom': 'Rlfrtip',
             'colReorder': {
                 'allowReorder': false
             }
-        });
+        });  --}}
         $("#tahun").change(function(e){
             var tahun = $(this).val();
             $('#bulan option').removeAttr('disabled');
