@@ -35,14 +35,16 @@ class AuthenticatedSessionController extends Controller
 
             if (($user && Hash::check($request->password, $user->password)) || ($karyawan && Hash::check($request->password, $karyawan->password))) {
                 if (Auth::guard('karyawan')->attempt(['nip' => $request->input_type, 'password' => $request->password])) {
-                    // dd(array_keys(config('auth.guards')));
                     // $request->authenticate();
                     $request->session()->regenerate();
 
                     return redirect()->intended(RouteServiceProvider::HOME);
                 } else {
                     if ($user->first_login) {
-                        return redirect()->route('password.reset', ['id' => $user->id]);
+                        $request->authenticate();
+                        $request->session()->regenerate();
+
+                        return redirect()->route('password.reset');
                     } else {
                         $request->authenticate();
                         $request->session()->regenerate();

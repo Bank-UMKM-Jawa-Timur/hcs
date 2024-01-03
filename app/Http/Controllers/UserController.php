@@ -58,9 +58,11 @@ class UserController extends Controller
         }
         $karyawan = $this->param->getDataKaryawan();
         $role = $this->param->getRole();
+        $cabang = $this->param->getCabang();
         return view('user.create', [
             'karyawan' => $karyawan,
-            'role' => $role
+            'role' => $role,
+            'cabang' => $cabang
         ]);
     }
 
@@ -76,23 +78,47 @@ class UserController extends Controller
             return view('roles.forbidden');
         }
 
-        $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
+        $this->validate($request, [
+                'name' => 'required',
+                'email' => 'required|unique:users,email',
+                'role' => 'not_in:0'
+            ], [
+                'required' => ':attribute harus diisi.',
+                'unique' => ':attribute telah digunakan.',
+                'not_in' => ':attribute harus dipilih.'
+            ],[
+                'name' => 'Nama',
+                'email' => 'Email',
+                'role' => 'Role'
+            ]
+        );
 
-        $dataUser = New User();
-        $dataUser->name = $karyawan->nama_karyawan;
-        $dataUser->username = $request->name;
-        $dataUser->email = $request->username;
-        $dataUser->password = Hash::make($request->password);
-        $dataUser->save();
+        DB::beginTransaction();
+        try {
+            $dataUser = new User();
+            $dataUser->name = $request->name;
+            $dataUser->username = $request->name;
+            $dataUser->email = $request->email;
+            if ($request->role == 4) {
+                $dataUser->kd_cabang = $request->data_cabang;
+            }
+            $dataUser->password = Hash::make('12345678');
+            $dataUser->save();
 
-        $dataRole = New ModelHasRole();
-        $dataRole->role_id = $request->role;
-        $dataRole->model_type = 'App\Models\User';
-        $dataRole->model_id = $dataUser->id;
-        $dataRole->save();
-        
-        Alert::success('Berhasil Menambahkan User.');
-        return redirect()->route('user.index');
+            $dataRole = new ModelHasRole();
+            $dataRole->role_id = $request->role;
+            $dataRole->model_type = 'App\Models\User';
+            $dataRole->model_id = $dataUser->id;
+            $dataRole->save();
+
+            DB::commit();
+            Alert::success('Berhasil Menambahkan User.');
+            return redirect()->route('user.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Alert::error($e->getMessage());
+            return redirect()->back();
+        }
     }
 
     /**
@@ -120,12 +146,14 @@ class UserController extends Controller
         $data = $this->param->dataByid($id);
         $karyawan = $this->param->getDataKaryawan();
         $role = $this->param->getRole();
-        $dataRoleId = ModelHasRole::where('model_id',$id)->first(); 
+        $dataRoleId = ModelHasRole::where('model_id',$id)->first();
+        $cabang = $this->param->getCabang();
         return view('user.edit', [
             'data' => $data,
             'karyawan' => $karyawan,
             'role' => $role,
             'dataRoleId' => $dataRoleId,
+            'cabang' => $cabang
         ]);
     }
 
@@ -138,21 +166,34 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $karyawan = KaryawanModel::select('nama_karyawan', 'nip')->where('nip', $request->name)->first();
+        $user = User::find($id);
+        $uniqueEmail = $request->email && $request->email != $user->email ? '|unique:users,email' : '';
 
-        $request->validate([
-            'username' => 'required|unique:users,email,'.$id,
-        ], 
-        [
-            'username.unique' => 'User sudah terdaftar.',
-        ]);
+        $this->validate($request, [
+                'name' => 'required',
+                'email' => 'required'.$uniqueEmail,
+                'role' => 'not_in:0'
+            ], [
+                'required' => ':attribute harus diisi.',
+                'unique' => ':attribute telah digunakan.',
+                'not_in' => ':attribute harus dipilih.'
+            ],[
+                'name' => 'Nama',
+                'email' => 'Email',
+                'role' => 'Role'
+            ]
+        );
 
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $dataUser = User::where('id',$id)->first();
-            $dataUser->name = $karyawan->nama_karyawan;
-            $dataUser->username = $request->name;
-            $dataUser->email = $request->username;
+            $dataUser->name = $request->name;
+            $dataUser->email = $request->email;
+            if ($request->role == 4) {
+                $dataUser->kd_cabang = $request->data_cabang;
+            }else{
+                $dataUser->kd_cabang = null;
+            }
             $dataUser->password = Hash::make($request->password);
             $dataUser->save();
 
@@ -205,6 +246,7 @@ class UserController extends Controller
         if (!auth()->user()->can('setting - master - user - delete user')) {
             return view('roles.forbidden');
         }
+        DB::beginTransaction();
         try{
             DB::table('users')
                 ->where('id', $id)
@@ -213,12 +255,16 @@ class UserController extends Controller
                 ->where('model_id', $id)
                 ->delete();
 
+            DB::commit();
+
             Alert::success('Berhasil', 'Berhasil Menghapus Data User.');
             return redirect()->route('user.index');
         } catch(Exception $e){
+            DB::rollBack();
             Alert::error('Terjadi Kesalahan', ''.$e);
             return redirect()->route('user.index')->withStatus($e->getMessage());
         } catch(QueryException $e){
+            DB::rollBack();
             Alert::error('Terjadi Kesalahan', ''.$e);
             return redirect()->route('user.index')->withStatus($e->getMessage());
         }

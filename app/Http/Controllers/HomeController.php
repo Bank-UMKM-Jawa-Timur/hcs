@@ -35,9 +35,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // dd(Auth::guard('web')->check());
-        // dd(\session()->all());
-        // dd(Auth::guard("karyawan")->check());
         // Need permission
         $dataCabang = CabangModel::orderBy('kd_cabang')->get();
         $karyawanByCabang = [];
