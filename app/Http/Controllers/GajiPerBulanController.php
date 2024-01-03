@@ -222,6 +222,7 @@ class GajiPerBulanController extends Controller
                     ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
                     ->first();
             }
+            
             $this->param['persenJkk'] = $hitungan_penambah->jkk;
             $this->param['persenJht'] = $hitungan_penambah->jht;
             $this->param['persenJkm'] = $hitungan_penambah->jkm;
