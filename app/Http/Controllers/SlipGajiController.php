@@ -394,6 +394,7 @@ class SlipGajiController extends Controller
             'nip' => 'not_in:0',
             'tahun' => 'not_in:0'
         ]);
+
         $cabang = null;
         if ($user->hasRole('cabang')) {
             $karyawan = DB::table('users AS u')
@@ -442,16 +443,11 @@ class SlipGajiController extends Controller
 
     public function cetakSlip(Request $request){
         $slipRepository = new SlipGajiRepository;
-        $nip = $request->get('request_nip');
-        $month = $request->get('request_month');
-        $year = $request->get('request_year');
+        $nip = $request->get('nip');
+        $month = $request->get('bulan');
+        $year = $request->get('tahun');
         $data = $slipRepository->getSlipCetak($nip, $month, $year);
 
         return view('slip_gaji.print.slip', compact('data'));
-        $pdf = PDF::loadview('slip_gaji.print.slip', [
-            'data' => $data
-        ]);
-        $fileName =  time() . '.' . 'pdf';
-        return $pdf->download($fileName);
     }
 }

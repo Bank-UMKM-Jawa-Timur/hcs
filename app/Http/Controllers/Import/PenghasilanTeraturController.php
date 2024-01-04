@@ -377,9 +377,17 @@ class PenghasilanTeraturController extends Controller
 
     public function cetakVitamin(Request $request)
     {
-        // Need permission
-        $bulan = $request->bulan;
-        $tahun = $request->tahun;
+        if (!auth()->user()->can('penghasilan - import - penghasilan teratur - download vitamin')) {
+            return view('roles.forbidden');
+        }
+        if (!$request->get('bulan')) {
+            Alert::warning('Peringatan', 'Bulan harus dipilih.');
+            return back();
+        }
+        if (!$request->get('tahun')) {
+            Alert::warning('Peringatan', 'Tahun harus dipilih.');
+            return back();
+        }
 
         return Excel::download(new ExportVitamin(), 'RINCIAN_PENGGANTI_UANG_VITAMIN_PEGAWAI.xlsx');
     }

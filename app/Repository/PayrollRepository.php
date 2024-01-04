@@ -35,8 +35,8 @@ class PayrollRepository
          * bpjs tk = kpj (jamsostek)
          * bpjs kesehatan = jkn
          */
-
-        $kode_cabang_arr = [];
+        $cabangRepo = new CabangRepository;
+        $kode_cabang_arr = $cabangRepo->listCabang(true);
 
         if($kantor == 'pusat'){
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
@@ -53,9 +53,6 @@ class PayrollRepository
                 ->first();
         }
         else {
-            $cabangRepo = new CabangRepository;
-            $kode_cabang_arr = $cabangRepo->listCabang(true);
-
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('mst_profil_kantor.kd_cabang', $kantor)
                 ->where('active', 1)

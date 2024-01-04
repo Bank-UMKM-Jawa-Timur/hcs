@@ -65,17 +65,17 @@
                         <td class="text-right">{{ $total_diterima > 0 ? number_format($total_diterima, 0, ',', '.') : '-' }}</td>
                         <td class="text-center">
                             <button type="button"
-                            data-toggle="modal"
-                            data-target="#exampleModal"
-                            data-target-id="slipGaji-{{ $item->id }}"
-                            data-nip="{{$data->nip}}"
-                            data-nama="{{$data->nama_karyawan}}"
-                            data-no_rekening="{{$data->no_rekening}}"
-                            data-status_jabatan={{$data->status_jabatan}}
-                            data-tanggal_pengangkat={{$data->tanggal_pengangkat}}
-                            data-json="{{ $item }}"
-                            data-bulan="{{$item->bulan}}"
-                            class="is-btn btn-sm is-primary p-1 show-data">Rincian</button>
+                                data-toggle="modal"
+                                data-target="#exampleModal"
+                                data-target-id="slipGaji-{{ $item->id }}"
+                                data-nip="{{$data->nip}}"
+                                data-nama="{{$data->nama_karyawan}}"
+                                data-no_rekening="{{$data->no_rekening}}"
+                                data-status_jabatan={{$data->status_jabatan}}
+                                data-tanggal_pengangkat={{$data->tanggal_pengangkat}}
+                                data-json="{{ $item }}"
+                                data-bulan="{{$item->bulan}}"
+                                class="is-btn btn-sm is-primary p-1 show-data">Rincian</button>
                         </td>
                     </tr>
                 @empty

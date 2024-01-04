@@ -13,11 +13,13 @@
                 <button class="is-btn is-primary">Import</button>
             </a>
         @endif
-        <a class="ml-3">
-            <button type="button" class="is-btn is-primary ml-2" data-toggle="modal" data-target="#modal-cetak-vitamin">
-                Print vitamin
-            </button>
-        </a>
+        @can('penghasilan - import - penghasilan teratur - download vitamin')
+            <a class="ml-3">
+                <button type="button" class="is-btn is-primary ml-2" data-toggle="modal" data-target="#modal-cetak-vitamin">
+                    Download Vitamin
+                </button>
+            </a>
+        @endcan
     </div>
 </div>
 <div class="card-body p-3">
