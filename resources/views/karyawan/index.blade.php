@@ -7,17 +7,21 @@
         <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="/karyawan">Karyawan</a></p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        @if (auth()->user()->hasRole(['hrd']))
+        @can('manajemen karyawan - data karyawan - create karyawan')
             <a class="mb-3" href="{{ route('karyawan.create') }}">
                 <button class="is-btn is-primary">Tambah</button>
             </a>
+        @endcan
+        @can('manajemen karyawan - data karyawan - import karyawan')
             <a class="ml-3" href="{{ route('import') }}">
                 <button class="is-btn is-primary">Import</button>
             </a>
+        @endcan
+        @can('manajemen karyawan - data karyawan - export karyawan')
             <a class="ml-3" href="{{ route('klasifikasi_karyawan') }}">
                 <button class="is-btn is-primary">Export</button>
             </a>
-        @endif
+        @endcan
     </div>
 </div>
 <div class="card-body p-3">
@@ -81,7 +85,7 @@
                                 $end = $page == 1 ? $page_length : $start + $page_length - 1;
                                 $i = $page == 1 ? 1 : $start;
                             @endphp
-                            @foreach ($karyawan as $krywn)
+                            {{-- @foreach ($karyawan as $krywn)
                                 @if ($krywn->nip != $krywn->nip)
                                     <tr>
                                         <td>{{ $i++ }}</td>
@@ -106,8 +110,6 @@
                                                             style="min-width: 60px">
                                                             Edit Potongan
                                                         </a>
-                                                    @else
-                                                        -
                                                     @endcan
                                                     @can('manajemen karyawan - data karyawan - detail karyawan')
                                                         <a href="{{ route('karyawan.show', $krywn->nip) }}"
@@ -121,7 +123,7 @@
                                         </td>
                                     </tr>
                                 @endif
-                            @endforeach
+                            @endforeach --}}
                             @foreach ($karyawan as $krywn)
                                 <tr>
                                     <td>{{ $i++ }}</td>
@@ -146,15 +148,20 @@
                                                         style="min-width: 60px">
                                                         Edit Potongan
                                                     </a>
-                                                @else
-                                                    -
                                                 @endcan
                                                 @can('manajemen karyawan - data karyawan - detail karyawan')
                                                     <a href="{{ route('karyawan.show', $krywn->nip) }}"
-                                                        class="btn btn-outline-info p-1"
+                                                        class="btn btn-outline-info"
                                                         style="min-width: 60px">
                                                         Detail
                                                     </a>
+                                                @endcan
+                                                @can('manajemen karyawan - data karyawan - reset password - karyawan')
+                                                    <a class="is-btn btn-info ml-2 modal-reset-button" href="javascript:void(0)" data-toggle="modal" data-target="#confirmResetModal{{$krywn->nip}}" data-formid="{{$krywn->nip}}" data-formname="{{ $krywn->nama_karyawan }}">
+                                                        <input type="hidden" id="nip-karywan" name="nip_karyawan" value="{{ $krywn->nip }}">
+                                                        Reset Password
+                                                    </a>
+                                                    {{-- modal reset password --}}
                                                 @endcan
                                             </div>
                                         </div>
@@ -177,6 +184,7 @@
             </div>
         </div>
     </div>
+    <div id="modalReset"></div>
 </div>
 @endsection
 
@@ -185,6 +193,40 @@
         $('#page_length').on('change', function() {
             $('#form').submit()
         })
+
+        $('.modal-reset-button').on('click', function() {
+            var formId = $(this).data('formid');
+            var formname = $(this).data('formname');
+
+            $('#modalReset').empty();
+            $('#modalReset').append(`
+                <div class="modal fade" id="confirmResetModal${formId}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Reset Password</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-left">Apakah Anda yakin ingin mereset password pengguna, <b>${formname}</b> dengan nip, <b>${formId}</b>?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                <form id="form-reset" action="{{ route('reset-password-karyawan') }}" method="POST">
+                                    @csrf
+                                    @method('POST')
+                                    <input type="hidden" name="formId" value="${formId}">
+                                    <button type="submit" class="btn btn-danger">Reset</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `)
+        });
+
         // Adjust pagination url
         var btn_pagination = $('.pagination').find('a')
         var page_url = window.location.href

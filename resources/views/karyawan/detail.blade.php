@@ -154,7 +154,7 @@
             <div class="row m-0 mt-2">
                 <label class="col-sm-2 mt-2">Jabatan</label>
                 <div class="col-sm-10">
-                    <input type="text" disabled class="form-control" value="{{ $karyawan->jabatan->nama_jabatan }}">
+                    <input type="text" disabled class="form-control" value="{{ $karyawan->jabatan?->nama_jabatan }}">
                 </div>
             </div>
             @if(isset($karyawan->entitas->div))

@@ -248,7 +248,7 @@ $request = isset($request) ? $request : null;
                             @endphp
                             <td>{{ ($item->tgl_mulai != null) ? $masaKerja : '-' }}</td>
                             <td>{{ $item->pendidikan ?? '-' }}</td>
-                            <td style="font-size: 8px" class="{{ $textColor }}">{{ $tampilPensiun ?? '-' }}</td>
+                            <td style="font-size: 12px" class="{{ $textColor }}">{{ $tampilPensiun ?? '-' }}</td>
                         </tr>
                         @endforeach
                     </tbody>

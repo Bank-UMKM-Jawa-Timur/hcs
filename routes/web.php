@@ -97,7 +97,7 @@ Route::prefix('graph')->group(function () {
     });
 });
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::resource('/kantor', KantorController::class);
     Route::resource('role', RoleMasterController::class);
     Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);
@@ -277,6 +277,10 @@ Route::group(['middleware' => 'auth'], function () {
     // Import Status
     Route::get('import_update_status', [KaryawanController::class, 'importStatusIndex'])->name('import-status-index');
     Route::post('import_update-status', [KaryawanController::class, 'importStatus'])->name('import_status');
+    
+    // Reset Password Karyawan
+    Route::post('reset-password-karyawan', [KaryawanController::class, 'resetPasswordKaryawan'])->name('reset-password-karyawan');
+
 
     // Get Laporan Gaji
     Route::post('/laporan_gaji/getLaporan', [SlipGajiController::class, 'getLaporan'])->name('getLaporanGaji');

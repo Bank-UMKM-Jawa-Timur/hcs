@@ -1,9 +1,16 @@
+@push('style')
+    <style>
+        .select2 {
+            height: 40px;
+        }
+    </style>
+@endpush
 <div class="modal fade" id="modal-cetak-vitamin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Filter print vitamin</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Filter Download Vitamin</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -15,7 +22,7 @@
                         <div class="col-lg-6">
                             <div class="from-group">
                                 <label for="" class="form-label">Bulan</label>
-                                <select class="select2 form-control" name="bulan" id="bulan">
+                                <select name="bulan" id="bulan" class="select2 form-control" required>
                                     <option value="">Pilih Bulan</option>
                                     @for ($i = 1; $i <= 12; $i++)
                                         <option
@@ -32,13 +39,13 @@
                         <div class="col-lg-6">
                             <div class="form-group" id="periode">
                                 <label for="" class="form-label">Periode</label>
-                                <select name="tahun" class="select2 form-control">
-                                    <option>Pilih Tahun</option>
-                                    @php
-                                        $tahunSaatIni = date('Y');
-                                        $tahunAwal = $tahunSaatIni - 5;
-                                        $tahunAkhir = $tahunSaatIni + 5;
-                                    @endphp
+                                @php
+                                    $tahunSaatIni = date('Y');
+                                    $tahunAwal = $tahunSaatIni - 5;
+                                    $tahunAkhir = $tahunSaatIni + 5;
+                                @endphp
+                                <select name="tahun" class="select2 form-control" required>
+                                    <option value="">Pilih Tahun</option>
                                     @for ($tahun = $tahunAwal; $tahun <= $tahunAkhir; $tahun++)
                                         <option {{ Request()->tahun == $tahun ? 'selected' : '' }}
                                             value="{{ $tahun }}">{{ $tahun }}</option>
@@ -52,7 +59,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Print</button>
+                    <button type="submit" class="btn btn-primary">Download Excel</button>
                 </div>
             </form>
         </div>

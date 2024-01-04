@@ -35,7 +35,7 @@
                     <div class="form-group">
                         <label for="kategori">Kategori</label>
                         <select id="kategori" class="form-control">
-                            <option value="">Semua Data</option>
+                            <option value="" selected>Semua Data</option>
                             <option value="nip" @selected($request->nip)>Karyawan</option>
                             <option value="tanggal" @selected($request->first_date || $request->end_date)>Tanggal</option>
                             <option value="tahun" @selected($request->tahun)>Tahun</option>
@@ -165,10 +165,16 @@ function initNIP() {
         @endif
     @endisset
 }
+const wrapper1 = $('#kategori-wrapper');
+var valKategori = $('#kategori').find(":selected").val();
+wrapper1.html('');
+wrapper1.append(generateKategori(valKategori));
+
 
 $('#kategori').change(function() {
     const wrapper = $('#kategori-wrapper');
     const kategori = $(this).val();
+    console.log(kategori);
 
     wrapper.html('');
     wrapper.append(generateKategori(kategori));

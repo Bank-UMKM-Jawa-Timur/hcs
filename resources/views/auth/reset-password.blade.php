@@ -31,10 +31,6 @@
                         {{ session('error') }}
                     </div>
                 @endif
-                {{-- @error('old_pass')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-                <div class="form-group"><input class="form-control" type="password" name="old_pass" placeholder="Password lama"></div> --}}
                 @error('password')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -47,11 +43,6 @@
             </form>
         </div>
     </div>
-    <a href="/">
-        <button class="btn-previous">
-            <iconify-icon icon="ooui:arrow-previous-ltr"></iconify-icon>
-        </button>
-    </a>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>

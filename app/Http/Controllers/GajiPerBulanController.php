@@ -46,9 +46,14 @@ class GajiPerBulanController extends Controller
     public function getBulan(Request $request)
     {
         $tahun = $request->get('tahun');
+        $kd_cabang = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : null;
 
         $bulan = DB::table('gaji_per_bulan')
+            ->join('mst_karyawan AS m', 'm.nip', 'gaji_per_bulan.nip')
             ->where('tahun', $tahun)
+            ->when($kd_cabang, function($query) use ($kd_cabang) {
+                $query->where('m.kd_entitas', $kd_cabang);
+            })
             ->distinct()
             ->get('bulan');
         if (count($bulan) > 0) {
@@ -63,10 +68,15 @@ class GajiPerBulanController extends Controller
         if (!auth()->user()->can('penghasilan')) {
             return view('roles.forbidden');
         }
+        $kd_cabang = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : null;
         // Need permission
-        $data = DB::table('gaji_per_bulan')
-            ->selectRaw('DISTINCT(bulan), tahun')
-            ->orderBy('created_at', 'desc')
+        $data = DB::table('gaji_per_bulan AS gaji')
+            ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+            ->selectRaw('DISTINCT(gaji.bulan), tahun')
+            ->when($kd_cabang, function($query) use ($kd_cabang) {
+                $query->where('m.kd_entitas', $kd_cabang);
+            })
+            ->orderBy('gaji.created_at', 'desc')
             ->get();
         return view('gaji_perbulan.index', ['data_gaji' => $data]);
     }
@@ -96,20 +106,28 @@ class GajiPerBulanController extends Controller
 
         $bulan = $request->bulan;
         $tahun = $request->tahun;
-        $cabang = array();
         $tunjangan = array();
         $tjJamsostek = array();
-        $cbg = DB::table('mst_cabang')
+        $cabang = DB::table('mst_cabang')
             ->select('kd_cabang')
-            ->pluck('kd_cabang');
+            ->pluck('kd_cabang')
+            ->toArray();
 
         DB::beginTransaction();
         $employee = array();
         $pph = array();
-        $karyawan = DB::table('mst_karyawan')
-                    ->whereNull('tanggal_penonaktifan')
-                    ->whereNotIn('kd_entitas', $cbg)
-                    ->get();
+        if (auth()->user()->hasRole('cabang')) {
+            // Cabang
+            $karyawan = DB::table('mst_karyawan')
+                        ->whereNull('tanggal_penonaktifan')
+                        ->where('kd_entitas', auth()->user()->kd_cabang)
+                        ->get();
+        }
+        else {
+            $karyawan = DB::table('mst_karyawan')
+                        ->whereNull('tanggal_penonaktifan')
+                        ->get();
+        }
 
         // Get Penghasilan from mst_karyawan + tunjangan karyawan + penghasilan tidak teratur
         $item_penghasilan_teratur = TunjanganModel::select('id','nama_tunjangan', 'kategori', 'status')
@@ -204,6 +222,7 @@ class GajiPerBulanController extends Controller
                     ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
                     ->first();
             }
+            
             $this->param['persenJkk'] = $hitungan_penambah->jkk;
             $this->param['persenJht'] = $hitungan_penambah->jht;
             $this->param['persenJkm'] = $hitungan_penambah->jkm;

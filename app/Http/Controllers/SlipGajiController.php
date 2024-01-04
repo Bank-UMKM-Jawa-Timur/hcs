@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Session as FacadesSession;
 use App\Repository\CabangRepository;
 use App\Repository\SlipGajiRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class SlipGajiController extends Controller
 {
@@ -21,7 +22,8 @@ class SlipGajiController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('penghasilan - gaji - slip gaji - rincian')) {
+        if (Auth::guard("karyawan")->check()) {
+        }else if (!auth()->user()->can('penghasilan - gaji - slip gaji - rincian')) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.laporan_gaji', ['data' => null, 'kategori' => null, 'request' => null]);
@@ -29,7 +31,8 @@ class SlipGajiController extends Controller
 
     public function slipJurnalIndex()
     {
-        if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
+        if (Auth::guard("karyawan")->check()) {
+        }else if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
             return view('roles.forbidden');
         }
         return view('slip_gaji.slip_jurnal', ['data' => null, 'kategori' => null, 'request' => null]);
@@ -166,7 +169,8 @@ class SlipGajiController extends Controller
 
     public function SlipJurnal(Request $request)
     {
-        if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
+        if (Auth::guard("karyawan")->check()) {
+        }else if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
             return view('roles.forbidden');
         }
         $kantor = $request->kantor;
@@ -179,10 +183,17 @@ class SlipGajiController extends Controller
         foreach($cabang as $i){
             array_push($cbg, $i->kd_cabang);
         }
-        $karyawan = DB::table('mst_karyawan')
-            ->whereNotIn('kd_entitas', $cbg)
-            ->orWhere('kd_entitas', null)
-            ->get();
+        if (auth()->user()->hasRole('user')) {
+            $karyawan = DB::table('mst_karyawan')
+                ->where('nip', auth()->user()->nip)
+                ->get();
+        }
+        else {
+            $karyawan = DB::table('mst_karyawan')
+                ->whereNotIn('kd_entitas', $cbg)
+                ->orWhere('kd_entitas', null)
+                ->get();
+        }
 
         $data = $this->getSlipJurnal($request, $kategori, $karyawan);
 
@@ -302,7 +313,8 @@ class SlipGajiController extends Controller
 
     public function getLaporan(Request $request)
     {
-        if (!auth()->user()->can('penghasilan - gaji - lampiran gaji')) {
+        if (Auth::guard("karyawan")->check()) {
+        }else if (!auth()->user()->can('penghasilan - gaji - lampiran gaji')) {
             return view('roles.forbidden');
         }
         $kantor = $request->kantor;
@@ -310,23 +322,31 @@ class SlipGajiController extends Controller
         $kategori = $request->kategori;
         $data = [];
 
-        if($kantor == 'cabang'){
+        if (auth()->user()->hasRole('user')) {
             $karyawan = DB::table('mst_karyawan')
-                ->where('kd_entitas', $Opsicabang)
-                ->get();
-        } else if($kantor == 'pusat'){
-            $cabang = DB::table('mst_cabang')
-                ->select('kd_cabang')
-                ->get();
-            $cbg = [];
-            foreach($cabang as $i){
-                array_push($cbg, $i->kd_cabang);
+                        ->where('nip', auth()->user()->nip)
+                        // Comment by arsyad entitas terdapat pilihan untuk memilih cabang tertentu di kategori
+                        ->get();
+        }
+        else {
+            if($kantor == 'cabang'){
+                $karyawan = DB::table('mst_karyawan')
+                    ->where('kd_entitas', $Opsicabang)
+                    ->get();
+            } else if($kantor == 'pusat'){
+                $cabang = DB::table('mst_cabang')
+                    ->select('kd_cabang')
+                    ->get();
+                $cbg = [];
+                foreach($cabang as $i){
+                    array_push($cbg, $i->kd_cabang);
+                }
+                $karyawan = DB::table('mst_karyawan')
+                    ->whereNotIn('kd_entitas', $cbg)
+                    ->orWhere('kd_entitas', null)
+                    // Comment by arsyad entitas terdapat pilihan untuk memilih cabang tertentu di kategori
+                    ->get();
             }
-            $karyawan = DB::table('mst_karyawan')
-                ->whereNotIn('kd_entitas', $cbg)
-                ->orWhere('kd_entitas', null)
-                // Comment by arsyad entitas terdapat pilihan untuk memilih cabang tertentu di kategori
-                ->get();
         }
 
         $data = $this->getLaporanGaji($karyawan, $kategori, $request);
@@ -362,7 +382,8 @@ class SlipGajiController extends Controller
     public function slip(Request $request) {
         // Need permission
         $user = auth()->user();
-        if (!$user->hasRole('user')) {
+        if (Auth::guard("karyawan")->check()) {
+        }else if (!$user->hasRole('user')) {
             if (!$user->can('penghasilan - gaji - slip gaji')) {
                 return view('roles.forbidden');
             }
@@ -373,17 +394,18 @@ class SlipGajiController extends Controller
             'nip' => 'not_in:0',
             'tahun' => 'not_in:0'
         ]);
+
         $cabang = null;
         if ($user->hasRole('cabang')) {
             $karyawan = DB::table('users AS u')
                             ->select('k.nip', 'k.kd_entitas')
                             ->join('mst_karyawan AS k', 'k.nip', 'u.username')
-                            ->where('u.username', $user->username)
+                            ->where('u.username', $user->kd_cabang)
                             ->first();
             $cabang = $karyawan->kd_entitas;
         }
 
-        $nip = $user->hasRole('user') ? $user->username : $request->get('nip');
+        $nip = $user->hasRole('user') ? $user->nip : $request->get('nip');
         $year = $request->get('tahun');
 
         FacadesSession::put('nip',$nip);
@@ -421,16 +443,11 @@ class SlipGajiController extends Controller
 
     public function cetakSlip(Request $request){
         $slipRepository = new SlipGajiRepository;
-        $nip = $request->get('request_nip');
-        $month = $request->get('request_month');
-        $year = $request->get('request_year');
+        $nip = $request->get('nip');
+        $month = $request->get('bulan');
+        $year = $request->get('tahun');
         $data = $slipRepository->getSlipCetak($nip, $month, $year);
 
         return view('slip_gaji.print.slip', compact('data'));
-        $pdf = PDF::loadview('slip_gaji.print.slip', [
-            'data' => $data
-        ]);
-        $fileName =  time() . '.' . 'pdf';
-        return $pdf->download($fileName);
     }
 }

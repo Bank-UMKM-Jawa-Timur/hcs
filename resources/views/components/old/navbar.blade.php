@@ -31,8 +31,8 @@
                         
                         <a class="nav nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <p class="font-weight-bold">Selamat datang,{{ auth()->user()->name }}</p>
-                                <img class="ml-2 mr-2 " src="https://ui-avatars.com/api/?background=DA271F&color=FFFFFF&name={{ auth()->user()->name }}" style="width: 30px; border-radius: 100%;" alt="">
+                                <p class="font-weight-bold">Selamat datang,{{ Auth::guard('karyawan')->check() ? auth()->user()->nama_karyawan : auth()->user()->name }}</p>
+                                <img class="ml-2 mr-2 " src="https://ui-avatars.com/api/?background=DA271F&color=FFFFFF&name={{ Auth::guard('karyawan')->check() ? auth()->user()->nama_karyawan : auth()->user()->name }}" style="width: 30px; border-radius: 100%;" alt="">
                         </a>
             
                         <div class="dropdown-menu dropdown-primary dropdown-menu-right"

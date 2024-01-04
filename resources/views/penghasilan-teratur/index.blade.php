@@ -13,11 +13,13 @@
                 <button class="is-btn is-primary">Import</button>
             </a>
         @endif
-        <a class="ml-3">
-            <button type="button" class="is-btn is-primary ml-2" data-toggle="modal" data-target="#modal-cetak-vitamin">
-                Print vitamin
-            </button>
-        </a>
+        @can('penghasilan - import - penghasilan teratur - download vitamin')
+            <a class="ml-3">
+                <button type="button" class="is-btn is-primary ml-2" data-toggle="modal" data-target="#modal-cetak-vitamin">
+                    Download Vitamin
+                </button>
+            </a>
+        @endcan
     </div>
 </div>
 <div class="card-body p-3">
@@ -100,12 +102,13 @@
                                                         @endphp
                                                         <a href="{{route('penghasilan.lock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}"
                                                             class="btn btn-success p-1">Lock</a>
-                                                    @elsecan('penghasilan - edit - penghasilan teratur')
+                                                    @endcan
+                                                    @can('penghasilan - edit - penghasilan teratur')
                                                         @php
                                                             $cant_lock_edit = true;
                                                         @endphp
                                                         <a href="{{ route('penghasilan.edit-tunjangan')}}?idTunjangan={{$item->id_transaksi_tunjangan}}&bulan={{$item->bulan}}&createdAt={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}" class="btn btn-outline-warning p-1">Edit</a>
-                                                    @endif
+                                                    @endcan
                                                 @else
                                                     @can('penghasilan - unlock - penghasilan teratur')
                                                         @php

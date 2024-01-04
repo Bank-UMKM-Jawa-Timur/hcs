@@ -22,7 +22,7 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="">Karyawan:</label>
-                                <select name="nip" id="nip" class="form-control">
+                                <select name="nip" id="nip" class="form-control" required>
                                 </select>
                             </div>
                         </div>

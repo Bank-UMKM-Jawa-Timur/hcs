@@ -37,6 +37,21 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="col cabang-input @if(\Request::get('kantor') == 'pusat' || \Request::get('kantor') == '0')d-none @endif">
+                                    <div class="form-group">
+                                        <label for="">Cabang<span class="text-danger">*</span></label>
+                                        <select name="cabang" id="cabang"
+                                            class="form-control select2">
+                                            <option value="0">-- Pilih cabang --</option>
+                                            @foreach ($cabang as $item)
+                                                <option value="{{$item->kd_cabang}}" @if(\Request::get('cabang') == $item->kd_cabang) selected @endif>{{$item->nama_cabang}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('cabang')
+                                            <small class="text-danger">{{ucfirst($message)}}</small>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="">Kategori Gaji Pegawai<span class="text-danger">*</span></label>
@@ -49,21 +64,6 @@
                                                 {{old('kategori') == 'payroll' ? 'selected' : ''}}>Payroll</option>
                                         </select>
                                         @error('kategori')
-                                            <small class="text-danger">{{ucfirst($message)}}</small>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col cabang-input @if(\Request::get('kantor') == 'pusat' || \Request::get('kantor') == '0')d-none @endif">
-                                    <div class="form-group">
-                                        <label for="">Cabang<span class="text-danger">*</span></label>
-                                        <select name="cabang" id="cabang"
-                                            class="form-control select2">
-                                            <option value="0">-- Pilih cabang --</option>
-                                            @foreach ($cabang as $item)
-                                                <option value="{{$item->kd_cabang}}" @if(\Request::get('cabang') == $item->kd_cabang) selected @endif>{{$item->nama_cabang}}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('cabang')
                                             <small class="text-danger">{{ucfirst($message)}}</small>
                                         @enderror
                                     </div>
@@ -114,11 +114,16 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                @if (\Request::has('kantor') && count($data) > 0)
-                                    <div class="mr-2">
-                                        <a href="{{ route('payroll.pdf') }}" target="_blank"  class="btn btn-warning">Download PDF</a>
-                                    </div>
-                                @endif
+                                @can('penghasilan - payroll - download')
+                                    @if (\Request::has('kantor') && count($data) > 0)
+                                        <div class="mr-2" id="btn-download">
+                                            <a href="{{ route('payroll.pdf') }}" target="_blank"
+                                                class="m-0 btn btn-lg is-btn btn-warning">
+                                                <span style="font-size: 14px;">Download PDF</span>
+                                            </a>
+                                        </div>
+                                    @endif
+                                @endcan
                                 <div>
                                     <input type="submit" value="Tampilkan" class="is-btn is-primary">
                                 </div>
@@ -267,6 +272,26 @@
             $('.cabang-input').removeClass('d-none')
         }
 
+        $('#kantor').on('change', function() {
+            $('#btn-download').addClass('d-none')
+        })
+
+        $('#cabang').on('change', function() {
+            $('#btn-download').addClass('d-none')
+        })
+
+        $('#bulan').on('change', function() {
+            $('#btn-download').addClass('d-none')
+        })
+
+        $('#tahun').on('change', function() {
+            $('#btn-download').addClass('d-none')
+        })
+
+        $('#kategori').on('change', function() {
+            $('#btn-download').addClass('d-none')
+        })
+
         const formatRupiahPayroll = (angka) => {
             let reverse = angka.toString().split('').reverse().join('');
             let ribuan = reverse.match(/\d{1,3}/g);
@@ -325,6 +350,7 @@
                 $('.cabang-input').removeClass('d-none')
             }
             else {
+                $('#cabang option[value="0"]').attr("selected", "selected");
                 $('.cabang-input').addClass('d-none')
             }
         })

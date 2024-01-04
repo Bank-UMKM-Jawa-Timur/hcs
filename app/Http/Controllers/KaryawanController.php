@@ -25,6 +25,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -435,22 +436,15 @@ class KaryawanController extends Controller
                         'created_at' => now()
                     ]);
             }
-
-            if(count($request->get('potongan_kredit_koperasi')) > 0){
-                foreach($request->get('potongan_kredit_koperasi') as $key => $item){
-                    DB::table('potongan_gaji')
-                        ->insert([
-                            'nip' => $request->nip,
-                            'bulan' => $request->get('potongan_bulan')[$key],
-                            'tahun' => $request->get('potongan_tahun')[$key],
-                            'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')[$key]),
-                            'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')[$key]),
-                            'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')[$key]),
-                            'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')[$key]),
-                            'created_at' => now()
-                        ]);
-                }
-            }
+            DB::table('potongan_gaji')
+                ->insert([
+                    'nip' => $request->nip,
+                    'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')) ?? 0,
+                    'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')) ?? 0,
+                    'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')) ?? 0,
+                    'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')) ?? 0,
+                    'created_at' => now()
+                ]);
 
             Alert::success('Berhasil', 'Berhasil menambah karyawan.');
             return redirect()->route('karyawan.index');
@@ -641,7 +635,7 @@ class KaryawanController extends Controller
             ->get();
         $data->potongan = DB::table('potongan_gaji')
                             ->where('nip', $data->nip)
-                            ->get();
+                            ->first();
         $data->count_tj = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
             ->count('*');
@@ -845,32 +839,29 @@ class KaryawanController extends Controller
             }
 
             if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
-                foreach($request->get('id_pot') as $key => $item){
-                    if ($item == null){
-                        DB::table('potongan_gaji')
-                            ->insert([
-                                'nip' => $request->nip,
-                                'bulan' => $request->get('potongan_bulan')[$key],
-                                'tahun' => $request->get('potongan_tahun')[$key],
-                                'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')[$key]),
-                                'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')[$key]),
-                                'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')[$key]),
-                                'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')[$key]),
-                                'created_at' => now()
-                            ]);
-                    } else{
-                        DB::table('potongan_gaji')
-                            ->where('id', $item)
-                            ->update([
-                                'bulan' => $request->get('potongan_bulan')[$key],
-                                'tahun' => $request->get('potongan_tahun')[$key],
-                                'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')[$key]),
-                                'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')[$key]),
-                                'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')[$key]),
-                                'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')[$key]),
-                                'created_at' => now()
-                            ]);
-                    }
+                $cekPotongan = DB::table('potongan_gaji')
+                    ->where('nip', $id)
+                    ->count();
+                if($cekPotongan > 0){
+                    DB::table('potongan_gaji')
+                        ->where('nip', $id)
+                        ->update([
+                            'kredit_koperasi' => $request->get('potongan_kredit_koperasi'),
+                            'iuran_koperasi' => $request->get('potongan_iuran_koperasi'),
+                            'kredit_pegawai' => $request->get('potongan_kredit_pegawai'),
+                            'iuran_ik' => $request->get('potongan_iuran_ik'),
+                            'updated_at' => now()
+                        ]);
+                } else {
+                    DB::table('potongan_gaji')
+                        ->insert([
+                            'nip' => $id,
+                            'kredit_koperasi' => $request->get('potongan_kredit_koperasi'),
+                            'iuran_koperasi' => $request->get('potongan_iuran_koperasi'),
+                            'kredit_pegawai' => $request->get('potongan_kredit_pegawai'),
+                            'iuran_ik' => $request->get('potongan_iuran_ik'),
+                            'created_at' => now()
+                        ]);
                 }
             }
 
@@ -1205,5 +1196,18 @@ class KaryawanController extends Controller
         return response()->json([
             'data' => $karyawan
         ]);
+    }
+
+    public function resetPasswordKaryawan(Request $request){
+        $data = KaryawanModel::where('nip',$request->formId)->first();
+
+        DB::table('mst_karyawan')
+            ->where('nip', $request->formId)
+            ->update([
+                'password' => Hash::make($data->nip),
+            ]);
+
+        Alert::success('Berhasil', 'Berhasil Reset Password Karyawan ' . $data->nama_karyawan . ', nip ' . $data->nip);
+        return redirect()->route('karyawan.index');
     }
 }
