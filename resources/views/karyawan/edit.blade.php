@@ -372,7 +372,7 @@
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="is_nama">Nominal</label>
-                                        <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-1">
@@ -837,7 +837,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
