@@ -136,8 +136,7 @@ class JaminanController extends Controller
         $tipe = $request->tipe;
         $tahun = $request->tahun;
         $bulan = $request->bulan;
-        $karyawan = DB::table('mst_karyawan')
-            ->get();
+        $karyawan = DB::table('mst_karyawan')->get();
 
         // If Kategori yang dipilih keseluruhan
         if ($request->kategori == 1) {
@@ -212,13 +211,72 @@ class JaminanController extends Controller
 
             // Get Data keseluruhan cabang
             $data_cabang = DB::table('tunjangan_karyawan')
-                ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
-                ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-                ->where('mst_tunjangan.status', 1)
-                ->whereIn('kd_entitas', $cbg)
-                ->selectRaw('kd_entitas, sum(nominal) as nominal')
-                ->groupBy('mst_karyawan.kd_entitas')
-                ->get();
+                            ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
+                            ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+                            ->where('mst_tunjangan.status', 1)
+                            ->whereIn('kd_entitas', $cbg)
+                            ->selectRaw('kd_entitas, sum(nominal) as nominal')
+                            ->groupBy('mst_karyawan.kd_entitas')
+                            ->get();
+
+            foreach ($data_cabang as $key => $item) {
+                $item->nama_cabang = DB::table('mst_cabang')
+                                ->where('kd_cabang', $item->kd_entitas)
+                                ->first();
+
+                $karyawan = DB::table('mst_karyawan')
+                                ->where('kd_entitas', $item->kd_entitas)
+                                ->get();
+
+                $jp1_cabang = array();
+                $jp2_cabang = array();
+                $total_gaji_cabang = array();
+
+                if($cek_data == 0){
+                    foreach($karyawan as $i){
+                        if($i->status_karyawan != 'Nonaktif'){
+                            $data_gaji = DB::table('mst_karyawan')
+                                            ->where('nip', $i->nip)
+                                            ->select('gj_pokok', 'gj_penyesuaian')
+                                            ->first();
+                            $total_gj = $data_gaji->gj_pokok + $data_gaji->gj_penyesuaian;
+                            for($j = 0; $j <= 8; $j++){
+                                $tj = DB::table('tunjangan_karyawan')
+                                        ->where('nip', $i->nip)
+                                        ->where('id_tunjangan', $j)
+                                        ->first('nominal');
+                                $total_gj += ($tj != null) ? $tj->nominal : 0;
+                            }
+                            array_push($total_gaji_cabang, $total_gj);
+                        }
+                    }
+                } else{
+                    foreach($karyawan as $i){
+                        if ($i->status_karyawan != 'Nonaktif') {
+                            $data_gaji = DB::table('gaji_per_bulan')
+                                            ->where('nip', $i->nip)
+                                            ->where('bulan', $bulan)
+                                            ->where('tahun', $tahun)
+                                            ->first();
+                            $total_gaji = ($data_gaji != null) ? ($data_gaji->gj_pokok +
+                                            $data_gaji->gj_penyesuaian + $data_gaji->tj_keluarga + $data_gaji->tj_jabatan +
+                                            $data_gaji->tj_telepon + $data_gaji->tj_teller + $data_gaji->tj_perumahan +
+                                            $data_gaji->tj_kemahalan + $data_gaji->tj_pelaksana + $data_gaji->tj_kesejahteraan +
+                                            $data_gaji->tj_multilevel) : 0;
+                            array_push($total_gaji_cabang, $total_gaji);
+                        }
+                    }
+                }
+                foreach($total_gaji_cabang as $i){
+                    array_push($jp1_cabang, ((($i > 9077600) ? round(9077600 * 0.01) : round($i * 0.01))));
+                    array_push($jp2_cabang, ((($i > 9077600) ? round(9077600 * 0.02) : round($i * 0.02))));
+                }
+
+                $item->karyawan = $karyawan;
+                $item->jp1_cabang = $jp1_cabang;
+                $item->jp2_cabang = $jp2_cabang;
+                $item->total_gaji_cabang = $total_gaji_cabang;
+            }
 
             return view('jaminan.index', [
                 'status' => 1,
