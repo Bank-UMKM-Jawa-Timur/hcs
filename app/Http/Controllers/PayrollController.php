@@ -29,6 +29,12 @@ class PayrollController extends Controller
             'bulan' => 'not_in:0',
             'tahun' => 'not_in:0'
         ]);
+        if ($request->get('kantor') == 'cabang') {
+            if ($request->get('cabang') == 0) {
+                Alert::warning('Peringatan', 'Harap pilih cabang terlebih dahulu.');
+                return back();
+            }
+        }
         FacadesSession::put('kategori',$request->get('kategori'));
 
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
