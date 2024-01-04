@@ -14,6 +14,9 @@
         </form>
     </div>
 </div>
+<button class="btn-scroll-to-top d-none">
+    To Top <iconify-icon icon="mdi:arrow-top" class="ml-2 mt-1"></iconify-icon>
+</button>
     <div class="card-body ml-3 mr-3">
         <div class="row">
             <div class="col">
