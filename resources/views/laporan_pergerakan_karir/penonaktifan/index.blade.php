@@ -63,6 +63,15 @@
                                         Tanggal Penonaktifan
                                     </th>
                                 </thead>
+                                @php
+                                    $i = 1;
+                                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                    $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                                    $pagination = \App\Helpers\Pagination::generateNumber($page, $page_length);
+                                    if ($pagination) {
+                                        $i = $pagination['iteration'];
+                                    }
+                                @endphp
                                 <tbody>
                                     @php
                                         $i = 1;
@@ -123,6 +132,12 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            @include('components.pagination.table-info', [
+                                'obj' => $data,
+                                'page_length' => $pagination['page_length'],
+                                'start' => $pagination['start'],
+                                'end' => $pagination['end']
+                            ])
                         </div>
                     </div>
                 @endisset
