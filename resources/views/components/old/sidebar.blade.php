@@ -495,7 +495,8 @@
                         @endcan
                         @can('histori - surat peringatan')
                         <li style="margin-top: -15px" class="@active('surat-peringatan.history')">
-                            <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}">
+                            {{-- <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}"> --}}
+                            <a href="{{ route('surat-peringatan.history') }}? }}">
                                 <div class="d-flex justify-content-start">
                                     <span class="icon">
                                         <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
