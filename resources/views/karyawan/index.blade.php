@@ -151,7 +151,7 @@
                                                 @endcan
                                                 @can('manajemen karyawan - data karyawan - detail karyawan')
                                                     <a href="{{ route('karyawan.show', $krywn->nip) }}"
-                                                        class="btn btn-outline-info p-1"
+                                                        class="btn btn-outline-info"
                                                         style="min-width: 60px">
                                                         Detail
                                                     </a>
