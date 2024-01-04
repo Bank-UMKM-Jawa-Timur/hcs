@@ -19,7 +19,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="kategori">Kategori</label>
-                        <select name="kategori" id="kategori" class="form-control">
+                        <select name="kategori" id="kategori" class="form-control" required>
                             <option value="">-- Pilih --</option>
                             <option value="aktif" @selected(request()?->kategori == 'aktif')>Aktif</option>
                             <option value="karyawan" @selected(request()->nip)>Karyawan</option>
@@ -128,22 +128,40 @@
         @endisset
     }
 
+    var valKaryawan = $('#kategori').find(":selected").val();
+
+    if (valKaryawan == "karyawan") {
+        console.log(valKaryawan);
+        $('#nip-wrapper').html(`
+                <div class="form-group">
+                    <label for="nip">Karyawan</label>
+                    <select name="nip" id="nip" class="form-control" required></select>
+                </div>
+            `);
+
+        initNIP();
+    }else{
+        $('#nip-wrapper').empty();
+    }
+
     $('#kategori').change(function() {
         const value = $(this).val();
+        console.log(value);
 
-        if(value == 'karyawan') {
+        if(value === 'karyawan') {
             $('#nip-wrapper').html(`
                 <div class="form-group">
                     <label for="nip">Karyawan</label>
-                    <select name="nip" id="nip" class="form-control"></select>
+                    <select name="nip" id="nip" class="form-control" required></select>
                 </div>
             `);
 
             initNIP();
-            return;
+        }else{
+            $('#nip-wrapper').empty();
         }
 
-        $('#nip-wrapper').empty();
+
     });
 
     $('#pjs-table').DataTable({

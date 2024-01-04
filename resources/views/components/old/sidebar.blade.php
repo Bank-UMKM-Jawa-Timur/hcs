@@ -47,6 +47,8 @@
                             'karyawan/*',
                             'reminder_pensiun',
                             'reminder_pensiun/*',
+                            'reminder_pensiun-show',
+                            'reminder_pensiun-show/*',
                             'pengkinian_data',
                             'pengkinian_data/*',
                             'mutasi',
@@ -76,6 +78,8 @@
                             'karyawan/*',
                             'reminder_pensiun',
                             'reminder_pensiun/*',
+                            'reminder_pensiun-show',
+                            'reminder_pensiun-show/*',
                             'pengkinian_data',
                             'pengkinian_data/*',
                             'mutasi',
@@ -224,7 +228,33 @@
                 {{-- Menu Penghasilan --}}
                 @if (Auth::guard("karyawan")->check())
                 <li
-                class="@active('pajak_penghasilan') {{ request()->is('penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*','gaji_perbulan', 'gaji_perbulan/*', 'penghasilan/import-penghasilan-teratur', 'penghasilan/import-penghasilan-teratur/*','pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }}">
+                class="@active('pajak_penghasilan','penghasilan/get-gaji') {{ request()->is(
+                    'penghasilan-tidak-teratur', 
+                    'penghasilan-tidak-teratur/*', 
+                    'bonus', 
+                    'bonus/*', 
+                    'potongan', 
+                    'potongan/*',
+                    'gaji_perbulan', 
+                    'gaji_perbulan/*', 
+                    'penghasilan/import-penghasilan-teratur', 
+                    'penghasilan/import-penghasilan-teratur/*',
+                    'pengganti-biaya-kesehatan', 
+                    'pengganti-biaya-kesehatan/*', 
+                    'uang-duka', 'uang-duka/*', 
+                    'penghasilan/get-gaji', 
+                    'penghasilan/get-gaji/*', 
+                    'penghasilan/details', 
+                    'penghasilan/details/*', 
+                    'payroll', 
+                    'payroll/*',
+                    'gaji',
+                    'gaji/*',
+                    'slip_jurnal',
+                    'slip_jurnal/*',
+                    'slip',
+                    'slip/*'
+                    ) ? 'active' : '' }}">
                     <a class="nav-link-btn" href="#submenu2"  data-target="#submenu2"
                         style="font-weight: bolder">
                         <div class="d-flex justify-content-start">
@@ -236,7 +266,7 @@
                             </span>
                         </div>
                     </a>
-                    <ul class="inner list-unstyled flex-column  pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'bonus/*', 'show')"
+                    <ul class="inner list-unstyled flex-column  pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'penghasilan/get-gaji', 'bonus/*', 'show')"
                         id="submenu2">
                         <li class=" dropdown @active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
                             <a href="#submenu-gaji" data-toggle="dropdown" aria-expanded="false">
@@ -258,7 +288,34 @@
                 @endif
                 @can('penghasilan')
                 <li
-                    class="@active('pajak_penghasilan') {{ request()->is('penghasilan-tidak-teratur', 'penghasilan-tidak-teratur/*', 'bonus', 'bonus/*', 'potongan', 'potongan/*','gaji_perbulan', 'gaji_perbulan/*', 'penghasilan/import-penghasilan-teratur', 'penghasilan/import-penghasilan-teratur/*','pengganti-biaya-kesehatan', 'pengganti-biaya-kesehatan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }}">
+                    class="@active('pajak_penghasilan','penghasilan/get-gaji') {{ request()->is(
+                        'penghasilan-tidak-teratur', 
+                        'penghasilan-tidak-teratur/*', 
+                        'bonus', 
+                        'bonus/*', 
+                        'potongan', 
+                        'potongan/*',
+                        'gaji_perbulan', 
+                        'gaji_perbulan/*', 
+                        'penghasilan/import-penghasilan-teratur', 
+                        'penghasilan/import-penghasilan-teratur/*',
+                        'pengganti-biaya-kesehatan', 
+                        'pengganti-biaya-kesehatan/*', 
+                        'uang-duka', 
+                        'uang-duka/*', 
+                        'penghasilan/get-gaji', 
+                        'penghasilan/get-gaji/*', 
+                        'penghasilan/details', 
+                        'penghasilan/details/*',
+                        'payroll',
+                        'payroll/*',
+                        'gaji',
+                        'gaji/*',
+                        'slip_jurnal',
+                        'slip_jurnal/*',
+                        'slip',
+                        'slip/*'
+                        ) ? 'active' : '' }}">
                     <a class="nav-link-btn" href="#submenu2"  data-target="#submenu2"
                         style="font-weight: bolder">
                         <div class="d-flex justify-content-start">
@@ -270,7 +327,7 @@
                             </span>
                         </div>
                     </a>
-                    <ul class="inner list-unstyled flex-column  pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'bonus/*', 'show')"
+                    <ul class="inner list-unstyled flex-column  pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan','penghasilan/get-gaji', 'bonus/*', 'show')"
                         id="submenu2">
                         @can('penghasilan - proses penghasilan')
                         <li style="margin-top: -15px" class="@active('gaji_perbulan')">
@@ -438,7 +495,8 @@
                         @endcan
                         @can('histori - surat peringatan')
                         <li style="margin-top: -15px" class="@active('surat-peringatan.history')">
-                            <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}">
+                            {{-- <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}"> --}}
+                            <a href="{{ route('surat-peringatan.history') }}? }}">
                                 <div class="d-flex justify-content-start">
                                     <span class="icon">
                                         <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
