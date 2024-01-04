@@ -329,7 +329,7 @@
                     </a>
                     <ul class="inner list-unstyled flex-column  pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan','penghasilan/get-gaji', 'bonus/*', 'show')"
                         id="submenu2">
-                        @can('penghasilan - proses penghasilan')
+                        @can('penghasilan')
                         <li style="margin-top: -15px" class="@active('gaji_perbulan')">
                             <a href="{{ route('gaji_perbulan.index') }}">
                                 <div class="d-flex justify-content-start">

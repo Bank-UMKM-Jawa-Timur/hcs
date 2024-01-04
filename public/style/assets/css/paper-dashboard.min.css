@@ -2834,7 +2834,7 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret {
 }
 .dropdown-menu.dropdown-primary .dropdown-item:focus,
 .dropdown-menu.dropdown-primary .dropdown-item:hover {
-    background-color: #6dd3d6;
+    background-color: #da241c;
 }
 .dropdown-menu.dropdown-info .dropdown-item:focus,
 .dropdown-menu.dropdown-info .dropdown-item:hover {

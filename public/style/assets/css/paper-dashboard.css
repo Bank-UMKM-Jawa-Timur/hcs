@@ -3420,7 +3420,7 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
 
 .dropdown-menu.dropdown-primary .dropdown-item:hover,
 .dropdown-menu.dropdown-primary .dropdown-item:focus {
-    background-color: #6dd3d6;
+    background-color: #da241c;
 }
 
 .dropdown-menu.dropdown-info .dropdown-item:hover,
