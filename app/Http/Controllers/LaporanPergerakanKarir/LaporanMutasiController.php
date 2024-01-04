@@ -18,6 +18,10 @@ class LaporanMutasiController extends Controller
         $data = null;
         $start_date = $request->start_date;
         $end_date = $request->end_date;
+
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+
         if ($start_date && $end_date) {
             try {
                 $data = DB::table('demosi_promosi_pangkat')
@@ -33,7 +37,13 @@ class LaporanMutasiController extends Controller
                     ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
                     ->whereBetween('demosi_promosi_pangkat.tanggal_pengesahan', [$start_date, $end_date])
                     ->orderBy('id', 'desc')
-                    ->get();
+                    ->paginate($limit);
+
+                    $data->appends([
+                        'start_date' => $start_date,
+                        'end_date' => $end_date,
+                        'page_length' => $limit,
+                    ]);
 
                 $data->map(function ($mutasi) {
                     $entity = EntityService::getEntity($mutasi->kd_entitas_baru);

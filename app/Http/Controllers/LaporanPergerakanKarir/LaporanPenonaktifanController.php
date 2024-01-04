@@ -18,11 +18,13 @@ class LaporanPenonaktifanController extends Controller
         $data = null;
         $start_date = $request->start_date;
         $end_date = $request->end_date;
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
 
         $karyawanRepo = new KaryawanRepository();
 
         if($start_date && $end_date){
-            $data = $karyawanRepo->filterKaryawanPusatNonaktif($start_date, $end_date);
+            $data = $karyawanRepo->filterKaryawanPusatNonaktif($start_date, $end_date, $limit, $page);
         }
         return view('laporan_pergerakan_karir.penonaktifan.index', compact('data'));
     }

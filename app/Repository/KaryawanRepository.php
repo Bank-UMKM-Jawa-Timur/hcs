@@ -181,15 +181,22 @@ class KaryawanRepository
         return $this->getKaryawanPusatNonaktif($search, $limit);
     }
 
-    public function filterKaryawanPusatNonaktif($start_date, $end_date): Collection
+    public function filterKaryawanPusatNonaktif($start_date, $end_date, $limit, $page)
     {
         $karyawan = KaryawanModel::with('jabatan')
             ->with('bagian')
             ->whereNotNull('tanggal_penonaktifan')
             ->orderBy('tanggal_penonaktifan', 'DESC')
             ->whereBetween('tanggal_penonaktifan', [$start_date, $end_date])
-            ->get();
+            ->paginate($limit);
 
+        $karyawan->appends([
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'page_length' => $limit,
+        ]);
+
+        
         $this->addEntity($karyawan);
         return $karyawan;
     }
