@@ -272,6 +272,26 @@
             $('.cabang-input').removeClass('d-none')
         }
 
+        $('#kantor').on('change', function() {
+            $('#btn-download').addClass('d-none')
+        })
+
+        $('#cabang').on('change', function() {
+            $('#btn-download').addClass('d-none')
+        })
+
+        $('#bulan').on('change', function() {
+            $('#btn-download').addClass('d-none')
+        })
+
+        $('#tahun').on('change', function() {
+            $('#btn-download').addClass('d-none')
+        })
+
+        $('#kategori').on('change', function() {
+            $('#btn-download').addClass('d-none')
+        })
+
         const formatRupiahPayroll = (angka) => {
             let reverse = angka.toString().split('').reverse().join('');
             let ribuan = reverse.match(/\d{1,3}/g);
