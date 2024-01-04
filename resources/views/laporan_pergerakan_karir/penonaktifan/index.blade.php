@@ -10,7 +10,7 @@
             </div>
 
             <div class="card-body">
-                <form action="" method="get">
+                <form id="form" action="" method="get">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -32,115 +32,141 @@
                             <button class="is-btn is-primary" type="submit">Tampilkan</button>
                         </div>
                     </div>
-                </form>
-                @isset($data)
-                    <div class="row mt-4 px-3">
-                        <div class="table-responsive">
-                            <table class="table" id="table_export">
-                                <thead class="text-primary">
-                                    <th>
-                                        #
-                                    </th>
-                                    <th>
-                                        NIP
-                                    </th>
-                                    <th>
-                                        NIK
-                                    </th>
-                                    <th>
-                                        Nama Karyawan
-                                    </th>
-                                    <th>
-                                        Kantor Terakhir
-                                    </th>
-                                    <th>
-                                        Jabatan Terakhir
-                                    </th>
-                                    <th>
-                                        kategori penonaktifan
-                                    </th>
-                                    <th>
-                                        Tanggal Penonaktifan
-                                    </th>
-                                </thead>
-                                @php
-                                    $i = 1;
-                                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                                    $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
-                                    $pagination = \App\Helpers\Pagination::generateNumber($page, $page_length);
-                                    if ($pagination) {
-                                        $i = $pagination['iteration'];
-                                    }
-                                @endphp
-                                <tbody>
+                    @isset($data)
+                        <div class="row mt-0 px-3">
+                            <div class="table-responsive">
+                                <div class="d-flex justify-content-between mb-4">
+                                    <div class="p-2 mt-4 w-100">
+                                        <label for="page_length" class="mr-3 text-sm text-neutral-400">show</label>
+                                        <select name="page_length" id="page_length"
+                                            class="border px-2 py-2 cursor-pointer rounded appearance-none text-center">
+                                            <option value="10"
+                                                @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
+                                                10</option>
+                                            <option value="20"
+                                                @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>
+                                                20</option>
+                                            <option value="50"
+                                                @isset($_GET['page_length']) {{ $_GET['page_length'] == 50 ? 'selected' : '' }} @endisset>
+                                                50</option>
+                                            <option value="100"
+                                                @isset($_GET['page_length']) {{ $_GET['page_length'] == 100 ? 'selected' : '' }} @endisset>
+                                                100</option>
+                                        </select>
+                                        <label for="" class="ml-3 text-sm text-neutral-400">entries</label>
+                                    </div>
+                                    {{-- <div class="p-2 w-25">
+                                        <label for="q">Cari</label>
+                                        <input type="search" name="q" id="q" placeholder="Cari disini..."
+                                            class="form-control p-2" value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
+                                    </div> --}}
+                                </div>
+                                <table class="table" id="table_export">
+                                    <thead class="text-primary">
+                                        <th>
+                                            #
+                                        </th>
+                                        <th>
+                                            NIP
+                                        </th>
+                                        <th>
+                                            NIK
+                                        </th>
+                                        <th>
+                                            Nama Karyawan
+                                        </th>
+                                        <th>
+                                            Kantor Terakhir
+                                        </th>
+                                        <th>
+                                            Jabatan Terakhir
+                                        </th>
+                                        <th>
+                                            kategori penonaktifan
+                                        </th>
+                                        <th>
+                                            Tanggal Penonaktifan
+                                        </th>
+                                    </thead>
                                     @php
                                         $i = 1;
+                                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                        $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                                        $pagination = \App\Helpers\Pagination::generateNumber($page, $page_length);
+                                        if ($pagination) {
+                                            $i = $pagination['iteration'];
+                                        }
                                     @endphp
-                                    @foreach ($data as $item)
-                                        <tr>
-                                            <td>
-                                                {{ $i++ }}
-                                            </td>
-                                            <td>
-                                                {{ $item->nip }}
-                                            </td>
-                                            <td>
-                                                {{ $item->nik }}
-                                            </td>
-                                            <td>
-                                                {{ $item->nama_karyawan }}
-                                            </td>
-                                            <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}
-                                            </td>
-                                            @php
-                                                $prefix = match ($item->status_jabatan) {
-                                                    'Penjabat' => 'Pj. ',
-                                                    'Penjabat Sementara' => 'Pjs. ',
-                                                    default => '',
-                                                };
+                                    <tbody>
+                                        @php
+                                            $i = 1;
+                                        @endphp
+                                        @foreach ($data as $item)
+                                            <tr>
+                                                <td>
+                                                    {{ $i++ }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->nip }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->nik }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->nama_karyawan }}
+                                                </td>
+                                                <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}
+                                                </td>
+                                                @php
+                                                    $prefix = match ($item->status_jabatan) {
+                                                        'Penjabat' => 'Pj. ',
+                                                        'Penjabat Sementara' => 'Pjs. ',
+                                                        default => '',
+                                                    };
 
-                                                $jabatan = $item->jabatan->nama_jabatan;
-
-                                                $ket = $item->ket_jabatan ? "({$item->ket_jabatan})" : '';
-
-                                                if (isset($item->entitas->subDiv)) {
-                                                    $entitas = $item->entitas->subDiv->nama_subdivisi;
-                                                } elseif (isset($item->entitas->div)) {
-                                                    $entitas = $item->entitas->div->nama_divisi;
-                                                } else {
-                                                    $entitas = '';
-                                                }
-
-                                                if ($jabatan == 'Pemimpin Sub Divisi') {
-                                                    $jabatan = 'PSD';
-                                                } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
-                                                    $jabatan = 'PBO';
-                                                } elseif ($jabatan == 'Pemimpin Bidang Pemasaran') {
-                                                    $jabatan = 'PBP';
-                                                } else {
                                                     $jabatan = $item->jabatan->nama_jabatan;
-                                                }
-                                            @endphp
-                                            <td>{{ $prefix . $jabatan }} {{ $entitas }}
-                                                {{ $item?->bagian?->nama_bagian }} {{ $ket }}</td>
-                                            <td>{{ $item->kategori_penonaktifan ?? '-' }}</td>
-                                            <td>
-                                                <span style="display: none;">{{ date('Ymd', strtotime($item->tanggal_penonaktifan)) }}</span>
-                                                {{ $item->tanggal_penonaktifan != null ? date('d M Y', strtotime($item->tanggal_penonaktifan)) : '-' }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @include('components.pagination.table-info', [
-                                'obj' => $data,
-                                'page_length' => $pagination['page_length'],
-                                'start' => $pagination['start'],
-                                'end' => $pagination['end']
-                            ])
+
+                                                    $ket = $item->ket_jabatan ? "({$item->ket_jabatan})" : '';
+
+                                                    if (isset($item->entitas->subDiv)) {
+                                                        $entitas = $item->entitas->subDiv->nama_subdivisi;
+                                                    } elseif (isset($item->entitas->div)) {
+                                                        $entitas = $item->entitas->div->nama_divisi;
+                                                    } else {
+                                                        $entitas = '';
+                                                    }
+
+                                                    if ($jabatan == 'Pemimpin Sub Divisi') {
+                                                        $jabatan = 'PSD';
+                                                    } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
+                                                        $jabatan = 'PBO';
+                                                    } elseif ($jabatan == 'Pemimpin Bidang Pemasaran') {
+                                                        $jabatan = 'PBP';
+                                                    } else {
+                                                        $jabatan = $item->jabatan->nama_jabatan;
+                                                    }
+                                                @endphp
+                                                <td>{{ $prefix . $jabatan }} {{ $entitas }}
+                                                    {{ $item?->bagian?->nama_bagian }} {{ $ket }}</td>
+                                                <td>{{ $item->kategori_penonaktifan ?? '-' }}</td>
+                                                <td>
+                                                    <span style="display: none;">{{ date('Ymd', strtotime($item->tanggal_penonaktifan)) }}</span>
+                                                    {{ $item->tanggal_penonaktifan != null ? date('d M Y', strtotime($item->tanggal_penonaktifan)) : '-' }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                @include('components.pagination.table-info', [
+                                    'obj' => $data,
+                                    'page_length' => $pagination['page_length'],
+                                    'start' => $pagination['start'],
+                                    'end' => $pagination['end']
+                                ])
+                            </div>
                         </div>
-                    </div>
-                @endisset
+                    @endisset
+                </form>
             </div>
         </div>
 
@@ -157,6 +183,10 @@
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script>
+        $('#page_length').on('change', function() {
+            $('#form').submit()
+        })
+
         var start_date = document.getElementById("start_date").value;
         var end_date = document.getElementById("end_date").value;
 
