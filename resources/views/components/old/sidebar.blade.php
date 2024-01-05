@@ -15,7 +15,7 @@
             role="navigation">
             <ul class="nav flex-column sticky-top pl-2 mt-0">
                 @if (Auth::guard("karyawan")->check())
-                    <li style="margin-top: -15px" class="@active('home')">
+                    <li style="margin-top: -15px" class="@active('home,per-cabang,per-divisi,list-karyawan-by-cabang,sub-divisi')">
                         <a class="nav-link-btn" href="{{ route('home') }}" style="font-weight: bolder">
                             <div class="d-flex justify-content-start">
                                 <span class="icon">
@@ -27,7 +27,7 @@
                     </li>
                 @else
                     @can('dashboard')
-                        <li style="margin-top: -15px" class="@active('home')">
+                        <li style="margin-top: -15px" class="@active('home,per-cabang,per-divisi,list-karyawan-by-cabang,sub-divisi')">
                             <a class="nav-link-btn" href="{{ route('home') }}" style="font-weight: bolder">
                                 <div class="d-flex justify-content-start">
                                     <span class="icon">
@@ -253,7 +253,9 @@
                     'slip_jurnal',
                     'slip_jurnal/*',
                     'slip',
-                    'slip/*'
+                    'slip/*',
+                    'pajak_penghasilan',
+                    'pajak_penghasilan/*'
                     ) ? 'active' : '' }}">
                     <a class="nav-link-btn" href="#submenu2"  data-target="#submenu2"
                         style="font-weight: bolder">
@@ -314,7 +316,9 @@
                         'slip_jurnal',
                         'slip_jurnal/*',
                         'slip',
-                        'slip/*'
+                        'slip/*',
+                        'pajak_penghasilan',
+                        'pajak_penghasilan/*'
                         ) ? 'active' : '' }}">
                     <a class="nav-link-btn" href="#submenu2"  data-target="#submenu2"
                         style="font-weight: bolder">
@@ -640,7 +644,7 @@
                 @endcan
                 {{-- Menu Setting --}}
                 @can('setting')
-                <li class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database')">
+                <li class="@active('user,role,cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database,ptkp,profil-kantor-pusat,penambahan-bruto,pengurangan-bruto')">
                     <a class="nav-link-btn" href="#submenu6"  data-target="#submenu7"
                         style="font-weight: bolder">
                         <div class="d-flex justify-content-start">
@@ -657,7 +661,7 @@
                     "
                         id="submenu7">
                         @can('setting - master')
-                            <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
+                            <li class="dropdown @active('user,role,cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,ptkp', 'show')" style="margin-top: -15px">
                                 <a data-toggle="dropdown" aria-expanded="false">
                                     <i class="nc-icon nc-box"></i>
                                     <p class="dropdown-toggle" id="navbarDropdownMenuLink">Master </p>
@@ -666,46 +670,46 @@
                                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                                     @can('setting - master - user')
                                     @endcan
-                                    <a class="dropdown-item @active('role.index')"
+                                    <a class="dropdown-item @active('user')"
                                         href="{{ route('user.index') }}">User</a>
                                     @can('setting - master - role')
-                                    <a class="dropdown-item @active('role.index')"
+                                    <a class="dropdown-item @active('role')"
                                         href="{{ route('role.index') }}">Roles</a>
                                     @endcan
                                     @can('setting - master - kantor cabang')
-                                    <a class="dropdown-item @active('cabang.index')"
+                                    <a class="dropdown-item @active('cabang')"
                                         href="{{ route('cabang.index') }}">Kantor Cabang</a>
                                     @endcan
                                     @can('setting - master - divisi')
-                                    <a class="dropdown-item @active('divisi.index')"
+                                    <a class="dropdown-item @active('divisi')"
                                         href="{{ route('divisi.index') }}">Divisi</a>
                                     @endcan
                                     @can('setting - master - sub divisi')
-                                    <a class="dropdown-item @active('sub_divisi.index')"
+                                    <a class="dropdown-item @active('sub_divisi')"
                                         href="{{ route('sub_divisi.index') }}">Sub Divisi</a>
                                     @endcan
                                     @can('setting - master - bagian')
-                                    <a class="dropdown-item @active('bagian.index')"
+                                    <a class="dropdown-item @active('bagian')"
                                         href="{{ route('bagian.index') }}">Bagian</a>
                                     @endcan
                                     @can('setting - master - jabatan')
-                                    <a class="dropdown-item @active('jabatan.index')"
+                                    <a class="dropdown-item @active('jabatan')"
                                         href="{{ route('jabatan.index') }}">Jabatan</a>
                                     @endcan
                                     @can('setting - master - pangkat & golongan')
-                                    <a class="dropdown-item @active('pangkat_golongan.index')"
+                                    <a class="dropdown-item @active('pangkat_golongan')"
                                         href="{{ route('pangkat_golongan.index') }}">Pangkat & Golongan</a>
                                     @endcan
                                     @can('setting - master - tunjangan')
-                                    <a class="dropdown-item @active('tunjangan.index')"
+                                    <a class="dropdown-item @active('tunjangan')"
                                         href="{{ route('tunjangan.index') }}">Tunjangan</a>
                                     @endcan
                                     @can('setting - master - rentang umur')
-                                    <a class="dropdown-item @active('umur.index')"
+                                    <a class="dropdown-item @active('umur')"
                                         href="{{ route('umur.index') }}">Rentang Umur</a>
                                     @endcan
                                     @can('setting - master - penghasilan tanpa pajak')
-                                    <a class="dropdown-item @active('umur.index')"
+                                    <a class="dropdown-item @active('ptkp')"
                                         href="{{ route('ptkp.index') }}">Penghasilan tanpa Pajak</a>
                                     @endcan
                                 </div>
@@ -716,7 +720,7 @@
                         @endphp
                         @can('setting - kantor pusat')
                         <li class="dropdown
-                            {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show') --}}
+                            @active('profil-kantor-pusat,penambahan-bruto,pengurangan-bruto', 'show')
                             " style="margin-top: -15px">
                             <a data-toggle="dropdown" aria-expanded="false">
                                 <i class="nc-icon nc-bank"></i>
@@ -725,15 +729,15 @@
                             </a>
                             <div class="dropdown-menu dropdown-primary dropdown-menu-right">
                                 @can('setting - kantor pusat - profil')
-                                    <a class="dropdown-item @active('cabang.index')"
+                                    <a class="dropdown-item @active('profil-kantor-pusat')"
                                         href="{{ route('profil-kantor-pusat.index') }}">Profil</a>
                                 @endcan
                                 @can('setting - kantor pusat - penambahan bruto')
-                                    <a class="dropdown-item @active('divisi.index')"
+                                    <a class="dropdown-item @active('penambahan-bruto')"
                                         href="{{ route('penambahan-bruto.index') }}?profil_kantor={{$profilKantorPusat ? $profilKantorPusat->id : ''}}">Penambahan Bruto</a>
                                 @endcan
                                 @can('setting - kantor pusat - pengurangan bruto')
-                                    <a class="dropdown-item @active('sub_divisi.index')"
+                                    <a class="dropdown-item @active('pengurangan-bruto')"
                                         href="{{ route('pengurangan-bruto.index') }}?profil_kantor={{$profilKantorPusat ? $profilKantorPusat->id : ''}}">Pengurangan Bruto</a>
                                 @endcan
                             </div>

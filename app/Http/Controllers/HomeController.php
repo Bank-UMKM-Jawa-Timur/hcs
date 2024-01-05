@@ -268,7 +268,7 @@ class HomeController extends Controller
 
         // return $datas;
 
-        return view('graph.per-divisi', compact('datas'));
+        return view('graph.per-devisi', compact('datas'));
     }
 
     public function subDivisi($kode){
@@ -286,6 +286,6 @@ class HomeController extends Controller
         ->groupBy('s.kd_subdiv')
         ->get();
 
-        return view('graph.sub-divisi', compact('data'));
+        return view('graph.sub-devisi', compact('data'));
     }
 }
