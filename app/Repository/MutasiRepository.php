@@ -5,11 +5,11 @@ namespace App\Repository;
 use App\Service\EntityService;
 use Illuminate\Support\Facades\DB;
 
-class PromosiRepository
+class MutasiRepository
 {
     public function get($search, $limit=10) {
         $data = DB::table('demosi_promosi_pangkat')
-            ->where('keterangan', 'Promosi')
+            ->where('keterangan', 'Mutasi')
             ->select(
                 'demosi_promosi_pangkat.*',
                 'karyawan.*',
