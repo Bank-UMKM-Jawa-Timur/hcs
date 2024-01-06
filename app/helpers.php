@@ -200,3 +200,15 @@ if (!function_exists('getPermission')) {
 
     }
 }
+
+if (!function_exists('hasPermission')) {
+    function hasPermission(string $permission_name = '') {
+        $permissions = auth()->user()->getAllPermissions();
+        foreach ($permissions as $key => $value) {
+            if ($value->name == $permission_name) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

@@ -270,21 +270,29 @@
                     </a>
                     <ul class="inner list-unstyled flex-column  pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*', 'uang-duka', 'uang-duka/*') ? 'active' : '' }} @active('pajak_penghasilan', 'penghasilan/get-gaji', 'bonus/*', 'show')"
                         id="submenu2">
-                        <li class=" dropdown @active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                            <a href="#submenu-gaji" data-toggle="dropdown" aria-expanded="false">
-                            <div class="d-flex justify-content-start">
-                                <span class="icon">
-                                    <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
-                                </span>
-                                <span class="dropdown-toggle">Gaji</span>
-                            </div>
-                            </a>
-                            <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
-                                <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
-                                <a class="dropdown-item" href="{{ route('slip.index') }}">Slip Gaji</a>
-                            </div>
-                        </li>
+                        @if(hasPermission('penghasilan - gaji'))
+                            <li class=" dropdown @active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
+                                <a href="#submenu-gaji" data-toggle="dropdown" aria-expanded="false">
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span class="dropdown-toggle">Gaji</span>
+                                </div>
+                                </a>
+                                <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                                    @if(hasPermission('penghasilan - gaji - lampiran gaji'))
+                                        <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
+                                    @endif
+                                    @if(hasPermission('penghasilan - gaji - slip jurnal'))
+                                        <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
+                                    @endif
+                                    @if(hasPermission('penghasilan - gaji - slip gaji'))
+                                        <a class="dropdown-item" href="{{ route('slip.index') }}">Slip Gaji</a>
+                                    @endif
+                                </div>
+                            </li>
+                        @endif
                     </ul>
                 </li>
                 @endif
@@ -426,27 +434,27 @@
                         @endcan
                         {{-- Menu Gaji --}}
                         @can('penghasilan - gaji')
-                        <li class=" dropdown @active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                            <a href="#submenu-gaji" data-toggle="dropdown" aria-expanded="false">
-                            <div class="d-flex justify-content-start">
-                                <span class="icon">
-                                    <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
-                                </span>
-                                <span class="dropdown-toggle">Gaji</span>
-                            </div>
-                            </a>
-                            <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                @can('penghasilan - gaji - lampiran gaji')
-                                    <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
-                                @endcan
-                                <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
-                                @can('penghasilan - gaji - slip gaji')
-                                @endcan
-                                @if (auth()->user()->hasRole('user') || auth()->user()->can('penghasilan - gaji - slip gaji'))
-                                    <a class="dropdown-item" href="{{ route('slip.index') }}">Slip Gaji</a>
-                                @endif
-                            </div>
-                        </li>
+                            <li class=" dropdown @active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
+                                <a href="#submenu-gaji" data-toggle="dropdown" aria-expanded="false">
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span class="dropdown-toggle">Gaji</span>
+                                </div>
+                                </a>
+                                <div class="dropdown-menu dropdown-primary dropdown-menu-right">
+                                    @can('penghasilan - gaji - lampiran gaji')
+                                        <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
+                                    @endcan
+                                    @can('penghasilan - gaji - slip jurnal')
+                                        <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
+                                    @endcan
+                                    @can('penghasilan - gaji - slip gaji')
+                                        <a class="dropdown-item" href="{{ route('slip.index') }}">Slip Gaji</a>
+                                    @endcan
+                                </div>
+                            </li>
                         @endcan
                     </ul>
                 </li>

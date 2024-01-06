@@ -55,6 +55,10 @@
                                 class="form-control p-2" value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
                         </div>
                     </div>
+                    {{-- @php
+                        // dump(auth()->user());
+                        // dump(auth()->user()->hasRole('cabang'));
+                    @endphp --}}
                     <table class="table whitespace-nowrap" id="table" style="width: 100%">
                         <thead class="text-dark">
                             <th>No</th>
