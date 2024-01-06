@@ -36,6 +36,7 @@ class KaryawanRepository
     }
 
     public function getDataKaryawan($search, $limit=10, $page=1) {
+        $is_cabang = auth()->user()->hasRole('cabang');
         $karyawan = KaryawanModel::select(
             'mst_karyawan.nip',
             'mst_karyawan.nik',
@@ -52,6 +53,10 @@ class KaryawanRepository
         ->with('jabatan')
         ->with('bagian')
         ->whereNull('tanggal_penonaktifan')
+        ->when($is_cabang, function($query) {
+            $kd_cabang = auth()->user()->kd_cabang;
+            $query->where('mst_karyawan.kd_entitas', $kd_cabang);
+        })
         ->where(function ($query) use ($search) {
             $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
                 ->orWhere('mst_karyawan.nip', 'like', "%$search%")
