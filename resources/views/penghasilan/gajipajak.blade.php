@@ -833,9 +833,12 @@
         ajax: {
             url: '{{ route('api.select2.karyawan') }}',
             data: function(params) {
+                const is_cabang = "{{auth()->user()->hasRole('cabang')}}"
+                const cabang = is_cabang ? "{{auth()->user()->kd_cabang}}" : null
                 return {
                     search: params.term || '',
-                    page: params.page || 1
+                    page: params.page || 1,
+                    cabang: cabang
                 }
             },
             cache: true,

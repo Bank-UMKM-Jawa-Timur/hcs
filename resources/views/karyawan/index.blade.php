@@ -89,45 +89,6 @@
                                 $end = $page == 1 ? $page_length : $start + $page_length - 1;
                                 $i = $page == 1 ? 1 : $start;
                             @endphp
-                            {{-- @foreach ($karyawan as $krywn)
-                                @if ($krywn->nip != $krywn->nip)
-                                    <tr>
-                                        <td>{{ $i++ }}</td>
-                                        <td>{{ $krywn->nip }}</td>
-                                        <td>{{ $krywn->nik }}</td>
-                                        <td>{{ $krywn->nama_karyawan }}</td>
-                                        <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
-                                        </td>
-                                        <td>{{$krywn->display_jabatan}}</td>
-                                        <td style="min-width: 130px">
-                                            <div class="container">
-                                                <div class="row">
-                                                    @can('manajemen karyawan - data karyawan - edit karyawan')
-                                                        <a href="{{ route('karyawan.edit', $krywn->nip) }}"
-                                                            class="btn btn-outline-warning p-1 mr-2"
-                                                            style="min-width: 60px">
-                                                            Edit
-                                                        </a>
-                                                    @elsecan('manajemen karyawan - data karyawan - edit karyawan - edit potongan')
-                                                        <a href="{{ route('karyawan.edit', $krywn->nip) }}"
-                                                            class="btn btn-outline-warning p-1 mr-2"
-                                                            style="min-width: 60px">
-                                                            Edit Potongan
-                                                        </a>
-                                                    @endcan
-                                                    @can('manajemen karyawan - data karyawan - detail karyawan')
-                                                        <a href="{{ route('karyawan.show', $krywn->nip) }}"
-                                                            class="btn btn-outline-info p-1"
-                                                            style="min-width: 60px">
-                                                            Detail
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endif
-                            @endforeach --}}
                             @foreach ($karyawan as $krywn)
                                 <tr>
                                     <td>{{ $i++ }}</td>
