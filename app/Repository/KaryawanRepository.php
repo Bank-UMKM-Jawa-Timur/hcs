@@ -36,74 +36,123 @@ class KaryawanRepository
     }
 
     public function getDataKaryawan($search, $limit=10, $page=1) {
-        $is_cabang = auth()->user()->hasRole('cabang');
-        $is_pusat = auth()->user()->hasRole('kepegawaian') || auth()->user()->hasRole('hrd');
-        $kd_cabang = DB::table('mst_cabang')
-                        ->select('kd_cabang')
-                        ->pluck('kd_cabang')
-                        ->toArray();
-        $karyawan = KaryawanModel::select(
-            'mst_karyawan.nip',
-            'mst_karyawan.nik',
-            'mst_karyawan.nama_karyawan',
-            'mst_karyawan.kd_bagian',
-            'mst_karyawan.kd_jabatan',
-            'mst_karyawan.kd_entitas',
-            'mst_karyawan.tanggal_penonaktifan',
-            'mst_karyawan.status_jabatan',
-            'mst_karyawan.ket_jabatan',
-            DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
-        )
-        ->leftJoin('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
-        ->with('jabatan')
-        ->with('bagian')
-        ->whereNull('tanggal_penonaktifan')
-        ->when($is_cabang, function($query) {
-            $kd_cabang = auth()->user()->kd_cabang;
-            $query->where('mst_karyawan.kd_entitas', $kd_cabang);
-        })
-        ->when($is_pusat, function($query) use ($kd_cabang) {
-            $query->where(function($q2) use ($kd_cabang) {
-                $q2->whereNotIn('mst_karyawan.kd_entitas', $kd_cabang)
-                    ->orWhere('mst_karyawan.kd_entitas', 0)
-                    ->orWhereNull('mst_karyawan.kd_entitas');
-            });
-        })
-        ->where(function ($query) use ($search) {
-            $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
-                ->orWhere('mst_karyawan.nip', 'like', "%$search%")
-                ->orWhere('mst_karyawan.nik', 'like', "%$search%")
-                ->orWhere('mst_karyawan.kd_bagian', 'like', "%$search%")
-                ->orWhere('mst_karyawan.kd_jabatan', 'like', "%$search%")
-                ->orWhere('mst_karyawan.kd_entitas', 'like', "%$search%")
-                ->orWhere('mst_karyawan.status_jabatan', 'like', "%$search%")
-                ->orWhere('c.kd_cabang', 'like', "%$search%")
-                ->orWhere('c.nama_cabang', 'like', "%$search%")
-                ->orWhere('mst_karyawan.ket_jabatan', 'like', "%$search%")
-                ->orWhereHas('jabatan', function($query3) use ($search) {
-                    $query3->where("nama_jabatan", 'like', "%$search%");
-                })
-                ->orWhereHas('bagian', function($query3) use ($search) {
-                    $query3->where("nama_bagian", 'like', "%$search%");
-                })
-                ->orWhere(function($query2) use ($search) {
-                    $query2->orWhereHas('jabatan', function($query3) use ($search) {
-                        $query3->where("nama_jabatan", 'like', "%$search%")
-                            ->orWhereRaw("MATCH(nama_jabatan) AGAINST('$search')");
+        if (auth()->user()->hasRole('cabang')) {
+            $karyawan = KaryawanModel::select(
+                'mst_karyawan.nip',
+                'mst_karyawan.nik',
+                'mst_karyawan.nama_karyawan',
+                'mst_karyawan.kd_bagian',
+                'mst_karyawan.kd_jabatan',
+                'mst_karyawan.kd_entitas',
+                'mst_karyawan.tanggal_penonaktifan',
+                'mst_karyawan.status_jabatan',
+                'mst_karyawan.ket_jabatan',
+                'mst_karyawan.kd_entitas',
+                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+            )
+            ->leftJoin('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
+            ->with('jabatan')
+            ->with('bagian')
+            ->where('kd_entitas', auth()->user()->kd_cabang)
+            ->whereNull('tanggal_penonaktifan')
+            ->where(function ($query) use ($search) {
+                $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.nip', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.nik', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.kd_bagian', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.kd_jabatan', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.kd_entitas', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.status_jabatan', 'like', "%$search%")
+                    ->orWhere('c.kd_cabang', 'like', "%$search%")
+                    ->orWhere('c.nama_cabang', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.ket_jabatan', 'like', "%$search%")
+                    ->orWhereHas('jabatan', function($query3) use ($search) {
+                        $query3->where("nama_jabatan", 'like', "%$search%");
                     })
-                    ->whereHas('bagian', function($query3) use ($search) {
-                        $query3->whereRaw("MATCH(nama_bagian) AGAINST('$search')")
-                            ->orWhereRaw("MATCH(nama_bagian) AGAINST('$search')");
+                    ->orWhereHas('bagian', function($query3) use ($search) {
+                        $query3->where("nama_bagian", 'like', "%$search%");
+                    })
+                    ->orWhere(function($query2) use ($search) {
+                        $query2->orWhereHas('jabatan', function($query3) use ($search) {
+                            $query3->where("nama_jabatan", 'like', "%$search%")
+                                ->orWhereRaw("MATCH(nama_jabatan) AGAINST('$search')");
+                        })
+                        ->whereHas('bagian', function($query3) use ($search) {
+                            $query3->whereRaw("MATCH(nama_bagian) AGAINST('$search')")
+                                ->orWhereRaw("MATCH(nama_bagian) AGAINST('$search')");
+                        });
                     });
-                });
+    
+                if ($search == 'pusat') {
+                    $query->orWhereRaw('mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang)');
+                }
+            })
+            ->orderByRaw($this->orderRaw)
+            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+            ->paginate($limit);
+        }else{
+            $is_pusat = auth()->user()->hasRole('kepegawaian') || auth()->user()->hasRole('hrd');
+            $kd_cabang = DB::table('mst_cabang')
+                            ->select('kd_cabang')
+                            ->pluck('kd_cabang')
+                            ->toArray();
 
-            if ($search == 'pusat') {
-                $query->orWhereRaw('mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang)');
-            }
-        })
-        ->orderByRaw($this->orderRaw)
-        ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
-        ->paginate($limit);
+            $karyawan = KaryawanModel::select(
+                'mst_karyawan.nip',
+                'mst_karyawan.nik',
+                'mst_karyawan.nama_karyawan',
+                'mst_karyawan.kd_bagian',
+                'mst_karyawan.kd_jabatan',
+                'mst_karyawan.kd_entitas',
+                'mst_karyawan.tanggal_penonaktifan',
+                'mst_karyawan.status_jabatan',
+                'mst_karyawan.ket_jabatan',
+                'mst_karyawan.kd_entitas',
+                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+            )
+            ->leftJoin('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
+            ->with('jabatan')
+            ->with('bagian')
+            ->whereNull('tanggal_penonaktifan')
+            ->when($is_pusat, function($query) use ($kd_cabang) {
+                $query->where(function($q2) use ($kd_cabang) {
+                    $q2->whereNotIn('mst_karyawan.kd_entitas', $kd_cabang)
+                        ->orWhere('mst_karyawan.kd_entitas', 0)
+                        ->orWhereNull('mst_karyawan.kd_entitas');
+                });
+            })
+            ->where(function ($query) use ($search) {
+                $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.nip', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.nik', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.kd_bagian', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.kd_jabatan', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.kd_entitas', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.status_jabatan', 'like', "%$search%")
+                    ->orWhere('c.kd_cabang', 'like', "%$search%")
+                    ->orWhere('c.nama_cabang', 'like', "%$search%")
+                    ->orWhere('mst_karyawan.ket_jabatan', 'like', "%$search%")
+                    ->orWhereHas('jabatan', function($query3) use ($search) {
+                        $query3->where("nama_jabatan", 'like', "%$search%");
+                    })
+                    ->orWhereHas('bagian', function($query3) use ($search) {
+                        $query3->where("nama_bagian", 'like', "%$search%");
+                    })
+                    ->orWhere(function($query2) use ($search) {
+                        $query2->orWhereHas('jabatan', function($query3) use ($search) {
+                            $query3->where("nama_jabatan", 'like', "%$search%")
+                                ->orWhereRaw("MATCH(nama_jabatan) AGAINST('$search')");
+                        })
+                        ->whereHas('bagian', function($query3) use ($search) {
+                            $query3->whereRaw("MATCH(nama_bagian) AGAINST('$search')")
+                                ->orWhereRaw("MATCH(nama_bagian) AGAINST('$search')");
+                        });
+                    });
+            })
+            ->orderByRaw($this->orderRaw)
+            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+            ->paginate($limit);
+        }
 
         $this->addEntity($karyawan);
 
@@ -144,7 +193,7 @@ class KaryawanRepository
             $value->display_jabatan = $display_jabatan;
         }
 
-        // dd($karyawan);
+        // dump($karyawan);
         return $karyawan;
     }
 

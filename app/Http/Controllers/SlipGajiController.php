@@ -415,7 +415,10 @@ class SlipGajiController extends Controller
 
         $karyawan = KaryawanModel::where('nip', $nip)->first();
 
-        return view('slip_gaji.slip', compact('data', 'cabang', 'karyawan'));
+        $slipRepository = new SlipGajiRepository;
+        $jabatan = $slipRepository->getjabatan($nip);
+
+        return view('slip_gaji.slip', compact('data', 'cabang', 'karyawan', 'jabatan'));
     }
 
     public function listSlipGaji($nip, $year, $cetak) {
@@ -447,7 +450,15 @@ class SlipGajiController extends Controller
         $month = $request->get('bulan');
         $year = $request->get('tahun');
         $data = $slipRepository->getSlipCetak($nip, $month, $year);
+        $jabatan = $slipRepository->getjabatan($nip);
 
-        return view('slip_gaji.print.slip', compact('data'));
+        $ttdKaryawan = DB::table('mst_karyawan')
+                ->select('nip','nama_karyawan','kd_bagian','ket_jabatan','kd_entitas')
+                ->where('kd_jabatan','=','PIMDIV')
+                ->where('kd_entitas','UMUM')
+                ->whereNotNull('kd_bagian')
+                ->first();
+
+        return view('slip_gaji.print.slip', compact(['data','ttdKaryawan','jabatan']));
     }
 }
