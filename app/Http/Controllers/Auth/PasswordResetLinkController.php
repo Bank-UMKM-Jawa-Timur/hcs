@@ -85,17 +85,15 @@ class PasswordResetLinkController extends Controller
             $user->updated_at = now();
             $user->save();
 
+            Alert::success('Berhasil', 'Berhasil memperbarui password');
+            return redirect()->intended(RouteServiceProvider::HOME);
         } catch (\Exception $e) {
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            Alert::error('Error', $e->getMessage());
+            return redirect()->intended(RouteServiceProvider::HOME);
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            Alert::error('Error', $e->getMessage());
+            return redirect()->intended(RouteServiceProvider::HOME);
         }
-
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/login')->withSuccess('Berhasil merubah password. Silahkan login ulang.');
     }
     public function resetPassword(Request $request)
     {
