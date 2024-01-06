@@ -32,7 +32,7 @@
                         return query;
                     },
                     success: function (response) {
-                        
+
                     }
                 },
                 templateResult: function(data) {
@@ -273,7 +273,7 @@
 
         $('.show-data').on('click',function(e) {
             const targetId = $(this).data("target-id");
-            const nip = "{{\Request::get('nip')}}";
+            const nip = $(this).data('nip');
             const tahun = "{{\Request::get('tahun')}}";
             const nama = $(this).data("nama");
             const norek = $(this).data("no_rekening");
@@ -288,7 +288,7 @@
             $('#print-gaji').attr('href', download_url);
             $('#request_month').val(bulan);
 
-            $('.periode').html(`Periode ${bulanName[bulan]} ${tahun}`)
+            $('.periode').html(`Periode ${tahun} ${bulanName[bulan - 1]}`)
 
             $('#download-gaji').on('click',function(e) {
                 $.ajax({
@@ -323,7 +323,7 @@
             $('#data-nip').html(`${nip}`)
             $('#nama').html(`${nama}`)
             $('#no_rekening').html(`${norek != null ? norek : '-'}`)
-            $('#data-jabatan').html(`${jabatan}`)
+            // $('#data-jabatan').html(`${jabatan}`)
             $('#tanggal-bergabung').html(`${tanggalPengangkat}`)
 
             if (result !== null) {

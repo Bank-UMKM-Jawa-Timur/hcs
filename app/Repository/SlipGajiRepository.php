@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Models\CabangModel;
 use App\Models\KaryawanModel;
 use App\Models\PtkpModel;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,85 @@ use function PHPSTORM_META\map;
 
 class SlipGajiRepository
 {
+    private \Illuminate\Support\Collection $cabang;
+    private String $orderRaw;
+
+    public function __construct()
+    {
+        $this->cabang = CabangModel::pluck('kd_cabang');
+        $this->orderRaw = "
+            CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 3
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 7
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 8
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
+        ";
+    }
+
+    public function getjabatan($nip){
+        $karyawan = KaryawanModel::select(
+            'mst_karyawan.nip',
+            'mst_karyawan.nik',
+            'mst_karyawan.nama_karyawan',
+            'mst_karyawan.kd_bagian',
+            'mst_karyawan.kd_jabatan',
+            'mst_karyawan.kd_entitas',
+            'mst_karyawan.tanggal_penonaktifan',
+            'mst_karyawan.status_jabatan',
+            'mst_karyawan.ket_jabatan',
+            DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+        )
+        ->leftJoin('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
+        ->with('jabatan')
+        ->with('bagian')
+        ->where('nip',$nip)
+        ->orderByRaw($this->orderRaw)
+        ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+        ->get();
+
+        foreach ($karyawan as $key => $value) {
+            $prefix = match ($value->status_jabatan) {
+                'Penjabat' => 'Pj. ',
+                'Penjabat Sementara' => 'Pjs. ',
+                default => '',
+            };
+            
+            if ($value->jabatan) {
+                $jabatan = $value->jabatan->nama_jabatan;
+            } else {
+                $jabatan = 'undifined';
+            }
+            
+            $ket = $value->ket_jabatan ? "({$value->ket_jabatan})" : '';
+            
+            if (isset($value->entitas->subDiv)) {
+                $entitas = $value->entitas->subDiv->nama_subdivisi;
+            } elseif (isset($value->entitas->div)) {
+                $entitas = $value->entitas->div->nama_divisi;
+            } else {
+                $entitas = '';
+            }
+            
+            if ($jabatan == 'Pemimpin Sub Divisi') {
+                $jabatan = 'PSD';
+            } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
+                $jabatan = 'PBO';
+            } elseif ($jabatan == 'Pemimpin Bidang Pemasaran') {
+                $jabatan = 'PBP';
+            } else {
+                $jabatan = $value->jabatan ? $value->jabatan->nama_jabatan : 'undifined';
+            }
+
+            $display_jabatan = $prefix . ' ' . $jabatan . ' ' . $entitas . ' ' . $value?->bagian?->nama_bagian . ' ' . $ket;
+            $value->display_jabatan = $display_jabatan;
+        }
+
+        return $karyawan;
+    }
     public function getSlip($nip, $year) {
         /**
          * PPH 21
@@ -790,6 +870,7 @@ class SlipGajiRepository
             $karyawan->perhitungan_pph21 = $perhitunganPph21;
         }
 
+        // dd($karyawan);
         return $karyawan;
     }
 
