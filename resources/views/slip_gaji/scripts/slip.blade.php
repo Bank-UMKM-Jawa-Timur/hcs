@@ -32,7 +32,7 @@
                         return query;
                     },
                     success: function (response) {
-                        
+
                     }
                 },
                 templateResult: function(data) {
@@ -288,7 +288,7 @@
             $('#print-gaji').attr('href', download_url);
             $('#request_month').val(bulan);
 
-            $('.periode').html(`Periode ${bulanName[bulan]} ${tahun}`)
+            $('.periode').html(`Periode ${tahun} ${bulanName[bulan - 1]}`)
 
             $('#download-gaji').on('click',function(e) {
                 $.ajax({
@@ -323,7 +323,7 @@
             $('#data-nip').html(`${nip}`)
             $('#nama').html(`${nama}`)
             $('#no_rekening').html(`${norek != null ? norek : '-'}`)
-            $('#data-jabatan').html(`${jabatan}`)
+            // $('#data-jabatan').html(`${jabatan}`)
             $('#tanggal-bergabung').html(`${tanggalPengangkat}`)
 
             if (result !== null) {

@@ -127,7 +127,7 @@ class KaryawanRepository
             $value->display_jabatan = $display_jabatan;
         }
 
-        // dd($karyawan);
+        // dump($karyawan);
         return $karyawan;
     }
 
