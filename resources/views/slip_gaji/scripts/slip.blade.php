@@ -273,7 +273,7 @@
 
         $('.show-data').on('click',function(e) {
             const targetId = $(this).data("target-id");
-            const nip = "{{\Request::get('nip')}}";
+            const nip = $(this).data('nip');
             const tahun = "{{\Request::get('tahun')}}";
             const nama = $(this).data("nama");
             const norek = $(this).data("no_rekening");

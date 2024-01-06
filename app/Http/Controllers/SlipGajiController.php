@@ -452,12 +452,60 @@ class SlipGajiController extends Controller
         $data = $slipRepository->getSlipCetak($nip, $month, $year);
         $jabatan = $slipRepository->getjabatan($nip);
 
-        $ttdKaryawan = DB::table('mst_karyawan')
-                ->select('nip','nama_karyawan','kd_bagian','ket_jabatan','kd_entitas')
-                ->where('kd_jabatan','=','PIMDIV')
-                ->where('kd_entitas','UMUM')
-                ->whereNotNull('kd_bagian')
-                ->first();
+        $ttdKaryawan = KaryawanModel::select(
+                            'mst_karyawan.nip',
+                            'mst_karyawan.nik',
+                            'mst_karyawan.nama_karyawan',
+                            'mst_karyawan.kd_bagian',
+                            'mst_karyawan.kd_jabatan',
+                            'mst_karyawan.kd_entitas',
+                            'mst_karyawan.tanggal_penonaktifan',
+                            'mst_karyawan.status_jabatan',
+                            'mst_karyawan.ket_jabatan',
+                            'mst_karyawan.kd_entitas',
+                            DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                        )
+                        ->with('jabatan')
+                        ->with('bagian')
+                        ->where('kd_jabatan','PIMDIV')
+                        ->where('kd_entitas','UMUM')
+                        ->orderBy('nip', 'DESC')
+                        ->first();
+
+        $prefix = match ($ttdKaryawan->status_jabatan) {
+            'Penjabat' => 'Pj. ',
+            'Penjabat Sementara' => 'Pjs. ',
+            default => '',
+        };
+        
+        if ($ttdKaryawan->jabatan) {
+            $d_jabatan = $ttdKaryawan->jabatan->nama_jabatan;
+        } else {
+            $d_jabatan = 'undifined';
+        }
+        
+        $ket = $ttdKaryawan->ket_jabatan ? "({$ttdKaryawan->ket_jabatan})" : '';
+        
+        if (isset($ttdKaryawan->entitas->subDiv)) {
+            $entitas = $ttdKaryawan->entitas->subDiv->nama_subdivisi;
+        } elseif (isset($ttdKaryawan->entitas->div)) {
+            $entitas = $ttdKaryawan->entitas->div->nama_divisi;
+        } else {
+            $entitas = '';
+        }
+        
+        if ($d_jabatan == 'Pemimpin Sub Divisi') {
+            $d_jabatan = 'PSD';
+        } elseif ($d_jabatan == 'Pemimpin Bidang Operasional') {
+            $d_jabatan = 'PBO';
+        } elseif ($d_jabatan == 'Pemimpin Bidang Pemasaran') {
+            $d_jabatan = 'PBP';
+        } else {
+            $d_jabatan = $ttdKaryawan->jabatan ? $ttdKaryawan->jabatan->nama_jabatan : 'undifined';
+        }
+
+        $display_jabatan = $prefix . ' ' . $d_jabatan . ' ' . $entitas . ' ' . $ttdKaryawan?->bagian?->nama_bagian . ' ' . $ket;
+        $ttdKaryawan->display_jabatan = $display_jabatan;
 
         return view('slip_gaji.print.slip', compact(['data','ttdKaryawan','jabatan']));
     }
