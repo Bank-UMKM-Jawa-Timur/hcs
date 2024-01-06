@@ -38,13 +38,13 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Nama Karyawan</label>
-                                    <input type="text" class="@error('nama') is-invalid @enderror form-control" name="nama" id="" value="{{ old('nama') }}">
+                                    <input type="text" class="@error('nama') is-invalid @enderror form-control textOnly" name="nama" id="" value="{{ old('nama') }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Tempat Lahir</label>
-                                    <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-control" name="tmp_lahir" id="" value="{{ old('tmp_lahir') }}">
+                                    <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-control textOnly" name="tmp_lahir" id="" value="{{ old('tmp_lahir') }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -348,7 +348,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control rupiah" onkeyup="formatRupiah(this)">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -649,7 +649,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control rupiah" onkeyup="formatRupiah($(this).val())">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -780,6 +780,14 @@
                 $(this).closest('.row').remove()
                 $(this).closest('.row').parent().find('hr').remove()
                 countIdPotongan--;
+            }
+        })
+
+        $(".textOnly").keydown(function(event){
+            var inputValue = event.which;
+            // allow letters and whitespaces only.
+            if(!(inputValue >= 65 && inputValue <= 120) && (inputValue != 32 && inputValue != 0)) { 
+                event.preventDefault(); 
             }
         })
     </script>

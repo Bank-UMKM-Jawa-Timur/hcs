@@ -45,13 +45,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Nama Karyawan</label>
-                                        <input type="text" class="@error('nama') is-invalid @enderror form-control" name="nama" id="" value="{{ old('nama', $data->nama_karyawan) }}">
+                                        <input type="text" class="@error('nama') is-invalid @enderror form-control textOnly" name="nama" id="" value="{{ old('nama', $data->nama_karyawan) }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="">Tempat Lahir</label>
-                                        <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-control" name="tmp_lahir" id="" value="{{ old('tmp_lahir', $data->tmp_lahir) }}">
+                                        <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-control textOnly" name="tmp_lahir" id="" value="{{ old('tmp_lahir', $data->tmp_lahir) }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -372,7 +372,7 @@
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="is_nama">Nominal</label>
-                                        <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-1">
@@ -837,7 +837,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="number" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -989,5 +989,13 @@
                 }
             })
         }
+
+        $(".textOnly").keydown(function(event){
+            var inputValue = event.which;
+            // allow letters and whitespaces only.
+            if(!(inputValue >= 65 && inputValue <= 120) && (inputValue != 32 && inputValue != 0)) { 
+                event.preventDefault(); 
+            }
+        })
     </script>
 @endsection

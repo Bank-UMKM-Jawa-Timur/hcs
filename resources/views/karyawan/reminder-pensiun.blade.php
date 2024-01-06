@@ -84,6 +84,7 @@ $request = isset($request) ? $request : null;
             </div>
         </div>
     </div>
+</form>
     {{--  Table  --}}
     <div class="card ml-3 mr-3 mb-3 mt-3 shadow">
         <div class="col-md-12">
@@ -255,14 +256,13 @@ $request = isset($request) ? $request : null;
                 </table>
                 <div class="d-flex justify-content-end mt-3">
                     @if ($karyawan instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                    {{ $karyawan->links('pagination::bootstrap-4') }}
+                    {{ $karyawan->appends(request()->except('page'))->links('pagination::bootstrap-4') }}
                     @endif
                 </div>
             </div>
             @endif
         </div>
     </div>
-</form>
 @endsection
 
 @section('custom_script')
@@ -606,30 +606,6 @@ $request = isset($request) ? $request : null;
                 }
             }]
         });
-
-        // Adjust pagination url
-        var btn_pagination = $(`.pagination`).find('a')
-        var page_url = window.location.href
-        $(`.pagination`).find('a').each(function(i, obj) {
-            if (page_url.includes('kategori')) {
-                btn_pagination[i].href += `&kategori=${$('#kategori').val()}`
-            }
-            if (page_url.includes('kantor')) {
-                btn_pagination[i].href += `&kantor=${$('#kantor').val()}`
-            }
-            if (page_url.includes('divisi')) {
-                btn_pagination[i].href += `&divisi=${$('#divisi').val()}`
-            }
-            if (page_url.includes('subDivisi')) {
-                btn_pagination[i].href += `&subDivisi=${$('#subDivisi').val()}`
-            }
-            if (page_url.includes('bagian')) {
-                btn_pagination[i].href += `&bagian=${$('#bagian').val()}`
-            }
-            if (page_url.includes('cabang')) {
-                btn_pagination[i].href += `&cabang=${$('#cabang').val()}`
-            }
-        })
 
         $(".buttons-excel").attr("class","btn btn-success mb-2");
         $(".buttons-pdf").attr("class","btn btn-success mb-2");

@@ -91,10 +91,8 @@
                                 <td style="min-width: 130px">
                                     @can('manajemen karyawan - pengkinian data - detail pengkinian data')
                                         <div class="container">
-                                            <a href="{{ route('pengkinian_data.show', $item->nip) }}">
-                                                <button class="btn btn-outline-info p-1" style="min-width: 60px">
-                                                    Detail
-                                                </button>
+                                            <a href="{{ route('pengkinian_data.show', $item->nip) }}" class="btn btn-outline-info p-1" style="min-width: 60px">
+                                                Detail
                                             </a>
                                         </div>
                                     @else
@@ -121,14 +119,5 @@
 
 @section('custom_script')
 <script>
-    $(document).ready(function() {
-            var table = $('#table').DataTable({
-                'autoWidth': false,
-                'dom': 'Rlfrtip',
-                'colReorder': {
-                    'allowReorder': false
-                }
-            });
-        });
 </script>
 @endsection
