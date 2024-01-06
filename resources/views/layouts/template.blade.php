@@ -74,7 +74,6 @@ Coded by www.creative-tim.com
                     Human Capital System
                 </a>
             </div>
-
             <div class="row row-offcanvas row-offcanvas-left vh-100" style="width: 1700px">
                 <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar"
                     role="navigation">
