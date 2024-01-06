@@ -133,10 +133,18 @@
                 <div>
                     <img src="{{ asset('style/assets/img/logo.png') }}" width="100px" class="img-fluid">
                 </div>
-                <div style="padding-left: 20px;">
-                    <h4>SLIP GAJI PEGAWAI</h4>
-                    {{--  <h6>Periode {{ Carbon::parse($date)->translatedFormat('F Y') }}</h6>  --}}
-                    <h4>Bank BPR Jatim</h4>
+                <div style="padding-left: 20px; padding-top: 10px;">
+                    <table>
+                        <tr>
+                            <td style="font-weight: 800; padding-top: 5px">SLIP GAJI PEGAWAI</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 800; padding-top: 5px">Periode {{ Carbon::parse($date)->translatedFormat('Y F') }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 800; padding-top: 5px">Bank BPR Jatim</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -169,7 +177,7 @@
                             <tr>
                                 <td>Jabatan</td>
                                 <td>:</td>
-                                <td>{{ $data->status_jabatan }}</td>
+                                <td>{{ $jabatan[0]->display_jabatan }}</td>
                             </tr>
                             <tr>
                                 <td>Tanggal Bergabung</td>
@@ -530,8 +538,24 @@
             </table>
         </div>
         <p>
-            *) Dicetak dengan <b>{{env('APP_NAME')}}</b>
+            {{-- *) Dicetak dengan <b>{{env('APP_NAME')}}</b> --}}
+            *) Keterangan: Pajak PPh 21 ditanggung perusahaan.</b>
         </p>
+
+        @if (auth()->user()->hasRole('kepegawaian'))
+            <br><br><br><br><br>
+            <div class="ttd" style="display: flex; justify-content: space-between">
+                <table></table>
+                <table>
+                    <tr>
+                        <td>(...........................................)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: 800">{{ $ttdKaryawan->nama_karyawan }}</td>
+                    </tr>
+                </table>
+            </div>
+        @endif
     </div>
 
     <script>

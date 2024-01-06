@@ -122,7 +122,7 @@
                                     <td id="data-nip"></td>
                                     <td class="fw-bold">Jabatan</td>
                                     <td>:</td>
-                                    <td id="data-jabatan"></td>
+                                    <td id="data-jabatan">{{ $jabatan[0]->display_jabatan }}</td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Nama Karyawan</td>
