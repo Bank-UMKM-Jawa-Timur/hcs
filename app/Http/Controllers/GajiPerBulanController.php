@@ -30,6 +30,7 @@ class GajiPerBulanController extends Controller
             'tj_kemahalan',
             'tj_pelaksana',
             'tj_kesejahteraan',
+            'tj_khusus',
             'tj_multilevel',
             'tj_ti',
             'tj_transport',
@@ -48,7 +49,7 @@ class GajiPerBulanController extends Controller
     {
         $tahun = $request->get('tahun');
         $is_cabang = auth()->user()->hasRole('cabang');
-        $is_pusat = auth()->user()->hasRole('kepegawaian') || auth()->user()->hasRole('hrd');
+        $is_pusat = auth()->user()->hasRole('kepegawaian');
         $kd_cabang = DB::table('mst_cabang')
                         ->select('kd_cabang')
                         ->pluck('kd_cabang')
@@ -83,7 +84,7 @@ class GajiPerBulanController extends Controller
             return view('roles.forbidden');
         }
         $is_cabang = auth()->user()->hasRole('cabang');
-        $is_pusat = auth()->user()->hasRole('kepegawaian') || auth()->user()->hasRole('hrd');
+        $is_pusat = auth()->user()->hasRole('kepegawaian');
         $kd_cabang = DB::table('mst_cabang')
                         ->select('kd_cabang')
                         ->pluck('kd_cabang')
@@ -99,7 +100,7 @@ class GajiPerBulanController extends Controller
                 'batch.status',
                 'gaji.bulan',
                 'gaji.tahun',
-                DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total')
+                DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_khusus + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total')
             )
             ->when($is_cabang, function($query) {
                 $kd_cabang = auth()->user()->kd_cabang;
@@ -181,7 +182,7 @@ class GajiPerBulanController extends Controller
                                 ->select(
                                     'mst_karyawan.*',
                                     'gaji.*',
-                                    DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total'),
+                                    DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_khusus + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total'),
                                     'potongan.kredit_koperasi',
                                     'potongan.iuran_koperasi',
                                     'potongan.kredit_pegawai',
@@ -204,7 +205,7 @@ class GajiPerBulanController extends Controller
                             ->select(
                                 'mst_karyawan.*',
                                 'gaji.*',
-                                DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total'),
+                                DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_khusus + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total'),
                                 'potongan.kredit_koperasi',
                                 'potongan.iuran_koperasi',
                                 'potongan.kredit_pegawai',
@@ -366,6 +367,16 @@ class GajiPerBulanController extends Controller
                             $item = [
                                 'tj_kesejahteraan' => $gaji->tj_kesejahteraan,
                                 'tj_kesejahteraan_baru' => $tunj->nominal,
+                            ];
+                            array_push($new_data, $item);
+                        }
+                    }
+                    // Khusus
+                    if ($tunj->id_tunjangan == 30) {
+                        if ($gaji->tj_khusus != $tunj->nominal) {
+                            $item = [
+                                'tj_khusus' => $gaji->tj_khusus,
+                                'tj_khusus_baru' => $tunj->nominal,
                             ];
                             array_push($new_data, $item);
                         }
@@ -532,7 +543,7 @@ class GajiPerBulanController extends Controller
                             ->get();
             }
             else {
-                $is_pusat = auth()->user()->hasRole('kepegawaian') || auth()->user()->hasRole('hrd');
+                $is_pusat = auth()->user()->hasRole('kepegawaian');
                 $kd_cabang = DB::table('mst_cabang')
                                 ->select('kd_cabang')
                                 ->pluck('kd_cabang')
@@ -689,6 +700,7 @@ class GajiPerBulanController extends Controller
                         'tj_vitamin' => $tunjangan[12],
                         'uang_makan' => $tunjangan[13],
                         'dpp' => $tunjangan[14],
+                        'tj_khusus' => $tunjangan[15],
                         'updated_at' => $now
                     ];
                     $gaji = GajiPerBulanModel::where('batch_id', $request->batch_id)
@@ -745,6 +757,7 @@ class GajiPerBulanController extends Controller
                             'tj_vitamin' => $tunjangan[12],
                             'uang_makan' => $tunjangan[13],
                             'dpp' => $tunjangan[14],
+                            'tj_khusus' => $tunjangan[15],
                             'created_at' => now()
                         ];
                         $gaji_id = GajiPerBulanModel::insertGetId($employee);
@@ -890,7 +903,7 @@ class GajiPerBulanController extends Controller
 
                 foreach ($this->param['namaTunjangan'] as $keyTunjangan => $item) {
                     array_push($tunjangan, $gaji->$item);
-                    if ($keyTunjangan < 9)
+                    if ($keyTunjangan < 10)
                         array_push($tunjanganJamsostek, $gaji->$item);
                 }
 
@@ -1205,7 +1218,7 @@ class GajiPerBulanController extends Controller
 
             foreach ($this->param['namaTunjangan'] as $keyTunjangan => $item) {
                 array_push($tunjangan, $gaji->$item);
-                if ($keyTunjangan < 9)
+                if ($keyTunjangan < 10)
                     array_push($tunjanganJamsostek, $gaji->$item);
             }
 

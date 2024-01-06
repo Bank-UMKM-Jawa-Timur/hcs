@@ -91,7 +91,7 @@ class KaryawanRepository
             ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
             ->paginate($limit);
         }else{
-            $is_pusat = auth()->user()->hasRole('kepegawaian') || auth()->user()->hasRole('hrd');
+            $is_pusat = auth()->user()->hasRole('kepegawaian');
             $kd_cabang = DB::table('mst_cabang')
                             ->select('kd_cabang')
                             ->pluck('kd_cabang')
