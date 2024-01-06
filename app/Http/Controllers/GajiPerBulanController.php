@@ -236,38 +236,53 @@ class GajiPerBulanController extends Controller
             $this->param['jpMarDes'] = $hitungan_pengurang->jp_mar_des;
             $this->param['nominalJp'] = 0;
 
-            array_push($pph, [
-                'nip' => $item->nip,
-                'bulan' => $bulan,
-                'tahun' => $tahun,
-                'total_pph' => $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp),
-                'tanggal' => now(),
-                'created_at' => now()
-            ]);
+            
+            $pph_bulan_ini = DB::table('pph_yang_dilunasi')
+                            ->where('nip', $item->nip)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->first();
+            if (!$pph_bulan_ini) {
+                array_push($pph, [
+                    'nip' => $item->nip,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                    'total_pph' => $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp),
+                    'tanggal' => now(),
+                    'created_at' => now()
+                ]);
+            }
 
-            array_push($employee, [
-                'nip' => $item->nip,
-                'bulan' => $bulan,
-                'tahun' => $tahun,
-                'gj_pokok' => $item->gj_pokok,
-                'gj_penyesuaian' => $item->gj_penyesuaian,
-                'tj_keluarga' => $tunjangan[0],
-                'tj_telepon' => $tunjangan[1],
-                'tj_jabatan' => $tunjangan[2],
-                'tj_teller' => $tunjangan[3],
-                'tj_perumahan' => $tunjangan[4],
-                'tj_kemahalan' => $tunjangan[5],
-                'tj_pelaksana' => $tunjangan[6],
-                'tj_kesejahteraan' => $tunjangan[7],
-                'tj_multilevel' => $tunjangan[8],
-                'tj_ti' => $tunjangan[9],
-                'tj_transport' => $tunjangan[10],
-                'tj_pulsa' => $tunjangan[11],
-                'tj_vitamin' => $tunjangan[12],
-                'uang_makan' => $tunjangan[13],
-                'dpp' => $tunjangan[14],
-                'created_at' => now()
-            ]);
+            $gaji = DB::table('gaji_per_bulan')
+                        ->where('nip', $item->nip)
+                        ->where('bulan', $bulan)
+                        ->where('tahun', $tahun)
+                        ->first();
+            if (!$gaji) {
+                array_push($employee, [
+                    'nip' => $item->nip,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                    'gj_pokok' => $item->gj_pokok,
+                    'gj_penyesuaian' => $item->gj_penyesuaian,
+                    'tj_keluarga' => $tunjangan[0],
+                    'tj_telepon' => $tunjangan[1],
+                    'tj_jabatan' => $tunjangan[2],
+                    'tj_teller' => $tunjangan[3],
+                    'tj_perumahan' => $tunjangan[4],
+                    'tj_kemahalan' => $tunjangan[5],
+                    'tj_pelaksana' => $tunjangan[6],
+                    'tj_kesejahteraan' => $tunjangan[7],
+                    'tj_multilevel' => $tunjangan[8],
+                    'tj_ti' => $tunjangan[9],
+                    'tj_transport' => $tunjangan[10],
+                    'tj_pulsa' => $tunjangan[11],
+                    'tj_vitamin' => $tunjangan[12],
+                    'uang_makan' => $tunjangan[13],
+                    'dpp' => $tunjangan[14],
+                    'created_at' => now()
+                ]);
+            }
         }
 
         try {
