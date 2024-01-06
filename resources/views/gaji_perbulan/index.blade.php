@@ -199,7 +199,12 @@
             })
         })
         $('#btn-submit').on('click', function(e) {
-            $('.loader-wrapper').removeAttr('style')
+            const bulan = $('#bulan').val()
+            const tahun = $('#tahun').val()
+            const tanggal = $('#tanggal').val()
+
+            if (bulan != 0 && tahun != 0 && tanggal)
+                $('.loader-wrapper').removeAttr('style')
         })
 
         function showDetail(data) {
