@@ -8,8 +8,11 @@ use App\Http\Requests\SuratPeringatan\HistoryRequest;
 use App\Models\KaryawanModel;
 use App\Models\SpModel;
 use App\Repository\SuratPeringatanRepository;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class SuratPeringatanController extends Controller
@@ -56,12 +59,24 @@ class SuratPeringatanController extends Controller
         return view('karyawan.surat-peringatan.add');
     }
 
-    public function store(PotonganRequest $request)
+    public function store(Request $request)
     {
         if (!auth()->user()->can('manajemen karyawan - reward & punishment - surat peringatan - create')) {
             return view('roles.forbidden');
         }
-        $this->repo->store($request->all());
+        try{
+            DB::beginTransaction();
+            $this->repo->store($request->all());
+            DB::commit();
+        } catch(Exception $e){
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->back();
+        } catch(QueryException $e){
+            DB::rollBack();
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->back();
+        }
 
         Alert::success('Berhasil menambahkan SP');
         return redirect()->route('surat-peringatan.index');

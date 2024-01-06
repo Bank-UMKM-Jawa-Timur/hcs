@@ -80,12 +80,5 @@
 
 @push('script')
 <script>
-    $('#sp-table').DataTable({
-        autoWidth: false,
-        dom: 'Rlfrtip',
-        colReorder: {
-            'allowReorder': false
-        }
-    });
 </script>
 @endpush
