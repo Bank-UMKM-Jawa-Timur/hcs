@@ -193,9 +193,22 @@ class GajiPerBulanController extends Controller
             $ptkp = DB::table('set_ptkp')
                     ->where('kode', $status)
                     ->first();
-
             // Get penambah & pengurang bruto
-            if (in_array($item->kd_entitas, $cabang)) {
+            if (!$item->kd_entitas) {
+                $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
+                    ->where('kd_cabang', '000')
+                    ->where('active', 1)
+                    ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
+                    ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
+                    ->first();
+                $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
+                        ->where('kd_cabang', '000')
+                        ->where('active', 1)
+                        ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
+                        ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
+                        ->first();
+            }
+            else if (in_array($item->kd_entitas, $cabang)) {
                 $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                     ->where('kd_cabang', $item->kd_entitas)
                     ->where('active', 1)
