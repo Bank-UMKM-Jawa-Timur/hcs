@@ -177,13 +177,14 @@
                         if (value == 12) {
                             var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
                             nmbr++
+
+                            $('#error-penghasilan').removeClass('d-none').html(message)
+                            $("#penghasilan").val("")
                         } else if (value == 13) {
-                            var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
-                            nmbr++
+                            // var message = 'kosong'
+                            $('#error-penghasilan').addClass('d-none')
                         }
-                        // alertWarning(message)
-                        $('#error-penghasilan').removeClass('d-none').html(message)
-                        $("#penghasilan").val("")
+                        
                     }
                 } else {
                     $('#error-penghasilan').addClass('d-none')
