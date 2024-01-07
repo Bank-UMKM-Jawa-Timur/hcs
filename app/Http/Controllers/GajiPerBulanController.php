@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Imports\ImportPPH21;
+use App\Models\CabangModel;
 use App\Models\GajiPerBulanModel;
 use App\Models\PPHModel;
 use App\Models\TunjanganModel;
+use App\Repository\PayrollRepository;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Events\QueryExecuted;
@@ -1434,5 +1436,19 @@ class GajiPerBulanController extends Controller
         }
         
         return intval($this->getPPHDesember($bulan, $tahun, $item, $ptkp));
+    }
+
+    public function getRincianPayroll(Request $request) {
+        $is_cabang = auth()->user()->hasRole('cabang');
+        $kantor = $is_cabang ? auth()->user()->kd_cabang : 'pusat';
+        $batch_id = $request->batch_id;
+        $cetak = $request->cetak ?? null;
+        $data_batch = GajiPerBulanModel::where('batch_id', $batch_id)->select('bulan', 'tahun')->first();
+        $bulan = $data_batch->bulan;
+        $tahun = $data_batch->tahun;
+
+        $payrollRepo = new PayrollRepository;
+        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak);
+        return DataTables::of($data)->make(true);
     }
 }

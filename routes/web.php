@@ -342,5 +342,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
             Route::get('/slip', [PayrollController::class, 'slip'])->name('slip');
             Route::get('/slip/pdf', [PayrollController::class, 'slipPDF'])->name('slip.pdf');
         });
+
+    Route::get('get-rincian-payroll', [GajiPerBulanController::class, 'getRincianPayroll'])->name('get-rincian-payroll');
 });
 require __DIR__.'/auth.php';
