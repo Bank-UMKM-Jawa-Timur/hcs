@@ -114,13 +114,9 @@ class KaryawanRepository
             ->with('jabatan')
             ->with('bagian')
             ->whereNull('tanggal_penonaktifan')
-            ->when($is_pusat, function($query) use ($kd_cabang) {
-                $query->where(function($q2) use ($kd_cabang) {
-                    $q2->whereNotIn('mst_karyawan.kd_entitas', $kd_cabang)
-                        ->orWhere('mst_karyawan.kd_entitas', 0)
-                        ->orWhereNull('mst_karyawan.kd_entitas');
-                });
-            })
+            // ->when($is_pusat, function($query) use ($kd_cabang) {
+            //     $query->whereRaw("(kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR kd_entitas IS null or kd_entitas = '')");
+            // })
             ->where(function ($query) use ($search) {
                 $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
                     ->orWhere('mst_karyawan.nip', 'like', "%$search%")
@@ -149,7 +145,10 @@ class KaryawanRepository
                         });
                     });
             })
+            ->orderBy('status_kantor', 'asc')
+            ->orderBy('kd_cabang', 'asc')
             ->orderByRaw($this->orderRaw)
+            ->orderBy('nip', 'asc')
             ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
             ->paginate($limit);
         }
@@ -236,6 +235,7 @@ class KaryawanRepository
             ->whereNull('tanggal_penonaktifan')
             ->whereIn('kd_entitas', $this->cabang)
             ->orderByRaw($this->orderRaw)
+            ->orderBy('kd_entitas', 'asc')
             ->get();
 
         $this->addEntity($karyawan);
