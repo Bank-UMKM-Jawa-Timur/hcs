@@ -278,7 +278,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th class="px-3">TOTAL (THP)</th>
+                                <th class="px-3">TOTAL PENDAPATAN</th>
                                 <th style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->total_gaji, 0, ',', '.') }}</th>
                             </tr>
                         </tfoot>
