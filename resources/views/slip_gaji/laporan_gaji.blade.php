@@ -134,7 +134,7 @@
                                     <th>Kredit Koperasi</th>
                                     <th>Iuran Koperasi</th>
                                     <th>Iuran Pegawai</th>
-                                    <th>Iuran</th>
+                                    <th>Iuran IK</th>
                                     <th>Total Potongan</th>
                                     <th>Total yang Diterima</th>
                                 </tr>

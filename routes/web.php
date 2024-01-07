@@ -142,8 +142,10 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
         Route::get('/edit-tunjangan', [PenghasilanTeraturController::class, 'editTunjangan'])->name('edit-tunjangan');
         Route::post('/edit-tunjangan-post', [PenghasilanTeraturController::class, 'editTunjanganPost'])->name('edit-tunjangan-post');
     });
-
+    Route::post('upload-penghasilan',[GajiPerBulanController::class,'upload'])->name('upload.penghasilanPerBulan');
+    Route::get('cetak-penghasilan/{id}',[GajiPerBulanController::class,'cetak'])->name('cetak.penghasilanPerBulan');
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
+    Route::get('/get-data-penghasilan-json', [GajiPerbulanController::class, 'getDataPenghasilanJson'])->name('gaji_perbulan.get_data_penghasilan_json');
     Route::get('/penyesuaian-gaji-json', [GajiPerbulanController::class, 'penyesuaianDataJson'])->name('gaji_perbulan.penyesuian_json');
     Route::post('/penyesuaian-gaji-json', [GajiPerbulanController::class, 'prosesFinal'])->name('gaji_perbulan.proses_final');
     Route::resource('/pengganti-biaya-kesehatan', PenggantiBiayaKesehatanController::class);
