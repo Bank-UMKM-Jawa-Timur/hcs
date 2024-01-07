@@ -398,13 +398,14 @@ class SlipGajiController extends Controller
         $cabang = null;
         if ($user->hasRole('cabang')) {
             $karyawan = DB::table('users AS u')
-                            ->select('k.nip', 'k.kd_entitas')
-                            ->join('mst_karyawan AS k', 'k.nip', 'u.username')
-                            ->where('u.username', $user->kd_cabang)
+                            ->select('k.nip', 'k.kd_entitas', 'k.nama_karyawan')
+                            ->join('mst_karyawan AS k', 'k.kd_entitas', 'u.kd_cabang')
+                            ->where('u.kd_cabang', $user->kd_cabang)
                             ->first();
+
             $cabang = $karyawan->kd_entitas;
         }
-
+            $data_karyawan = KaryawanModel::select('nip', 'nama_karyawan', 'kd_entitas')->where('kd_entitas', $user->kd_cabang)->get();
         $nip = $user->hasRole('user') ? $user->nip : $request->get('nip');
         $year = $request->get('tahun');
 
@@ -418,7 +419,8 @@ class SlipGajiController extends Controller
         $slipRepository = new SlipGajiRepository;
         $jabatan = $slipRepository->getjabatan($nip);
 
-        return view('slip_gaji.slip', compact('data', 'cabang', 'karyawan', 'jabatan'));
+        $role_cabang = $user->hasRole('cabang');
+        return view('slip_gaji.slip', compact('data', 'cabang', 'karyawan', 'jabatan', 'role_cabang', 'data_karyawan'));
     }
 
     public function listSlipGaji($nip, $year, $cetak) {
@@ -446,12 +448,12 @@ class SlipGajiController extends Controller
 
     public function cetakSlip(Request $request){
         $slipRepository = new SlipGajiRepository;
+        $user = auth()->user();
         $nip = $request->get('nip');
         $month = $request->get('bulan');
         $year = $request->get('tahun');
         $data = $slipRepository->getSlipCetak($nip, $month, $year);
         $jabatan = $slipRepository->getjabatan($nip);
-
         $ttdKaryawan = KaryawanModel::select(
                             'mst_karyawan.nip',
                             'mst_karyawan.nik',
@@ -477,15 +479,15 @@ class SlipGajiController extends Controller
             'Penjabat Sementara' => 'Pjs. ',
             default => '',
         };
-        
+
         if ($ttdKaryawan->jabatan) {
             $d_jabatan = $ttdKaryawan->jabatan->nama_jabatan;
         } else {
             $d_jabatan = 'undifined';
         }
-        
+
         $ket = $ttdKaryawan->ket_jabatan ? "({$ttdKaryawan->ket_jabatan})" : '';
-        
+
         if (isset($ttdKaryawan->entitas->subDiv)) {
             $entitas = $ttdKaryawan->entitas->subDiv->nama_subdivisi;
         } elseif (isset($ttdKaryawan->entitas->div)) {
@@ -493,7 +495,7 @@ class SlipGajiController extends Controller
         } else {
             $entitas = '';
         }
-        
+
         if ($d_jabatan == 'Pemimpin Sub Divisi') {
             $d_jabatan = 'PSD';
         } elseif ($d_jabatan == 'Pemimpin Bidang Operasional') {
@@ -506,7 +508,33 @@ class SlipGajiController extends Controller
 
         $display_jabatan = $prefix . ' ' . $d_jabatan . ' ' . $entitas . ' ' . $ttdKaryawan?->bagian?->nama_bagian . ' ' . $ket;
         $ttdKaryawan->display_jabatan = $display_jabatan;
+        $namaBulan = [
+            "01" => "Januari",
+            "02" => "Februari",
+            "03" => "Maret",
+            "04" => "April",
+            "05" => "Mei",
+            "06" => "Juni",
+            "07" => "July",
+            "08" => "Agustus",
+            "09" => "Septemper",
+            "10" => "Oktober",
+            "11" => "November",
+            "12" => "Desember"
+        ];
+        $tanggalSekarang = date('d');
+        $bulanSekarang = $namaBulan[date('m')];
+        $tahunSekarang = date('Y');
+        $tanggal = $tanggalSekarang . ' ' . $bulanSekarang . ' ' . $tahunSekarang;
+        $karyawan = KaryawanModel::where('nip', $nip)->first();
+        if ($user->hasRole('cabang')) {
+            $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('kd_entitas', $karyawan->kd_entitas)->first();
+            $cabang = DB::table('mst_cabang')->select('kd_cabang', 'nama_cabang')->where('kd_cabang', $karyawan->kd_entitas)->first();
+        } else {
+            $pincab = null;
+            $cabang = null;
+        }
 
-        return view('slip_gaji.print.slip', compact(['data','ttdKaryawan','jabatan']));
+        return view('slip_gaji.print.slip', compact(['data','ttdKaryawan','jabatan', 'tanggal', 'pincab', 'cabang']));
     }
 }

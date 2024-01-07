@@ -211,68 +211,74 @@
                                 <td id="gaji_pokok" style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->gj_pokok, 0, ',', '.') }}
                                 </td>
                             </tr>
-                            @if ($data->gaji->tj_jabatan)
-                                <tr style="border:1px solid #e3e3e3">
-                                    <td>Jabatan</td>
-                                    <td id="gaji_pokok" style="padding-x: 3rem; text-align: right;">
-                                        Rp {{ number_format($data->gaji->tj_jabatan, 0, ',', '.') }}</td>
-                                </tr>
-                            @endif
-                            @if ($data->gaji->gj_penyesuaian)
-                                <tr style="border:1px solid #e3e3e3">
-                                    <td>Penyesuaian</td>
-                                    <td id="gaji_pokok" style="padding-x: 3rem; text-align: right;">
-                                        Rp {{ number_format($data->gaji->gj_penyesuaian, 0, ',', '.') }}</td>
-                                </tr>
-                            @endif
                             @if ($data->gaji->tj_keluarga)
                                 <tr style="border:1px solid #e3e3e3">
-                                    <td>Keluarga</td>
+                                    <td>Tj. Keluarga</td>
                                     <td id="gaji_pokok" style="padding-x: 3rem; text-align: right;">
                                         Rp {{ number_format($data->gaji->tj_keluarga, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
                             @if ($data->gaji->tj_jabatan)
                                 <tr style="border:1px solid #e3e3e3">
-                                    <td>Kemahalan</td>
-                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_kemahalan, 0, ',', '.') }}</td>
+                                    <td>Tj. Jabatan</td>
+                                    <td id="gaji_pokok" style="padding-x: 3rem; text-align: right;">
+                                        Rp {{ number_format($data->gaji->tj_jabatan, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
                             @if ($data->gaji->gj_penyesuaian)
                                 <tr style="border:1px solid #e3e3e3">
-                                    <td>Kesejahteraan</td>
-                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_kesejahteraan, 0, ',', '.') }}
-                                    </td>
+                                    <td>Gaji Penyesuaian</td>
+                                    <td id="gaji_pokok" style="padding-x: 3rem; text-align: right;">
+                                        Rp {{ number_format($data->gaji->gj_penyesuaian, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
                             @if ($data->gaji->tj_perumahan)
                                 <tr style="border:1px solid #e3e3e3">
-                                    <td>Multilevel</td>
+                                    <td>Tj. Perumahan</td>
                                     <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_multilevel, 0, ',', '.') }}</td>
+                                </tr>
+                            @endif
+                            @if ($data->gaji->tj_telepon)
+                                <tr style="border:1px solid #e3e3e3">
+                                    <td>Tj. Telepon, Listrik dan Air</td>
+                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_telepon, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
                             @if ($data->gaji->tj_pelaksana)
                                 <tr style="border:1px solid #e3e3e3">
-                                    <td>Pelaksana</td>
+                                    <td>Tj. Pelaksana</td>
                                     <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_pelaksana, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
                             @if ($data->gaji->tj_kemahalan)
                                 <tr style="border:1px solid #e3e3e3">
-                                    <td>Perumahan</td>
-                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_perumahan, 0, ',', '.') }}</td>
+                                    <td>Tj. Kemahalan</td>
+                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_kemahalan, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
-                            @if ($data->gaji->tj_telepon)
+                            @if ($data->gaji->tj_kesejahteraan)
                                 <tr style="border:1px solid #e3e3e3">
-                                    <td>Telepon</td>
-                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_telepon, 0, ',', '.') }}</td>
+                                    <td>Tj. Kesejahteraan</td>
+                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_kesejahteraan, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                            @endif
+                            @if ($data->gaji->tj_ti)
+                                <tr style="border:1px solid #e3e3e3">
+                                    <td>Tj. Khusus</td>
+                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_ti, 0, ',', '.') }}</td>
+                                </tr>
+                            @endif
+                            @if ($data->gaji->tj_multilevel)
+                                <tr style="border:1px solid #e3e3e3">
+                                    <td>Tj. Khusus</td>
+                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_multilevel, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th class="px-3">TOTAL (THP)</th>
+                                <th class="px-3">TOTAL PENDAPATAN</th>
                                 <th style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->total_gaji, 0, ',', '.') }}</th>
                             </tr>
                         </tfoot>
@@ -360,7 +366,7 @@
             <table border="1" class="table" style="width: 100%">
                 <thead class="bg-utama text-white">
                     <tr>
-                        <th class="text-center px-3" colspan="2">TOTAL GAJI YANG DITERIMA <i>(TAKE HOME PAY)</i></th>
+                        <th class="text-left px-3" colspan="2">TOTAL GAJI YANG DITERIMA <i>(TAKE HOME PAY)</i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -378,14 +384,14 @@
                             TERBILANG
                         </td>
                         <td style="text-align: left; font-weight: bold">
-                            {{terbilang($takehomepay)}}
+                            {{strtoupper(terbilang($takehomepay))}}
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <p>*) Keterangan: Pajak PPh 21 ditanggung perusahaan.</b></p>
-        <p>*) Dicetak dengan <b>{{env('APP_NAME')}}</b></p>
+        {{-- <p>*) Keterangan: Pajak PPh 21 ditanggung perusahaan.</b></p> --}}
+        <p>*) Dicetak dengan <b>Human Capital System</b></p>
 
         @if (auth()->user()->hasRole('kepegawaian'))
             <div class="ttd" style="display: flex; justify-content: space-between; margin-top: 60px;">
@@ -393,13 +399,30 @@
                 </table>
                 <table>
                     <tr>
+                        <td style="text-align: center; padding-bottom: 3px;" >Surabaya, {{$tanggal}}</td>
+                    </tr>
+                    <tr>
                         <td style="text-align: center; padding-bottom: 60px;" >{{$ttdKaryawan->display_jabatan}}</td>
                     </tr>
                     <tr>
-                        <td>(...........................................)</td>
+                        <td style="text-align: center; font-weight: 800">({{ $ttdKaryawan->nama_karyawan }})</td>
+                    </tr>
+                </table>
+            </div>
+        @endif
+        @if (auth()->user()->hasRole('cabang'))
+            <div class="ttd" style="display: flex; justify-content: space-between; margin-top: 60px;">
+                <table>
+                </table>
+                <table>
+                    <tr>
+                        <td style="text-align: center; padding-bottom: 3px;" >{{$cabang->nama_cabang}}, {{$tanggal}}</td>
                     </tr>
                     <tr>
-                        <td style="text-align: center; font-weight: 800">{{ $ttdKaryawan->nama_karyawan }}</td>
+                        <td style="text-align: center; padding-bottom: 60px;" >Pimpinan Cabang</td>
+                    </tr>
+                    <tr>
+                        <td>({{ $pincab->nama_karyawan }})</td>
                     </tr>
                 </table>
             </div>

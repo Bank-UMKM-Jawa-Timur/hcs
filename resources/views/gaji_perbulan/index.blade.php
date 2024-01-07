@@ -1,166 +1,143 @@
 @extends('layouts.template')
-{{--  @push('style')
-    <style>
-        /*DL, DT, DD TAGS LIST DATA*/
-        dl {
-            margin-bottom:50px;
-        }
-        
-        dl dt {
-            background:#5f9be3;
-            color:#fff;
-            float:left; 
-            font-weight:bold; 
-            margin-right:10px; 
-            padding:5px;  
-            width:100px; 
-        }
-        
-        dl dd {
-            margin:2px 0; 
-            padding:5px 0;
-        }
-    </style>
-@endpush  --}}
+@include('gaji_perbulan.modal.proses')
+@include('gaji_perbulan.modal.perbarui')
+@include('gaji_perbulan.modal.modal-upload')
+@include('gaji_perbulan.modal.penghasilan-kantor')
+@include('gaji_perbulan.script.index')
 @section('content')
     @include('gaji_perbulan.modal.perbarui')
     @include('gaji_perbulan.modal.rincian')
     @include('gaji_perbulan.modal.payroll')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title font-weight-bold">Proses Penghasilan Bulanan</h5>
-            <p class="card-title"><a href="">Penghasilan </a> > Proses Penghasilan Bulanan</p>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title font-weight-bold">Proses Penghasilan Bulanan</h5>
+                    <p class="card-title"><a href="">Penghasilan </a> > Proses Penghasilan Bulanan</p>
+                </div>
+                <div>
+                    @if (auth()->user()->hasRole('kepegawaian'))
+                        <button type="button" class="is-btn is-primary btn-show">Penghasilan Semua Kantor</button>
+                    @endif
+                    @can('penghasilan - proses penghasilan')
+                        <button type="button" class="is-btn is-primary btn-proses">Proses</button>
+                    @endcan
+                </div>
+            </div>
         </div>
     </div>
     @php
         $already_selected_value = date('Y');
         $earliest_year = 2022;
     @endphp
-    @can('penghasilan - proses penghasilan')
-        <div class="card-body">
+    <div class="row">
+        <div class="col">
             <div class="alert alert-info mx-3" role="alert">
                 Harap cek kembali data tunjangan sebelum melakukan proses tunjangan.
             </div>
-            <form id="form" action="{{ route('gaji_perbulan.store') }}"
-                method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="row m-0">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="nama_bulan">Tahun</label>
-                            <select name="tahun" id="tahun" class="form-control">
-                                <option value="0">--- Pilih Tahun ---</option>
-                                @foreach (range(date('Y'), $earliest_year) as $x)
-                                    <option value="{{ $x }}">{{ $x }}</option>
-                                @endforeach
-                            </select>
-                            @error('tahun')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="Bulan">Bulan</label>
-                            <select name="bulan" id="bulan" class="form-control">
-                                <option value="0">--- Pilih Bulan ---</option>
-                                <option value='1'>Januari</option>
-                                <option value='2'>Februari </option>
-                                <option value='3'>Maret</option>
-                                <option value='4'>April</option>
-                                <option value='5'>Mei</option>
-                                <option value='6'>Juni</option>
-                                <option value='7'>Juli</option>
-                                <option value='8'>Agustus</option>
-                                <option value='9'>September</option>
-                                <option value='10'>Oktober</option>
-                                <option value='11'>November</option>
-                                <option value='12'>Desember</option>
-                            </select>
-                            @error('bulan')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="tanggal">Tanggal Penghasilan</label>
-                            <input type="date" name="tanggal" id="tanggal"
-                                class="form-control" required>
-                            @error('tanggal')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <div class="row m-0">
-                    <div class="col-md-5 pt-4 pb-4">
-                        <button type="submit" class="is-btn is-primary" id="btn-submit">proses</button>
-                    </div>
-                </div>
-            </form>
-            <hr>
         </div>
-    @endcan
-
-    <div class="card-body">
-        <div class="card shadow">
-            <div class="row m-0 p-5">
-                <p class="col-sm-12 text-center" style="font-size: 20px; font-weight: 700">DATA PENGHASILAN YANG SEDANG DI PROSES</p>
-            </div>
-            <div class="row m-0">
-                <div class="card-body">
-                    <div class="col-l-12">
+    </div>
+    <div class="row m-0">
+        <div class="card-body">
+            <div class="col-l-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active border" id="home-tab" data-bs-toggle="tab" data-bs-target="#proses" type="button" role="tab" aria-controls="proses" aria-selected="true">
+                            Proses
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link border" id="final-tab" data-bs-toggle="tab" data-bs-target="#final" type="button" role="tab" aria-controls="final" aria-selected="false">
+                            Final
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="proses" role="tabpanel" aria-labelledby="proses-tab">
                         <div class="table-responsive overflow-hidden">
-                            <table class="table stripe" id="table" style="width: 100%">
+                            <table class="table table-bordered" id="table" style="width: 100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" rowspan="2">No</th>
-                                        <th class="text-center" rowspan="2">Tahun</th>
-                                        <th class="text-center" rowspan="2">Bulan</th>
-                                        <th class="text-center" rowspan="2">Tanggal</th>
-                                        <th class="text-center" colspan="2">Total</th>
-                                        <th class="text-center" rowspan="2">Status</th>
-                                        <th class="text-center" rowspan="2">File</th>
-                                        <th class="text-center" rowspan="2">Aksi</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">No</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Tahun</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Bulan</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Tanggal</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">File</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" colspan="3">Total</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Aksi</th>
                                     </tr>
                                     <tr>
-                                        <th>Bruto</th>
-                                        <th>Neto</th>
+                                        <th class="text-center">Bruto</th>
+                                        <th class="text-center">Potongan</th>
+                                        <th class="text-center">Netto</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @php
                                         $i = 1;
                                         $months = array(1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember');
+                                        $total_bruto = 0;
+                                        $total_potongan = 0;
+                                        $total_netto = 0;
                                     @endphp
-                                    @forelse ($data_gaji as $item)
+                                    @forelse ($proses_list as $item)
+                                        @php
+                                            $total_bruto += $item->bruto;
+                                            $total_potongan += $item->total_potongan;
+                                            $total_netto += $item->netto;
+                                        @endphp
                                         <tr>
                                             <td class="text-center">{{ $i++ }}</td>
                                             <td class="text-center">{{ $item->tahun }}</td>
                                             <td class="text-center">{{ $months[$item->bulan] }}</td>
                                             <td class="text-center">{{date('d-m-y', strtotime($item->tanggal_input))}}</td>
-                                            <td>Rp {{number_format($item->bruto, 0, ',', '.')}}</td>
-                                            <td>
-                                                @if ($item->neto < 0)
-                                                    Rp ({{number_format(str_replace('-', '', $item->neto), 0, ',', '.')}})
-                                                @else
-                                                    Rp {{number_format($item->neto, 0, ',', '.')}}
-                                                @endif
-                                            </td>
-                                            <td class="text-center">{{ucwords($item->status)}}</td>
                                             <td class="text-center">
                                                 <a href="#" class="btn btn-outline-warning p-1 btn-rincian"
                                                     data-batch_id="{{$item->id}}">Rincian</a>
                                                 <a href="#" class="btn btn-outline-success p-1 btn-payroll"
                                                     data-batch_id="{{$item->id}}">Payroll</a>
                                             </td>
+                                            @if ($item->bruto == 0)
+                                                <td class="text-center">-</td>
+                                            @else
+                                                <td class="text-right">
+                                                    Rp {{number_format($item->bruto, 0, ',', '.')}}
+                                                </td>
+                                            @endif
+                                            @if ($item->total_potongan == 0)
+                                                <td class="text-center">-</td>
+                                            @else
+                                                <td class="text-right">
+                                                    Rp {{number_format($item->total_potongan, 0, ',', '.')}}
+                                                </td>
+                                            @endif
+                                            @if ($item->netto < 0)
+                                                <td class="text-right">
+                                                    Rp ({{number_format(str_replace('-', '', $item->netto), 0, ',', '.')}})
+                                                </td>
+                                            @elseif ($item->netto == 0)
+                                                <td class="text-center">-</td>
+                                            @else
+                                                <td class="text-right">
+                                                    Rp {{number_format($item->netto, 0, ',', '.')}}
+                                                </td>
+                                            @endif
                                             <td class="text-center">
                                                 @if($item->status == 'proses')
-                                                    <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
-                                                        data-batch_id="{{$item->id}}">Perbarui</a>
-                                                    <a href="#" class="btn btn-outline-success p-1 btn-final"
-                                                        data-batch_id="{{$item->id}}">Proses Final</a>
+                                                    @if ($item->tanggal_cetak != null)
+                                                        @if ($item->file == null)
+                                                            <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload File</a>
+                                                        @endif
+                                                    @else
+                                                        <a class="btn btn-outline-primary p-1 btn-download-pdf" href="{{ route('cetak.penghasilanPerBulan',$item->id) }}">Download PDF</a>
+                                                    @endif
+                                                    @if($item->total_penyesuaian > 0)
+                                                        <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
+                                                            data-batch_id="{{$item->id}}">Perbarui</a>
+                                                    @else
+                                                        <a href="#" class="btn btn-outline-success p-1 btn-final"
+                                                            data-batch_id="{{$item->id}}">Proses Final</a>
+                                                    @endif
                                                 @else
                                                     -
                                                 @endif
@@ -171,6 +148,135 @@
                                             <td colspan="10" class="text-center">Belum ada penghasilan yang diproses.</td>
                                         </tr>
                                     @endforelse
+                                </tbody>
+                                @if ($proses_list)
+                                    <tfoot>
+                                        <tr>
+                                            <th class="text-center" colspan="5">Total</th>
+                                            @if ($total_bruto > 0)
+                                                <th class="text-right">
+                                                    RP {{number_format($total_bruto, 0, ',', '.')}}
+                                                </th>
+                                            @else
+                                                <th class="text-center">-</th>
+                                            @endif
+                                            @if ($total_potongan > 0)
+                                                <th class="text-right">
+                                                    RP {{number_format($total_potongan, 0, ',', '.')}}
+                                                </th>
+                                            @else
+                                                <th class="text-center">-</th>
+                                            @endif
+                                            @if ($total_netto > 0)
+                                                <th class="text-right">
+                                                    RP {{number_format($total_netto, 0, ',', '.')}}
+                                                </th>
+                                            @else
+                                                <th class="text-center">-</th>
+                                            @endif
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                @endif
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="final" role="tabpanel" aria-labelledby="final-tab">
+                        <div class="table-responsive overflow-hidden">
+                            <table class="table table-bordered" id="table" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">No</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Tahun</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Bulan</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Tanggal</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">File</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center" colspan="3">Total</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center">Bruto</th>
+                                        <th class="text-center">Potongan</th>
+                                        <th class="text-center">Netto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $i = 1;
+                                        $total_bruto = 0;
+                                        $total_potongan = 0;
+                                        $total_netto = 0;
+                                    @endphp
+                                    @forelse ($final_list as $item)
+                                        @php
+                                            $total_bruto += $item->bruto;
+                                            $total_potongan += $item->total_potongan;
+                                            $total_netto += $item->netto;
+                                        @endphp
+                                        <tr>
+                                            <td class="text-center">{{ $i++ }}</td>
+                                            <td class="text-center">{{ $item->tahun }}</td>
+                                            <td class="text-center">{{ $months[$item->bulan] }}</td>
+                                            <td class="text-center">{{date('d-m-y', strtotime($item->tanggal_input))}}</td>
+                                            <td class="text-center">dummy.xlsx</td>
+                                            @if ($item->bruto == 0)
+                                                <td class="text-center">-</td>
+                                            @else
+                                                <td class="text-right">
+                                                    Rp {{number_format($item->bruto, 0, ',', '.')}}
+                                                </td>
+                                            @endif
+                                            @if ($item->total_potongan == 0)
+                                                <td class="text-center">-</td>
+                                            @else
+                                                <td class="text-right">
+                                                    Rp {{number_format($item->total_potongan, 0, ',', '.')}}
+                                                </td>
+                                            @endif
+                                            @if ($item->netto < 0)
+                                                <td class="text-right">
+                                                    Rp ({{number_format(str_replace('-', '', $item->netto), 0, ',', '.')}})
+                                                </td>
+                                            @elseif ($item->netto == 0)
+                                                <td class="text-center">-</td>
+                                            @else
+                                                <td class="text-right">
+                                                    Rp {{number_format($item->netto, 0, ',', '.')}}
+                                                </td>
+                                            @endif
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="9" class="text-center">Belum ada penghasilan yang telah selesai diproses.</td>
+                                        </tr>
+                                    @endforelse
+                                    @if ($final_list)
+                                    <tfoot>
+                                        <tr>
+                                            <th class="text-center" colspan="5">Total</th>
+                                            @if ($total_bruto > 0)
+                                                <th class="text-right">
+                                                    RP {{number_format($total_bruto, 0, ',', '.')}}
+                                                </th>
+                                            @else
+                                                <th class="text-center">-</th>
+                                            @endif
+                                            @if ($total_potongan > 0)
+                                                <th class="text-right">
+                                                    RP {{number_format($total_potongan, 0, ',', '.')}}
+                                                </th>
+                                            @else
+                                                <th class="text-center">-</th>
+                                            @endif
+                                            @if ($total_netto > 0)
+                                                <th class="text-right">
+                                                    RP {{number_format($total_netto, 0, ',', '.')}}
+                                                </th>
+                                            @else
+                                                <th class="text-center">-</th>
+                                            @endif
+                                        </tr>
+                                    </tfoot>
+                                @endif
                                 </tbody>
                             </table>
                         </div>

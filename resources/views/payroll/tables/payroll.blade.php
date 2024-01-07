@@ -77,7 +77,22 @@
     </tbody>
     <tfoot>
         <tr>
-            <th colspan="2" class="text-center">Jumlah</th>
+            <th colspan="2" class="text-center">Grand Total</th>
+            <th class="text-right">{{ number_format($total['grand_total_gaji'], 0, ',', '.') }}</th>
+            <th></th>
+            <th class="text-right">{{ number_format($total['grand_bpjs_tk'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['grand_dpp'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['grand_kredit_koperasi'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['grand_iuran_koperasi'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['grand_kredit_pegawai'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['grand_iuran_ik'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['grand_total_potongan'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['grand_total_diterima'], 0, ',', '.') }}</th>
+        </tr>
+    </tfoot>
+    <tfoot>
+        <tr>
+            <th colspan="2" class="text-center">Total</th>
             <th class="text-right">{{ number_format($footer_total_gaji, 0, ',', '.') }}</th>
             <th></th>
             <th class="text-right">{{ number_format($footer_bpjs_tk, 0, ',', '.') }}</th>
@@ -90,4 +105,6 @@
             <th class="text-right">{{ number_format($footer_total_diterima, 0, ',', '.') }}</th>
         </tr>
     </tfoot>
+
 </table>
+

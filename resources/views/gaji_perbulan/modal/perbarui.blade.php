@@ -3,21 +3,31 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Perbarui</h5>
-                <button class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <table class="display" id="penyesuaian-table">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>No</th>
-                            <th>NIP</th>
-                            <th>Nama</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="table-responsive">
+                    <table class="display" id="penyesuaian-table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th rowspan="2"></th>
+                                <th rowspan="2">No</th>
+                                <th rowspan="2">NIP</th>
+                                <th rowspan="2">Nama</th>
+                                <th colspan="2">Total Penghasilan</th>
+                                <th colspan="2">Total Potongan</th>
+                            </tr>
+                            <tr>
+                                <th class="text-right">Sebelum</th>
+                                <th class="text-right">Sesudah</th>
+                                <th class="text-right">Sebelum</th>
+                                <th class="text-right">Sesudah</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <form id="form" action="{{route('gaji_perbulan.store')}}" method="POST">

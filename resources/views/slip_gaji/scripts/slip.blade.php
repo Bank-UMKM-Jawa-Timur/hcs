@@ -17,6 +17,7 @@
             nipKaryawan = selected;
 
             $('#nip').empty()
+            $('#nip_per_cabang').select2()
             // Load karyawan options
             $('#nip').select2({
                 ajax: {
@@ -108,7 +109,7 @@
 
             }
         });
-        
+
         function convertToTerbilang(number) {
             var bilangan = [
                 '',
@@ -167,7 +168,7 @@
             if (data.tj_keluarga > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td class="px-3">Keluarga</td>
+                        <td class="px-3">Tj. Keluarga</td>
                         <td class="text-right px-3">Rp ${formatRupiahPayroll(data.tj_keluarga)}</td>
                     </tr>
                 `
@@ -176,7 +177,7 @@
             if (data.tj_jabatan > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td class="px-3">Jabatan</td>
+                        <td class="px-3">Tj. Jabatan</td>
                         <td class="text-right px-3">Rp ${formatRupiahPayroll(data.tj_jabatan)}</td>
                     </tr>
                 `
@@ -194,7 +195,7 @@
             if (data.tj_perumahan > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td class="px-3">Perumahan</td>
+                        <td class="px-3">Tj. Perumahan</td>
                         <td class="text-right px-3">Rp ${formatRupiahPayroll(data.tj_perumahan)}</td>
                     </tr>
                 `
@@ -212,7 +213,7 @@
             if (data.tj_pelaksana > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td class="px-3">Pelaksana</td>
+                        <td class="px-3">Tj. Pelaksana</td>
                         <td class="text-right px-3">Rp ${formatRupiahPayroll(data.tj_pelaksana)}</td>
                     </tr>
                 `
@@ -221,7 +222,7 @@
             if (data.tj_kemahalan > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td class="px-3">Kemahalan</td>
+                        <td class="px-3">Tj. Kemahalan</td>
                         <td class="text-right px-3">Rp ${formatRupiahPayroll(data.tj_kemahalan)}</td>
                     </tr>
                 `
@@ -230,7 +231,7 @@
             // if (data.tj_kesejahteraan > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td class="px-3">Kesejahteraan</td>
+                        <td class="px-3">Tj. Kesejahteraan</td>
                         <td class="text-right px-3">Rp ${formatRupiahPayroll(data.tj_kesejahteraan)}</td>
                     </tr>
                 `
@@ -239,7 +240,7 @@
             if (data.tj_multilevel > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td class="px-3">Multilevel</td>
+                        <td class="px-3">Tj. Multilevel</td>
                         <td class="text-right px-3">Rp ${formatRupiahPayroll(data.tj_multilevel)}</td>
                     </tr>
                 `
@@ -342,7 +343,7 @@
 
             var tableTotalTunjanganTeratur = `
                 <tr>
-                    <th class="px-3">TOTAL (THP)</th>
+                    <th class="px-3">TOTAL PENDAPATAN</th>
                     <th class="text-right px-3">Rp ${formatRupiahPayroll(data.total_gaji)}</th>
                 </tr>
             `
@@ -412,7 +413,7 @@
             var totalGaji = total_diterima > 0 ? formatRupiahPayroll(total_diterima.toString()) : '-';
             var terbilang = total_diterima > 0 ? total_diterima : '-';
             var tableTotalDiterima = `
-                <tr class="bg-primary text-white p-1 rounded">
+                <tr class="bg-primary text-center text-white p-1 rounded">
                     <th colspan="2" width="40%">Total Gaji Yang Diterima <i>(Take Home Pay)</i></th>
                 </tr>
                 <tr>
