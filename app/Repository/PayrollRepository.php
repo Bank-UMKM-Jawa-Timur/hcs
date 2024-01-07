@@ -1533,6 +1533,49 @@ class PayrollRepository
             $perhitunganPph21->pph_pasal_21 = $pphPasal21;
             $karyawan->perhitungan_pph21 = $perhitunganPph21;
         }
-        return $data;
+        $data = $data;
+        $grand_footer_total_gaji = 0;
+        $grand_footer_bpjs_tk = 0;
+        $grand_footer_dpp = 0;
+        $grand_footer_kredit_koperasi = 0;
+        $grand_footer_iuran_koperasi = 0;
+        $grand_footer_kredit_pegawai = 0;
+        $grand_footer_iuran_ik = 0;
+        $grand_footer_total_potongan = 0;
+        $grand_footer_total_diterima = 0;
+        foreach ($data as $item) {
+            $total_gaji = $item->gaji ? number_format($item->gaji->total_gaji, 0, ',', '.') : 0;
+            $dpp = $item->potongan ? number_format($item->potongan->dpp, 0, ',', '.') : 0;
+            $bpjs_tk = $item->bpjs_tk ? number_format($item->bpjs_tk, 0, ',', '.') : 0;
+            $kredit_koperasi = $item->potonganGaji ? number_format($item->potonganGaji->kredit_koperasi, 0, ',', '.') : 0;
+            $iuran_koperasi = $item->potonganGaji ? number_format($item->potonganGaji->iuran_koperasi, 0, ',', '.') : 0;
+            $kredit_pegawai = $item->potonganGaji ? number_format($item->potonganGaji->kredit_pegawai, 0, ',', '.') : 0;
+            $iuran_ik = $item->potonganGaji ? number_format($item->potonganGaji->iuran_ik, 0, ',', '.') : 0;
+            $total_potongan = number_format($item->total_potongan, 0, ',', '.');
+            $total_diterima = $item->total_yg_diterima ? number_format($item->total_yg_diterima, 0, ',', '.') : 0;
+            // count total
+            $grand_footer_total_gaji += str_replace('.', '', $total_gaji);
+            $grand_footer_bpjs_tk += str_replace('.', '', $bpjs_tk);
+            $grand_footer_dpp += str_replace('.', '', $dpp);
+            $grand_footer_kredit_koperasi += str_replace('.', '', $kredit_koperasi);
+            $grand_footer_iuran_koperasi += str_replace('.', '', $iuran_koperasi);
+            $grand_footer_kredit_pegawai += str_replace('.', '', $kredit_pegawai);
+            $grand_footer_iuran_ik += str_replace('.', '', $iuran_ik);
+            $grand_footer_total_potongan += str_replace('.', '', $total_potongan);
+            $grand_footer_total_diterima += str_replace('.', '', $total_diterima);
+        }
+        $result = [
+            'grand_total_gaji' => $grand_footer_total_gaji,
+            'grand_bpjs_tk' => $grand_footer_bpjs_tk,
+            'grand_dpp' => $grand_footer_dpp,
+            'grand_kredit_koperasi' => $grand_footer_kredit_koperasi,
+            'grand_iuran_koperasi' => $grand_footer_iuran_koperasi,
+            'grand_kredit_pegawai' => $grand_footer_kredit_pegawai,
+            'grand_iuran_ik' => $grand_footer_iuran_ik,
+            'grand_total_potongan' => $grand_footer_total_potongan,
+            'grand_total_diterima' => $grand_footer_total_diterima,
+        ];
+        return $result;
+
     }
 }
