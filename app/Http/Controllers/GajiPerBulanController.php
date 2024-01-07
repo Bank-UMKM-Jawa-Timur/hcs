@@ -6,6 +6,8 @@ use App\Imports\ImportPPH21;
 use App\Models\GajiPerBulanModel;
 use App\Models\PPHModel;
 use App\Models\TunjanganModel;
+use App\Repository\CetakGajiRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Events\QueryExecuted;
@@ -110,6 +112,8 @@ class GajiPerBulanController extends Controller
                     'batch.id',
                     'batch.tanggal_input',
                     'batch.tanggal_final',
+                    'batch.tanggal_cetak',
+                    'batch.file',
                     'batch.status',
                     'gaji.bulan',
                     'gaji.tahun',
@@ -859,7 +863,7 @@ class GajiPerBulanController extends Controller
                         ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
                         ->first();
                 }
-                
+
                 $this->param['persenJkk'] = $hitungan_penambah->jkk;
                 $this->param['persenJht'] = $hitungan_penambah->jht;
                 $this->param['persenJkm'] = $hitungan_penambah->jkm;
@@ -1645,7 +1649,64 @@ class GajiPerBulanController extends Controller
             $this->param['jpMarDes'] = $hitungan_pengurang->jp_mar_des;
             $this->param['nominalJp'] = 0;
         }
-        
+
         return intval($this->getPPHDesember($bulan, $tahun, $item, $ptkp));
+    }
+
+    function cetak($id) {
+        $data = DB::table('batch_gaji_per_bulan AS batch')
+        ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+        ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+        ->select(
+            'batch.id',
+            'batch.tanggal_input',
+            'batch.tanggal_final',
+            'batch.status',
+            'gaji.bulan',
+            'gaji.tahun',
+        )->where('batch.id',$id)->first();
+        $year = date('Y',strtotime($data->tanggal_input));
+        $month = str_replace('0','',date('m',strtotime($data->tanggal_input)));
+        $is_pusat = auth()->user()->hasRole('kepegawaian');
+        $is_cabang = auth()->user()->hasRole('cabang');
+        if ($is_pusat) {
+            $kantor = 'pusat';
+        }
+        if($is_cabang){
+            $kantor = auth()->user()->kd_cabang;
+        }
+        $cetak = new CetakGajiRepository;
+        $result = $cetak->cetak($kantor, $month, $year,$id);
+
+        DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
+            'tanggal_cetak' => Carbon::now(),
+            ]);
+        $pdf = Pdf::loadView('gaji_perbulan.cetak-pdf', ['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $data->tanggal_input]);
+        return $pdf->download('LampiranGaji-' . $data->tanggal_input . '.pdf');
+    }
+
+    function upload(Request $request){
+        $request->validate([
+            'upload_file' => 'required'
+        ]);
+        try {
+            $folderLampiran = public_path() . '/upload/' . $request->id . '/';
+            $file = $request->upload_file;
+            $filenameLampiran = $file->getClientOriginalName();
+            $pathSPPK = realpath($folderLampiran);
+            if (!($pathSPPK !== true and is_dir($pathSPPK))) {
+                mkdir($folderLampiran, 0755, true);
+            }
+            $file->move($folderLampiran, $filenameLampiran);
+            DB::table('batch_gaji_per_bulan')->where('id',$request->id)->update([
+                'file' => $filenameLampiran,
+            ]);
+            Alert::success('Sukses','Lampiran Gaji Berhasil Diupload');
+            return redirect()->route('gaji_perbulan.index');
+        } catch (Exception $th) {
+            return $th;
+        } catch (QueryException $e) {
+            return $e;
+        }
     }
 }

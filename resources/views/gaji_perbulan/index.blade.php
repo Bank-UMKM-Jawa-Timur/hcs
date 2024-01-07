@@ -1,6 +1,7 @@
 @extends('layouts.template')
 @include('gaji_perbulan.modal.proses')
 @include('gaji_perbulan.modal.perbarui')
+@include('gaji_perbulan.modal.modal-upload')
 @include('gaji_perbulan.script.index')
 @section('content')
     <div class="card-header">
@@ -111,6 +112,13 @@
                                             @endif
                                             <td class="text-center">
                                                 @if($item->status == 'proses')
+                                                    @if ($item->tanggal_cetak != null)
+                                                        @if ($item->file == null)
+                                                            <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload File</a>
+                                                        @endif
+                                                    @else
+                                                        <a class="btn btn-outline-primary p-1 btn-download-pdf" href="{{ route('cetak.penghasilanPerBulan',$item->id) }}">Download PDF</a>
+                                                    @endif
                                                     @if($item->total_penyesuaian > 0)
                                                         <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
                                                             data-batch_id="{{$item->id}}">Perbarui</a>
@@ -172,7 +180,6 @@
                                         <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Tanggal</th>
                                         <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">File</th>
                                         <th style="border: 1px solid #dee2e6;" class="text-center" colspan="3">Total</th>
-                                        <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Aksi</th>
                                     </tr>
                                     <tr>
                                         <th class="text-center">Bruto</th>
@@ -224,23 +231,10 @@
                                                     Rp {{number_format($item->netto, 0, ',', '.')}}
                                                 </td>
                                             @endif
-                                            <td class="text-center">
-                                                @if($item->status == 'proses')
-                                                    @if($item->total_penyesuaian > 0)
-                                                        <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
-                                                            data-batch_id="{{$item->id}}">Perbarui</a>
-                                                    @else
-                                                        <a href="#" class="btn btn-outline-success p-1 btn-final"
-                                                            data-batch_id="{{$item->id}}">Proses Final</a>
-                                                    @endif
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="10" class="text-center">Belum ada penghasilan yang diproses.</td>
+                                            <td colspan="9" class="text-center">Belum ada penghasilan yang telah selesai diproses.</td>
                                         </tr>
                                     @endforelse
                                     @if ($final_list)
@@ -268,7 +262,6 @@
                                             @else
                                                 <th class="text-center">-</th>
                                             @endif
-                                            <th></th>
                                         </tr>
                                     </tfoot>
                                 @endif
@@ -286,6 +279,3 @@
         <input type="hidden" name="batch_id" id="batch_id">
     </form>
 @endsection
-@push('script')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-@endpush

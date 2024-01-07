@@ -68,7 +68,7 @@
                             style="font-weight: bolder">
                             <div class="d-flex justify-content-start">
                                 <span class="icon">
-                                    <iconify-icon icon="heroicons:user-group" class="icon"></iconify-icon>                                                                    
+                                    <iconify-icon icon="heroicons:user-group" class="icon"></iconify-icon>
                                 </span>
                                 <span> Manajemen Karyawan</span>
                             </div>
@@ -135,7 +135,7 @@
                                         </span>
                                         <span>
                                             <p>Pengkinian Data </p>
-                                        </span>                                        
+                                        </span>
                                     </div>
                                     <p></p>
                                 </a>
@@ -229,24 +229,24 @@
                 @if (Auth::guard("karyawan")->check())
                 <li
                 class="@active('pajak_penghasilan','penghasilan/get-gaji') {{ request()->is(
-                    'penghasilan-tidak-teratur', 
-                    'penghasilan-tidak-teratur/*', 
-                    'bonus', 
-                    'bonus/*', 
-                    'potongan', 
+                    'penghasilan-tidak-teratur',
+                    'penghasilan-tidak-teratur/*',
+                    'bonus',
+                    'bonus/*',
+                    'potongan',
                     'potongan/*',
-                    'gaji_perbulan', 
-                    'gaji_perbulan/*', 
-                    'penghasilan/import-penghasilan-teratur', 
+                    'gaji_perbulan',
+                    'gaji_perbulan/*',
+                    'penghasilan/import-penghasilan-teratur',
                     'penghasilan/import-penghasilan-teratur/*',
-                    'pengganti-biaya-kesehatan', 
-                    'pengganti-biaya-kesehatan/*', 
-                    'uang-duka', 'uang-duka/*', 
-                    'penghasilan/get-gaji', 
-                    'penghasilan/get-gaji/*', 
-                    'penghasilan/details', 
-                    'penghasilan/details/*', 
-                    'payroll', 
+                    'pengganti-biaya-kesehatan',
+                    'pengganti-biaya-kesehatan/*',
+                    'uang-duka', 'uang-duka/*',
+                    'penghasilan/get-gaji',
+                    'penghasilan/get-gaji/*',
+                    'penghasilan/details',
+                    'penghasilan/details/*',
+                    'payroll',
                     'payroll/*',
                     'gaji',
                     'gaji/*',
@@ -281,9 +281,9 @@
                                 </div>
                                 </a>
                                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                    @if(hasPermission('penghasilan - gaji - lampiran gaji'))
+                                    {{-- @if(hasPermission('penghasilan - gaji - lampiran gaji'))
                                         <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
-                                    @endif
+                                    @endif --}}
                                     @if(hasPermission('penghasilan - gaji - slip jurnal'))
                                         <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
                                     @endif
@@ -299,23 +299,23 @@
                 @can('penghasilan')
                 <li
                     class="@active('pajak_penghasilan','penghasilan/get-gaji') {{ request()->is(
-                        'penghasilan-tidak-teratur', 
-                        'penghasilan-tidak-teratur/*', 
-                        'bonus', 
-                        'bonus/*', 
-                        'potongan', 
+                        'penghasilan-tidak-teratur',
+                        'penghasilan-tidak-teratur/*',
+                        'bonus',
+                        'bonus/*',
+                        'potongan',
                         'potongan/*',
-                        'gaji_perbulan', 
-                        'gaji_perbulan/*', 
-                        'penghasilan/import-penghasilan-teratur', 
+                        'gaji_perbulan',
+                        'gaji_perbulan/*',
+                        'penghasilan/import-penghasilan-teratur',
                         'penghasilan/import-penghasilan-teratur/*',
-                        'pengganti-biaya-kesehatan', 
-                        'pengganti-biaya-kesehatan/*', 
-                        'uang-duka', 
-                        'uang-duka/*', 
-                        'penghasilan/get-gaji', 
-                        'penghasilan/get-gaji/*', 
-                        'penghasilan/details', 
+                        'pengganti-biaya-kesehatan',
+                        'pengganti-biaya-kesehatan/*',
+                        'uang-duka',
+                        'uang-duka/*',
+                        'penghasilan/get-gaji',
+                        'penghasilan/get-gaji/*',
+                        'penghasilan/details',
                         'penghasilan/details/*',
                         'payroll',
                         'payroll/*',
@@ -444,9 +444,9 @@
                                 </div>
                                 </a>
                                 <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                    @can('penghasilan - gaji - lampiran gaji')
+                                    {{-- @can('penghasilan - gaji - lampiran gaji')
                                         <a class="dropdown-item" href="{{ route('gaji.index') }}">Lampiran Gaji</a>
-                                    @endcan
+                                    @endcan --}}
                                     @can('penghasilan - gaji - slip jurnal')
                                         <a class="dropdown-item" href="{{ route('slipIndex') }}">Slip Jurnal</a>
                                     @endcan

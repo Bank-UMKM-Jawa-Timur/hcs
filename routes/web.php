@@ -64,7 +64,7 @@ Route::get('/dashboard', function () {
 
 // Route::get('/home', [HomeController::class, 'index'])->name('home');
 // Route::middleware('auth:user,karyawan')->group(function () {
-    
+
 // });
 
 Route::prefix('graph')->group(function () {
@@ -139,7 +139,8 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
         Route::get('/edit-tunjangan', [PenghasilanTeraturController::class, 'editTunjangan'])->name('edit-tunjangan');
         Route::post('/edit-tunjangan-post', [PenghasilanTeraturController::class, 'editTunjanganPost'])->name('edit-tunjangan-post');
     });
-
+    Route::post('upload-penghasilan',[GajiPerBulanController::class,'upload'])->name('upload.penghasilanPerBulan');
+    Route::get('cetak-penghasilan/{id}',[GajiPerBulanController::class,'cetak'])->name('cetak.penghasilanPerBulan');
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::get('/get-data-penghasilan-json', [GajiPerbulanController::class, 'getDataPenghasilanJson'])->name('gaji_perbulan.get_data_penghasilan_json');
     Route::get('/penyesuaian-gaji-json', [GajiPerbulanController::class, 'penyesuaianDataJson'])->name('gaji_perbulan.penyesuian_json');
@@ -280,7 +281,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     // Import Status
     Route::get('import_update_status', [KaryawanController::class, 'importStatusIndex'])->name('import-status-index');
     Route::post('import_update-status', [KaryawanController::class, 'importStatus'])->name('import_status');
-    
+
     // Reset Password Karyawan
     Route::post('reset-password-karyawan', [KaryawanController::class, 'resetPasswordKaryawan'])->name('reset-password-karyawan');
 
