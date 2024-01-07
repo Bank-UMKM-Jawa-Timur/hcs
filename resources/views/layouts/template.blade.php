@@ -37,8 +37,8 @@ Coded by www.creative-tim.com
     <link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />
     <link href="{{ asset('style/assets/css/datatables.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('style/assets/css/loading.css') }}">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    {{--  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">  --}}
     {{-- Set Token --}}
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
@@ -74,7 +74,6 @@ Coded by www.creative-tim.com
                     Human Capital System
                 </a>
             </div>
-
             <div class="row row-offcanvas row-offcanvas-left vh-100" style="width: 1700px">
                 <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar"
                     role="navigation">
@@ -123,7 +122,7 @@ Coded by www.creative-tim.com
     <script src="{{ asset('style/assets/js/plugins/bootstrap-notify.js') }}"></script>
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
     {{-- <script src="{{ asset('style/assets/js/paper-dashboard.min.js') }}" type="text/javascript"></script> --}}
-    <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
+    <!-- Paper Dashboard DEMO methods, dont include it in your project! -->
     <script src="{{ asset('style/assets/demo/demo.js') }}"></script>
     <!-- Jam Realtime -->
     <script src="{{ asset('style/assets/js/jam.js') }}" async></script>
@@ -135,25 +134,7 @@ Coded by www.creative-tim.com
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.0/moment.min.js"></script>
 
     <script>
-        // $(document).ready(function() {
-        //     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
-        //     demo.initChartsPages();
-        // });
         var url = window.location;
-
-        // for sidebar menu entirely but not cover treeview
-        // $('ul.nav>li>a').filter(function() {
-        //   return this.href == url;
-        // }).parent().addClass('active');
-
-        // // for treeview
-        // $('ul.sub-menu>li>a').filter(function() {
-        //   return this.href == url;
-        // }).parentsUntil(".nav > .sub-menu").addClass('active show');
-
-        // $('ul.sub-menu>li.dropdown>div.dropdown-menu>a').filter(function() {
-        //   return this.href == url;
-        // }).parentsUntil(".nav > .sub-menu").addClass('active');
 
         function formatRupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
@@ -169,7 +150,7 @@ Coded by www.creative-tim.com
             }
 
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
 
         function formatRupiahKoma(angka, prefix) {
@@ -192,6 +173,24 @@ Coded by www.creative-tim.com
         $(window).on("load", function() {
             $(".loader-wrapper").fadeOut("slow");
         });
+
+        String.prototype.ucwords = function() {
+            str = this.toLowerCase();
+            return str.replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g,
+                function(s){
+                return s.toUpperCase();
+            });
+        };
+
+        function generateCsrfToken() {
+            var token = "{{csrf_token()}}"
+            if (token == '') {
+                generateCsrfToken();
+            }
+            else {
+                return token;
+            }
+        }
     </script>
     @yield('custom_script')
     @stack('script')

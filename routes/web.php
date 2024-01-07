@@ -141,6 +141,8 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     });
 
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
+    Route::get('/penyesuaian-gaji-json', [GajiPerbulanController::class, 'penyesuaianDataJson'])->name('gaji_perbulan.penyesuian_json');
+    Route::post('/penyesuaian-gaji-json', [GajiPerbulanController::class, 'prosesFinal'])->name('gaji_perbulan.proses_final');
     Route::resource('/pengganti-biaya-kesehatan', PenggantiBiayaKesehatanController::class);
     Route::resource('/uang-duka', UangDukaController::class);
     Route::resource('/backup', BackupController::class);

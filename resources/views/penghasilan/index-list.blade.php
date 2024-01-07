@@ -12,7 +12,8 @@
             <a class="mb-3" href="{{ route('penghasilan-tidak-teratur.input-tidak-teratur') }}">
                 <button class="is-btn is-primary">Tambah</button>
             </a>
-        @elsecan('penghasilan - import - penghasilan tidak teratur - import')
+        @endcan
+        @can('penghasilan - import - penghasilan tidak teratur - import')
             <a class="mb-3 ml-2" href="{{ route('penghasilan-tidak-teratur.create') }}">
                 <button class="is-btn is-primary">Import</button>
             </a>
