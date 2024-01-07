@@ -5,25 +5,27 @@
         dl {
             margin-bottom:50px;
         }
-        
+
         dl dt {
             background:#5f9be3;
             color:#fff;
-            float:left; 
-            font-weight:bold; 
-            margin-right:10px; 
-            padding:5px;  
-            width:100px; 
+            float:left;
+            font-weight:bold;
+            margin-right:10px;
+            padding:5px;
+            width:100px;
         }
-        
+
         dl dd {
-            margin:2px 0; 
+            margin:2px 0;
             padding:5px 0;
         }
     </style>
 @endpush  --}}
 @section('content')
     @include('gaji_perbulan.modal.perbarui')
+    @include('gaji_perbulan.modal.modal-upload')
+
     <div class="card-header">
         <div class="card-header">
             <h5 class="card-title font-weight-bold">Proses Penghasilan Bulanan</h5>
@@ -147,13 +149,21 @@
                                                 @endif
                                             </td>
                                             <td class="text-center">{{ucwords($item->status)}}</td>
-                                            <td class="text-center">dummy.xlsx</td>
+                                            <td class="text-center">{{ $item->file == null ? '-' : $item->file }}</td>
                                             <td class="text-center">
                                                 @if($item->status == 'proses')
                                                     <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
                                                         data-batch_id="{{$item->id}}">Perbarui</a>
                                                     <a href="#" class="btn btn-outline-success p-1 btn-final"
                                                         data-batch_id="{{$item->id}}">Proses Final</a>
+                                                    @if ($item->tanggal_cetak != null)
+                                                        @if ($item->file == null)
+                                                          <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload File </a>
+
+                                                        @endif
+                                                    @else
+                                                        <a class="btn btn-outline-primary p-1" href="{{ route('cetak.penghasilanPerBulan',$item->id) }}">Cetak </a>
+                                                    @endif
                                                 @else
                                                     -
                                                 @endif
@@ -182,6 +192,19 @@
 @section('custom_script')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        $('#uploadFile').on('click',function() {
+            let batch_id = $(this).data('batch_id');
+            let target = $(this).data('target');
+
+            $(`${target} #id`).val(batch_id);
+        })
+        document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+            var name = document.getElementById("upload_csv").files[0].name;
+            var nextSibling = e.target.nextElementSibling
+            nextSibling.innerText = name
+        });
+
+
         $("#tahun").change(function(e){
             var tahun = $(this).val();
             $('#bulan option').removeAttr('disabled');
@@ -261,7 +284,7 @@
                     {"data": "nama_karyawan"},
                 ]
             });
-            
+
             // Add event listener for opening and closing details
             table.on('click', 'td.dt-control', function (e) {
                 let tr = e.target.closest('tr');
@@ -276,8 +299,8 @@
                     row.child(showDetail(row.data().penyesuaian)).show();
                 }
             });
-            $('#penyesuaian-modal #batch_id').val(batch_id); 
-            $('#penyesuaian-modal').modal('show'); 
+            $('#penyesuaian-modal #batch_id').val(batch_id);
+            $('#penyesuaian-modal').modal('show');
         })
 
         $('.btn-final').on('click', function() {
