@@ -190,6 +190,7 @@ class PenghasilanTidakTeraturController extends Controller
                 'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
                 'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
                 'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
+                'tj_khusus' => ($data != null) ? $data->tj_khusus : 0,
                 'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
                 'tj_ti' => ($data != null) ? $data->tj_ti : 0,
                 'tj_transport' => ($data != null) ? $data->tj_transport : 0,
@@ -208,6 +209,7 @@ class PenghasilanTidakTeraturController extends Controller
                 'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
                 'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
                 'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
+                'tj_khusus' => ($data != null) ? $data->tj_khusus : 0,
             ];
             array_push($gaji, $gj[$i-1]);
             array_push($total_gaji, array_sum($total_gj[$i-1]));
