@@ -83,9 +83,27 @@ class PenghasilanTidakTeraturRepository
     }
 
     public function dataFileExcel() {
+        // Berdasarkan karyawan aktif
+        // Kepegawaian
+        // Berdasarkan kantor
+        $is_cabang = auth()->user()->hasRole('cabang');
+        $is_pusat = auth()->user()->hasRole('kepegawaian');
+
+        $kd_cabang = DB::table('mst_cabang')
+                    ->select('kd_cabang')
+                    ->pluck('kd_cabang')
+                    ->toArray();
         $karyawan = KaryawanModel::select(
                     'mst_karyawan.nip',
-                )
+                )->when($is_cabang,function($query){
+                    $kd_cabang = auth()->user()->kd_cabang;
+                    $query->where('kd_entitas', $kd_cabang);
+                })->when($is_pusat, function($q2) use ($kd_cabang) {
+                        $q2->where(function($q2) use ($kd_cabang) {
+                        $q2->whereNotIn('kd_entitas', $kd_cabang)
+                            ->orWhere('kd_entitas', 0);
+                    });
+                })
                 ->whereNull('tanggal_penonaktifan')
                 ->get();
         return $karyawan;
