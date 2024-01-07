@@ -39,13 +39,22 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label for="">Karyawan</label>
-                                            <select name="nip" id="nip"
-                                                class="form-control select2">
-                                                <option value="0">-- Pilih Semua Karyawan --</option>
-                                            </select>
-                                            @error('nip')
-                                                <small class="text-danger">{{ucfirst($message)}}</small>
-                                            @enderror
+                                            @if ($role_cabang == 1)
+                                                <select class="form-control select2" name="nip" id="nip_per_cabang">
+                                                    <option value="0">-- Pilih Semua Karyawan --</option>
+                                                    @foreach ( $data_karyawan as $item)
+                                                        <option {{Request()->nip == $item->nip ? 'selected' : ''}} value="{{$item->nip}}">{{$item->nip}} - {{$item->nama_karyawan}}</option>
+                                                    @endforeach
+                                                </select>
+                                            @else
+                                                <select name="nip" id="nip"
+                                                    class="form-control select2">
+                                                    <option value="0">-- Pilih Semua Karyawan --</option>
+                                                </select>
+                                                @error('nip')
+                                                    <small class="text-danger">{{ucfirst($message)}}</small>
+                                                @enderror
+                                            @endif
                                         </div>
                                     </div>
                                 @endif
@@ -90,7 +99,7 @@
         <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Rincian</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Rincian  </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -189,7 +198,6 @@
                     </div>
                     <div class="row mt-4" id="footer-1">
                         <div class="col">
-                            *) Keterangan: Pajak PPh 21 ditanggung perusahaan.
                         </div>
                     </div>
                     <div class="row mt-2 d-none" id="footer-2">

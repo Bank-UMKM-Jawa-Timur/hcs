@@ -58,13 +58,16 @@ use Maatwebsite\Excel\Row;
 Route::get('/', function () {
     return redirect('/login');
 });
+Route::get('coming-soon',function() {
+    return view('coming-soon');
+});
 Route::get('/dashboard', function () {
     return view('welcome');
 });
 
 // Route::get('/home', [HomeController::class, 'index'])->name('home');
 // Route::middleware('auth:user,karyawan')->group(function () {
-    
+
 // });
 
 Route::prefix('graph')->group(function () {
@@ -279,7 +282,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     // Import Status
     Route::get('import_update_status', [KaryawanController::class, 'importStatusIndex'])->name('import-status-index');
     Route::post('import_update-status', [KaryawanController::class, 'importStatus'])->name('import_status');
-    
+
     // Reset Password Karyawan
     Route::post('reset-password-karyawan', [KaryawanController::class, 'resetPasswordKaryawan'])->name('reset-password-karyawan');
 

@@ -56,8 +56,15 @@ class PayrollController extends Controller
         $this->param = null;
 
         $data = $this->list($kantor, $month, $year, $search, $page, $limit,null);
+        $total = $this->grandTotal($kantor, $month, $year, $search, $page, $limit,null);
+        return view('payroll.index', compact('data', 'cabang','total'));
+    }
 
-        return view('payroll.index', compact('data', 'cabang'));
+    function grandTotal($kantor, $month, $year, $q, $page, $limit, $cetak) {
+        $payrollRepository = new PayrollRepository;
+        $data = $payrollRepository->total($kantor, $month, $year, $q, $page, $limit,$cetak);
+
+        return $data;
     }
 
     public function list($kantor, $month, $year, $q, $page, $limit, $cetak) {
