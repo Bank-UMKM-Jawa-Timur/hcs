@@ -8,24 +8,26 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="display" id="penyesuaian-table">
-                    <thead>
-                        <tr>
-                            <th rowspan="2"></th>
-                            <th rowspan="2">No</th>
-                            <th rowspan="2">NIP</th>
-                            <th rowspan="2">Nama</th>
-                            <th colspan="2">Total Penghasilan</th>
-                            <th colspan="2">Total Potongan</th>
-                        </tr>
-                        <tr>
-                            <th class="text-right">Sebelum</th>
-                            <th class="text-right">Sesudah</th>
-                            <th class="text-right">Sebelum</th>
-                            <th class="text-right">Sesudah</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="table-responsive">
+                    <table class="display" id="penyesuaian-table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th rowspan="2"></th>
+                                <th rowspan="2">No</th>
+                                <th rowspan="2">NIP</th>
+                                <th rowspan="2">Nama</th>
+                                <th colspan="2">Total Penghasilan</th>
+                                <th colspan="2">Total Potongan</th>
+                            </tr>
+                            <tr>
+                                <th class="text-right">Sebelum</th>
+                                <th class="text-right">Sesudah</th>
+                                <th class="text-right">Sebelum</th>
+                                <th class="text-right">Sesudah</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <form id="form" action="{{route('gaji_perbulan.store')}}" method="POST">

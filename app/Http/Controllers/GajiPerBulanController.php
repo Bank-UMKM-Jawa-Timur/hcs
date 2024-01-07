@@ -657,10 +657,84 @@ class GajiPerBulanController extends Controller
                     $gaji->total_potongan_baru = $total_potongan_baru;
                 }
             }
-            return DataTables::of($data_gaji)->make(true);
+            return DataTables::of($data_gaji)
+                            ->addColumn('counter', function ($row) {
+                                static $count = 0;
+                                $count++;
+                                return $count;
+                            })
+                            ->rawColumns(['counter'])
+                            ->make(true);
         }
         catch (Exception $e) {
             return $e->getMessage();
+        }
+    }
+
+    public function penghasilanKantor() {
+        $status = 'failed';
+        $message = '';
+
+        try {
+            $months = array(1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember');
+            $kantor = DB::table('mst_cabang')->orderBy('kd_cabang')->get();
+            $kd_cabang_arr = DB::table('mst_cabang')
+                                ->orderBy('kd_cabang')
+                                ->pluck('kd_cabang')
+                                ->toArray();
+
+            foreach ($kantor as $value) {
+                $penghasilan = new \stdClass();
+                foreach ($months as $key => $m) {
+                    if ($value->kd_cabang == '000') {
+                        // Pusat
+                        $batch = DB::table('batch_gaji_per_bulan AS batch')
+                                    ->select('batch.status')
+                                    ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+                                    ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+                                    ->whereMonth('batch.tanggal_input', $key)
+                                    ->where(function($query) use($kd_cabang_arr) {
+                                        $query->whereNotIn('m.kd_entitas', $kd_cabang_arr)
+                                            ->orWhereNull('m.kd_entitas');
+                                    })
+                                    ->first();
+                    }
+                    else {
+                        // Cabang
+                        $batch = DB::table('batch_gaji_per_bulan AS batch')
+                                    ->select('batch.status')
+                                    ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+                                    ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+                                    ->whereMonth('batch.tanggal_input', $key)
+                                    ->where('m.kd_entitas', $value->kd_cabang)
+                                    ->first();
+                    }
+
+                    $month = strtolower($m);
+                    if ($batch) {
+                        $penghasilan->$month = $batch->status;
+                    }
+                    else {
+                        $penghasilan->$month = '-';
+                    }
+                }
+                $value->penghasilan = $penghasilan;
+            }
+
+            return DataTables::of($kantor)
+                            ->addColumn('counter', function ($row) {
+                                static $count = 0;
+                                $count++;
+                                return $count;
+                            })
+                            ->rawColumns(['counter'])
+                            ->make(true);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            return response()->json([
+                'status' => $status,
+                'message' => $message,
+            ]);
         }
     }
     /**

@@ -2,6 +2,7 @@
 @include('gaji_perbulan.modal.proses')
 @include('gaji_perbulan.modal.perbarui')
 @include('gaji_perbulan.modal.modal-upload')
+@include('gaji_perbulan.modal.penghasilan-kantor')
 @include('gaji_perbulan.script.index')
 @section('content')
     <div class="card-header">
@@ -13,6 +14,7 @@
                 </div>
                 @can('penghasilan - proses penghasilan')
                     <div>
+                        <button type="button" class="is-btn is-primary btn-show">Penghasilan Semua Kantor</button>
                         <button type="button" class="is-btn is-primary btn-proses">Proses</button>
                     </div>
                 @endcan

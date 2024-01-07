@@ -14,6 +14,72 @@
             nextSibling.innerText = name
         });
 
+        $('.btn-show').on('click', function() {
+            $('#penghasilan-kantor-modal').modal('show')
+            loadPenghasilanKantor()
+        })
+
+        $('#penghasilan-kantor-modal .close').on('click', function () {
+            $('#penghasilan-kantor-modal').modal('hide')
+            $("#penghasilan-kantor-modal #penghasilan-kantor-table").dataTable().fnDestroy();
+        })
+
+        function loadPenghasilanKantor() {
+            var table = $('#penghasilan-kantor-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{route('gaji_perbulan.penghasilan_kantor')}}",
+                columns: [
+                    {
+                        data: "counter",
+                    },
+                    {
+                        data: "nama_cabang"
+                    },
+                    {
+                        data: "penghasilan.januari"
+                    },
+                    {
+                        data: "penghasilan.februari"
+                    },
+                    {
+                        data: "penghasilan.maret"
+                    },
+                    {
+                        data: "penghasilan.april"
+                    },
+                    {
+                        data: "penghasilan.mei"
+                    },
+                    {
+                        data: "penghasilan.juni"
+                    },
+                    {
+                        data: "penghasilan.juli"
+                    },
+                    {
+                        data: "penghasilan.agustus"
+                    },
+                    {
+                        data: "penghasilan.september"
+                    },
+                    {
+                        data: "penghasilan.oktober"
+                    },
+                    {
+                        data: "penghasilan.november"
+                    },
+                    {
+                        data: "penghasilan.desember"
+                    }
+                ],
+                initComplete:function( settings, json){
+                    console.log(json);
+                    // call your function here
+                }
+            });
+        }
+
         $(".btn-proses").on('click', function(e){
             loadDataPenghasilan()
             $('#proses-modal').modal('show'); 
@@ -118,7 +184,6 @@
         let table = null
         $('.btn-perbarui').on('click', function() {
             const batch_id = $(this).data('batch_id');
-            var iteration = 1;
             table = $('#penyesuaian-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -131,10 +196,7 @@
                         defaultContent: ''
                     },
                     {
-                        data: null,
-                        render:function(data , type , row){
-                            return iteration++;
-                        },
+                        data: "counter"
                     },
                     {"data": "nip"},
                     {"data": "nama_karyawan"},
@@ -184,6 +246,7 @@
         })
 
         $('#penyesuaian-modal .close').on('click', function () {
+            $('#penyesuaian-modal').modal('hide'); 
             $("#penyesuaian-modal #penyesuaian-table").dataTable().fnDestroy();
         })
 
