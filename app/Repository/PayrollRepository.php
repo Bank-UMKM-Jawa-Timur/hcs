@@ -162,7 +162,7 @@ class PayrollRepository
                                 }
                             ])
                             ->select(
-                                'nip',
+                                'mst_karyawan.nip',
                                 'nama_karyawan',
                                 'npwp',
                                 'no_rekening',
@@ -171,17 +171,19 @@ class PayrollRepository
                                 'jkn',
                                 DB::raw("
                                     IF(
-                                        status = 'Kawin',
+                                        mst_karyawan.status = 'Kawin',
                                         'K',
                                         IF(
-                                            status = 'Belum Kawin',
+                                            mst_karyawan.status = 'Belum Kawin',
                                             'TK',
-                                            status
+                                            mst_karyawan.status
                                         )
                                     ) AS status
                                 "),
                                 'status_karyawan',
                             )
+                            ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
+                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
                             ->orderByRaw("
                                 CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
@@ -206,7 +208,10 @@ class PayrollRepository
                                         $q->orWhere('mst_karyawan.kd_entitas', $kantor);
                                     }
                                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
-                                });
+                                })
+                                ->where('gaji_per_bulan.bulan', $month)
+                                ->where('gaji_per_bulan.tahun', $year)
+                                ->where('batch.status', 'final');
                             });
                             if ($cetak == 'cetak') {
                                 $data = $data->get();

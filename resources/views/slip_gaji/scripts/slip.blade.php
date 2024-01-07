@@ -343,7 +343,7 @@
 
             var tableTotalTunjanganTeratur = `
                 <tr>
-                    <th class="px-3">TOTAL </th>
+                    <th class="px-3">TOTAL PENDAPATAN</th>
                     <th class="text-right px-3">Rp ${formatRupiahPayroll(data.total_gaji)}</th>
                 </tr>
             `

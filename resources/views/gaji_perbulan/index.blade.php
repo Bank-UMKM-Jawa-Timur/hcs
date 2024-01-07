@@ -2,6 +2,7 @@
 @include('gaji_perbulan.modal.proses')
 @include('gaji_perbulan.modal.perbarui')
 @include('gaji_perbulan.modal.modal-upload')
+@include('gaji_perbulan.modal.penghasilan-kantor')
 @include('gaji_perbulan.script.index')
 @section('content')
     <div class="card-header">
@@ -11,11 +12,14 @@
                     <h5 class="card-title font-weight-bold">Proses Penghasilan Bulanan</h5>
                     <p class="card-title"><a href="">Penghasilan </a> > Proses Penghasilan Bulanan</p>
                 </div>
-                @can('penghasilan - proses penghasilan')
-                    <div>
+                <div>
+                    @if (auth()->user()->hasRole('kepegawaian'))
+                        <button type="button" class="is-btn is-primary btn-show">Penghasilan Semua Kantor</button>
+                    @endif
+                    @can('penghasilan - proses penghasilan')
                         <button type="button" class="is-btn is-primary btn-proses">Proses</button>
-                    </div>
-                @endcan
+                    @endcan
+                </div>
             </div>
         </div>
     </div>

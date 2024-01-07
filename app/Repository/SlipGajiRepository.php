@@ -189,6 +189,7 @@ class SlipGajiRepository
         $karyawan = KaryawanModel::with([
                                 'allGajiByKaryawan' => function($query) use ($nip, $year) {
                                     $query->select(
+                                        'batch.status',
                                         'nip',
                                         DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
                                         'gj_pokok',
@@ -220,8 +221,10 @@ class SlipGajiRepository
                                         DB::raw("(SELECT p.iuran_ik FROM potongan_gaji AS p
                                                 WHERE p.nip = gaji_per_bulan.nip AND p.bulan = gaji_per_bulan.bulan AND p.tahun = gaji_per_bulan.tahun) AS iuran_ik"),
                                     )
+                                    ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                                     ->where('gaji_per_bulan.nip', $nip)
                                     ->where('gaji_per_bulan.tahun', $year)
+                                    ->where('batch.status', 'final')
                                     ->orderBy('bulan')
                                     ->groupBy('gaji_per_bulan.bulan');
                                 },
