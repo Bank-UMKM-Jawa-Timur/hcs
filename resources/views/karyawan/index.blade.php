@@ -93,7 +93,7 @@
                                 <tr>
                                     <td>{{ $i++ }}</td>
                                     <td>{{ $krywn->nip }}</td>
-                                    <td>{{ $krywn->nik }}</td>
+                                    <td>{{ $krywn->nik != '0' ? $krywn->nik : '-' }}</td>
                                     <td>{{ $krywn->nama_karyawan }}</td>
                                     <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
                                     </td>
