@@ -90,12 +90,26 @@ class PenghasilanTidakTeraturController extends Controller
         $z = 0;
 
         $karyawan = DB::table('mst_karyawan')
-            ->where(compact('nip'))
-            ->join('mst_jabatan', 'mst_jabatan.kd_jabatan', '=', 'mst_karyawan.kd_jabatan')
+            ->where('nip', $nip)
+            ->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan')
             ->select('mst_karyawan.*', 'mst_jabatan.nama_jabatan')
             ->first();
-
-        if(in_array($karyawan->kd_entitas, $cabang)){
+            
+        if (!$karyawan->kd_entitas) {
+            $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
+                ->where('kd_cabang', '000')
+                ->where('active', 1)
+                ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
+                ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
+                ->first();
+            $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
+                ->where('kd_cabang', '000')
+                ->where('active', 1)
+                ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
+                ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
+                ->first();
+        }
+        else if(in_array($karyawan->kd_entitas, $cabang)){
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('mst_profil_kantor.kd_cabang', $karyawan->kd_entitas)
                 ->where('active', 1)
