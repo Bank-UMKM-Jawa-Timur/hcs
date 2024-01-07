@@ -530,7 +530,6 @@ class SlipGajiController extends Controller
         if ($user->hasRole('cabang')) {
             $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('kd_entitas', $karyawan->kd_entitas)->first();
             $cabang = DB::table('mst_cabang')->select('kd_cabang', 'nama_cabang')->where('kd_cabang', $karyawan->kd_entitas)->first();
-            return ['pincab' => $pincab, 'cabang' => $cabang];
         } else {
             $pincab = null;
             $cabang = null;
