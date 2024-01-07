@@ -360,7 +360,7 @@
             <table border="1" class="table" style="width: 100%">
                 <thead class="bg-utama text-white">
                     <tr>
-                        <th class="text-center px-3" colspan="2">TOTAL GAJI YANG DITERIMA <i>(TAKE HOME PAY)</i></th>
+                        <th class="text-left px-3" colspan="2">TOTAL GAJI YANG DITERIMA <i>(TAKE HOME PAY)</i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -378,14 +378,14 @@
                             TERBILANG
                         </td>
                         <td style="text-align: left; font-weight: bold">
-                            {{terbilang($takehomepay)}}
+                            {{strtoupper(terbilang($takehomepay))}}
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <p>*) Keterangan: Pajak PPh 21 ditanggung perusahaan.</b></p>
-        <p>*) Dicetak dengan <b>{{env('APP_NAME')}}</b></p>
+        {{-- <p>*) Keterangan: Pajak PPh 21 ditanggung perusahaan.</b></p> --}}
+        <p>*) Dicetak dengan <b>Human Capital System</b></p>
 
         @if (auth()->user()->hasRole('kepegawaian'))
             <div class="ttd" style="display: flex; justify-content: space-between; margin-top: 60px;">
@@ -400,6 +400,23 @@
                     </tr>
                     <tr>
                         <td style="text-align: center; font-weight: 800">{{ $ttdKaryawan->nama_karyawan }}</td>
+                    </tr>
+                </table>
+            </div>
+        @endif
+        @if (auth()->user()->hasRole('cabang'))
+            <div class="ttd" style="display: flex; justify-content: space-between; margin-top: 60px;">
+                <table>
+                </table>
+                <table>
+                    <tr>
+                        <td style="text-align: center; padding-bottom: 3px;" >{{$cabang->nama_cabang}}, {{$tanggal}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; padding-bottom: 60px;" >Pimpinan Cabang</td>
+                    </tr>
+                    <tr>
+                        <td>({{ $pincab->nama_karyawan }})</td>
                     </tr>
                 </table>
             </div>
