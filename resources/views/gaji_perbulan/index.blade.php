@@ -217,7 +217,12 @@
                                             <td class="text-center">{{ $item->tahun }}</td>
                                             <td class="text-center">{{ $months[$item->bulan] }}</td>
                                             <td class="text-center">{{date('d-m-y', strtotime($item->tanggal_input))}}</td>
-                                            <td class="text-center">dummy.xlsx</td>
+                                            <td class="text-center">
+                                                <a href="#" class="btn btn-outline-warning p-1 btn-rincian"
+                                                    data-batch_id="{{$item->id}}">Rincian</a>
+                                                <a href="#" class="btn btn-outline-success p-1 btn-payroll"
+                                                    data-batch_id="{{$item->id}}">Payroll</a>
+                                            </td>
                                             @if ($item->bruto == 0)
                                                 <td class="text-center">-</td>
                                             @else
@@ -438,8 +443,13 @@
             $('.loader-wrapper').removeAttr('style')
             $('#penyesuaian-modal #form').submit()
         })
+    </script>
+    @push('script')
+        <script>
+            
 
         $(".btn-rincian").on("click", function(){
+            console.log('test test');
             var batch_id = $(this).data("batch_id")
             var iteration = 1;
             var table = $("#table-rincian").DataTable({
@@ -706,5 +716,6 @@
             })
             $("#payroll-modal").modal("show")
         })
-    </script>
+        </script>
+    @endpush
 @endsection
