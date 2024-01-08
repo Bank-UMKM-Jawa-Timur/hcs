@@ -13,12 +13,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md">
-                            <label>Periode Penghasilan Terakhir : </label>
-                            <b id="periode_terakhir"></b>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Total Karyawan : </label>

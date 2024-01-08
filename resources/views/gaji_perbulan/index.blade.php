@@ -7,6 +7,7 @@
 @include('gaji_perbulan.modal.perbarui')
 @include('gaji_perbulan.modal.rincian')
 @include('gaji_perbulan.modal.payroll')
+@include('gaji_perbulan.modal.lampir-gaji')
 @section('content')
     <div class="card-header">
         <div class="card-header">
@@ -67,9 +68,9 @@
                                         <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Aksi</th>
                                     </tr>
                                     <tr>
-                                        <th class="text-center">Bruto</th>
-                                        <th class="text-center">Potongan</th>
-                                        <th class="text-center">Netto</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center">Bruto</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center">Potongan</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center">Netto</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -92,16 +93,24 @@
                                             <td class="text-center">{{ $months[$item->bulan] }}</td>
                                             <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-outline-warning p-1 btn-rincian"
-                                                    data-batch_id="{{$item->id}}">Rincian</a>
-                                                <a href="#" class="btn btn-outline-success p-1 btn-payroll"
-                                                    data-batch_id="{{$item->id}}">Payroll</a>
+                                                @can('penghasilan - proses penghasilan - rincian')
+                                                    <a href="#" class="btn btn-outline-warning p-1 btn-rincian"
+                                                        data-batch_id="{{$item->id}}">Rincian</a>
+                                                @endcan
+                                                @can('penghasilan - proses penghasilan - payroll')
+                                                    <a href="#" class="btn btn-outline-success p-1 btn-payroll"
+                                                        data-batch_id="{{$item->id}}">Payroll</a>
+                                                @endcan
                                                 @if ($item->tanggal_cetak != null)
-                                                    @if ($item->file == null)
-                                                        <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload Lampiran Gaji</a>
-                                                    @endif
+                                                    @can('penghasilan - proses penghasilan - lampiran gaji - upload')
+                                                        @if ($item->file == null)
+                                                            <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload Lampiran Gaji</a>
+                                                        @endif
+                                                    @endcan
                                                 @else
-                                                    <a class="btn btn-outline-primary p-1 btn-download-pdf " id="download" href="#" data-id={{ $item->id }}>Cetak Lampiran Gaji</a>
+                                                    @can('penghasilan - proses penghasilan - lampiran gaji')
+                                                        <a href="#" class="btn btn-outline-primary p-1 btn-lampiran-gaji" data-id="{{$item->id}}">Lampiran Gaji</a>
+                                                    @endcan
                                                 @endif
                                             </td>
                                             @if ($item->bruto == 0)
@@ -132,11 +141,24 @@
                                             <td class="text-center">
                                                 @if($item->status == 'proses')
                                                     @if($item->total_penyesuaian > 0)
-                                                        <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
-                                                            data-batch_id="{{$item->id}}">Perbarui</a>
+                                                        @can('penghasilan - proses penghasilan')
+                                                            <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
+                                                                data-batch_id="{{$item->id}}">Perbarui</a>
+                                                        @endcan
                                                     @else
-                                                        <a href="#" class="btn btn-outline-success p-1 btn-final"
-                                                            data-batch_id="{{$item->id}}">Proses Final</a>
+                                                        @can('penghasilan - proses penghasilan')
+                                                            @if ($item->tanggal_cetak != null)
+                                                                @if ($item->file != null)
+                                                                    @php
+                                                                        $now = date('Y-m-d');
+                                                                    @endphp
+                                                                    {{--  @if ($item->tanggal_input == $now)  --}}
+                                                                        <a href="#" class="btn btn-outline-success p-1 btn-final"
+                                                                            data-batch_id="{{$item->id}}">Proses Final</a>
+                                                                    {{--  @endif  --}}
+                                                                @endif
+                                                            @endif
+                                                        @endcan
                                                     @endif
                                                 @else
                                                     -
@@ -194,9 +216,9 @@
                                         <th style="border: 1px solid #dee2e6;" class="text-center" colspan="3">Total</th>
                                     </tr>
                                     <tr>
-                                        <th class="text-center">Bruto</th>
-                                        <th class="text-center">Potongan</th>
-                                        <th class="text-center">Netto</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center">Bruto</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center">Potongan</th>
+                                        <th style="border: 1px solid #dee2e6;" class="text-center">Netto</th>
                                     </tr>
                                 </thead>
                                 <tbody>

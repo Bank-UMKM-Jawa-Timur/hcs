@@ -8,17 +8,19 @@
         <p class="card-title"><a href="/">Penghasilan</a> > Penghasilan Teratur</p>
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
-        @if (auth()->user()->hasRole(['kepegawaian']))
+        @can('penghasilan - import - penghasilan teratur - import')
             <a class="ml-3" href="{{ route('penghasilan.import-penghasilan-teratur.create') }}">
                 <button class="is-btn is-primary">Import</button>
             </a>
-        @endif
+        @endcan
         @can('penghasilan - import - penghasilan teratur - download vitamin')
-            <a class="ml-3">
-                <button type="button" class="is-btn is-primary ml-2" data-toggle="modal" data-target="#modal-cetak-vitamin">
-                    Download Vitamin
-                </button>
-            </a>
+            @if ($data->total() > 0)
+                <a class="ml-3">
+                    <button type="button" class="is-btn is-primary ml-2" data-toggle="modal" data-target="#modal-cetak-vitamin">
+                        Download Vitamin
+                    </button>
+                </a>
+            @endif
         @endcan
     </div>
 </div>

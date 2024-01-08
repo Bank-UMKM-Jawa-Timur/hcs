@@ -886,8 +886,8 @@ class GajiPerBulanController extends Controller
                         $tj = DB::table('transaksi_tunjangan')
                                 ->where('nip', $item->nip)
                                 ->where('id_tunjangan', $tunj->id)
-                                ->where('tahun', $tahun)
-                                ->where('bulan', $bulan)
+                                ->whereYear('tanggal', intval($tahun))
+                                ->whereMonth('tanggal', intval($bulan))
                                 ->first();
                         array_push($tunjangan, ($tj != null) ? $tj->nominal : 0);
                         if ($tunj->status) {
@@ -1277,6 +1277,7 @@ class GajiPerBulanController extends Controller
             $penghasilanTidakTeraturBulanIni = DB::table('penghasilan_tidak_teratur')
                 ->join('mst_tunjangan AS m', 'm.id', 'penghasilan_tidak_teratur.id_tunjangan')
                 ->where('m.kategori', 'tidak teratur')
+                ->where('nip', $karyawan->nip)
                 ->where('bulan', $bulan)
                 ->where('tahun', $tahun)
                 ->whereDate('penghasilan_tidak_teratur.created_at', '<', $tanggal)
@@ -1285,8 +1286,8 @@ class GajiPerBulanController extends Controller
                 ->join('mst_tunjangan AS m', 'm.id', 'penghasilan_tidak_teratur.id_tunjangan')
                 ->where('m.kategori', 'bonus')
                 ->where('nip', $karyawan->nip)
-                ->where('tahun', $tahun)
-                ->where('bulan', $bulan)
+                ->where('tahun', intval($tahun))
+                ->where('bulan', intval($bulan))
                 ->whereDate('penghasilan_tidak_teratur.created_at', '<', $tanggal)
                 ->sum('penghasilan_tidak_teratur.nominal');
             $totalGajiBulanIni = $karyawan->gj_pokok + $karyawan->gj_penyesuaian;
@@ -1858,6 +1859,34 @@ class GajiPerBulanController extends Controller
                         ->make(true);
     }
 
+    public function getLampiranGaji($id){
+        $data = DB::table('batch_gaji_per_bulan AS batch')
+        ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+        ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+        ->select(
+            'batch.id',
+            'batch.tanggal_input',
+            'batch.tanggal_final',
+            'batch.status',
+            'gaji.bulan',
+            'gaji.tahun',
+        )->where('batch.id',$id)->first();
+        $year = date('Y',strtotime($data->tanggal_input));
+        $month = str_replace('0','',date('m',strtotime($data->tanggal_input)));
+        $kantor = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
+        $cetak = new CetakGajiRepository;
+        $result = $cetak->cetak($kantor, $month, $year,$id);
+
+        return DataTables::of($result)
+                        ->addColumn('counter', function ($row) {
+                            static $count = 0;
+                            $count++;
+                            return $count;
+                        })
+                        ->rawColumns(['counter'])
+                        ->make(true);
+    }
+
     function cetak($id) {
         $data = DB::table('batch_gaji_per_bulan AS batch')
         ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
@@ -1872,14 +1901,7 @@ class GajiPerBulanController extends Controller
         )->where('batch.id',$id)->first();
         $year = date('Y',strtotime($data->tanggal_input));
         $month = str_replace('0','',date('m',strtotime($data->tanggal_input)));
-        $is_pusat = auth()->user()->hasRole('kepegawaian');
-        $is_cabang = auth()->user()->hasRole('cabang');
-        if ($is_pusat) {
-            $kantor = 'pusat';
-        }
-        if($is_cabang){
-            $kantor = auth()->user()->kd_cabang;
-        }
+        $kantor = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
         $cetak = new CetakGajiRepository;
         $result = $cetak->cetak($kantor, $month, $year,$id);
 
