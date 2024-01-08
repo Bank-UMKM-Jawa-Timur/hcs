@@ -140,13 +140,14 @@ class PayrollRepository
                                         'tj_kesejahteraan',
                                         'tj_multilevel',
                                         'tj_ti',
+                                        'tj_fungsional',
                                         'tj_transport',
                                         'tj_pulsa',
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
@@ -911,13 +912,14 @@ class PayrollRepository
                                         'tj_kesejahteraan',
                                         'tj_multilevel',
                                         'tj_ti',
+                                        'tj_fungsional',
                                         'tj_transport',
                                         'tj_pulsa',
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
@@ -1566,6 +1568,28 @@ class PayrollRepository
         $grand_footer_iuran_ik = 0;
         $grand_footer_total_potongan = 0;
         $grand_footer_total_diterima = 0;
+        $total_gj_pokok = 0;
+        $total_gj_penyesuaian = 0;
+        $total_tj_keluarga = 0;
+        $total_tj_telepon = 0;
+        $total_tj_jabatan = 0;
+        $total_tj_teller = 0;
+        $total_tj_perumahan = 0;
+        $total_tj_kemahalan = 0;
+        $total_tj_pelaksana = 0;
+        $total_tj_kesejahteraan = 0;
+        $total_tj_multilevel = 0;
+        $total_tj_ti = 0;
+        $total_tj_fungsional = 0;
+        $total_tj_khusus = 0;
+        $total_tj_transport = 0;
+        $total_tj_pulsa = 0;
+        $total_tj_vitamin = 0;
+        $total_uang_makan = 0;
+        $total_dpp = 0;
+        $total_total_gaji = 0;
+        $total_pph_harus_dibayar = 0;
+
         foreach ($data as $item) {
             $total_gaji = $item->gaji ? number_format($item->gaji->total_gaji, 0, ',', '.') : 0;
             $dpp = $item->potongan ? number_format($item->potongan->dpp, 0, ',', '.') : 0;
@@ -1576,7 +1600,37 @@ class PayrollRepository
             $iuran_ik = $item->potonganGaji ? number_format($item->potonganGaji->iuran_ik, 0, ',', '.') : 0;
             $total_potongan = number_format($item->total_potongan, 0, ',', '.');
             $total_diterima = $item->total_yg_diterima ? number_format($item->total_yg_diterima, 0, ',', '.') : 0;
-            // count total
+            // count total rincian
+            $total_gj_pokok += $item->gaji->gj_pokok;
+            $total_gj_penyesuaian += $item->gaji->gj_penyesuaian;
+            $total_tj_keluarga += $item->gaji->tj_keluarga;
+            $total_tj_telepon += $item->gaji->tj_telepon;
+            $total_tj_jabatan += $item->gaji->tj_jabatan;
+            $total_tj_teller += $item->gaji->tj_teller;
+            $total_tj_perumahan += $item->gaji->tj_perumahan;
+            $total_tj_kemahalan += $item->gaji->tj_kemahalan;
+            $total_tj_pelaksana += $item->gaji->tj_pelaksana;
+            $total_tj_kemahalan += $item->gaji->tj_kemahalan;
+            $total_tj_kesejahteraan += $item->gaji->tj_kesejahteraan;
+            $total_tj_multilevel += $item->gaji->tj_multilevel;
+            $total_tj_ti += $item->gaji->tj_ti;
+            $total_tj_fungsional += $item->gaji->tj_fungsional;
+            $total_tj_khusus += ($item->gaji->tj_multilevel + $item->gaji->tj_ti + $item->gaji->tj_fungsional);
+            $total_tj_transport += $item->gaji->tj_transport;
+            $total_tj_pulsa += $item->gaji->tj_pulsa;
+            $total_tj_vitamin += $item->gaji->tj_vitamin;
+            $total_uang_makan += $item->gaji->uang_makan;
+            $total_dpp += $item->gaji->dpp;
+            $total_total_gaji += $item->gaji->total_gaji;
+            if ($item->perhitungan_pph21) {
+                if ($item->perhitungan_pph21->pph_pasal_21) {
+                    if ($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar > 0) {
+                        $total_pph_harus_dibayar += $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar;
+                    }
+                }
+            }
+            
+            // count total payroll
             $grand_footer_total_gaji += str_replace('.', '', $total_gaji);
             $grand_footer_bpjs_tk += str_replace('.', '', $bpjs_tk);
             $grand_footer_dpp += str_replace('.', '', $dpp);
@@ -1588,6 +1642,28 @@ class PayrollRepository
             $grand_footer_total_diterima += str_replace('.', '', $total_diterima);
         }
         $result = [
+            'total_gj_pokok' => $total_gj_pokok,
+            'total_gj_penyesuaian' => $total_gj_penyesuaian,
+            'total_tj_keluarga' => $total_tj_keluarga,
+            'total_tj_telepon' => $total_tj_telepon,
+            'total_tj_jabatan' => $total_tj_jabatan,
+            'total_tj_teller' => $total_tj_teller,
+            'total_tj_perumahan' => $total_tj_perumahan,
+            'total_tj_kemahalan' => $total_tj_kemahalan,
+            'total_tj_pelaksana' => $total_tj_pelaksana,
+            'total_tj_kemahalan' => $total_tj_kemahalan,
+            'total_tj_kesejahteraan' => $total_tj_kesejahteraan,
+            'total_tj_multilevel' => $total_tj_multilevel,
+            'total_tj_ti' => $total_tj_ti,
+            'total_tj_fungsional' => $total_tj_fungsional,
+            'total_tj_khusus' => $total_tj_khusus,
+            'total_tj_transport' => $total_tj_transport,
+            'total_tj_pulsa' => $total_tj_pulsa,
+            'total_tj_vitamin' => $total_tj_vitamin,
+            'total_uang_makan' => $total_uang_makan,
+            'total_dpp' => $total_dpp,
+            'total_total_gaji' => $total_total_gaji,
+            'total_pph_harus_dibayar' => $total_pph_harus_dibayar,
             'grand_total_gaji' => $grand_footer_total_gaji,
             'grand_bpjs_tk' => $grand_footer_bpjs_tk,
             'grand_dpp' => $grand_footer_dpp,
@@ -1718,13 +1794,14 @@ class PayrollRepository
                                         'tj_kesejahteraan',
                                         'tj_multilevel',
                                         'tj_ti',
+                                        'tj_fungsional',
                                         'tj_transport',
                                         'tj_pulsa',
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
