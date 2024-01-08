@@ -2430,6 +2430,7 @@ class PayrollRepository
             $perhitunganPph21->pph_pasal_21 = $pphPasal21;
             $karyawan->perhitungan_pph21 = $perhitunganPph21;
         }
+
         return $data;
     }
 }

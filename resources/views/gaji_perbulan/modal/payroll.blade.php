@@ -26,8 +26,8 @@
                             <th rowspan="2" class="text-center">Total Yang Diterima</th>
                         </tr>
                         <tr>
-                            <th class="text-center">JP BPJS TK 1%</th>
                             <th class="text-center">DPP 5%</th>
+                            <th class="text-center">JP BPJS TK 1%</th>
                             <th class="text-center">Kredit Koperasi</th>
                             <th class="text-center">Iuaran Koperasi</th>
                             <th class="text-center">Kredit Pegawai</th>
@@ -36,6 +36,34 @@
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot >
+                        <tr class="total">
+                            <th colspan="2" class="text-center">Total</th>
+                            <th class="text-right"></th>
+                            <th></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                        </tr>
+                        <tr class="grandtotalPayroll">
+                             <th colspan="2" class="text-center"></th>
+                             <th class="text-right"></th>
+                             <th></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                         </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

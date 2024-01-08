@@ -13,7 +13,7 @@
             </div>
         </center>
         <div>
-            <h4 class="text-center">Harap Tunggu, Data Sedang Diproses...</h4>
+            <h4 class="text-center">Harap Tunggu, Data sedang diproses...</h4>
         </div>
     </div>
 </div>

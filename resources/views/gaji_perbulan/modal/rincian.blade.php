@@ -37,6 +37,38 @@ max-width: 90%;
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot >
+                        <tr class="total">
+                            <th colspan="2" class="text-center">Total</th>
+                            <th class="text-right"></th>
+                            <th></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                        </tr>
+                        <tr class="grandtotal">
+                             <th colspan="2" class="text-center"></th>
+                             <th class="text-right"></th>
+                             <th></th>
+                             <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                            <th class="text-right"></th>
+                         </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
