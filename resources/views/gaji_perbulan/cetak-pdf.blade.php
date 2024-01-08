@@ -111,8 +111,8 @@
                         <th rowspan="2" class="text-center">Total Yang Diterima</th>
                     </tr>
                     <tr>
-                        <th class="text-center">JP BPJS TK 1%</th>
                         <th class="text-center">DPP 5%</th>
+                        <th class="text-center">JP BPJS TK 1%</th>
                         <th class="text-center">Kredit Koperasi</th>
                         <th class="text-center">Iuaran Koperasi</th>
                         <th class="text-center">Kredit Pegawai</th>
@@ -180,8 +180,8 @@
                         <th colspan="2" class="text-center">Jumlah</th>
                         <th class="text-end" align="right">{{ number_format($footer_total_gaji, 0, ',', '.') }}</th>
                         <th></th>
-                        <th class="text-end" align="right">{{ number_format($footer_bpjs_tk, 0, ',', '.') }}</th>
                         <th class="text-end" align="right">{{ number_format($footer_dpp, 0, ',', '.') }}</th>
+                        <th class="text-end" align="right">{{ number_format($footer_bpjs_tk, 0, ',', '.') }}</th>
                         <th class="text-end" align="right">{{ number_format($footer_kredit_koperasi, 0, ',', '.') }}</th>
                         <th class="text-end" align="right">{{ number_format($footer_iuran_koperasi, 0, ',', '.') }}</th>
                         <th class="text-end" align="right">{{ number_format($footer_kredit_pegawai, 0, ',', '.') }}</th>
