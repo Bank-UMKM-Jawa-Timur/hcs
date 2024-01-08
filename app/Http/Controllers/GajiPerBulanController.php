@@ -1740,7 +1740,14 @@ class GajiPerBulanController extends Controller
 
         $payrollRepo = new PayrollRepository;
         $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak);
-        return DataTables::of($data)->make(true);
+        return DataTables::of($data)
+                        ->addColumn('counter', function ($row) {
+                            static $count = 0;
+                            $count++;
+                            return $count;
+                        })
+                        ->rawColumns(['counter'])
+                        ->make(true);
     }
 
     function cetak($id) {

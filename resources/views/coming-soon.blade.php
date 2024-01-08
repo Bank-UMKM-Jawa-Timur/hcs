@@ -23,9 +23,9 @@
         <div class="masthead">
             <div class="masthead-content text-white">
                 <div class="container-fluid px-4 px-lg-0">
-                    <h1 class="fst-italic lh-1 mb-4">Our Website is Coming Soon</h1>
-                    <p class="mb-5">We're working hard to finish the development of this site. Sign up below to receive updates and to be notified when we launch!</p>
-                    <a href="{{ route('login') }}" class="btn btn-primary">Dashboard</a>
+                    <h1 class="fst-italic lh-1 mb-4">This feature is Coming Soon</h1>
+                    <p class="mb-5">We're working hard to finish the development of this feature. Sign up below to receive updates and to be notified when we launch!</p>
+                    {{--  <a href="{{ route('login') }}" class="btn btn-primary">Dashboard</a>  --}}
                 </div>
             </div>
         </div>

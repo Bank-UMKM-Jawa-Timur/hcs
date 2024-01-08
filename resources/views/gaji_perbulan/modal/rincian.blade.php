@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Rincian</h5>
-                <button class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -30,11 +30,6 @@
                     <tbody>
                     </tbody>
                 </table>
-            </div>
-            <div class="modal-footer">
-                <button class="btn is-primary" data-dismiss="modal" aria-label="Close">
-                    Tutup
-                </button>                
             </div>
         </div>
     </div>

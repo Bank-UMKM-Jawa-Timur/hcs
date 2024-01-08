@@ -1,15 +1,13 @@
 @extends('layouts.template')
 
 @section('content')
-<div class="card-header">
+@include('coming-soon')
+{{--  <div class="card-header">
     <div class="d-flex justify-content-between">
         <div>
             <h5 class="card-title font-weight-bold">Dashboard</h5>
             <p class="card-title"><a href="/">Dashboard </a></p>
         </div>
-        {{-- <div class="mt-4">
-            <a href="{{ route('per-cabang') }}" class="is-btn btn-info">Detail</a>
-        </div> --}}
     </div>
 </div>
 <div class="card-body">
@@ -92,7 +90,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>  --}}
 @endsection
 
 @section('custom_script')
