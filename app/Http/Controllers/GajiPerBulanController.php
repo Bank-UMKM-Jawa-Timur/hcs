@@ -1790,14 +1790,7 @@ class GajiPerBulanController extends Controller
         )->where('batch.id',$id)->first();
         $year = date('Y',strtotime($data->tanggal_input));
         $month = str_replace('0','',date('m',strtotime($data->tanggal_input)));
-        $is_pusat = auth()->user()->hasRole('kepegawaian');
-        $is_cabang = auth()->user()->hasRole('cabang');
-        if ($is_pusat) {
-            $kantor = 'pusat';
-        }
-        if($is_cabang){
-            $kantor = auth()->user()->kd_cabang;
-        }
+        $kantor = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
         $cetak = new CetakGajiRepository;
         $result = $cetak->cetak($kantor, $month, $year,$id);
 
@@ -1825,14 +1818,7 @@ class GajiPerBulanController extends Controller
         )->where('batch.id',$id)->first();
         $year = date('Y',strtotime($data->tanggal_input));
         $month = str_replace('0','',date('m',strtotime($data->tanggal_input)));
-        $is_pusat = auth()->user()->hasRole('kepegawaian');
-        $is_cabang = auth()->user()->hasRole('cabang');
-        if ($is_pusat) {
-            $kantor = 'pusat';
-        }
-        if($is_cabang){
-            $kantor = auth()->user()->kd_cabang;
-        }
+        $kantor = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
         $cetak = new CetakGajiRepository;
         $result = $cetak->cetak($kantor, $month, $year,$id);
 

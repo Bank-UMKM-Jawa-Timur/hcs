@@ -10,10 +10,12 @@
             <div class="">
             </div>
             <div class="modal-body table-responsive">
-                <br>
-                <a class="is-btn is-primary mb-3 btn-download-pdf " id="download" href="#" data-id="">Cetak PDF</a>
-                <br>
-                <br>
+                @can('penghasilan - proses penghasilan - lampiran gaji - cetak')
+                    <br>
+                        <a class="is-btn is-primary mb-3 btn-download-pdf " id="download" href="#" data-id="">Cetak</a>
+                    <br>
+                    <br>
+                @endcan
                 <table class="table whitespace-nowrap table-bordered" id="table-lampiran-gaji" style="width: 100%;">
                     <thead class="text-primary" style="border:1px solid #e3e3e3 !important">
                         <tr>
