@@ -1776,6 +1776,34 @@ class GajiPerBulanController extends Controller
                         ->make(true);
     }
 
+    public function getLampiranGaji($id){
+        $data = DB::table('batch_gaji_per_bulan AS batch')
+        ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+        ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+        ->select(
+            'batch.id',
+            'batch.tanggal_input',
+            'batch.tanggal_final',
+            'batch.status',
+            'gaji.bulan',
+            'gaji.tahun',
+        )->where('batch.id',$id)->first();
+        $year = date('Y',strtotime($data->tanggal_input));
+        $month = str_replace('0','',date('m',strtotime($data->tanggal_input)));
+        $kantor = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
+        $cetak = new CetakGajiRepository;
+        $result = $cetak->cetak($kantor, $month, $year,$id);
+
+        return DataTables::of($result)
+                        ->addColumn('counter', function ($row) {
+                            static $count = 0;
+                            $count++;
+                            return $count;
+                        })
+                        ->rawColumns(['counter'])
+                        ->make(true);
+    }
+
     function cetak($id) {
         $data = DB::table('batch_gaji_per_bulan AS batch')
         ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
@@ -1790,14 +1818,7 @@ class GajiPerBulanController extends Controller
         )->where('batch.id',$id)->first();
         $year = date('Y',strtotime($data->tanggal_input));
         $month = str_replace('0','',date('m',strtotime($data->tanggal_input)));
-        $is_pusat = auth()->user()->hasRole('kepegawaian');
-        $is_cabang = auth()->user()->hasRole('cabang');
-        if ($is_pusat) {
-            $kantor = 'pusat';
-        }
-        if($is_cabang){
-            $kantor = auth()->user()->kd_cabang;
-        }
+        $kantor = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
         $cetak = new CetakGajiRepository;
         $result = $cetak->cetak($kantor, $month, $year,$id);
 
