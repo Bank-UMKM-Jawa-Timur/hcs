@@ -509,13 +509,18 @@
         cekStatus();
         jabatanChange();
         var gaji_pokok = $("#gj_pokok").val();
-        console.log(gaji_pokok);
         if(gaji_pokok != undefined){
             $("#gj_pokok").val(formatRupiah($("#gj_pokok").val()));
         }
+        var gj_penyesuaian = $('#gj_penyesuaian').val();
+        if (gj_penyesuaian != undefined) {
+            $("#gj_penyesuaian").val(formatRupiah($("#gj_penyesuaian").val()));
+        }
 
-        // $("#gj_penyesuaian").val(formatRupiah($("#gj_penyesuaian").val()));
-        // $("#nominal").val(formatRupiah($("#nominal").val()));
+        var nominal = $('#nominal').val();
+        if (nominal != undefined) {
+            $("#nominal").val(formatRupiah($("#nominal").val()));
+        }
 
         $("#is_jml_anak").keyup(function(){
             $("#row_anak").empty();

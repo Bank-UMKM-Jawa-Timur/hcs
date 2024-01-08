@@ -103,13 +103,13 @@
                                             <div class="row">
                                                 @can('manajemen karyawan - data karyawan - edit karyawan')
                                                     <a href="{{ route('karyawan.edit', $krywn->nip) }}"
-                                                        class="btn btn-outline-warning p-1 mr-2"
+                                                        class="btn btn-outline-warning mr-2"
                                                         style="min-width: 60px">
                                                         Edit
                                                     </a>
                                                 @elsecan('manajemen karyawan - data karyawan - edit karyawan - edit potongan')
                                                     <a href="{{ route('karyawan.edit', $krywn->nip) }}"
-                                                        class="btn btn-outline-warning p-1 mr-2"
+                                                        class="btn btn-outline-warning mr-2"
                                                         style="min-width: 60px">
                                                         Edit Potongan
                                                     </a>
