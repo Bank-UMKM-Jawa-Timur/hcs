@@ -238,7 +238,6 @@ class PayrollRepository
                                 $data=  $data->paginate($limit);
                             }
 
-
         foreach ($data as $key => $karyawan) {
             $ptkp = null;
             if ($karyawan->keluarga) {
@@ -950,7 +949,7 @@ class PayrollRepository
                                 }
                             ])
                             ->select(
-                                'nip',
+                                'mst_karyawan.nip',
                                 'nama_karyawan',
                                 'npwp',
                                 'no_rekening',
@@ -959,17 +958,19 @@ class PayrollRepository
                                 'jkn',
                                 DB::raw("
                                     IF(
-                                        status = 'Kawin',
+                                        mst_karyawan.status = 'Kawin',
                                         'K',
                                         IF(
-                                            status = 'Belum Kawin',
+                                            mst_karyawan.status = 'Belum Kawin',
                                             'TK',
-                                            status
+                                            mst_karyawan.status
                                         )
                                     ) AS status
                                 "),
                                 'status_karyawan',
                             )
+                            ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
+                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
                             ->orderByRaw("
                                 CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
@@ -988,21 +989,20 @@ class PayrollRepository
                                 ->whereNull('tanggal_penonaktifan')
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
-                                        $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
+                                        $q->where(function($q2) use($kode_cabang_arr) {
+                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
+                                                ->orWhereNull('mst_karyawan.kd_entitas');
+                                        });
                                     }
                                     else {
-                                        $q->orWhere('mst_karyawan.kd_entitas', $kantor);
+                                        $q->where('mst_karyawan.kd_entitas', $kantor);
                                     }
                                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
-                                });
-                            });
-                            if ($cetak == 'cetak') {
-                                $data = $data->get();
-                            }else{
-                                $data=  $data->get();
-                            }
-
-
+                                })
+                                ->where('gaji_per_bulan.bulan', $month)
+                                ->where('gaji_per_bulan.tahun', $year)
+                                ->where('batch.status', 'final');
+                            })->get();
         foreach ($data as $key => $karyawan) {
             $ptkp = null;
             if ($karyawan->keluarga) {
@@ -1629,7 +1629,7 @@ class PayrollRepository
                     }
                 }
             }
-            
+
             // count total payroll
             $grand_footer_total_gaji += str_replace('.', '', $total_gaji);
             $grand_footer_bpjs_tk += str_replace('.', '', $bpjs_tk);
@@ -1678,7 +1678,7 @@ class PayrollRepository
 
     }
 
-    
+
     public function getJson($kantor, $month, $year, $cetak) {
         /**
          * PPH 21
@@ -1875,6 +1875,9 @@ class PayrollRepository
                             ->orderByRaw($this->orderRaw)
                             ->orderBy('nip', 'asc')
                             ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+                            ->where('gaji_per_bulan.bulan', $month)
+                            ->where('gaji_per_bulan.tahun', $year)
+                            ->where('batch.status', 'final')
                             ->get();
         foreach ($data as $key => $karyawan) {
             $ptkp = null;
