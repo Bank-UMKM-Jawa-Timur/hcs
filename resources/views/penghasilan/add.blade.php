@@ -64,7 +64,7 @@
                         $("#keterangan").addClass('hidden')
                     }
 
-                    url = "{{ route('api.get.karyawan') }}";
+                    url = "{{ route('api.get.karyawan2') }}";
 
                     $('#table-data').addClass('hidden');
                     $('#table_item tbody').empty();
@@ -97,6 +97,8 @@
                                 var nipDataRequest = [];
 
                                 var checkNip = [];
+                                var noCheckEmpty = 1;
+                                var no = 1;
 
                                 var hasError = false;
                                 var hasSuccess = false;
@@ -138,38 +140,76 @@
                                             `);
                                         },
                                         success: function (res) {
+                                            console.log(res);
                                             $('#table-data').removeClass('hidden');
                                             var new_body_tr = ``
                                             $.each(res,function(key,value) {
-                                                nipDataRequest.push(value.nip);
                                                 // if (res.some(checkUsername)) {
                                                 if (value.cek == '-') {
-                                                    checkNip.push(value.nip);
+                                                    checkNip.push(value.nip + " row " + noCheckEmpty++);
                                                     hasError = true
                                                 }
-                                                grand_total += parseInt(dataNominal[key])
-                                                var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
-                                                    <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                        <span>${dataKeterangan[key]}</span>
-                                                    </td>` : ``;
-                                                new_body_tr += `
-                                                    <tr>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span>${key + 1}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span>${formatRupiah(dataNominal[key])}</span>
+                                                if (value.cek == '-') {
+                                                    nipDataRequest.push(value.nip);
+                                                    grand_total += parseInt(dataNominal[key])
+                                                    var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
+                                                        <td class="table-danger">
+                                                            <span>${dataKeterangan[key]}</span>
+                                                        </td>` : ``;
+                                                    new_body_tr += `
+                                                        <tr>
+                                                            <td class="table-danger">
+                                                                <span>${no++}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span class="text-danger">${value.nip}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span class="text-danger">${value.nama_karyawan}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span>${formatRupiah(dataNominal[key])}</span>
+    
+                                                            </td>
+                                                            ${rowKeterangan}
+                                                        </tr>
+                                                    `;
+                                                }
 
-                                                        </td>
-                                                        ${rowKeterangan}
-                                                    </tr>
-                                                `;
+                                            })
+                                            $.each(res,function(key,value) {
+                                                // if (res.some(checkUsername)) {
+                                                if (value.cek == '-') {
+                                                    // checkNip.push(value.nip);
+                                                    hasError = true
+                                                }
+                                                if (value.cek == '-') {
+                                                }else{
+                                                    nipDataRequest.push(value.nip);
+                                                    grand_total += parseInt(dataNominal[key])
+                                                    var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
+                                                        <td class="">
+                                                            <span>${dataKeterangan[key]}</span>
+                                                        </td>` : ``;
+                                                    new_body_tr += `
+                                                        <tr>
+                                                            <td class="">
+                                                                <span>${no++}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span>${formatRupiah(dataNominal[key])}</span>
+    
+                                                            </td>
+                                                            ${rowKeterangan}
+                                                        </tr>
+                                                    `;
+                                                }
 
                                             })
                                             if (hasError == true) {
