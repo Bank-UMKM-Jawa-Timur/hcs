@@ -10,8 +10,8 @@
             <th rowspan="2" class="text-center">Total Yang Diterima</th>
         </tr>
         <tr>
-            <th class="text-center">JP BPJS TK 1%</th>
             <th class="text-center">DPP 5%</th>
+            <th class="text-center">JP BPJS TK 1%</th>
             <th class="text-center">Kredit Koperasi</th>
             <th class="text-center">Iuaran Koperasi</th>
             <th class="text-center">Kredit Pegawai</th>
@@ -48,8 +48,8 @@
                 <td>{{ $item->nama_karyawan }}</td>
                 <td class="text-right">{{ $total_gaji }}</td>
                 <td class="text-center">{{ $norek }}</td>
-                <td class="text-right">{{ round($bpjs_tk) }}</td>
                 <td class="text-right">{{ round($dpp) }}</td>
+                <td class="text-right">{{ round($bpjs_tk) }}</td>
                 <td class="text-right">{{ round($kredit_koperasi) }}</td>
                 <td class="text-right">{{ round($iuran_koperasi) }}</td>
                 <td class="text-right">{{ round($kredit_pegawai) }}</td>
