@@ -503,7 +503,7 @@
                         }
                     },
                     {
-                        data: "potonganGaji.kredit_koperasi",
+                        data: "potongan_gaji.kredit_koperasi",
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -514,7 +514,7 @@
                         }
                     },
                     {
-                        data: "potonganGaji.iuran_koperasi",
+                        data: "potongan_gaji.iuran_koperasi",
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -525,7 +525,7 @@
                         }
                     },
                     {
-                        data: "potonganGaji.kredit_pegawai",
+                        data: "potongan_gaji.kredit_pegawai",
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -536,7 +536,7 @@
                         }
                     },
                     {
-                        data: "potonganGaji.iuran_ik",
+                        data: "potongan_gaji.iuran_ik",
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render

@@ -90,7 +90,7 @@
                                             <td class="text-center">{{ $i++ }}</td>
                                             <td class="text-center">{{ $item->tahun }}</td>
                                             <td class="text-center">{{ $months[$item->bulan] }}</td>
-                                            <td class="text-center">{{date('d-m-y', strtotime($item->tanggal_input))}}</td>
+                                            <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
                                             <td class="text-center">
                                                 <a href="#" class="btn btn-outline-warning p-1 btn-rincian"
                                                     data-batch_id="{{$item->id}}">Rincian</a>
@@ -216,7 +216,7 @@
                                             <td class="text-center">{{ $i++ }}</td>
                                             <td class="text-center">{{ $item->tahun }}</td>
                                             <td class="text-center">{{ $months[$item->bulan] }}</td>
-                                            <td class="text-center">{{date('d-m-y', strtotime($item->tanggal_input))}}</td>
+                                            <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
                                             <td class="text-center">
                                                 <a href="#" class="btn btn-outline-warning p-1 btn-rincian"
                                                     data-batch_id="{{$item->id}}">Rincian</a>

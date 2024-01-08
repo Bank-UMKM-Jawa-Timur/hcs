@@ -217,10 +217,13 @@ class PayrollRepository
                                 ->whereNull('tanggal_penonaktifan')
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
-                                        $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
+                                        $q->where(function($q2) use($kode_cabang_arr) {
+                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
+                                                ->orWhereNull('mst_karyawan.kd_entitas');
+                                        });
                                     }
                                     else {
-                                        $q->orWhere('mst_karyawan.kd_entitas', $kantor);
+                                        $q->where('mst_karyawan.kd_entitas', $kantor);
                                     }
                                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
                                 })
@@ -1780,10 +1783,13 @@ class PayrollRepository
                                 ->whereNull('tanggal_penonaktifan')
                                 ->where(function($q) use ($kantor, $kode_cabang_arr) {
                                     if ($kantor == 'pusat') {
-                                        $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
+                                        $q->where(function($q2) use($kode_cabang_arr) {
+                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
+                                                ->orWhereNull('mst_karyawan.kd_entitas');
+                                        });
                                     }
                                     else {
-                                        $q->orWhere('mst_karyawan.kd_entitas', $kantor);
+                                        $q->where('mst_karyawan.kd_entitas', $kantor);
                                     }
                                 });
                             })
