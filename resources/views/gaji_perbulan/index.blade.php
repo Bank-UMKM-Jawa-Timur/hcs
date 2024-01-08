@@ -90,12 +90,19 @@
                                             <td class="text-center">{{ $i++ }}</td>
                                             <td class="text-center">{{ $item->tahun }}</td>
                                             <td class="text-center">{{ $months[$item->bulan] }}</td>
-                                            <td class="text-center">{{date('d-m-y', strtotime($item->tanggal_input))}}</td>
+                                            <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
                                             <td class="text-center">
                                                 <a href="#" class="btn btn-outline-warning p-1 btn-rincian"
                                                     data-batch_id="{{$item->id}}">Rincian</a>
                                                 <a href="#" class="btn btn-outline-success p-1 btn-payroll"
                                                     data-batch_id="{{$item->id}}">Payroll</a>
+                                                @if ($item->tanggal_cetak != null)
+                                                    @if ($item->file == null)
+                                                        <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload Lampiran Gaji</a>
+                                                    @endif
+                                                @else
+                                                    <a class="btn btn-outline-primary p-1 btn-download-pdf " id="download" href="#" data-id={{ $item->id }}>Cetak Lampiran Gaji</a>
+                                                @endif
                                             </td>
                                             @if ($item->bruto == 0)
                                                 <td class="text-center">-</td>
@@ -124,13 +131,6 @@
                                             @endif
                                             <td class="text-center">
                                                 @if($item->status == 'proses')
-                                                    @if ($item->tanggal_cetak != null)
-                                                        @if ($item->file == null)
-                                                            <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload File</a>
-                                                        @endif
-                                                    @else
-                                                        <a class="btn btn-outline-primary p-1 btn-download-pdf" href="{{ route('cetak.penghasilanPerBulan',$item->id) }}">Download PDF</a>
-                                                    @endif
                                                     @if($item->total_penyesuaian > 0)
                                                         <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
                                                             data-batch_id="{{$item->id}}">Perbarui</a>
@@ -216,7 +216,7 @@
                                             <td class="text-center">{{ $i++ }}</td>
                                             <td class="text-center">{{ $item->tahun }}</td>
                                             <td class="text-center">{{ $months[$item->bulan] }}</td>
-                                            <td class="text-center">{{date('d-m-y', strtotime($item->tanggal_input))}}</td>
+                                            <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
                                             <td class="text-center">
                                                 <a href="#" class="btn btn-outline-warning p-1 btn-rincian"
                                                     data-batch_id="{{$item->id}}">Rincian</a>

@@ -140,13 +140,14 @@ class PayrollRepository
                                         'tj_kesejahteraan',
                                         'tj_multilevel',
                                         'tj_ti',
+                                        'tj_fungsional',
                                         'tj_transport',
                                         'tj_pulsa',
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
@@ -196,6 +197,7 @@ class PayrollRepository
                                     ) AS status
                                 "),
                                 'status_karyawan',
+                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
                             )
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
@@ -211,16 +213,24 @@ class PayrollRepository
                                 WHEN mst_karyawan.kd_jabatan='NST' THEN 8
                                 WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
                             ")
+                            ->orderBy('status_kantor', 'asc')
+                            ->orderBy('kd_cabang', 'asc')
+                            ->orderByRaw($this->orderRaw)
+                            ->orderBy('nip', 'asc')
+                            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
                                 ->whereNull('tanggal_penonaktifan')
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
-                                        $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
+                                        $q->where(function($q2) use($kode_cabang_arr) {
+                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
+                                                ->orWhereNull('mst_karyawan.kd_entitas');
+                                        });
                                     }
                                     else {
-                                        $q->orWhere('mst_karyawan.kd_entitas', $kantor);
+                                        $q->where('mst_karyawan.kd_entitas', $kantor);
                                     }
                                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
                                 })
@@ -233,7 +243,6 @@ class PayrollRepository
                             }else{
                                 $data=  $data->paginate($limit);
                             }
-
 
         foreach ($data as $key => $karyawan) {
             $ptkp = null;
@@ -908,13 +917,14 @@ class PayrollRepository
                                         'tj_kesejahteraan',
                                         'tj_multilevel',
                                         'tj_ti',
+                                        'tj_fungsional',
                                         'tj_transport',
                                         'tj_pulsa',
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
@@ -945,7 +955,7 @@ class PayrollRepository
                                 }
                             ])
                             ->select(
-                                'nip',
+                                'mst_karyawan.nip',
                                 'nama_karyawan',
                                 'npwp',
                                 'no_rekening',
@@ -954,17 +964,19 @@ class PayrollRepository
                                 'jkn',
                                 DB::raw("
                                     IF(
-                                        status = 'Kawin',
+                                        mst_karyawan.status = 'Kawin',
                                         'K',
                                         IF(
-                                            status = 'Belum Kawin',
+                                            mst_karyawan.status = 'Belum Kawin',
                                             'TK',
-                                            status
+                                            mst_karyawan.status
                                         )
                                     ) AS status
                                 "),
                                 'status_karyawan',
                             )
+                            ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
+                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
                             ->orderByRaw("
                                 CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
@@ -983,21 +995,20 @@ class PayrollRepository
                                 ->whereNull('tanggal_penonaktifan')
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
-                                        $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
+                                        $q->where(function($q2) use($kode_cabang_arr) {
+                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
+                                                ->orWhereNull('mst_karyawan.kd_entitas');
+                                        });
                                     }
                                     else {
-                                        $q->orWhere('mst_karyawan.kd_entitas', $kantor);
+                                        $q->where('mst_karyawan.kd_entitas', $kantor);
                                     }
                                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
-                                });
-                            });
-                            if ($cetak == 'cetak') {
-                                $data = $data->get();
-                            }else{
-                                $data=  $data->get();
-                            }
-
-
+                                })
+                                ->where('gaji_per_bulan.bulan', $month)
+                                ->where('gaji_per_bulan.tahun', $year)
+                                ->where('batch.status', 'final');
+                            })->get();
         foreach ($data as $key => $karyawan) {
             $ptkp = null;
             if ($karyawan->keluarga) {
@@ -1563,6 +1574,28 @@ class PayrollRepository
         $grand_footer_iuran_ik = 0;
         $grand_footer_total_potongan = 0;
         $grand_footer_total_diterima = 0;
+        $total_gj_pokok = 0;
+        $total_gj_penyesuaian = 0;
+        $total_tj_keluarga = 0;
+        $total_tj_telepon = 0;
+        $total_tj_jabatan = 0;
+        $total_tj_teller = 0;
+        $total_tj_perumahan = 0;
+        $total_tj_kemahalan = 0;
+        $total_tj_pelaksana = 0;
+        $total_tj_kesejahteraan = 0;
+        $total_tj_multilevel = 0;
+        $total_tj_ti = 0;
+        $total_tj_fungsional = 0;
+        $total_tj_khusus = 0;
+        $total_tj_transport = 0;
+        $total_tj_pulsa = 0;
+        $total_tj_vitamin = 0;
+        $total_uang_makan = 0;
+        $total_dpp = 0;
+        $total_total_gaji = 0;
+        $total_pph_harus_dibayar = 0;
+
         foreach ($data as $item) {
             $total_gaji = $item->gaji ? number_format($item->gaji->total_gaji, 0, ',', '.') : 0;
             $dpp = $item->potongan ? number_format($item->potongan->dpp, 0, ',', '.') : 0;
@@ -1573,7 +1606,37 @@ class PayrollRepository
             $iuran_ik = $item->potonganGaji ? number_format($item->potonganGaji->iuran_ik, 0, ',', '.') : 0;
             $total_potongan = number_format($item->total_potongan, 0, ',', '.');
             $total_diterima = $item->total_yg_diterima ? number_format($item->total_yg_diterima, 0, ',', '.') : 0;
-            // count total
+            // count total rincian
+            $total_gj_pokok += $item->gaji->gj_pokok;
+            $total_gj_penyesuaian += $item->gaji->gj_penyesuaian;
+            $total_tj_keluarga += $item->gaji->tj_keluarga;
+            $total_tj_telepon += $item->gaji->tj_telepon;
+            $total_tj_jabatan += $item->gaji->tj_jabatan;
+            $total_tj_teller += $item->gaji->tj_teller;
+            $total_tj_perumahan += $item->gaji->tj_perumahan;
+            $total_tj_kemahalan += $item->gaji->tj_kemahalan;
+            $total_tj_pelaksana += $item->gaji->tj_pelaksana;
+            $total_tj_kemahalan += $item->gaji->tj_kemahalan;
+            $total_tj_kesejahteraan += $item->gaji->tj_kesejahteraan;
+            $total_tj_multilevel += $item->gaji->tj_multilevel;
+            $total_tj_ti += $item->gaji->tj_ti;
+            $total_tj_fungsional += $item->gaji->tj_fungsional;
+            $total_tj_khusus += ($item->gaji->tj_multilevel + $item->gaji->tj_ti + $item->gaji->tj_fungsional);
+            $total_tj_transport += $item->gaji->tj_transport;
+            $total_tj_pulsa += $item->gaji->tj_pulsa;
+            $total_tj_vitamin += $item->gaji->tj_vitamin;
+            $total_uang_makan += $item->gaji->uang_makan;
+            $total_dpp += $item->gaji->dpp;
+            $total_total_gaji += $item->gaji->total_gaji;
+            if ($item->perhitungan_pph21) {
+                if ($item->perhitungan_pph21->pph_pasal_21) {
+                    if ($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar > 0) {
+                        $total_pph_harus_dibayar += $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar;
+                    }
+                }
+            }
+
+            // count total payroll
             $grand_footer_total_gaji += str_replace('.', '', $total_gaji);
             $grand_footer_bpjs_tk += str_replace('.', '', $bpjs_tk);
             $grand_footer_dpp += str_replace('.', '', $dpp);
@@ -1585,6 +1648,28 @@ class PayrollRepository
             $grand_footer_total_diterima += str_replace('.', '', $total_diterima);
         }
         $result = [
+            'total_gj_pokok' => $total_gj_pokok,
+            'total_gj_penyesuaian' => $total_gj_penyesuaian,
+            'total_tj_keluarga' => $total_tj_keluarga,
+            'total_tj_telepon' => $total_tj_telepon,
+            'total_tj_jabatan' => $total_tj_jabatan,
+            'total_tj_teller' => $total_tj_teller,
+            'total_tj_perumahan' => $total_tj_perumahan,
+            'total_tj_kemahalan' => $total_tj_kemahalan,
+            'total_tj_pelaksana' => $total_tj_pelaksana,
+            'total_tj_kemahalan' => $total_tj_kemahalan,
+            'total_tj_kesejahteraan' => $total_tj_kesejahteraan,
+            'total_tj_multilevel' => $total_tj_multilevel,
+            'total_tj_ti' => $total_tj_ti,
+            'total_tj_fungsional' => $total_tj_fungsional,
+            'total_tj_khusus' => $total_tj_khusus,
+            'total_tj_transport' => $total_tj_transport,
+            'total_tj_pulsa' => $total_tj_pulsa,
+            'total_tj_vitamin' => $total_tj_vitamin,
+            'total_uang_makan' => $total_uang_makan,
+            'total_dpp' => $total_dpp,
+            'total_total_gaji' => $total_total_gaji,
+            'total_pph_harus_dibayar' => $total_pph_harus_dibayar,
             'grand_total_gaji' => $grand_footer_total_gaji,
             'grand_bpjs_tk' => $grand_footer_bpjs_tk,
             'grand_dpp' => $grand_footer_dpp,
@@ -1599,7 +1684,7 @@ class PayrollRepository
 
     }
 
-    
+
     public function getJson($kantor, $month, $year, $cetak) {
         /**
          * PPH 21
@@ -1715,13 +1800,14 @@ class PayrollRepository
                                         'tj_kesejahteraan',
                                         'tj_multilevel',
                                         'tj_ti',
+                                        'tj_fungsional',
                                         'tj_transport',
                                         'tj_pulsa',
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
@@ -1780,10 +1866,13 @@ class PayrollRepository
                                 ->whereNull('tanggal_penonaktifan')
                                 ->where(function($q) use ($kantor, $kode_cabang_arr) {
                                     if ($kantor == 'pusat') {
-                                        $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
+                                        $q->where(function($q2) use($kode_cabang_arr) {
+                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
+                                                ->orWhereNull('mst_karyawan.kd_entitas');
+                                        });
                                     }
                                     else {
-                                        $q->orWhere('mst_karyawan.kd_entitas', $kantor);
+                                        $q->where('mst_karyawan.kd_entitas', $kantor);
                                     }
                                 });
                             })
@@ -1792,6 +1881,9 @@ class PayrollRepository
                             ->orderByRaw($this->orderRaw)
                             ->orderBy('nip', 'asc')
                             ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+                            ->where('gaji_per_bulan.bulan', $month)
+                            ->where('gaji_per_bulan.tahun', $year)
+                            ->where('batch.status', 'final')
                             ->get();
         foreach ($data as $key => $karyawan) {
             $ptkp = null;

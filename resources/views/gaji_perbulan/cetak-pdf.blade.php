@@ -93,7 +93,7 @@
         <center style="font-size: 10px; text-align: center" class="text-center">( MASUK TAB. SIKEMAS )</center>
         <div class="d-flex justify-content-end mb-3">
             <div class="mx-3">
-                <a href="{{route('payroll.index')}}" class="btn btn-primary btn-icon-text no-print"><i class="ti-angle-left btn-icon-prepend"></i> Kembali</a>
+                <a href="{{route('gaji_perbulan.index')}}" class="btn btn-primary btn-icon-text no-print"><i class="ti-angle-left btn-icon-prepend"></i> Kembali</a>
             </div>
         </div>
     </div>
@@ -209,12 +209,9 @@
         </div>
     </div>
 </body>
-{{-- <script>
+<script>
     window.print() //open the print dialog box
-window.onafterprint=function(){
-    document.location.href = "{{ route('gaji_perbulan.index') }}";
-}
-</script> --}}
+</script>
 </html>
 
 

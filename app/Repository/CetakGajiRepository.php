@@ -9,6 +9,21 @@ use Illuminate\Support\Facades\DB;
 
 class CetakGajiRepository
 {
+    private $orderRaw;
+    public function __construct() {
+        $this->orderRaw = "
+            CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 3
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 7
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 8
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
+        ";
+    }
+
     function cetak($kantor, $month, $year, $batch_id) {
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
@@ -156,6 +171,7 @@ class CetakGajiRepository
                                     ) AS status
                                 "),
                                 'status_karyawan',
+                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
                             )
                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr) {
@@ -164,13 +180,22 @@ class CetakGajiRepository
                                 ->whereNull('tanggal_penonaktifan')
                                 ->where(function($q) use ($kantor, $kode_cabang_arr) {
                                     if ($kantor == 'pusat') {
-                                        $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
+                                        $q->where(function($q2) use($kode_cabang_arr) {
+                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
+                                                ->orWhereNull('mst_karyawan.kd_entitas');
+                                        });
                                     }
                                     else {
-                                        $q->orWhere('mst_karyawan.kd_entitas', $kantor);
+                                        $q->where('mst_karyawan.kd_entitas', $kantor);
                                     }
                                 });
-                            })->get();
+                            })
+                            ->orderBy('status_kantor', 'asc')
+                            ->orderBy('kd_cabang', 'asc')
+                            ->orderByRaw($this->orderRaw)
+                            ->orderBy('nip', 'asc')
+                            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+                            ->get();
         foreach ($data as $key => $karyawan) {
             $ptkp = null;
             if ($karyawan->keluarga) {

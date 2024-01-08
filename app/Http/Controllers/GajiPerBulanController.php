@@ -39,6 +39,7 @@ class GajiPerBulanController extends Controller
             'tj_kesejahteraan',
             'tj_multilevel',
             'tj_ti',
+            'tj_fungsional',
             'tj_transport',
             'tj_pulsa',
             'tj_vitamin',
@@ -276,7 +277,7 @@ class GajiPerBulanController extends Controller
                     $potongan = DB::table('potongan_gaji')
                                 ->where('nip', $gaji->nip)
                                 ->first();
-                    
+
                     if ($potongan) {
                         if ($potongan->kredit_koperasi != $gaji->kredit_koperasi) {
                             $total_penyesuaian++;
@@ -614,7 +615,7 @@ class GajiPerBulanController extends Controller
                 $potongan = DB::table('potongan_gaji')
                             ->where('nip', $gaji->nip)
                             ->first();
-                
+
                 if ($potongan) {
                     if ($potongan->kredit_koperasi != $gaji->kredit_koperasi) {
                         $total_potongan_baru -= $gaji->kredit_koperasi;
@@ -653,7 +654,7 @@ class GajiPerBulanController extends Controller
                         array_push($new_data, $item);
                     }
                 }
-                
+
                 if (count($new_data) == 0) {
                     unset($data_gaji[$key]);
                 } else {
@@ -990,11 +991,12 @@ class GajiPerBulanController extends Controller
                         'tj_vitamin' => $tunjangan[12],
                         'uang_makan' => $tunjangan[13],
                         'dpp' => $tunjangan[14],
+                        'tj_fungsional' => $tunjangan[15],
                         'updated_at' => $now,
-                        'kredit_koperasi' => $kredit_koperasi, 
-                        'iuran_koperasi' => $iuran_koperasi, 
-                        'kredit_pegawai' => $kredit_pegawai, 
-                        'iuran_ik' => $iuran_ik, 
+                        'kredit_koperasi' => $kredit_koperasi,
+                        'iuran_koperasi' => $iuran_koperasi,
+                        'kredit_pegawai' => $kredit_pegawai,
+                        'iuran_ik' => $iuran_ik,
                     ];
                     $gaji = GajiPerBulanModel::where('batch_id', $request->batch_id)
                                             ->where('nip', $item->nip)
@@ -1050,11 +1052,12 @@ class GajiPerBulanController extends Controller
                             'tj_vitamin' => $tunjangan[12],
                             'uang_makan' => $tunjangan[13],
                             'dpp' => $tunjangan[14],
+                            'tj_fungsional' => $tunjangan[15],
                             'created_at' => now(),
-                            'kredit_koperasi' => $kredit_koperasi, 
-                            'iuran_koperasi' => $iuran_koperasi, 
-                            'kredit_pegawai' => $kredit_pegawai, 
-                            'iuran_ik' => $iuran_ik, 
+                            'kredit_koperasi' => $kredit_koperasi,
+                            'iuran_koperasi' => $iuran_koperasi,
+                            'kredit_pegawai' => $kredit_pegawai,
+                            'iuran_ik' => $iuran_ik,
                         ];
                         $gaji_id = GajiPerBulanModel::insertGetId($employee);
                         $pph_bulan_ini = DB::table('pph_yang_dilunasi')
@@ -1083,7 +1086,7 @@ class GajiPerBulanController extends Controller
                 Alert::success('Berhasil', 'Berhasil memperbarui penghasilan karyawan.');
             }
             else {
-                Alert::success('Berhasil', 'Berhasil melakukan pembayaran penghasilan karyawan.');
+                Alert::success('Berhasil', 'Berhasil melakukan proses penghasilan karyawan.');
             }
 
             return redirect()->back();
@@ -1199,7 +1202,7 @@ class GajiPerBulanController extends Controller
 
                 foreach ($this->param['namaTunjangan'] as $keyTunjangan => $item) {
                     array_push($tunjangan, $gaji->$item);
-                    if ($keyTunjangan < 10)
+                    if ($keyTunjangan < 11)
                         array_push($tunjanganJamsostek, $gaji->$item);
                 }
 
@@ -1514,7 +1517,7 @@ class GajiPerBulanController extends Controller
 
             foreach ($this->param['namaTunjangan'] as $keyTunjangan => $item) {
                 array_push($tunjangan, $gaji->$item);
-                if ($keyTunjangan < 10)
+                if ($keyTunjangan < 11)
                     array_push($tunjanganJamsostek, $gaji->$item);
             }
 
@@ -1743,6 +1746,7 @@ class GajiPerBulanController extends Controller
 
         $payrollRepo = new PayrollRepository;
         $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak);
+
         return DataTables::of($data)
                         ->addColumn('counter', function ($row) {
                             static $count = 0;
@@ -1752,7 +1756,7 @@ class GajiPerBulanController extends Controller
                         ->rawColumns(['counter'])
                         ->make(true);
     }
-    
+
     function cetak($id) {
         $data = DB::table('batch_gaji_per_bulan AS batch')
         ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
@@ -1780,9 +1784,9 @@ class GajiPerBulanController extends Controller
 
         DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
             'tanggal_cetak' => Carbon::now(),
-            ]);
-        $pdf = Pdf::loadView('gaji_perbulan.cetak-pdf', ['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $data->tanggal_input]);
-        return $pdf->download('LampiranGaji-' . $data->tanggal_input . '.pdf');
+        ]);
+
+        return view('gaji_perbulan.cetak-pdf',['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $data->tanggal_input]);
     }
 
     function upload(Request $request){

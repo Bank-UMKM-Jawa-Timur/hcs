@@ -39,7 +39,17 @@
                 $tj_keluarga = $item->gaji ? number_format($item->gaji->tj_keluarga, 0, ',', '.') : 0;
                 $tj_listrik = $item->gaji ? number_format($item->gaji->tj_telepon, 0, ',', '.') : 0;
                 $tj_jabatan = $item->gaji ? number_format($item->gaji->tj_jabatan, 0, ',', '.') : 0;
-                $tj_khusus = $item->gaji ? number_format($item->gaji->tj_ti, 0, ',', '.') : 0;
+                $tj_khusus = 0;
+                if ($item->gaji->tj_multilevel) {
+                    $tj_khusus += $item->gaji->tj_multilevel;
+                }
+                if ($item->gaji->tj_ti) {
+                    $tj_khusus += $item->gaji->tj_ti;
+                }
+                if ($item->gaji->tj_fungsional) {
+                    $tj_khusus += $item->gaji->tj_fungsional;
+                }
+                $tj_khusus = $item->gaji ? number_format($tj_khusus, 0, ',', '.') : 0;
                 $tj_perumahan = $item->gaji ? number_format($item->gaji->tj_perumahan, 0, ',', '.') : 0;
                 $tj_pelaksana = $item->gaji ? number_format($item->gaji->tj_pelaksana, 0, ',', '.') : 0;
                 $tj_kemahalan = $item->gaji ? number_format($item->gaji->tj_kemahalan, 0, ',', '.') : 0;
@@ -93,7 +103,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <th colspan="2" class="text-center">Jumlah</th>
+            <th colspan="2" class="text-center">Total</th>
             <th class="text-right">{{ number_format($footer_gj_pokok, 0, ',', '.') }}</th>
             <th class="text-right">{{ number_format($footer_tj_keluarga, 0, ',', '.') }}</th>
             <th class="text-right">{{ number_format($footer_tj_listrik, 0, ',', '.') }}</th>
@@ -106,6 +116,21 @@
             <th class="text-right">{{ number_format($footer_gj_penyesuaian, 0, ',', '.') }}</th>
             <th class="text-right">{{ number_format($footer_total_gaji, 0, ',', '.') }}</th>
             <th class="text-right">({{ number_format($footer_pph_harus_dibayar, 0, ',', '.') }})</th>
+        </tr>
+        <tr>
+            <th colspan="2" class="text-center">Grand Total</th>
+            <th class="text-right">{{ number_format($total['total_gj_pokok'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_tj_keluarga'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_tj_telepon'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_tj_jabatan'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_tj_khusus'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_tj_perumahan'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_tj_pelaksana'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_tj_kemahalan'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_tj_kesejahteraan'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_gj_penyesuaian'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_total_gaji'], 0, ',', '.') }}</th>
+            <th class="text-right">{{ number_format($total['total_pph_harus_dibayar'], 0, ',', '.') }}</th>
         </tr>
     </tfoot>
 </table>
