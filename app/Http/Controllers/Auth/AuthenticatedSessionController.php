@@ -33,24 +33,30 @@ class AuthenticatedSessionController extends Controller
             $karyawan = KaryawanModel::where('nip', $request->input_type)
                 ->first();
 
-            if (($user && Hash::check($request->password, $user->password)) || ($karyawan && Hash::check($request->password, $karyawan->password))) {
-                if (Auth::guard('karyawan')->attempt(['nip' => $request->input_type, 'password' => $request->password])) {
-                    // $request->authenticate();
-                    $request->session()->regenerate();
-
-                    return redirect()->intended(RouteServiceProvider::HOME);
-                } else {
-                    if ($user->first_login) {
-                        $request->authenticate();
+            if ($user || $karyawan) {
+                if (($user && Hash::check($request->password, $user->password)) || ($karyawan && Hash::check($request->password, $karyawan->password))) {
+                    if (Auth::guard('karyawan')->attempt(['nip' => $request->input_type, 'password' => $request->password])) {
+                        // $request->authenticate();
                         $request->session()->regenerate();
-
-                        return redirect()->route('password.reset');
-                    } else {
-                        $request->authenticate();
-                        $request->session()->regenerate();
-
+    
                         return redirect()->intended(RouteServiceProvider::HOME);
+                    } else {
+                        if ($user->first_login) {
+                            $request->authenticate();
+                            $request->session()->regenerate();
+    
+                            return redirect()->route('password.reset');
+                        } else {
+                            $request->authenticate();
+                            $request->session()->regenerate();
+    
+                            return redirect()->intended(RouteServiceProvider::HOME);
+                        }
                     }
+                }
+                else {
+                    Alert::warning('Peringatan', 'Password yang Anda masukkan salah');
+                    return back();
                 }
             } else {
                 Alert::warning('Peringatan', 'Akun tidak ditemukan');
