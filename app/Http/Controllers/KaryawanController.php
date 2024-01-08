@@ -432,7 +432,7 @@ class KaryawanController extends Controller
                     ->insert([
                         'nip' => $request->get('nip'),
                         'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
-                        'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                        'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
                         'created_at' => now()
                     ]);
             }
@@ -822,7 +822,7 @@ class KaryawanController extends Controller
                             ->insert([
                                 'nip' => $request->get('nip'),
                                 'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
-                                'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
                                 'created_at' => now()
                             ]);
                     } else {
@@ -831,7 +831,7 @@ class KaryawanController extends Controller
                             ->update([
                                 'nip' => $request->get('nip'),
                                 'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
-                                'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
                                 'updated_at' => now()
                             ]);
                     }
@@ -1070,7 +1070,7 @@ class KaryawanController extends Controller
                         'kantor' => 'Pusat'
                     ]);
                 }
-            } 
+            }
         }
 
         return view('karyawan.reminder-pensiun', [

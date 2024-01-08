@@ -14,20 +14,15 @@
         <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&amp;display=swap" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ asset('style/assets/css/coming-soon.css') }}">
     </head>
     <body>
-        <!-- Background Video-->
-        <video class="bg-video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop"><source src="{{ asset('style/assets/mp4/bg.mp4') }}" type="video/mp4" /></video>
         <!-- Masthead-->
-        <div class="masthead">
-            <div class="masthead-content text-white">
-                <div class="container-fluid px-4 px-lg-0">
-                    <h1 class="fst-italic lh-1 mb-4">This feature is Coming Soon</h1>
-                    <p class="mb-5">We're working hard to finish the development of this feature. Sign up below to receive updates and to be notified when we launch!</p>
-                    {{--  <a href="{{ route('login') }}" class="btn btn-primary">Dashboard</a>  --}}
-                </div>
-            </div>
+        <div class="d-flex justify-content-center">
+            <img src="{{ asset('style/assets/img/under-construction.svg') }}" class="img-fluid w-50 mx-auto" alt="">
+        </div>
+        <div class="container text-center mb-5">
+            <h2 class="font-weight-bold display-3 text-danger">Coming Soon!</h2>
+            <p class="lead text-muted">Halaman sedang dalam tahap pengembangan, mohon tunggu beberapa saat</p>
         </div>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

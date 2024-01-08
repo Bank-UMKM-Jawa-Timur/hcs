@@ -3,6 +3,10 @@
  * Copyright 2015 Daniel Cardoso <@DanielCardoso>
  * Licensed under MIT
  */
+.wrapper-loading{
+    display: flex;
+    flex-direction: column;
+}
  .la-line-spin-clockwise-fade,
  .la-line-spin-clockwise-fade > div {
      position: relative;

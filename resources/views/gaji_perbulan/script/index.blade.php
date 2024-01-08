@@ -377,7 +377,9 @@
             var iteration = 1;
             var table = $("#table-rincian").DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
+                orderCellsTop: true,
+                paging:true,
                 ajax: `{{ route('get-rincian-payroll') }}?batch_id=${batch_id}`,
                 columns: [
                     {
@@ -508,17 +510,225 @@
                         }
                     },
                 ],
+                footerCallback: function ( row, data, start, end, display ) {
+                    var api = this.api(),data;
+                    var test = this.api();
+                        // converting to interger to find total
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+                     // Calculate and display grand totals in the second footer
+                    var grandTotalGajiPokok = api
+                        .column(2)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    // computing column Total gaji pokok
+                    var totalGajiPokok = api
+                        .column(2, { page: "current" })
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    // computing column Total gaji pokok
+                    var grandTotalGajiKeluarga = api
+                        .column(3)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var totalGajiKeluarga = api
+                        .column( 3, { page: "current" })
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+
+                    var grandTotalGajiListrik = api
+                        .column( 4 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiListrik = api
+                        .column( 4,{page:"current"} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiJabatan = api
+                        .column( 5 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiJabatan = api
+                        .column( 5, {page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiKhusus = api
+                        .column( 6 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiKhusus = api
+                        .column( 6, {page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiPerumahan = api
+                        .column( 7)
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiPerumahan = api
+                        .column( 7, {page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiPelaksana = api
+                        .column( 8 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiPelaksana = api
+                        .column( 8 ,{page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiKemahalan = api
+                        .column( 9 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiKemahalan = api
+                        .column( 9 ,{page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiKesejahteraan = api
+                        .column( 10 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiKesejahteraan = api
+                        .column( 10 ,{page:"current"} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiPenyesuian = api
+                        .column( 11 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiPenyesuian = api
+                        .column( 11 ,{page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiTotal = api
+                        .column( 12 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiTotal = api
+                        .column( 12 ,{page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiPPH = api
+                    .column( 13 )
+                    .data()
+                    .reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiPPH = api
+                    .column( 13 ,{page:"current"})
+                    .data()
+                    .reduce( function (a, b) {
+                        return a + b;
+                    }, 0 );
+                    $( api.column( 0 ).footer('.total') ).html('Total');
+                    $( api.column( 2 ).footer('.total') ).html( totalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 3 ).footer('.total') ).html( totalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 4 ).footer('.total') ).html( totalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 5 ).footer('.total') ).html( totalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 6 ).footer('.total') ).html( totalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 7 ).footer('.total') ).html( totalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 8 ).footer('.total') ).html( totalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 9 ).footer('.total') ).html( totalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 10 ).footer('.total') ).html( totalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 11 ).footer('.total') ).html( totalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 12 ).footer('.total') ).html( totalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 13 ).footer('.total') ).html( `(${totalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')})`);
+
+                    $('tfoot tr.grandtotal').html(`
+                        <th colspan="2" class="text-center">Grand Total</th>
+                        <th class="text-right">${grandTotalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${grandTotalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${grandTotalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${grandTotalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${grandTotalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${grandTotalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${grandTotalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${grandTotalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${grandTotalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${grandTotalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${grandTotalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">(${grandTotalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}   )</th>
+                    `);
+                },
+
             })
             $("#rincian-modal").modal("show")
             $("#rincian-modal .btn-download-rincian").data('batch', batch_id)
         })
 
+
+        function formatrupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+        }
         $(".btn-payroll").on("click", function(){
             var batch_id = $(this).data("batch_id")
             var table = $("#table-payroll").DataTable({
-                processing: true,
-                serverSide: true,
                 ajax: `{{ route('get-rincian-payroll') }}?batch_id=${batch_id}`,
+                processing: true,
+                serverSide: false,
+                orderCellsTop: true,
+                paging:true,
                 columns: [
                     {
                         data: 'counter',
@@ -542,17 +752,6 @@
                         defaultContent: '-',
                     },
                     {
-                        data: "potongan.dpp",
-                        defaultContent: 0,
-                        render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
-                        }
-                    },
-                    {
                         data: "bpjs_tk",
                         defaultContent: 0,
                         render:function(data, type, row){
@@ -563,6 +762,18 @@
                             return number
                         }
                     },
+                    {
+                        data: "potongan.dpp",
+                        defaultContent: 0,
+                        render:function(data, type, row){
+                            var number = DataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number
+                        }
+                    },
+
                     {
                         data: "potongan_gaji.kredit_koperasi",
                         defaultContent: 0,
@@ -630,6 +841,156 @@
                         }
                     },
                 ],
+                footerCallback: function ( row, data, start, end, display ) {
+                    var api = this.api(),data;
+                        // converting to interger to find total
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+                     // Calculate and display grand totals in the second footer
+                    var grandTotalGajiPokok = api
+                        .column(2)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    // computing column Total gaji pokok
+                    var totalGajiPokok = api
+                        .column(2, { page: "current" })
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    // computing column Total gaji pokok
+                    var grandTotalDPP = api
+                        .column(4)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var totalGajiDPP = api
+                        .column( 4, { page: "current" })
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+
+                    var grandTotalBPJS = api
+                        .column( 5 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiBPJS = api
+                        .column(5,{page:"current"} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiKredit = api
+                        .column(6)
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiKredit = api
+                        .column( 6, {page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiKoperasi = api
+                        .column( 7 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiKoperasi = api
+                        .column( 7, {page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiPegawai = api
+                        .column(8)
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiPegawai = api
+                        .column(8, {page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiIuran = api
+                        .column(9)
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiIuran = api
+                        .column(9 ,{page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiPotongan = api
+                        .column(10 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiPotongan = api
+                        .column(10 ,{page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var grandTotalGajiDiterima = api
+                        .column( 11 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalGajiDiterima = api
+                    .column( 11 ,{page:"current"} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );
+
+                    $( api.column( 0 ).footer('.total') ).html('Total');
+                    $( api.column( 2 ).footer('.total') ).html(  totalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 3 ).footer('.total') ).html(`-`);
+                    $( api.column( 4 ).footer('.total') ).html(  Math.floor(totalGajiDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 5 ).footer('.total') ).html(  Math.floor(totalGajiBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 6 ).footer('.total') ).html(  Math.floor(totalGajiKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 7 ).footer('.total') ).html(  Math.floor(totalGajiKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 8 ).footer('.total') ).html(  Math.floor(totalGajiPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 9 ).footer('.total') ).html( Math.floor(totalGajiIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 10 ).footer('.total') ).html( Math.floor(totalGajiPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 11 ).footer('.total') ).html( Math.floor(totalGajiDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
+                    $('tfoot tr.grandtotalPayroll').html(`
+                        <th colspan="2" class="text-center">Grand Total</th>
+                        <th class="text-right">${grandTotalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">-</th>
+                        <th class="text-right">${Math.floor(grandTotalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.floor(grandTotalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.floor(grandTotalGajiKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.floor(grandTotalGajiKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.floor(grandTotalGajiPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.floor(grandTotalGajiIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.floor(grandTotalGajiPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.floor(grandTotalGajiDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+
+                    `);
+                },
+
             })
             $("#payroll-modal").modal("show")
             $("#payroll-modal .btn-download-payroll").data('batch', batch_id)
