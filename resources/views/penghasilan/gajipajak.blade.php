@@ -625,7 +625,12 @@
                                                     $total_tj_pelaksana += $gj[$i]['tj_pelaksana'];
                                                     $total_tj_kemahalan += $gj[$i]['tj_kemahalan'];
                                                     $total_tj_kesejahteraan += $gj[$i]['tj_kesejahteraan'];
-                                                    $total_tj_khusus += $gj[$i]['tj_khusus'];
+                                                    if ($gj[$i]['tj_multilevel']) {
+                                                        $total_tj_khusus += $gj[$i]['tj_multilevel'];
+                                                    }
+                                                    if ($gj[$i]['tj_ti']) {
+                                                        $total_tj_khusus += $gj[$i]['tj_ti'];
+                                                    }
 
                                                     $total_jamsostek += $jamsostek[$i];
                                                     $total_uang_makan += $gj[$i]['uang_makan'];
@@ -637,9 +642,16 @@
                                                                    + $total_tj_perumahan + $total_tj_telepon + $total_tj_pelaksana + $total_tj_kemahalan
                                                                    + $total_tj_kesejahteraan;
 
+                                                    $tj_khusus = 0;
+                                                    if ($gj[$i]['tj_multilevel']) {
+                                                        $tj_khusus += $gj[$i]['tj_multilevel'];
+                                                    }
+                                                    if ($gj[$i]['tj_ti']) {
+                                                        $tj_khusus += $gj[$i]['tj_ti'];
+                                                    }
                                                     $total_gaji_bln = ($gj[$i]['gj_pokok']) + ($gj[$i]['tj_keluarga']) + ($gj[$i]['tj_jabatan']) + ($gj[$i]['gj_penyesuaian'])
                                                                       + ($gj[$i]['tj_perumahan']) + ($gj[$i]['tj_telepon']) + ($gj[$i]['tj_pelaksana']) + ( $gj[$i]['tj_kemahalan'])
-                                                                      + ($gj[$i]['tj_kesejahteraan']) + $gj[$i]['tj_khusus'];
+                                                                      + ($gj[$i]['tj_kesejahteraan']) + $tj_khusus;
                                                 @endphp
                                                     <tr>
                                                         <td>{{ $bulan[$i] }}</td>
@@ -652,7 +664,7 @@
                                                         <td>{{ ($gj[$i]['tj_pelaksana'] != 0) ? rupiah($gj[$i]['tj_pelaksana']) : '-' }}</td>
                                                         <td>{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
                                                         <td>{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
-                                                        <td>{{ ($gj[$i]['tj_khusus'] != 0) ? rupiah($gj[$i]['tj_khusus']) : '-' }}</td>
+                                                        <td>{{ ($tj_khusus != 0) ? rupiah($tj_khusus) : '-' }}</td>
                                                         <td>{{ ($total_gaji_bln != 0 ) ? rupiah($total_gaji_bln) : '-' }}</td>
                                                         <td>{{ ($jamsostek[$i] != 0) ? rupiah($jamsostek[$i]) : '-' }}</td>
                                                         <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
