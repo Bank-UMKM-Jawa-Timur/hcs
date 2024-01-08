@@ -19,6 +19,7 @@
             let url = "{{ url('') }}"
             let downloadUrl = `${url}/cetak-penghasilan/${id}`;
             $(this).attr('href',downloadUrl)
+            $('#lampiran-gaji-modal').modal('hide')
 
         })
         $(document).ready(function() {
@@ -665,5 +666,138 @@
             var batch_id = $(this).data('batch');
             $(this).attr('href', `{{ route('proses-gaji-download-rincian') }}?batch_id=${batch_id}&tipe=${tipe}`)
         })
+
+        $('.btn-lampiran-gaji').on("click", function () {
+            let id  = $(this).data('id');
+            $('#download').data('id', id);
+            var table = $("#table-lampiran-gaji").DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: `{{ url('get-lampiran-gaji/${id}') }}`,
+                columns: [
+                    {
+                        data: 'counter',
+                    },
+                    {
+                        data: 'nama_karyawan'
+                    },
+                    {
+                        data: 'gaji.total_gaji',
+                        defaultContent: 0,
+                        render: function (data, type, row) {
+                            var number = $.fn.dataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number;
+                        }
+                    },
+                    {
+                        data: 'no_rekening',
+                        defaultContent: '-',
+                    },
+                    {
+                        data: "bpjs_tk",
+                        defaultContent: 0,
+                        render:function(data, type, row){
+                            var number = DataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number
+                        }
+                    },
+                    {
+                        data: "potongan.dpp",
+                        defaultContent: 0,
+                        render: function (data, type, row) {
+                            var number = $.fn.dataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number;
+                        }
+                    },
+                    {
+                        data: "potongan_gaji.kredit_koperasi",
+                        defaultContent: 0,
+                        render:function(data, type, row){
+                            var number = DataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number
+                        }
+                    },
+                    {
+                        data: "potongan_gaji.iuran_koperasi",
+                        defaultContent: 0,
+                        render:function(data, type, row){
+                            var number = DataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number
+                        }
+                    },
+                    {
+                        data: "potongan_gaji.kredit_pegawai",
+                        defaultContent: 0,
+                        render:function(data, type, row){
+                            var number = DataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number
+                        }
+                    },
+                    {
+                        data: "potongan_gaji.iuran_ik",
+                        defaultContent: 0,
+                        render:function(data, type, row){
+                            var number = DataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number
+                        }
+                    },
+                    {
+                        data: "total_potongan",
+                        defaultContent: 0,
+                        render:function(data, type, row){
+                            var number = DataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number
+                        }
+                    },
+                    {
+                        data: "total_yg_diterima",
+                        defaultContent: 0,
+                        render:function(data, type, row){
+                            var number = DataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number
+                        }
+                    },
+                ],
+            })
+            $("#lampiran-gaji-modal").modal("show")
+            $("#lampiran-gaji-modal .btn-download-lampiran-gaji").data('batch', batch_id)
+        });
+
+        $('#lampiran-gaji-modal').on('hidden.bs.modal', function () {
+            $('#lampiran-gaji-modal').modal('hide')
+            $("#lampiran-gaji-modal #table-lampiran-gaji").dataTable().fnDestroy();
+        })
+
+        $('#lampiran-gaji-modal .close').on("click", function(){
+            $("#lampiran-gaji-modal").modal("hide")
+            $("#lampiran-gaji-modal #table-lampiran-gaji").dataTable().fnDestroy();
+        });
     </script>
 @endpush
