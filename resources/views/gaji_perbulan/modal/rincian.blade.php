@@ -16,7 +16,7 @@
                             <th>Nama karyawan</th>
                             <th class="text-center">Gaji Pokok</th>
                             <th class="text-center">T. Keluarga</th>
-                            <th class="text-center">T. Listrik & Air</th>
+                            <th class="text-center">T. Telepon, Listrik & Air</th>
                             <th class="text-center">T. Jabatan</th>
                             <th class="text-center">T. Khusus</th>
                             <th class="text-center">T. Perumahan</th>

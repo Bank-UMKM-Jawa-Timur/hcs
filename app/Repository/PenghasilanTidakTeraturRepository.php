@@ -134,8 +134,8 @@ class PenghasilanTidakTeraturRepository
         return ImportPenghasilanTidakTeraturModel::create([
             'nip' => $data['nip'],
             'id_tunjangan' => $data['id_tunjangan'],
-            'bulan' => $data['bulan'],
-            'tahun' => $data['tahun'],
+            'bulan' => (int) $data['bulan'],
+            'tahun' => (int) $data['tahun'],
             'nominal' => str_replace('.', '', $data['nominal']),
             'keterangan' => $data['keterangan'] ?? null,
             'created_at' => now()
@@ -147,8 +147,8 @@ class PenghasilanTidakTeraturRepository
         return ImportPenghasilanTidakTeraturModel::create([
             'nip' => $data['nip'],
             'id_tunjangan' => $data['id_tunjangan'],
-            'bulan' => $data['bulan'],
-            'tahun' => $data['tahun'],
+            'bulan' => (int) $data['bulan'],
+            'tahun' => (int) $data['tahun'],
             'nominal' => str_replace('.', '', $data['nominal']),
             'keterangan' => $data['keterangan'] . " meninggal",
             'created_at' => now()

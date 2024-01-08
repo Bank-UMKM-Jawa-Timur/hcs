@@ -852,7 +852,7 @@ class SlipGajiRepository
             $pphPasal21->pph_21_dipotong_masa_sebelumnya = $pph_21_dipotong_masa_sebelumnya;
 
             // 5. PPh Pasal 21 Terutang
-            $pph_21_terutang = ceil(($penghasilan_kena_pajak_setahun / 12) * $total_ket);
+            $pph_21_terutang = floor(($penghasilan_kena_pajak_setahun / 12) * $total_ket);
             $pphPasal21->pph_21_terutang = $pph_21_terutang;
 
             // 6. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi
@@ -1599,7 +1599,7 @@ class SlipGajiRepository
             $pphPasal21->pph_21_dipotong_masa_sebelumnya = $pph_21_dipotong_masa_sebelumnya;
 
             // 5. PPh Pasal 21 Terutang
-            $pph_21_terutang = ceil(($penghasilan_kena_pajak_setahun / 12) * $total_ket);
+            $pph_21_terutang = floor(($penghasilan_kena_pajak_setahun / 12) * $total_ket);
             $pphPasal21->pph_21_terutang = $pph_21_terutang;
 
             // 6. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi

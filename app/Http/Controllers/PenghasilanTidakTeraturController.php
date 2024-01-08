@@ -479,8 +479,8 @@ class PenghasilanTidakTeraturController extends Controller
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $idTunjangan->id,
-                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
-                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
+                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => (int) Carbon::parse($request->get('tanggal'))->format('Y'),
                     'nominal' => str_replace('.', '', $nominal[$key]),
                     'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
                     'created_at' => $request->get('tanggal')
@@ -666,8 +666,8 @@ class PenghasilanTidakTeraturController extends Controller
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $old_tunjangan,
-                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
-                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
+                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => (int) Carbon::parse($request->get('tanggal'))->format('Y'),
                     'nominal' => str_replace('.', '', $nominal[$key]),
                     'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
                     'created_at' => $request->get('tanggal')
