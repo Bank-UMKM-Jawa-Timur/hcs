@@ -7,6 +7,7 @@
 @include('gaji_perbulan.modal.perbarui')
 @include('gaji_perbulan.modal.rincian')
 @include('gaji_perbulan.modal.payroll')
+@include('gaji_perbulan.modal.lampir-gaji')
 @section('content')
     <div class="card-header">
         <div class="card-header">
@@ -101,7 +102,8 @@
                                                         <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload Lampiran Gaji</a>
                                                     @endif
                                                 @else
-                                                    <a class="btn btn-outline-primary p-1 btn-download-pdf " id="download" href="#" data-id={{ $item->id }}>Cetak Lampiran Gaji</a>
+                                                    <a href="#" class="btn btn-outline-primary p-1 btn-lampiran-gaji" data-id="{{$item->id}}">Lampiran Gaji</a>
+                                                    {{-- <a class="btn btn-outline-primary p-1 btn-download-pdf " id="download"  href="#" data-id={{ $item->id }}>Cetak Lampiran Gaji</a> --}}
                                                 @endif
                                             </td>
                                             @if ($item->bruto == 0)
