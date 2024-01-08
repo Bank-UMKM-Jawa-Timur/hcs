@@ -846,20 +846,20 @@ class KaryawanController extends Controller
                     DB::table('potongan_gaji')
                         ->where('nip', $id)
                         ->update([
-                            'kredit_koperasi' => $request->get('potongan_kredit_koperasi'),
-                            'iuran_koperasi' => $request->get('potongan_iuran_koperasi'),
+                            'kredit_koperasi' => (int)str_replace('.', '', $request->get('potongan_kredit_koperasi')),
+                            'iuran_koperasi' => (int)str_replace('.', '', $request->get('potongan_iuran_koperasi')),
                             'kredit_pegawai' => $request->get('potongan_kredit_pegawai'),
-                            'iuran_ik' => $request->get('potongan_iuran_ik'),
+                            'iuran_ik' => (int)str_replace('.', '', $request->get('potongan_iuran_ik')),
                             'updated_at' => now()
                         ]);
                 } else {
                     DB::table('potongan_gaji')
                         ->insert([
                             'nip' => $id,
-                            'kredit_koperasi' => $request->get('potongan_kredit_koperasi'),
-                            'iuran_koperasi' => $request->get('potongan_iuran_koperasi'),
-                            'kredit_pegawai' => $request->get('potongan_kredit_pegawai'),
-                            'iuran_ik' => $request->get('potongan_iuran_ik'),
+                            'kredit_koperasi' => (int)str_replace('.', '', $request->get('potongan_kredit_koperasi')),
+                            'iuran_koperasi' => (int)str_replace('.', '', $request->get('potongan_iuran_koperasi')),
+                            'kredit_pegawai' => (int)str_replace('.', '', $request->get('potongan_kredit_pegawai')),
+                            'iuran_ik' => (int)str_replace('.', '', $request->get('potongan_iuran_ik')),
                             'created_at' => now()
                         ]);
                 }
