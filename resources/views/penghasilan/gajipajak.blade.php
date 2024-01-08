@@ -82,9 +82,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <a href="penghasilan/gajipajak">
-                        <button class="is-btn is-primary" type="submit">Tampilkan</button>
-                    </a>
+                    <button class="is-btn is-primary" type="submit">Tampilkan</button>
                 </div>
         </form>
     @endcan
