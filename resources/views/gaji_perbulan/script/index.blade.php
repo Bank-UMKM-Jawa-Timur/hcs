@@ -190,7 +190,8 @@
                         $('#proses-modal #tahun_terakhir').val(data.penghasilan_tahun_terakhir)
                         $('#proses-modal #bulan_terakhir').val(data.penghasilan_bulan_terakhir)
                         var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
-                        $('#proses-modal #periode_terakhir').html(`${data.penghasilan_tahun_terakhir} ${months[(data.penghasilan_bulan_terakhir - 1)]}`)
+                        var index_month = data.penghasilan_bulan_terakhir > 0 ? data.penghasilan_bulan_terakhir - 1 : 0
+                        $('#proses-modal #periode_terakhir').html(`${data.penghasilan_tahun_terakhir} ${months[index_month]}`)
                         $('#proses-modal #total_karyawan').html(data.total_karyawan)
                         $('#proses-modal #total_bruto').html(`Rp ${formatRupiah(data.bruto.toString())}`)
                         $('#proses-modal #total_potongan').html(`Rp ${formatRupiah(data.potongan.toString())}`)
