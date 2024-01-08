@@ -885,8 +885,8 @@ class GajiPerBulanController extends Controller
                         $tj = DB::table('transaksi_tunjangan')
                                 ->where('nip', $item->nip)
                                 ->where('id_tunjangan', $tunj->id)
-                                ->where('tahun', $tahun)
-                                ->where('bulan', $bulan)
+                                ->where('tahun', intval($tahun))
+                                ->where('bulan', intval($bulan))
                                 ->first();
                         array_push($tunjangan, ($tj != null) ? $tj->nominal : 0);
                         if ($tunj->status) {
@@ -1276,6 +1276,7 @@ class GajiPerBulanController extends Controller
             $penghasilanTidakTeraturBulanIni = DB::table('penghasilan_tidak_teratur')
                 ->join('mst_tunjangan AS m', 'm.id', 'penghasilan_tidak_teratur.id_tunjangan')
                 ->where('m.kategori', 'tidak teratur')
+                ->where('nip', $karyawan->nip)
                 ->where('bulan', $bulan)
                 ->where('tahun', $tahun)
                 ->whereDate('penghasilan_tidak_teratur.created_at', '<', $tanggal)
@@ -1284,8 +1285,8 @@ class GajiPerBulanController extends Controller
                 ->join('mst_tunjangan AS m', 'm.id', 'penghasilan_tidak_teratur.id_tunjangan')
                 ->where('m.kategori', 'bonus')
                 ->where('nip', $karyawan->nip)
-                ->where('tahun', $tahun)
-                ->where('bulan', $bulan)
+                ->where('tahun', intval($tahun))
+                ->where('bulan', intval($bulan))
                 ->whereDate('penghasilan_tidak_teratur.created_at', '<', $tanggal)
                 ->sum('penghasilan_tidak_teratur.nominal');
             $totalGajiBulanIni = $karyawan->gj_pokok + $karyawan->gj_penyesuaian;
