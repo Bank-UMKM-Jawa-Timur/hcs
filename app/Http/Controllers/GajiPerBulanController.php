@@ -36,6 +36,7 @@ class GajiPerBulanController extends Controller
             'tj_kesejahteraan',
             'tj_multilevel',
             'tj_ti',
+            'tj_fungsional',
             'tj_transport',
             'tj_pulsa',
             'tj_vitamin',
@@ -987,6 +988,7 @@ class GajiPerBulanController extends Controller
                         'tj_vitamin' => $tunjangan[12],
                         'uang_makan' => $tunjangan[13],
                         'dpp' => $tunjangan[14],
+                        'tj_fungsional' => $tunjangan[15],
                         'updated_at' => $now,
                         'kredit_koperasi' => $kredit_koperasi,
                         'iuran_koperasi' => $iuran_koperasi,
@@ -1047,6 +1049,7 @@ class GajiPerBulanController extends Controller
                             'tj_vitamin' => $tunjangan[12],
                             'uang_makan' => $tunjangan[13],
                             'dpp' => $tunjangan[14],
+                            'tj_fungsional' => $tunjangan[15],
                             'created_at' => now(),
                             'kredit_koperasi' => $kredit_koperasi,
                             'iuran_koperasi' => $iuran_koperasi,
@@ -1080,7 +1083,7 @@ class GajiPerBulanController extends Controller
                 Alert::success('Berhasil', 'Berhasil memperbarui penghasilan karyawan.');
             }
             else {
-                Alert::success('Berhasil', 'Berhasil melakukan pembayaran penghasilan karyawan.');
+                Alert::success('Berhasil', 'Berhasil melakukan proses penghasilan karyawan.');
             }
 
             return redirect()->back();
@@ -1196,7 +1199,7 @@ class GajiPerBulanController extends Controller
 
                 foreach ($this->param['namaTunjangan'] as $keyTunjangan => $item) {
                     array_push($tunjangan, $gaji->$item);
-                    if ($keyTunjangan < 10)
+                    if ($keyTunjangan < 11)
                         array_push($tunjanganJamsostek, $gaji->$item);
                 }
 
@@ -1511,7 +1514,7 @@ class GajiPerBulanController extends Controller
 
             foreach ($this->param['namaTunjangan'] as $keyTunjangan => $item) {
                 array_push($tunjangan, $gaji->$item);
-                if ($keyTunjangan < 10)
+                if ($keyTunjangan < 11)
                     array_push($tunjanganJamsostek, $gaji->$item);
             }
 
@@ -1740,6 +1743,7 @@ class GajiPerBulanController extends Controller
 
         $payrollRepo = new PayrollRepository;
         $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak);
+
         return DataTables::of($data)
                         ->addColumn('counter', function ($row) {
                             static $count = 0;
