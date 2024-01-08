@@ -204,7 +204,7 @@
             if (data.tj_telepon > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td class="px-3">Listrik & Air</td>
+                        <td class="px-3">Tj. Telepon, Listrik & Air</td>
                         <td class="text-right px-3">Rp ${formatRupiahPayroll(data.tj_telepon)}</td>
                     </tr>
                 `
