@@ -14,25 +14,32 @@ class UserRepository
     private $param;
     public function getListUser($search, $limit=10, $page=1) {
         $this->param['data'] = DB::table('users')
-        ->select(
-                'users.id',
-                'users.name as name_user',
-                'users.email',
-                'users.username',
-                'users.kd_cabang',
-                'mst_cabang.nama_cabang',
-                'users.first_login',
-                'roles.name as name_role'
-        )
-        ->join('model_has_roles','model_has_roles.model_id','users.id')
-        ->join('roles','model_has_roles.role_id','roles.id')
-        ->leftJoin('mst_cabang', 'users.kd_cabang',  'mst_cabang.kd_cabang')
-        ->when($search, function ($query) use ($search) {
-            $query->where('users.name', 'like', "%$search%")
-            ->orWhere('users.email', 'like', "%$search%")
-            ->orWhere('r.name', 'like', "%$search%");
-        })
-        ->paginate($limit);
+                    ->join('model_has_roles', function ($join) {
+                        $join->on('model_has_roles.model_id', '=', 'users.id')
+                            ->where(DB::raw('CAST(model_has_roles.model_id AS CHAR)'), '=', DB::raw('CAST(users.id AS CHAR)'));
+                    })
+                    ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                    ->leftJoin('mst_cabang', 'users.kd_cabang', '=', 'mst_cabang.kd_cabang')
+                    ->select(
+                        'users.id',
+                        'users.name as name_user',
+                        'users.email',
+                        'users.username',
+                        'users.kd_cabang',
+                        'mst_cabang.nama_cabang',
+                        'users.first_login',
+                        'roles.name as name_role',
+                        'model_has_roles.model_id'
+                    )
+                    ->when($search, function ($query) use ($search) {
+                        $query->where('users.name', 'like', "%$search%")
+                        ->orWhere('users.email', 'like', "%$search%")
+                        ->orWhere('roles.name', 'like', "%$search%");
+                    })
+                    ->orderBy('roles.id')
+                    ->orderBy('users.kd_cabang')
+                    ->paginate($limit);
+
         return $this->param['data'];
     }
 

@@ -306,6 +306,8 @@
                 var nipDataRequest = [];
 
                 var checkNip = [];
+                var rowEmpty = [];
+                var noEmpty = 1;
                 var checkNipTunjangan = [];
                 var namaTunjangan = [];
 
@@ -344,29 +346,33 @@
                                 </div>
                         `);
                     },
+                    // <tr class="${value.cek_nip == false || value.cek_tunjangan == true ? 'table-danger' : ''}">
                     success: function(res){
                         var new_body_tr = ``;
+                        var new_body_tr_success = ``;
                         var message = ``;
                         var tittleMessage = ``;
                         var headerMessage = `harap cek kembali pada file excel yang di upload.`;
                         $.each(res,function(key,value) {
+                            if (value.cek_nip == false) {
+                                checkNip.push(value.nip + " row " + noEmpty++);
+                                hasError = true;
+                                hasNip = true;
+                                hasTunjangan = false;
+                            } else if (value.cek_tunjangan == true) {
+                                checkNipTunjangan.push(value.nip + " row " + noEmpty++);
+                                namaTunjangan.push(value.tunjangan.nama_tunjangan);
+                                hasError = true;
+                                hasTunjangan = true;
+                                hasNip = false;
+                            }
+                            if (value.cek_nip == false || value.cek_tunjangan == true) {
+                                grandTotalNominal += parseInt(dataNominal[key])
                                 nipDataRequest.push(value.nip);
                                 no++;
-                                if (value.cek_nip == false) {
-                                    checkNip.push(value.nip);
-                                    hasError = true;
-                                    hasNip = true;
-                                    hasTunjangan = false;
-                                } else if (value.cek_tunjangan == true) {
-                                    checkNipTunjangan.push(value.nip);
-                                    namaTunjangan.push(value.tunjangan.nama_tunjangan);
-                                    hasError = true;
-                                    hasTunjangan = true;
-                                    hasNip = false;
-                                }
-                                grandTotalNominal += parseInt(dataNominal[key])
                                 new_body_tr += `
-                                     <tr class="${value.cek_nip == false || value.cek_tunjangan == true ? 'table-danger' : ''}">
+                                        
+                                        <tr class="table-danger">
                                         <td>
                                             ${no}
                                         </td>
@@ -381,9 +387,47 @@
                                         </td>
                                     </tr>
                                 `;
+                            }
+                        })
+                        $.each(res,function(key,value) {
+                            if (value.cek_nip == false) {
+                                // checkNip.push(value.nip);
+                                // hasError = true;
+                                // hasNip = true;
+                                // hasTunjangan = false;
+                            } else if (value.cek_tunjangan == true) {
+                                // checkNipTunjangan.push(value.nip);
+                                // namaTunjangan.push(value.tunjangan.nama_tunjangan);
+                                // hasError = true;
+                                // hasTunjangan = true;
+                                // hasNip = false;
+                            }
+                            if (value.cek_nip == false || value.cek_tunjangan == true) {
+                            }else{
+                                grandTotalNominal += parseInt(dataNominal[key])
+                                nipDataRequest.push(value.nip);
+                                no++;
+                                new_body_tr += `
+                                        
+                                        <tr class="">
+                                        <td>
+                                            ${no}
+                                        </td>
+                                        <td>
+                                            ${value.nip}
+                                        </td>
+                                        <td>
+                                            ${value.nama_karyawan}
+                                        </td>
+                                        <td>
+                                            ${formatRupiah(dataNominal[key].toString())}
+                                        </td>
+                                    </tr>
+                                `;
+                            }
+                        })
 
-                            })
-                            if (hasError == true) {
+                        if (hasError == true) {
                                 if (hasNip == true) {
                                     message += `${checkNip}`
                                     tittleMessage += `Tidak ditemukan`
@@ -410,31 +454,32 @@
                                         formatRupiah(grandTotalNominal.toString())
                                     }</p>
                                 `)
-                            }
-                            else {
-                                $('#alert-massage').html(`
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <strong>Data valid.</strong>
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                `)
-                                $('.nominal-input').val(dataNominal)
-                                $('.nip-input').val(nipDataRequest);
-                                $('.tunjangan-input').val(id_tunjangan);
-                                $('.bulan-input').val(bulanReq);
+                        }else{
+                            $('#alert-massage').html(`
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Data valid.</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            `)
+                            $('.nominal-input').val(dataNominal)
+                            $('.nip-input').val(nipDataRequest);
+                            $('.tunjangan-input').val(id_tunjangan);
+                            $('.bulan-input').val(bulanReq);
 
-                                $('#table_item tbody').append(new_body_tr);
-                                $('#btn-simpan').removeClass('d-none');
-                                $('#hasil-filter').removeClass('d-none');
-                                $('#grand').html(`
-                                    <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
-                                    <p id="grand-total" class="font-weight-bold">Grand Total : ${
-                                        formatRupiah(grandTotalNominal.toString())
-                                    }</p>
-                                `)
-                            }
+                            $('#table_item tbody').append(new_body_tr);
+                            $('#btn-simpan').removeClass('d-none');
+                            $('#hasil-filter').removeClass('d-none');
+                            $('#grand').html(`
+                                <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
+                                <p id="grand-total" class="font-weight-bold">Grand Total : ${
+                                    formatRupiah(grandTotalNominal.toString())
+                                }</p>
+                            `)
+                        }
+
+                        
                     },
                     complete: function () {
                         $('#loading-message').empty();
