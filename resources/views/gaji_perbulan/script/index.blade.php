@@ -18,8 +18,6 @@
             console.log(id);
             let url = "{{ url('') }}"
             let downloadUrl = `${url}/cetak-penghasilan/${id}`;
-            console.log(downloadUrl);
-            // href="{{ route('cetak.penghasilanPerBulan',$item->id) }}"
             $(this).attr('href',downloadUrl)
 
         })
