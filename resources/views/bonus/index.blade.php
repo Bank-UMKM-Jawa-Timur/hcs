@@ -5,6 +5,8 @@
     <div class="card-header">
         <h5 class="card-title">Bonus</h5>
         <p class="card-title"><a href="/">Penghasilan </a> > Bonus</p>
+    </div>
+    <div class="card-header row mt-3 mr-8 pr-5" >
         @can('penghasilan - import - bonus - import')
             <a href="{{ route('bonus.create') }}" class="btn is-btn is-primary">Import Bonus</a>
         @endcan
