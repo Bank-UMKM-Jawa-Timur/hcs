@@ -436,6 +436,7 @@
                 ],
             })
             $("#rincian-modal").modal("show")
+            $("#rincian-modal .btn-download-rincian").data('batch', batch_id)
         })
 
         $(".btn-payroll").on("click", function(){
@@ -557,6 +558,7 @@
                 ],
             })
             $("#payroll-modal").modal("show")
+            $("#payroll-modal .btn-download-payroll").data('batch', batch_id)
         })
 
         $('#payroll-modal').on('hidden.bs.modal', function () {
@@ -577,6 +579,18 @@
         $('#rincian-modal .close').on('click', function () {
             $('#rincian-modal').modal('hide')
             $("#rincian-modal #table-rincian").dataTable().fnDestroy();
+        })
+
+        $("#payroll-modal .btn-download-payroll").on('click', function(){
+            var tipe = 'payroll';
+            var batch_id = $(this).data('batch');
+            $(this).attr('href', `{{ route('proses-gaji-download-rincian') }}?batch_id=${batch_id}&tipe=${tipe}`)
+        })
+
+        $("#rincian-modal .btn-download-rincian").on('click', function(){
+            var tipe = 'rincian';
+            var batch_id = $(this).data('batch');
+            $(this).attr('href', `{{ route('proses-gaji-download-rincian') }}?batch_id=${batch_id}&tipe=${tipe}`)
         })
     </script>
 @endpush

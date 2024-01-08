@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProsesPayroll;
+use App\Exports\ProsesRincianPayroll;
 use App\Imports\ImportPPH21;
 use App\Models\CabangModel;
 use App\Models\GajiPerBulanModel;
@@ -16,6 +18,7 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\DataTables;
 
@@ -1805,5 +1808,42 @@ class GajiPerBulanController extends Controller
         } catch (QueryException $e) {
             return $e;
         }
+    }
+
+    public function downloadRincianPayroll(Request $request){
+        $is_cabang = auth()->user()->hasRole('cabang');
+        $kantor = $is_cabang ? auth()->user()->kd_cabang : 'pusat';
+        $batch_id = $request->batch_id;
+        $cetak = $request->cetak ?? null;
+        $data_batch = GajiPerBulanModel::where('batch_id', $batch_id)->select('bulan', 'tahun')->first();
+        $bulan = $data_batch->bulan;
+        $tahun = $data_batch->tahun;
+        $tipe = $request->tipe;
+        $bulanShow = array(
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        );
+
+        $payrollRepo = new PayrollRepository;
+        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak);
+        $returnType = null;
+        if($tipe == 'payroll'){
+            $returnType = new ProsesPayroll($data);
+        } else {
+            $returnType = new ProsesRincianPayroll($data);
+        }
+
+        $filename = ucwords($tipe) . ' Kantor ' . (!$is_cabang ? 'Pusat' : CabangModel::where('kd_cabang', $kantor)->first()->nama_cabang) . ' Bulan ' . $bulanShow[$bulan] . ' Tahun ' . $tahun . '.xlsx'; 
+        return Excel::download($returnType , $filename);
     }
 }

@@ -8,6 +8,7 @@
                 </button>
             </div>
             <div class="modal-body table-responsive">
+                <a href="" download class="is-btn is-primary mb-3 btn-download-payroll" data-batch="" type="">Download Excel</a>
                 <table class="table whitespace-nowrap table-bordered" id="table-payroll" style="width: 100%;">
                     <thead class="text-primary" style="border:1px solid #e3e3e3 !important">
                         <tr>
