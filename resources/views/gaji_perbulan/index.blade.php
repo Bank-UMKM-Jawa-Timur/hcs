@@ -129,7 +129,7 @@
                                                             <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload File</a>
                                                         @endif
                                                     @else
-                                                        <a class="btn btn-outline-primary p-1 btn-download-pdf" href="{{ route('cetak.penghasilanPerBulan',$item->id) }}">Download PDF</a>
+                                                        <a class="btn btn-outline-primary p-1 btn-download-pdf " id="download" href="#" data-id={{ $item->id }}>Download PDF</a>
                                                     @endif
                                                     @if($item->total_penyesuaian > 0)
                                                         <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
@@ -291,7 +291,25 @@
         <input type="hidden" name="batch_id" id="batch_id">
     </form>
 @endsection
+@push('script')
+<script src="{{asset('vendor/printpage/printpage.min.js')}}"></script>
 
+    <script>
+        $('.btn-download-pdf').on('click',function() {
+            let id  = $(this).data('id');
+            console.log(id);
+            let url = "{{ url('') }}"
+            let downloadUrl = `${url}/cetak-penghasilan/${id}`;
+            console.log(downloadUrl);
+            // href="{{ route('cetak.penghasilanPerBulan',$item->id) }}"
+            $(this).attr('href',downloadUrl)
+
+        })
+        $(document).ready(function() {
+            $('#download').printPage();
+        })
+    </script>
+@endpush
 @section('custom_script')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
@@ -306,6 +324,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js">
     </script>
     <script>
+
         $("#tahun").change(function(e){
             var tahun = $(this).val();
             $('#bulan option').removeAttr('disabled');
@@ -385,7 +404,7 @@
                     {"data": "nama_karyawan"},
                 ]
             });
-            
+
             // Add event listener for opening and closing details
             table.on('click', 'td.dt-control', function (e) {
                 let tr = e.target.closest('tr');
@@ -400,8 +419,8 @@
                     row.child(showDetail(row.data().penyesuaian)).show();
                 }
             });
-            $('#penyesuaian-modal #batch_id').val(batch_id); 
-            $('#penyesuaian-modal').modal('show'); 
+            $('#penyesuaian-modal #batch_id').val(batch_id);
+            $('#penyesuaian-modal').modal('show');
         })
 
         $('.btn-final').on('click', function() {
