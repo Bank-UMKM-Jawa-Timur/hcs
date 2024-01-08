@@ -197,6 +197,7 @@ class PayrollRepository
                                     ) AS status
                                 "),
                                 'status_karyawan',
+                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
                             )
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
@@ -212,6 +213,11 @@ class PayrollRepository
                                 WHEN mst_karyawan.kd_jabatan='NST' THEN 8
                                 WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
                             ")
+                            ->orderBy('status_kantor', 'asc')
+                            ->orderBy('kd_cabang', 'asc')
+                            ->orderByRaw($this->orderRaw)
+                            ->orderBy('nip', 'asc')
+                            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
