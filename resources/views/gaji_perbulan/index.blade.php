@@ -131,11 +131,6 @@
                                             @endif
                                             <td class="text-center">
                                                 @if($item->status == 'proses')
-                                                    @if ($item->tanggal_cetak != null)
-                                                        @if ($item->file == null)
-                                                            <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload File</a>
-                                                        @endif
-                                                    @endif
                                                     @if($item->total_penyesuaian > 0)
                                                         <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
                                                             data-batch_id="{{$item->id}}">Perbarui</a>
