@@ -296,7 +296,7 @@ class CetakGajiRepository
             }
 
             if ($karyawan->potongan) {
-                $total_potongan += $karyawan->potongan->dpp;
+                $total_potongan += $karyawan->potongan?->dpp;
             }
 
             $total_potongan += $bpjs_tk;
