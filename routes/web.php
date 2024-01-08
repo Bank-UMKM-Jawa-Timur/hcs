@@ -350,5 +350,6 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
         });
 
     Route::get('get-rincian-payroll', [GajiPerBulanController::class, 'getRincianPayroll'])->name('get-rincian-payroll');
+    Route::get('/proses-gaji-download-rincian', [GajiPerBulanController::class, 'downloadRincianPayroll'])->name('proses-gaji-download-rincian');
 });
 require __DIR__.'/auth.php';
