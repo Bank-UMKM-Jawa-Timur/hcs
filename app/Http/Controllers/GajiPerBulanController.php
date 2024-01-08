@@ -1781,9 +1781,8 @@ class GajiPerBulanController extends Controller
 
         DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
             'tanggal_cetak' => Carbon::now(),
-            ]);
-        // $pdf = Pdf::loadView('gaji_perbulan.cetak-pdf', ['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $data->tanggal_input]);
-        // return $pdf->download('LampiranGaji-' . $data->tanggal_input . '.pdf');
+        ]);
+
         return view('gaji_perbulan.cetak-pdf',['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $data->tanggal_input]);
     }
 
