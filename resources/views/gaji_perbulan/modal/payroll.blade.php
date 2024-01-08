@@ -1,6 +1,9 @@
 <div class="modal" tabindex="-1" id="payroll-modal">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
+    <div class="modal-dialog" style="max-width: 90%;">
+        <div class="modal-content" style="
+        width: 100%;
+        margin: 0;
+        padding: 0;">
             <div class="modal-header">
                 <h5 class="modal-title">Payroll</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -8,7 +11,9 @@
                 </button>
             </div>
             <div class="modal-body table-responsive">
-                <a href="" download class="is-btn is-primary mb-3 btn-download-payroll" data-batch="" type="">Download Excel</a>
+                <div class="pb-4">
+                    <a href="" download class="is-btn is-primary mb-3 btn-download-payroll" data-batch="" type="">Download Excel</a>
+                </div>
                 <table class="table whitespace-nowrap table-bordered" id="table-payroll" style="width: 100%;">
                     <thead class="text-primary" style="border:1px solid #e3e3e3 !important">
                         <tr>
