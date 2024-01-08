@@ -12,18 +12,18 @@
                     <table class="display" id="penyesuaian-table" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th rowspan="2"></th>
-                                <th rowspan="2">No</th>
-                                <th rowspan="2">NIP</th>
-                                <th rowspan="2">Nama</th>
-                                <th colspan="2">Total Penghasilan</th>
-                                <th colspan="2">Total Potongan</th>
+                                <th rowspan="2" class="text-center"></th>
+                                <th rowspan="2" class="text-center">No</th>
+                                <th rowspan="2" class="text-center">NIP</th>
+                                <th rowspan="2" class="text-center">Nama</th>
+                                <th colspan="2" class="text-center">Total Penghasilan</th>
+                                <th colspan="2" class="text-center">Total Potongan</th>
                             </tr>
                             <tr>
-                                <th class="text-right">Sebelum</th>
-                                <th class="text-right">Sesudah</th>
-                                <th class="text-right">Sebelum</th>
-                                <th class="text-right">Sesudah</th>
+                                <th class="text-center">Sebelum</th>
+                                <th class="text-center">Sesudah</th>
+                                <th class="text-center">Sebelum</th>
+                                <th class="text-center">Sesudah</th>
                             </tr>
                         </thead>
                     </table>
