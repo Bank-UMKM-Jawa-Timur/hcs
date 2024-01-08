@@ -96,29 +96,9 @@
                                     <th>Nip</th>
                                     <th>Nama Karyawan</th>
                                     <th>Nominal</th>
-                                    {{-- <th>Aksi</th> --}}
-                                    {{-- <th>
-                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-primary btn-plus">
-                                            +
-                                        </button>
-                                    </th> --}}
                                 </tr>
                             </thead>
                             <tbody id="t_body">
-                                {{-- <tr>
-                                    <td>1</td>
-                                    <td>1121212</td>
-                                    <td>Saya</td>
-                                    <td>123.321</td>
-                                    <td>
-                                        <button class="btn btn-warning" id="edit-penghasilan">edit</button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
-                                            -
-                                        </button>
-                                    </td>
-                                </tr> --}}
                             </tbody>
                         </table>
                     </div>
@@ -293,6 +273,30 @@
                     }
             }
 
+            function findDuplicateNIP(data) {
+                const nipMap = new Map();
+                const duplicates = [];
+              
+                data.forEach(employee => {
+                  const nip = employee.nip;
+              
+                  if (nipMap.has(nip)) {
+                    // NIP already found, increment the count
+                    nipMap.set(nip, nipMap.get(nip) + 1);
+              
+                    // Check if it's the second occurrence (or more)
+                    if (nipMap.get(nip) === 2) {
+                      duplicates.push(nip);
+                    }
+                  } else {
+                    // Add NIP to the map with an initial count of 1
+                    nipMap.set(nip, 1);
+                  }
+                });
+              
+                return duplicates;
+              }
+
             function showTable(sheet_data) {
                 var no = 0;
                 var grandTotalNominal = 0;
@@ -346,32 +350,35 @@
                                 </div>
                         `);
                     },
-                    // <tr class="${value.cek_nip == false || value.cek_tunjangan == true ? 'table-danger' : ''}">
                     success: function(res){
                         var new_body_tr = ``;
                         var new_body_tr_success = ``;
                         var message = ``;
                         var tittleMessage = ``;
                         var headerMessage = `harap cek kembali pada file excel yang di upload.`;
+                        const duplicateNIP = findDuplicateNIP(res);
                         $.each(res,function(key,value) {
                             if (value.cek_nip == false) {
-                                checkNip.push(value.nip + " row " + noEmpty++);
+                                checkNip.push(value.nip + " baris " + noEmpty++);
                                 hasError = true;
                                 hasNip = true;
                                 hasTunjangan = false;
                             } else if (value.cek_tunjangan == true) {
-                                checkNipTunjangan.push(value.nip + " row " + noEmpty++);
+                                checkNipTunjangan.push(value.nip + " baris " + noEmpty++);
                                 namaTunjangan.push(value.tunjangan.nama_tunjangan);
                                 hasError = true;
                                 hasTunjangan = true;
                                 hasNip = false;
                             }
                             if (value.cek_nip == false || value.cek_tunjangan == true) {
+                                checkNip.push(value.nip + " baris " + noEmpty++);
+                                hasError = true;
+                                hasNip = true;
+                                hasTunjangan = false;
                                 grandTotalNominal += parseInt(dataNominal[key])
                                 nipDataRequest.push(value.nip);
                                 no++;
                                 new_body_tr += `
-                                        
                                         <tr class="table-danger">
                                         <td>
                                             ${no}
@@ -388,7 +395,36 @@
                                     </tr>
                                 `;
                             }
+                            if (value.cek_nip || value.cek_tunjangan) {
+                                let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
+                                if (nipDuplicate) {
+                                    checkNip.push(value.nip + " baris " + noEmpty++);
+                                    hasError = true;
+                                    hasNip = true;
+                                    hasTunjangan = false;
+                                    grandTotalNominal += parseInt(dataNominal[key])
+                                    nipDataRequest.push(value.nip);
+                                    no++;
+                                    new_body_tr += `
+                                            <tr class="table-danger">
+                                            <td>
+                                                ${no}
+                                            </td>
+                                            <td>
+                                                ${value.nip}
+                                            </td>
+                                            <td>
+                                                ${value.nama_karyawan}
+                                            </td>
+                                            <td>
+                                                ${formatRupiah(dataNominal[key].toString())}
+                                            </td>
+                                        </tr>
+                                    `;
+                                }
+                            }
                         })
+
                         $.each(res,function(key,value) {
                             if (value.cek_nip == false) {
                                 // checkNip.push(value.nip);
@@ -408,7 +444,6 @@
                                 nipDataRequest.push(value.nip);
                                 no++;
                                 new_body_tr += `
-                                        
                                         <tr class="">
                                         <td>
                                             ${no}
