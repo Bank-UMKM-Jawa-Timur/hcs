@@ -848,7 +848,7 @@ class KaryawanController extends Controller
                         ->update([
                             'kredit_koperasi' => (int)str_replace('.', '', $request->get('potongan_kredit_koperasi')),
                             'iuran_koperasi' => (int)str_replace('.', '', $request->get('potongan_iuran_koperasi')),
-                            'kredit_pegawai' => $request->get('potongan_kredit_pegawai'),
+                            'kredit_pegawai' => (int)str_replace('.', '', $request->get('potongan_kredit_pegawai')),
                             'iuran_ik' => (int)str_replace('.', '', $request->get('potongan_iuran_ik')),
                             'updated_at' => now()
                         ]);
