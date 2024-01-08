@@ -236,12 +236,22 @@
                     </tr>
                 `
             // }
+            var tj_khusus = 0;
             // T. Multilevel
+            if (data.tj_ti > 0) {
+                tj_khusus += data.tj_ti
+            }
             if (data.tj_multilevel > 0) {
+                tj_khusus += data.tj_multilevel
+            }
+            if (data.tj_fungsional > 0) {
+                tj_khusus += data.tj_fungsional
+            }
+            if (tj_khusus > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
-                        <td class="px-3">Tj. Multilevel</td>
-                        <td class="text-right px-3">Rp ${formatRupiahPayroll(data.tj_multilevel)}</td>
+                        <td class="px-3">Tj. Khusus</td>
+                        <td class="text-right px-3">Rp ${formatRupiahPayroll(tj_khusus)}</td>
                     </tr>
                 `
             }
