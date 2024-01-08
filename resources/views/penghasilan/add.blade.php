@@ -43,6 +43,30 @@
                 }
             })
 
+            function findDuplicateNIP(data) {
+                const nipMap = new Map();
+                const duplicates = [];
+
+                data.forEach(employee => {
+                    const nip = employee.nip;
+
+                    if (nipMap.has(nip)) {
+                        // NIP already found, increment the count
+                        nipMap.set(nip, nipMap.get(nip) + 1);
+                
+                        // Check if it's the second occurrence (or more)
+                        if (nipMap.get(nip) === 2) {
+                        duplicates.push(nip);
+                        }
+                    } else {
+                        // Add NIP to the map with an initial count of 1
+                        nipMap.set(nip, 1);
+                    }
+                });
+
+                return duplicates;
+            }
+
             $('.btn-import').on('click',function(element) {
                 var kategori = $("#kategori").val();
                 if(kategori == ''){
@@ -104,10 +128,8 @@
                                 var hasSuccess = false;
 
                                 var invalidNamaRows = [];
-                                console.log(sheet_data);
                                 $.each(sheet_data,function(key, value) {
                                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
-
                                         dataNip.push({ nip: value['NIP'], row: key + 1 });
                                         dataNominal.push(value['Nominal'])
                                         if(sheet_data[key].hasOwnProperty(keterangan)){
@@ -140,16 +162,22 @@
                                             `);
                                         },
                                         success: function (res) {
-                                            console.log(res);
                                             $('#table-data').removeClass('hidden');
                                             var new_body_tr = ``
+                                            const duplicateNIP = findDuplicateNIP(res);
                                             $.each(res,function(key,value) {
                                                 // if (res.some(checkUsername)) {
+                                                let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
                                                 if (value.cek == '-') {
-                                                    checkNip.push(value.nip + " row " + noCheckEmpty++);
-                                                    hasError = true
-                                                }
-                                                if (value.cek == '-') {
+                                                    // Jika nip tidak ditemukan
+                                                    if (nipDuplicate) {
+                                                        checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
+                                                        hasError = true
+                                                    }
+                                                    else {
+                                                        checkNip.push(value.nip + " baris " + noCheckEmpty++);
+                                                        hasError = true
+                                                    }
                                                     nipDataRequest.push(value.nip);
                                                     grand_total += parseInt(dataNominal[key])
                                                     var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
@@ -175,7 +203,38 @@
                                                         </tr>
                                                     `;
                                                 }
+                                                else {
+                                                    // Nip ditemukan
+                                                    if (nipDuplicate) {
+                                                        checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
+                                                        hasError = true
 
+                                                        nipDataRequest.push(value.nip);
+                                                        grand_total += parseInt(dataNominal[key])
+                                                        var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
+                                                            <td class="table-danger">
+                                                                <span>${dataKeterangan[key]}</span>
+                                                            </td>` : ``;
+                                                        new_body_tr += `
+                                                            <tr>
+                                                                <td class="table-danger">
+                                                                    <span>${no++}</span>
+                                                                </td>
+                                                                <td class="table-danger">
+                                                                    <span class="text-danger">${value.nip}</span>
+                                                                </td>
+                                                                <td class="table-danger">
+                                                                    <span class="text-danger">${value.nama_karyawan}</span>
+                                                                </td>
+                                                                <td class="table-danger">
+                                                                    <span>${formatRupiah(dataNominal[key])}</span>
+        
+                                                                </td>
+                                                                ${rowKeterangan}
+                                                            </tr>
+                                                        `;
+                                                    }
+                                                }
                                             })
                                             $.each(res,function(key,value) {
                                                 // if (res.some(checkUsername)) {
@@ -185,32 +244,34 @@
                                                 }
                                                 if (value.cek == '-') {
                                                 }else{
-                                                    nipDataRequest.push(value.nip);
-                                                    grand_total += parseInt(dataNominal[key])
-                                                    var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
-                                                        <td class="">
-                                                            <span>${dataKeterangan[key]}</span>
-                                                        </td>` : ``;
-                                                    new_body_tr += `
-                                                        <tr>
+                                                    let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
+                                                    if (!nipDuplicate) {
+                                                        nipDataRequest.push(value.nip);
+                                                        grand_total += parseInt(dataNominal[key])
+                                                        var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
                                                             <td class="">
-                                                                <span>${no++}</span>
-                                                            </td>
-                                                            <td class="">
-                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
-                                                            </td>
-                                                            <td class="">
-                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
-                                                            </td>
-                                                            <td class="">
-                                                                <span>${formatRupiah(dataNominal[key])}</span>
-    
-                                                            </td>
-                                                            ${rowKeterangan}
-                                                        </tr>
-                                                    `;
+                                                                <span>${dataKeterangan[key]}</span>
+                                                            </td>` : ``;
+                                                        new_body_tr += `
+                                                            <tr>
+                                                                <td class="">
+                                                                    <span>${no++}</span>
+                                                                </td>
+                                                                <td class="">
+                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
+                                                                </td>
+                                                                <td class="">
+                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
+                                                                </td>
+                                                                <td class="">
+                                                                    <span>${formatRupiah(dataNominal[key])}</span>
+        
+                                                                </td>
+                                                                ${rowKeterangan}
+                                                            </tr>
+                                                        `;
+                                                    }
                                                 }
-
                                             })
                                             if (hasError == true) {
                                                 var message = ``;
@@ -229,10 +290,8 @@
                                             }
                                             var total_grand = grand_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
                                             $('#grand-total').html(`
-                                                <span id="grand-total" class="font-weight-bold">Grand Total : ${total_grand}</span>
-                                            `)
-                                            $('#total-data').html(`
-                                                <span id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</span>
+                                                <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
+                                                <p id="grand-total" class="font-weight-bold">Grand Total : ${total_grand}</p>
                                             `)
                                             $('#table_item tbody').append(new_body_tr);
 
@@ -316,7 +375,7 @@
                 </div>
             </div>
             <div class="row">
-            <div class="col-md-12 justify-content-center">
+                <div class="col-md-12 justify-content-center">
                     @if ($errors->any())
                     <div class="alert alert-danger" role="alert">
                         <span class="alert-link">Terjadi Kesalahan</span>
@@ -330,84 +389,79 @@
                             @endforeach
                         </ul>
                     </div>
-
                     @endif
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div id="alert-container">
+                    <div class="row">
+                        <div class="col">
+                            <label for="">Kategori</label>
+                            <select name="kategori" id="kategori" class="form-control">
+                                <option value="">-- Pilih Kategori --</option>
+                                @forelse ($data as $item)
+                                    <option value="{{ strtolower($item->nama_tunjangan) }}">{{ $item->nama_tunjangan }}</option>
+                                @empty
 
-                                </div>
-                            </div>
-                            <div class="col">
-                                <label for="">Kategori</label>
-                                <select name="kategori" id="kategori" class="form-control">
-                                    <option value="">-- Pilih Kategori --</option>
-                                    @forelse ($data as $item)
-                                        <option value="{{ strtolower($item->nama_tunjangan) }}">{{ $item->nama_tunjangan }}</option>
-                                    @empty
-
-                                    @endforelse
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label for="tanggal">Tanggal</label>
-                                <input type="date" class="form-control" name="tanggal" required>
-                            </div>
-                            <div class="col">
-                                <label for="">Data Excel</label>
-                                <div class="custom-file">
-                                    <input type="file" name="upload_excel" class="custom-file-input" id="upload_csv" accept=".xlsx, .xls">
-                                    <label class="custom-file-label overflow-hidden" for="validatedCustomFile" id="file-label" style="padding: 10px 4px 30px 5px">Choose file...</label>
-                                </div>
-                            </div>
-                            <div class="col align-items-center mt-4">
-                                <button type="button" class="is-btn is-primary btn-import">Import</button>
+                                @endforelse
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="tanggal">Tanggal</label>
+                            <input type="date" class="form-control" name="tanggal" required>
+                        </div>
+                        <div class="col">
+                            <label for="">Data Excel</label>
+                            <div class="custom-file">
+                                <input type="file" name="upload_excel" class="custom-file-input" id="upload_csv" accept=".xlsx, .xls">
+                                <label class="custom-file-label overflow-hidden" for="validatedCustomFile" id="file-label" style="padding: 10px 4px 30px 5px">Choose file...</label>
                             </div>
                         </div>
-                </div>
-
-                <div class="col-md-4 align-self-center mt-4" id="total-data">
-                </div>
-                <div class="col-md-4 align-self-center mt-4" id="grand-total">
-                </div>
-                <div class="col-md-4 align-self-center mt-4">
-                    <div class="d-flex justify-content-start hidden">
-                        <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
-                        <input type="text" name="keterangan" class="form-control keterangan-input" value="" readonly hidden>
-                        <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
-                        <button type="submit" class="is-btn btn-info hidden" id="button-simpan">Simpan</button>
+                        <div class="col align-items-center mt-4">
+                            <button type="button" class="is-btn is-primary btn-import">Import</button>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-12" id="loading-message">
+            </div>
+            <div class="mt-2" id="alert-container"></div>
+            <div class="teks mt-4">
+                <div class="col-md-4 align-self-center mt-4" id="grand-total"></div>
+            </div>
+            <div class="col-md-4 align-self-center mt-4">
+                <div class="d-flex justify-content-start hidden">
+                    <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
+                    <input type="text" name="keterangan" class="form-control keterangan-input" value="" readonly hidden>
+                    <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
+                    <button type="submit" class="is-btn is-primary hidden" id="button-simpan">Simpan</button>
                 </div>
-                <div class="col-md-12 hidden" id="table-data">
-                    <div class="table-responsive overflow-hidden content-center">
-                        <table class="table whitespace-nowrap table-bondered" id="table_item" style="width: 100%">
-                        <thead class="text-primary">
-                            <th>
-                                No
-                            </th>
-                            <th>
-                                NIP
-                            </th>
-                            <th>
-                                Nama
-                            </th>
-                            <th>
-                                Nominal
-                            </th>
-                            <th class="hidden" id="keterangan">
-                                Keterangan
-                            </th>
-                        </thead>
-                        <tbody>
+            </div>
+            <div class="col-md-12" id="loading-message">
+            </div>
+            <div class="col-md-12 hidden" id="table-data">
+                <div class="table-responsive overflow-hidden content-center">
+                    <table class="table whitespace-nowrap table-bondered" id="table_item" style="width: 100%">
+                    <thead class="text-primary">
+                        <th>
+                            No
+                        </th>
+                        <th>
+                            NIP
+                        </th>
+                        <th>
+                            Nama
+                        </th>
+                        <th>
+                            Nominal
+                        </th>
+                        <th class="hidden" id="keterangan">
+                            Keterangan
+                        </th>
+                    </thead>
+                    <tbody>
 
-                        </tbody>
+                    </tbody>
 
-                        </table>
-                    </div>
+                    </table>
                 </div>
             </div>
         </form>

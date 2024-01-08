@@ -82,7 +82,7 @@
         <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
         <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
         <div class="d-flex justify-content-start">
-            <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
+            <button type="submit" class="is-btn is-primary d-none" id="btn-simpan">Simpan</button>
         </div>
         <div class="col" id="loading-message"></div>
         <div class="row d-none" id="hasil-filter">
@@ -276,26 +276,26 @@
             function findDuplicateNIP(data) {
                 const nipMap = new Map();
                 const duplicates = [];
-              
+
                 data.forEach(employee => {
-                  const nip = employee.nip;
-              
-                  if (nipMap.has(nip)) {
-                    // NIP already found, increment the count
-                    nipMap.set(nip, nipMap.get(nip) + 1);
-              
-                    // Check if it's the second occurrence (or more)
-                    if (nipMap.get(nip) === 2) {
-                      duplicates.push(nip);
+                    const nip = employee.nip;
+
+                    if (nipMap.has(nip)) {
+                        // NIP already found, increment the count
+                        nipMap.set(nip, nipMap.get(nip) + 1);
+                
+                        // Check if it's the second occurrence (or more)
+                        if (nipMap.get(nip) === 2) {
+                        duplicates.push(nip);
+                        }
+                    } else {
+                        // Add NIP to the map with an initial count of 1
+                        nipMap.set(nip, 1);
                     }
-                  } else {
-                    // Add NIP to the map with an initial count of 1
-                    nipMap.set(nip, 1);
-                  }
                 });
-              
+
                 return duplicates;
-              }
+            }
 
             function showTable(sheet_data) {
                 var no = 0;
@@ -398,7 +398,7 @@
                             if (value.cek_nip || value.cek_tunjangan) {
                                 let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
                                 if (nipDuplicate) {
-                                    checkNip.push(value.nip + " baris " + noEmpty++);
+                                    checkNip.push("Duplikasi " + value.nip + " baris " + noEmpty++);
                                     hasError = true;
                                     hasNip = true;
                                     hasTunjangan = false;
