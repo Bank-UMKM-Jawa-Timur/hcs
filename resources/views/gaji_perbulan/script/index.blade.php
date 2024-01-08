@@ -121,6 +121,63 @@
             $('#proses-modal #total_netto').empty()
         })
 
+        $('#proses-modal #tanggal').on('change', function () {
+            var tanggal = $(this).val()
+            console.log(tanggal)
+            // Create a Date object from the date string
+            var dateObject = new Date(tanggal);
+
+            // Get the month (0-indexed, so January is 0, February is 1, and so on)
+            const month = dateObject.getMonth() + 1;
+            const year = dateObject.getFullYear();
+
+            // Get month & year penghasilan terakhir
+            if (year.toString().length == 4) {
+                const last_month = $('#proses-modal #bulan_terakhir').val()
+                const last_year = $('#proses-modal #tahun_terakhir').val()
+                const dif_month = parseInt(month) - parseInt(last_month);
+                console.log(`month : ${month}`)
+                console.log(`last_month : ${last_month}`)
+                console.log(`dif_month : ${dif_month}`)
+                if (dif_month > 1) {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: 'Tanggal penghasilan hanya diperbolehkan H+1 dari bulan penghasilan terakhir',
+                        icon: 'warning',
+                        iconColor: '#da271f',
+                        confirmButtonText: 'Oke',
+                        confirmButtonColor: "#da271f",
+                    })
+                    $(this).val('')
+                }
+                else {
+                    if (((year == last_year) && (month == last_month)) || (year == last_year) && (month < last_month)) {
+                        // Clear tanggal
+                        Swal.fire({
+                            title: 'Peringatan',
+                            text: 'Harap pilih tanggal setelah tanggal penghasilan terakhir',
+                            icon: 'warning',
+                            iconColor: '#da271f',
+                            confirmButtonText: 'Oke',
+                            confirmButtonColor: "#da271f",
+                        })
+                        $(this).val('')
+                    }
+                    else if (year < last_year) {
+                        Swal.fire({
+                            title: 'Peringatan',
+                            text: 'Harap pilih tanggal setelah tanggal penghasilan terakhir',
+                            icon: 'warning',
+                            iconColor: '#da271f',
+                            confirmButtonText: 'Oke',
+                            confirmButtonColor: "#da271f",
+                        })
+                        $(this).val('')
+                    }
+                }
+            }
+        })
+
         function loadDataPenghasilan() {
             $('.loader-wrapper').removeAttr('style')
 
@@ -130,6 +187,10 @@
                 success: function(response) {
                     if (response.status == 'success') {
                         var data = response.data
+                        $('#proses-modal #tahun_terakhir').val(data.penghasilan_tahun_terakhir)
+                        $('#proses-modal #bulan_terakhir').val(data.penghasilan_bulan_terakhir)
+                        var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+                        $('#proses-modal #periode_terakhir').html(`${data.penghasilan_tahun_terakhir} ${months[(data.penghasilan_bulan_terakhir - 1)]}`)
                         $('#proses-modal #total_karyawan').html(data.total_karyawan)
                         $('#proses-modal #total_bruto').html(`Rp ${formatRupiah(data.bruto.toString())}`)
                         $('#proses-modal #total_potongan').html(`Rp ${formatRupiah(data.potongan.toString())}`)

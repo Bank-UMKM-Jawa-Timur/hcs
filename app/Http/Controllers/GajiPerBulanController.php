@@ -360,11 +360,27 @@ class GajiPerBulanController extends Controller
             // Get Netto
             $netto = $bruto - $potongan;
 
+            // Get Penghasilan terakhir
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+            $penghasilan = DB::table('batch_gaji_per_bulan')
+                            ->where('kd_entitas', $kd_entitas)
+                            ->whereYear('tanggal_input', date('Y'))
+                            ->orderBy('tanggal_input', 'DESC')
+                            ->first();
+            $penghasilan_tahun_terakhir = date('Y');
+            $penghasilan_bulan_terakhir = 0;
+            if ($penghasilan) {
+                $penghasilan_tahun_terakhir = (int) date('Y', strtotime($penghasilan->tanggal_input));
+                $penghasilan_bulan_terakhir = (int) date('m', strtotime($penghasilan->tanggal_input));
+            }
+
             $data = [
                 'total_karyawan' => $total_karyawan,
                 'bruto' => $bruto,
                 'potongan' => $potongan,
                 'netto' => $netto,
+                'penghasilan_tahun_terakhir' => $penghasilan_tahun_terakhir,
+                'penghasilan_bulan_terakhir' => $penghasilan_bulan_terakhir,
             ];
 
             $status = 'success';
@@ -800,7 +816,9 @@ class GajiPerBulanController extends Controller
                 DB::table('batch_gaji_per_bulan')->update($batch);
             }
             else {
+                $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
                 $batch = [
+                    'kd_entitas' => $kd_entitas,
                     'tanggal_input' => $tanggal,
                     'created_at' => $now,
                     'updated_at' => $now,

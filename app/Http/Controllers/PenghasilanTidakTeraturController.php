@@ -192,6 +192,7 @@ class PenghasilanTidakTeraturController extends Controller
                 'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
                 'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
                 'tj_ti' => ($data != null) ? $data->tj_ti : 0,
+                'tj_fungsional' => ($data != null) ? $data->tj_fungsional : 0,
                 'tj_transport' => ($data != null) ? $data->tj_transport : 0,
                 'tj_pulsa' => ($data != null) ? $data->tj_pulsa : 0,
                 'tj_vitamin' => ($data != null) ? $data->tj_vitamin : 0,
