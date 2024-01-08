@@ -166,7 +166,6 @@
                                             var new_body_tr = ``
                                             const duplicateNIP = findDuplicateNIP(res);
                                             $.each(res,function(key,value) {
-                                                // if (res.some(checkUsername)) {
                                                 let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
                                                 if (value.cek == '-') {
                                                     // Jika nip tidak ditemukan
