@@ -137,8 +137,17 @@
                                                         <a href="#" class="btn btn-outline-warning p-1 btn-perbarui"
                                                             data-batch_id="{{$item->id}}">Perbarui</a>
                                                     @else
-                                                        <a href="#" class="btn btn-outline-success p-1 btn-final"
-                                                            data-batch_id="{{$item->id}}">Proses Final</a>
+                                                        @if ($item->tanggal_cetak != null)
+                                                            @if ($item->file != null)
+                                                                @php
+                                                                    $now = date('Y-m-d');
+                                                                @endphp
+                                                                {{--  @if ($item->tanggal_input == $now)  --}}
+                                                                    <a href="#" class="btn btn-outline-success p-1 btn-final"
+                                                                        data-batch_id="{{$item->id}}">Proses Final</a>
+                                                                {{--  @endif  --}}
+                                                            @endif
+                                                        @endif
                                                     @endif
                                                 @else
                                                     -
