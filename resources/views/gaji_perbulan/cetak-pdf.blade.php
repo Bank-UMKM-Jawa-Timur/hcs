@@ -210,7 +210,21 @@
     </div>
 </body>
 <script>
-    window.print() //open the print dialog box
+    var currentPageUrl = "{{ route('gaji_perbulan.index') }}";
+
+    function printAndRefresh() {
+        window.print(); // Open the print dialog box
+    }
+
+    window.addEventListener('afterprint', function () {
+        // After print, refresh the page
+        window.location.href = currentPageUrl;
+    });
+
+    // Call the print function when the document is ready
+    document.addEventListener('DOMContentLoaded', function () {
+        printAndRefresh();
+    });
 </script>
 </html>
 
