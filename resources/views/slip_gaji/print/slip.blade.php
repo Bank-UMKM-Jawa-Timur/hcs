@@ -211,68 +211,74 @@
                                 <td id="gaji_pokok" style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->gj_pokok, 0, ',', '.') }}
                                 </td>
                             </tr>
-                            @if ($data->gaji->tj_keluarga)
+                            @if ($data->gaji->tj_keluarga > 0)
                                 <tr style="border:1px solid #e3e3e3">
                                     <td>Tj. Keluarga</td>
                                     <td id="gaji_pokok" style="padding-x: 3rem; text-align: right;">
                                         Rp {{ number_format($data->gaji->tj_keluarga, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
-                            @if ($data->gaji->tj_jabatan)
+                            @if ($data->gaji->tj_jabatan > 0)
                                 <tr style="border:1px solid #e3e3e3">
                                     <td>Tj. Jabatan</td>
                                     <td id="gaji_pokok" style="padding-x: 3rem; text-align: right;">
                                         Rp {{ number_format($data->gaji->tj_jabatan, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
-                            @if ($data->gaji->gj_penyesuaian)
+                            @if ($data->gaji->gj_penyesuaian > 0)
                                 <tr style="border:1px solid #e3e3e3">
                                     <td>Gaji Penyesuaian</td>
                                     <td id="gaji_pokok" style="padding-x: 3rem; text-align: right;">
                                         Rp {{ number_format($data->gaji->gj_penyesuaian, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
-                            @if ($data->gaji->tj_perumahan)
+                            @if ($data->gaji->tj_perumahan > 0)
                                 <tr style="border:1px solid #e3e3e3">
                                     <td>Tj. Perumahan</td>
-                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_multilevel, 0, ',', '.') }}</td>
+                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_perumahan, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
-                            @if ($data->gaji->tj_telepon)
+                            @if ($data->gaji->tj_telepon > 0)
                                 <tr style="border:1px solid #e3e3e3">
                                     <td>Tj. Telepon, Listrik dan Air</td>
                                     <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_telepon, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
-                            @if ($data->gaji->tj_pelaksana)
+                            @if ($data->gaji->tj_pelaksana > 0)
                                 <tr style="border:1px solid #e3e3e3">
                                     <td>Tj. Pelaksana</td>
                                     <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_pelaksana, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
-                            @if ($data->gaji->tj_kemahalan)
+                            @if ($data->gaji->tj_kemahalan > 0)
                                 <tr style="border:1px solid #e3e3e3">
                                     <td>Tj. Kemahalan</td>
                                     <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_kemahalan, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
-                            @if ($data->gaji->tj_kesejahteraan)
+                            @if ($data->gaji->tj_kesejahteraan > 0)
                                 <tr style="border:1px solid #e3e3e3">
                                     <td>Tj. Kesejahteraan</td>
                                     <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_kesejahteraan, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             @endif
-                            @if ($data->gaji->tj_ti)
+                            @php
+                                $tj_khusus = 0;
+                                if ($data->gaji->tj_ti > 0) {
+                                    $tj_khusus += $data->gaji->tj_ti;
+                                }
+                                if ($data->gaji->tj_multilevel > 0) {
+                                    $tj_khusus += $data->gaji->tj_multilevel;
+                                }
+                                if ($data->gaji->tj_fungsional > 0) {
+                                    $tj_khusus += $data->gaji->tj_fungsional;
+                                }
+                            @endphp
+                            @if ($tj_khusus > 0)
                                 <tr style="border:1px solid #e3e3e3">
                                     <td>Tj. Khusus</td>
-                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_ti, 0, ',', '.') }}</td>
-                                </tr>
-                            @endif
-                            @if ($data->gaji->tj_multilevel)
-                                <tr style="border:1px solid #e3e3e3">
-                                    <td>Tj. Khusus</td>
-                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_multilevel, 0, ',', '.') }}</td>
+                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($tj_khusus, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
                         </tbody>
