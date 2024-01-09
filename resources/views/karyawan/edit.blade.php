@@ -2,6 +2,32 @@
     $arrayPendidikan = array('SD', 'SMP', 'SLTP', 'SLTA', 'SMK', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3');
 @endphp
 @extends('layouts.template')
+@push('script')
+<script>
+    $(document).ready(function() {
+        var inputRupiah = $('.rupiah-potongan')
+        $.each(inputRupiah, function(i, obj) {
+            $(this).val(formatRupiah(obj.value))
+        })
+    })
+    // function formatrupiah(angka, prefix) {
+    //     var number_string = angka.replace(/[^,\d]/g, '').toString(),
+    //         split = number_string.split(','),
+    //         sisa = split[0].length % 3,
+    //         rupiah = split[0].substr(0, sisa),
+    //         ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    //     // tambahkan titik jika yang di input sudah menjadi angka ribuan
+    //     if (ribuan) {
+    //         separator = sisa ? '.' : '';
+    //         rupiah += separator + ribuan.join('.');
+    //     }
+
+    //     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    //     return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+    // }
+</script>
+@endpush
 @section('content')
     <div class="card-header">
         <div class="card-header">
@@ -434,25 +460,25 @@
                                 <div class="col col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label for="is_nama">Kredit Koperasi</label>
-                                        <input type="number" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi" class="form-control rupiah-potongan" value="{{ old('potongan_kredit_koperasi', $data->potongan->kredit_koperasi ?? '') }}">
+                                        <input type="text" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi" class="form-control rupiah-potongan" value="{{ old('potongan_kredit_koperasi', $data->potongan->kredit_koperasi ?? '') }}">
                                     </div>
                                 </div>
                                 <div class="col col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label for="is_nama">Iuran Koperasi</label>
-                                        <input type="number" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi" class="form-control rupiah-potongan" value="{{ old('potongan_iuran_koperasi', $data->potongan->iuran_koperasi ?? '') }}">
+                                        <input type="text" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi" class="form-control rupiah-potongan" value="{{ old('potongan_iuran_koperasi', $data->potongan->iuran_koperasi ?? '') }}">
                                     </div>
                                 </div>
                                 <div class="col col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label for="is_nama">Kredit Pegawai</label>
-                                        <input type="number" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai" class="form-control rupiah-potongan" value="{{ old('potongan_kredit_pegawai', $data->potongan->kredit_pegawai ?? '') }}">
+                                        <input type="text" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai" class="form-control rupiah-potongan" value="{{ old('potongan_kredit_pegawai', $data->potongan->kredit_pegawai ?? '') }}">
                                     </div>
                                 </div>
                                 <div class="col col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label for="is_nama">Iuran IK</label>
-                                        <input type="number" id="potongan_iuran_ik" name="potongan_iuran_ik" class="form-control rupiah-potongan" value="{{ old('potongan_iuran_ik', $data->potongan->iuran_ik ?? '') }}">
+                                        <input type="text" id="potongan_iuran_ik" name="potongan_iuran_ik" class="form-control rupiah-potongan" value="{{ old('potongan_iuran_ik', $data->potongan->iuran_ik ?? '') }}">
                                     </div>
                                 </div>
                             </div>
@@ -482,9 +508,19 @@
         getKantor();
         cekStatus();
         jabatanChange();
-        $("#gj_pokok").val(formatRupiah($("#gj_pokok").val()));
-        $("#gj_penyesuaian").val(formatRupiah($("#gj_penyesuaian").val()));
-        $("#nominal").val(formatRupiah($("#nominal").val()));
+        var gaji_pokok = $("#gj_pokok").val();
+        if(gaji_pokok != undefined){
+            $("#gj_pokok").val(formatRupiah($("#gj_pokok").val()));
+        }
+        var gj_penyesuaian = $('#gj_penyesuaian').val();
+        if (gj_penyesuaian != undefined) {
+            $("#gj_penyesuaian").val(formatRupiah($("#gj_penyesuaian").val()));
+        }
+
+        var nominal = $('#nominal').val();
+        if (nominal != undefined) {
+            $("#nominal").val(formatRupiah($("#nominal").val()));
+        }
 
         $("#is_jml_anak").keyup(function(){
             $("#row_anak").empty();
@@ -517,6 +553,7 @@
 
         $('#gj_pokok').keyup(function(){
             var angka = $(this).val();
+            console.log(angka);
 
             $("#gj_pokok").val(formatRupiah(angka));
         })
@@ -533,7 +570,6 @@
         })
         $(".rupiah-potongan").keyup(function(){
             var value = $(this).val();
-            console.log(value);
             $(this).val(formatRupiah(value))
         })
 
@@ -593,9 +629,9 @@
                         var value = $('#divisi').val();
                         if($("#jabatan").val() != 'PIMDIV') {
                             divisiChange(value);
-    
+
                             $("#kantor_row2").empty();
-    
+
                             $("#kantor_row2").append(`
                                     <div class="form-group">
                                         <label for="subdiv">Sub divisi</label>
@@ -604,7 +640,7 @@
                                         </select>
                                     </div>`
                             );
-    
+
                             $("#divisi").change(function(){
                                 var value = $(this).val();
                                 divisiChange(value);
@@ -993,8 +1029,8 @@
         $(".textOnly").keydown(function(event){
             var inputValue = event.which;
             // allow letters and whitespaces only.
-            if(!(inputValue >= 65 && inputValue <= 120) && (inputValue != 32 && inputValue != 0)) { 
-                event.preventDefault(); 
+            if(!(inputValue >= 65 && inputValue <= 120) && (inputValue != 32 && inputValue != 0)) {
+                event.preventDefault();
             }
         })
     </script>

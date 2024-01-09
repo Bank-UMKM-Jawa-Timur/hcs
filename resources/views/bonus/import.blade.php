@@ -28,12 +28,35 @@
             var kategori;
             var url;
 
+            function findDuplicateNIP(data) {
+                const nipMap = new Map();
+                const duplicates = [];
+
+                data.forEach(employee => {
+                    const nip = employee.nip;
+
+                    if (nipMap.has(nip)) {
+                        // NIP already found, increment the count
+                        nipMap.set(nip, nipMap.get(nip) + 1);
+                
+                        // Check if it's the second occurrence (or more)
+                        if (nipMap.get(nip) === 2) {
+                        duplicates.push(nip);
+                        }
+                    } else {
+                        // Add NIP to the map with an initial count of 1
+                        nipMap.set(nip, 1);
+                    }
+                });
+
+                return duplicates;
+            }
+
             $('.btn-import').on('click',function(element) {
                 url = "{{ route('api.get.karyawan2') }}";
                 $('#table-data').addClass('hidden');
                 $('#table_item tbody').empty();
                 $('#alert-container').addClass('hidden');
-
 
                 var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
                 var grand_total = 0;
@@ -102,13 +125,21 @@
                                         success: function (res) {
                                             $('#table-data').removeClass('hidden');
                                             var new_body_tr = ``
+                                            const duplicateNIP = findDuplicateNIP(res);
                                             $.each(res,function(key,value) {
-                                                // if (res.some(checkUsername)) {
+                                                let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
                                                 if (value.cek == '-') {
+                                                    // Jika nip tidak ditemukan
+                                                    if (nipDuplicate) {
+                                                        checkNip.push("Duplikasi " + value.nip + " row " + noCheckEmpty++);
+                                                        hasError = true
+                                                    }
+                                                    else {
+                                                        checkNip.push(value.nip + " row " + noCheckEmpty++);
+                                                        hasError = true
+                                                    }
+                                                    
                                                     nipDataRequest.push(value.nip);
-                                                    checkNip.push(value.nip + " row " + noCheckEmpty++);
-                                                    hasError = true
-
                                                     grand_total += parseInt(dataNominal[key])
                                                     new_body_tr += `
                                                         <tr>
@@ -128,7 +159,33 @@
                                                         </tr>
                                                     `;
                                                 }
+                                                else {
+                                                    // Nip ditemukan
+                                                    if (nipDuplicate) {
+                                                        checkNip.push("Duplikasi " + value.nip + " row " + noCheckEmpty++);
+                                                        hasError = true
 
+                                                        nipDataRequest.push(value.nip);
+                                                        grand_total += parseInt(dataNominal[key])
+                                                        new_body_tr += `
+                                                            <tr>
+                                                                <td class="table-danger">
+                                                                    <span>${no++}</span>
+                                                                </td>
+                                                                <td class="table-danger">
+                                                                    <span class="text-danger">${value.nip}</span>
+                                                                </td>
+                                                                <td class="table-danger">
+                                                                    <span class="text-danger">${value.nama_karyawan}</span>
+                                                                </td>
+                                                                <td class="table-danger">
+                                                                    <span>${formatRupiah(dataNominal[key])}</span>
+        
+                                                                </td>
+                                                            </tr>
+                                                        `;
+                                                    }
+                                                }
                                             })
                                             $.each(res,function(key,value) {
                                                 // if (res.some(checkUsername)) {
@@ -136,25 +193,28 @@
                                                     // checkNip.push(value.nip);
                                                     // hasError = true
                                                 }else{
-                                                    nipDataRequest.push(value.nip);
-                                                    grand_total += parseInt(dataNominal[key])
-                                                    new_body_tr += `
-                                                        <tr>
-                                                            <td class="">
-                                                                <span>${no++}</span>
-                                                            </td>
-                                                            <td class="">
-                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
-                                                            </td>
-                                                            <td class="">
-                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
-                                                            </td>
-                                                            <td class="">
-                                                                <span>${formatRupiah(dataNominal[key])}</span>
-    
-                                                            </td>
-                                                        </tr>
-                                                    `;
+                                                    let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
+                                                    if (!nipDuplicate) {
+                                                        nipDataRequest.push(value.nip);
+                                                        grand_total += parseInt(dataNominal[key])
+                                                        new_body_tr += `
+                                                            <tr>
+                                                                <td class="">
+                                                                    <span>${no++}</span>
+                                                                </td>
+                                                                <td class="">
+                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
+                                                                </td>
+                                                                <td class="">
+                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
+                                                                </td>
+                                                                <td class="">
+                                                                    <span>${formatRupiah(dataNominal[key])}</span>
+        
+                                                                </td>
+                                                            </tr>
+                                                        `;
+                                                    }
                                                 }
 
                                             })
@@ -171,11 +231,9 @@
                                                 $('#button-simpan').removeClass('hidden');
                                             }
                                             var total_grand = grand_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-                                            $('#grand-total').html(`
-                                                <span id="grand-total-value" class="font-weight-bold">Grand Total : ${total_grand}</span>
-                                            `)
-                                            $('#total-data').html(`
-                                                <span id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</span>
+                                            $('#grand').html(`
+                                                <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
+                                                <p id="grand-total" class="font-weight-bold">Grand Total : ${total_grand}</p>
                                             `)
                                             $('#table_item tbody').append(new_body_tr);
 
@@ -265,21 +323,15 @@
         <div class="card-header">
             <h5 class="card-title">Import Bonus</h5>
             <p class="card-title"><a href="">Dashboard</a> > <a href="{{ route('bonus.index') }}">Bonus</a> >Import</p>
-            <a href="{{ route('bonus.excel') }}"  class="btn is-btn is-primary">Download Template Excel</a>
-
         </div>
     </div>
 
     <div class="card-body">
+        <a href="{{ route('bonus.excel') }}"  class="btn is-btn is-primary">Download Template Excel</a>
         <form action="{{ route('bonus.store') }}" enctype="multipart/form-data" method="POST" class="form-group mt-4">
             @csrf
-        <div class="row px-3">
-            <div class="col-md-12">
-                <div id="alert-container">
-
-                </div>
-            </div>
-           <div class="col-md-12 justify-content-center">
+        <div class="row">
+            <div class="col-md-12 justify-content-center">
                 @if ($errors->any())
                 <div class="alert alert-danger" role="alert">
                     <span class="alert-link">Terjadi Kesalahan</span>
@@ -296,7 +348,7 @@
 
                 @endif
             </div>
-            <div class="col-md-12 px-4">
+            <div class="col-md-12">
                     <div class="form-row mb-3">
                         <div class="col">
                             <label for="">Kategori</label>
@@ -319,30 +371,28 @@
                                 <input type="file" name="upload_csv" class="custom-file-input" id="upload_csv" >
                                 <label class="custom-file-label overflow-hidden" for="upload_csv"  style="padding: 10px 4px 30px 5px">Choose file...</label>
                             </div>
-                            {{-- <div class=" col-md-12 ">
-                                <input type="file" name="upload_csv" class="custom-file-input form-control"  id="upload_csv"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label class="custom-file-label overflow-hidden" for="validatedCustomFile" style="padding: 10px 4px 30px 5px">Choose file...</label>
-                            </div> --}}
                         </div>
                         <div class="col align-items-center mt-4">
                             <button type="button" class="is-btn is-primary btn-import">Import</button>
                         </div>
                     </div>
             </div>
-            <div class="col-md-4 px-4 align-self-center mt-4" id="total-data">
+        </div>
+        <div id="alert-container"></div>
+        <div class="teks mt-4">
+            <div class="col-md-4 align-self-center mt-4" id="grand"></div>
+        </div>
+        <div class="col-md-4 align-self-center mt-4">
+            <div class="d-flex justify-content-start hidden">
+                <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
+                <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
+                <button type="submit" class="is-btn is-primary hidden" id="button-simpan">Simpan</button>
             </div>
-            <div class="col-md-4 px-4 align-self-center mt-4" id="grand-total">
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="loading-message">
             </div>
-            <div class="col-md-4 px-4 align-self-center mt-4">
-                <div class="d-flex justify-content-start hidden">
-                    <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
-                    <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
-                    <button type="submit" class="is-btn btn-info hidden" id="button-simpan">Simpan</button>
-                </div>
-            </div>
-            <div class="col-md-12 px-4" id="loading-message">
-            </div>
-            <div class="col-md-12 px-4 hidden" id="table-data">
+            <div class="col-md-12 hidden" id="table-data">
                 <div class="table-responsive overflow-hidden content-center">
                     <table class="table whitespace-nowrap table-bondered" id="table_item" style="width: 100%">
                       <thead class="text-primary">
