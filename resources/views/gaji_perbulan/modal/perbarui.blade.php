@@ -26,6 +26,22 @@
                                 <th class="text-center">Sesudah</th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr class="total">
+                                <th class="text-center" colspan="4">Total</th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                            </tr>
+                            <tr class="grandTotal">
+                                <th class="text-center" colspan="4">Grand Total</th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>

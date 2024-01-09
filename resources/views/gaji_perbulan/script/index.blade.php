@@ -289,30 +289,112 @@
                     {"data": "nip"},
                     {"data": "nama_karyawan"},
                     {
+                        className: 'text-right',
                         data: "total_penghasilan",
                         render:function(data , type , row){
                             return `Rp ${formatRupiah(data.toString())}`;
                         },
                     },
                     {
+                        className: 'text-right',
                         data: "total_penghasilan_baru",
                         render:function(data , type , row){
                             return `Rp ${formatRupiah(data.toString())}`;
                         },
                     },
                     {
+                        className: 'text-right',
                         data: "total_potongan",
                         render:function(data , type , row){
                             return `Rp ${formatRupiah(data.toString())}`;
                         },
                     },
                     {
+                        className: 'text-right',
                         data: "total_potongan_baru",
                         render:function(data , type , row){
                             return `Rp ${formatRupiah(data.toString())}`;
                         },
                     },
-                ]
+                ],
+                footerCallback: function( row, data, start, end, display ) {
+                    var api = this.api(),data;
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+                    var grandTotalPenghasilanSebelum = api
+                        .column(4)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    
+                    var totalPenghasilanSebelum = api
+                        .column(4, {page: "current"})
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    
+                    var grandTotalPenghasilanSesudah = api
+                        .column(5)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    
+                    var totalPenghasilanSesudah = api
+                        .column(5, {page: "current"})
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                        
+                    var grandTotalPotonganSebelum = api
+                        .column(6)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    
+                    var totalPotonganSebelum = api
+                        .column(6, {page: "current"})
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    
+                    var grandTotalPotonganSesudah = api
+                        .column(7)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    
+                    var totalPotonganSesudah = api
+                        .column(7, {page: "current"})
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                        
+                    $( api.column( 0 ).footer('.total') ).html('Total');
+                    $( api.column( 4 ).footer('.total') ).html( 'Rp ' + totalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 5 ).footer('.total') ).html( 'Rp ' + totalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 6 ).footer('.total') ).html( 'Rp ' + totalPotonganSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 7 ).footer('.total') ).html( 'Rp ' + totalPotonganSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
+                    $('tfoot tr.grandtotal').html(`
+                        <th colspan="4" class="text-center">Grand Total</th>
+                        <th class="text-right">Rp ${grandTotalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">Rp ${grandTotalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">Rp ${grandTotalPotonganSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">Rp ${grandTotalPotonganSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                    `);
+                }
             });
 
             // Add event listener for opening and closing details
