@@ -89,7 +89,7 @@
         <h5 class="fw-bold text-center">RINCIAN GAJI PEGAWAI</h5>
         <h5 class="fw-bold text-center">KANTOR PUSAT</h5>
         <h5 class="fw-bold text-center">BANK BPR JATIM BANK UMKM JAWA TIMUR</h5>
-        <h6 class="fw-bold text-center">{{ date('M',strotime($month))  }} {{ $year }}</h6>
+        <h6 class="fw-bold text-center">{{ $bulan[$month] }} {{ $year }}</h6>
         <center style="font-size: 10px; text-align: center" class="text-center">( MASUK TAB. SIKEMAS )</center>
         <div class="d-flex justify-content-end mb-3">
             <div class="mx-3">

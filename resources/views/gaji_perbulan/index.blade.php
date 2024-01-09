@@ -102,15 +102,15 @@
                                                         data-batch_id="{{$item->id}}">Payroll</a>
                                                 @endcan
                                                 @if ($item->tanggal_cetak != null)
-                                                    {{-- @can('penghasilan - proses penghasilan - lampiran gaji - upload') --}}
+                                                    @can('penghasilan - proses penghasilan - lampiran gaji - upload')
                                                         @if ($item->file == null)
                                                             <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload Lampiran Gaji</a>
                                                         @endif
-                                                    {{-- @endcan --}}
+                                                    @endcan
                                                 @else
-                                                    {{-- @can('penghasilan - proses penghasilan - lampiran gaji') --}}
+                                                    @can('penghasilan - proses penghasilan - lampiran gaji')
                                                         <a href="#" class="btn btn-outline-primary p-1 btn-lampiran-gaji" data-id="{{$item->id}}">Lampiran Gaji</a>
-                                                    {{-- @endcan --}}
+                                                    @endcan
                                                 @endif
                                             </td>
                                             @if ($item->bruto == 0)
