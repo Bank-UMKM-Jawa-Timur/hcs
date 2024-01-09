@@ -23,8 +23,9 @@
 
         })
         $(document).ready(function() {
-            $('#download').printPage();
+            // $('#download').printPage();
         })
+
     </script>
     <script>
         $('#proses-modal #form').on('submit', function() {
