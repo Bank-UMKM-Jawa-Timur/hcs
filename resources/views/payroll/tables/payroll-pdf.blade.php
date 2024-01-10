@@ -198,9 +198,9 @@
         </div>
     </div>
 
-    <div class="p-4 my-5 container-fluid">
+    <div class="px-4 container-fluid">
         <div class="d-flex justify-content-between mx-4 px-4">
-            @if (auth()->user()->hasRole('kepegawaian'))
+            @if (!auth()->user()->hasRole('cabang'))
                 <div>
                     <p class="p-0 mb-5">Mengetahui</p>
                     <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $ttdKaryawan[0]->nama_karyawan }}</p>

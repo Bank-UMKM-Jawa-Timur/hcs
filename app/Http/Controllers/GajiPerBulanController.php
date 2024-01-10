@@ -1663,7 +1663,7 @@ class GajiPerBulanController extends Controller
             ];
 
             return response()->json($response);
-            
+
         }
     }
 
@@ -1717,7 +1717,7 @@ class GajiPerBulanController extends Controller
         );
 
         $payrollRepo = new PayrollRepository;
-        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak, $data_batch);
+        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak, $batch_id);
         $returnType = null;
         if($tipe == 'payroll'){
             $returnType = new ProsesPayroll($data);
