@@ -333,7 +333,7 @@
 
             $('#data-nip').html(`${nip}`)
             $('#nama').html(`${nama}`)
-            $('#no_rekening').html(`${norek != null ? norek : '-'}`)
+            $('#no_rekening').html(`${norek ? norek : '-'}`)
             // $('#data-jabatan').html(`${jabatan}`)
             $('#tanggal-bergabung').html(`${tanggalPengangkat}`)
 
