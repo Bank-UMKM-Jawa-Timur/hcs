@@ -17,6 +17,23 @@ use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class KaryawanController extends Controller
 {
+    private String $orderRaw;
+
+    public function __construct()
+    {
+        $this->orderRaw = "
+            CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 3
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 7
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 8
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
+        ";
+    }
+
     public function paginateResponse(Paginator $karyawan)
     {
         return [
@@ -40,10 +57,10 @@ class KaryawanController extends Controller
             ->when($cabang, function($query) use($cabang) {
                 $query->where('kd_entitas', $cabang);
             })
-
             ->whereNull('tanggal_penonaktifan')
             ->where('status_karyawan', '!=', 'Nonaktif')
-            ->orderBy('nama_karyawan', 'ASC')
+            ->orderByRaw($this->orderRaw)
+            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
             ->simplePaginate();
 
         return $this->paginateResponse($karyawan);
@@ -70,8 +87,9 @@ class KaryawanController extends Controller
                 }
             })
             ->whereNull('tanggal_penonaktifan');
-            $data = $karyawan->orderBy('nama_karyawan', 'ASC')
-                                ->simplePaginate();
+            $data = $karyawan->orderByRaw($this->orderRaw)
+                            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+                            ->simplePaginate();
 
         return $this->response($data, KaryawanResource::collection($data));
     }
@@ -107,7 +125,8 @@ class KaryawanController extends Controller
                         $query->where('status_karyawan', '!=', 'Nonaktif')
                             ->whereNull('tanggal_penonaktifan');
                     })
-                    ->orderBy('nama_karyawan', 'ASC')
+                    ->orderByRaw($this->orderRaw)
+                    ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
                     ->get();
 
         return $this->response($karyawan, KaryawanResource::collection($karyawan));
@@ -129,7 +148,8 @@ class KaryawanController extends Controller
             })
             ->where('status_karyawan', '!=', 'Nonaktif')
             ->whereNull('tanggal_penonaktifan')
-            ->orderBy('nama_karyawan', 'ASC')
+            ->orderByRaw($this->orderRaw)
+            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
             ->simplePaginate();
 
         return $this->response($karyawan, KaryawanResource::collection($karyawan));
