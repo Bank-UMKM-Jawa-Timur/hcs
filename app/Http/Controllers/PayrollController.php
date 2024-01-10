@@ -6,6 +6,7 @@ use App\Models\KaryawanModel;
 use App\Repository\CabangRepository;
 use App\Repository\PayrollRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -71,7 +72,6 @@ class PayrollController extends Controller
     public function list($kantor, $month, $year, $q, $page, $limit, $cetak) {
         $payrollRepository = new PayrollRepository;
         $data = $payrollRepository->get($kantor, $month, $year, $q, $page, $limit,$cetak);
-
         return $data;
     }
 
@@ -84,11 +84,70 @@ class PayrollController extends Controller
         $search = null;
         $page = null;
         $data = $this->list($kantor, $month, $year, $search, $page, null,'cetak');
+        // get karyaawan
+        $ttdKaryawan = KaryawanModel::select(
+                    'mst_karyawan.nip',
+                    'mst_karyawan.nik',
+                    'mst_karyawan.nama_karyawan',
+                    'mst_karyawan.kd_bagian',
+                    'mst_karyawan.kd_jabatan',
+                    'mst_karyawan.kd_entitas',
+                    'mst_karyawan.tanggal_penonaktifan',
+                    'mst_karyawan.status_jabatan',
+                    'mst_karyawan.ket_jabatan',
+                    'mst_karyawan.kd_entitas',
+                    DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                )
+                ->with('jabatan')
+                ->with('bagian')
+                ->whereIn('kd_jabatan',['PIMDIV','PSD'])
+                ->whereIn('kd_entitas',['UMUM','SDM'])
+                ->whereNull('tanggal_penonaktifan')
+                ->get();
+        foreach ($ttdKaryawan as $key => $krywn) {
+            $krywn->prefix = match($krywn->status_jabatan) {
+                'Penjabat' => 'Pj. ',
+                'Penjabat Sementara' => 'Pjs. ',
+                default => '',
+            };
+
+            $jabatan = $krywn->jabatan->nama_jabatan;
+
+            $krywn->ket = $krywn->ket_jabatan ? "({$krywn->ket_jabatan})" : "";
+
+            if(isset($krywn->entitas->subDiv)) {
+                $krywn->entitas_result = $krywn->entitas->subDiv->nama_subdivisi;
+            } else if(isset($krywn->entitas->div)) {
+                $krywn->entitas_result = $krywn->entitas->div->nama_divisi;
+            } else {
+                $krywn->entitas_result = '';
+            }
+
+            if ($jabatan == "Pemimpin Sub Divisi") {
+                $jabatan = 'PSD';
+            } else if ($jabatan == "Pemimpin Bidang Operasional") {
+                $jabatan = 'PBO';
+            } else if ($jabatan == "Pemimpin Bidang Pemasaran") {
+                $jabatan = 'PBP';
+            } else {
+                $jabatan = $krywn->jabatan->nama_jabatan;
+            }
+
+            $krywn->jabatan_result = $jabatan;
+        }
+        $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+        if (auth()->user()->hasRole('cabang')) {
+            $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('kd_entitas', $kd_entitas)->first();
+            $cabang = DB::table('mst_cabang')->select('kd_cabang', 'nama_cabang')->where('kd_cabang', $kd_entitas)->first();
+        } else {
+            $pincab = null;
+            $cabang = null;
+        }
         if ($kategori == 'payroll'){
-            return view('payroll.tables.payroll-pdf', ['data' => $data]);
+            return view('payroll.tables.payroll-pdf', ['data' => $data, 'pincab' => $pincab, 'cabang' => $cabang, 'ttdKaryawan' => $ttdKaryawan]);
 
         }elseif ($kategori = 'rincian') {
-            return view('payroll.tables.rincian-pdf', ['data' => $data]);
+            return view('payroll.tables.rincian-pdf', ['data' => $data,'pincab' => $pincab, 'cabang' => $cabang, 'ttdKaryawan' => $ttdKaryawan]);
         }else{
             Alert::error('Terjadi kesalahan');
             return redirect()->route('payroll.index');
