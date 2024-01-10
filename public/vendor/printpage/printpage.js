@@ -5,18 +5,43 @@
  * @licence: MIT
  * @desciption: jQuery page print plugin help you print your page in a better way
  */
-
 (function( $ ){
+    let testing;
+    const print_parent_key = 'print_parent';
+    let parent;
+    $.fn.closePrint = function() {
+      console.log('reload page')
+      console.log("test: "+testing)
+      var parent = localStorage.getItem(print_parent_key) || 0;
+
+      console.log(typeof(parent))
+      //parent.location.reload()
+    }
+
     $.fn.printPage = function(options) {
       // EXTEND options for this button
       var pluginOptions = {
         attr : "href",
         url : false,
-        message: "Please wait while we create your document" 
+        message: "Please wait while we create your document",
       };
+      // Store parent to local storage
+      
+      console.log(options.parent)
+      var print_parent = options.parent;
+      testing = 'oke'
+      localStorage.setItem(print_parent_key, print_parent);
+      
       $.extend(pluginOptions, options);
   
-      this.on("click", function(){  loadPrintDocument(this, pluginOptions); return false;  });
+      this.on("click", function(){
+        console.log(window)
+        window.addEventListener('afterprint', function () {
+          // After print, refresh the page
+          console.log('after print')
+      });
+        loadPrintDocument(this, pluginOptions); return false;
+      });
       
       /**
        * Load & show message box, call iframe
@@ -40,7 +65,9 @@
   
           if(!$('#printPage')[0]){
             $("body").append(components.iframe(url));
-            $('#printPage').on("load",function() {  printit();  })
+            $('#printPage').on("load",function() {
+              printit();
+            })
           }else{
             $('#printPage').attr("src", url);
           }
@@ -57,6 +84,7 @@
        * Hide & Delete the message box with a small delay
        */
       function unloadMessage(){
+        console.log('asd')
         $("#printMessageBox").delay(1000).animate({opacity:0}, 700, function(){
           $(this).remove();
         });

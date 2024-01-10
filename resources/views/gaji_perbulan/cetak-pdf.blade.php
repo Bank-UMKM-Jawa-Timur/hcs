@@ -111,8 +111,8 @@
                         <th rowspan="2" class="text-center">Total Yang Diterima</th>
                     </tr>
                     <tr>
-                        <th class="text-center">DPP 5%</th>
                         <th class="text-center">JP BPJS TK 1%</th>
+                        <th class="text-center">DPP 5%</th>
                         <th class="text-center">Kredit Koperasi</th>
                         <th class="text-center">Iuaran Koperasi</th>
                         <th class="text-center">Kredit Pegawai</th>
@@ -177,11 +177,11 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="2" class="text-center">Jumlah</th>
+                        <th colspan="2" class="text-center">Total</th>
                         <th class="text-end" align="right">{{ number_format($footer_total_gaji, 0, ',', '.') }}</th>
                         <th></th>
-                        <th class="text-end" align="right">{{ number_format($footer_dpp, 0, ',', '.') }}</th>
                         <th class="text-end" align="right">{{ number_format($footer_bpjs_tk, 0, ',', '.') }}</th>
+                        <th class="text-end" align="right">{{ number_format($footer_dpp, 0, ',', '.') }}</th>
                         <th class="text-end" align="right">{{ number_format($footer_kredit_koperasi, 0, ',', '.') }}</th>
                         <th class="text-end" align="right">{{ number_format($footer_iuran_koperasi, 0, ',', '.') }}</th>
                         <th class="text-end" align="right">{{ number_format($footer_kredit_pegawai, 0, ',', '.') }}</th>
@@ -209,22 +209,40 @@
         </div>
     </div>
 </body>
+<!--   Core JS Files   -->
+<script src="{{ asset('style/assets/js/core/jquery.min.js') }}"></script>
+<script src="{{asset('vendor/printpage/printpage.js')}}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    var currentPageUrl = "{{ route('gaji_perbulan.index') }}";
-
-    function printAndRefresh() {
-        window.print(); // Open the print dialog box
-    }
-
+    var currentPageUrl = " http://127.0.0.1:8000/cetak-penghasilan/2";
+    var url_arr = currentPageUrl.split('/')
+    var id = url_arr[(url_arr.length - 1)]
     window.addEventListener('afterprint', function () {
         // After print, refresh the page
-        window.location.href = currentPageUrl;
+        console.log('after print')
+        //window.location.href = currentPageUrl;
+        updateTglCetak(id)
     });
 
-    // Call the print function when the document is ready
-    document.addEventListener('DOMContentLoaded', function () {
-        printAndRefresh();
-    });
+    function updateTglCetak(id) {
+        $.ajax({
+            url: `{{url('update-tanggal-cetak')}}/${id}`,
+            method: "GET",
+            success: function(response) {
+                console.log(response)
+                window.close()
+                $().closePrint()
+            },
+            error: function(e) {
+                console.log(e)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi kesalahan!',
+                    text: e
+                });
+            }
+        })
+    }
 </script>
 </html>
 

@@ -1,5 +1,5 @@
 @push('script')
-    <script src="{{asset('vendor/printpage/printpage.min.js')}}"></script>
+    <script src="{{asset('vendor/printpage/printpage.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
     <script src="{{asset('vendor/datatables/dataTables.button.min.js')}}"></script>
@@ -13,21 +13,14 @@
     <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script>
-        $('.btn-download-pdf').on('click',function() {
-            let id  = $(this).data('id');
-            console.log(id);
-            let url = "{{ url('') }}"
-            let downloadUrl = `${url}/cetak-penghasilan/${id}`;
-            $(this).attr('href',downloadUrl)
-            $('#lampiran-gaji-modal').modal('hide')
-
-        })
-        $(document).ready(function() {
-            // $('#download').printPage();
-        })
-
+        
     </script>
     <script>
+        $(document).ready(function() {
+            $('.btn-download-pdf').printPage({
+                parent: window
+            });
+        })
         $('#proses-modal #form').on('submit', function() {
             $('.loader-wrapper').removeAttr('style')
         })
@@ -1113,6 +1106,9 @@
 
         $('.btn-lampiran-gaji').on("click", function () {
             let id  = $(this).data('id');
+            let url = "{{ url('') }}"
+            let downloadUrl = `${url}/cetak-penghasilan/${id}`;
+            $('#download').attr('href', downloadUrl);
             $('#download').data('id', id);
             var table = $("#table-lampiran-gaji").DataTable({
                 processing: true,
@@ -1129,6 +1125,7 @@
                     },
                     {
                         data: 'gaji.total_gaji',
+                        class: 'text-right',
                         defaultContent: 0,
                         render: function (data, type, row) {
                             var number = $.fn.dataTable.render
@@ -1141,21 +1138,12 @@
                     {
                         data: 'no_rekening',
                         defaultContent: '-',
-                    },
-                    {
-                        data: "potongan.dpp",
-                        defaultContent: 0,
-                        render: function (data, type, row) {
-                            var number = $.fn.dataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number;
-                        }
+                        class: 'text-center',
                     },
                     {
                         data: "bpjs_tk",
                         defaultContent: 0,
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -1165,8 +1153,21 @@
                         }
                     },
                     {
+                        data: "potongan.dpp",
+                        defaultContent: 0,
+                        class: 'text-right',
+                        render: function (data, type, row) {
+                            var number = $.fn.dataTable.render
+                                .number('.', '.', 0, '')
+                                .display(data);
+
+                            return number;
+                        }
+                    },
+                    {
                         data: "potongan_gaji.kredit_koperasi",
                         defaultContent: 0,
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -1178,6 +1179,7 @@
                     {
                         data: "potongan_gaji.iuran_koperasi",
                         defaultContent: 0,
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -1189,6 +1191,7 @@
                     {
                         data: "potongan_gaji.kredit_pegawai",
                         defaultContent: 0,
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -1200,6 +1203,7 @@
                     {
                         data: "potongan_gaji.iuran_ik",
                         defaultContent: 0,
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -1211,6 +1215,7 @@
                     {
                         data: "total_potongan",
                         defaultContent: 0,
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -1222,6 +1227,7 @@
                     {
                         data: "total_yg_diterima",
                         defaultContent: 0,
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -1232,23 +1238,6 @@
                     },
                 ],
                 footerCallback: function ( row, data, start, end, display ) {
-                    // <tr>
-                    //         <th rowspan="2" class="text-center">No</th>
-                    //         <th rowspan="2" class="text-center">Nama karyawan</th>
-                    //         <th rowspan="2" class="text-center">Gaji</th>
-                    //         <th rowspan="2" class="text-center">No Rek</th>
-                    //         <th colspan="6" class="text-center">Potongan</th>
-                    //         <th rowspan="2" class="text-center">Total Potongan</th>
-                    //         <th rowspan="2" class="text-center">Total Yang Diterima</th>
-                    //     </tr>
-                    //     <tr>
-                    //         <th class="text-center">JP BPJS TK 1%</th>
-                    //         <th class="text-center">DPP 5%</th>
-                    //         <th class="text-center">Kredit Koperasi</th>
-                    //         <th class="text-center">Iuaran Koperasi</th>
-                    //         <th class="text-center">Kredit Pegawai</th>
-                    //         <th class="text-center">Iuran IK</th>
-                    //     </tr>
                     var api = this.api(),data;
                         // converting to interger to find total
                     var intVal = function ( i ) {
@@ -1271,75 +1260,64 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
-                    // computing column Total gaji pokok
-                    var grandTotalPotongan = api
-                        .column(4)
+                    // computing column bpjs
+                    var grandTotalBPJS = api
+                        .column( 4 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    var totalBPJS = api
+                        .column(4,{page:"current"} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }, 0 );
+                    // computing column dpp
+                    var grandTotalDPP = api
+                        .column(5)
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    var totalPotongan = api
-                        .column( 4, { page: "current" })
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                    }, 0 );
-                    var grandTotalDPP = api
-                        .column( 5 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                    }, 0 );
                     var totalDPP = api
-                        .column(5,{page:"current"} )
+                        .column( 5, { page: "current" })
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                     }, 0 );
-                    var grandTotalBPJS = api
-                        .column( 6 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                    }, 0 );
-                    var totalGajiBPJS = api
-                        .column(6,{page:"current"} )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                    }, 0 );
-                    var grandTotalKredit = api
-                        .column(7)
+                    var grandTotalKreditKoperasi = api
+                        .column(6)
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                     }, 0 );
                     var totalKredit = api
-                        .column( 7, {page:"current"})
+                        .column( 6, {page:"current"})
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                     }, 0 );
                     var grandTotalIuran= api
-                        .column( 8 )
+                        .column( 7 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                     }, 0 );
                     var totalIuran = api
-                        .column( 8, {page:"current"})
+                        .column( 7, {page:"current"})
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                     }, 0 );
-                    var grandTotalPegawai = api
-                        .column(9)
+                    var grandTotalKreditPegawai = api
+                        .column(8)
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                     }, 0 );
-                    var totalPegawai = api
-                        .column(9, {page:"current"})
+                    var totalKreditPegawai = api
+                        .column(8, {page:"current"})
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
@@ -1384,22 +1362,24 @@
                     $( api.column( 0 ).footer('.total') ).html('Total');
                     $( api.column( 2 ).footer('.total') ).html(  Math.floor(totalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
                     $( api.column( 3 ).footer('.total') ).html(`-`);
-                    $( api.column( 4 ).footer('.total') ).html(  Math.floor(totalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 5 ).footer('.total') ).html(  Math.floor(totalGajiBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 4 ).footer('.total') ).html(  Math.floor(totalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 5 ).footer('.total') ).html(  Math.floor(totalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
                     $( api.column( 6 ).footer('.total') ).html(  Math.floor(totalKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
                     $( api.column( 7 ).footer('.total') ).html(  Math.floor(totalIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 8 ).footer('.total') ).html( Math.floor(totalIuranIk).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 9 ).footer('.total') ).html( Math.floor(totalPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 10 ).footer('.total') ).html( Math.floor(totalDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 8 ).footer('.total') ).html(  Math.floor(totalKreditPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 9 ).footer('.total') ).html( Math.floor(totalIuranIk).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 10 ).footer('.total') ).html( Math.floor(totalPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 11 ).footer('.total') ).html( Math.floor(totalDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
                     $('tfoot tr.grandtotalGaji').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
                         <th class="text-right">${Math.floor(grandTotalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">-</th>
-                        <th class="text-right">${Math.floor(grandTotalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-center">-</th>
                         <th class="text-right">${Math.floor(grandTotalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.floor(grandTotalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.floor(grandTotalKreditKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                         <th class="text-right">${Math.floor(grandTotalIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.floor(grandTotalKreditPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                         <th class="text-right">${Math.floor(grandTotalIuranIk).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                         <th class="text-right">${Math.floor(grandTotalPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                         <th class="text-right">${Math.floor(grandTotalDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>

@@ -144,6 +144,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     });
     Route::post('upload-penghasilan',[GajiPerBulanController::class,'upload'])->name('upload.penghasilanPerBulan');
     Route::get('cetak-penghasilan/{id}',[GajiPerBulanController::class,'cetak'])->name('cetak.penghasilanPerBulan');
+    Route::get('update-tanggal-cetak/{id}',[GajiPerBulanController::class,'updateTanggalCetak'])->name('cetak.updateTanggalCetak');
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::get('/get-data-penghasilan-json', [GajiPerbulanController::class, 'getDataPenghasilanJson'])->name('gaji_perbulan.get_data_penghasilan_json');
     Route::get('/penyesuaian-gaji-json', [GajiPerbulanController::class, 'penyesuaianDataJson'])->name('gaji_perbulan.penyesuian_json');

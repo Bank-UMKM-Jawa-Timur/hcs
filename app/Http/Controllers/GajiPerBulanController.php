@@ -1906,11 +1906,32 @@ class GajiPerBulanController extends Controller
         $cetak = new CetakGajiRepository;
         $result = $cetak->cetak($kantor, $month, $year,$id);
 
-        DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
-            'tanggal_cetak' => Carbon::now(),
-        ]);
-
         return view('gaji_perbulan.cetak-pdf',['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $data->tanggal_input]);
+    }
+
+    public function updateTanggalCetak($id) {
+        $status = '';
+        $message = '';
+
+        try {
+            DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
+                'tanggal_cetak' => Carbon::now(),
+            ]);
+
+            $status = 'success';
+            $message = 'Berhasil memperbarui tanggal cetak';
+        } catch (\Exception $e) {
+            $status = 'failed';
+            $message = $e->getMessage();
+        } finally {
+            $response = [
+                'status' => $status,
+                'message' => $message
+            ];
+
+            return response()->json($response);
+            
+        }
     }
 
     function upload(Request $request){
