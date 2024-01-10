@@ -105,6 +105,8 @@ class PenghasilanTidakTeraturRepository
                     ->toArray();
         $karyawan = KaryawanModel::select(
                     'mst_karyawan.nip',
+                    'mst_karyawan.nama_karyawan',
+                    'mst_karyawan.no_rekening',
                 )->when($is_cabang,function($query){
                     $kd_cabang = auth()->user()->kd_cabang;
                     $query->where('kd_entitas', $kd_cabang);

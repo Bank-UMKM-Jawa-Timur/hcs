@@ -95,6 +95,7 @@
                                     <th>No</th>
                                     <th>Nip</th>
                                     <th>Nama Karyawan</th>
+                                    <th>No Rekening</th>
                                     <th>Nominal</th>
                                 </tr>
                             </thead>
@@ -371,7 +372,6 @@
                                 hasNip = false;
                             }
                             if (value.cek_nip == false || value.cek_tunjangan == true) {
-                                checkNip.push(value.nip + " baris " + noEmpty++);
                                 hasError = true;
                                 hasNip = true;
                                 hasTunjangan = false;
@@ -390,39 +390,45 @@
                                             ${value.nama_karyawan}
                                         </td>
                                         <td>
+                                            ${value.no_rekening ?? '-'}
+                                        </td>
+                                        <td>
                                             ${formatRupiah(dataNominal[key].toString())}
                                         </td>
                                     </tr>
                                 `;
                             }
-                            if (value.cek_nip || value.cek_tunjangan) {
-                                let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
-                                if (nipDuplicate) {
-                                    checkNip.push("Duplikasi " + value.nip + " baris " + noEmpty++);
-                                    hasError = true;
-                                    hasNip = true;
-                                    hasTunjangan = false;
-                                    grandTotalNominal += parseInt(dataNominal[key])
-                                    nipDataRequest.push(value.nip);
-                                    no++;
-                                    new_body_tr += `
-                                            <tr class="table-danger">
-                                            <td>
-                                                ${no}
-                                            </td>
-                                            <td>
-                                                ${value.nip}
-                                            </td>
-                                            <td>
-                                                ${value.nama_karyawan}
-                                            </td>
-                                            <td>
-                                                ${formatRupiah(dataNominal[key].toString())}
-                                            </td>
-                                        </tr>
-                                    `;
-                                }
-                            }
+                            // if (value.cek_nip || value.cek_tunjangan) {
+                            //     let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
+                            //     if (nipDuplicate) {
+                            //         checkNip.push("Duplikasi " + value.nip + " baris " + noEmpty++);
+                            //         hasError = true;
+                            //         hasNip = true;
+                            //         hasTunjangan = false;
+                            //         grandTotalNominal += parseInt(dataNominal[key])
+                            //         nipDataRequest.push(value.nip);
+                            //         no++;
+                            //         new_body_tr += `
+                            //                 <tr class="table-danger">
+                            //                 <td>
+                            //                     ${no}
+                            //                 </td>
+                            //                 <td>
+                            //                     ${value.nip}
+                            //                 </td>
+                            //                 <td>
+                            //                     ${value.nama_karyawan}
+                            //                 </td>
+                            //                 <td>
+                            //                     ${value.no_rekening != null ? value.no_rekening : '-'}
+                            //                 </td>
+                            //                 <td>
+                            //                     ${formatRupiah(dataNominal[key].toString())}
+                            //                 </td>
+                            //             </tr>
+                            //         `;
+                            //     }
+                            // }
                         })
 
                         $.each(res,function(key,value) {
@@ -453,6 +459,9 @@
                                         </td>
                                         <td>
                                             ${value.nama_karyawan}
+                                        </td>
+                                        <td>
+                                            ${value.no_rekening ?? '-'}
                                         </td>
                                         <td>
                                             ${formatRupiah(dataNominal[key].toString())}
