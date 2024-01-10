@@ -57,6 +57,7 @@
                         </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
+                        <input type="hidden" name="page" value="{{\Request::get('page') ? \Request::get('page') : 1}}">
                         <div class="d-flex justify-content-between mb-4">
                             <div class="p-2 mt-4">
                                 <label for="page_length" class="mr-3 text-sm text-neutral-400">show</label>
@@ -77,12 +78,12 @@
                                 </select>
                                 <label for="" class="ml-3 text-sm text-neutral-400">entries</label>
                             </div>
-                            <div class="p-2">
-                            <label for="q">Cari</label>
-                            <input type="search" name="q" id="q" placeholder="Cari disini..."
-                                class="form-control p-2" value="{{isset($_GET['q']) ? $_GET['q'] : ''}}"
-                                style="width: 300px;">
-                            </div>
+                            {{--  <div class="p-2">
+                                <label for="q">Cari</label>
+                                <input type="search" name="q" id="q" placeholder="Cari disini..."
+                                    class="form-control p-2" value="{{isset($_GET['q']) ? $_GET['q'] : ''}}"
+                                    style="width: 300px;">
+                            </div>  --}}
                         </div>
                         <div class="tab-pane fade @if(!\Request::has('tab')) active show @endif @if(\Request::get('tab') == 'proses') active show @endif" id="proses" role="tabpanel" aria-labelledby="proses-tab">
                             <div class="table-responsive overflow-hidden">

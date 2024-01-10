@@ -95,18 +95,21 @@ class GajiPerBulanController extends Controller
 
         $tab = $request->has('tab') ? $request->get('tab') : 'proses';
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
-        $search = $request->get('q');
+        $page = $request->has('page') ? $request->get('page') : 10;
+        // $search = $request->get('q');
 
         $gajiRepo = new GajiPerBulanRepository;
+
         // Proses
-        $proses_list = $gajiRepo->getPenghasilanList('proses', $search, $limit);
+        $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1);
         // Final
-        $final_list = $gajiRepo->getPenghasilanList('final', $search, $limit);
+        $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1);
 
         $data = [
             'proses_list' => $proses_list,
             'final_list' => $final_list,
         ];
+
         return view('gaji_perbulan.index', $data);
     }
 
