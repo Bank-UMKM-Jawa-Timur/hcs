@@ -173,7 +173,6 @@
                                 @if (\Request::get('kategori') == 'payroll')
                                     <div class="table-responsive">
                                         @include('payroll.tables.payroll', ['data' => $data, 'total' => $total])
-
                                     </div>
                                 @elseif (\Request::get('kategori') == 'rincian')
                                     <div class="table-responsive">
