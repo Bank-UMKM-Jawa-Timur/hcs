@@ -28,9 +28,11 @@ class PenghasilanTeraturRepository
                     DB::raw('DATE(transaksi_tunjangan.tanggal) as tanggal'),
                     DB::raw('SUM(transaksi_tunjangan.nominal) as total_nominal'),
                     DB::raw('COUNT(transaksi_tunjangan.id) as total_data'),
+                    DB::raw("IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas")
                 )
                 ->join('mst_karyawan', 'mst_karyawan.nip', 'transaksi_tunjangan.nip')
                 ->join('mst_tunjangan', 'mst_tunjangan.id', 'transaksi_tunjangan.id_tunjangan')
+                ->leftJoin('mst_cabang', 'mst_cabang.kd_cabang', 'mst_karyawan.kd_entitas')
                 ->where('mst_tunjangan.kategori', 'teratur')
                 ->where('mst_tunjangan.is_import', 1)
                 ->where(function ($query) use ($search) {
@@ -40,13 +42,7 @@ class PenghasilanTeraturRepository
                     ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%");
                 })
                 ->when($kd_cabang, function($query) use($kd_cabang, $cabangRepo, $kode_cabang_arr) {
-                    if ($kd_cabang == 'pusat') {
-                        if (!auth()->user()->hasRole('admin')) {
-                            $query->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
-                                ->orWhereNull('mst_karyawan.kd_entitas');
-                        }
-                    }
-                    else {
+                    if ($kd_cabang != 'pusat') {
                         $query->where('mst_karyawan.kd_entitas', $kd_cabang);
                     }
                 })
@@ -102,17 +98,33 @@ class PenghasilanTeraturRepository
 
     public function excelVitamin($bulan, $tahun){
         $cabang = CabangModel::select('kd_cabang')->pluck('kd_cabang');
-        $data = DB::table('transaksi_tunjangan')->select(
-            'transaksi_tunjangan.nip',
-            'k.nama_karyawan',
-            'k.no_rekening',
-            'transaksi_tunjangan.nominal as vitamin'
-        )
-            ->join('mst_karyawan as k', 'k.nip', 'transaksi_tunjangan.nip')
-            ->where('id_tunjangan', 13) //vitamin
-            ->whereMonth('transaksi_tunjangan.tanggal', $bulan)
-            ->whereYear('transaksi_tunjangan.tanggal', $tahun)
-            ->get();
+        if (auth()->user()->kd_cabang != null) {
+            $data = DB::table('transaksi_tunjangan')->select(
+                'transaksi_tunjangan.nip',
+                'k.nama_karyawan',
+                'k.no_rekening',
+                'transaksi_tunjangan.nominal as vitamin'
+            )
+                ->join('mst_karyawan as k', 'k.nip', 'transaksi_tunjangan.nip')
+                ->where('id_tunjangan', 13) //vitamin
+                ->where('k.kd_entitas', auth()->user()->kd_cabang)
+                ->whereMonth('transaksi_tunjangan.tanggal', $bulan)
+                ->whereYear('transaksi_tunjangan.tanggal', $tahun)
+                ->get();
+        }else{
+            $data = DB::table('transaksi_tunjangan')->select(
+                'transaksi_tunjangan.nip',
+                'k.nama_karyawan',
+                'k.no_rekening',
+                'transaksi_tunjangan.nominal as vitamin'
+            )
+                ->join('mst_karyawan as k', 'k.nip', 'transaksi_tunjangan.nip')
+                ->where('id_tunjangan', 13) //vitamin
+                ->whereMonth('transaksi_tunjangan.tanggal', $bulan)
+                ->whereYear('transaksi_tunjangan.tanggal', $tahun)
+                ->get();
+
+        }
 
         return $data;
     }
