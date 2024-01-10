@@ -213,14 +213,10 @@ class SlipGajiRepository
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
-                                        DB::raw("(SELECT p.kredit_koperasi FROM potongan_gaji AS p
-                                                WHERE p.nip = gaji_per_bulan.nip AND p.bulan = gaji_per_bulan.bulan AND p.tahun = gaji_per_bulan.tahun) AS kredit_koperasi"),
-                                        DB::raw("(SELECT p.iuran_koperasi FROM potongan_gaji AS p
-                                                WHERE p.nip = gaji_per_bulan.nip AND p.bulan = gaji_per_bulan.bulan AND p.tahun = gaji_per_bulan.tahun) AS iuran_koperasi"),
-                                        DB::raw("(SELECT p.kredit_pegawai FROM potongan_gaji AS p
-                                                WHERE p.nip = gaji_per_bulan.nip AND p.bulan = gaji_per_bulan.bulan AND p.tahun = gaji_per_bulan.tahun) AS kredit_pegawai"),
-                                        DB::raw("(SELECT p.iuran_ik FROM potongan_gaji AS p
-                                                WHERE p.nip = gaji_per_bulan.nip AND p.bulan = gaji_per_bulan.bulan AND p.tahun = gaji_per_bulan.tahun) AS iuran_ik"),
+                                        'kredit_koperasi',
+                                        'iuran_koperasi',
+                                        'kredit_pegawai',
+                                        'iuran_ik',
                                     )
                                     ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                                     ->where('gaji_per_bulan.nip', $nip)
@@ -984,7 +980,12 @@ class SlipGajiRepository
                                         'uang_makan',
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                        'kredit_koperasi',
+                                        'iuran_koperasi',
+                                        'kredit_pegawai',
+                                        'iuran_ik',
+                                        DB::raw('(kredit_koperasi + iuran_koperasi + kredit_pegawai + iuran_ik) AS total_potongan')
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
@@ -1011,8 +1012,7 @@ class SlipGajiRepository
                                         DB::raw('potongan_gaji.kredit_pegawai AS kredit_pegawai'),
                                         DB::raw('potongan_gaji.iuran_ik AS iuran_ik'),
                                         DB::raw('(potongan_gaji.kredit_koperasi + potongan_gaji.iuran_koperasi + potongan_gaji.kredit_pegawai + potongan_gaji.iuran_ik) AS total_potongan'),
-                                    )
-                                    ->where('potongan_gaji.tahun', $year);
+                                    );
                                 }
                             ])
                             ->select(
@@ -1208,8 +1208,8 @@ class SlipGajiRepository
             $penghasilan_tidak_rutin = $penghasilan_tidak_teratur + $bonus;
 
             // Get total potongan
-            if ($karyawan->potonganGaji) {
-                $total_potongan += $karyawan->potonganGaji->total_potongan;
+            if ($karyawan->gaji) {
+                $total_potongan += $karyawan->gaji->total_potongan;
             }
 
             if ($karyawan->potongan) {

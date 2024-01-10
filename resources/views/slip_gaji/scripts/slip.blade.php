@@ -228,14 +228,14 @@
                 `
             }
             // T. Kesejahteraan
-            // if (data.tj_kesejahteraan > 0) {
+            if (data.tj_kesejahteraan > 0) {
                 tableTunjangan += `
                     <tr style="border:1px solid #e3e3e3">
                         <td class="px-3">Tj. Kesejahteraan</td>
                         <td class="text-right px-3">Rp ${formatRupiahPayroll(data.tj_kesejahteraan)}</td>
                     </tr>
                 `
-            // }
+            }
             var tj_khusus = 0;
             // T. Multilevel
             if (data.tj_ti > 0) {
@@ -289,7 +289,8 @@
             const nama = $(this).data("nama");
             const norek = $(this).data("no_rekening");
             const jabatan = $(this).data("status_jabatan");
-            const tanggalPengangkat = $(this).data("tanggal_pengangkat");
+            const tanggalPengangkat = $(this).data("tanggal_pengangkat") ? $(this).data("tanggal_pengangkat") : '-';
+            const tanggalPengangkatFormated = $(this).data("tanggal_pengangkat_formated") ? $(this).data("tanggal_pengangkat_formated") : '-';
             const result = lamaBekerja(tanggalPengangkat);
             const data = $(this).data('json');
             const bulan = data.bulan;
@@ -335,14 +336,14 @@
             $('#nama').html(`${nama}`)
             $('#no_rekening').html(`${norek ? norek : '-'}`)
             // $('#data-jabatan').html(`${jabatan}`)
-            $('#tanggal-bergabung').html(`${tanggalPengangkat}`)
+            $('#tanggal-bergabung').html(`${tanggalPengangkatFormated}`)
 
             if (result !== null) {
                 const { tahun, bulan } = result;
                 const settDate = `${tahun} tahun, ${bulan} bulan`;
                 $('#lama-kerja').html(settDate);
             } else {
-                $('#lama-kerja').html("Invalid date format");
+                $('#lama-kerja').html("-");
             }
 
             var nominal = 0;
