@@ -200,16 +200,30 @@
 
     <div class="p-4">
         <div class="d-flex justify-content-between">
+            @if (!auth()->user()->hasRole('cabang'))
             <div>
                 <p class="p-0 mb-5">Mengetahui</p>
                 <p class="p-0 m-0 fw-bold text-decoration-underline">SIGIT PURWANTO</p>
                 <p class="p-0 m-0">Pemimpin Divisi Umum</p>
             </div>
-            <div>
-                <p class="p-0 m-0 mb-5">Surabaya,{{ date('d M Y', strtotime($tanggal)) }}</p>
-                <p class="p-0 m-0 fw-bold text-decoration-underline">DEANG PARUJAR S</p>
-                <p class="p-0 m-0">Pemimpin Sub Divisi SDM</p>
-            </div>
+            @endif
+            @if (auth()->user()->hasRole('cabang'))
+                @foreach ($ttdKaryawan as $item)
+                    @if ($item->kd_jabatan == 'PBO' || $item->kd_jabatan == 'PC')
+                        <div>
+                            <p class="p-0 m-0 mb-5">{{ $cabang->nama_cabang }},{{ date('d M Y', strtotime($tanggal)) }}</p>
+                            <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $item->nama_karyawan }}</p>
+                            <p class="p-0 m-0">{{ $item->jabatan_result }}</p>
+                        </div>
+                    @elseif ($item->kd_bagian == 'B-UMAK')
+                        <div>
+                            <p class="p-0 m-0 mb-5">{{ $cabang->nama_cabang }},{{ date('d M Y', strtotime($tanggal)) }}</p>
+                            <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $item->nama_karyawan }}</p>
+                            <p class="p-0 m-0">{{ $item->jabatan_result.' '.$item->bagian->nama_bagian }}</p>
+                        </div>
+                    @endif
+                @endforeach
+            @endif
         </div>
     </div>
 </body>

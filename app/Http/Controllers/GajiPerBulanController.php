@@ -7,6 +7,7 @@ use App\Exports\ProsesRincianPayroll;
 use App\Imports\ImportPPH21;
 use App\Models\CabangModel;
 use App\Models\GajiPerBulanModel;
+use App\Models\KaryawanModel;
 use App\Models\PPHModel;
 use App\Models\TunjanganModel;
 use App\Repository\PayrollRepository;
@@ -1636,7 +1637,67 @@ class GajiPerBulanController extends Controller
         $cetak = new CetakGajiRepository;
         $result = $cetak->cetak($kantor, $month, $year,$id);
 
-        return view('gaji_perbulan.cetak-pdf',['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $data->tanggal_input]);
+        if (auth()->user()->hasRole('cabang')) {
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+            $cabang = DB::table('mst_cabang')->select('kd_cabang', 'nama_cabang')->where('kd_cabang', $kd_entitas)->first();
+            $ttdKaryawan = KaryawanModel::select(
+                        'mst_karyawan.nip',
+                        'mst_karyawan.nik',
+                        'mst_karyawan.nama_karyawan',
+                        'mst_karyawan.kd_bagian',
+                        'mst_karyawan.kd_jabatan',
+                        'mst_karyawan.kd_entitas',
+                        'mst_karyawan.tanggal_penonaktifan',
+                        'mst_karyawan.status_jabatan',
+                        'mst_karyawan.ket_jabatan',
+                        'mst_karyawan.kd_entitas',
+                        DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                    )
+                    ->with('jabatan')
+                    ->with('bagian')
+                    ->where('kd_entitas',$kd_entitas)
+                    ->whereNotIn('kd_jabatan',['ST','NST'])
+                    ->whereNull('tanggal_penonaktifan')
+                    ->get();
+            foreach ($ttdKaryawan as $key => $krywn) {
+                $krywn->prefix = match($krywn->status_jabatan) {
+                    'Penjabat' => 'Pj. ',
+                    'Penjabat Sementara' => 'Pjs. ',
+                    default => '',
+                };
+
+                $jabatan = $krywn->jabatan->nama_jabatan;
+
+                $krywn->ket = $krywn->ket_jabatan ? "({$krywn->ket_jabatan})" : "";
+
+                if(isset($krywn->entitas->subDiv)) {
+                    $krywn->entitas_result = $krywn->entitas->subDiv->nama_subdivisi;
+                } else if(isset($krywn->entitas->div)) {
+                    $krywn->entitas_result = $krywn->entitas->div->nama_divisi;
+                } else {
+                    $krywn->entitas_result = '';
+                }
+
+                if ($jabatan == "Pemimpin Sub Divisi") {
+                    $jabatan = 'PSD';
+                } else if ($jabatan == "Pemimpin Bidang Operasional") {
+                    $jabatan = 'PBO';
+                } else if ($jabatan == "Pemimpin Bidang Pemasaran") {
+                    $jabatan = 'PBP';
+                } else {
+                    $jabatan = $krywn->jabatan->nama_jabatan;
+                }
+
+                $krywn->jabatan_result = $jabatan;
+            }
+
+        }else{
+            $cabang = null;
+            $ttdKaryawan = null;
+        }
+
+
+        return view('gaji_perbulan.cetak-pdf',['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $data->tanggal_input,'ttdKaryawan' => $ttdKaryawan,'cabang' => $cabang]);
     }
 
     public function updateTanggalCetak($id) {
