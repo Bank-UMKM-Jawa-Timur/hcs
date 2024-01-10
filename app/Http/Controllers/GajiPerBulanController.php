@@ -900,6 +900,7 @@ class GajiPerBulanController extends Controller
                 if ($item->status == 'K' || $item->status == 'Kawin') {
                     $anak = DB::table('mst_karyawan')
                         ->where('keluarga.nip', $item->nip)
+                        ->whereIn('enum', ['Suami', 'Istri'])
                         ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
                         ->orderByDesc('id')
                         ->first('jml_anak');
@@ -1310,11 +1311,11 @@ class GajiPerBulanController extends Controller
         }
         $rumus_14 = 0;
         if (0.05 * (array_sum($totalGaji)) > $keterangan) {
-            $rumus_14 = round($keterangan);
+            $rumus_14 = ceil($keterangan);
         } else {
-            $rumus_14 = round(0.05 * (array_sum($totalGaji)));
+            $rumus_14 = ceil(0.05 * (array_sum($totalGaji)));
         }
-        $no_14 = round((array_sum($totalGaji) - $bonus - array_sum($pengurang) - $biaya_jabatan) / intval($bulan) * 12 + $bonus + ($biaya_jabatan - $rumus_14));
+        $no_14 = ((array_sum($totalGaji) - $bonus - array_sum($pengurang) - $biaya_jabatan) / intval($bulan) * 12 + $bonus + ($biaya_jabatan - $rumus_14));
 
         $persen5 = 0;
         if (($no_14 - $ptkp?->ptkp_tahun) > 0) {
@@ -1928,7 +1929,7 @@ class GajiPerBulanController extends Controller
             DB::table('batch_gaji_per_bulan')->where('id',$request->id)->update([
                 'file' => $filenameLampiran,
             ]);
-            Alert::success('Sukses','Lampiran Gaji Berhasil Diupload');
+            Alert::success('Sukses','Lampiran gaji berhasil diupload');
             return redirect()->route('gaji_perbulan.index');
         } catch (Exception $th) {
             return $th;
