@@ -20,6 +20,7 @@ class PenghasilanTidakTeraturRepository
         $bonus = DB::table('penghasilan_tidak_teratur')
                     ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                     ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
+                    ->leftJoin('mst_cabang', 'mst_cabang.kd_cabang', 'mst_karyawan.kd_entitas')
                     ->select(
                         'penghasilan_tidak_teratur.is_lock',
                         'penghasilan_tidak_teratur.id',
@@ -34,20 +35,15 @@ class PenghasilanTidakTeraturRepository
                         DB::raw('COUNT(penghasilan_tidak_teratur.id) as total_data'),
                         'tahun',
                         'keterangan',
+                        DB::raw("IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas")
                     )
                     ->where('mst_tunjangan.kategori','bonus')
                     ->where(function ($query) use ($search) {
                         $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
                             ->orWhere('nominal', 'like', "%$search%");
                     })
-                    ->when($kd_cabang, function($query) use($kd_cabang, $cabangRepo, $kode_cabang_arr) {
-                        if ($kd_cabang == 'pusat') {
-                            if (!auth()->user()->hasRole('admin')) {
-                                $query->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
-                                    ->orWhereNull('mst_karyawan.kd_entitas');
-                            }
-                        }
-                        else {
+                    ->where(function ($query) use ($kd_cabang, $kode_cabang_arr) {
+                        if ($kd_cabang != 'pusat') {
                             $query->where('mst_karyawan.kd_entitas', $kd_cabang);
                         }
                     })
