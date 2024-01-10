@@ -16,8 +16,9 @@
         $waktuSekarang = Carbon::now();
 
         $hitung = $waktuSekarang->diff($mulaKerja);
+        $tahunKerja = (int) $hitung->format('%y'); 
+        $bulanKerja = (int) $hitung->format('%m'); 
         $masaKerja = $hitung->format('%y Tahun, %m Bulan');
-
 
         $nilai = 0;
 
@@ -187,7 +188,7 @@
                             <tr>
                                 <td>Lama Kerja</td>
                                 <td>:</td>
-                                <td>{{ $masaKerja }}</td>
+                                <td>{{ $tahunKerja > 0 || $bulanKerja > 0 ? $masaKerja : '-' }}</td>
                             </tr>
                         </table>
                     </td>
