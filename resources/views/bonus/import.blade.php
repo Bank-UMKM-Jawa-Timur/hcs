@@ -131,11 +131,11 @@
                                                 if (value.cek == '-') {
                                                     // Jika nip tidak ditemukan
                                                     if (nipDuplicate) {
-                                                        checkNip.push("Duplikasi " + value.nip + " row " + noCheckEmpty++);
+                                                        checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
                                                         hasError = true
                                                     }
                                                     else {
-                                                        checkNip.push(value.nip + " row " + noCheckEmpty++);
+                                                        checkNip.push(value.nip + " baris " + noCheckEmpty++);
                                                         hasError = true
                                                     }
                                                     
@@ -153,6 +153,9 @@
                                                                 <span class="text-danger">${value.nama_karyawan}</span>
                                                             </td>
                                                             <td class="table-danger">
+                                                                <span class="text-danger">${value.no_rekening ?? '-'}</span>
+                                                            </td>
+                                                            <td class="table-danger">
                                                                 <span>${formatRupiah(dataNominal[key])}</span>
     
                                                             </td>
@@ -162,7 +165,7 @@
                                                 else {
                                                     // Nip ditemukan
                                                     if (nipDuplicate) {
-                                                        checkNip.push("Duplikasi " + value.nip + " row " + noCheckEmpty++);
+                                                        checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
                                                         hasError = true
 
                                                         nipDataRequest.push(value.nip);
@@ -177,6 +180,9 @@
                                                                 </td>
                                                                 <td class="table-danger">
                                                                     <span class="text-danger">${value.nama_karyawan}</span>
+                                                                </td>
+                                                                <td class="table-danger">
+                                                                    <span class="text-danger">${value.no_rekening ?? '-'}</span>
                                                                 </td>
                                                                 <td class="table-danger">
                                                                     <span>${formatRupiah(dataNominal[key])}</span>
@@ -207,6 +213,9 @@
                                                                 </td>
                                                                 <td class="">
                                                                     <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
+                                                                </td>
+                                                                <td class="">
+                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.no_rekening ?? '-'}</span>
                                                                 </td>
                                                                 <td class="">
                                                                     <span>${formatRupiah(dataNominal[key])}</span>
@@ -404,6 +413,9 @@
                         </th>
                         <th>
                             Nama
+                        </th>
+                        <th>
+                            No Rekening
                         </th>
                         <th>
                             Nominal

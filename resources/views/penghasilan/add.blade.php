@@ -195,6 +195,9 @@
                                                                 <span class="text-danger">${value.nama_karyawan}</span>
                                                             </td>
                                                             <td class="table-danger">
+                                                                <span class="text-danger">${value.no_rekening ?? '-'}</span>
+                                                            </td>
+                                                            <td class="table-danger">
                                                                 <span>${formatRupiah(dataNominal[key])}</span>
     
                                                             </td>
@@ -224,6 +227,9 @@
                                                                 </td>
                                                                 <td class="table-danger">
                                                                     <span class="text-danger">${value.nama_karyawan}</span>
+                                                                </td>
+                                                                <td class="table-danger">
+                                                                    <span class="text-danger">${value.no_rekening ?? '-'}</span>
                                                                 </td>
                                                                 <td class="table-danger">
                                                                     <span>${formatRupiah(dataNominal[key])}</span>
@@ -261,6 +267,9 @@
                                                                 </td>
                                                                 <td class="">
                                                                     <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
+                                                                </td>
+                                                                <td class="">
+                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.no_rekening ?? '-'}</span>
                                                                 </td>
                                                                 <td class="">
                                                                     <span>${formatRupiah(dataNominal[key])}</span>
@@ -448,6 +457,9 @@
                         </th>
                         <th>
                             Nama
+                        </th>
+                        <th>
+                            No Rekening
                         </th>
                         <th>
                             Nominal

@@ -65,13 +65,13 @@ class PenghasilanTeraturController extends Controller
             $nip_id = $nip_req->pluck('nip')->toArray();
 
             if (auth()->user()->kd_cabang != null) {
-                $data = KaryawanModel::select('nama_karyawan', 'nip')
+                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
                     ->whereIn('nip', $nip_id)
                     ->where('kd_entitas', auth()->user()->kd_cabang)
                     ->whereNull('tanggal_penonaktifan')
                     ->get();
             }else{
-                $data = KaryawanModel::select('nama_karyawan', 'nip')
+                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
                     ->whereIn('nip', $nip_id)
                     ->whereNull('tanggal_penonaktifan')
                     ->get();
@@ -103,6 +103,7 @@ class PenghasilanTeraturController extends Controller
                     'cek_tunjangan' => $tunjangan ? true : false,
                     'tunjangan' => $tunjangan,
                     'nama_karyawan' => $nip_exist ? $nip_exist->nama_karyawan : 'Karyawan Tidak Ditemukan',
+                    'no_rekening' => $nip_exist ? $nip_exist->no_rekening : 'No Rek Tidak Ditemukan',
                 ];
             })->toArray();
 
