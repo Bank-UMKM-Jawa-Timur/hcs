@@ -82,9 +82,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <a href="penghasilan/gajipajak">
-                        <button class="is-btn is-primary" type="submit">Tampilkan</button>
-                    </a>
+                    <button class="is-btn is-primary" type="submit">Tampilkan</button>
                 </div>
         </form>
     @endcan
@@ -583,6 +581,7 @@
                                                     $total_tj_pelaksana = null;
                                                     $total_tj_kemahalan = null;
                                                     $total_tj_kesejahteraan = null;
+                                                    $total_tj_khusus = null;
                                                     $total_jamsostek = null;
                                                     $total_uang_makan = null;
                                                     $total_tj_pulsa = null;
@@ -592,7 +591,7 @@
                                                 <tr>
                                                     <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Bulan</th>
                                                     <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Gaji<br>Pokok</th>
-                                                    <th colspan="8" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Tunjangan</th>
+                                                    <th colspan="9" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Tunjangan</th>
                                                     <th rowspan="2" style="background-color: #CCD6A6; max-width: 30px; font-size: 8px;">Total<br>Gaji</th>
                                                     <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Penambah<br>Bruto<br>Jamsostek</th>
                                                     <th rowspan="2" style="background-color: #CCD6A6; min-width: 30px; font-size: 8px;">Tunjangan<br>Uang<br>Makan</th>
@@ -609,6 +608,7 @@
                                                     <th style="font-size: 8px; min-width: 20px;">Pelaksana</th>
                                                     <th style="font-size: 8px; min-width: 20px;">Kemahalan</th>
                                                     <th style="font-size: 8px; min-width: 20px;">Kesejahteraan</th>
+                                                    <th style="font-size: 8px; min-width: 20px;">Khusus</th>
                                                 </tr>
                                             </thead>
                                             <tbody style="font-size: 11px;">
@@ -623,6 +623,15 @@
                                                     $total_tj_pelaksana += $gj[$i]['tj_pelaksana'];
                                                     $total_tj_kemahalan += $gj[$i]['tj_kemahalan'];
                                                     $total_tj_kesejahteraan += $gj[$i]['tj_kesejahteraan'];
+                                                    if ($gj[$i]['tj_multilevel']) {
+                                                        $total_tj_khusus += $gj[$i]['tj_multilevel'];
+                                                    }
+                                                    if ($gj[$i]['tj_ti']) {
+                                                        $total_tj_khusus += $gj[$i]['tj_ti'];
+                                                    }
+                                                    if ($gj[$i]['tj_fungsional']) {
+                                                        $total_tj_khusus += $gj[$i]['tj_fungsional'];
+                                                    }
 
                                                     $total_jamsostek += $jamsostek[$i];
                                                     $total_uang_makan += $gj[$i]['uang_makan'];
@@ -634,9 +643,19 @@
                                                                    + $total_tj_perumahan + $total_tj_telepon + $total_tj_pelaksana + $total_tj_kemahalan
                                                                    + $total_tj_kesejahteraan;
 
+                                                    $tj_khusus = 0;
+                                                    if ($gj[$i]['tj_multilevel']) {
+                                                        $tj_khusus += $gj[$i]['tj_multilevel'];
+                                                    }
+                                                    if ($gj[$i]['tj_ti']) {
+                                                        $tj_khusus += $gj[$i]['tj_ti'];
+                                                    }
+                                                    if ($gj[$i]['tj_fungsional']) {
+                                                        $tj_khusus += $gj[$i]['tj_fungsional'];
+                                                    }
                                                     $total_gaji_bln = ($gj[$i]['gj_pokok']) + ($gj[$i]['tj_keluarga']) + ($gj[$i]['tj_jabatan']) + ($gj[$i]['gj_penyesuaian'])
                                                                       + ($gj[$i]['tj_perumahan']) + ($gj[$i]['tj_telepon']) + ($gj[$i]['tj_pelaksana']) + ( $gj[$i]['tj_kemahalan'])
-                                                                      + ($gj[$i]['tj_kesejahteraan']);
+                                                                      + ($gj[$i]['tj_kesejahteraan']) + $tj_khusus;
                                                 @endphp
                                                     <tr>
                                                         <td>{{ $bulan[$i] }}</td>
@@ -649,6 +668,7 @@
                                                         <td>{{ ($gj[$i]['tj_pelaksana'] != 0) ? rupiah($gj[$i]['tj_pelaksana']) : '-' }}</td>
                                                         <td>{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
                                                         <td>{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
+                                                        <td>{{ ($tj_khusus != 0) ? rupiah($tj_khusus) : '-' }}</td>
                                                         <td>{{ ($total_gaji_bln != 0 ) ? rupiah($total_gaji_bln) : '-' }}</td>
                                                         <td>{{ ($jamsostek[$i] != 0) ? rupiah($jamsostek[$i]) : '-' }}</td>
                                                         <td>{{ ($gj[$i]['uang_makan'] != 0) ? rupiah($gj[$i]['uang_makan']) : '-' }}</td>
@@ -672,6 +692,7 @@
                                                     <td style="background-color: #FED049; ">{{ rupiah($total_tj_pelaksana) }}</td>
                                                     <td style="background-color: #FED049; ">{{ rupiah($total_tj_kemahalan) }}</td>
                                                     <td style="background-color: #FED049; ">{{ rupiah($total_tj_kesejahteraan) }}</td>
+                                                    <td style="background-color: #FED049; ">{{ rupiah($total_tj_khusus) }}</td>
                                                     <td style="background-color: #cecece; ">{{ rupiah($total_gaji) }}</td>
                                                     <td style="background-color: #54B435; ">{{ rupiah($total_jamsostek) }}</td>
                                                     <td style="background-color: #54B435; ">{{ rupiah($total_uang_makan) }}</td>

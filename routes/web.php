@@ -144,10 +144,12 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     });
     Route::post('upload-penghasilan',[GajiPerBulanController::class,'upload'])->name('upload.penghasilanPerBulan');
     Route::get('cetak-penghasilan/{id}',[GajiPerBulanController::class,'cetak'])->name('cetak.penghasilanPerBulan');
+    Route::get('update-tanggal-cetak/{id}',[GajiPerBulanController::class,'updateTanggalCetak'])->name('cetak.updateTanggalCetak');
     Route::resource('/gaji_perbulan', GajiPerBulanController::class);
     Route::get('/get-data-penghasilan-json', [GajiPerbulanController::class, 'getDataPenghasilanJson'])->name('gaji_perbulan.get_data_penghasilan_json');
     Route::get('/penyesuaian-gaji-json', [GajiPerbulanController::class, 'penyesuaianDataJson'])->name('gaji_perbulan.penyesuian_json');
     Route::post('/penyesuaian-gaji-json', [GajiPerbulanController::class, 'prosesFinal'])->name('gaji_perbulan.proses_final');
+    Route::get('/penghasilan-kantor', [GajiPerbulanController::class, 'penghasilanKantor'])->name('gaji_perbulan.penghasilan_kantor');
     Route::resource('/pengganti-biaya-kesehatan', PenggantiBiayaKesehatanController::class);
     Route::resource('/uang-duka', UangDukaController::class);
     Route::resource('/backup', BackupController::class);
@@ -347,5 +349,9 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
             Route::get('/slip', [PayrollController::class, 'slip'])->name('slip');
             Route::get('/slip/pdf', [PayrollController::class, 'slipPDF'])->name('slip.pdf');
         });
+
+    Route::get('get-rincian-payroll', [GajiPerBulanController::class, 'getRincianPayroll'])->name('get-rincian-payroll');
+    Route::get('get-lampiran-gaji/{id}', [GajiPerBulanController::class, 'getLampiranGaji'])->name('get-lampiran-gaji');
+    Route::get('/proses-gaji-download-rincian', [GajiPerBulanController::class, 'downloadRincianPayroll'])->name('proses-gaji-download-rincian');
 });
 require __DIR__.'/auth.php';

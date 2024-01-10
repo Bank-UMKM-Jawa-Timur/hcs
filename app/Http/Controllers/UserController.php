@@ -276,7 +276,7 @@ class UserController extends Controller
         $user = User::select('name','username','email')->where('id',$id)->first();
 
         $dataUser = User::where('id',$id)->first();
-        $dataUser->password = Hash::make($user->username);
+        $dataUser->password = Hash::make('12345678');
         $dataUser->save();
 
         Alert::success('Berhasil Reset Password User.');

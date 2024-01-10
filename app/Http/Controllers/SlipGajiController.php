@@ -173,6 +173,7 @@ class SlipGajiController extends Controller
         }else if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
             return view('roles.forbidden');
         }
+
         $kantor = $request->kantor;
         $kategori = $request->kategori;
 
@@ -186,13 +187,26 @@ class SlipGajiController extends Controller
         if (auth()->user()->hasRole('user')) {
             $karyawan = DB::table('mst_karyawan')
                 ->where('nip', auth()->user()->nip)
+                ->whereNull('tanggal_penonaktifan')
+                ->get();
+        }
+        elseif (auth()->user()->hasRole('cabang')) {
+            $karyawan = DB::table('mst_karyawan')
+                ->where('kd_entitas', auth()->user()->kd_cabang)
+                ->whereNull('tanggal_penonaktifan')
+                ->get();
+        }
+        elseif (auth()->user()->hasRole('kepegawaian')) {
+            $karyawan = DB::table('mst_karyawan')
+                ->whereNull('tanggal_penonaktifan')
+                ->whereNotIn('kd_entitas', $cbg)
+                ->orWhere('kd_entitas', null)
                 ->get();
         }
         else {
             $karyawan = DB::table('mst_karyawan')
-                ->whereNotIn('kd_entitas', $cbg)
-                ->orWhere('kd_entitas', null)
-                ->get();
+                            ->whereNull('tanggal_penonaktifan')
+                            ->get();
         }
 
         $data = $this->getSlipJurnal($request, $kategori, $karyawan);

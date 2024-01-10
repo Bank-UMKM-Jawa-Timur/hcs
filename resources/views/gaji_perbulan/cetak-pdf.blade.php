@@ -27,6 +27,9 @@
         p, table, ol{
             font-size: 9pt;
         }
+        table thead {
+            font-size: 8pt;
+        }
 
         @page {
             margin: 0;  /* Ini akan diterapkan ke setiap halaman */
@@ -40,6 +43,7 @@
             /* Sembunyikan thead di semua halaman */
             thead {
                 display: table-row-group;
+                font-size: 10pt;
             }
 
             /* thead.no-print {
@@ -89,11 +93,11 @@
         <h5 class="fw-bold text-center">RINCIAN GAJI PEGAWAI</h5>
         <h5 class="fw-bold text-center">KANTOR PUSAT</h5>
         <h5 class="fw-bold text-center">BANK BPR JATIM BANK UMKM JAWA TIMUR</h5>
-        <h6 class="fw-bold text-center">{{ $month }} {{ $year }}</h6>
+        <h6 class="fw-bold text-center">{{ $bulan[$month] }} {{ $year }}</h6>
         <center style="font-size: 10px; text-align: center" class="text-center">( MASUK TAB. SIKEMAS )</center>
-        <div class="d-flex justify-content-end mb-3">
+        <div class="d-flex justify-content-end mb-1">
             <div class="mx-3">
-                <a href="{{route('payroll.index')}}" class="btn btn-primary btn-icon-text no-print"><i class="ti-angle-left btn-icon-prepend"></i> Kembali</a>
+                <a href="{{route('gaji_perbulan.index')}}" class="btn btn-primary btn-icon-text no-print"><i class="ti-angle-left btn-icon-prepend"></i> Kembali</a>
             </div>
         </div>
     </div>
@@ -102,13 +106,13 @@
             <table class="table whitespace-nowrap table-bordered" id="table" style="width: 100%;">
                 <thead style="border:1px solid #e3e3e3 !important">
                     <tr>
-                        <th rowspan="2" class="text-center">No</th>
-                        <th rowspan="2" class="text-center">Nama karyawan</th>
-                        <th rowspan="2" class="text-center">Gaji</th>
-                        <th rowspan="2" class="text-center">No Rek</th>
-                        <th colspan="6" class="text-center">Potongan</th>
-                        <th rowspan="2" class="text-center">Total Potongan</th>
-                        <th rowspan="2" class="text-center">Total Yang Diterima</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle"  align="center">No</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle" >Nama karyawan</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle" >Gaji</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle" >No Rek</th>
+                        <th colspan="6" class="text-center"  style="vertical-align:middle" >Potongan</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle" >Total Potongan</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle" >Total Yang Diterima</th>
                     </tr>
                     <tr>
                         <th class="text-center">JP BPJS TK 1%</th>
@@ -177,7 +181,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="2" class="text-center">Jumlah</th>
+                        <th colspan="2" class="text-center">Total</th>
                         <th class="text-end" align="right">{{ number_format($footer_total_gaji, 0, ',', '.') }}</th>
                         <th></th>
                         <th class="text-end" align="right">{{ number_format($footer_bpjs_tk, 0, ',', '.') }}</th>
@@ -194,7 +198,7 @@
         </div>
     </div>
 
-    <div class="p-4 my-5">
+    <div class="p-4">
         <div class="d-flex justify-content-between">
             <div>
                 <p class="p-0 mb-5">Mengetahui</p>
@@ -209,12 +213,41 @@
         </div>
     </div>
 </body>
-{{-- <script>
-    window.print() //open the print dialog box
-window.onafterprint=function(){
-    document.location.href = "{{ route('gaji_perbulan.index') }}";
-}
-</script> --}}
+<!--   Core JS Files   -->
+<script src="{{ asset('style/assets/js/core/jquery.min.js') }}"></script>
+<script src="{{asset('vendor/printpage/printpage.js')}}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    var currentPageUrl = window.location.href;
+    var url_arr = currentPageUrl.split('/')
+    var id = url_arr[(url_arr.length - 1)]
+    window.addEventListener('afterprint', function () {
+        // After print, refresh the page
+        console.log('after print')
+        //window.location.href = currentPageUrl;
+        updateTglCetak(id)
+    });
+
+    function updateTglCetak(id) {
+        $.ajax({
+            url: `{{url('update-tanggal-cetak')}}/${id}`,
+            method: "GET",
+            success: function(response) {
+                console.log(response)
+                window.close()
+                $().closePrint()
+            },
+            error: function(e) {
+                console.log(e)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi kesalahan!',
+                    text: e
+                });
+            }
+        })
+    }
+</script>
 </html>
 
 

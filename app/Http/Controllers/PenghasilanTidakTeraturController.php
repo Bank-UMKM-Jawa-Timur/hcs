@@ -192,6 +192,7 @@ class PenghasilanTidakTeraturController extends Controller
                 'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
                 'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
                 'tj_ti' => ($data != null) ? $data->tj_ti : 0,
+                'tj_fungsional' => ($data != null) ? $data->tj_fungsional : 0,
                 'tj_transport' => ($data != null) ? $data->tj_transport : 0,
                 'tj_pulsa' => ($data != null) ? $data->tj_pulsa : 0,
                 'tj_vitamin' => ($data != null) ? $data->tj_vitamin : 0,
@@ -478,8 +479,8 @@ class PenghasilanTidakTeraturController extends Controller
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $idTunjangan->id,
-                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
-                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
+                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => (int) Carbon::parse($request->get('tanggal'))->format('Y'),
                     'nominal' => str_replace('.', '', $nominal[$key]),
                     'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
                     'created_at' => $request->get('tanggal')
@@ -665,8 +666,8 @@ class PenghasilanTidakTeraturController extends Controller
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $old_tunjangan,
-                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
-                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
+                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
+                    'tahun' => (int) Carbon::parse($request->get('tanggal'))->format('Y'),
                     'nominal' => str_replace('.', '', $nominal[$key]),
                     'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
                     'created_at' => $request->get('tanggal')

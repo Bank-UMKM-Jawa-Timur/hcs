@@ -9,32 +9,35 @@ use Illuminate\Support\Facades\DB;
 
 class CetakGajiRepository
 {
+    private $orderRaw;
+    public function __construct() {
+        $this->orderRaw = "
+            CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 3
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 7
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 8
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
+        ";
+    }
+
     function cetak($kantor, $month, $year, $batch_id) {
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
-        if($kantor == 'pusat'){
+
+        $batch = DB::table('batch_gaji_per_bulan')->find($batch_id);
+        if ($batch) {
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
-                ->where('kd_cabang', '000')
+                ->where('mst_profil_kantor.kd_cabang', $batch->kd_entitas)
                 ->where('active', 1)
                 ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
                 ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
                 ->first();
             $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
-                ->where('kd_cabang', '000')
-                ->where('active', 1)
-                ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
-                ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
-                ->first();
-        }
-        else {
-            $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
-                ->where('mst_profil_kantor.kd_cabang', $kantor)
-                ->where('active', 1)
-                ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
-                ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
-                ->first();
-            $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
-                ->where('kd_cabang', $kantor)
+                ->where('kd_cabang', $batch->kd_entitas)
                 ->where('active', 1)
                 ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
                 ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
@@ -137,7 +140,7 @@ class CetakGajiRepository
                                 }
                             ])
                             ->select(
-                                'nip',
+                                'mst_karyawan.nip',
                                 'nama_karyawan',
                                 'npwp',
                                 'no_rekening',
@@ -146,31 +149,33 @@ class CetakGajiRepository
                                 'jkn',
                                 DB::raw("
                                     IF(
-                                        status = 'Kawin',
+                                        mst_karyawan.status = 'Kawin',
                                         'K',
                                         IF(
-                                            status = 'Belum Kawin',
+                                            mst_karyawan.status = 'Belum Kawin',
                                             'TK',
-                                            status
+                                            mst_karyawan.status
                                         )
                                     ) AS status
                                 "),
                                 'status_karyawan',
+                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
                             )
-                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
-                            ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr) {
+                            ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
+                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
+                            ->where(function($query) use ($month, $year, $batch) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
                                 ->whereNull('tanggal_penonaktifan')
-                                ->where(function($q) use ($kantor, $kode_cabang_arr) {
-                                    if ($kantor == 'pusat') {
-                                        $q->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr);
-                                    }
-                                    else {
-                                        $q->orWhere('mst_karyawan.kd_entitas', $kantor);
-                                    }
-                                });
-                            })->get();
+                                ->where('batch.id', $batch->id);
+                            })
+                            ->orderBy('status_kantor', 'asc')
+                            ->orderBy('kd_cabang', 'asc')
+                            ->orderByRaw($this->orderRaw)
+                            ->orderBy('mst_karyawan.nip', 'asc')
+                            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+                            ->get();
         foreach ($data as $key => $karyawan) {
             $ptkp = null;
             if ($karyawan->keluarga) {
@@ -296,7 +301,7 @@ class CetakGajiRepository
             }
 
             if ($karyawan->potongan) {
-                $total_potongan += $karyawan->potongan->dpp;
+                $total_potongan += property_exists($karyawan->potongan, 'dpp') ? $karyawan->potongan?->dpp : 0;
             }
 
             $total_potongan += $bpjs_tk;
@@ -695,7 +700,7 @@ class CetakGajiRepository
             $pphPasal21->pph_21_dipotong_masa_sebelumnya = $pph_21_dipotong_masa_sebelumnya;
 
             // 5. PPh Pasal 21 Terutang
-            $pph_21_terutang = ceil(($penghasilan_kena_pajak_setahun / 12) * $total_ket);
+            $pph_21_terutang = floor(($penghasilan_kena_pajak_setahun / 12) * $total_ket);
             $pphPasal21->pph_21_terutang = $pph_21_terutang;
 
             // 6. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi

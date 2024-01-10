@@ -91,7 +91,7 @@
                         <th>Nama karyawan</th>
                         <th class="text-center">Gaji Pokok</th>
                         <th class="text-center">T. Keluarga</th>
-                        <th class="text-center">T. Listrik & Air</th>
+                        <th class="text-center">T. Telepon, Listrik & Air</th>
                         <th class="text-center">T. Jabatan</th>
                         <th class="text-center">T. Khusus</th>
                         <th class="text-center">T. Perumahan</th>
@@ -197,18 +197,28 @@
 
         </div>
     </div>
-    <div class="p-4 my-5">
-        <div class="d-flex justify-content-between">
-            <div>
-                <p class="p-0 mb-5">Mengetahui</p>
-                <p class="p-0 m-0 fw-bold text-decoration-underline">SIGIT PURWANTO</p>
-                <p class="p-0 m-0">Pemimpin Divisi Umum</p>
-            </div>
-            <div>
-                <p class="p-0 m-0 mb-5">Surabaya,{{ date('d M Y', strtotime(now())) }}</p>
-                <p class="p-0 m-0 fw-bold text-decoration-underline">DEANG PARUJAR S</p>
-                <p class="p-0 m-0">Pemimpin Sub Divisi SDM</p>
-            </div>
+    <div class="p-4 my-5 container-fluid">
+        <div class="d-flex justify-content-between mx-4 px-4">
+            @if (auth()->user()->hasRole('kepegawaian'))
+                <div>
+                    <p class="p-0 mb-5">Mengetahui</p>
+                    <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $ttdKaryawan[0]->nama_karyawan }}</p>
+                    <p class="p-0 m-0">{{ $ttdKaryawan[0]->jabatan->nama_jabatan.' '.$ttdKaryawan[0]->entitas_result }}</p>
+                </div>
+                <div>
+                    <p class="p-0 m-0 mb-5">Surabaya,{{ date('d F Y', strtotime($data[0]->tanggal_input)) }}</p>
+                    <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $ttdKaryawan[1]->nama_karyawan }}</p>
+                    <p class="p-0 m-0">{{ $ttdKaryawan[1]->jabatan->nama_jabatan.' '.$ttdKaryawan[1]->entitas_result }}</p>
+                </div>
+            @endif
+            @if (auth()->user()->hasRole('cabang'))
+                <div></div>
+                <div>
+                    <p class="p-0 m-0 mb-5">{{$cabang->nama_cabang}}, {{ date('d F Y', strtotime($data[0]->tanggal_input)) }}</p>
+                    <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $pincab->nama_karyawan }}</p>
+                    <p class="p-0 m-0">Pimpinan Cabang {{$cabang->nama_cabang}}</p>
+                </div>
+            @endif
         </div>
     </div>
 </body>

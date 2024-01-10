@@ -8,24 +8,42 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="display" id="penyesuaian-table">
-                    <thead>
-                        <tr>
-                            <th rowspan="2"></th>
-                            <th rowspan="2">No</th>
-                            <th rowspan="2">NIP</th>
-                            <th rowspan="2">Nama</th>
-                            <th colspan="2">Total Penghasilan</th>
-                            <th colspan="2">Total Potongan</th>
-                        </tr>
-                        <tr>
-                            <th class="text-right">Sebelum</th>
-                            <th class="text-right">Sesudah</th>
-                            <th class="text-right">Sebelum</th>
-                            <th class="text-right">Sesudah</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="table-responsive">
+                    <table class="display" id="penyesuaian-table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="text-center"></th>
+                                <th rowspan="2" class="text-center">No</th>
+                                <th rowspan="2" class="text-center">NIP</th>
+                                <th rowspan="2" class="text-center">Nama</th>
+                                <th colspan="2" class="text-center">Total Penghasilan</th>
+                                <th colspan="2" class="text-center">Total Potongan</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">Sebelum</th>
+                                <th class="text-center">Sesudah</th>
+                                <th class="text-center">Sebelum</th>
+                                <th class="text-center">Sesudah</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr class="total">
+                                <th class="text-center" colspan="4">Total</th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                            </tr>
+                            <tr class="grandTotal">
+                                <th class="text-center" colspan="4">Grand Total</th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                                <th class="text-right"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <form id="form" action="{{route('gaji_perbulan.store')}}" method="POST">

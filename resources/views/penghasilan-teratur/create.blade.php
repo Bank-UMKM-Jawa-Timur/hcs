@@ -82,7 +82,7 @@
         <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
         <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
         <div class="d-flex justify-content-start">
-            <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
+            <button type="submit" class="is-btn is-primary d-none" id="btn-simpan">Simpan</button>
         </div>
         <div class="col" id="loading-message"></div>
         <div class="row d-none" id="hasil-filter">
@@ -96,29 +96,9 @@
                                     <th>Nip</th>
                                     <th>Nama Karyawan</th>
                                     <th>Nominal</th>
-                                    {{-- <th>Aksi</th> --}}
-                                    {{-- <th>
-                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-primary btn-plus">
-                                            +
-                                        </button>
-                                    </th> --}}
                                 </tr>
                             </thead>
                             <tbody id="t_body">
-                                {{-- <tr>
-                                    <td>1</td>
-                                    <td>1121212</td>
-                                    <td>Saya</td>
-                                    <td>123.321</td>
-                                    <td>
-                                        <button class="btn btn-warning" id="edit-penghasilan">edit</button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
-                                            -
-                                        </button>
-                                    </td>
-                                </tr> --}}
                             </tbody>
                         </table>
                     </div>
@@ -293,6 +273,30 @@
                     }
             }
 
+            function findDuplicateNIP(data) {
+                const nipMap = new Map();
+                const duplicates = [];
+
+                data.forEach(employee => {
+                    const nip = employee.nip;
+
+                    if (nipMap.has(nip)) {
+                        // NIP already found, increment the count
+                        nipMap.set(nip, nipMap.get(nip) + 1);
+                
+                        // Check if it's the second occurrence (or more)
+                        if (nipMap.get(nip) === 2) {
+                        duplicates.push(nip);
+                        }
+                    } else {
+                        // Add NIP to the map with an initial count of 1
+                        nipMap.set(nip, 1);
+                    }
+                });
+
+                return duplicates;
+            }
+
             function showTable(sheet_data) {
                 var no = 0;
                 var grandTotalNominal = 0;
@@ -306,6 +310,8 @@
                 var nipDataRequest = [];
 
                 var checkNip = [];
+                var rowEmpty = [];
+                var noEmpty = 1;
                 var checkNipTunjangan = [];
                 var namaTunjangan = [];
 
@@ -346,27 +352,34 @@
                     },
                     success: function(res){
                         var new_body_tr = ``;
+                        var new_body_tr_success = ``;
                         var message = ``;
                         var tittleMessage = ``;
                         var headerMessage = `harap cek kembali pada file excel yang di upload.`;
+                        const duplicateNIP = findDuplicateNIP(res);
                         $.each(res,function(key,value) {
+                            if (value.cek_nip == false) {
+                                checkNip.push(value.nip + " baris " + noEmpty++);
+                                hasError = true;
+                                hasNip = true;
+                                hasTunjangan = false;
+                            } else if (value.cek_tunjangan == true) {
+                                checkNipTunjangan.push(value.nip + " baris " + noEmpty++);
+                                namaTunjangan.push(value.tunjangan.nama_tunjangan);
+                                hasError = true;
+                                hasTunjangan = true;
+                                hasNip = false;
+                            }
+                            if (value.cek_nip == false || value.cek_tunjangan == true) {
+                                checkNip.push(value.nip + " baris " + noEmpty++);
+                                hasError = true;
+                                hasNip = true;
+                                hasTunjangan = false;
+                                grandTotalNominal += parseInt(dataNominal[key])
                                 nipDataRequest.push(value.nip);
                                 no++;
-                                if (value.cek_nip == false) {
-                                    checkNip.push(value.nip);
-                                    hasError = true;
-                                    hasNip = true;
-                                    hasTunjangan = false;
-                                } else if (value.cek_tunjangan == true) {
-                                    checkNipTunjangan.push(value.nip);
-                                    namaTunjangan.push(value.tunjangan.nama_tunjangan);
-                                    hasError = true;
-                                    hasTunjangan = true;
-                                    hasNip = false;
-                                }
-                                grandTotalNominal += parseInt(dataNominal[key])
                                 new_body_tr += `
-                                     <tr class="${value.cek_nip == false || value.cek_tunjangan == true ? 'table-danger' : ''}">
+                                        <tr class="table-danger">
                                         <td>
                                             ${no}
                                         </td>
@@ -381,9 +394,75 @@
                                         </td>
                                     </tr>
                                 `;
+                            }
+                            if (value.cek_nip || value.cek_tunjangan) {
+                                let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
+                                if (nipDuplicate) {
+                                    checkNip.push("Duplikasi " + value.nip + " baris " + noEmpty++);
+                                    hasError = true;
+                                    hasNip = true;
+                                    hasTunjangan = false;
+                                    grandTotalNominal += parseInt(dataNominal[key])
+                                    nipDataRequest.push(value.nip);
+                                    no++;
+                                    new_body_tr += `
+                                            <tr class="table-danger">
+                                            <td>
+                                                ${no}
+                                            </td>
+                                            <td>
+                                                ${value.nip}
+                                            </td>
+                                            <td>
+                                                ${value.nama_karyawan}
+                                            </td>
+                                            <td>
+                                                ${formatRupiah(dataNominal[key].toString())}
+                                            </td>
+                                        </tr>
+                                    `;
+                                }
+                            }
+                        })
 
-                            })
-                            if (hasError == true) {
+                        $.each(res,function(key,value) {
+                            if (value.cek_nip == false) {
+                                // checkNip.push(value.nip);
+                                // hasError = true;
+                                // hasNip = true;
+                                // hasTunjangan = false;
+                            } else if (value.cek_tunjangan == true) {
+                                // checkNipTunjangan.push(value.nip);
+                                // namaTunjangan.push(value.tunjangan.nama_tunjangan);
+                                // hasError = true;
+                                // hasTunjangan = true;
+                                // hasNip = false;
+                            }
+                            if (value.cek_nip == false || value.cek_tunjangan == true) {
+                            }else{
+                                grandTotalNominal += parseInt(dataNominal[key])
+                                nipDataRequest.push(value.nip);
+                                no++;
+                                new_body_tr += `
+                                        <tr class="">
+                                        <td>
+                                            ${no}
+                                        </td>
+                                        <td>
+                                            ${value.nip}
+                                        </td>
+                                        <td>
+                                            ${value.nama_karyawan}
+                                        </td>
+                                        <td>
+                                            ${formatRupiah(dataNominal[key].toString())}
+                                        </td>
+                                    </tr>
+                                `;
+                            }
+                        })
+
+                        if (hasError == true) {
                                 if (hasNip == true) {
                                     message += `${checkNip}`
                                     tittleMessage += `Tidak ditemukan`
@@ -410,31 +489,32 @@
                                         formatRupiah(grandTotalNominal.toString())
                                     }</p>
                                 `)
-                            }
-                            else {
-                                $('#alert-massage').html(`
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <strong>Data valid.</strong>
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                `)
-                                $('.nominal-input').val(dataNominal)
-                                $('.nip-input').val(nipDataRequest);
-                                $('.tunjangan-input').val(id_tunjangan);
-                                $('.bulan-input').val(bulanReq);
+                        }else{
+                            $('#alert-massage').html(`
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Data valid.</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            `)
+                            $('.nominal-input').val(dataNominal)
+                            $('.nip-input').val(nipDataRequest);
+                            $('.tunjangan-input').val(id_tunjangan);
+                            $('.bulan-input').val(bulanReq);
 
-                                $('#table_item tbody').append(new_body_tr);
-                                $('#btn-simpan').removeClass('d-none');
-                                $('#hasil-filter').removeClass('d-none');
-                                $('#grand').html(`
-                                    <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
-                                    <p id="grand-total" class="font-weight-bold">Grand Total : ${
-                                        formatRupiah(grandTotalNominal.toString())
-                                    }</p>
-                                `)
-                            }
+                            $('#table_item tbody').append(new_body_tr);
+                            $('#btn-simpan').removeClass('d-none');
+                            $('#hasil-filter').removeClass('d-none');
+                            $('#grand').html(`
+                                <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
+                                <p id="grand-total" class="font-weight-bold">Grand Total : ${
+                                    formatRupiah(grandTotalNominal.toString())
+                                }</p>
+                            `)
+                        }
+
+                        
                     },
                     complete: function () {
                         $('#loading-message').empty();

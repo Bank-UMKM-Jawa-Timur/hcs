@@ -21,37 +21,45 @@
                     <div class="table-responsive overflow-hidden content-center">
                         <form id="form" method="get">
                             <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="">Kantor<span class="text-danger">*</span></label>
-                                        <select name="kantor" id="kantor"
-                                            class="form-control">
-                                            <option value="0">-- Pilih kantor --</option>
-                                            <option value="pusat" @if(\Request::get('kantor') == 'pusat') selected @endif
-                                                {{old('kantor') == 'pusat' ? 'selected' : ''}}>Pusat</option>
-                                            <option value="cabang" @if(\Request::get('kantor') != '' && \Request::get('kantor') != 'pusat') selected @endif
-                                                {{old('kantor') == 'cabang' ? 'selected' : ''}}>Cabang</option>
-                                        </select>
-                                        @error('kantor')
-                                            <small class="text-danger">{{ucfirst($message)}}</small>
-                                        @enderror
+                                @if (auth()->user()->hasRole('cabang'))
+                                    <input type="hidden" name="kantor" value="cabang">
+                                @else
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="">Kantor<span class="text-danger">*</span></label>
+                                            <select name="kantor" id="kantor"
+                                                class="form-control">
+                                                <option value="0">-- Pilih kantor --</option>
+                                                <option value="pusat" @if(\Request::get('kantor') == 'pusat') selected @endif
+                                                    {{old('kantor') == 'pusat' ? 'selected' : ''}}>Pusat</option>
+                                                <option value="cabang" @if(\Request::get('kantor') != '' && \Request::get('kantor') != 'pusat') selected @endif
+                                                    {{old('kantor') == 'cabang' ? 'selected' : ''}}>Cabang</option>
+                                            </select>
+                                            @error('kantor')
+                                                <small class="text-danger">{{ucfirst($message)}}</small>
+                                            @enderror
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col cabang-input @if(\Request::get('kantor') == 'pusat' || \Request::get('kantor') == '0')d-none @endif">
-                                    <div class="form-group">
-                                        <label for="">Cabang<span class="text-danger">*</span></label>
-                                        <select name="cabang" id="cabang"
-                                            class="form-control select2">
-                                            <option value="0">-- Pilih cabang --</option>
-                                            @foreach ($cabang as $item)
-                                                <option value="{{$item->kd_cabang}}" @if(\Request::get('cabang') == $item->kd_cabang) selected @endif>{{$item->nama_cabang}}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('cabang')
-                                            <small class="text-danger">{{ucfirst($message)}}</small>
-                                        @enderror
+                                @endif
+                                @if (auth()->user()->hasRole('cabang'))
+                                    <input type="hidden" name="cabang" value="{{auth()->user()->kd_cabang}}">
+                                @else
+                                    <div class="col cabang-input @if(\Request::get('kantor') == 'pusat' || \Request::get('kantor') == '0')d-none @endif">
+                                        <div class="form-group">
+                                            <label for="">Cabang<span class="text-danger">*</span></label>
+                                            <select name="cabang" id="cabang"
+                                                class="form-control select2">
+                                                <option value="0">-- Pilih cabang --</option>
+                                                @foreach ($cabang as $item)
+                                                    <option value="{{$item->kd_cabang}}" @if(\Request::get('cabang') == $item->kd_cabang) selected @endif>{{$item->nama_cabang}}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('cabang')
+                                                <small class="text-danger">{{ucfirst($message)}}</small>
+                                            @enderror
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="">Kategori Gaji Pegawai<span class="text-danger">*</span></label>
@@ -165,7 +173,6 @@
                                 @if (\Request::get('kategori') == 'payroll')
                                     <div class="table-responsive">
                                         @include('payroll.tables.payroll', ['data' => $data, 'total' => $total])
-
                                     </div>
                                 @elseif (\Request::get('kategori') == 'rincian')
                                     <div class="table-responsive">

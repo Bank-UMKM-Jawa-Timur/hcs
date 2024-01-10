@@ -40,6 +40,8 @@ class KaryawanController extends Controller
             ->when($cabang, function($query) use($cabang) {
                 $query->where('kd_entitas', $cabang);
             })
+
+            ->whereNull('tanggal_penonaktifan')
             ->where('status_karyawan', '!=', 'Nonaktif')
             ->orderBy('nama_karyawan', 'ASC')
             ->simplePaginate();
@@ -126,6 +128,7 @@ class KaryawanController extends Controller
                     ->whereNull('tanggal_berakhir');
             })
             ->where('status_karyawan', '!=', 'Nonaktif')
+            ->whereNull('tanggal_penonaktifan')
             ->orderBy('nama_karyawan', 'ASC')
             ->simplePaginate();
 

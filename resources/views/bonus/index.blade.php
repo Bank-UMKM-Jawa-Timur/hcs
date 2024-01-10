@@ -5,8 +5,12 @@
     <div class="card-header">
         <h5 class="card-title">Bonus</h5>
         <p class="card-title"><a href="/">Penghasilan </a> > Bonus</p>
+    </div>
+    <div class="card-header row mt-3 mr-8 pr-5" >
         @can('penghasilan - import - bonus - import')
-            <a href="{{ route('bonus.create') }}" class="btn is-btn is-primary">Import Bonus</a>
+            <a href="{{ route('bonus.create') }}" class="ml-3">
+                <button class="is-btn is-primary">Import</button>
+            </a>
         @endcan
     </div>
 </div>
@@ -46,6 +50,11 @@
                             <thead class="text-primary">
                                 <th>No</th>
                                 <th>Tunjangan</th>
+                                @if (auth()->user()->hasRole('cabang') != 'cabang')
+                                    <th>
+                                        Kantor
+                                    </th>
+                                @endif
                                 <th>Total Data</th>
                                 <th>Grand Total</th>
                                 <th>Tanggal</th>
@@ -63,6 +72,11 @@
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->nama_tunjangan }}</td>
+                                        @if (auth()->user()->hasRole('cabang') != 'cabang')
+                                            <td>
+                                                {{ $item->entitas ?? 'Pusat' }}
+                                            </td>
+                                        @endif
                                         <td>{{ $item->total_data }}</td>
                                         <td>{{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('d F Y') }}</td>

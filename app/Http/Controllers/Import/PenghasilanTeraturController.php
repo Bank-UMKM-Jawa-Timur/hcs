@@ -64,10 +64,19 @@ class PenghasilanTeraturController extends Controller
             $nip_req = collect(json_decode($nip, true));
             $nip_id = $nip_req->pluck('nip')->toArray();
 
-            $data = KaryawanModel::select('nama_karyawan', 'nip')
-                ->whereIn('nip', $nip_id)
-                ->whereNull('tanggal_penonaktifan')
-                ->get();
+            if (auth()->user()->kd_cabang != null) {
+                $data = KaryawanModel::select('nama_karyawan', 'nip')
+                    ->whereIn('nip', $nip_id)
+                    ->where('kd_entitas', auth()->user()->kd_cabang)
+                    ->whereNull('tanggal_penonaktifan')
+                    ->get();
+            }else{
+                $data = KaryawanModel::select('nama_karyawan', 'nip')
+                    ->whereIn('nip', $nip_id)
+                    ->whereNull('tanggal_penonaktifan')
+                    ->get();
+            }
+
 
             $response = $nip_req->map(function ($value) use ($data) {
                 $nip = $value['nip'];

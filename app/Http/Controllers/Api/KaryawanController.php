@@ -61,6 +61,48 @@ class KaryawanController extends Controller
         }
     }
 
+    function getKaryawan2(Request $request)
+    {
+        ini_set('max_input_vars','2000');
+        try {
+            $request->get('nip');
+            $explode_data = collect(json_decode($request->get('nip'), true));
+            $explode_id = $explode_data->pluck('nip')->toArray();
+
+            if (auth()->user()->kd_cabang != null) {
+                $data = KaryawanModel::select('nama_karyawan', 'nip')
+                    ->whereIn('nip', $explode_id)
+                    ->where('kd_entitas', auth()->user()->kd_cabang)
+                    ->whereNull('tanggal_penonaktifan')
+                    ->get();
+            }else{
+                $data = KaryawanModel::select('nama_karyawan', 'nip')
+                    ->whereIn('nip', $explode_id)
+                    ->whereNull('tanggal_penonaktifan')
+                    ->get();
+            }
+
+            $response = $explode_data->map(function ($item) use ($data) {
+                $nip = $item['nip'];
+                $row = $item['row'];
+
+                // Check if the NIP is found in the server-side data
+                $found = $data->where('nip', $nip)->first();
+
+                return [
+                    'row' => $row,
+                    'nip' => $found ? $found->nip : $nip,
+                    'cek' => $found ? null : '-',
+                    'nama_karyawan' => $found ? $found->nama_karyawan : 'Karyawan Tidak Ditemukan',
+                ];
+            })->toArray();
+
+            return response()->json($response);
+        }catch (Exception $e){
+            return $e;
+        }
+    }
+
     public function autocomplete(Request $request)
     {
         $data = KaryawanModel::select("nama_karyawan", "nip")
