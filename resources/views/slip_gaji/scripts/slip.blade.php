@@ -367,49 +367,49 @@
             var iuran_ik = data.iuran_ik ? data.iuran_ik : 0;
             var bpjs_tk = data.bpjs_tk ? data.bpjs_tk : 0;
             var potongan_dpp = data.potongan.dpp ? data.potongan.dpp : 0;
-            var total_potongan = parseInt(data.bpjs_tk) + parseInt(data.potongan.dpp) + parseInt(kredit_koperasi) + parseInt(iuran_koperasi) + parseInt(kredit_pegawai) + parseInt(iuran_ik);
-            var total_diterima = parseInt(data.total_gaji) - total_potongan;
+            var total_potongan = Math.round(data.bpjs_tk) + Math.round(data.potongan.dpp) + Math.round(kredit_koperasi) + Math.round(iuran_koperasi) + Math.round(kredit_pegawai) + Math.round(iuran_ik);
+            var total_diterima = Math.round(data.total_gaji) - total_potongan;
             var potongan = ``;
 
             if (bpjs_tk > 0 ) {
                 potongan += `
                 <tr style="border:1px solid #e3e3e3">
                     <td class="px-3">JP BPJS TK 1%</td>
-                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(parseInt(data.bpjs_tk))}</td>
+                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(Math.round(data.bpjs_tk))}</td>
                 </tr>`
             }
             if (potongan_dpp > 0) {
                 potongan += `
                 <tr style="border:1px solid #e3e3e3">
                     <td class="px-3">DPP 5%</td>
-                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(data.potongan.dpp)}</td>
+                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(Math.round(data.potongan.dpp))}</td>
                 </tr>`
             }
             if (kredit_koperasi > 0) {
                 potongan += `
                 <tr style="border:1px solid #e3e3e3">
                     <td class="px-3">KREDIT KOPERASI</td>
-                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(parseInt(data.kredit_koperasi))}</td>
+                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(Math.round(data.kredit_koperasi))}</td>
                 </tr>`
             }
             if (iuran_koperasi > 0) {
                 potongan += `<tr style="border:1px solid #e3e3e3">
                     <td class="px-3">IUARAN KOPERASI	</td>
-                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(parseInt(data.iuran_koperasi))}</td>
+                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(Math.round(data.iuran_koperasi))}</td>
                 </tr>`
             }
             if (kredit_pegawai > 0) {
                 potongan += `
                 <tr style="border:1px solid #e3e3e3">
                     <td class="px-3">KREDIT PEGAWAI	</td>
-                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(parseInt(data.kredit_pegawai))}</td>
+                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(Math.round(data.kredit_pegawai))}</td>
                 </tr>`
             }
             if (iuran_ik > 0) {
                 potongan += `
                 <tr style="border:1px solid #e3e3e3">
                     <td class="px-3">IURAN IK</td>
-                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(parseInt(data.iuran_ik))}</td>
+                    <td id="gaji_pokok" class="text-right px-3">Rp ${formatRupiahPayroll(Math.round(data.iuran_ik))}</td>
                 </tr>`
             }
             $('#table-potongan tbody').append(potongan);
