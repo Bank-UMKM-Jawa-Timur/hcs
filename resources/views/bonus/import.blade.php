@@ -38,7 +38,7 @@
                     if (nipMap.has(nip)) {
                         // NIP already found, increment the count
                         nipMap.set(nip, nipMap.get(nip) + 1);
-                
+
                         // Check if it's the second occurrence (or more)
                         if (nipMap.get(nip) === 2) {
                         duplicates.push(nip);
@@ -84,6 +84,7 @@
                                 var dataNip = [];
                                 var dataNominal = [];
                                 var nipDataRequest = [];
+                                var no_rek = [];
 
                                 var checkNip = [];
                                 var noCheckEmpty = 1;
@@ -97,7 +98,8 @@
                                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
 
                                         dataNip.push({ nip: value['NIP'], row: key + 1 });
-                                        dataNominal.push(value['Nominal'])
+                                        dataNominal.push(value['Nominal']);
+                                        no_rek.push(value['No Rekening'])
                                     }
                                 })
                                 $.ajaxSetup({
@@ -138,7 +140,7 @@
                                                         checkNip.push(value.nip + " baris " + noCheckEmpty++);
                                                         hasError = true
                                                     }
-                                                    
+
                                                     nipDataRequest.push(value.nip);
                                                     grand_total += parseInt(dataNominal[key])
                                                     new_body_tr += `
@@ -153,11 +155,11 @@
                                                                 <span class="text-danger">${value.nama_karyawan}</span>
                                                             </td>
                                                             <td class="table-danger">
-                                                                <span class="text-danger">${value.no_rekening ?? '-'}</span>
+                                                                <span class="text-danger">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
                                                             </td>
                                                             <td class="table-danger">
                                                                 <span>${formatRupiah(dataNominal[key])}</span>
-    
+
                                                             </td>
                                                         </tr>
                                                     `;
@@ -182,11 +184,11 @@
                                                                     <span class="text-danger">${value.nama_karyawan}</span>
                                                                 </td>
                                                                 <td class="table-danger">
-                                                                    <span class="text-danger">${value.no_rekening ?? '-'}</span>
+                                                                    <span class="text-danger">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
                                                                 </td>
                                                                 <td class="table-danger">
                                                                     <span>${formatRupiah(dataNominal[key])}</span>
-        
+
                                                                 </td>
                                                             </tr>
                                                         `;
@@ -215,11 +217,11 @@
                                                                     <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
                                                                 </td>
                                                                 <td class="">
-                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.no_rekening ?? '-'}</span>
+                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
                                                                 </td>
                                                                 <td class="">
                                                                     <span>${formatRupiah(dataNominal[key])}</span>
-        
+
                                                                 </td>
                                                             </tr>
                                                         `;

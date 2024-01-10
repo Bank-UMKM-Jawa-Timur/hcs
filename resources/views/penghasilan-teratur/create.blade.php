@@ -165,7 +165,7 @@
                             // var message = 'kosong'
                             $('#error-penghasilan').addClass('d-none')
                         }
-                        
+
                     }
                 } else {
                     $('#error-penghasilan').addClass('d-none')
@@ -284,7 +284,7 @@
                     if (nipMap.has(nip)) {
                         // NIP already found, increment the count
                         nipMap.set(nip, nipMap.get(nip) + 1);
-                
+
                         // Check if it's the second occurrence (or more)
                         if (nipMap.get(nip) === 2) {
                         duplicates.push(nip);
@@ -308,6 +308,7 @@
 
                 var dataNip = [];
                 var dataNominal = [];
+                var no_rek = [];
                 var nipDataRequest = [];
 
                 var checkNip = [];
@@ -323,9 +324,9 @@
 
                 $.each(sheet_data,function(key, value) {
                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
-
                         dataNip.push({ nip: value['NIP'], row: key + 1 });
-                        dataNominal.push(value['Nominal'])
+                        dataNominal.push(value['Nominal']);
+                        no_rek.push(value['No Rekening'])
                     }
                 })
                 $.ajaxSetup({
@@ -352,6 +353,7 @@
                         `);
                     },
                     success: function(res){
+                        console.log(no_rek);
                         var new_body_tr = ``;
                         var new_body_tr_success = ``;
                         var message = ``;
@@ -390,7 +392,7 @@
                                             ${value.nama_karyawan}
                                         </td>
                                         <td>
-                                            ${value.no_rekening ?? '-'}
+                                            ${no_rek[key] == undefined ? '-' : no_rek[key]}
                                         </td>
                                         <td>
                                             ${formatRupiah(dataNominal[key].toString())}
@@ -461,7 +463,7 @@
                                             ${value.nama_karyawan}
                                         </td>
                                         <td>
-                                            ${value.no_rekening ?? '-'}
+                                            ${no_rek[key] == undefined ? '-' : no_rek[key]}
                                         </td>
                                         <td>
                                             ${formatRupiah(dataNominal[key].toString())}
@@ -523,7 +525,7 @@
                             `)
                         }
 
-                        
+
                     },
                     complete: function () {
                         $('#loading-message').empty();
