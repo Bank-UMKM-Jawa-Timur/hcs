@@ -41,7 +41,7 @@
                 return uri + separator + key + "=" + value;
             }
         }
-        function refreshPagination() {
+        {{--  function refreshPagination() {
             var btn_pagination = $(`.pagination`).find('a')
             var page_url = window.location.href
             $(`#myTabContent .active .pagination`).find('a').each(function(i, obj) {
@@ -70,6 +70,33 @@
                     btn_pagination[i].href += `&q=${$('#q').val()}`
                 }
             })
+        }  --}}
+
+        function refreshPagination() {
+            var btn_pagination = $("#myTabContent .active .pagination").find("a");
+            var page_url = window.location.href;
+        
+            // Your custom query parameter and its value
+            var customParam = "";
+            
+            customParam += "&tab=" + $('#tab').val();
+            customParam += "&page_length=" + $('#page_length').val();
+            //customParam += "&q=" + $('#q').val();
+        
+            btn_pagination.each(function (i, obj) {
+                // Clone the original href to avoid modifying the original link
+                var href = $(this).attr("href");
+        
+                // Check if the href already contains a question mark
+                var separator = href.includes("?") ? "&" : "?";
+        
+                // Append the custom query parameter and its value
+                var updatedHref = href + separator + customParam;
+                updatedHref = updatedHref.replaceAll('&&', '&')
+        
+                // Update the href attribute of the pagination link
+                $(this).attr("href", updatedHref);
+            });
         }
 
         $(document).ready(function() {

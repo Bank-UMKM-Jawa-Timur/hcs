@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class GajiPerBulanRepository
 {
-    public function getPenghasilanList($status, $search, $limit=10) {
+    public function getPenghasilanList($status, $limit=10, $page = 1) {
         $is_cabang = auth()->user()->hasRole('cabang');
         $is_pusat = auth()->user()->hasRole('kepegawaian');
         $kd_cabang = DB::table('mst_cabang')
@@ -49,7 +49,7 @@ class GajiPerBulanRepository
                 ->groupBy('batch.kd_entitas')
                 ->groupBy('gaji.bulan')
                 ->groupBy('gaji.tahun')
-                ->paginate($limit);
+                ->paginate($limit, ['*'], 'page', $page);
 
         foreach ($data as $key => $item) {
             // Get Bruto & Netto
