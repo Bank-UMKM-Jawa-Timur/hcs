@@ -40,10 +40,12 @@ class PenghasilanTidakTeraturRepository
                         $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
                             ->orWhere('nominal', 'like', "%$search%");
                     })
-                    ->where(function ($query) use ($kd_cabang, $kode_cabang_arr) {
+                    ->when($kd_cabang, function($query) use($kd_cabang, $cabangRepo, $kode_cabang_arr) {
                         if ($kd_cabang == 'pusat') {
-                            $query->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
-                                ->orWhereNull('mst_karyawan.kd_entitas');
+                            if (!auth()->user()->hasRole('admin')) {
+                                $query->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
+                                    ->orWhereNull('mst_karyawan.kd_entitas');
+                            }
                         }
                         else {
                             $query->where('mst_karyawan.kd_entitas', $kd_cabang);
