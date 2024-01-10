@@ -1575,86 +1575,7 @@ class GajiPerBulanController extends Controller
         $tahun = $data_batch->tahun;
 
         $payrollRepo = new PayrollRepository;
-        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak);
-
-        // $total_gj_pokok = 0;
-        // $total_gj_penyesuaian = 0;
-        // $total_tj_keluarga = 0;
-        // $total_tj_telepon = 0;
-        // $total_tj_jabatan = 0;
-        // $total_tj_teller = 0;
-        // $total_tj_perumahan = 0;
-        // $total_tj_kemahalan = 0;
-        // $total_tj_pelaksana = 0;
-        // $total_tj_kesejahteraan = 0;
-        // $total_tj_multilevel = 0;
-        // $total_tj_ti = 0;
-        // $total_tj_fungsional = 0;
-        // $total_tj_khusus = 0;
-        // $total_tj_transport = 0;
-        // $total_tj_pulsa = 0;
-        // $total_tj_vitamin = 0;
-        // $total_uang_makan = 0;
-        // $total_dpp = 0;
-        // $total_total_gaji = 0;
-        // $total_pph_harus_dibayar = 0;
-
-        // foreach ($data as $item) {
-        //     // count total rincian
-        //     $total_gj_pokok += $item->gaji->gj_pokok;
-        //     $total_gj_penyesuaian += $item->gaji->gj_penyesuaian;
-        //     $total_tj_keluarga += $item->gaji->tj_keluarga;
-        //     $total_tj_telepon += $item->gaji->tj_telepon;
-        //     $total_tj_jabatan += $item->gaji->tj_jabatan;
-        //     $total_tj_teller += $item->gaji->tj_teller;
-        //     $total_tj_perumahan += $item->gaji->tj_perumahan;
-        //     $total_tj_kemahalan += $item->gaji->tj_kemahalan;
-        //     $total_tj_pelaksana += $item->gaji->tj_pelaksana;
-        //     $total_tj_kemahalan += $item->gaji->tj_kemahalan;
-        //     $total_tj_kesejahteraan += $item->gaji->tj_kesejahteraan;
-        //     $total_tj_multilevel += $item->gaji->tj_multilevel;
-        //     $total_tj_ti += $item->gaji->tj_ti;
-        //     $total_tj_fungsional += $item->gaji->tj_fungsional;
-        //     $total_tj_khusus += ($item->gaji->tj_multilevel + $item->gaji->tj_ti + $item->gaji->tj_fungsional);
-        //     $total_tj_transport += $item->gaji->tj_transport;
-        //     $total_tj_pulsa += $item->gaji->tj_pulsa;
-        //     $total_tj_vitamin += $item->gaji->tj_vitamin;
-        //     $total_uang_makan += $item->gaji->uang_makan;
-        //     $total_dpp += $item->gaji->dpp;
-        //     $total_total_gaji += $item->gaji->total_gaji;
-        //     if ($item->perhitungan_pph21) {
-        //         if ($item->perhitungan_pph21->pph_pasal_21) {
-        //             if ($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar > 0) {
-        //                 $total_pph_harus_dibayar += $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar;
-        //             }
-        //         }
-        //     }
-
-        // }
-
-        // $grandTotalResults = [
-        //     'total_gj_pokok' => $total_gj_pokok,
-        //     'total_gj_penyesuaian' => $total_gj_penyesuaian,
-        //     'total_tj_keluarga' => $total_tj_keluarga,
-        //     'total_tj_telepon' => $total_tj_telepon,
-        //     'total_tj_jabatan' => $total_tj_jabatan,
-        //     'total_tj_teller' => $total_tj_teller,
-        //     'total_tj_perumahan' => $total_tj_perumahan,
-        //     'total_tj_kemahalan' => $total_tj_kemahalan,
-        //     'total_tj_pelaksana' => $total_tj_pelaksana,
-        //     'total_tj_kemahalan' => $total_tj_kemahalan,
-        //     'total_tj_kesejahteraan' => $total_tj_kesejahteraan,
-        //     'total_tj_multilevel' => $total_tj_multilevel,
-        //     'total_tj_ti' => $total_tj_ti,
-        //     'total_tj_fungsional' => $total_tj_fungsional,
-        //     'total_tj_khusus' => $total_tj_khusus,
-        //     'total_tj_transport' => $total_tj_transport,
-        //     'total_tj_pulsa' => $total_tj_pulsa,
-        //     'total_tj_vitamin' => $total_tj_vitamin,
-        //     'total_uang_makan' => $total_uang_makan,
-        //     'total_dpp' => $total_dpp,
-        //     'total_total_gaji' => $total_total_gaji,
-        // ];
+        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak, $batch_id);
 
         return DataTables::of($data)
                         ->addColumn('counter', function ($row) {
@@ -1662,9 +1583,6 @@ class GajiPerBulanController extends Controller
                             $count++;
                             return $count;
                         })
-                        // ->addColumn('grand_total', function ($row) use ($grandTotalResults) {
-                        //     return $grandTotalResults;
-                        // })
                         ->rawColumns(['counter','grand_total'])
                         ->make(true);
     }
@@ -1723,9 +1641,15 @@ class GajiPerBulanController extends Controller
         $message = '';
 
         try {
-            DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
-                'tanggal_cetak' => Carbon::now(),
-            ]);
+            $kd_entitas = auth()->user()->kd_cabang;
+            $batch = DB::table('batch_gaji_per_bulan')->where('id',$id)->first();
+            if ($batch) {
+                if ($batch->kd_entitas == $kd_entitas) {
+                    DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
+                        'tanggal_cetak' => Carbon::now(),
+                    ]);
+                }
+            }
 
             $status = 'success';
             $message = 'Berhasil memperbarui tanggal cetak';
@@ -1793,7 +1717,7 @@ class GajiPerBulanController extends Controller
         );
 
         $payrollRepo = new PayrollRepository;
-        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak);
+        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak, $data_batch);
         $returnType = null;
         if($tipe == 'payroll'){
             $returnType = new ProsesPayroll($data);
