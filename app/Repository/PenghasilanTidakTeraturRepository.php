@@ -14,7 +14,11 @@ use Illuminate\Support\Facades\DB;
 class PenghasilanTidakTeraturRepository
 {
     public function getDataBonus($search, $limit=10, $page=1) {
-      $bonus = DB::table('penghasilan_tidak_teratur')
+        $kd_cabang = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
+        $cabangRepo = new CabangRepository;
+        $kode_cabang_arr = $cabangRepo->listCabang(true);
+
+        $bonus = DB::table('penghasilan_tidak_teratur')
                     ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                     ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
                     ->select(
@@ -36,6 +40,15 @@ class PenghasilanTidakTeraturRepository
                     ->where(function ($query) use ($search) {
                         $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
                             ->orWhere('nominal', 'like', "%$search%");
+                    })
+                    ->when($kd_cabang, function($query) use($kd_cabang, $cabangRepo, $kode_cabang_arr) {
+                        if ($kd_cabang == 'pusat') {
+                            $query->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
+                                ->orWhereNull('mst_karyawan.kd_entitas');
+                        }
+                        else {
+                            $query->where('mst_karyawan.kd_entitas', $kd_cabang);
+                        }
                     })
                     ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date')
                     ->orderBy('mst_tunjangan.id', 'ASC')
