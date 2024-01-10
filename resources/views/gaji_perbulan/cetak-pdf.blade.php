@@ -214,7 +214,7 @@
 <script src="{{asset('vendor/printpage/printpage.js')}}"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    var currentPageUrl = " http://127.0.0.1:8000/cetak-penghasilan/2";
+    var currentPageUrl = window.location.href;
     var url_arr = currentPageUrl.split('/')
     var id = url_arr[(url_arr.length - 1)]
     window.addEventListener('afterprint', function () {
