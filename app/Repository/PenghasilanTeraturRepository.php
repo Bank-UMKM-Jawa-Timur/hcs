@@ -12,6 +12,10 @@ class PenghasilanTeraturRepository
     // nip, nama karyawan, nama tunjangan, nominal, tahun, bulan
     // search semua
     public function getPenghasilanTeraturImport($search, $limit=10, $page=1 ) {
+        $kd_cabang = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
+        $cabangRepo = new CabangRepository;
+        $kode_cabang_arr = $cabangRepo->listCabang(true);
+
         $data = DB::table('transaksi_tunjangan')
                 ->select(
                     'transaksi_tunjangan.nip as nip_tunjangan',
@@ -35,9 +39,18 @@ class PenghasilanTeraturRepository
                     ->orWhere('transaksi_tunjangan.nominal', 'like', "%$search%")
                     ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%");
                 })
-                    ->groupBy('transaksi_tunjangan.id_tunjangan', 'tanggal')
-                    ->orderBy('transaksi_tunjangan.tanggal')
-                    ->paginate($limit);
+                ->when($kd_cabang, function($query) use($kd_cabang, $cabangRepo, $kode_cabang_arr) {
+                    if ($kd_cabang == 'pusat') {
+                        $query->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
+                            ->orWhereNull('mst_karyawan.kd_entitas');
+                    }
+                    else {
+                        $query->where('mst_karyawan.kd_entitas', $kd_cabang);
+                    }
+                })
+                ->groupBy('transaksi_tunjangan.id_tunjangan', 'tanggal')
+                ->orderBy('transaksi_tunjangan.tanggal')
+                ->paginate($limit);
         foreach ($data as $key => $value) {
             $bulan = date("m", strtotime($value->tanggal));
             $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
