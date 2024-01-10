@@ -185,6 +185,7 @@ class PayrollRepository
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
+                                'tanggal_input',
                                 DB::raw("
                                     IF(
                                         mst_karyawan.status = 'Kawin',

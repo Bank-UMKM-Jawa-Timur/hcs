@@ -27,6 +27,9 @@
         p, table, ol{
             font-size: 9pt;
         }
+        table thead {
+            font-size: 8pt;
+        }
 
         @page {
             margin: 0;  /* Ini akan diterapkan ke setiap halaman */
@@ -40,6 +43,7 @@
             /* Sembunyikan thead di semua halaman */
             thead {
                 display: table-row-group;
+                font-size: 10pt;
             }
 
             /* thead.no-print {
@@ -91,7 +95,7 @@
         <h5 class="fw-bold text-center">BANK BPR JATIM BANK UMKM JAWA TIMUR</h5>
         <h6 class="fw-bold text-center">{{ $bulan[$month] }} {{ $year }}</h6>
         <center style="font-size: 10px; text-align: center" class="text-center">( MASUK TAB. SIKEMAS )</center>
-        <div class="d-flex justify-content-end mb-3">
+        <div class="d-flex justify-content-end mb-1">
             <div class="mx-3">
                 <a href="{{route('gaji_perbulan.index')}}" class="btn btn-primary btn-icon-text no-print"><i class="ti-angle-left btn-icon-prepend"></i> Kembali</a>
             </div>
@@ -102,13 +106,13 @@
             <table class="table whitespace-nowrap table-bordered" id="table" style="width: 100%;">
                 <thead style="border:1px solid #e3e3e3 !important">
                     <tr>
-                        <th rowspan="2" class="text-center">No</th>
-                        <th rowspan="2" class="text-center">Nama karyawan</th>
-                        <th rowspan="2" class="text-center">Gaji</th>
-                        <th rowspan="2" class="text-center">No Rek</th>
-                        <th colspan="6" class="text-center">Potongan</th>
-                        <th rowspan="2" class="text-center">Total Potongan</th>
-                        <th rowspan="2" class="text-center">Total Yang Diterima</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle"  align="center">No</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle" >Nama karyawan</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle" >Gaji</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle" >No Rek</th>
+                        <th colspan="6" class="text-center"  style="vertical-align:middle" >Potongan</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle" >Total Potongan</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle" >Total Yang Diterima</th>
                     </tr>
                     <tr>
                         <th class="text-center">JP BPJS TK 1%</th>
@@ -194,7 +198,7 @@
         </div>
     </div>
 
-    <div class="p-4 my-5">
+    <div class="p-4">
         <div class="d-flex justify-content-between">
             <div>
                 <p class="p-0 mb-5">Mengetahui</p>
