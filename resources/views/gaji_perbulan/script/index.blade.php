@@ -13,9 +13,65 @@
     <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script>
-        
-    </script>
-    <script>
+        $('#page_length').on('change', function() {
+            $('#form-filter').submit()
+        })
+
+        $('#form-filter').on('submit', function() {
+            $('.loader-wrapper').css('display: none;')
+            $('.loader-wrapper').addClass('d-block')
+            $(".loader-wrapper").fadeOut("slow");
+        })
+
+        $('.nav-tabs li').on('click', function() {
+            $('#tab').val($(this).data('tab'))
+            refreshPagination();
+        })
+
+        refreshPagination();
+
+        // Adjust pagination url
+        function updateQueryStringParameter(uri, key, value) {
+            var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+            var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+            if (uri.match(re)) {
+                return uri.replace(re, '$1' + key + "=" + value + '$2');
+            }
+            else {
+                return uri + separator + key + "=" + value;
+            }
+        }
+        function refreshPagination() {
+            var btn_pagination = $(`.pagination`).find('a')
+            var page_url = window.location.href
+            $(`#myTabContent .active .pagination`).find('a').each(function(i, obj) {
+                var have_arial = $(this).attr('aria-label')
+                console.log(i)
+                if (page_url.includes('tab')) {
+                    var url = updateQueryStringParameter(page_url, 'tab', $('#tab').val())
+                    const urlParams = new URLSearchParams(url);
+                    btn_pagination[i].href += url;
+                }
+                else {
+                    btn_pagination[i].href += `&tab=${$('#tab').val()}`
+                }
+                if (page_url.includes('page_length')) {
+                    var url = updateQueryStringParameter(page_url, 'page_length', $('#page_length').val())
+                    btn_pagination[i].href = url;
+                }
+                else {
+                    btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
+                }
+                if (page_url.includes('q')) {
+                    var url = updateQueryStringParameter(page_url, 'q', $('#q').val())
+                    btn_pagination[i].href = url;
+                }
+                else {
+                    btn_pagination[i].href += `&q=${$('#q').val()}`
+                }
+            })
+        }
+
         $(document).ready(function() {
             $('.btn-download-pdf').printPage({
                 parent: window

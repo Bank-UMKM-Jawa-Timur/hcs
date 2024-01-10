@@ -27,7 +27,11 @@
         p, table, ol{
             font-size: 9pt;
         }
-
+        thead th{
+            font-size: 8pt;
+            display:flex,
+            align-items:center,
+        }
         @page {
             margin: 0;  /* Ini akan diterapkan ke setiap halaman */
             size: landscape;
@@ -102,13 +106,13 @@
             <table class="table whitespace-nowrap table-bordered" id="table" style="width: 100%;">
                 <thead style="border:1px solid #e3e3e3 !important">
                     <tr>
-                        <th rowspan="2" class="text-center">No</th>
-                        <th rowspan="2" class="text-center">Nama karyawan</th>
-                        <th rowspan="2" class="text-center">Gaji</th>
-                        <th rowspan="2" class="text-center">No Rek</th>
-                        <th colspan="6" class="text-center">Potongan</th>
-                        <th rowspan="2" class="text-center">Total Potongan</th>
-                        <th rowspan="2" class="text-center">Total Yang Diterima</th>
+                        <th rowspan="2"  style="vertical-align:middle" class="text-center">No</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle">Nama karyawan</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle">Gaji</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle">No Rek</th>
+                        <th colspan="6" class="text-center"  style="vertical-align:middle">Potongan</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle">Total Potongan</th>
+                        <th rowspan="2" class="text-center"  style="vertical-align:middle">Total Yang Diterima</th>
                     </tr>
                     <tr>
                         <th class="text-center">DPP 5%</th>
@@ -177,7 +181,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="2" class="text-center">Jumlah</th>
+                        <th colspan="2" class="text-center">Total</th>
                         <th class="text-end" align="right">{{ number_format($footer_total_gaji, 0, ',', '.') }}</th>
                         <th></th>
                         <th class="text-end" align="right">{{ number_format($footer_dpp, 0, ',', '.') }}</th>
@@ -194,23 +198,33 @@
         </div>
     </div>
 
-    <div class="p-4 my-5">
-        <div class="d-flex justify-content-between">
-            <div>
-                <p class="p-0 mb-5">Mengetahui</p>
-                <p class="p-0 m-0 fw-bold text-decoration-underline">SIGIT PURWANTO</p>
-                <p class="p-0 m-0">Pemimpin Divisi Umum</p>
-            </div>
-            <div>
-                <p class="p-0 m-0 mb-5">Surabaya,{{ date('d M Y', strtotime(now())) }}</p>
-                <p class="p-0 m-0 fw-bold text-decoration-underline">DEANG PARUJAR S</p>
-                <p class="p-0 m-0">Pemimpin Sub Divisi SDM</p>
-            </div>
+    <div class="p-4 my-5 container-fluid">
+        <div class="d-flex justify-content-between mx-4 px-4">
+            @if (auth()->user()->hasRole('kepegawaian'))
+                <div>
+                    <p class="p-0 mb-5">Mengetahui</p>
+                    <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $ttdKaryawan[0]->nama_karyawan }}</p>
+                    <p class="p-0 m-0">{{ $ttdKaryawan[0]->jabatan->nama_jabatan.' '.$ttdKaryawan[0]->entitas_result }}</p>
+                </div>
+                <div>
+                    <p class="p-0 m-0 mb-5">Surabaya,{{ date('d F Y', strtotime($data[0]->tanggal_input)) }}</p>
+                    <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $ttdKaryawan[1]->nama_karyawan }}</p>
+                    <p class="p-0 m-0">{{ $ttdKaryawan[1]->jabatan->nama_jabatan.' '.$ttdKaryawan[1]->entitas_result }}</p>
+                </div>
+            @endif
+            @if (auth()->user()->hasRole('cabang'))
+                <div></div>
+                <div>
+                    <p class="p-0 m-0 mb-5">{{$cabang->nama_cabang}}, {{ date('d F Y', strtotime($data[0]->tanggal_input)) }}</p>
+                    <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $pincab->nama_karyawan }}</p>
+                    <p class="p-0 m-0">Pimpinan Cabang {{$cabang->nama_cabang}}</p>
+                </div>
+            @endif
         </div>
     </div>
 </body>
 <script>
-     print();
+    print();
 </script>
 </html>
 

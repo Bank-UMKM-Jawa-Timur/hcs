@@ -11,6 +11,7 @@ use App\Models\PPHModel;
 use App\Models\TunjanganModel;
 use App\Repository\PayrollRepository;
 use App\Repository\CetakGajiRepository;
+use App\Repository\GajiPerBulanRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
@@ -86,219 +87,27 @@ class GajiPerBulanController extends Controller
         }
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (!auth()->user()->can('penghasilan')) {
             return view('roles.forbidden');
         }
+
+        $tab = $request->has('tab') ? $request->get('tab') : 'proses';
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $search = $request->get('q');
+
+        $gajiRepo = new GajiPerBulanRepository;
         // Proses
-        $proses_list = $this->getPenghasilanList('proses');
+        $proses_list = $gajiRepo->getPenghasilanList('proses', $search, $limit);
         // Final
-        $final_list = $this->getPenghasilanList('final');
+        $final_list = $gajiRepo->getPenghasilanList('final', $search, $limit);
 
         $data = [
             'proses_list' => $proses_list,
             'final_list' => $final_list,
         ];
         return view('gaji_perbulan.index', $data);
-    }
-
-    private function getPenghasilanList($status) {
-        $is_cabang = auth()->user()->hasRole('cabang');
-        $is_pusat = auth()->user()->hasRole('kepegawaian');
-        $kd_cabang = DB::table('mst_cabang')
-                        ->select('kd_cabang')
-                        ->pluck('kd_cabang')
-                        ->toArray();
-        $year = date('Y');
-
-        $data = DB::table('batch_gaji_per_bulan AS batch')
-                ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
-                ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
-                ->select(
-                    'batch.id',
-                    'batch.tanggal_input',
-                    'batch.tanggal_final',
-                    'batch.tanggal_cetak',
-                    'batch.file',
-                    'batch.status',
-                    'gaji.bulan',
-                    'gaji.tahun',
-                    DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS bruto'),
-                    DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan')
-                )
-                ->when($is_cabang, function($query) {
-                    $kd_cabang = auth()->user()->kd_cabang;
-                    $query->where('m.kd_entitas', $kd_cabang);
-                })
-                ->when($is_pusat, function($query) use ($kd_cabang) {
-                    $query->where(function($q2) use ($kd_cabang) {
-                        $q2->whereNotIn('m.kd_entitas', $kd_cabang)
-                            ->orWhere('m.kd_entitas', 0)
-                            ->orWhereNull('m.kd_entitas');
-                    });
-                })
-                ->where('batch.status', $status)
-                ->whereYear('batch.tanggal_input', $year)
-                ->orderBy('gaji.created_at', 'desc')
-                ->groupBy('gaji.tahun')
-                ->groupBy('gaji.bulan')
-                ->get();
-
-        foreach ($data as $key => $item) {
-            // Get Bruto & Netto
-            $netto = 0;
-            $netto = $item->bruto - $item->total_potongan;
-            $item->netto = $netto;
-
-            // Cek apakah ada perubahan data penghasilan
-            $total_penyesuaian = 0;
-            if ($item->status == 'proses') {
-                $data_gaji = DB::table('gaji_per_bulan AS gaji')
-                                ->select(
-                                    'gaji.*',
-                                    'm.nama_karyawan',
-                                    DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total_penghasilan'),
-                                    DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan')
-                                )
-                                ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
-                                ->where('gaji.batch_id', $item->id)
-                                ->get();
-
-                foreach ($data_gaji as $gaji) {
-                    $karyawan = DB::table('mst_karyawan')
-                                ->where('nip', $gaji->nip)
-                                ->first();
-                    if ($gaji->gj_pokok != $karyawan->gj_pokok) {
-                        $total_penyesuaian++;
-                    }
-                    if ($gaji->gj_penyesuaian != $karyawan->gj_penyesuaian) {
-                        $total_penyesuaian++;
-                    }
-
-                    $tunjangan = DB::table('tunjangan_karyawan')
-                                    ->where('nip', $gaji->nip)
-                                    ->get();
-                    foreach ($tunjangan as $tunj) {
-                        // Keluarga
-                        if ($tunj->id_tunjangan == 1) {
-                            if ($gaji->tj_keluarga != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Telepon
-                        if ($tunj->id_tunjangan == 2) {
-                            if ($gaji->tj_telepon != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Jabatan
-                        if ($tunj->id_tunjangan == 3) {
-                            if ($gaji->tj_jabatan != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Teller
-                        if ($tunj->id_tunjangan == 4) {
-                            if ($gaji->tj_teller != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Perumahan
-                        if ($tunj->id_tunjangan == 5) {
-                            if ($gaji->tj_perumahan != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Kemahalan
-                        if ($tunj->id_tunjangan == 6) {
-                            if ($gaji->tj_kemahalan != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Pelaksana
-                        if ($tunj->id_tunjangan == 7) {
-                            if ($gaji->tj_pelaksana != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Kesejahteraan
-                        if ($tunj->id_tunjangan == 8) {
-                            if ($gaji->tj_kesejahteraan != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Multilevel
-                        if ($tunj->id_tunjangan == 9) {
-                            if ($gaji->tj_multilevel != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // TI
-                        if ($tunj->id_tunjangan == 10) {
-                            if ($gaji->tj_ti != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                    }
-
-                    $transaksi_tunjangan = DB::table('transaksi_tunjangan')
-                                            ->where('nip', $gaji->nip)
-                                            ->where('bulan', $gaji->bulan)
-                                            ->where('tahun', $gaji->tahun)
-                                            ->get();
-                    foreach ($transaksi_tunjangan as $tunj) {
-                        // Transport
-                        if ($tunj->id_tunjangan == 11) {
-                            if ($gaji->tj_transport != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Pulsa
-                        if ($tunj->id_tunjangan == 12) {
-                            if ($gaji->tj_pulsa != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Vitamin
-                        if ($tunj->id_tunjangan == 13) {
-                            if ($gaji->tj_vitamin != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                        // Uang Makan
-                        if ($tunj->id_tunjangan == 14) {
-                            if ($gaji->uang_makan != $tunj->nominal) {
-                                $total_penyesuaian++;
-                            }
-                        }
-                    }
-
-                    // Get Potongan
-                    $potongan = DB::table('potongan_gaji')
-                                ->where('nip', $gaji->nip)
-                                ->first();
-
-                    if ($potongan) {
-                        if ($potongan->kredit_koperasi != $gaji->kredit_koperasi) {
-                            $total_penyesuaian++;
-                        }
-                        if ($potongan->iuran_koperasi != $gaji->iuran_koperasi) {
-                            $total_penyesuaian++;
-                        }
-                        if ($potongan->kredit_pegawai != $gaji->kredit_pegawai) {
-                            $total_penyesuaian++;
-                        }
-                        if ($potongan->iuran_ik != $gaji->iuran_ik) {
-                            $total_penyesuaian++;
-                        }
-                    }
-                }
-            }
-            $item->total_penyesuaian = $total_penyesuaian;
-        }
-
-        return $data;
     }
 
     public function getDataPenghasilanJson() {
@@ -1766,86 +1575,7 @@ class GajiPerBulanController extends Controller
         $tahun = $data_batch->tahun;
 
         $payrollRepo = new PayrollRepository;
-        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak);
-
-        // $total_gj_pokok = 0;
-        // $total_gj_penyesuaian = 0;
-        // $total_tj_keluarga = 0;
-        // $total_tj_telepon = 0;
-        // $total_tj_jabatan = 0;
-        // $total_tj_teller = 0;
-        // $total_tj_perumahan = 0;
-        // $total_tj_kemahalan = 0;
-        // $total_tj_pelaksana = 0;
-        // $total_tj_kesejahteraan = 0;
-        // $total_tj_multilevel = 0;
-        // $total_tj_ti = 0;
-        // $total_tj_fungsional = 0;
-        // $total_tj_khusus = 0;
-        // $total_tj_transport = 0;
-        // $total_tj_pulsa = 0;
-        // $total_tj_vitamin = 0;
-        // $total_uang_makan = 0;
-        // $total_dpp = 0;
-        // $total_total_gaji = 0;
-        // $total_pph_harus_dibayar = 0;
-
-        // foreach ($data as $item) {
-        //     // count total rincian
-        //     $total_gj_pokok += $item->gaji->gj_pokok;
-        //     $total_gj_penyesuaian += $item->gaji->gj_penyesuaian;
-        //     $total_tj_keluarga += $item->gaji->tj_keluarga;
-        //     $total_tj_telepon += $item->gaji->tj_telepon;
-        //     $total_tj_jabatan += $item->gaji->tj_jabatan;
-        //     $total_tj_teller += $item->gaji->tj_teller;
-        //     $total_tj_perumahan += $item->gaji->tj_perumahan;
-        //     $total_tj_kemahalan += $item->gaji->tj_kemahalan;
-        //     $total_tj_pelaksana += $item->gaji->tj_pelaksana;
-        //     $total_tj_kemahalan += $item->gaji->tj_kemahalan;
-        //     $total_tj_kesejahteraan += $item->gaji->tj_kesejahteraan;
-        //     $total_tj_multilevel += $item->gaji->tj_multilevel;
-        //     $total_tj_ti += $item->gaji->tj_ti;
-        //     $total_tj_fungsional += $item->gaji->tj_fungsional;
-        //     $total_tj_khusus += ($item->gaji->tj_multilevel + $item->gaji->tj_ti + $item->gaji->tj_fungsional);
-        //     $total_tj_transport += $item->gaji->tj_transport;
-        //     $total_tj_pulsa += $item->gaji->tj_pulsa;
-        //     $total_tj_vitamin += $item->gaji->tj_vitamin;
-        //     $total_uang_makan += $item->gaji->uang_makan;
-        //     $total_dpp += $item->gaji->dpp;
-        //     $total_total_gaji += $item->gaji->total_gaji;
-        //     if ($item->perhitungan_pph21) {
-        //         if ($item->perhitungan_pph21->pph_pasal_21) {
-        //             if ($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar > 0) {
-        //                 $total_pph_harus_dibayar += $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar;
-        //             }
-        //         }
-        //     }
-
-        // }
-
-        // $grandTotalResults = [
-        //     'total_gj_pokok' => $total_gj_pokok,
-        //     'total_gj_penyesuaian' => $total_gj_penyesuaian,
-        //     'total_tj_keluarga' => $total_tj_keluarga,
-        //     'total_tj_telepon' => $total_tj_telepon,
-        //     'total_tj_jabatan' => $total_tj_jabatan,
-        //     'total_tj_teller' => $total_tj_teller,
-        //     'total_tj_perumahan' => $total_tj_perumahan,
-        //     'total_tj_kemahalan' => $total_tj_kemahalan,
-        //     'total_tj_pelaksana' => $total_tj_pelaksana,
-        //     'total_tj_kemahalan' => $total_tj_kemahalan,
-        //     'total_tj_kesejahteraan' => $total_tj_kesejahteraan,
-        //     'total_tj_multilevel' => $total_tj_multilevel,
-        //     'total_tj_ti' => $total_tj_ti,
-        //     'total_tj_fungsional' => $total_tj_fungsional,
-        //     'total_tj_khusus' => $total_tj_khusus,
-        //     'total_tj_transport' => $total_tj_transport,
-        //     'total_tj_pulsa' => $total_tj_pulsa,
-        //     'total_tj_vitamin' => $total_tj_vitamin,
-        //     'total_uang_makan' => $total_uang_makan,
-        //     'total_dpp' => $total_dpp,
-        //     'total_total_gaji' => $total_total_gaji,
-        // ];
+        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak, $batch_id);
 
         return DataTables::of($data)
                         ->addColumn('counter', function ($row) {
@@ -1853,9 +1583,6 @@ class GajiPerBulanController extends Controller
                             $count++;
                             return $count;
                         })
-                        // ->addColumn('grand_total', function ($row) use ($grandTotalResults) {
-                        //     return $grandTotalResults;
-                        // })
                         ->rawColumns(['counter','grand_total'])
                         ->make(true);
     }
@@ -1914,9 +1641,15 @@ class GajiPerBulanController extends Controller
         $message = '';
 
         try {
-            DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
-                'tanggal_cetak' => Carbon::now(),
-            ]);
+            $kd_entitas = auth()->user()->kd_cabang;
+            $batch = DB::table('batch_gaji_per_bulan')->where('id',$id)->first();
+            if ($batch) {
+                if ($batch->kd_entitas == $kd_entitas) {
+                    DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
+                        'tanggal_cetak' => Carbon::now(),
+                    ]);
+                }
+            }
 
             $status = 'success';
             $message = 'Berhasil memperbarui tanggal cetak';
@@ -1984,7 +1717,7 @@ class GajiPerBulanController extends Controller
         );
 
         $payrollRepo = new PayrollRepository;
-        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak);
+        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak, $data_batch);
         $returnType = null;
         if($tipe == 'payroll'){
             $returnType = new ProsesPayroll($data);

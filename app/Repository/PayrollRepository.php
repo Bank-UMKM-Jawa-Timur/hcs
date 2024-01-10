@@ -185,6 +185,7 @@ class PayrollRepository
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
+                                'tanggal_input',
                                 DB::raw("
                                     IF(
                                         mst_karyawan.status = 'Kawin',
@@ -1685,7 +1686,7 @@ class PayrollRepository
     }
 
 
-    public function getJson($kantor, $month, $year, $cetak) {
+    public function getJson($kantor, $month, $year, $cetak, $batch_id) {
         /**
          * PPH 21
          * Gaji - done
@@ -1713,29 +1714,16 @@ class PayrollRepository
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
 
-        if($kantor == 'pusat'){
+        $batch = DB::table('batch_gaji_per_bulan')->find($batch_id);
+        if ($batch) {
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
-                ->where('kd_cabang', '000')
+                ->where('mst_profil_kantor.kd_cabang', $batch->kd_entitas)
                 ->where('active', 1)
                 ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
                 ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
                 ->first();
             $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
-                ->where('kd_cabang', '000')
-                ->where('active', 1)
-                ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
-                ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
-                ->first();
-        }
-        else {
-            $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
-                ->where('mst_profil_kantor.kd_cabang', $kantor)
-                ->where('active', 1)
-                ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
-                ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
-                ->first();
-            $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
-                ->where('kd_cabang', $kantor)
+                ->where('kd_cabang', $batch->kd_entitas)
                 ->where('active', 1)
                 ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
                 ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
@@ -1862,29 +1850,20 @@ class PayrollRepository
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
-                            ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr) {
-                                $query->whereRelation('gaji', 'bulan', $month)
-                                ->whereRelation('gaji', 'tahun', $year)
-                                ->whereNull('tanggal_penonaktifan')
-                                ->where(function($q) use ($kantor, $kode_cabang_arr) {
-                                    if ($kantor == 'pusat') {
-                                        $q->where(function($q2) use($kode_cabang_arr) {
-                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
-                                                ->orWhereNull('mst_karyawan.kd_entitas');
-                                        });
-                                    }
-                                    else {
-                                        $q->where('mst_karyawan.kd_entitas', $kantor);
-                                    }
-                                });
+                            ->where(function($query) use ($month, $year, $batch) {
+                                $query->where('batch.id', $batch->id);
+                                // $query->whereRelation('gaji', 'bulan', $month)
+                                // ->whereRelation('gaji', 'tahun', $year)
+                                // ->whereNull('tanggal_penonaktifan')
+                                // ->where('batch.id', $batch->id);
                             })
                             ->orderBy('status_kantor', 'asc')
                             ->orderBy('kd_cabang', 'asc')
                             ->orderByRaw($this->orderRaw)
                             ->orderBy('nip', 'asc')
                             ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
-                            ->where('gaji_per_bulan.bulan', $month)
-                            ->where('gaji_per_bulan.tahun', $year)
+                            // ->where('gaji_per_bulan.bulan', $month)
+                            // ->where('gaji_per_bulan.tahun', $year)
                             ->get();
         foreach ($data as $key => $karyawan) {
             $ptkp = null;

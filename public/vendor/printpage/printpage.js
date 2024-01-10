@@ -26,11 +26,9 @@
         message: "Please wait while we create your document",
       };
       // Store parent to local storage
+      // var print_parent = options.parent;
+      // localStorage.setItem(print_parent_key, print_parent);
       
-      console.log(options.parent)
-      var print_parent = options.parent;
-      testing = 'oke'
-      localStorage.setItem(print_parent_key, print_parent);
       
       $.extend(pluginOptions, options);
   

@@ -71,8 +71,9 @@
                                 data-nip="{{$data->nip}}"
                                 data-nama="{{$data->nama_karyawan}}"
                                 data-no_rekening="{{$data->no_rekening}}"
-                                data-status_jabatan={{$data->status_jabatan}}
-                                data-tanggal_pengangkat={{$data->tanggal_pengangkat}}
+                                data-status_jabatan="{{$data->status_jabatan}}"
+                                data-tanggal_pengangkat="{{ $data->tanggal_pengangkat }}"
+                                data-tanggal_pengangkat_formated="{{ Carbon::parse($data->tanggal_pengangkat)->translatedFormat('d F Y') }}"
                                 data-json="{{ $item }}"
                                 data-bulan="{{$item->bulan}}"
                                 class="is-btn btn-sm is-primary p-1 show-data">Rincian</button>

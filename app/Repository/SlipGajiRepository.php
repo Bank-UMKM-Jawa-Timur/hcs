@@ -189,6 +189,7 @@ class SlipGajiRepository
         $karyawan = KaryawanModel::with([
                                 'allGajiByKaryawan' => function($query) use ($nip, $year) {
                                     $query->select(
+                                        'batch.id AS batch_id',
                                         'batch.status',
                                         'nip',
                                         DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
@@ -212,14 +213,10 @@ class SlipGajiRepository
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
-                                        DB::raw("(SELECT p.kredit_koperasi FROM potongan_gaji AS p
-                                                WHERE p.nip = gaji_per_bulan.nip AND p.bulan = gaji_per_bulan.bulan AND p.tahun = gaji_per_bulan.tahun) AS kredit_koperasi"),
-                                        DB::raw("(SELECT p.iuran_koperasi FROM potongan_gaji AS p
-                                                WHERE p.nip = gaji_per_bulan.nip AND p.bulan = gaji_per_bulan.bulan AND p.tahun = gaji_per_bulan.tahun) AS iuran_koperasi"),
-                                        DB::raw("(SELECT p.kredit_pegawai FROM potongan_gaji AS p
-                                                WHERE p.nip = gaji_per_bulan.nip AND p.bulan = gaji_per_bulan.bulan AND p.tahun = gaji_per_bulan.tahun) AS kredit_pegawai"),
-                                        DB::raw("(SELECT p.iuran_ik FROM potongan_gaji AS p
-                                                WHERE p.nip = gaji_per_bulan.nip AND p.bulan = gaji_per_bulan.bulan AND p.tahun = gaji_per_bulan.tahun) AS iuran_ik"),
+                                        'kredit_koperasi',
+                                        'iuran_koperasi',
+                                        'kredit_pegawai',
+                                        'iuran_ik',
                                     )
                                     ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                                     ->where('gaji_per_bulan.nip', $nip)
@@ -289,14 +286,13 @@ class SlipGajiRepository
                                             DB::raw('SUM(potongan_gaji.iuran_ik) AS iuran_ik'),
                                             DB::raw('(SUM(potongan_gaji.kredit_koperasi) + SUM(potongan_gaji.iuran_koperasi) + SUM(potongan_gaji.kredit_pegawai) + SUM(potongan_gaji.iuran_ik)) AS total_potongan'),
                                         )
-                                        ->where('potongan_gaji.tahun', $year)
                                         ->groupBy('potongan_gaji.bulan')
                                         ->groupBy('potongan_gaji.tahun')
                                         ->sum('potongan_gaji.kredit_koperasi');
                                 }
                             ])
                             ->select(
-                                'nip',
+                                'mst_karyawan.nip',
                                 'nama_karyawan',
                                 'npwp',
                                 'no_rekening',
@@ -307,24 +303,24 @@ class SlipGajiRepository
                                 'tanggal_pengangkat',
                                 DB::raw("
                                     IF(
-                                        status = 'Kawin',
+                                        mst_karyawan.status = 'Kawin',
                                         'K',
                                         IF(
-                                            status = 'Belum Kawin',
+                                            mst_karyawan.status = 'Belum Kawin',
                                             'TK',
-                                            status
+                                            mst_karyawan.status
                                         )
                                     ) AS status
                                 "),
                                 'status_karyawan',
                             )
-                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
+                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
                             ->where(function($query) use ($year, $nip) {
                                 $query->whereRelation('gaji', 'tahun', $year)
                                     ->whereNull('tanggal_penonaktifan')
                                     ->where('mst_karyawan.nip', $nip);
                             })
-                            ->where('nip', $nip)
+                            ->where('mst_karyawan.nip', $nip)
                             ->first();
 
         if ($karyawan) {
@@ -350,6 +346,47 @@ class SlipGajiRepository
 
             if ($karyawan->allGajiByKaryawan) {
                 foreach ($karyawan->allGajiByKaryawan as $key => $value) {
+                    $batch = DB::table('batch_gaji_per_bulan')->find($value->batch_id);
+                    if ($batch) {
+                        $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
+                            ->where('mst_profil_kantor.kd_cabang', $batch->kd_entitas)
+                            ->where('active', 1)
+                            ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
+                            ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
+                            ->first();
+                        $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
+                            ->where('kd_cabang', $batch->kd_entitas)
+                            ->where('active', 1)
+                            ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
+                            ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
+                            ->first();
+                    }
+                    if (!$hitungan_penambah && !$hitungan_pengurang) {
+                        $persen_jkk = 0;
+                        $persen_jht = 0;
+                        $persen_jkm = 0;
+                        $persen_kesehatan = 0;
+                        $persen_jp_penambah = 0;
+                        $persen_dpp = 0;
+                        $persen_jp_pengurang = 0;
+                        $batas_atas = 0;
+                        $batas_bawah = 0;
+                        $jp_jan_feb = 0;
+                        $jp_mar_des = 0;
+                    }else{
+                        $persen_jkk = $hitungan_penambah->jkk;
+                        $persen_jht = $hitungan_penambah->jht;
+                        $persen_jkm = $hitungan_penambah->jkm;
+                        $persen_kesehatan = $hitungan_penambah->kesehatan;
+                        $persen_jp_penambah = $hitungan_penambah->jp;
+                        $persen_dpp = $hitungan_pengurang->dpp;
+                        $persen_jp_pengurang = $hitungan_pengurang->jp;
+                        $batas_atas = $hitungan_penambah->kesehatan_batas_atas;
+                        $batas_bawah = $hitungan_penambah->kesehatan_batas_bawah;
+                        $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
+                        $jp_mar_des = $hitungan_pengurang->jp_mar_des;
+                    }
+
                     $potongan = new \stdClass();
                     // Get BPJS TK * Kesehatan
                     $obj_gaji = $value;
@@ -382,21 +419,17 @@ class SlipGajiRepository
 
                     // Get Potongan(JP1%, DPP 5%)
                     $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                    if($karyawan->status_karyawan == 'IKJP') {
-                        $dpp = 0;
-                        $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
-                    } else{
-                        $gj_pokok = $obj_gaji->gj_pokok;
-                        $tj_keluarga = $obj_gaji->tj_keluarga;
-                        $tj_kesejahteraan = $obj_gaji->tj_kesejahteraan;
+                    $gj_pokok = $obj_gaji->gj_pokok;
+                    $tj_keluarga = $obj_gaji->tj_keluarga;
+                    $tj_kesejahteraan = $obj_gaji->tj_kesejahteraan;
 
-                        // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
-                        $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
-                        if($gaji >= $nominal_jp){
-                            $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
-                        } else {
-                            $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
-                        }
+                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
+                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
+                    // dd($gj_pokok ,$tj_keluarga,$tj_kesejahteraan,$persen_dpp, $dpp);
+                    if($gaji >= $nominal_jp){
+                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                    } else {
+                        $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
                     }
                     $potongan->dpp = $dpp;
                     $potongan->jp_1_persen = $jp_1_persen;
@@ -909,71 +942,6 @@ class SlipGajiRepository
         $kode_cabang_str = str_replace('[', '(', $kode_cabang_str);
         $kode_cabang_str = str_replace(']', ')', $kode_cabang_str);
 
-        $isCabang = KaryawanModel::select('nip', 'kd_entitas')
-                                ->where('nip', $nip)
-                                ->join('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
-                                ->first();
-
-        $kantor = $isCabang ? 'cabang': 'pusat';
-
-        if($kantor == 'pusat'){
-            $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
-                ->where('kd_cabang', '000')
-                ->where('active', 1)
-                ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
-                ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
-                ->first();
-            $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
-                ->where('kd_cabang', '000')
-                ->where('active', 1)
-                ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
-                ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
-                ->first();
-        }
-        else {
-            $cabangRepo = new CabangRepository;
-            $kode_cabang_arr = $cabangRepo->listCabang(true);
-
-            $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
-                ->where('mst_profil_kantor.kd_cabang', $kantor)
-                ->where('active', 1)
-                ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
-                ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
-                ->first();
-            $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
-                ->where('kd_cabang', $kantor)
-                ->where('active', 1)
-                ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
-                ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
-                ->first();
-        }
-
-        if (!$hitungan_penambah && !$hitungan_pengurang) {
-            $persen_jkk = 0;
-            $persen_jht = 0;
-            $persen_jkm = 0;
-            $persen_kesehatan = 0;
-            $persen_jp_penambah = 0;
-            $persen_dpp = 0;
-            $persen_jp_pengurang = 0;
-            $batas_atas = 0;
-            $batas_bawah = 0;
-            $jp_jan_feb = 0;
-            $jp_mar_des = 0;
-        }else{
-            $persen_jkk = $hitungan_penambah->jkk;
-            $persen_jht = $hitungan_penambah->jht;
-            $persen_jkm = $hitungan_penambah->jkm;
-            $persen_kesehatan = $hitungan_penambah->kesehatan;
-            $persen_jp_penambah = $hitungan_penambah->jp;
-            $persen_dpp = $hitungan_pengurang->dpp;
-            $persen_jp_pengurang = $hitungan_pengurang->jp;
-            $batas_atas = $hitungan_penambah->kesehatan_batas_atas;
-            $batas_bawah = $hitungan_penambah->kesehatan_batas_bawah;
-            $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
-            $jp_mar_des = $hitungan_pengurang->jp_mar_des;
-        }
-
         $karyawan = KaryawanModel::with([
                                 'keluarga' => function($query) {
                                     $query->select(
@@ -1012,7 +980,12 @@ class SlipGajiRepository
                                         'uang_makan',
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                        'kredit_koperasi',
+                                        'iuran_koperasi',
+                                        'kredit_pegawai',
+                                        'iuran_ik',
+                                        DB::raw('(kredit_koperasi + iuran_koperasi + kredit_pegawai + iuran_ik) AS total_potongan')
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
@@ -1039,12 +1012,13 @@ class SlipGajiRepository
                                         DB::raw('potongan_gaji.kredit_pegawai AS kredit_pegawai'),
                                         DB::raw('potongan_gaji.iuran_ik AS iuran_ik'),
                                         DB::raw('(potongan_gaji.kredit_koperasi + potongan_gaji.iuran_koperasi + potongan_gaji.kredit_pegawai + potongan_gaji.iuran_ik) AS total_potongan'),
-                                    )
-                                    ->where('potongan_gaji.tahun', $year);
+                                    );
                                 }
                             ])
                             ->select(
-                                'nip',
+                                'batch.id AS batch_id',
+                                'batch.status AS batch_status',
+                                'mst_karyawan.nip',
                                 'nama_karyawan',
                                 'npwp',
                                 'no_rekening',
@@ -1055,18 +1029,20 @@ class SlipGajiRepository
                                 'tanggal_pengangkat',
                                 DB::raw("
                                     IF(
-                                        status = 'Kawin',
+                                        mst_karyawan.status = 'Kawin',
                                         'K',
                                         IF(
-                                            status = 'Belum Kawin',
+                                            mst_karyawan.status = 'Belum Kawin',
                                             'TK',
-                                            status
+                                            mst_karyawan.status
                                         )
                                     ) AS status
                                 "),
                                 'status_karyawan',
                             )
-                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'kd_entitas')
+                            ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
+                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
                             ->where(function($query) use ($month, $year, $nip) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
@@ -1076,6 +1052,47 @@ class SlipGajiRepository
                             ->first();
 
         if ($karyawan) {
+            $batch = DB::table('batch_gaji_per_bulan')->find($karyawan->batch_id);
+            if ($batch) {
+                $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
+                    ->where('mst_profil_kantor.kd_cabang', $batch->kd_entitas)
+                    ->where('active', 1)
+                    ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
+                    ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
+                    ->first();
+                $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
+                    ->where('kd_cabang', $batch->kd_entitas)
+                    ->where('active', 1)
+                    ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
+                    ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
+                    ->first();
+            }
+
+            if (!$hitungan_penambah && !$hitungan_pengurang) {
+                $persen_jkk = 0;
+                $persen_jht = 0;
+                $persen_jkm = 0;
+                $persen_kesehatan = 0;
+                $persen_jp_penambah = 0;
+                $persen_dpp = 0;
+                $persen_jp_pengurang = 0;
+                $batas_atas = 0;
+                $batas_bawah = 0;
+                $jp_jan_feb = 0;
+                $jp_mar_des = 0;
+            }else{
+                $persen_jkk = $hitungan_penambah->jkk;
+                $persen_jht = $hitungan_penambah->jht;
+                $persen_jkm = $hitungan_penambah->jkm;
+                $persen_kesehatan = $hitungan_penambah->kesehatan;
+                $persen_jp_penambah = $hitungan_penambah->jp;
+                $persen_dpp = $hitungan_pengurang->dpp;
+                $persen_jp_pengurang = $hitungan_pengurang->jp;
+                $batas_atas = $hitungan_penambah->kesehatan_batas_atas;
+                $batas_bawah = $hitungan_penambah->kesehatan_batas_bawah;
+                $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
+                $jp_mar_des = $hitungan_pengurang->jp_mar_des;
+            }
             $ptkp = null;
             if ($karyawan->keluarga) {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
@@ -1129,21 +1146,17 @@ class SlipGajiRepository
 
                 // Get Potongan(JP1%, DPP 5%)
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP') {
-                    $dpp = 0;
-                    $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
-                } else{
-                    $gj_pokok = $obj_gaji->gj_pokok;
-                    $tj_keluarga = $obj_gaji->tj_keluarga;
-                    $tj_kesejahteraan = $obj_gaji->tj_kesejahteraan;
 
-                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
-                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
-                    if($gaji >= $nominal_jp){
-                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
-                    } else {
-                        $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
-                    }
+                $gj_pokok = $obj_gaji->gj_pokok;
+                $tj_keluarga = $obj_gaji->tj_keluarga;
+                $tj_kesejahteraan = $obj_gaji->tj_kesejahteraan;
+
+                // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
+                $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
+                if($gaji >= $nominal_jp){
+                    $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                } else {
+                    $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
                 }
                 $potongan->dpp = $dpp;
                 $potongan->jp_1_persen = $jp_1_persen;
@@ -1195,8 +1208,8 @@ class SlipGajiRepository
             $penghasilan_tidak_rutin = $penghasilan_tidak_teratur + $bonus;
 
             // Get total potongan
-            if ($karyawan->potonganGaji) {
-                $total_potongan += $karyawan->potonganGaji->total_potongan;
+            if ($karyawan->gaji) {
+                $total_potongan += $karyawan->gaji->total_potongan;
             }
 
             if ($karyawan->potongan) {
