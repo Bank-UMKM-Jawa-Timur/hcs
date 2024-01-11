@@ -564,6 +564,7 @@
                     },
                     {
                         data: "gaji.tj_telepon",
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
