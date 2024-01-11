@@ -37,9 +37,9 @@
                 $dpp = $item->potongan ? round($item->potongan->dpp) : 0;
                 $bpjs_tk = $item->bpjs_tk ? round($item->bpjs_tk) : 0;
                 $kredit_koperasi = $item->potonganGaji ? round($item->potonganGaji->kredit_koperasi) : 0;
-                $iuran_koperasi = $item->potonganGaji ? round($item->potonganGaji->iuran_koperasi) : 0;
-                $kredit_pegawai = $item->potonganGaji ? round($item->potonganGaji->kredit_pegawai) : 0;
-                $iuran_ik = $item->potonganGaji ? round($item->potonganGaji->iuran_ik) : 0;
+                $iuran_koperasi = $item->potonganGaji ? round($item->gaji->iuran_koperasi) : 0;
+                $kredit_pegawai = $item->potonganGaji ? round($item->gaji->kredit_pegawai) : 0;
+                $iuran_ik = $item->potonganGaji ? round($item->gaji->iuran_ik) : 0;
                 $total_potongan = $item->total_potongan ? round($item->total_potongan) : 0;
                 $total_diterima = $item->total_yg_diterima ? round($item->total_yg_diterima) : 0;
 
