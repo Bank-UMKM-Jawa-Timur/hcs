@@ -168,11 +168,11 @@ class PenghasilanTidakTeraturRepository
     }
 
     public function getPenghasilan($search, $limit=10, $page=1){
-        $kd_cabang = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
+        $kd_cabang = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
         $data = ImportPenghasilanTidakTeraturModel::join('mst_tunjangan', 'mst_tunjangan.id', 'penghasilan_tidak_teratur.id_tunjangan')
-            ->selectRaw("mst_tunjangan.id as tunjangan_id, mst_tunjangan.kategori, is_lock, bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan, SUM(penghasilan_tidak_teratur.nominal) as grand_total, IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas")
+            ->selectRaw("mst_tunjangan.id as tunjangan_id, penghasilan_tidak_teratur.kd_entitas, mst_tunjangan.kategori, is_lock, bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan, SUM(penghasilan_tidak_teratur.nominal) as grand_total, IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas")
             ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
             ->leftJoin('mst_cabang', 'mst_cabang.kd_cabang', 'mst_karyawan.kd_entitas')
             ->having('grand_total', '>', 0)
@@ -182,9 +182,7 @@ class PenghasilanTidakTeraturRepository
                     ->orWhere('nominal', 'like', "%$search%");
             })
             ->where(function ($query) use ($kd_cabang, $kode_cabang_arr) {
-                if ($kd_cabang != 'pusat') {
-                    $query->where('mst_karyawan.kd_entitas', $kd_cabang);
-                }
+                    $query->where('penghasilan_tidak_teratur.kd_entitas', $kd_cabang);
             })
             ->groupBy('bulan')
             ->groupBy('tahun')

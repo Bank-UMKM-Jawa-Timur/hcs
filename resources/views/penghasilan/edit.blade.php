@@ -43,7 +43,7 @@
             })
 
             $('.btn-import').on('click',function(element) {
-                var kategori = $("#kategori").val();
+                var kategori = $('#kategori').find(":selected").text();
                 if(kategori == ''){
                     Swal.fire({
                         icon: 'error',
@@ -55,7 +55,7 @@
                     $('#button-simpan').addClass('hidden');
                 } else{
                     var keterangan = 'Keterangan';
-                    if(kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan'){
+                    if(kategori == 'Uang Duka' || kategori == 'Pengganti Biaya Kesehatan'){
                         keterangan = kategori == 'uang duka' ? 'Yang Meninggal' : 'Keterangan';
                         $("#keterangan").html(keterangan);
                         $("#keterangan").removeClass('hidden');
@@ -63,7 +63,7 @@
                         $("#keterangan").addClass('hidden')
                     }
 
-                    url = "{{ route('api.get.karyawan') }}";
+                    url = "{{ route('api.get.karyawan2') }}";
 
                     $('#table-data').addClass('hidden');
                     $('#table_item tbody').empty();
@@ -93,6 +93,7 @@
                                 var dataNip = [];
                                 var dataNominal = [];
                                 var dataKeterangan = [];
+                                var dataKdEntitas = [];
                                 var nipDataRequest = [];
 
                                 var checkNip = [];
@@ -108,7 +109,6 @@
                                         dataNip.push({ nip: value['NIP'], row: key + 1 });
                                         dataNominal.push(value['Nominal'])
                                         if(sheet_data[key].hasOwnProperty(keterangan)){
-                                            console.log(value[keterangan]);
                                             dataKeterangan.push(value[keterangan])
                                         }
                                     }
@@ -140,14 +140,16 @@
                                             $('#table-data').removeClass('hidden');
                                             var new_body_tr = ``
                                             $.each(res,function(key,value) {
+                                                console.log(rowKeterangan);
                                                 nipDataRequest.push(value.nip);
+                                                dataKdEntitas.push(value.kd_entitas)
                                                 // if (res.some(checkUsername)) {
                                                 if (value.cek == '-') {
                                                     checkNip.push(value.nip);
                                                     hasError = true
                                                 }
                                                 grand_total += parseInt(dataNominal[key])
-                                                var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
+                                                var rowKeterangan = kategori == 'Uang Duka' || kategori == 'Pengganti Biaya Kesehatan' ? `
                                                     <td class="${value.cek == '-' ? 'table-danger' : ''}">
                                                         <span>${dataKeterangan[key]}</span>
                                                     </td>` : ``;
@@ -163,8 +165,10 @@
                                                             <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
                                                         </td>
                                                         <td class="${value.cek == '-' ? 'table-danger' : ''}">
+                                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.no_rekening ?? '-'}</span>
+                                                        </td>
+                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
                                                             <span>${formatRupiah(dataNominal[key])}</span>
-
                                                         </td>
                                                         ${rowKeterangan}
                                                     </tr>
@@ -181,7 +185,8 @@
                                                 alertSuccess('Data Valid.');
                                                 $('.nominal-input').val(dataNominal)
                                                 $('.nip').val(nipDataRequest);
-                                                if(kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan'){
+                                                $('.kd-entitas-input').val(dataKdEntitas);
+                                                if(kategori == 'Uang Duka' || kategori == 'Pengganti Biaya Kesehatan'){
                                                     $('.keterangan-input').val(dataKeterangan)
                                                 }
                                                 $('#button-simpan').removeClass('hidden');
@@ -331,6 +336,7 @@
                         <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
                         <input type="text" name="keterangan" class="form-control keterangan-input" value="" readonly hidden>
                         <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
+                        <input type="text" name="kd_entitas" class="form-control kd-entitas-input" value="" readonly hidden>
                         <input type="hidden" name="old_tanggal" value="{{$old_created_at}}">
                         <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
                         <button type="submit" class="is-btn btn-info hidden" id="button-simpan">Simpan</button>
@@ -350,6 +356,9 @@
                             </th>
                             <th>
                                 Nama
+                            </th>
+                            <th>
+                                No Rekening
                             </th>
                             <th>
                                 Nominal

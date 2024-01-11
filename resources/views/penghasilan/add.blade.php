@@ -118,6 +118,7 @@
                                 var dataNip = [];
                                 var dataNominal = [];
                                 var dataKeterangan = [];
+                                var dataKdEntitas = [];
                                 var nipDataRequest = [];
                                 var no_rek = [];
 
@@ -130,10 +131,12 @@
 
                                 var invalidNamaRows = [];
                                 $.each(sheet_data,function(key, value) {
+                                    console.log(value);
                                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
                                         dataNip.push({ nip: value['NIP'], row: key + 1 });
                                         dataNominal.push(value['Nominal']);
                                         no_rek.push(value['No Rekening']);
+                                        // dataKdEntitas.push(value['Nominal'])
                                         if(sheet_data[key].hasOwnProperty(keterangan)){
                                             dataKeterangan.push(value[keterangan]);
                                         }
@@ -252,6 +255,7 @@
                                                 }else{
                                                     let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
                                                     if (!nipDuplicate) {
+                                                        dataKdEntitas.push(value.kd_entitas)
                                                         nipDataRequest.push(value.nip);
                                                         grand_total += parseInt(dataNominal[key])
                                                         var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
@@ -292,6 +296,7 @@
                                                 alertSuccess('Data Valid.');
                                                 $('.nominal-input').val(dataNominal)
                                                 $('.nip').val(nipDataRequest);
+                                                $('.kd-entitas-input').val(dataKdEntitas);
                                                 if(kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan'){
                                                     $('.keterangan-input').val(dataKeterangan)
                                                 }
@@ -441,6 +446,7 @@
                     <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
                     <input type="text" name="keterangan" class="form-control keterangan-input" value="" readonly hidden>
                     <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
+                    <input type="text" name="kd_entitas" class="form-control kd-entitas-input" value="" readonly hidden>
                     <button type="submit" class="is-btn is-primary hidden" id="button-simpan">Simpan</button>
                 </div>
             </div>

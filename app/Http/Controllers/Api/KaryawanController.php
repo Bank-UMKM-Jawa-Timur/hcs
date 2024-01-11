@@ -70,13 +70,13 @@ class KaryawanController extends Controller
             $explode_id = $explode_data->pluck('nip')->toArray();
 
             if (auth()->user()->kd_cabang != null) {
-                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
+                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening','kd_entitas')
                     ->whereIn('nip', $explode_id)
                     ->where('kd_entitas', auth()->user()->kd_cabang)
                     ->whereNull('tanggal_penonaktifan')
                     ->get();
             }else{
-                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
+                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening','kd_entitas')
                     ->whereIn('nip', $explode_id)
                     ->whereNull('tanggal_penonaktifan')
                     ->get();
@@ -93,6 +93,7 @@ class KaryawanController extends Controller
                     'row' => $row,
                     'nip' => $found ? $found->nip : $nip,
                     'cek' => $found ? null : '-',
+                    'kd_entitas' => $found->kd_entitas ?? '000',
                     'nama_karyawan' => $found ? $found->nama_karyawan : 'Karyawan Tidak Ditemukan',
                     'no_rekening' => $found ? $found->no_rekening : 'No Rek Tidak Ditemukan',
                 ];
