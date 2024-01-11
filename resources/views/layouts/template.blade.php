@@ -136,6 +136,38 @@ Coded by www.creative-tim.com
     <script>
         var url = window.location;
 
+        function formatNumber(number, precision = 0) {
+            const numberParts = Number(Math.abs(number)).toFixed(precision).split('.');
+            const integerPart = numberParts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            const decimalPart = numberParts[1] || '0';
+        
+            if (precision == 0) {
+                return `${number < 0 ? '-' : ''}${integerPart}`;
+            }
+            else {
+                return `${number < 0 ? '-' : ''}${integerPart},${decimalPart}`;
+            }
+        }
+
+        function formatRupiahExcel(number, precision = 0, formatted = true) {
+            // Format the number using toLocaleString with the specified precision and 'id-ID' as the locale
+            const numberFormatted = formatNumber(number, precision);
+
+            // Check if the number is negative
+            if (isNaN(number)) {
+                return '-';
+            }
+            else {
+                if (number < 0) {
+                    return formatted ? `(${numberFormatted.slice(1)})` : number;
+                } else if (number === 0) {
+                    return '-';
+                } else {
+                    return formatted ? numberFormatted : number;
+                }
+            }
+        }
+
         function formatRupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
                 split = number_string.split(','),

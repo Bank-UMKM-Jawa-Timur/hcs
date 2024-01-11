@@ -159,17 +159,17 @@
                             <tr>
                                 <td>NIP</td>
                                 <td>:</td>
-                                <td>{{ $data->nip }}</td>
+                                <td>{{ $data->nip ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td>Nama</td>
                                 <td>:</td>
-                                <td>{{ $data->nama_karyawan }}</td>
+                                <td>{{ $data->nama_karyawan ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td>No Rekening</td>
                                 <td>:</td>
-                                <td>{{ $data->no_rekening }}</td>
+                                <td>{{ $data->no_rekening ?? '-' }}</td>
                             </tr>
                         </table>
                     </td>
@@ -178,7 +178,7 @@
                             <tr>
                                 <td>Jabatan</td>
                                 <td>:</td>
-                                <td>{{ $jabatan[0]->display_jabatan }}</td>
+                                <td>{{ $jabatan[0]->display_jabatan ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td>Tanggal Bergabung</td>
