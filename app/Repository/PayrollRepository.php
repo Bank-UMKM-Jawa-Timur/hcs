@@ -320,7 +320,7 @@ class PayrollRepository
                         $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
                     }
                 }
-                $potongan->dpp = $dpp;
+                $potongan->dpp = round($dpp);
                 $potongan->jp_1_persen = $jp_1_persen;
 
                 // Get BPJS TK
@@ -1091,7 +1091,7 @@ class PayrollRepository
                         $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
                     }
                 }
-                $potongan->dpp = $dpp;
+                $potongan->dpp = round($dpp);
                 $potongan->jp_1_persen = $jp_1_persen;
 
                 // Get BPJS TK
@@ -1950,7 +1950,7 @@ class PayrollRepository
                         $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
                     }
                 }
-                $potongan->dpp = $dpp;
+                $potongan->dpp = round($dpp);
                 $potongan->jp_1_persen = $jp_1_persen;
 
                 // Get BPJS TK
