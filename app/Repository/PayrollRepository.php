@@ -1629,7 +1629,6 @@ class PayrollRepository
             $total_tj_perumahan += $item->gaji->tj_perumahan;
             $total_tj_kemahalan += $item->gaji->tj_kemahalan;
             $total_tj_pelaksana += $item->gaji->tj_pelaksana;
-            $total_tj_kemahalan += $item->gaji->tj_kemahalan;
             $total_tj_kesejahteraan += $item->gaji->tj_kesejahteraan;
             $total_tj_multilevel += $item->gaji->tj_multilevel;
             $total_tj_ti += $item->gaji->tj_ti;
@@ -1670,7 +1669,6 @@ class PayrollRepository
             'total_tj_perumahan' => $total_tj_perumahan,
             'total_tj_kemahalan' => $total_tj_kemahalan,
             'total_tj_pelaksana' => $total_tj_pelaksana,
-            'total_tj_kemahalan' => $total_tj_kemahalan,
             'total_tj_kesejahteraan' => $total_tj_kesejahteraan,
             'total_tj_multilevel' => $total_tj_multilevel,
             'total_tj_ti' => $total_tj_ti,
