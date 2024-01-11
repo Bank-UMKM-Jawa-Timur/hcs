@@ -28,9 +28,21 @@ use Yajra\DataTables\DataTables;
 class GajiPerBulanController extends Controller
 {
     private $param;
+    private $orderRaw;
 
     public function __construct()
     {
+        $this->orderRaw = "
+            CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 3
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 7
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 8
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
+        ";
         $this->param['namaTunjangan'] = [
             'tj_keluarga',
             'tj_telepon',
@@ -1677,7 +1689,11 @@ class GajiPerBulanController extends Controller
                     ->where('kd_entitas',$kd_entitas)
                     ->whereNotIn('kd_jabatan',['ST','NST'])
                     ->whereNull('tanggal_penonaktifan')
-                    ->get();
+                    ->orderByRaw($this->orderRaw)
+                    ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+                    ->get()
+                    ->reverse();
+
             foreach ($ttdKaryawan as $key => $krywn) {
                 $krywn->prefix = match($krywn->status_jabatan) {
                     'Penjabat' => 'Pj. ',

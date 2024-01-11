@@ -212,3 +212,18 @@ if (!function_exists('hasPermission')) {
         return false;
     }
 }
+
+if (!function_exists('formatRupiahExcel')) {
+    function formatRupiahExcel(int $number, int $precission = 0, $formated = false) {
+        $number_formated = number_format($number, $precission, ',', '.');
+        if ($number < 0) {
+            return $formated ? '('.str_replace('-', '', $number_formated).')' : $number;
+        }
+        else if ($number == 0) {
+            return '-';
+        }
+        else {
+            return $formated ? $number_formated : $number;
+        }
+    }
+}

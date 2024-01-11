@@ -10,25 +10,29 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 class ProsesRincianPayroll implements FromView, WithColumnFormatting
 {
     private $data;
+    private $FORMAT_NUMBER;
+
     public function __construct($data)
     {
+        $this->FORMAT_NUMBER = '_(* #,##_);_(* (#,##);_(* "-"_);_(@_)';
         $this->data = $data;
     }
 
     public function columnFormats(): array
     {
         return [
-            'C' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'D' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'H' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'I' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'J' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'K' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'L' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'M' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
+            'C' => $this->FORMAT_NUMBER,
+            'D' => $this->FORMAT_NUMBER,
+            'E' => $this->FORMAT_NUMBER,
+            'F' => $this->FORMAT_NUMBER,
+            'G' => $this->FORMAT_NUMBER,
+            'H' => $this->FORMAT_NUMBER,
+            'I' => $this->FORMAT_NUMBER,
+            'J' => $this->FORMAT_NUMBER,
+            'K' => $this->FORMAT_NUMBER,
+            'L' => $this->FORMAT_NUMBER,
+            'M' => $this->FORMAT_NUMBER,
+            'N' => $this->FORMAT_NUMBER,
         ];
     }
 

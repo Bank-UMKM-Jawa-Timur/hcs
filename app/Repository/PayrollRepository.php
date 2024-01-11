@@ -147,7 +147,12 @@ class PayrollRepository
                                         'uang_makan',
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                                        'kredit_koperasi',
+                                        'iuran_koperasi',
+                                        'kredit_pegawai',
+                                        'iuran_ik',
+                                        DB::raw('(kredit_koperasi + iuran_koperasi + kredit_pegawai + iuran_ik) AS total_potongan'),
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
@@ -365,8 +370,8 @@ class PayrollRepository
             $penghasilan_tidak_rutin = $penghasilan_tidak_teratur + $bonus;
 
             // Get total potongan
-            if ($karyawan->potonganGaji) {
-                $total_potongan += $karyawan->potonganGaji->total_potongan;
+            if ($karyawan->gaji) {
+                $total_potongan += $karyawan->gaji->total_potongan;
             }
 
             if ($karyawan->potongan) {
@@ -925,7 +930,12 @@ class PayrollRepository
                                         'uang_makan',
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                                        'kredit_koperasi',
+                                        'iuran_koperasi',
+                                        'kredit_pegawai',
+                                        'iuran_ik',
+                                        DB::raw('(kredit_koperasi + iuran_koperasi + kredit_pegawai + iuran_ik) AS total_potongan'),
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
@@ -1130,8 +1140,8 @@ class PayrollRepository
             $penghasilan_tidak_rutin = $penghasilan_tidak_teratur + $bonus;
 
             // Get total potongan
-            if ($karyawan->potonganGaji) {
-                $total_potongan += $karyawan->potonganGaji->total_potongan;
+            if ($karyawan->gaji) {
+                $total_potongan += $karyawan->gaji->total_potongan;
             }
 
             if ($karyawan->potongan) {
@@ -1795,7 +1805,12 @@ class PayrollRepository
                                         'uang_makan',
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                                        'kredit_koperasi',
+                                        'iuran_koperasi',
+                                        'kredit_pegawai',
+                                        'iuran_ik',
+                                        DB::raw('(kredit_koperasi + iuran_koperasi + kredit_pegawai + iuran_ik) AS total_potongan'),
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year);
@@ -1985,8 +2000,8 @@ class PayrollRepository
             $penghasilan_tidak_rutin = $penghasilan_tidak_teratur + $bonus;
 
             // Get total potongan
-            if ($karyawan->potonganGaji) {
-                $total_potongan += $karyawan->potonganGaji->total_potongan;
+            if ($karyawan->gaji) {
+                $total_potongan += $karyawan->gaji->total_potongan;
             }
 
             if ($karyawan->potongan) {
