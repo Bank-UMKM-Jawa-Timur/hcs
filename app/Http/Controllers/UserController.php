@@ -102,6 +102,9 @@ class UserController extends Controller
             if ($request->role == 4) {
                 $dataUser->kd_cabang = $request->data_cabang;
             }
+            if ($request->role == 2 || $request->role == 3) {
+                $dataUser->kd_cabang = '000';
+            }
             $dataUser->password = Hash::make('12345678');
             $dataUser->save();
 
@@ -191,8 +194,9 @@ class UserController extends Controller
             $dataUser->email = $request->email;
             if ($request->role == 4) {
                 $dataUser->kd_cabang = $request->data_cabang;
-            }else{
-                $dataUser->kd_cabang = null;
+            }
+            if ($request->role == 2 || $request->role == 3) {
+                $dataUser->kd_cabang = '000';
             }
             $dataUser->password = Hash::make($request->password);
             $dataUser->save();

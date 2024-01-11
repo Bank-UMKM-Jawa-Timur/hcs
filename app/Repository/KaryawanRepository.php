@@ -36,6 +36,8 @@ class KaryawanRepository
     }
 
     public function getDataKaryawan($search, $limit=10, $page=1) {
+        $search = strtolower($search);
+
         if (auth()->user()->hasRole('cabang')) {
             $karyawan = KaryawanModel::select(
                 'mst_karyawan.nip',
@@ -117,7 +119,7 @@ class KaryawanRepository
             // ->when($is_pusat, function($query) use ($kd_cabang) {
             //     $query->whereRaw("(kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR kd_entitas IS null or kd_entitas = '')");
             // })
-            ->where(function ($query) use ($search) {
+            ->where(function ($query) use ($search, $kd_cabang) {
                 $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
                     ->orWhere('mst_karyawan.nip', 'like', "%$search%")
                     ->orWhere('mst_karyawan.nik', 'like', "%$search%")
@@ -126,7 +128,15 @@ class KaryawanRepository
                     ->orWhere('mst_karyawan.kd_entitas', 'like', "%$search%")
                     ->orWhere('mst_karyawan.status_jabatan', 'like', "%$search%")
                     ->orWhere('c.kd_cabang', 'like', "%$search%")
-                    ->orWhere('c.nama_cabang', 'like', "%$search%")
+                    ->orWhere(function($q2) use ($search, $kd_cabang) {
+                        if (str_contains($search, 'pusat')) {
+                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kd_cabang)
+                            ->orWhereNull('mst_karyawan.kd_entitas');
+                        }
+                        else {
+                            $q2->where('c.nama_cabang', 'like', "%$search%");
+                        }
+                    })
                     ->orWhere('mst_karyawan.ket_jabatan', 'like', "%$search%")
                     ->orWhereHas('jabatan', function($query3) use ($search) {
                         $query3->where("nama_jabatan", 'like', "%$search%");

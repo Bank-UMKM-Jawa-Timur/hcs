@@ -937,13 +937,32 @@ class GajiPerBulanController extends Controller
     public function prosesFinal(Request $request) {
         DB::beginTransaction();
         try {
-            DB::table('batch_gaji_per_bulan')
-                ->where('id', $request->batch_id)
-                ->update([
-                    'status' => 'final',
-                    'tanggal_final' => date('Y-m-d'),
-                    'updated_at' => now(),
-                ]);
+            $batch = DB::table('batch_gaji_per_bulan')
+                        ->where('id', $request->batch_id)
+                        ->first();
+            $prev = null;
+            if ($batch) {
+                $prev = DB::table('batch_gaji_per_bulan')
+                            ->where('tanggal_input', '<', $batch->tanggal_input)
+                            ->where('kd_entitas', $batch->kd_entitas)
+                            ->where('status', 'proses')
+                            ->orderByDesc('tanggal_input')
+                            ->first();
+
+                if ($prev) {
+                    Alert::error('Gagal', 'Harap lakukan final proses pada penghasilan yang sebelumnya terlebih dahulu');
+                    return back();
+                }
+                else {
+                    DB::table('batch_gaji_per_bulan')
+                        ->where('id', $request->batch_id)
+                        ->update([
+                            'status' => 'final',
+                            'tanggal_final' => date('Y-m-d'),
+                            'updated_at' => now(),
+                        ]);
+                }
+            }
 
             DB::commit();
             Alert::success('Berhasil', 'Berhasil memproses penghasilan.');
