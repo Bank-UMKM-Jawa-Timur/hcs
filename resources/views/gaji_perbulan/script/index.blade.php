@@ -75,25 +75,25 @@
         function refreshPagination() {
             var btn_pagination = $("#myTabContent .active .pagination").find("a");
             var page_url = window.location.href;
-        
+
             // Your custom query parameter and its value
             var customParam = "";
-            
+
             customParam += "&tab=" + $('#tab').val();
             customParam += "&page_length=" + $('#page_length').val();
             //customParam += "&q=" + $('#q').val();
-        
+
             btn_pagination.each(function (i, obj) {
                 // Clone the original href to avoid modifying the original link
                 var href = $(this).attr("href");
-        
+
                 // Check if the href already contains a question mark
                 var separator = href.includes("?") ? "&" : "?";
-        
+
                 // Append the custom query parameter and its value
                 var updatedHref = href + separator + customParam;
                 updatedHref = updatedHref.replaceAll('&&', '&')
-        
+
                 // Update the href attribute of the pagination link
                 $(this).attr("href", updatedHref);
             });
@@ -108,10 +108,11 @@
             $('.loader-wrapper').removeAttr('style')
         })
         $('#uploadFile').on('click',function() {
+            // console.log('masuk');
             let batch_id = $(this).data('batch_id');
             let target = $(this).data('target');
-
             $(`${target} #id`).val(batch_id);
+            $(`${target} #cetak_lampiran_gaji`).data('id', batch_id);
         })
         document.querySelector('.custom-file-input').addEventListener('change', function (e) {
             var name = document.getElementById("upload_csv").files[0].name;
@@ -407,56 +408,56 @@
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var totalPenghasilanSebelum = api
                         .column(4, {page: "current"})
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var grandTotalPenghasilanSesudah = api
                         .column(5)
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var totalPenghasilanSesudah = api
                         .column(5, {page: "current"})
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                        
+
                     var grandTotalPotonganSebelum = api
                         .column(6)
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var totalPotonganSebelum = api
                         .column(6, {page: "current"})
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var grandTotalPotonganSesudah = api
                         .column(7)
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var totalPotonganSesudah = api
                         .column(7, {page: "current"})
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                        
+
                     $( api.column( 0 ).footer('.total') ).html('Total');
                     $( api.column( 4 ).footer('.total') ).html( 'Rp ' + totalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
                     $( api.column( 5 ).footer('.total') ).html( 'Rp ' + totalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
