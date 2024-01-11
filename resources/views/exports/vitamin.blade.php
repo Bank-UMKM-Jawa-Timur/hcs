@@ -20,7 +20,7 @@
             <th colspan="4" align="center" style="font-size: 20px;"><b>RINCIAN PENGGANTI UANG VITAMIN PEGAWAI</b></th>
         </tr>
         <tr>
-            <th colspan="4" align="center" style="font-size: 20px;"><b>KANTOR PUSAT</b></th>
+            <th colspan="4" align="center" style="font-size: 20px;"><b>{{auth()->user()->hasRole('cabang') ? 'KANTOR ' . strtoupper($cabang->nama_cabang) : 'KANTOR PUSAT' }} </b></th>
         </tr>
         <tr>
             <th colspan="4" align="center" style="font-size: 20px;"><b>BANK BPR JATIM BANK UMKM JAWA TIMUR</b></th>
@@ -72,54 +72,104 @@
 </table>
 
 <table>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+<table>
     <tbody>
         <tr>
             <td></td>
-            <td>
-                <table>
-                    <tr>
-                        <td align="center">Mengetahui</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td align="center" style="font-weight:bold; font-size: 12px">SIGIT PURWANTO</td>
-                    </tr>
-                    <tr>
-                        <td align="center">Pemimpin Divisi Umum</td>
-                    </tr>
-                </table>
-            </td>
-            <td></td>
-            <td>
-                <table>
-                    <tr>
-                        <td align="center">Mengetahui</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td align="center" style="font-weight:bold; font-size: 12px">DEANG PARUJAR S</td>
-                    </tr>
-                    <tr>
-                        <td align="center">Pj. Pemimpin Sub Divisi SDM</td>
-                    </tr>
-                </table>
-            </td>
+            @if (auth()->user()->hasRole('cabang'))
+                <td>
+                    <table>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td align="center">{{ $cabang->nama_cabang }}, {{ now()->format('d F Y') }}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td align="center" style="font-weight:bold; font-size: 12px">{{ $pincab->nama_karyawan }}</td>
+                        </tr>
+                        <tr>
+                            <td align="center">Pimpinan Cabang {{$cabang->nama_cabang}}</td>
+                        </tr>
+                    </table>
+                </td>
+            @else
+                <td>
+                    <table>
+                        <tr>
+                            <td align="center">Mengetahui</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td align="center" style="font-weight:bold; font-size: 12px">{{ $ttdKaryawan[0]->nama_karyawan }}</td>
+                        </tr>
+                        <tr>
+                            <td align="center">{{ $ttdKaryawan[0]->jabatan->nama_jabatan.' '.$ttdKaryawan[0]->entitas_result }}</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table></table>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td align="center">Surabaya, {{ now()->format('d F Y') }}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td align="center" style="font-weight:bold; font-size: 12px">{{ $ttdKaryawan[1]->nama_karyawan }}</td>
+                        </tr>
+                        <tr>
+                            <td align="center">{{ $ttdKaryawan[1]->jabatan->nama_jabatan.' '.$ttdKaryawan[1]->entitas_result }}</td>
+                        </tr>
+                    </table>
+                </td>
+            @endif
         </tr>
     </tbody>
 </table>
