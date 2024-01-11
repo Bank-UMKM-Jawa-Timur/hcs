@@ -240,10 +240,15 @@ class GajiPerBulanController extends Controller
                                 DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total_penghasilan'),
                                 DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan')
                             )
+                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
                             ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
                             ->where('gaji.batch_id', $batch_id)
                             ->get();
 
+            $totalBruto = 0;
+            $totalBrutoBaru = 0;
+            $totalPotongan = 0;
+            $totalPotonganBaru = 0;
             foreach ($data_gaji as $key => $gaji) {
                 $new_data = [];
                 $total_penghasilan_baru = $gaji->total_penghasilan;
@@ -453,8 +458,14 @@ class GajiPerBulanController extends Controller
                     }
                 }
 
+                $totalBrutoBaru += $total_penghasilan_baru;
+
                 // Get Potongan
                 $potongan = DB::table('potongan_gaji')
+                            ->select(
+                                'potongan_gaji.*',
+                                DB::raw('(kredit_koperasi + iuran_koperasi + kredit_pegawai + iuran_ik) AS total_potongan'),
+                            )
                             ->where('nip', $gaji->nip)
                             ->first();
 
@@ -495,7 +506,11 @@ class GajiPerBulanController extends Controller
                         ];
                         array_push($new_data, $item);
                     }
+                    $totalPotonganBaru += $total_potongan_baru;
                 }
+
+                $totalPotongan += $gaji->total_potongan;
+                $totalBruto += $gaji->total_penghasilan;
 
                 if (count($new_data) == 0) {
                     unset($data_gaji[$key]);
@@ -505,13 +520,24 @@ class GajiPerBulanController extends Controller
                     $gaji->total_potongan_baru = $total_potongan_baru;
                 }
             }
+            $grandtotal = [
+                'bruto_lama' => $totalBruto,
+                'bruto_baru' => $totalBrutoBaru,
+                'potongan_lama' => $totalPotongan,
+                'potongan_baru' => $totalPotonganBaru,
+                'netto_lama' => $totalBruto - $totalPotongan,
+                'netto_baru' => $totalBrutoBaru - $totalPotonganBaru,
+            ];
             return DataTables::of($data_gaji)
                             ->addColumn('counter', function ($row) {
                                 static $count = 0;
                                 $count++;
                                 return $count;
                             })
-                            ->rawColumns(['counter'])
+                            ->addColumn('grandtotal', function ($row) use($grandtotal) {
+                                return $grandtotal;
+                            })
+                            ->rawColumns(['counter', 'grandtotal'])
                             ->make(true);
         }
         catch (Exception $e) {

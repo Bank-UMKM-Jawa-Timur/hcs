@@ -394,12 +394,7 @@
                             typeof i === 'number' ?
                                 i : 0;
                     };
-                    var grandTotalPenghasilanSebelum = api
-                        .column(4)
-                        .data()
-                        .reduce(function (a, b) {
-                            return Math.round(a) + Math.round(b);
-                        }, 0);
+                    var grandTotalPenghasilanSebelum = data[0].grandtotal.bruto_lama
 
                     var totalPenghasilanSebelum = api
                         .column(4, {page: "current"})
@@ -408,12 +403,7 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    var grandTotalPenghasilanSesudah = api
-                        .column(5)
-                        .data()
-                        .reduce(function (a, b) {
-                            return Math.round(a) + Math.round(b);
-                        }, 0);
+                    var grandTotalPenghasilanSesudah = data[0].grandtotal.bruto_baru
 
                     var totalPenghasilanSesudah = api
                         .column(5, {page: "current"})
@@ -422,12 +412,7 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    var grandTotalPotonganSebelum = api
-                        .column(6)
-                        .data()
-                        .reduce(function (a, b) {
-                            return Math.round(a) + Math.round(b);
-                        }, 0);
+                    var grandTotalPotonganSebelum = data[0].grandtotal.potongan_lama
 
                     var totalPotonganSebelum = api
                         .column(6, {page: "current"})
@@ -436,12 +421,7 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    var grandTotalPotonganSesudah = api
-                        .column(7)
-                        .data()
-                        .reduce(function (a, b) {
-                            return Math.round(a) + Math.round(b);
-                        }, 0);
+                    var grandTotalPotonganSesudah = data[0].grandtotal.potongan_baru
 
                     var totalPotonganSesudah = api
                         .column(7, {page: "current"})
@@ -1028,7 +1008,7 @@
                         }
                     },
                     {
-                        data: "gaji.total_potongan",
+                        data: "total_potongan",
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){

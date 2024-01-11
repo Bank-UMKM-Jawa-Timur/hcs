@@ -275,8 +275,8 @@ class PayrollRepository
             if ($karyawan->gaji) {
                 // Get BPJS TK * Kesehatan
                 $obj_gaji = $karyawan->gaji;
-                $gaji = $obj_gaji->gaji;
-                $total_gaji = $obj_gaji->total_gaji;
+                $gaji = round($obj_gaji->gaji);
+                $total_gaji = round($obj_gaji->total_gaji);
 
                 if($total_gaji > 0){
                     $jkk = 0;
@@ -379,6 +379,7 @@ class PayrollRepository
             }
 
             $total_potongan += $bpjs_tk;
+            $total_potongan = round($total_potongan);
             $karyawan->total_potongan = $total_potongan;
 
             // Get total yg diterima
@@ -1045,8 +1046,8 @@ class PayrollRepository
             if ($karyawan->gaji) {
                 // Get BPJS TK * Kesehatan
                 $obj_gaji = $karyawan->gaji;
-                $gaji = $obj_gaji->gaji;
-                $total_gaji = $obj_gaji->total_gaji;
+                $gaji = round($obj_gaji->gaji);
+                $total_gaji = round($obj_gaji->total_gaji);
 
                 if($total_gaji > 0){
                     $jkk = 0;
@@ -1149,6 +1150,7 @@ class PayrollRepository
             }
 
             $total_potongan += $bpjs_tk;
+            $total_potongan = round($total_potongan);
             $karyawan->total_potongan = $total_potongan;
 
             // Get total yg diterima
@@ -1641,7 +1643,7 @@ class PayrollRepository
             $total_total_gaji += $item->gaji->total_gaji;
             if ($item->perhitungan_pph21) {
                 if ($item->perhitungan_pph21->pph_pasal_21) {
-                    if ($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar > 0) {
+                    if ($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar) {
                         $total_pph_harus_dibayar += $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar;
                     }
                 }
@@ -1905,8 +1907,8 @@ class PayrollRepository
             if ($karyawan->gaji) {
                 // Get BPJS TK * Kesehatan
                 $obj_gaji = $karyawan->gaji;
-                $gaji = $obj_gaji->gaji;
-                $total_gaji = $obj_gaji->total_gaji;
+                $gaji = round($obj_gaji->gaji);
+                $total_gaji = round($obj_gaji->total_gaji);
 
                 if($total_gaji > 0){
                     $jkk = 0;
@@ -2009,6 +2011,7 @@ class PayrollRepository
             }
 
             $total_potongan += $bpjs_tk;
+            $total_potongan = round($total_potongan);
             $karyawan->total_potongan = $total_potongan;
 
             // Get total yg diterima

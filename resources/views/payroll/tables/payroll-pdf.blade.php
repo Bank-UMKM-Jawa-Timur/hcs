@@ -115,8 +115,8 @@
                         <th rowspan="2" class="text-center"  style="vertical-align:middle">Total Yang Diterima</th>
                     </tr>
                     <tr>
-                        <th class="text-center">DPP 5%</th>
                         <th class="text-center">JP BPJS TK 1%</th>
+                        <th class="text-center">DPP 5%</th>
                         <th class="text-center">Kredit Koperasi</th>
                         <th class="text-center">Iuaran Koperasi</th>
                         <th class="text-center">Kredit Pegawai</th>
@@ -138,15 +138,15 @@
                     @forelse ($data as $key => $item)
                         @php
                             $norek = $item->no_rekening ? $item->no_rekening : '-';
-                            $total_gaji = $item->gaji ? number_format($item->gaji->total_gaji, 0, ',', '.') : 0;
-                            $dpp = $item->potongan ? number_format($item->potongan->dpp, 0, ',', '.') : 0;
-                            $bpjs_tk = $item->bpjs_tk ? number_format($item->bpjs_tk, 0, ',', '.') : 0;
-                            $kredit_koperasi = $item->potonganGaji ? number_format($item->potonganGaji->kredit_koperasi, 0, ',', '.') : 0;
-                            $iuran_koperasi = $item->potonganGaji ? number_format($item->gaji->iuran_koperasi, 0, ',', '.') : 0;
-                            $kredit_pegawai = $item->potonganGaji ? number_format($item->gaji->kredit_pegawai, 0, ',', '.') : 0;
-                            $iuran_ik = $item->potonganGaji ? number_format($item->gaji->iuran_ik, 0, ',', '.') : 0;
-                            $total_potongan = number_format($item->total_potongan, 0, ',', '.');
-                            $total_diterima = $item->total_yg_diterima ? number_format($item->total_yg_diterima, 0, ',', '.') : 0;
+                            $total_gaji = $item->gaji ? $item->gaji->total_gaji : 0;
+                            $dpp = $item->potongan ? $item->potongan->dpp : 0;
+                            $bpjs_tk = $item->bpjs_tk ? $item->bpjs_tk : 0;
+                            $kredit_koperasi = $item->potonganGaji ? $item->potonganGaji->kredit_koperasi : 0;
+                            $iuran_koperasi = $item->potonganGaji ? $item->gaji->iuran_koperasi : 0;
+                            $kredit_pegawai = $item->potonganGaji ? $item->gaji->kredit_pegawai : 0;
+                            $iuran_ik = $item->potonganGaji ? $item->gaji->iuran_ik : 0;
+                            $total_potongan = $item->total_potongan ? $item->total_potongan : 0;
+                            $total_diterima = $item->total_yg_diterima ? $item->total_yg_diterima : 0;
 
                             // count total
                             $footer_total_gaji += str_replace('.', '', $total_gaji);
@@ -162,16 +162,16 @@
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
                             <td>{{ $item->nama_karyawan }}</td>
-                            <td class="text-end">{{ $total_gaji }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($total_gaji, 0, true) }}</td>
                             <td class="text-center">{{ $norek }}</td>
-                            <td class="text-end">{{ $dpp }}</td>
-                            <td class="text-end">{{ $bpjs_tk }}</td>
-                            <td class="text-end">{{ $kredit_koperasi }}</td>
-                            <td class="text-end">{{ $iuran_koperasi }}</td>
-                            <td class="text-end">{{ $kredit_pegawai }}</td>
-                            <td class="text-end">{{ $iuran_ik }}</td>
-                            <td class="text-end">{{ $total_potongan }}</td>
-                            <td class="text-end">{{ $total_diterima }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($bpjs_tk, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($dpp, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($kredit_koperasi, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($iuran_koperasi, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($kredit_pegawai, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($iuran_ik, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($total_potongan, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($total_diterima, 0, true) }}</td>
                         </tr>
                     @empty
                         <tr>
@@ -182,23 +182,23 @@
                 <tfoot>
                     <tr>
                         <th colspan="2" class="text-center">Total</th>
-                        <th class="text-end" align="right">{{ number_format($footer_total_gaji, 0, ',', '.') }}</th>
+                        <th class="text-end" align="right">{{ formatRupiahExcel($footer_total_gaji, 0, true) }}</th>
                         <th></th>
-                        <th class="text-end" align="right">{{ number_format($footer_dpp, 0, ',', '.') }}</th>
-                        <th class="text-end" align="right">{{ number_format($footer_bpjs_tk, 0, ',', '.') }}</th>
-                        <th class="text-end" align="right">{{ number_format($footer_kredit_koperasi, 0, ',', '.') }}</th>
-                        <th class="text-end" align="right">{{ number_format($footer_iuran_koperasi, 0, ',', '.') }}</th>
-                        <th class="text-end" align="right">{{ number_format($footer_kredit_pegawai, 0, ',', '.') }}</th>
-                        <th class="text-end" align="right">{{ number_format($footer_iuran_ik, 0, ',', '.') }}</th>
-                        <th class="text-end" align="right">{{ number_format($footer_total_potongan, 0, ',', '.') }}</th>
-                        <th class="text-end" align="right">{{ number_format($footer_total_diterima, 0, ',', '.') }}</th>
+                        <th class="text-end" align="right">{{ formatRupiahExcel($footer_bpjs_tk, 0, true) }}</th>
+                        <th class="text-end" align="right">{{ formatRupiahExcel($footer_dpp, 0, true) }}</th>
+                        <th class="text-end" align="right">{{ formatRupiahExcel($footer_kredit_koperasi, 0, true) }}</th>
+                        <th class="text-end" align="right">{{ formatRupiahExcel($footer_iuran_koperasi, 0, true) }}</th>
+                        <th class="text-end" align="right">{{ formatRupiahExcel($footer_kredit_pegawai, 0, true) }}</th>
+                        <th class="text-end" align="right">{{ formatRupiahExcel($footer_iuran_ik, 0, true) }}</th>
+                        <th class="text-end" align="right">{{ formatRupiahExcel($footer_total_potongan, 0, true) }}</th>
+                        <th class="text-end" align="right">{{ formatRupiahExcel($footer_total_diterima, 0, true) }}</th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
 
-    <div class="px-4 container-fluid">
+    <div class="px-4 container-fluid mt-4">
         <div class="d-flex justify-content-between mx-4 px-4">
             @if (!auth()->user()->hasRole('cabang'))
                 <div>

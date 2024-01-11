@@ -120,55 +120,55 @@
                     @endphp
                     @forelse ($data as $key => $item)
                         @php
-                            $gj_pokok = $item->gaji ? number_format($item->gaji->gj_pokok, 0, ',', '.') : 0;
-                            $tj_keluarga = $item->gaji ? number_format($item->gaji->tj_keluarga, 0, ',', '.') : 0;
-                            $tj_listrik = $item->gaji ? number_format($item->gaji->tj_telepon, 0, ',', '.') : 0;
-                            $tj_jabatan = $item->gaji ? number_format($item->gaji->tj_jabatan, 0, ',', '.') : 0;
-                            $tj_khusus = $item->gaji ? number_format($item->gaji->tj_ti, 0, ',', '.') : 0;
-                            $tj_perumahan = $item->gaji ? number_format($item->gaji->tj_perumahan, 0, ',', '.') : 0;
-                            $tj_pelaksana = $item->gaji ? number_format($item->gaji->tj_pelaksana, 0, ',', '.') : 0;
-                            $tj_kemahalan = $item->gaji ? number_format($item->gaji->tj_kemahalan, 0, ',', '.') : 0;
-                            $tj_kesejahteraan = $item->gaji ? number_format($item->gaji->tj_kesejahteraan, 0, ',', '.') : 0;
-                            $gj_penyesuaian = $item->gaji ? number_format($item->gaji->gj_penyesuaian, 0, ',', '.') : 0;
-                            $total_gaji = $item->gaji ? number_format($item->gaji->total_gaji, 0, ',', '.') : 0;
+                            $gj_pokok = $item->gaji ? $item->gaji->gj_pokok : 0;
+                            $tj_keluarga = $item->gaji ? $item->gaji->tj_keluarga : 0;
+                            $tj_listrik = $item->gaji ? $item->gaji->tj_telepon : 0;
+                            $tj_jabatan = $item->gaji ? $item->gaji->tj_jabatan : 0;
+                            $tj_khusus = $item->gaji ? $item->gaji->tj_ti : 0;
+                            $tj_perumahan = $item->gaji ? $item->gaji->tj_perumahan : 0;
+                            $tj_pelaksana = $item->gaji ? $item->gaji->tj_pelaksana : 0;
+                            $tj_kemahalan = $item->gaji ? $item->gaji->tj_kemahalan : 0;
+                            $tj_kesejahteraan = $item->gaji ? $item->gaji->tj_kesejahteraan : 0;
+                            $gj_penyesuaian = $item->gaji ? $item->gaji->gj_penyesuaian : 0;
+                            $total_gaji = $item->gaji ? $item->gaji->total_gaji : 0;
                             $pph_harus_dibayar = 0;
                             if ($item->perhitungan_pph21) {
                                 if ($item->perhitungan_pph21->pph_pasal_21) {
-                                    if ($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar > 0) {
-                                        $pph_harus_dibayar = number_format($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar, 0, ',', '.');
+                                    if ($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar) {
+                                        $pph_harus_dibayar = $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar;
                                     }
                                 }
                             }
 
                             // count total
-                            $footer_gj_pokok += intval(str_replace('.','', $gj_pokok));
-                            $footer_tj_keluarga += intval(str_replace('.','', $tj_keluarga));
-                            $footer_tj_listrik += intval(str_replace('.','', $tj_listrik));
-                            $footer_tj_jabatan += intval(str_replace('.','', $tj_jabatan));
-                            $footer_tj_khusus += intval(str_replace('.','', $tj_khusus));
-                            $footer_tj_perumahan += intval(str_replace('.','', $tj_perumahan));
-                            $footer_tj_pelaksana += intval(str_replace('.','', $tj_pelaksana));
-                            $footer_tj_kemahalan += intval(str_replace('.','', $tj_kemahalan));
-                            $footer_tj_kesejahteraan += intval(str_replace('.','', $tj_kesejahteraan));
-                            $footer_gj_penyesuaian += intval(str_replace('.','', $gj_penyesuaian));
-                            $footer_total_gaji += intval(str_replace('.','', $total_gaji));
-                            $footer_pph_harus_dibayar += intval(str_replace('.','', $pph_harus_dibayar));
+                            $footer_gj_pokok += $gj_pokok;
+                            $footer_tj_keluarga += $tj_keluarga;
+                            $footer_tj_listrik += $tj_listrik;
+                            $footer_tj_jabatan += $tj_jabatan;
+                            $footer_tj_khusus += $tj_khusus;
+                            $footer_tj_perumahan += $tj_perumahan;
+                            $footer_tj_pelaksana += $tj_pelaksana;
+                            $footer_tj_kemahalan += $tj_kemahalan;
+                            $footer_tj_kesejahteraan += $tj_kesejahteraan;
+                            $footer_gj_penyesuaian += $gj_penyesuaian;
+                            $footer_total_gaji += $total_gaji;
+                            $footer_pph_harus_dibayar += $pph_harus_dibayar;
                         @endphp
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
                             <td>{{ $item->nama_karyawan }}</td>
-                            <td class="text-end">{{ $gj_pokok > 0 ? $gj_pokok : '-' }}</td>
-                            <td class="text-end">{{ $tj_keluarga > 0 ? $tj_keluarga : '-' }}</td>
-                            <td class="text-end">{{ $tj_listrik > 0 ? $tj_listrik : '-' }}</td>
-                            <td class="text-end">{{ $tj_jabatan > 0 ? $tj_jabatan : '-' }}</td>
-                            <td class="text-end">{{ $tj_khusus > 0 ? $tj_khusus : '-' }}</td>
-                            <td class="text-end">{{ $tj_perumahan > 0 ? $tj_perumahan : '-' }}</td>
-                            <td class="text-end">{{ $tj_pelaksana > 0 ? $tj_pelaksana : '-' }}</td>
-                            <td class="text-end">{{ $tj_kemahalan > 0 ? $tj_kemahalan : '-' }}</td>
-                            <td class="text-end">{{ $tj_kesejahteraan > 0 ? $tj_kesejahteraan : '-' }}</td>
-                            <td class="text-end">{{ $gj_penyesuaian > 0 ? $gj_penyesuaian : '-' }}</td>
-                            <td class="text-end">{{ $total_gaji > 0 ? $total_gaji : '-' }}</td>
-                            <td class="text-end">{{ $pph_harus_dibayar > 0 ? "($pph_harus_dibayar)" : '-' }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($gj_pokok, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($tj_keluarga, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($tj_listrik, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($tj_jabatan, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($tj_khusus, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($tj_perumahan, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($tj_pelaksana, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($tj_kemahalan, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($tj_kesejahteraan, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($gj_penyesuaian, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($total_gaji, 0, true) }}</td>
+                            <td class="text-end">{{ formatRupiahExcel($pph_harus_dibayar, 0, true) }}</td>
                         </tr>
                     @empty
                         <tr>
@@ -179,18 +179,18 @@
                 <tfoot>
                     <tr>
                         <th colspan="2" class="text-center">Jumlah</th>
-                        <th class="text-end">{{ number_format($footer_gj_pokok, 0, ',', '.') }}</th>
-                        <th class="text-end">{{ number_format($footer_tj_keluarga, 0, ',', '.') }}</th>
-                        <th class="text-end">{{ number_format($footer_tj_listrik, 0, ',', '.') }}</th>
-                        <th class="text-end">{{ number_format($footer_tj_jabatan, 0, ',', '.') }}</th>
-                        <th class="text-end">{{ number_format($footer_tj_khusus, 0, ',', '.') }}</th>
-                        <th class="text-end">{{ number_format($footer_tj_perumahan, 0, ',', '.') }}</th>
-                        <th class="text-end">{{ number_format($footer_tj_pelaksana, 0, ',', '.') }}</th>
-                        <th class="text-end">{{ number_format($footer_tj_kemahalan, 0, ',', '.') }}</th>
-                        <th class="text-end">{{ number_format($footer_tj_kesejahteraan, 0, ',', '.') }}</th>
-                        <th class="text-end">{{ number_format($footer_gj_penyesuaian, 0, ',', '.') }}</th>
-                        <th class="text-end">{{ number_format($footer_total_gaji, 0, ',', '.') }}</th>
-                        <th class="text-end">({{ number_format($footer_pph_harus_dibayar, 0, ',', '.') }})</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_gj_pokok, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_tj_keluarga, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_tj_listrik, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_tj_jabatan, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_tj_khusus, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_tj_perumahan, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_tj_pelaksana, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_tj_kemahalan, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_tj_kesejahteraan, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_gj_penyesuaian, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_total_gaji, 0, true) }}</th>
+                        <th class="text-end">{{ formatRupiahExcel($footer_pph_harus_dibayar, 0, true) }}</th>
                     </tr>
                 </tfoot>
             </table>
