@@ -63,15 +63,19 @@ class PenghasilanTeraturController extends Controller
 
             $nip_req = collect(json_decode($nip, true));
             $nip_id = $nip_req->pluck('nip')->toArray();
+            $is_cabang = auth()->user()->hasRole('cabang');
+            $is_pusat = auth()->user()->hasRole('kepegawaian');
 
-            if (auth()->user()->kd_cabang != null) {
+            if ($is_pusat) {
                 $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
+                    // ->where('kd_cabang', auth()->user()->kd_cabang)
                     ->whereIn('nip', $nip_id)
-                    ->where('kd_entitas', auth()->user()->kd_cabang)
                     ->whereNull('tanggal_penonaktifan')
                     ->get();
-            }else{
+            }
+            if($is_cabang){
                 $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
+                   ->where('kd_cabang', auth()->user()->kd_cabang)
                     ->whereIn('nip', $nip_id)
                     ->whereNull('tanggal_penonaktifan')
                     ->get();
@@ -106,7 +110,7 @@ class PenghasilanTeraturController extends Controller
                     'no_rekening' => $nip_exist ? $nip_exist->no_rekening : 'No Rek Tidak Ditemukan',
                 ];
             })->toArray();
-
+            return $response;
             return response()->json($response);
 
             // return response($data);
