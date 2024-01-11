@@ -48,8 +48,8 @@ class PenghasilanTidakTeraturRepository
                         }
                     })
                     ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date')
-                    ->orderBy('mst_tunjangan.id', 'ASC')
                     ->orderBy('penghasilan_tidak_teratur.kd_entitas')
+                    ->orderBy('mst_tunjangan.id', 'ASC')
                     ->paginate($limit);
 
         return $bonus;

@@ -95,6 +95,7 @@
                                                         @endcan
                                                     @endif
                                                 @else
+                                                    {{-- Cabang --}}
                                                     @can('penghasilan - lock - bonus')
                                                         <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
                                                             class="btn btn-success p-1">Lock</a>
