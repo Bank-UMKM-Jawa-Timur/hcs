@@ -524,121 +524,77 @@
                         data: 'gaji.gj_pokok',
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
                         data: "gaji.tj_keluarga",
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
                         data: "gaji.tj_telepon",
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
                         data: "gaji.tj_jabatan",
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
                         data: "gaji.tj_ti",
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
                         data: "gaji.tj_perumahan",
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
                         data: "gaji.tj_pelaksana",
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
                         data: "gaji.tj_kemahalan",
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
                         data: "gaji.tj_kesejahteraan",
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
                         data: "gaji.gj_penyesuaian",
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
                         data: "gaji.total_gaji",
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -646,12 +602,7 @@
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
-                            var value = Math.round(data)
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(Math.round(value).toString().replaceAll('-', ''));
-                            
-                            return value < 0 ? '(' + number + ')' : number
+                            return formatRupiahExcel(data)
                         }
                     },
                 ],
@@ -814,55 +765,55 @@
                         return Math.round(a) + Math.round(b);
                     }, 0 );
                     $( api.column( 0 ).footer('.total') ).html('Total');
-                    var displayTotalGajiPokok = totalGajiPokok < 0 ? `(${totalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiPokok = formatRupiahExcel(totalGajiPokok)
                     $( api.column( 2 ).footer('.total') ).html(displayTotalGajiPokok);
-                    var displayTotalGajiKeluarga = totalGajiKeluarga < 0 ? `(${totalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiKeluarga = formatRupiahExcel(totalGajiKeluarga)
                     $( api.column( 3 ).footer('.total') ).html(displayTotalGajiKeluarga);
-                    var displayTotalGajiListrik = totalGajiListrik < 0 ? `(${totalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiListrik = formatRupiahExcel(totalGajiListrik)
                     $( api.column( 4 ).footer('.total') ).html(displayTotalGajiListrik);
-                    var displayTotalGajiJabatan = totalGajiJabatan < 0 ? `(${totalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiJabatan = formatRupiahExcel(totalGajiJabatan)
                     $( api.column( 5 ).footer('.total') ).html(displayTotalGajiJabatan);
-                    var displayTotalGajiKhusus = totalGajiKhusus < 0 ? `(${totalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiKhusus = formatRupiahExcel(totalGajiKhusus)
                     $( api.column( 6 ).footer('.total') ).html(displayTotalGajiKhusus);
-                    var displayTotalGajiPerumahan = totalGajiPerumahan < 0 ? `(${totalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiPerumahan = formatRupiahExcel(totalGajiPerumahan)
                     $( api.column( 7 ).footer('.total') ).html(displayTotalGajiPerumahan);
-                    var displayTotalGajiPelaksana = totalGajiPelaksana < 0 ? `(${totalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiPelaksana = formatRupiahExcel(totalGajiPelaksana)
                     $( api.column( 8 ).footer('.total') ).html(displayTotalGajiPelaksana);
-                    var displayTotalGajiKemahalan = totalGajiKemahalan < 0 ? `(${totalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiKemahalan = formatRupiahExcel(totalGajiKemahalan)
                     $( api.column( 9 ).footer('.total') ).html(displayTotalGajiKemahalan);
-                    var displayTotalGajiKesejahteraan = totalGajiKesejahteraan < 0 ? `(${totalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiKesejahteraan = formatRupiahExcel(totalGajiKesejahteraan)
                     $( api.column( 10 ).footer('.total') ).html(displayTotalGajiKesejahteraan);
-                    var displayTotalGajiPenyesuian = totalGajiPenyesuian < 0 ? `(${totalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiPenyesuian = formatRupiahExcel(totalGajiPenyesuian)
                     $( api.column( 11 ).footer('.total') ).html(displayTotalGajiPenyesuian);
-                    var displayTotalGajiTotal = totalGajiTotal < 0 ? `(${totalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiTotal = formatRupiahExcel(totalGajiTotal)
                     $( api.column( 12 ).footer('.total') ).html(displayTotalGajiTotal);
-                    var displayTotalGajiPPH = totalGajiPPH < 0 ? `(${totalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : totalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayTotalGajiPPH = formatRupiahExcel(totalGajiPPH)
                     $( api.column( 13 ).footer('.total') ).html(displayTotalGajiPPH);
 
                     grandTotalGajiPokok = Math.round(grandTotalGajiPokok)
-                    var displayGrandTotalGajiPokok =  grandTotalGajiPokok < 0 ? `(${grandTotalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiPokok = formatRupiahExcel(grandTotalGajiPokok)
                     grandTotalGajiKeluarga = Math.round(grandTotalGajiKeluarga)
-                    var displayGrandTotalGajiKeluarga =  grandTotalGajiKeluarga < 0 ? `(${grandTotalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiKeluarga = formatRupiahExcel(grandTotalGajiKeluarga)
                     grandTotalGajiListrik = Math.round(grandTotalGajiListrik)
-                    var displayGrandTotalGajiListrik =  grandTotalGajiListrik < 0 ? `(${grandTotalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiListrik = formatRupiahExcel(grandTotalGajiListrik)
                     grandTotalGajiJabatan = Math.round(grandTotalGajiJabatan)
-                    var displayGrandTotalGajiJabatan =  grandTotalGajiJabatan < 0 ? `(${grandTotalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiJabatan = formatRupiahExcel(grandTotalGajiJabatan)
                     grandTotalGajiKhusus = Math.round(grandTotalGajiKhusus)
-                    var displayGrandTotalGajiKhusus =  grandTotalGajiKhusus < 0 ? `(${grandTotalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiKhusus = formatRupiahExcel(grandTotalGajiKhusus)
                     grandTotalGajiPerumahan = Math.round(grandTotalGajiPerumahan)
-                    var displayGrandTotalGajiPerumahan =  grandTotalGajiPerumahan < 0 ? `(${grandTotalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiPerumahan = formatRupiahExcel(grandTotalGajiPerumahan)
                     grandTotalGajiPelaksana = Math.round(grandTotalGajiPelaksana)
-                    var displayGrandTotalGajiPelaksana =  grandTotalGajiPelaksana < 0 ? `(${grandTotalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiPelaksana = formatRupiahExcel(grandTotalGajiPelaksana)
                     grandTotalGajiKemahalan = Math.round(grandTotalGajiKemahalan)
-                    var displayGrandTotalGajiKemahalan =  grandTotalGajiKemahalan < 0 ? `(${grandTotalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiKemahalan = formatRupiahExcel(grandTotalGajiKemahalan)
                     grandTotalGajiKesejahteraan = Math.round(grandTotalGajiKesejahteraan)
-                    var displayGrandTotalGajiKesejahteraan =  grandTotalGajiKesejahteraan < 0 ? `(${grandTotalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiKesejahteraan = formatRupiahExcel(grandTotalGajiKesejahteraan)
                     grandTotalGajiPenyesuian = Math.round(grandTotalGajiPenyesuian)
-                    var displayGrandTotalGajiPenyesuian =  grandTotalGajiPenyesuian < 0 ? `(${grandTotalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiPenyesuian = formatRupiahExcel(grandTotalGajiPenyesuian)
                     grandTotalGajiTotal = Math.round(grandTotalGajiTotal)
-                    var displayGrandTotalGajiTotal =  grandTotalGajiTotal < 0 ? `(${grandTotalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiTotal = formatRupiahExcel(grandTotalGajiTotal)
                     grandTotalGajiPPH = Math.round(grandTotalGajiPPH)
-                    var displayGrandTotalGajiPPH =  grandTotalGajiPPH < 0 ? `(${grandTotalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.').replaceAll('-', '')})` : grandTotalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                    var displayGrandTotalGajiPPH = formatRupiahExcel(grandTotalGajiPPH)
 
                     $('tfoot tr.grandtotal').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
@@ -923,11 +874,7 @@
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -939,11 +886,7 @@
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -951,11 +894,7 @@
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
 
@@ -964,11 +903,7 @@
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -976,11 +911,7 @@
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -988,11 +919,7 @@
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -1000,11 +927,7 @@
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -1012,11 +935,7 @@
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -1024,11 +943,7 @@
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                 ],
@@ -1155,29 +1070,29 @@
                     }, 0 );
 
                     $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 3 ).footer('.total') ).html(`-`);
-                    $( api.column( 4 ).footer('.total') ).html(Math.round(totalGajiDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 5 ).footer('.total') ).html(Math.round(totalGajiBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 6 ).footer('.total') ).html(Math.round(totalGajiKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 7 ).footer('.total') ).html(Math.round(totalGajiKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 8 ).footer('.total') ).html(Math.round(totalGajiPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 9 ).footer('.total') ).html( Math.round(totalGajiIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 10 ).footer('.total') ).html( Math.round(totalGajiPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 11 ).footer('.total') ).html( Math.round(totalGajiDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 2 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiPokok)));
+                    $( api.column( 3 ).footer('.total') ).html();
+                    $( api.column( 4 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiDPP)));
+                    $( api.column( 5 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiBPJS)));
+                    $( api.column( 6 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiKredit)));
+                    $( api.column( 7 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiKoperasi)));
+                    $( api.column( 8 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiPegawai)));
+                    $( api.column( 9 ).footer('.total') ).html( formatRupiahExcel(Math.round(totalGajiIuran)));
+                    $( api.column( 10 ).footer('.total') ).html( formatRupiahExcel(Math.round(totalGajiPotongan)));
+                    $( api.column( 11 ).footer('.total') ).html( formatRupiahExcel(Math.round(totalGajiDiterima)));
 
                     $('tfoot tr.grandtotalPayroll').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
-                        <th class="text-right">${Math.round(grandTotalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">-</th>
-                        <th class="text-right">${Math.round(grandTotalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.round(grandTotalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.round(grandTotalGajiKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.round(grandTotalGajiKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.round(grandTotalGajiPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.round(grandTotalGajiIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.round(grandTotalGajiPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.round(grandTotalGajiDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiPokok))}</th>
+                        <th class="text-center"></th>
+                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalDPP))}</th>
+                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalBPJS))}</th>
+                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiKredit))}</th>
+                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiKoperasi))}</th>
+                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiPegawai))}</th>
+                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiIuran))}</th>
+                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiPotongan))}</th>
+                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiDiterima))}</th>
 
                     `);
                 },
@@ -1260,11 +1175,7 @@
                         defaultContent: 0,
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -1284,11 +1195,7 @@
                         defaultContent: 0,
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -1296,11 +1203,7 @@
                         defaultContent: 0,
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -1308,11 +1211,7 @@
                         defaultContent: 0,
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -1320,11 +1219,7 @@
                         defaultContent: 0,
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -1332,11 +1227,7 @@
                         defaultContent: 0,
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                     {
@@ -1344,11 +1235,7 @@
                         defaultContent: 0,
                         class: 'text-right',
                         render:function(data, type, row){
-                            var number = DataTable.render
-                                .number('.', '.', 0, '')
-                                .display(data);
-
-                            return number
+                            return formatRupiahExcel(data)
                         }
                     },
                 ],
@@ -1475,7 +1362,7 @@
                     }, 0 );
 
                     $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok));
                     $( api.column( 3 ).footer('.total') ).html(`-`);
                     $( api.column( 4 ).footer('.total') ).html(  Math.round(totalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
                     $( api.column( 5 ).footer('.total') ).html(  Math.round(totalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));

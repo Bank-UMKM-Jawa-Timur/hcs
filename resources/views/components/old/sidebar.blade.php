@@ -527,7 +527,7 @@
                 {{-- Menu Laporan --}}
                 @can('laporan')
                 <li
-                    class="{{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek') ? 'active' : '' }}">
+                    class="{{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek', 'rekap-tetap/*') ? 'active' : '' }}">
                     <a class="nav-link-btn" href="#submenu4"  data-target="#submenu4"
                         style="font-weight: bolder">
                         <div class="d-flex justify-content-start">
@@ -613,6 +613,19 @@
                             </a>
                         </li>
                         @endcan
+                        <li style="margin-top: -15px" class="@active('rekap-tetap.index')">
+                            <a href="{{ route('rekap-tetap.index') }}">
+                                <div class="d-flex justify-content-start">
+                                    <span class="icon">
+                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                    </span>
+                                    <span>
+                                        <p>Laporan Rekap Tetap</p>
+                                    </span>
+                                </div>
+                                <p></p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @endcan

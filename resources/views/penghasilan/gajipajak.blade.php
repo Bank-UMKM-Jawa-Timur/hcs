@@ -45,7 +45,7 @@
 </div>
 
 <div class="card-body">
-    @can('penghasilan - proses penghasilan')
+    @can('penghasilan - pajak penghasilan')
         <form action="{{ route('get-penghasilan') }}" method="post">
             @csrf
                 <div class="row m-0">
