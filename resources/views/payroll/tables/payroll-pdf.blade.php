@@ -164,8 +164,8 @@
                             <td>{{ $item->nama_karyawan }}</td>
                             <td class="text-end">{{ $total_gaji }}</td>
                             <td class="text-center">{{ $norek }}</td>
-                            <td class="text-end">{{ $bpjs_tk }}</td>
                             <td class="text-end">{{ $dpp }}</td>
+                            <td class="text-end">{{ $bpjs_tk }}</td>
                             <td class="text-end">{{ $kredit_koperasi }}</td>
                             <td class="text-end">{{ $iuran_koperasi }}</td>
                             <td class="text-end">{{ $kredit_pegawai }}</td>
