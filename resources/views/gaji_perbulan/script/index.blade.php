@@ -107,10 +107,11 @@
             $('.loader-wrapper').removeAttr('style')
         })
         $('#uploadFile').on('click',function() {
+            // console.log('masuk');
             let batch_id = $(this).data('batch_id');
             let target = $(this).data('target');
-
             $(`${target} #id`).val(batch_id);
+            $(`${target} #cetak_lampiran_gaji`).data('id', batch_id);
         })
         document.querySelector('.custom-file-input').addEventListener('change', function (e) {
             var name = document.getElementById("upload_csv").files[0].name;

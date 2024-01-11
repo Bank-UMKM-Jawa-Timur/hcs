@@ -1728,9 +1728,11 @@ class GajiPerBulanController extends Controller
             $batch = DB::table('batch_gaji_per_bulan')->where('id',$id)->first();
             if ($batch) {
                 if ($batch->kd_entitas == $kd_entitas) {
-                    DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
-                        'tanggal_cetak' => Carbon::now(),
-                    ]);
+                    if ($batch->tanggal_cetak != null) {
+                        DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
+                            'tanggal_cetak' => Carbon::now(),
+                        ]);
+                    }
                 }
             }
 
@@ -1765,6 +1767,7 @@ class GajiPerBulanController extends Controller
             $file->move($folderLampiran, $filenameLampiran);
             DB::table('batch_gaji_per_bulan')->where('id',$request->id)->update([
                 'file' => $filenameLampiran,
+                'tanggal_upload' => Carbon::now(),
             ]);
             Alert::success('Sukses','Lampiran gaji berhasil diupload');
             return redirect()->route('gaji_perbulan.index');

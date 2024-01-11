@@ -25,6 +25,7 @@ class GajiPerBulanRepository
                     'batch.tanggal_input',
                     'batch.tanggal_final',
                     'batch.tanggal_cetak',
+                    'batch.tanggal_upload',
                     'batch.file',
                     'batch.status',
                     'gaji.bulan',
