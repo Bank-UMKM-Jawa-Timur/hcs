@@ -49,6 +49,7 @@ class PenghasilanTeraturRepository
                 ->groupBy('transaksi_tunjangan.id_tunjangan', 'tanggal')
                 ->orderBy('transaksi_tunjangan.tanggal')
                 ->paginate($limit);
+                
         foreach ($data as $key => $value) {
             $bulan = date("m", strtotime($value->tanggal));
             $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
