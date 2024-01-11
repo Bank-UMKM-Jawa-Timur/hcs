@@ -75,25 +75,25 @@
         function refreshPagination() {
             var btn_pagination = $("#myTabContent .active .pagination").find("a");
             var page_url = window.location.href;
-        
+
             // Your custom query parameter and its value
             var customParam = "";
-            
+
             customParam += "&tab=" + $('#tab').val();
             customParam += "&page_length=" + $('#page_length').val();
             //customParam += "&q=" + $('#q').val();
-        
+
             btn_pagination.each(function (i, obj) {
                 // Clone the original href to avoid modifying the original link
                 var href = $(this).attr("href");
-        
+
                 // Check if the href already contains a question mark
                 var separator = href.includes("?") ? "&" : "?";
-        
+
                 // Append the custom query parameter and its value
                 var updatedHref = href + separator + customParam;
                 updatedHref = updatedHref.replaceAll('&&', '&')
-        
+
                 // Update the href attribute of the pagination link
                 $(this).attr("href", updatedHref);
             });
@@ -407,56 +407,56 @@
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var totalPenghasilanSebelum = api
                         .column(4, {page: "current"})
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var grandTotalPenghasilanSesudah = api
                         .column(5)
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var totalPenghasilanSesudah = api
                         .column(5, {page: "current"})
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                        
+
                     var grandTotalPotonganSebelum = api
                         .column(6)
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var totalPotonganSebelum = api
                         .column(6, {page: "current"})
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var grandTotalPotonganSesudah = api
                         .column(7)
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    
+
                     var totalPotonganSesudah = api
                         .column(7, {page: "current"})
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                        
+
                     $( api.column( 0 ).footer('.total') ).html('Total');
                     $( api.column( 4 ).footer('.total') ).html( 'Rp ' + totalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
                     $( api.column( 5 ).footer('.total') ).html( 'Rp ' + totalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
@@ -828,33 +828,33 @@
                         return a + b;
                     }, 0 );
                     $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 2 ).footer('.total') ).html( totalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 3 ).footer('.total') ).html( totalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 4 ).footer('.total') ).html( totalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 5 ).footer('.total') ).html( totalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 6 ).footer('.total') ).html( totalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 7 ).footer('.total') ).html( totalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 8 ).footer('.total') ).html( totalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 9 ).footer('.total') ).html( totalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 10 ).footer('.total') ).html( totalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 11 ).footer('.total') ).html( totalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 12 ).footer('.total') ).html( totalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 13 ).footer('.total') ).html( `(${totalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')})`);
+                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 3 ).footer('.total') ).html(  Math.round(totalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 4 ).footer('.total') ).html(  Math.round(totalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 5 ).footer('.total') ).html(  Math.round(totalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 6 ).footer('.total') ).html(  Math.round(totalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 7 ).footer('.total') ).html(  Math.round(totalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 8 ).footer('.total') ).html(  Math.round(totalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 9 ).footer('.total') ).html(  Math.round(totalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 10 ).footer('.total') ).html( Math.round(totalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 11 ).footer('.total') ).html( Math.round(totalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 12 ).footer('.total') ).html( Math.round(totalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 13 ).footer('.total') ).html( `(${Math.round(totalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))})`);
 
                     $('tfoot tr.grandtotal').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
-                        <th class="text-right">${grandTotalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${grandTotalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${grandTotalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${grandTotalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${grandTotalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${grandTotalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${grandTotalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${grandTotalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${grandTotalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${grandTotalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${grandTotalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">(${grandTotalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}   )</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">${ Math.round(grandTotalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
+                        <th class="text-right">(${Math.round(grandTotalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}   )</th>
                     `);
                 },
 
@@ -1123,29 +1123,29 @@
                     }, 0 );
 
                     $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 2 ).footer('.total') ).html(  totalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
                     $( api.column( 3 ).footer('.total') ).html(`-`);
-                    $( api.column( 4 ).footer('.total') ).html(  Math.floor(totalGajiDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 5 ).footer('.total') ).html(  Math.floor(totalGajiBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 6 ).footer('.total') ).html(  Math.floor(totalGajiKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 7 ).footer('.total') ).html(  Math.floor(totalGajiKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 8 ).footer('.total') ).html(  Math.floor(totalGajiPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 9 ).footer('.total') ).html( Math.floor(totalGajiIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 10 ).footer('.total') ).html( Math.floor(totalGajiPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 11 ).footer('.total') ).html( Math.floor(totalGajiDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 4 ).footer('.total') ).html(Math.round(totalGajiDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 5 ).footer('.total') ).html(Math.round(totalGajiBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 6 ).footer('.total') ).html(Math.round(totalGajiKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 7 ).footer('.total') ).html(Math.round(totalGajiKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 8 ).footer('.total') ).html(Math.round(totalGajiPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 9 ).footer('.total') ).html( Math.round(totalGajiIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 10 ).footer('.total') ).html( Math.round(totalGajiPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 11 ).footer('.total') ).html( Math.round(totalGajiDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
                     $('tfoot tr.grandtotalPayroll').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
                         <th class="text-right">${grandTotalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                         <th class="text-right">-</th>
-                        <th class="text-right">${Math.floor(grandTotalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalGajiKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalGajiKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalGajiPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalGajiIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalGajiPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalGajiDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
 
                     `);
                 },
@@ -1443,29 +1443,29 @@
                     }, 0 );
 
                     $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 2 ).footer('.total') ).html(  Math.floor(totalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
                     $( api.column( 3 ).footer('.total') ).html(`-`);
-                    $( api.column( 4 ).footer('.total') ).html(  Math.floor(totalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 5 ).footer('.total') ).html(  Math.floor(totalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 6 ).footer('.total') ).html(  Math.floor(totalKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 7 ).footer('.total') ).html(  Math.floor(totalIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 8 ).footer('.total') ).html(  Math.floor(totalKreditPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 9 ).footer('.total') ).html( Math.floor(totalIuranIk).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 10 ).footer('.total') ).html( Math.floor(totalPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 11 ).footer('.total') ).html( Math.floor(totalDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 4 ).footer('.total') ).html(  Math.round(totalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 5 ).footer('.total') ).html(  Math.round(totalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 6 ).footer('.total') ).html(  Math.round(totalKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 7 ).footer('.total') ).html(  Math.round(totalIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 8 ).footer('.total') ).html(  Math.round(totalKreditPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 9 ).footer('.total') ).html( Math.round(totalIuranIk).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 10 ).footer('.total') ).html( Math.round(totalPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 11 ).footer('.total') ).html( Math.round(totalDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
                     $('tfoot tr.grandtotalGaji').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
-                        <th class="text-right">${Math.floor(grandTotalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                         <th class="text-center">-</th>
-                        <th class="text-right">${Math.floor(grandTotalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalKreditKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalKreditPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalIuranIk).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">${Math.floor(grandTotalDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalKreditKoperasi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalKreditPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalIuranIk).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
 
                     `);
                 },
