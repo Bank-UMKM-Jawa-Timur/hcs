@@ -343,6 +343,9 @@ class SlipGajiRepository
             $penghasilan_tidak_teratur = 0;
             $bonus = 0;
             $tunjangan_teratur_import = 0; // Uang makan, vitamin, transport & pulsa
+            $obj_gaji = null;
+            $gaji = 0;
+            $total_gaji = 0;
 
             if ($karyawan->allGajiByKaryawan) {
                 foreach ($karyawan->allGajiByKaryawan as $key => $value) {
