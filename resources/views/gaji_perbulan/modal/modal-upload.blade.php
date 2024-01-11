@@ -8,6 +8,7 @@
                     </button>
             </div>
             <div class="modal-body">
+                    <a href="#" id="cetak_lampiran_gaji" class="btn btn-outline-primary p-1 btn-lampiran-gaji" data-id="">Lampiran Gaji</a>
                 <form action="{{ route('upload.penghasilanPerBulan') }}" enctype="multipart/form-data" method="POST">
                     @csrf
                     <div class="form-row mb-3">

@@ -144,11 +144,15 @@
                                                         <a href="#" class="btn btn-outline-success p-1 btn-payroll"
                                                             data-batch_id="{{$item->id}}">Payroll</a>
                                                     @endcan
-                                                    @if ($item->tanggal_cetak != null)
+                                                    @if ($item->tanggal_cetak != null && $item->tanggal_upload == null)
                                                         @can('penghasilan - proses penghasilan - lampiran gaji - upload')
                                                             @if ($item->file == null)
                                                                 <a class="btn btn-outline-primary p-1" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload Lampiran Gaji</a>
                                                             @endif
+                                                        @endcan
+                                                    @elseif ($item->tanggal_upload != null && $item->tanggal_cetak != null)
+                                                        @can('penghasilan - proses penghasilan - lampiran gaji')
+                                                            <a href="#" class="btn btn-outline-primary p-1 btn-lampiran-gaji" data-id="{{$item->id}}">Lampiran Gaji</a>
                                                         @endcan
                                                     @else
                                                         @can('penghasilan - proses penghasilan - lampiran gaji')
