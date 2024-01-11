@@ -110,7 +110,6 @@ class PenghasilanTeraturController extends Controller
                     'no_rekening' => $nip_exist ? $nip_exist->no_rekening : 'No Rek Tidak Ditemukan',
                 ];
             })->toArray();
-            return $response;
             return response()->json($response);
 
             // return response($data);
@@ -153,7 +152,7 @@ class PenghasilanTeraturController extends Controller
 
             $tanggal = date('Y-m-d', strtotime(date('Y') . '-' . $bulan . '-' . date('d')));
             $tahun = date("Y", strtotime($tanggal));
-
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
 
             if ($nip) {
                 if (is_array($nip)) {
@@ -164,6 +163,7 @@ class PenghasilanTeraturController extends Controller
                             'id_tunjangan' => $id_tunjangan,
                             'tanggal' => $tanggal,
                             'bulan' => $bulanReq,
+                            'kd_entitas' => $kd_entitas,
                             'is_lock' => 1,
                             'created_at' => now(),
                             'updated_at' => now(),
