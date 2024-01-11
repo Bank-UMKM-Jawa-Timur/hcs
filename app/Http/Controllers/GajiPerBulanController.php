@@ -1770,9 +1770,11 @@ class GajiPerBulanController extends Controller
             $batch = DB::table('batch_gaji_per_bulan')->where('id',$id)->first();
             if ($batch) {
                 if ($batch->kd_entitas == $kd_entitas) {
-                    if ($batch->tanggal_cetak != null) {
+                    if (!$batch->tanggal_cetak) {
+                        $now = Carbon::now();
                         DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
-                            'tanggal_cetak' => Carbon::now(),
+                            'tanggal_cetak' => $now,
+                            'updated_at' => $now,
                         ]);
                     }
                 }
