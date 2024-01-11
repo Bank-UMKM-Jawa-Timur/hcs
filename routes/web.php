@@ -20,6 +20,7 @@ use App\Http\Controllers\LaporanPergerakanKarir\LaporanDemosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanMutasiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanPromosiController;
 use App\Http\Controllers\LaporanPergerakanKarir\LaporanPenonaktifanController;
+use App\Http\Controllers\LaporanTetapController;
 use App\Http\Controllers\LemburController;
 use App\Http\Controllers\MigrasiController;
 use App\Http\Controllers\MstPenambahanBrutoController;
@@ -161,6 +162,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::resource('/pengurangan-bruto', MstPenguranganBrutoController::class);
     Route::resource('/lembur', LemburController::class);
     Route::resource('/spd', SPDController::class);
+    Route::resource('/rekap-tetap', LaporanTetapController::class);
 
     // Bonus Data
     Route::get('bonus/excel', [BonusController::class, 'fileExcel'])->name('bonus.excel');
@@ -353,5 +355,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::get('get-rincian-payroll', [GajiPerBulanController::class, 'getRincianPayroll'])->name('get-rincian-payroll');
     Route::get('get-lampiran-gaji/{id}', [GajiPerBulanController::class, 'getLampiranGaji'])->name('get-lampiran-gaji');
     Route::get('/proses-gaji-download-rincian', [GajiPerBulanController::class, 'downloadRincianPayroll'])->name('proses-gaji-download-rincian');
+
+    Route::get('/download-rekap-tetap', [LaporanTetapController::class, 'cetak'])->name('download-rekap-tetap');
 });
 require __DIR__.'/auth.php';
