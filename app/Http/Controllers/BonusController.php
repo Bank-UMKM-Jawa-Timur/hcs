@@ -74,6 +74,8 @@ class BonusController extends Controller
      */
     public function store(Request $request)
     {
+        // return auth()->user()->hasRole('cabang');
+        // return auth()->user()->kd_cabang;
         // Need permission
         if (!auth()->user()->can('penghasilan - import - bonus - import')) {
             return view('roles.forbidden');
@@ -90,6 +92,13 @@ class BonusController extends Controller
             'nip' => 'NIP'
         ]);
         try {
+            $id_cabang = "";
+            if (auth()->user()->hasRole('cabang')) {
+                $id_cabang = auth()->user()->kd_cabang;
+            } else {
+                $id_cabang = "000";
+            }
+
             \DB::beginTransaction();
             $data_nominal = explode(',',$request->get('nominal'));
             $data_nip = explode(',',$request->get('nip'));
@@ -102,6 +111,7 @@ class BonusController extends Controller
                     'nominal' => $data_nominal[$i],
                     'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
+                    'kd_entitas' => $id_cabang,
                     'created_at' => Carbon::parse($request->get('tanggal'))
                 ]);
 
@@ -198,7 +208,7 @@ class BonusController extends Controller
         if (!auth()->user()->can('penghasilan - lock - bonus')) {
             return view('roles.forbidden');
         }
-        
+
         $repo = new PenghasilanTidakTeraturRepository;
         $repo->lockBonus($request->all());
         Alert::success('Berhasil lock tunjangan.');
