@@ -46,7 +46,6 @@
             var page_url = window.location.href
             $(`#myTabContent .active .pagination`).find('a').each(function(i, obj) {
                 var have_arial = $(this).attr('aria-label')
-                console.log(i)
                 if (page_url.includes('tab')) {
                     var url = updateQueryStringParameter(page_url, 'tab', $('#tab').val())
                     const urlParams = new URLSearchParams(url);
@@ -179,7 +178,6 @@
                     }
                 ],
                 initComplete:function( settings, json){
-                    console.log(json);
                     // call your function here
                 }
             });
@@ -201,7 +199,6 @@
 
         $('#proses-modal #tanggal').on('change', function () {
             var tanggal = $(this).val()
-            console.log(tanggal)
             // Create a Date object from the date string
             var dateObject = new Date(tanggal);
 
@@ -214,9 +211,6 @@
                 const last_month = $('#proses-modal #bulan_terakhir').val()
                 const last_year = $('#proses-modal #tahun_terakhir').val()
                 const dif_month = parseInt(month) - parseInt(last_month);
-                console.log(`month : ${month}`)
-                console.log(`last_month : ${last_month}`)
-                console.log(`dif_month : ${dif_month}`)
                 if (dif_month > 1) {
                     Swal.fire({
                         title: 'Peringatan',
@@ -274,11 +268,9 @@
                         $('.loader-wrapper').attr('style', 'display: none;')
                     }
                     else {
-                        console.log(response)
                     }
                 },
                 error: function(e) {
-                    console.log(e)
                     Swal.fire({
                         title: 'Error',
                         text: e,
@@ -549,6 +541,7 @@
                     },
                     {
                         data: 'gaji.gj_pokok',
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -559,6 +552,7 @@
                     },
                     {
                         data: "gaji.tj_keluarga",
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -579,6 +573,7 @@
                     },
                     {
                         data: "gaji.tj_jabatan",
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -589,6 +584,7 @@
                     },
                     {
                         data: "gaji.tj_ti",
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -599,6 +595,7 @@
                     },
                     {
                         data: "gaji.tj_perumahan",
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -609,6 +606,7 @@
                     },
                     {
                         data: "gaji.tj_pelaksana",
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -619,6 +617,7 @@
                     },
                     {
                         data: "gaji.tj_kemahalan",
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -629,6 +628,7 @@
                     },
                     {
                         data: "gaji.tj_kesejahteraan",
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -639,6 +639,7 @@
                     },
                     {
                         data: "gaji.gj_penyesuaian",
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -649,6 +650,7 @@
                     },
                     {
                         data: "gaji.total_gaji",
+                        class: 'text-right',
                         render:function(data, type, row){
                             var number = DataTable.render
                                 .number('.', '.', 0, '')
@@ -659,6 +661,7 @@
                     },
                     {
                         data: 'perhitungan_pph21.pph_pasal_21.pph_harus_dibayar',
+                        class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -684,7 +687,7 @@
                         .column(2)
                         .data()
                         .reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
+                            return Math.round(a) + Math.round(b);
                         }, 0);
                     // computing column Total gaji pokok
                     var totalGajiPokok = api
@@ -825,36 +828,36 @@
                     .column( 13 ,{page:"current"})
                     .data()
                     .reduce( function (a, b) {
-                        return a + b;
+                        return Math.round(a) + Math.round(b);
                     }, 0 );
                     $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 3 ).footer('.total') ).html(  Math.round(totalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 4 ).footer('.total') ).html(  Math.round(totalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 5 ).footer('.total') ).html(  Math.round(totalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 6 ).footer('.total') ).html(  Math.round(totalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 7 ).footer('.total') ).html(  Math.round(totalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 8 ).footer('.total') ).html(  Math.round(totalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 9 ).footer('.total') ).html(  Math.round(totalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 10 ).footer('.total') ).html( Math.round(totalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 11 ).footer('.total') ).html( Math.round(totalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 12 ).footer('.total') ).html( Math.round(totalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
-                    $( api.column( 13 ).footer('.total') ).html( `(${Math.round(totalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))})`);
+                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 3 ).footer('.total') ).html(  Math.round(totalGajiKeluarga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 4 ).footer('.total') ).html(  Math.round(totalGajiListrik).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 5 ).footer('.total') ).html(  Math.round(totalGajiJabatan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 6 ).footer('.total') ).html(  Math.round(totalGajiKhusus).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 7 ).footer('.total') ).html(  Math.round(totalGajiPerumahan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 8 ).footer('.total') ).html(  Math.round(totalGajiPelaksana).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 9 ).footer('.total') ).html(  Math.round(totalGajiKemahalan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 10 ).footer('.total') ).html( Math.round(totalGajiKesejahteraan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 11 ).footer('.total') ).html( Math.round(totalGajiPenyesuian).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 12 ).footer('.total') ).html( Math.round(totalGajiTotal).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 13 ).footer('.total') ).html( `(${totalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')})`);
 
                     $('tfoot tr.grandtotal').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiKeluarga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiListrik.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiJabatan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiKhusus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiPerumahan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiPelaksana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiKemahalan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiKesejahteraan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiPenyesuian.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">${ Math.round(grandTotalGajiTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}</th>
-                        <th class="text-right">(${Math.round(grandTotalGajiPPH.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}   )</th>
+                        <th class="text-right">${Math.round(grandTotalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiKeluarga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiListrik).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiJabatan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiKhusus).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiPerumahan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiPelaksana).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiKemahalan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiKesejahteraan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiPenyesuian).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiTotal).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">(${Math.round(grandTotalGajiPPH).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')})</th>
                     `);
                 },
 
@@ -897,6 +900,7 @@
                     },
                     {
                         data: 'gaji.total_gaji',
+                        class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -912,6 +916,7 @@
                     },
                     {
                         data: "bpjs_tk",
+                        class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -923,6 +928,7 @@
                     },
                     {
                         data: "potongan.dpp",
+                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -935,6 +941,7 @@
 
                     {
                         data: "potongan_gaji.kredit_koperasi",
+                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -946,6 +953,7 @@
                     },
                     {
                         data: "potongan_gaji.iuran_koperasi",
+                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -957,6 +965,7 @@
                     },
                     {
                         data: "potongan_gaji.kredit_pegawai",
+                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -968,6 +977,7 @@
                     },
                     {
                         data: "potongan_gaji.iuran_ik",
+                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -979,6 +989,7 @@
                     },
                     {
                         data: "total_potongan",
+                        class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -990,6 +1001,7 @@
                     },
                     {
                         data: "total_yg_diterima",
+                        class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
                             var number = DataTable.render
@@ -1123,7 +1135,7 @@
                     }, 0 );
 
                     $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')));
+                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
                     $( api.column( 3 ).footer('.total') ).html(`-`);
                     $( api.column( 4 ).footer('.total') ).html(Math.round(totalGajiDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
                     $( api.column( 5 ).footer('.total') ).html(Math.round(totalGajiBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
@@ -1136,7 +1148,7 @@
 
                     $('tfoot tr.grandtotalPayroll').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
-                        <th class="text-right">${grandTotalGajiPokok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th class="text-right">${Math.round(grandTotalGajiPokok).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                         <th class="text-right">-</th>
                         <th class="text-right">${Math.round(grandTotalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                         <th class="text-right">${Math.round(grandTotalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
