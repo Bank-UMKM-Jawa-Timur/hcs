@@ -114,7 +114,7 @@ class PenghasilanTidakTeraturRepository
                 })->when($is_pusat, function($q2) use ($kd_cabang) {
                         $q2->where(function($q2) use ($kd_cabang) {
                         $q2->whereNotIn('kd_entitas', $kd_cabang)
-                            ->orWhere('kd_entitas', 0);
+                            ->orWhere('kd_entitas', null);
                     });
                 })
                 ->whereNull('tanggal_penonaktifan')
@@ -173,10 +173,11 @@ class PenghasilanTidakTeraturRepository
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
         $data = ImportPenghasilanTidakTeraturModel::join('mst_tunjangan', 'mst_tunjangan.id', 'penghasilan_tidak_teratur.id_tunjangan')
-            ->selectRaw("mst_tunjangan.id as tunjangan_id, is_lock, bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan, SUM(penghasilan_tidak_teratur.nominal) as grand_total, IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas")
+            ->selectRaw("mst_tunjangan.id as tunjangan_id, mst_tunjangan.kategori, is_lock, bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan, SUM(penghasilan_tidak_teratur.nominal) as grand_total, IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas")
             ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
             ->leftJoin('mst_cabang', 'mst_cabang.kd_cabang', 'mst_karyawan.kd_entitas')
             ->having('grand_total', '>', 0)
+            ->where('mst_tunjangan.kategori', 'tidak teratur')
             ->where(function ($query) use ($search) {
                 $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
                     ->orWhere('nominal', 'like', "%$search%");
@@ -191,7 +192,6 @@ class PenghasilanTidakTeraturRepository
             ->groupBy('nama_tunjangan')
             ->orderBy('penghasilan_tidak_teratur.created_at', 'desc')
             ->paginate($limit);
-
         return $data;
     }
 
