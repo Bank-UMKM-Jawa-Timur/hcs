@@ -353,7 +353,6 @@
                         `);
                     },
                     success: function(res){
-                        console.log(no_rek);
                         var new_body_tr = ``;
                         var new_body_tr_success = ``;
                         var message = ``;

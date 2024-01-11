@@ -49,7 +49,7 @@ class PenghasilanTeraturRepository
                 ->groupBy('transaksi_tunjangan.id_tunjangan', 'tanggal')
                 ->orderBy('transaksi_tunjangan.tanggal')
                 ->paginate($limit);
-                
+
         foreach ($data as $key => $value) {
             $bulan = date("m", strtotime($value->tanggal));
             $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
@@ -64,6 +64,7 @@ class PenghasilanTeraturRepository
     }
 
     public function getDetailTunjangan($idTunjangan, $createdAt, $search, $limit){
+        $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
         $data = DB::table('transaksi_tunjangan')
                 ->select(
                     'transaksi_tunjangan.nip as nip_tunjangan',
@@ -84,6 +85,7 @@ class PenghasilanTeraturRepository
                             ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%");
                     })
                     ->where('transaksi_tunjangan.id_tunjangan', $idTunjangan)
+                    ->where('transaksi_tunjangan.kd_entitas',$kd_entitas)
                     ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $createdAt)
                     ->paginate($limit);
 

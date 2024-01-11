@@ -75,12 +75,11 @@ class PenghasilanTeraturController extends Controller
             }
             if($is_cabang){
                 $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
-                   ->where('kd_cabang', auth()->user()->kd_cabang)
+                    ->where('kd_entitas', auth()->user()->kd_cabang)
                     ->whereIn('nip', $nip_id)
                     ->whereNull('tanggal_penonaktifan')
                     ->get();
             }
-
 
             $response = $nip_req->map(function ($value) use ($data) {
                 $nip = $value['nip'];
@@ -342,8 +341,9 @@ class PenghasilanTeraturController extends Controller
 
         $search = Request()->get('q');
         $repo = new PenghasilanTeraturRepository;
+        $data = $repo->getDetailTunjangan($idTunjangan, $createdAt, $search, $limit);
         return view('penghasilan-teratur.detail', [
-            'data' => $repo->getDetailTunjangan($idTunjangan, $createdAt, $search, $limit),
+            'data' => $data,
             'tunjangan' => $repo->getNamaTunjangan($idTunjangan)
         ]);
     }
