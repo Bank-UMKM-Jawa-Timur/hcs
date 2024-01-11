@@ -35,7 +35,7 @@ class PenghasilanTidakTeraturRepository
                         DB::raw('COUNT(penghasilan_tidak_teratur.id) as total_data'),
                         'tahun',
                         'keterangan',
-                        DB::raw("IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas")
+                        DB::raw("IF(penghasilan_tidak_teratur.kd_entitas != '000', mst_cabang.nama_cabang, 'Pusat' ) as entitas")
                     )
                     ->where('mst_tunjangan.kategori','bonus')
                     ->where(function ($query) use ($search) {
@@ -48,6 +48,7 @@ class PenghasilanTidakTeraturRepository
                         }
                     })
                     ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date')
+                    ->orderBy('penghasilan_tidak_teratur.kd_entitas')
                     ->orderBy('mst_tunjangan.id', 'ASC')
                     ->paginate($limit);
 
