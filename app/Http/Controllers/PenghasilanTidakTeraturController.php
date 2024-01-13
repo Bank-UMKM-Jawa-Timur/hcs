@@ -474,9 +474,9 @@ class PenghasilanTidakTeraturController extends Controller
             }
             $inserted = array();
             $tunjangan = $request->get('kategori');
-            if($tunjangan == 'spd'){
-                $tunjangan = $request->get('kategori_spd');
-            }
+            // if($tunjangan == 'spd'){
+            //     $tunjangan = $request->get('kategori_spd');
+            // }
             $idTunjangan = TunjanganModel::where('nama_tunjangan', 'like', "%$tunjangan%")->first();
 
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';

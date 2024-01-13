@@ -169,7 +169,7 @@ class PenghasilanTidakTeraturRepository
     }
 
     public function getPenghasilan($search, $limit=10, $page=1){
-        $kd_cabang = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+        $kd_cabang = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
         $data = ImportPenghasilanTidakTeraturModel::join('mst_tunjangan', 'mst_tunjangan.id', 'penghasilan_tidak_teratur.id_tunjangan')
@@ -183,7 +183,9 @@ class PenghasilanTidakTeraturRepository
                     ->orWhere('nominal', 'like', "%$search%");
             })
             ->where(function ($query) use ($kd_cabang, $kode_cabang_arr) {
-                    $query->where('penghasilan_tidak_teratur.kd_entitas', $kd_cabang);
+                if ($kd_cabang != 'pusat') {
+                    $query->where('mst_karyawan.kd_entitas', $kd_cabang);
+                }
             })
             ->groupBy('bulan')
             ->groupBy('tahun')
