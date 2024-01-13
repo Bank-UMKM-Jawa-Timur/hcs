@@ -880,12 +880,13 @@ class GajiPerBulanController extends Controller
                                                 ->where('tahun', $tahun)
                                                 ->update($employee);
 
+                    $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : $this->getPPh58($bulan, $tahun, $item, $tunjangan, $ptkp, $tanggal);
                     $pph = [
                         'gaji_per_bulan_id' => $gaji->id,
                         'nip' => $item->nip,
                         'bulan' => $bulan,
                         'tahun' => $tahun,
-                        'total_pph' => $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal),
+                        'total_pph' => $total_pph,
                         'updated_at' => $now
                     ];
                     PPHModel::where('gaji_per_bulan_id', $gaji->id)
@@ -937,12 +938,14 @@ class GajiPerBulanController extends Controller
                                             ->where('tahun', $tahun)
                                             ->first();
                         if (!$pph_bulan_ini) {
+                            $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : $this->getPPh58($bulan, $tahun, $item, $tunjangan, $ptkp, $tanggal);
+
                             $pph = [
                                 'gaji_per_bulan_id' => $gaji_id,
                                 'nip' => $item->nip,
                                 'bulan' => $bulan,
                                 'tahun' => $tahun,
-                                'total_pph' => $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal),
+                                'total_pph' => $total_pph,
                                 'tanggal' => now(),
                                 'created_at' => now()
                             ];
@@ -1010,6 +1013,68 @@ class GajiPerBulanController extends Controller
             Alert::error('Error', $e->getMessage());
             return back();
         }
+    }
+
+    private function getPPh58($bulan, $tahun, $karyawan, $tunjangan, $ptkp, $tanggal) {
+        $penghasilanRutin = 0;
+        $penghasilanTidakRutin = 0;
+        $penghasilanBruto = 0;
+
+        // Get total penghasilan rutin
+        if($karyawan->gj_pokok) {
+            $penghasilanRutin += $karyawan->gj_pokok;
+        }
+        if($karyawan->gj_penyesuaian) {
+            $penghasilanRutin += $karyawan->gj_penyesuaian;
+        }
+        if ($tunjangan) {
+            if (count($tunjangan) > 0) {
+                $penghasilanRutin += array_sum($tunjangan);
+            }
+        }
+        // Get total penghasilan tidak rutin
+        if ($bulan > 1) {
+            $tanggal_filter = $tahun.'-'.$bulan.'-'.'25';
+            $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
+                                        ->select('nominal')
+                                        ->where('nip', $karyawan->nip)
+                                        ->where('tahun', $tahun)
+                                        ->where('bulan', $bulan)
+                                        ->whereDate('created_at', '<=', $tanggal_filter)
+                                        ->sum('nominal');
+        }
+        else {
+            $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
+                                        ->select('nominal')
+                                        ->where('nip', $karyawan->nip)
+                                        ->where('tahun', $tahun)
+                                        ->where('bulan', $bulan)
+                                        ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                                        ->sum('nominal');
+        }
+        $penghasilanBruto = $penghasilanRutin + $penghasilanTidakRutin;
+
+        $pph = 0;
+        $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
+                                    ->where('kode_ptkp', 'like' , "%$ptkp->kode;%")
+                                    ->where(function($query) use ($penghasilanBruto) {
+                                        $query->where(function($q2) use ($penghasilanBruto) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBruto)
+                                                ->where('nominal_end', '>=', $penghasilanBruto);
+                                        })->orWhere(function($q2) use ($penghasilanBruto) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBruto)
+                                                ->where('nominal_end', 0);
+                                        });
+                                    })
+                                    ->first();
+        $pengali = 0;
+        if ($lapisanPenghasilanBruto) {
+            $pengali = $lapisanPenghasilanBruto->pengali;
+        }
+
+        $pph = $penghasilanBruto * $pengali;
+
+        return $pph;
     }
 
     function getPPHBulanIni($bulan, $tahun, $karyawan, $ptkp, $tanggal)
