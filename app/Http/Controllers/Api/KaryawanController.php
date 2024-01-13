@@ -8,6 +8,7 @@ use App\Models\KaryawanModel;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KaryawanController extends Controller
 {
@@ -69,18 +70,46 @@ class KaryawanController extends Controller
             $explode_data = collect(json_decode($request->get('nip'), true));
             $explode_id = $explode_data->pluck('nip')->toArray();
 
-            if (auth()->user()->kd_cabang != null) {
-                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
-                    ->whereIn('nip', $explode_id)
-                    ->where('kd_entitas', auth()->user()->kd_cabang)
+            $is_cabang = auth()->user()->hasRole('cabang');
+            $is_pusat = auth()->user()->hasRole('kepegawaian');
+
+            $kd_cabang = DB::table('mst_cabang')
+                        ->select('kd_cabang')
+                        ->pluck('kd_cabang')
+                        ->toArray();
+            $data = KaryawanModel::select(
+                        'mst_karyawan.nip',
+                        'mst_karyawan.nama_karyawan',
+                        'mst_karyawan.no_rekening',
+                        'mst_karyawan.kd_entitas',
+                    )->when($is_cabang,function($query) use ($explode_id){
+                        $kd_cabang = auth()->user()->kd_cabang;
+                        $query->where(function($query) use ($explode_id,$kd_cabang){
+                            $query->whereIn('nip', $explode_id)
+                                    ->where('kd_entitas', $kd_cabang);
+                        });
+                    })->when($is_pusat, function($q2) use ($kd_cabang,$explode_id) {
+                            $q2->where(function($q2) use ($kd_cabang,$explode_id) {
+                            $q2->whereNotIn('kd_entitas', $kd_cabang)
+                                ->whereIn('nip', $explode_id)
+                                ->orWhere('kd_entitas', null);
+                        });
+                    })
                     ->whereNull('tanggal_penonaktifan')
                     ->get();
-            }else{
-                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
-                    ->whereIn('nip', $explode_id)
-                    ->whereNull('tanggal_penonaktifan')
-                    ->get();
-            }
+
+            // if (auth()->user()->kd_cabang != null) {
+            //     $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening','kd_entitas')
+            //         ->whereIn('nip', $explode_id)
+            //         ->where('kd_entitas', auth()->user()->kd_cabang)
+            //         ->whereNull('tanggal_penonaktifan')
+            //         ->get();
+            // }else{
+            //     $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening','kd_entitas')
+            //         ->whereIn('nip', $explode_id)
+            //         ->whereNull('tanggal_penonaktifan')
+            //         ->get();
+            // }
 
             $response = $explode_data->map(function ($item) use ($data) {
                 $nip = $item['nip'];
@@ -93,6 +122,7 @@ class KaryawanController extends Controller
                     'row' => $row,
                     'nip' => $found ? $found->nip : $nip,
                     'cek' => $found ? null : '-',
+                    'kd_entitas' => $found->kd_entitas ?? '000',
                     'nama_karyawan' => $found ? $found->nama_karyawan : 'Karyawan Tidak Ditemukan',
                     'no_rekening' => $found ? $found->no_rekening : 'No Rek Tidak Ditemukan',
                 ];

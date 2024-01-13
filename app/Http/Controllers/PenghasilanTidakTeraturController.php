@@ -341,11 +341,14 @@ class PenghasilanTidakTeraturController extends Controller
             $bulan = intval(date('m', strtotime($request->tanggal)));
             $tahun = date('Y', strtotime($request->tanggal));
 
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+
             DB::table('penghasilan_tidak_teratur')
                 ->insert([
                     'nip' => $request->nip,
                     'id_tunjangan' => $request->id_tunjangan,
                     'nominal' => str_replace('.', '', $request->nominal),
+                    'kd_entitas' => $kd_entitas,
                     'bulan' => $bulan,
                     'tahun' => $tahun,
                     'keterangan' => $request->keterangan,
@@ -464,16 +467,19 @@ class PenghasilanTidakTeraturController extends Controller
             }
             $nip = explode(',', $request->get('nip'));
             $nominal = explode(',', $request->get('nominal'));
+            // $kdEntitas = explode(',', $request->get('kd_entitas'));
             $keterangan = [];
             if(strlen($request->get('keterangan')) > 0){
                 $keterangan = explode(',', $request->get('keterangan'));
             }
             $inserted = array();
             $tunjangan = $request->get('kategori');
-            if($tunjangan == 'spd'){
-                $tunjangan = $request->get('kategori_spd');
-            }
+            // if($tunjangan == 'spd'){
+            //     $tunjangan = $request->get('kategori_spd');
+            // }
             $idTunjangan = TunjanganModel::where('nama_tunjangan', 'like', "%$tunjangan%")->first();
+
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
 
             foreach($nip as $key => $item){
                 array_push($inserted, [
@@ -482,6 +488,7 @@ class PenghasilanTidakTeraturController extends Controller
                     'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => (int) Carbon::parse($request->get('tanggal'))->format('Y'),
                     'nominal' => str_replace('.', '', $nominal[$key]),
+                    'kd_entitas' => $kd_entitas,
                     'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
                     'created_at' => $request->get('tanggal')
                 ]);
@@ -644,6 +651,7 @@ class PenghasilanTidakTeraturController extends Controller
         try {
             $nip = explode(',', $request->get('nip'));
             $nominal = explode(',', $request->get('nominal'));
+            // $kdEntitas = explode(',', $request->get('kd_entitas'));
             $keterangan = [];
             if (strlen($request->get('keterangan')) > 0) {
                 $keterangan = explode(',', $request->get('keterangan'));
@@ -658,6 +666,8 @@ class PenghasilanTidakTeraturController extends Controller
             $old_tunjangan = $request->get('old_tunjangan');
             $old_tanggal = $request->get('old_tanggal');
 
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+
             DB::table('penghasilan_tidak_teratur')
             ->where('id_tunjangan', $old_tunjangan)
             ->where(DB::raw('DATE(created_at)'), $old_tanggal)
@@ -669,6 +679,7 @@ class PenghasilanTidakTeraturController extends Controller
                     'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => (int) Carbon::parse($request->get('tanggal'))->format('Y'),
                     'nominal' => str_replace('.', '', $nominal[$key]),
+                    'kd_entitas' => $kd_entitas,
                     'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
                     'created_at' => $request->get('tanggal')
                 ]);

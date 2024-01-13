@@ -48,6 +48,9 @@ class KaryawanController extends Controller
     {
         $query = $request->q ?? $request->search;
         $cabang = $request->has('cabang') ? $request->cabang : null;
+        if (auth()->user()->hasRole('cabang')) {
+            $cabang = auth()->user()->kd_cabang;
+        }
 
         $karyawan = KaryawanModel::with('jabatan')
             ->where(function (Builder $builder) use ($query) {

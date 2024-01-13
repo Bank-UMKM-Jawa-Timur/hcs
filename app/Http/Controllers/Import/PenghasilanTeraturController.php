@@ -63,20 +63,23 @@ class PenghasilanTeraturController extends Controller
 
             $nip_req = collect(json_decode($nip, true));
             $nip_id = $nip_req->pluck('nip')->toArray();
+            $is_cabang = auth()->user()->hasRole('cabang');
+            $is_pusat = auth()->user()->hasRole('kepegawaian');
 
-            if (auth()->user()->kd_cabang != null) {
+            if ($is_pusat) {
                 $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
-                    ->whereIn('nip', $nip_id)
-                    ->where('kd_entitas', auth()->user()->kd_cabang)
-                    ->whereNull('tanggal_penonaktifan')
-                    ->get();
-            }else{
-                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
+                    // ->where('kd_cabang', auth()->user()->kd_cabang)
                     ->whereIn('nip', $nip_id)
                     ->whereNull('tanggal_penonaktifan')
                     ->get();
             }
-
+            if($is_cabang){
+                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
+                    ->where('kd_entitas', auth()->user()->kd_cabang)
+                    ->whereIn('nip', $nip_id)
+                    ->whereNull('tanggal_penonaktifan')
+                    ->get();
+            }
 
             $response = $nip_req->map(function ($value) use ($data) {
                 $nip = $value['nip'];
@@ -106,7 +109,6 @@ class PenghasilanTeraturController extends Controller
                     'no_rekening' => $nip_exist ? $nip_exist->no_rekening : 'No Rek Tidak Ditemukan',
                 ];
             })->toArray();
-
             return response()->json($response);
 
             // return response($data);
@@ -149,7 +151,7 @@ class PenghasilanTeraturController extends Controller
 
             $tanggal = date('Y-m-d', strtotime(date('Y') . '-' . $bulan . '-' . date('d')));
             $tahun = date("Y", strtotime($tanggal));
-
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
 
             if ($nip) {
                 if (is_array($nip)) {
@@ -160,6 +162,7 @@ class PenghasilanTeraturController extends Controller
                             'id_tunjangan' => $id_tunjangan,
                             'tanggal' => $tanggal,
                             'bulan' => $bulanReq,
+                            'kd_entitas' => $kd_entitas,
                             'is_lock' => 1,
                             'created_at' => now(),
                             'updated_at' => now(),
@@ -338,8 +341,9 @@ class PenghasilanTeraturController extends Controller
 
         $search = Request()->get('q');
         $repo = new PenghasilanTeraturRepository;
+        $data = $repo->getDetailTunjangan($idTunjangan, $createdAt, $search, $limit);
         return view('penghasilan-teratur.detail', [
-            'data' => $repo->getDetailTunjangan($idTunjangan, $createdAt, $search, $limit),
+            'data' => $data,
             'tunjangan' => $repo->getNamaTunjangan($idTunjangan)
         ]);
     }

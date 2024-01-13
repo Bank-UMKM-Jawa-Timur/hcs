@@ -61,6 +61,7 @@
                                 var dataNip = [];
                                 var dataNominal = [];
                                 var nipDataRequest = [];
+                                var no_rek = [];
 
                                 var checkNip = [];
 
@@ -72,7 +73,8 @@
                                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
 
                                         dataNip.push({ nip: value['NIP'], row: key + 1 });
-                                        dataNominal.push(value['Nominal'])
+                                        dataNominal.push(value['Nominal']);
+                                        no_rek.push(value['No Rekening'])
                                     }
                                 })
                                 $.ajaxSetup({
@@ -120,8 +122,10 @@
                                                             <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
                                                         </td>
                                                         <td class="${value.cek == '-' ? 'table-danger' : ''}">
+                                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
+                                                        </td>
+                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
                                                             <span>${formatRupiah(dataNominal[key])}</span>
-
                                                         </td>
                                                     </tr>
                                                 `;
@@ -320,6 +324,9 @@
                         </th>
                         <th>
                             Nama
+                        </th>
+                        <th>
+                            No Rekening
                         </th>
                         <th>
                             Nominal
