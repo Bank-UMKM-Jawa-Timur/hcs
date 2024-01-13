@@ -885,7 +885,7 @@ class GajiPerBulanController extends Controller
                         'nip' => $item->nip,
                         'bulan' => $bulan,
                         'tahun' => $tahun,
-                        'total_pph' => $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp),
+                        'total_pph' => $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal),
                         'updated_at' => $now
                     ];
                     PPHModel::where('gaji_per_bulan_id', $gaji->id)
@@ -942,7 +942,7 @@ class GajiPerBulanController extends Controller
                                 'nip' => $item->nip,
                                 'bulan' => $bulan,
                                 'tahun' => $tahun,
-                                'total_pph' => $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp),
+                                'total_pph' => $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal),
                                 'tanggal' => now(),
                                 'created_at' => now()
                             ];
@@ -1012,9 +1012,8 @@ class GajiPerBulanController extends Controller
         }
     }
 
-    function getPPHBulanIni($bulan, $tahun, $karyawan, $ptkp)
+    function getPPHBulanIni($bulan, $tahun, $karyawan, $ptkp, $tanggal)
     {
-        $tanggal = date('Y-m-d', strtotime(Carbon::createFromFormat('Y-m-d', date('Y') . '-' . $bulan . '-' . '26')));
         $pph = 0;
         if (intval($bulan) > 1) {
             $tunjangan = array();
