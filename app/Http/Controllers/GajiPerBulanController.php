@@ -432,7 +432,7 @@ class GajiPerBulanController extends Controller
                 ->sum('total_pph');
             $pph -= $pphTerbayar;
         }
-        return $pph;
+        return round($pph);
     }
 
     function getPengurang($status, $tjKeluarga, $tjKesejahteraan, $totalGajiJamsostek, $gajiPokok) : int {
