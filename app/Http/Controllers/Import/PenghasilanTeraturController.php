@@ -260,7 +260,6 @@ class PenghasilanTeraturController extends Controller
             $old_tunjangan = $request->get('old_tunjangan');
             $old_tanggal = $request->get('old_tanggal');
             $created_at = $request->get('created_at');
-            // dd($old_tunjangan, $old_tanggal, $created_at);
 
             DB::table('transaksi_tunjangan')
             ->where('id_tunjangan', $old_tunjangan)

@@ -15,7 +15,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
         document.querySelector('.custom-file-input').addEventListener('change', function (e) {
             var name = document.getElementById("upload_csv").files[0].name;
@@ -236,8 +235,8 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Import Bonus</h5>
-            <p class="card-title"><a href="">Dashboard</a> > <a href="{{ route('bonus.index') }}">Bonus</a> >Import</p>
+            <h5 class="card-title">Edit Import Bonus</h5>
+            <p class="card-title"><a href="">Dashboard</a> > <a href="{{ route('bonus.index') }}">Bonus</a> >Edit</p>
             <a href="{{ route('bonus.excel') }}"  class="btn is-btn is-primary">Download Template Excel</a>
 
         </div>
@@ -246,56 +245,54 @@
     <div class="card-body">
         <form action="{{ route('edit-tunjangan-bonus-post') }}" enctype="multipart/form-data" method="POST" class="form-group mt-4">
             @csrf
-        <div class="row px-3">
-            <div class="col-md-12">
-                <div id="alert-container">
+            <input type="hidden" name="kd_entitas" value="{{\Request::get('entitas')}}">
+            <div class="row px-3">
+                <div class="col-md-12">
+                    <div id="alert-container">
 
-                </div>
-            </div>
-           <div class="col-md-12 justify-content-center">
-                @if ($errors->any())
-                <div class="alert alert-danger" role="alert">
-                    <span class="alert-link">Terjadi Kesalahan</span>
-                    <ul>
-                        @foreach ($errors->all() as $item)
-                        <tr class="justify-content-center">
-                            <td>
-                                {{ $item }}
-                            </td>
-                        </tr>
-                        @endforeach
-                    </ul>
-                </div>
-
-                @endif
-            </div>
-            <div class="col-md-12 px-4">
-                    <div class="form-row mb-3">
-                        <div class="col">
-                            <label for="">Kategori</label>
-                            <select name="kategori_bonus" id="kategori-bonus" class="form-control" @readonly(true)>
-                                <option value="{{ $penghasilan->id }}">{{ ucwords($penghasilan->nama_tunjangan) }}</option>
-                            </select>
-                        </div>
-                        <div class="col kategori-tunjangan-select">
-                            <label for="">Tanggal</label>
-                            <input type="date" class="form-control" name="tanggal" id="">
-                        </div>
-                        <div class="col">
-                            <label for="">Data Excel</label>
-                            <div class="custom-file col-md-12">
-                                <input type="file" name="upload_csv" class="custom-file-input" id="upload_csv" >
-                                <label class="custom-file-label overflow-hidden" for="upload_csv"  style="padding: 10px 4px 30px 5px">Choose file...</label>
-                            </div>
-                            {{-- <div class=" col-md-12 ">
-                                <input type="file" name="upload_csv" class="custom-file-input form-control"  id="upload_csv"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label class="custom-file-label overflow-hidden" for="validatedCustomFile" style="padding: 10px 4px 30px 5px">Choose file...</label>
-                            </div> --}}
-                        </div>
-                        <div class="col align-items-center mt-4">
-                            <button type="button" class="is-btn is-primary btn-import">Import</button>
-                        </div>
                     </div>
+                </div>
+                <div class="col-md-12 justify-content-center">
+                    @if ($errors->any())
+                    <div class="alert alert-danger" role="alert">
+                        <span class="alert-link">Terjadi Kesalahan</span>
+                        <ul>
+                            @foreach ($errors->all() as $item)
+                            <tr class="justify-content-center">
+                                <td>
+                                    {{ $item }}
+                                </td>
+                            </tr>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    @endif
+                </div>
+                <div class="col-md-12 px-4">
+                        <div class="form-row mb-3">
+                            <div class="col">
+                                <label for="">Kategori</label>
+                                <select name="kategori_bonus" id="kategori-bonus" class="form-control" @readonly(true)>
+                                    <option value="{{ $penghasilan->id }}">{{ ucwords($penghasilan->nama_tunjangan) }}</option>
+                                </select>
+                            </div>
+                            <div class="col kategori-tunjangan-select">
+                                <label for="">Tanggal</label>
+                                <input type="date" class="form-control" name="tanggal" value="{{$old_created_at}}">
+                            </div>
+                            <div class="col">
+                                <label for="">Data Excel</label>
+                                <div class="custom-file col-md-12">
+                                    <input type="file" name="upload_csv" class="custom-file-input" id="upload_csv" >
+                                    <label class="custom-file-label overflow-hidden" for="upload_csv"  style="padding: 10px 4px 30px 5px">Choose file...</label>
+                                </div>
+                            </div>
+                            <div class="col align-items-center mt-4">
+                                <button type="button" class="is-btn is-primary btn-import">Import</button>
+                            </div>
+                        </div>
+                </div>
             </div>
             <div class="col-md-4 px-4 align-self-center mt-4" id="total-data">
             </div>
@@ -307,39 +304,39 @@
                     <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
                     <input type="hidden" name="old_tanggal" value="{{$old_created_at}}">
                     <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
-                    <button type="submit" class="is-btn btn-info hidden" id="button-simpan">Simpan</button>
+                    <button type="submit" class="is-btn is-primary hidden" id="button-simpan">Simpan</button>
                 </div>
             </div>
             <div class="col-md-12 px-4" id="loading-message">
             </div>
-            <div class="col-md-12 px-4 hidden" id="table-data">
-                <div class="table-responsive overflow-hidden content-center">
-                    <table class="table whitespace-nowrap table-bondered" id="table_item" style="width: 100%">
-                      <thead class="text-primary">
-                        <th>
-                            No
-                        </th>
-                        <th>
-                            NIP
-                        </th>
-                        <th>
-                            Nama
-                        </th>
-                        <th>
-                            No Rekening
-                        </th>
-                        <th>
-                            Nominal
-                        </th>
-                      </thead>
-                      <tbody>
+            <div class="row">
+                <div class="col-md-12 px-4 hidden" id="table-data">
+                    <div class="table-responsive overflow-hidden content-center">
+                        <table class="table whitespace-nowrap table-bondered" id="table_item" style="width: 100%">
+                            <thead class="text-primary">
+                                <th>
+                                    No
+                                </th>
+                                <th>
+                                    NIP
+                                </th>
+                                <th>
+                                    Nama
+                                </th>
+                                <th>
+                                    No Rekening
+                                </th>
+                                <th>
+                                    Nominal
+                                </th>
+                            </thead>
+                            <tbody>
 
-                      </tbody>
-
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
     </div>
 @endsection

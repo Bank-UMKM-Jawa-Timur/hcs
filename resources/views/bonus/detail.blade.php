@@ -12,6 +12,8 @@
                 <h6> Tunjangan : {{$tunjangan->nama_tunjangan}}</h6>
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
+                        <input type="hidden" name="tanggal" id="tanggal" value="{{\Request::get('tanggal')}}">
+                        <input type="hidden" name="entitas" id="entitas" value="{{\Request::get('entitas')}}">
                         <div class="d-flex justify-content-between mb-4">
                           <div class="p-2 mt-4">
                             <label for="page_length" class="mr-3 text-sm text-neutral-400">show</label>
@@ -98,6 +100,12 @@
             }
             if (page_url.includes('q')) {
                 btn_pagination[i].href += `&q=${$('#q').val()}`
+            }
+            if (page_url.includes('tanggal')) {
+                btn_pagination[i].href += `&tanggal=${$('#tanggal').val()}`
+            }
+            if (page_url.includes('entitas')) {
+                btn_pagination[i].href += `&entitas=${$('#entitas').val()}`
             }
         })
     </script>

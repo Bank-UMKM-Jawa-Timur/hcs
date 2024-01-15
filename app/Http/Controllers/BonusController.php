@@ -74,8 +74,6 @@ class BonusController extends Controller
      */
     public function store(Request $request)
     {
-        // return auth()->user()->hasRole('cabang');
-        // return auth()->user()->kd_cabang;
         // Need permission
         if (!auth()->user()->can('penghasilan - import - bonus - import')) {
             return view('roles.forbidden');
@@ -147,19 +145,22 @@ class BonusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function detail(Request $request,$id, $tgl)
+    public function detail($id, Request $request)
     {
         // Need permission
         if (!auth()->user()->can('penghasilan - import - bonus - detail')) {
             return view('roles.forbidden');
         }
+
+        $tgl = $request->get('tanggal');
+        $kd_entitas = $request->get('entitas');
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
         $search = $request->get('q');
-        // $data = $this->repo->getDataBonus($search, $limit, $page);
-        $data = $this->repo->getDetailBonus($search, $limit,$page, $id,$tgl);
+        $data = $this->repo->getDetailBonus($search, $limit,$page, $id, $tgl, $kd_entitas);
         $tunjangan = $this->repo->getNameTunjangan($id);
+
         return view('bonus.detail',['data' => $data, 'tunjangan' => $tunjangan]);
     }
 
@@ -226,13 +227,14 @@ class BonusController extends Controller
         return redirect()->route('bonus.index');
     }
 
-    public function editTunjangan($idTunjangan, $tanggal)
+    public function editTunjangan($idTunjangan, Request $request)
     {
         // Need permission
         if (!auth()->user()->can('penghasilan - edit - bonus')) {
             return view('roles.forbidden');
         }
         $id = $idTunjangan;
+        $tanggal = $request->get('tanggal');
         $repo = new PenghasilanTidakTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
         return view('bonus.edit', [
@@ -265,11 +267,13 @@ class BonusController extends Controller
             $tunjangan = TunjanganModel::where('id', $request->get('kategori_bonus'))->first();
             $old_tunjangan = $request->get('old_tunjangan');
             $old_tanggal = $request->get('old_tanggal');
+            $kd_entitas = $request->get('kd_entitas');
             $datetime = new DateTime($old_tanggal);
             $new_tanggal = $datetime->format('Y-m-d');
 
             DB::table('penghasilan_tidak_teratur')
             ->where('id_tunjangan', $old_tunjangan)
+            ->where('kd_entitas', $kd_entitas)
             ->where(DB::raw('DATE(created_at)'), $new_tanggal)
             ->delete();
             for ($i = 0; $i < count($data_nip); $i++) {
@@ -280,12 +284,13 @@ class BonusController extends Controller
                     'nominal' => $data_nominal[$i],
                     'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
-                    'created_at' => Carbon::parse($request->get('tanggal'))
+                    'created_at' => Carbon::parse($request->get('tanggal')),
+                    'kd_entitas' => $kd_entitas,
                 ]);
             }
             \DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil menambahkan bonus.');
+            Alert::success('Berhasil', 'Berhasil menyimpan bonus.');
             return redirect()->route('bonus.index');
         } catch (Exception $th) {
             \DB::rollBack();

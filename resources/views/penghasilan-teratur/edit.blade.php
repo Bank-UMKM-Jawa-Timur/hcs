@@ -73,58 +73,38 @@
         </div>
 
         <form action="{{route('penghasilan.edit-tunjangan-post')}}" method="POST">
-        @csrf
-        <input type="hidden" name="nominal" class="form-control nominal-input" value="" readonly>
-        <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
-        <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
-        <input type="hidden" name="old_tanggal" value="{{\Request::get('tanggal')}}">
-        <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
-        <input type="hidden" name="created_at" value="{{\Request::get('createdAt')}}">
-        <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
-        <div class="d-flex justify-content-start">
-            <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
-        </div>
-        <div class="col" id="loading-message"></div>
-        <div class="row d-none" id="hasil-filter">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table" id="table_item">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nip</th>
-                                    <th>Nama Karyawan</th>
-                                    <th>Nominal</th>
-                                    {{-- <th>Aksi</th> --}}
-                                    {{-- <th>
-                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-primary btn-plus">
-                                            +
-                                        </button>
-                                    </th> --}}
-                                </tr>
-                            </thead>
-                            <tbody id="t_body">
-                                {{-- <tr>
-                                    <td>1</td>
-                                    <td>1121212</td>
-                                    <td>Saya</td>
-                                    <td>123.321</td>
-                                    <td>
-                                        <button class="btn btn-warning" id="edit-penghasilan">edit</button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
-                                            -
-                                        </button>
-                                    </td>
-                                </tr> --}}
-                            </tbody>
-                        </table>
+            @csrf
+            <input type="hidden" name="nominal" class="form-control nominal-input" value="" readonly>
+            <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
+            <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
+            <input type="hidden" name="old_tanggal" value="{{\Request::get('tanggal')}}">
+            <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
+            <input type="hidden" name="created_at" value="{{\Request::get('createdAt')}}">
+            <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
+            <div class="d-flex justify-content-start">
+                <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
+            </div>
+            <div class="col" id="loading-message"></div>
+            <div class="row d-none" id="hasil-filter">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table" id="table_item">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nip</th>
+                                        <th>Nama Karyawan</th>
+                                        <th>Nominal</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="t_body">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </form>
     </div>
 @endsection

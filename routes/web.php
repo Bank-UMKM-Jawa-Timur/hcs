@@ -166,14 +166,14 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
 
     // Bonus Data
     Route::get('bonus/excel', [BonusController::class, 'fileExcel'])->name('bonus.excel');
-    Route::get('bonus/{id}/{tgl}', [BonusController::class, 'detail'])->name('bonus.detail');
+    Route::get('bonus/{id}', [BonusController::class, 'detail'])->name('bonus.detail');
     Route::resource('bonus', BonusController::class);
     Route::resource('/thr', THRController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
     Route::get('/bonus-lock', [BonusController::class, 'lock'])->name('bonus-lock');
     Route::get('/bonus-unlock', [BonusController::class, 'unlock'])->name('bonus-unlock');
-    Route::get('/edit-tunjangan-bonus/{idTunjangan}/{tanggal}', [BonusController::class, 'editTunjangan'])->name('edit-tunjangan-bonus');
+    Route::get('/edit-tunjangan-bonus/{idTunjangan}', [BonusController::class, 'editTunjangan'])->name('edit-tunjangan-bonus');
     Route::post('/edit-tunjangan-bonus/post', [BonusController::class, 'editTunjanganPost'])->name('edit-tunjangan-bonus-post');
 
     Route::prefix('penghasilan-tidak-teratur')

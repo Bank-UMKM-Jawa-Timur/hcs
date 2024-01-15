@@ -26,6 +26,7 @@ class PenghasilanTidakTeraturRepository
                         'penghasilan_tidak_teratur.id',
                         'penghasilan_tidak_teratur.id_tunjangan',
                         'penghasilan_tidak_teratur.nip',
+                        'penghasilan_tidak_teratur.kd_entitas',
                         'mst_karyawan.nama_karyawan',
                         'mst_tunjangan.nama_tunjangan',
                         'nominal',
@@ -40,14 +41,15 @@ class PenghasilanTidakTeraturRepository
                     ->where('mst_tunjangan.kategori','bonus')
                     ->where(function ($query) use ($search) {
                         $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
-                            ->orWhere('nominal', 'like', "%$search%");
+                            ->orWhere('nominal', 'like', "%$search%")
+                            ->orWhere('mst_cabang.nama_cabang', 'like', "%$search%");
                     })
                     ->where(function ($query) use ($kd_cabang, $kode_cabang_arr) {
                         if ($kd_cabang != 'pusat') {
                             $query->where('mst_karyawan.kd_entitas', $kd_cabang);
                         }
                     })
-                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date')
+                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date', 'penghasilan_tidak_teratur.kd_entitas')
                     ->orderBy('penghasilan_tidak_teratur.kd_entitas')
                     ->orderBy('mst_tunjangan.id', 'ASC')
                     ->paginate($limit);
@@ -60,37 +62,36 @@ class PenghasilanTidakTeraturRepository
         return $data;
     }
 
-    public function getDetailBonus($search, $limit=10, $page=1, $id, $tgl) {
+    public function getDetailBonus($search, $limit=10, $page=1, $id, $tgl, $kd_entitas) {
         $format_tgl = Carbon::parse($tgl)->format('y-m-d');
         $bonus = DB::table('penghasilan_tidak_teratur')
-                      ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
-                      ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
-                      ->select(
-                          'penghasilan_tidak_teratur.id',
-                          'penghasilan_tidak_teratur.id_tunjangan',
-                          'penghasilan_tidak_teratur.nip',
-                          'mst_karyawan.nama_karyawan',
-                          'mst_tunjangan.nama_tunjangan',
-                          'nominal',
-                          'keterangan',
-                          'penghasilan_tidak_teratur.created_at',
-                      )
-                    //   ->groupBy('new_date')
+                    ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
+                    ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
+                    ->select(
+                        'penghasilan_tidak_teratur.id',
+                        'penghasilan_tidak_teratur.id_tunjangan',
+                        'penghasilan_tidak_teratur.nip',
+                        'mst_karyawan.nama_karyawan',
+                        'mst_tunjangan.nama_tunjangan',
+                        'nominal',
+                        'keterangan',
+                        'penghasilan_tidak_teratur.created_at',
+                    )
                     ->where('mst_tunjangan.kategori','bonus')
                     ->where(function ($query) use ($search) {
                         $query->where('penghasilan_tidak_teratur.nip', 'like', "%$search%")
-                              ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%")
-                              ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
-                              ->orWhere('nominal', 'like', "%$search%")
-                              ->orWhere('keterangan', 'like', "%$search%");
-                            })
+                            ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%")
+                            ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
+                            ->orWhere('nominal', 'like', "%$search%")
+                            ->orWhere('keterangan', 'like', "%$search%");
+                    })
+                    ->where('penghasilan_tidak_teratur.kd_entitas', $kd_entitas)
                     ->orderBy('mst_tunjangan.id', 'ASC')
                     ->where('penghasilan_tidak_teratur.id_tunjangan',$id)
                     ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'),$format_tgl)
-                    // ->get()
                     ->paginate($limit);
 
-          return $bonus;
+        return $bonus;
     }
 
     public function dataFileExcel() {
@@ -286,8 +287,10 @@ class PenghasilanTidakTeraturRepository
     public function lockBonus(array $data){
         $idTunjangan = $data['id_tunjangan'];
         $tanggal = $data['tanggal'];
+        $kd_entitas = $data['entitas'];
         return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
             ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'), $tanggal)
+            ->where('kd_entitas', $kd_entitas)
             ->update([
                 'is_lock' => 1
             ]);
@@ -295,8 +298,10 @@ class PenghasilanTidakTeraturRepository
     public function unlockBonus(array $data){
         $idTunjangan = $data['id_tunjangan'];
         $tanggal = $data['tanggal'];
+        $kd_entitas = $data['entitas'];
         return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
             ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'), $tanggal)
+            ->where('kd_entitas', $kd_entitas)
             ->update([
                 'is_lock' => 0
             ]);
