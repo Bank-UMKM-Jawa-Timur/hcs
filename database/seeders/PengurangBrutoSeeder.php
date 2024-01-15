@@ -16,8 +16,9 @@ class PengurangBrutoSeeder extends Seeder
     public function run()
     {
         $profiles = DB::table('mst_profil_kantor')
-                        ->where('kd_cabang', '!=', '000')
-                        ->pluck('id');
+                        ->orderBy('kd_cabang')
+                        ->pluck('id')
+                        ->toArray();
         for ($i=0; $i < count($profiles); $i++) { 
             DB::table('pemotong_pajak_pengurangan')->insert([
                 'id_profil_kantor' => $profiles[$i],

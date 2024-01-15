@@ -35,6 +35,42 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $kesehatan_batas_bawah = [
+            4725479,
+            4725479,
+            2221135,
+            2240701,
+            2638628,
+            2281469,
+            2806955,
+            4635133,
+            3368275,
+            2241054,
+            2241054,
+            2340668,
+            4624787,
+            2945544,
+            2258455,
+            2243291,
+            2320000,
+            2223163,
+            2235311,
+            4642031,
+            2828323,
+            2238808,
+            2199337,
+            4638582,
+            2665392,
+            2864225,
+            3155367,
+            2172287,
+            2371016,
+            2183590,
+            2249113,
+            3368275,
+            2182861
+        ];
+        dd($kesehatan_batas_bawah);
         // Need permission
         $dataCabang = CabangModel::orderBy('kd_cabang')->get();
         $karyawanByCabang = [];
