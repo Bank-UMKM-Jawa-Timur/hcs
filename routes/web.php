@@ -183,7 +183,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
             Route::get('/', 'lists')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
-            Route::get('/detail', 'show')->name('detail');
+            Route::get('/detail/{idTunjangan}', 'show')->name('detail');
             Route::get('/input-tidak-teratur', 'createTidakTeratur')->name('input-tidak-teratur');
             Route::get('template-tidak-teratur', 'templateTidakTeratur')->name('templateTidakTeratur');
             Route::get('template-biaya-kesehatan', 'templateBiayaKesehatan')->name('templateBiayaKesehatan');

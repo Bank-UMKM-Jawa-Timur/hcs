@@ -174,7 +174,7 @@ class PenghasilanTidakTeraturRepository
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
         $data = ImportPenghasilanTidakTeraturModel::join('mst_tunjangan', 'mst_tunjangan.id', 'penghasilan_tidak_teratur.id_tunjangan')
-            ->selectRaw("mst_tunjangan.id as tunjangan_id, penghasilan_tidak_teratur.kd_entitas, mst_tunjangan.kategori, is_lock, bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan, SUM(penghasilan_tidak_teratur.nominal) as grand_total, IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas")
+            ->selectRaw("mst_tunjangan.id as tunjangan_id, penghasilan_tidak_teratur.kd_entitas, penghasilan_tidak_teratur.created_at, mst_tunjangan.kategori, is_lock, penghasilan_tidak_teratur.bulan, tahun, COUNT(penghasilan_tidak_teratur.id) as total, nama_tunjangan, penghasilan_tidak_teratur.created_at as tanggal, penghasilan_tidak_teratur.id_tunjangan, SUM(penghasilan_tidak_teratur.nominal) as grand_total, IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas")
             ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
             ->leftJoin('mst_cabang', 'mst_cabang.kd_cabang', 'mst_karyawan.kd_entitas')
             ->having('grand_total', '>', 0)
@@ -196,7 +196,7 @@ class PenghasilanTidakTeraturRepository
         return $data;
     }
 
-    public function getAllPenghasilan($search, $limit=10, $page=1, $tanggal, $idTunjangan){
+    public function getAllPenghasilan($search, $limit=10, $page=1, $bulan, $createdAt, $idTunjangan){
         $karyawanRepo = new KaryawanRepository();
         $penghasilan = KaryawanModel::select('nama_tunjangan', 'id_tunjangan', 'nominal', 'tahun', 'bulan', 'keterangan', 'penghasilan_tidak_teratur.created_at','mst_karyawan.nip', 'mst_karyawan.nik', 'mst_karyawan.nama_karyawan', 'mst_karyawan.kd_bagian', 'mst_karyawan.kd_jabatan', 'mst_karyawan.kd_entitas', 'mst_karyawan.tanggal_penonaktifan', 'mst_karyawan.status_jabatan', 'mst_karyawan.ket_jabatan', DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor"))
             ->join('penghasilan_tidak_teratur', 'mst_karyawan.nip', 'penghasilan_tidak_teratur.nip')
@@ -206,7 +206,8 @@ class PenghasilanTidakTeraturRepository
             ->with('bagian')
             ->whereNull('tanggal_penonaktifan')
             ->where('nominal', '>', 0)
-            ->where('penghasilan_tidak_teratur.created_at', $tanggal)
+            ->where('penghasilan_tidak_teratur.created_at', $createdAt)
+            ->where('penghasilan_tidak_teratur.bulan', $bulan)
             ->where('id_tunjangan', $idTunjangan)
             ->where(function ($query) use ($search) {
                 $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")

@@ -131,7 +131,6 @@
 
                                 var invalidNamaRows = [];
                                 $.each(sheet_data,function(key, value) {
-                                    console.log(value);
                                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
                                         dataNip.push({ nip: value['NIP'], row: key + 1 });
                                         dataNominal.push(value['Nominal']);
