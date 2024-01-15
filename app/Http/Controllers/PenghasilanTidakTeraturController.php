@@ -169,7 +169,6 @@ class PenghasilanTidakTeraturController extends Controller
                 ->where('bulan', $i)
                 ->where('tahun', $tahun)
                 ->first();
-            array_push($pph_yang_dilunasi, ($pph != null) ? $pph->total_pph : 0);
             $data = DB::table('gaji_per_bulan')
                     ->select('gaji_per_bulan.*')
                     ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
@@ -179,6 +178,10 @@ class PenghasilanTidakTeraturController extends Controller
                     ->where('batch.status', 'final')
                     ->first();
 
+            if($data != null)
+                array_push($pph_yang_dilunasi, ($pph != null) ? $pph->total_pph : 0);
+            else
+                array_push($pph_yang_dilunasi, 0);
             $gj[$i - 1] = [
                 'gj_pokok' => ($data != null) ? $data->gj_pokok : 0,
                 'gj_penyesuaian' => ($data != null) ? $data->gj_penyesuaian : 0,
