@@ -28,7 +28,8 @@ class PenghasilanTeraturRepository
                     DB::raw('DATE(transaksi_tunjangan.tanggal) as tanggal'),
                     DB::raw('SUM(transaksi_tunjangan.nominal) as total_nominal'),
                     DB::raw('COUNT(transaksi_tunjangan.id) as total_data'),
-                    DB::raw("IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas")
+                    DB::raw("IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas"),
+                    'transaksi_tunjangan.created_at'
                 )
                 ->join('mst_karyawan', 'mst_karyawan.nip', 'transaksi_tunjangan.nip')
                 ->join('mst_tunjangan', 'mst_tunjangan.id', 'transaksi_tunjangan.id_tunjangan')
@@ -39,14 +40,15 @@ class PenghasilanTeraturRepository
                     $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
                     ->orWhere('mst_karyawan.nip', 'like', "%$search%")
                     ->orWhere('transaksi_tunjangan.nominal', 'like', "%$search%")
-                    ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%");
+                    ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
+                    ->orWhere('mst_cabang.nama_cabang', 'like', "%$search%");
                 })
                 ->when($kd_cabang, function($query) use($kd_cabang, $cabangRepo, $kode_cabang_arr) {
                     if ($kd_cabang != 'pusat') {
                         $query->where('mst_karyawan.kd_entitas', $kd_cabang);
                     }
                 })
-                ->groupBy('transaksi_tunjangan.id_tunjangan', 'tanggal')
+                ->groupBy('transaksi_tunjangan.id_tunjangan', 'transaksi_tunjangan.tanggal', 'transaksi_tunjangan.kd_entitas')
                 ->orderBy('transaksi_tunjangan.tanggal')
                 ->paginate($limit);
 
@@ -63,8 +65,7 @@ class PenghasilanTeraturRepository
         return $data;
     }
 
-    public function getDetailTunjangan($idTunjangan, $createdAt, $search, $limit){
-        $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+    public function getDetailTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit){
         $data = DB::table('transaksi_tunjangan')
                 ->select(
                     'transaksi_tunjangan.nip as nip_tunjangan',
@@ -85,8 +86,8 @@ class PenghasilanTeraturRepository
                             ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%");
                     })
                     ->where('transaksi_tunjangan.id_tunjangan', $idTunjangan)
-                    ->where('transaksi_tunjangan.kd_entitas',$kd_entitas)
-                    ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $createdAt)
+                    ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $tanggal)
+                    ->where('transaksi_tunjangan.created_at', $createdAt)
                     ->paginate($limit);
 
         return $data;
@@ -134,17 +135,25 @@ class PenghasilanTeraturRepository
 
     public function lock(array $data){
         $idTunjangan = $data['id_tunjangan'];
-        $createdAt = $data['tanggal'];
+        $tanggal = $data['tanggal'];
+        $createdAt = $data['created_at'];
+
         return DB::table('transaksi_tunjangan')->where('id_tunjangan', $idTunjangan)
-        ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $createdAt)->update([
+        ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $tanggal)
+        ->where('transaksi_tunjangan.created_at', $createdAt)
+        ->update([
             'is_lock' => 1
         ]);
     }
     public function unlock(array $data){
         $idTunjangan = $data['id_tunjangan'];
-        $createdAt = $data['tanggal'];
+        $tanggal = $data['tanggal'];
+        $createdAt = $data['created_at'];
+
         return DB::table('transaksi_tunjangan')->where('id_tunjangan', $idTunjangan)
-        ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $createdAt)->update([
+        ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $tanggal)
+        ->where('transaksi_tunjangan.created_at', $createdAt)
+        ->update([
             'is_lock' => 0
         ]);
     }

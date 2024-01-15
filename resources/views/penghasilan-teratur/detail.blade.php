@@ -12,6 +12,8 @@
                 <h6> Tunjangan : {{$tunjangan->nama_tunjangan}}</h6>
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
+                        <input type="hidden" name="tanggal" value="{{\Request::get('tanggal')}}">
+                        <input type="hidden" name="createdAt" value="{{\Request::get('createdAt')}}">
                         <div class="d-flex justify-content-between mb-4">
                           <div class="p-2 mt-4">
                             <label for="page_length" class="mr-3 text-sm text-neutral-400">show</label>
@@ -79,9 +81,12 @@
                           </div>
                           <div>
                             @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                            {{ $data->links('pagination::bootstrap-4') }}
+                            {{ $data->links('pagination::bootstrap-4', [
+                                'tanggal' => \Request::get('tanggal'),
+                                'createdAt' => \Request::get('createdAt')
+                                ]) }}
                             @endif
-                          </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -104,6 +109,14 @@
             }
             if (page_url.includes('q')) {
                 btn_pagination[i].href += `&q=${$('#q').val()}`
+            }
+            if (page_url.includes('tanggal')) {
+                var tanggal = "{{\Request::get('tanggal')}}"
+                btn_pagination[i].href += `&tanggal=${tanggal}`
+            }
+            if (page_url.includes('createdAt')) {
+                var createdAt = "{{\Request::get('createdAt')}}"
+                btn_pagination[i].href += `&createdAt=${createdAt}`
             }
         })
     </script>

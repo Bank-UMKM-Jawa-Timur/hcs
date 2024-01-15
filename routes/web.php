@@ -135,7 +135,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
         Route::resource('import-penghasilan-teratur', \App\Http\Controllers\Import\PenghasilanTeraturController::class);
         Route::post('/get-karyawan-by-entitas', [PenghasilanTeraturController::class, 'getKaryawanByEntitas'])->name('karyawan-by-entitas');
         Route::get('/get-karyawan-search', [PenghasilanTeraturController::class, 'getKaryawanSearch'])->name('karyawan-search');
-        Route::get('/details/{idTunjangan}/{createdAt}', [PenghasilanTeraturController::class, 'details'])->name('details');
+        Route::get('/details/{idTunjangan}', [PenghasilanTeraturController::class, 'details'])->name('details');
         Route::post('/cetak-vitamin', [PenghasilanTeraturController::class, 'cetakVitamin'])->name('cetak-vitamin');
         Route::get('/template-excel', [PenghasilanTeraturController::class, 'templateExcel'])->name('template-excel');
         Route::get('/lock', [PenghasilanTeraturController::class, 'lock'])->name('lock');
