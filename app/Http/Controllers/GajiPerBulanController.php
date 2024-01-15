@@ -758,7 +758,8 @@ class GajiPerBulanController extends Controller
                     if ($anak != null && $anak->jml_anak > 3) {
                         $status = 'K/3';
                     } else if ($anak != null) {
-                        $status = 'K/' . $anak->jml_anak;
+                        $jml_anak = $anak->jml_anak ? $anak->jml_anak : 0;
+                        $status = 'K/' . $jml_anak;
                     } else {
                         $status = 'K/0';
                     }
@@ -1072,9 +1073,9 @@ class GajiPerBulanController extends Controller
             $pengali = $lapisanPenghasilanBruto->pengali;
         }
 
-        $pph = $penghasilanBruto * $pengali;
+        $pph = $penghasilanBruto * ($pengali / 100);
 
-        return $pph;
+        return round($pph);
     }
 
     function getPPHBulanIni($bulan, $tahun, $karyawan, $ptkp, $tanggal)
@@ -1302,13 +1303,13 @@ class GajiPerBulanController extends Controller
 
         $pph = floor(($no17 / 12) * intval($bulan));
         if (intval($bulan) > 1) {
-            $pphTerbayar = DB::table('pph_yang_dilunasi')
+            $pphTerbayar = (int) DB::table('pph_yang_dilunasi')
                 ->where('nip', $karyawan->nip)
                 ->where('tahun', $tahun)
                 ->sum('total_pph');
             $pph -= $pphTerbayar;
         }
-        return $pph;
+        return round($pph);
     }
 
     function getPengurang($status, $tjKeluarga, $tjKesejahteraan, $totalGajiJamsostek, $gajiPokok)

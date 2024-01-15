@@ -13,7 +13,6 @@ class GajiPerBulanRepository
                         ->select('kd_cabang')
                         ->pluck('kd_cabang')
                         ->toArray();
-        $year = date('Y');
 
         $data = DB::table('batch_gaji_per_bulan AS batch')
                 ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
@@ -45,7 +44,6 @@ class GajiPerBulanRepository
                     });
                 })
                 ->where('batch.status', $status)
-                ->whereYear('batch.tanggal_input', $year)
                 ->orderBy('gaji.created_at', 'desc')
                 ->groupBy('batch.kd_entitas')
                 ->groupBy('gaji.bulan')
