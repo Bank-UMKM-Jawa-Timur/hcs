@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Helpers\HitungPPH;
 use App\Models\KaryawanModel;
 use App\Models\PtkpModel;
 use Illuminate\Support\Facades\DB;
@@ -184,13 +185,15 @@ class PayrollRepository
                             ])
                             ->select(
                                 'mst_karyawan.nip',
+                                'mst_karyawan.kd_entitas',
+                                'mst_karyawan.gj_pokok',
+                                'mst_karyawan.gj_penyesuaian',
                                 'nama_karyawan',
                                 'npwp',
                                 'no_rekening',
                                 'tanggal_penonaktifan',
                                 'kpj',
                                 'jkn',
-                                'tanggal_input',
                                 DB::raw("
                                     IF(
                                         mst_karyawan.status = 'Kawin',
@@ -202,8 +205,9 @@ class PayrollRepository
                                         )
                                     ) AS status
                                 "),
-                                'status_karyawan',
-                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                                'mst_karyawan.status_karyawan',
+                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor"),
+                                'batch.tanggal_input'
                             )
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
@@ -255,6 +259,11 @@ class PayrollRepository
             if ($karyawan->keluarga) {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
                                 ->where('kode', $karyawan->keluarga->status_kawin)
+                                ->first();
+            }
+            else {
+                $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
+                                ->where('kode', 'TK')
                                 ->first();
             }
             $karyawan->ptkp = $ptkp;
@@ -650,6 +659,10 @@ class PayrollRepository
             $pengurang = $penguranganPenghasilan->total_pengurangan_bruto;
             $total_ket = $month_on_year_paid;
 
+            // Get PPh21 PP58
+            $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji);
+            $perhitunganPph21->pph21_pp58 = $pph21_pp58;
+
             // Get jumlah penghasilan neto
             $jumlah_penghasilan = property_exists($penghasilanBruto, 'total_keseluruhan') ? $penghasilanBruto->total_keseluruhan : 0;
             $jumlah_pengurang = property_exists($penguranganPenghasilan, 'jumlah_pengurangan') ? $penguranganPenghasilan->jumlah_pengurangan : 0;
@@ -968,6 +981,9 @@ class PayrollRepository
                             ])
                             ->select(
                                 'mst_karyawan.nip',
+                                'mst_karyawan.kd_entitas',
+                                'mst_karyawan.gj_pokok',
+                                'mst_karyawan.gj_penyesuaian',
                                 'nama_karyawan',
                                 'npwp',
                                 'no_rekening',
@@ -985,7 +1001,9 @@ class PayrollRepository
                                         )
                                     ) AS status
                                 "),
-                                'status_karyawan',
+                                'mst_karyawan.status_karyawan',
+                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor"),
+                                'batch.tanggal_input'
                             )
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
@@ -1026,6 +1044,11 @@ class PayrollRepository
             if ($karyawan->keluarga) {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
                                 ->where('kode', $karyawan->keluarga->status_kawin)
+                                ->first();
+            }
+            else {
+                $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
+                                ->where('kode', 'TK')
                                 ->first();
             }
             $karyawan->ptkp = $ptkp;
@@ -1421,6 +1444,10 @@ class PayrollRepository
             $pengurang = $penguranganPenghasilan->total_pengurangan_bruto;
             $total_ket = $month_on_year_paid;
 
+            // Get PPh21 PP58
+            $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji);
+            $perhitunganPph21->pph21_pp58 = $pph21_pp58;
+
             // Get jumlah penghasilan neto
             $jumlah_penghasilan = property_exists($penghasilanBruto, 'total_keseluruhan') ? $penghasilanBruto->total_keseluruhan : 0;
             $jumlah_pengurang = property_exists($penguranganPenghasilan, 'jumlah_pengurangan') ? $penguranganPenghasilan->jumlah_pengurangan : 0;
@@ -1641,10 +1668,8 @@ class PayrollRepository
             $total_dpp += $item->gaji->dpp;
             $total_total_gaji += $item->gaji->total_gaji;
             if ($item->perhitungan_pph21) {
-                if ($item->perhitungan_pph21->pph_pasal_21) {
-                    if ($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar) {
-                        $total_pph_harus_dibayar += $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar;
-                    }
+                if ($item->perhitungan_pph21->pph21_pp58) {
+                    $total_pph_harus_dibayar += $item->perhitungan_pph21->pph21_pp58;
                 }
             }
 
@@ -1842,6 +1867,9 @@ class PayrollRepository
                             ])
                             ->select(
                                 'mst_karyawan.nip',
+                                'mst_karyawan.kd_entitas',
+                                'mst_karyawan.gj_pokok',
+                                'mst_karyawan.gj_penyesuaian',
                                 'nama_karyawan',
                                 'npwp',
                                 'no_rekening',
@@ -1860,31 +1888,31 @@ class PayrollRepository
                                     ) AS status
                                 "),
                                 'mst_karyawan.status_karyawan',
-                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor"),
+                                'batch.tanggal_input'
                             )
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
-                            ->where(function($query) use ($month, $year, $batch) {
+                            ->where(function($query) use ($batch) {
                                 $query->where('batch.id', $batch->id);
-                                // $query->whereRelation('gaji', 'bulan', $month)
-                                // ->whereRelation('gaji', 'tahun', $year)
-                                // ->whereNull('tanggal_penonaktifan')
-                                // ->where('batch.id', $batch->id);
                             })
                             ->orderBy('status_kantor', 'asc')
                             ->orderBy('kd_cabang', 'asc')
                             ->orderByRaw($this->orderRaw)
                             ->orderBy('nip', 'asc')
                             ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
-                            // ->where('gaji_per_bulan.bulan', $month)
-                            // ->where('gaji_per_bulan.tahun', $year)
                             ->get();
         foreach ($data as $key => $karyawan) {
             $ptkp = null;
             if ($karyawan->keluarga) {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
                                 ->where('kode', $karyawan->keluarga->status_kawin)
+                                ->first();
+            }
+            else {
+                $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
+                                ->where('kode', 'TK')
                                 ->first();
             }
             $karyawan->ptkp = $ptkp;
@@ -2268,6 +2296,10 @@ class PayrollRepository
             $bonus_sum = $penghasilanBruto->total_bonus;
             $pengurang = $penguranganPenghasilan->total_pengurangan_bruto;
             $total_ket = $month_on_year_paid;
+
+            // Get PPh21 PP58
+            $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji);
+            $perhitunganPph21->pph21_pp58 = $pph21_pp58;
 
             // Get jumlah penghasilan neto
             $jumlah_penghasilan = property_exists($penghasilanBruto, 'total_keseluruhan') ? $penghasilanBruto->total_keseluruhan : 0;

@@ -598,7 +598,7 @@
                         }
                     },
                     {
-                        data: 'perhitungan_pph21.pph_pasal_21.pph_harus_dibayar',
+                        data: 'perhitungan_pph21.pph21_pp58',
                         class: 'text-right',
                         defaultContent: 0,
                         render:function(data, type, row){
