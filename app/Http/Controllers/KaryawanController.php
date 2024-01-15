@@ -7,6 +7,7 @@ use App\Http\Requests\Karyawan\PenonaktifanRequest;
 use App\Imports\ImportDataKeluarga;
 use App\Imports\ImportKaryawan;
 use App\Imports\ImportNpwpRekening;
+use App\Imports\ImportStatusPTKP;
 use App\Imports\UpdateStatusImport;
 use App\Imports\UpdateTunjanganImport;
 use App\Models\JabatanModel;
@@ -1245,6 +1246,15 @@ class KaryawanController extends Controller
             ]);
 
         Alert::success('Berhasil', 'Berhasil Reset Password Karyawan ' . $data->nama_karyawan . ', nip ' . $data->nip);
+        return redirect()->route('karyawan.index');
+    }
+
+    public function importStatusPtkp(Request $request){
+        $file = $request->file('upload_csv');
+        $import = new ImportStatusPTKP;
+        $import = $import->import($file);
+
+        Alert::success('Berhasil', 'Berhasil mengimport data excel');
         return redirect()->route('karyawan.index');
     }
 }

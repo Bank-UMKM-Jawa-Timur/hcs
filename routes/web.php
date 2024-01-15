@@ -357,5 +357,11 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::get('/proses-gaji-download-rincian', [GajiPerBulanController::class, 'downloadRincianPayroll'])->name('proses-gaji-download-rincian');
 
     Route::get('/download-rekap-tetap', [LaporanTetapController::class, 'cetak'])->name('download-rekap-tetap');
+
+    // Route update status ptkp
+    Route::get('/import-status-ptkp', function(){
+        return view('karyawan.import.status-ptkp');
+    });
+    Route::post('/post-import-status-ptkp', [KaryawanController::class, 'importStatusPtkp'])->name('import-status-ptkp');
 });
 require __DIR__.'/auth.php';
