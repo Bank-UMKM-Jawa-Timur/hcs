@@ -105,8 +105,9 @@ class HitungPPH
         $penghasilanBruto = $penghasilanRutin + $penghasilanTidakRutin + $jamsostek;
 
         $pph = 0;
+        $kode_ptkp = $ptkp->kode == 'TK' ? 'TK/0' : $ptkp->kode;
         $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
-                                    ->where('kode_ptkp', 'like' , "%$ptkp->kode;%")
+                                    ->where('kode_ptkp', 'like' , "%$kode_ptkp;%")
                                     ->where(function($query) use ($penghasilanBruto) {
                                         $query->where(function($q2) use ($penghasilanBruto) {
                                             $q2->where('nominal_start', '<=', $penghasilanBruto)
