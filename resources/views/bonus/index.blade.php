@@ -85,7 +85,7 @@
                                                 @if (auth()->user()->hasRole('kepegawaian'))
                                                     @if ($item->entitas == '000')
                                                         @can('penghasilan - lock - bonus')
-                                                            <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
+                                                            <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}&entitas={{$item->kd_entitas}}"
                                                                 class="btn btn-success p-1">Lock</a>
                                                         @endcan
                                                         @can('penghasilan - edit - bonus')
@@ -97,23 +97,21 @@
                                                 @else
                                                     {{-- Cabang --}}
                                                     @can('penghasilan - lock - bonus')
-                                                        <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
+                                                        <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}&entitas={{$item->kd_entitas}}"
                                                             class="btn btn-success p-1">Lock</a>
                                                     @endcan
                                                     @can('penghasilan - edit - bonus')
-                                                        <a href="{{ route('edit-tunjangan-bonus', [
-                                                            'idTunjangan' => $item->id_tunjangan,
-                                                            'tanggal' => \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') ])}}" class="btn btn-outline-warning p-1">Edit</a>
+                                                        <a href="{{ route('edit-tunjangan-bonus', $item->id_tunjangan)}}?tanggal={{\Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d')}}&entitas={{$item->kd_entitas}}" class="btn btn-outline-warning p-1">Edit</a>
                                                     @endcan
                                                 @endif
                                             @else
                                                 @can('penghasilan - unlock - bonus')
-                                                    <a href="{{route('bonus-unlock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}"
+                                                    <a href="{{route('bonus-unlock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}&entitas={{$item->kd_entitas}}"
                                                         class="btn btn-success p-1">Unlock</a>
                                                 @endcan
                                             @endif
                                             @can('penghasilan - import - bonus - detail')
-                                                <a href="{{ route('bonus.detail',[$item->id_tunjangan,$item->new_date]) }}" class="btn btn-outline-info p-1">Detail</a>
+                                                <a href="{{ route('bonus.detail', $item->id_tunjangan) }}?tanggal={{$item->new_date}}&entitas={{$item->kd_entitas}}" class="btn btn-outline-info p-1">Detail</a>
                                             @endcan
                                         </td>
                                     </tr>

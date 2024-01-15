@@ -112,21 +112,21 @@
                                                         @php
                                                             $cant_lock_edit = true;
                                                         @endphp
-                                                        <a href="{{route('penghasilan.lock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}"
+                                                        <a href="{{route('penghasilan.lock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&created_at={{$item->created_at}}"
                                                             class="btn btn-success p-1">Lock</a>
                                                     @endcan
                                                     @can('penghasilan - edit - penghasilan teratur')
                                                         @php
                                                             $cant_lock_edit = true;
                                                         @endphp
-                                                        <a href="{{ route('penghasilan.edit-tunjangan')}}?idTunjangan={{$item->id_transaksi_tunjangan}}&bulan={{$item->bulan}}&createdAt={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}" class="btn btn-outline-warning p-1">Edit</a>
+                                                        <a href="{{ route('penghasilan.edit-tunjangan')}}?idTunjangan={{$item->id_transaksi_tunjangan}}&bulan={{$item->bulan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&createdAt={{$item->created_at}}" class="btn btn-outline-warning p-1">Edit</a>
                                                     @endcan
                                                 @else
                                                     @can('penghasilan - unlock - penghasilan teratur')
                                                         @php
                                                             $cant_unlock = true;
                                                         @endphp
-                                                        <a href="{{route('penghasilan.unlock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}"
+                                                        <a href="{{route('penghasilan.unlock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&created_at={{$item->created_at}}"
                                                             class="btn btn-success p-1">Unlock</a>
                                                     @endcan
                                                 @endif
@@ -135,7 +135,7 @@
                                                 @php
                                                     $cant_detail = true;
                                                 @endphp
-                                                <a href="{{ route('penghasilan.details', ['idTunjangan' => $item->id_transaksi_tunjangan, 'createdAt' => \Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')]) }}" class="btn btn-outline-info p-1">Detail</a>
+                                                <a href="{{ route('penghasilan.details', $item->id_transaksi_tunjangan)}}?tanggal={{Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&createdAt={{$item->created_at}}" class="btn btn-outline-info p-1">Detail</a>
                                             @endcan
                                             @if (!$cant_detail && !$cant_lock_edit && !$cant_unlock)
                                                 -

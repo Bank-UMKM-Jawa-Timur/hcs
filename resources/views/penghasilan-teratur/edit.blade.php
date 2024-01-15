@@ -73,57 +73,38 @@
         </div>
 
         <form action="{{route('penghasilan.edit-tunjangan-post')}}" method="POST">
-        @csrf
-        <input type="hidden" name="nominal" class="form-control nominal-input" value="" readonly>
-        <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
-        <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
-        <input type="hidden" name="old_tanggal" value="{{$old_tanggal}}">
-        <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
-        <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
-        <div class="d-flex justify-content-start">
-            <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
-        </div>
-        <div class="col" id="loading-message"></div>
-        <div class="row d-none" id="hasil-filter">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table" id="table_item">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nip</th>
-                                    <th>Nama Karyawan</th>
-                                    <th>Nominal</th>
-                                    {{-- <th>Aksi</th> --}}
-                                    {{-- <th>
-                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-primary btn-plus">
-                                            +
-                                        </button>
-                                    </th> --}}
-                                </tr>
-                            </thead>
-                            <tbody id="t_body">
-                                {{-- <tr>
-                                    <td>1</td>
-                                    <td>1121212</td>
-                                    <td>Saya</td>
-                                    <td>123.321</td>
-                                    <td>
-                                        <button class="btn btn-warning" id="edit-penghasilan">edit</button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-icon btn-round btn-danger btn-minus">
-                                            -
-                                        </button>
-                                    </td>
-                                </tr> --}}
-                            </tbody>
-                        </table>
+            @csrf
+            <input type="hidden" name="nominal" class="form-control nominal-input" value="" readonly>
+            <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
+            <input type="hidden" name="tunjangan" class="form-control tunjangan-input" value="" readonly>
+            <input type="hidden" name="old_tanggal" value="{{\Request::get('tanggal')}}">
+            <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
+            <input type="hidden" name="created_at" value="{{\Request::get('createdAt')}}">
+            <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
+            <div class="d-flex justify-content-start">
+                <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
+            </div>
+            <div class="col" id="loading-message"></div>
+            <div class="row d-none" id="hasil-filter">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table" id="table_item">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nip</th>
+                                        <th>Nama Karyawan</th>
+                                        <th>Nominal</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="t_body">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </form>
     </div>
 @endsection
@@ -337,91 +318,91 @@
                         var tittleMessage = ``;
                         var headerMessage = `harap cek kembali pada file excel yang di upload.`;
                         $.each(res,function(key,value) {
-                                nipDataRequest.push(value.nip);
-                                no++;
-                                if (value.cek_nip == false) {
-                                    checkNip.push(value.nip);
-                                    hasError = true;
-                                    hasNip = true;
-                                    hasTunjangan = false;
-                                } else if (value.cek_tunjangan == true) {
-                                    checkNipTunjangan.push(value.nip);
-                                    namaTunjangan.push(value.tunjangan.nama_tunjangan);
-                                    hasError = true;
-                                    hasTunjangan = true;
-                                    hasNip = false;
-                                }
-                                grandTotalNominal += parseInt(dataNominal[key])
-                                new_body_tr += `
-                                     <tr class="${value.cek_nip == false || value.cek_tunjangan == true ? 'table-danger' : ''}">
-                                        <td>
-                                            ${no}
-                                        </td>
-                                        <td>
-                                            ${value.nip}
-                                        </td>
-                                        <td>
-                                            ${value.nama_karyawan}
-                                        </td>
-                                        <td>
-                                            ${formatRupiah(dataNominal[key].toString())}
-                                        </td>
-                                    </tr>
-                                `;
-
-                            })
-                            if (hasError == true) {
-                                if (hasNip == true) {
-                                    message += `${checkNip}`
-                                    tittleMessage += `Tidak ditemukan`
-                                }
-                                if (hasTunjangan == true) {
-                                    message += `${checkNipTunjangan}`
-                                    tittleMessage += `Sudah terdaftar di tunjangan ${namaTunjangan[0]}`
-                                }
-                                $('#alert-massage').html(`
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <strong>Data tidak valid.</strong> Nip : ${message} <br>
-                                        ${tittleMessage}, <strong>${headerMessage}</strong>
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                `)
-                                $('#btn-simpan').addClass('d-none');
-                                $('#hasil-filter').removeClass('d-none');
-                                $('#table_item tbody').append(new_body_tr);
-                                $('#grand').html(`
-                                    <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
-                                    <p id="grand-total" class="font-weight-bold">Grand Total : ${
-                                        formatRupiah(grandTotalNominal.toString())
-                                    }</p>
-                                `)
+                            console.log(value)
+                            nipDataRequest.push(value.nip);
+                            no++;
+                            if (value.cek_nip == false) {
+                                checkNip.push(value.nip);
+                                hasError = true;
+                                hasNip = true;
+                                hasTunjangan = false;
+                            } else if (!value.cek_tunjangan) {
+                                checkNipTunjangan.push(value.nip);
+                                namaTunjangan.push(value.tunjangan.nama_tunjangan);
+                                hasError = true;
+                                hasTunjangan = true;
+                                hasNip = false;
                             }
-                            else {
-                                $('#alert-massage').html(`
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <strong>Data valid.</strong>
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                `)
-                                $('.nominal-input').val(dataNominal)
-                                $('.nip-input').val(nipDataRequest);
-                                $('.tunjangan-input').val(id_tunjangan);
-                                $('.bulan-input').val(bulanReq);
-
-                                $('#table_item tbody').append(new_body_tr);
-                                $('#btn-simpan').removeClass('d-none');
-                                $('#hasil-filter').removeClass('d-none');
-                                $('#grand').html(`
-                                    <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
-                                    <p id="grand-total" class="font-weight-bold">Grand Total : ${
-                                        formatRupiah(grandTotalNominal.toString())
-                                    }</p>
-                                `)
+                            grandTotalNominal += parseInt(dataNominal[key])
+                            new_body_tr += `
+                                    <tr class="${value.cek_nip == false || !value.cek_tunjangan ? 'table-danger' : ''}">
+                                    <td>
+                                        ${no}
+                                    </td>
+                                    <td>
+                                        ${value.nip}
+                                    </td>
+                                    <td>
+                                        ${value.nama_karyawan}
+                                    </td>
+                                    <td>
+                                        ${formatRupiah(dataNominal[key].toString())}
+                                    </td>
+                                </tr>
+                            `;
+                        })
+                        if (hasError == true) {
+                            if (hasNip == true) {
+                                message += `${checkNip}`
+                                tittleMessage += `Tidak ditemukan`
                             }
+                            if (hasTunjangan == true) {
+                                message += `${checkNipTunjangan}`
+                                tittleMessage += `Sudah terdaftar di tunjangan ${namaTunjangan[0]}`
+                            }
+                            $('#alert-massage').html(`
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Data tidak valid.</strong> Nip : ${message} <br>
+                                    ${tittleMessage}, <strong>${headerMessage}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            `)
+                            $('#btn-simpan').addClass('d-none');
+                            $('#hasil-filter').removeClass('d-none');
+                            $('#table_item tbody').append(new_body_tr);
+                            $('#grand').html(`
+                                <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
+                                <p id="grand-total" class="font-weight-bold">Grand Total : ${
+                                    formatRupiah(grandTotalNominal.toString())
+                                }</p>
+                            `)
+                        }
+                        else {
+                            $('#alert-massage').html(`
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Data valid.</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            `)
+                            $('.nominal-input').val(dataNominal)
+                            $('.nip-input').val(nipDataRequest);
+                            $('.tunjangan-input').val(id_tunjangan);
+                            $('.bulan-input').val(bulanReq);
+
+                            $('#table_item tbody').append(new_body_tr);
+                            $('#btn-simpan').removeClass('d-none');
+                            $('#hasil-filter').removeClass('d-none');
+                            $('#grand').html(`
+                                <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
+                                <p id="grand-total" class="font-weight-bold">Grand Total : ${
+                                    formatRupiah(grandTotalNominal.toString())
+                                }</p>
+                            `)
+                        }
                     },
                     complete: function () {
                         $('#loading-message').empty();

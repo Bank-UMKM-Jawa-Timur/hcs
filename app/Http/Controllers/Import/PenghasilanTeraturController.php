@@ -247,7 +247,6 @@ class PenghasilanTeraturController extends Controller
 
     public function editTunjanganPost(Request $request){
         try {
-            // return $request;
             $id_tunjangan = $request->get('tunjangan');
             $nominal = explode(',', $request->get('nominal'));
             $nip = explode(',', $request->get('nip'));
@@ -260,10 +259,12 @@ class PenghasilanTeraturController extends Controller
 
             $old_tunjangan = $request->get('old_tunjangan');
             $old_tanggal = $request->get('old_tanggal');
+            $created_at = $request->get('created_at');
 
             DB::table('transaksi_tunjangan')
             ->where('id_tunjangan', $old_tunjangan)
             ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $old_tanggal)
+            ->where('created_at', $created_at)
             ->delete();
 
             if ($nip) {
@@ -330,8 +331,10 @@ class PenghasilanTeraturController extends Controller
     {
     }
 
-    public function details($idTunjangan, $createdAt)
+    public function details($idTunjangan, Request $request)
     {
+        $tanggal = $request->tanggal;
+        $createdAt = $request->createdAt;
         // Need permission
         if (!auth()->user()->can('penghasilan - import - penghasilan teratur - detail')) {
             return view('roles.forbidden');
@@ -341,7 +344,8 @@ class PenghasilanTeraturController extends Controller
 
         $search = Request()->get('q');
         $repo = new PenghasilanTeraturRepository;
-        $data = $repo->getDetailTunjangan($idTunjangan, $createdAt, $search, $limit);
+        $data = $repo->getDetailTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit);
+
         return view('penghasilan-teratur.detail', [
             'data' => $data,
             'tunjangan' => $repo->getNamaTunjangan($idTunjangan)
