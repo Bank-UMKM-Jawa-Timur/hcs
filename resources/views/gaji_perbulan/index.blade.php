@@ -111,7 +111,7 @@
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Bruto</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Potongan</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Netto</th>
-                                            <th style="border: 1px solid #dee2e6;" class="text-center">PPh</th>
+                                            <th style="border: 1px solid #dee2e6;" class="text-center">PPH21</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -306,7 +306,7 @@
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Bruto</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Potongan</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Netto</th>
-                                            <th style="border: 1px solid #dee2e6;" class="text-center">PPh</th>
+                                            <th style="border: 1px solid #dee2e6;" class="text-center">PPH21</th>
                                         </tr>
                                     </thead>
                                     <tbody>
