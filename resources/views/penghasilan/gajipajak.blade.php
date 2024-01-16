@@ -372,8 +372,9 @@
                         for ($i=0; $i < 12; $i++) { 
                             if ($gj[$i] != null) {
                                 $penghasilanBruto = array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i];
+                                $ter_kategori = \App\Helpers\HitungPPH::getTarifEfektifKategori($status);
                                 $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
-                                    ->where('kode_ptkp', 'like' , "%$status;%")
+                                    ->where('kategori', $ter_kategori)
                                     ->where(function($query) use ($penghasilanBruto) {
                                         $query->where(function($q2) use ($penghasilanBruto) {
                                             $q2->where('nominal_start', '<=', $penghasilanBruto)

@@ -84,7 +84,7 @@ class PayrollController extends Controller
         $search = null;
         $page = null;
         $data = $this->list($kantor, $month, $year, $search, $page, null,'cetak');
-        // get karyaawan
+        // get karyawan
         $ttdKaryawan = KaryawanModel::select(
                     'mst_karyawan.nip',
                     'mst_karyawan.nik',

@@ -6,6 +6,7 @@ use App\Helpers\HitungPPH;
 use App\Models\KaryawanModel;
 use App\Models\PtkpModel;
 use Illuminate\Support\Facades\DB;
+use App\Repository\CabangRepository;
 
 use function PHPSTORM_META\map;
 

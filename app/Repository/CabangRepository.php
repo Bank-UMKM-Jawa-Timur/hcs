@@ -18,7 +18,7 @@ class CabangRepository
                 ->where('kd_cabang', '!=', '000')
                 ->orderBy('kd_cabang');
         if ($pluck) {
-            $cabang = $cabang->pluck('kd_cabang');
+            $cabang = $cabang->pluck('kd_cabang')->toArray();
         }
         else {
             $cabang = $cabang->get();
