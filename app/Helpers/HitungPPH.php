@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class HitungPPH
 {
-    public static function getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal, $total_gaji) {
+    public static function getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal, $total_gaji, $full_month = false) {
         $penghasilanRutin = 0;
         $penghasilanTidakRutin = 0;
         $penghasilanBruto = 0;
@@ -16,25 +16,169 @@ class HitungPPH
 
         // Get total penghasilan tidak rutin
         if ($bulan > 1) {
-            $tanggal_filter = $tahun.'-'.$bulan.'-'.'25';
-            $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
-                                        ->select('nominal')
-                                        ->where('nip', $karyawan->nip)
-                                        ->where('tahun', (int) $tahun)
-                                        ->where('bulan', (int) $bulan)
-                                        ->whereDate('created_at', '<=', $tanggal_filter)
-                                        ->sum('nominal');
+            if ($full_month) {
+                $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->where('tahun', (int) $tahun)
+                                            ->where('bulan', (int) $bulan)
+                                            ->sum('nominal');
+            }
+            else {
+                $tanggal_filter = $tahun.'-'.$bulan.'-'.'25';
+                $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->where('tahun', (int) $tahun)
+                                            ->where('bulan', (int) $bulan)
+                                            ->whereDate('created_at', '<=', $tanggal_filter)
+                                            ->sum('nominal');
+            }
         }
         else {
-            $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
-                                        ->select('nominal')
-                                        ->where('nip', $karyawan->nip)
-                                        ->where('tahun', (int) $tahun)
-                                        ->where('bulan', (int) $bulan)
-                                        ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
-                                        ->sum('nominal');
+            if ($full_month) {
+                $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->where('tahun', (int) $tahun)
+                                            ->where('bulan', (int) $bulan)
+                                            ->sum('nominal');
+            }
+            else {
+                $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->where('tahun', (int) $tahun)
+                                            ->where('bulan', (int) $bulan)
+                                            ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                                            ->sum('nominal');
+            }
         }
 
+        $jamsostek = HitungPPH::getJamsostek($karyawan, $total_gaji);
+
+        $penghasilanBruto = $penghasilanRutin + $penghasilanTidakRutin + $jamsostek;
+
+        $pph = 0;
+        $kode_ptkp = $ptkp->kode == 'TK' ? 'TK/0' : $ptkp->kode;
+        $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
+                                    ->where('kode_ptkp', 'like' , "%$kode_ptkp;%")
+                                    ->where(function($query) use ($penghasilanBruto) {
+                                        $query->where(function($q2) use ($penghasilanBruto) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBruto)
+                                                ->where('nominal_end', '>=', $penghasilanBruto);
+                                        })->orWhere(function($q2) use ($penghasilanBruto) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBruto)
+                                                ->where('nominal_end', 0);
+                                        });
+                                    })
+                                    ->first();
+        $pengali = 0;
+        if ($lapisanPenghasilanBruto) {
+            $pengali = $lapisanPenghasilanBruto->pengali;
+        }
+
+        $pph = $penghasilanBruto * ($pengali / 100);
+
+        if (!$full_month) {
+            if ($bulan > 1) {
+                $last_month = intval($bulan) - 1;
+                $terutang_lastmonth = HitungPPH::getTerutang($last_month, $tahun, $karyawan);
+            }
+        }
+
+        return round($pph);
+    }
+
+    public static function getTerutang($bulan, $tahun, $karyawan) {
+        $gaji = DB::table('gaji_per_bulan AS gaji')
+                            ->select(
+                                'gaji.id',
+                                'batch.tanggal_input',
+                                DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
+                            )
+                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                            ->where('gaji.nip', $karyawan->nip)
+                            ->where('gaji.bulan', (int) $bulan)
+                            ->where('gaji.tahun', (int) $tahun)
+                            ->first();
+        $gaji_id = 0;
+        $tanggal_input = $tahun.'-'.$bulan.'-'.'25';
+        $total_gaji = 0;
+        if ($gaji) {
+            $gaji_id = $gaji->id;
+            $tanggal_input = $gaji->tanggal_input;
+            $total_gaji = $gaji->total_gaji;
+        }
+        // PPH final adalah hasil perhitungan saat melakukan proses final
+        $pph_final = 0;
+        $pph_final_obj = DB::table('pph_yang_dilunasi')
+                        ->select('total_pph')
+                        ->where('gaji_per_bulan_id', $gaji_id)
+                        ->first();
+        if ($pph_final_obj) {
+            $pph_final = $pph_final_obj->total_pph;
+        }
+
+        /**
+         * pph_full_month adalah hasil perhitungan dilakukan 1 bulan full.
+         * jadi mulai tanggal 1 hingga tgl terakhir pada bulan tersebut.
+         */
+        $pph_full_month = 0;
+
+        // Get PTKP
+        $ptkp = HitungPPH::getPTKP($karyawan->nip, $karyawan->status);
+        
+        $pph_full_month = HitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, true);
+
+        $terutang = $pph_full_month - $pph_final;
+        if ($karyawan->nip == '00193') {
+            // dd($total_gaji, $pph_full_month, $pph_final, $terutang);
+        }
+
+        if ($terutang > 0) {
+            // Update terutang on table
+            DB::table('pph_yang_dilunasi')
+                ->where('gaji_per_bulan_id', $gaji_id)
+                ->update([
+                    'terutang' => $terutang,
+                    'updated_at' => now()
+                ]);
+        }
+
+        return $terutang;
+    }
+
+    public static function getPTKP($nip, $karyawan_status) {
+        // Get status pernikahan untuk kode ptkp
+        if ($karyawan_status == 'K' || $karyawan_status == 'Kawin') {
+            $anak = DB::table('mst_karyawan')
+                ->where('keluarga.nip', $nip)
+                ->whereIn('enum', ['Suami', 'Istri'])
+                ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
+                ->orderByDesc('id')
+                ->first('jml_anak');
+            if ($anak != null && $anak->jml_anak > 3) {
+                $status = 'K/3';
+            } else if ($anak != null) {
+                $jml_anak = $anak->jml_anak ? $anak->jml_anak : 0;
+                $status = 'K/' . $jml_anak;
+            } else {
+                $status = 'K/0';
+            }
+        }
+        else {
+            $status = 'TK';
+        }
+
+        // Get PTKP
+        $ptkp = DB::table('set_ptkp')
+                ->where('kode', $status)
+                ->first();
+        return $ptkp;
+    }
+
+    public static function getJamsostek($karyawan, $total_gaji) {
         // Get Jamsostek
         $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                                 ->where('kd_cabang', $karyawan->kd_entitas)
@@ -102,32 +246,12 @@ class HitungPPH
             $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
         }
 
-        $penghasilanBruto = $penghasilanRutin + $penghasilanTidakRutin + $jamsostek;
-
-        $pph = 0;
-        $kode_ptkp = $ptkp->kode == 'TK' ? 'TK/0' : $ptkp->kode;
-        $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
-                                    ->where('kode_ptkp', 'like' , "%$kode_ptkp;%")
-                                    ->where(function($query) use ($penghasilanBruto) {
-                                        $query->where(function($q2) use ($penghasilanBruto) {
-                                            $q2->where('nominal_start', '<=', $penghasilanBruto)
-                                                ->where('nominal_end', '>=', $penghasilanBruto);
-                                        })->orWhere(function($q2) use ($penghasilanBruto) {
-                                            $q2->where('nominal_start', '<=', $penghasilanBruto)
-                                                ->where('nominal_end', 0);
-                                        });
-                                    })
-                                    ->first();
-        $pengali = 0;
-        if ($lapisanPenghasilanBruto) {
-            $pengali = $lapisanPenghasilanBruto->pengali;
-        }
-
-        $pph = $penghasilanBruto * ($pengali / 100);
-
-        return round($pph);
+        return $jamsostek;
     }
 
+    public static function getTotalGaji($karyawan, $bulan, $tahun) {
+        // $gaji =
+    }
     // function getPPHBulanIni($bulan, $tahun, $karyawan, $ptkp, $tanggal)
     // {
     //     $pph = 0;

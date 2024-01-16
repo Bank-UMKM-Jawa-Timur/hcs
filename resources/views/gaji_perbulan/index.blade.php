@@ -405,16 +405,12 @@
                                                 @else
                                                     <th class="text-center">-</th>
                                                 @endif
-                                                @if ($item->total_pph < 0)
-                                                    <td class="text-right">
-                                                        Rp ({{number_format(str_replace('-', '', $item->total_pph), 0, ',', '.')}})
-                                                    </td>
-                                                @elseif ($item->total_pph == 0)
-                                                    <td class="text-center">-</td>
+                                                @if ($total_pph > 0)
+                                                    <th class="text-right">
+                                                        RP {{number_format($total_pph, 0, ',', '.')}}
+                                                    </th>
                                                 @else
-                                                    <td class="text-right">
-                                                        Rp {{number_format($item->total_pph, 0, ',', '.')}}
-                                                    </td>
+                                                    <th class="text-center">-</th>
                                                 @endif
                                             </tr>
                                         </tfoot>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ExportBiayaDuka;
 use App\Exports\ExportBiayaKesehatan;
 use App\Exports\ExportBiayaTidakTeratur;
+use App\Helpers\HitungPPH;
 use App\Imports\PenghasilanImport;
 use App\Models\GajiPerBulanModel;
 use App\Models\ImportPenghasilanTidakTeraturModel;
@@ -363,7 +364,7 @@ class PenghasilanTidakTeraturController extends Controller
                 DB::beginTransaction();
                 $gajiPerBulanController = new GajiPerBulanController;
                 $pphTerutang = $gajiPerBulanController->storePPHDesember($request->nip, $tahun, $bulan);
-                $test = PPHModel::where('nip', $request->nip)
+                PPHModel::where('nip', $request->nip)
                     ->where('tahun', $tahun)
                     ->where('bulan', 12)
                     ->update([
@@ -373,11 +374,15 @@ class PenghasilanTidakTeraturController extends Controller
 
                 DB::commit();
             }
+            $karyawan = DB::table('mst_karyawan')
+                            ->where('nip', $request->nip)
+                            ->whereNull('tanggal_penonaktifan')
+                            ->first();
+            $pph = HitungPPH::getTerutang((int) $bulan, $tahun, $karyawan);
             Alert::success('Berhasil', 'Berhasil menambahkan data.');
             return redirect()->route('penghasilan-tidak-teratur.index');
         } catch(Exception $e){
             DB::rollBack();
-            return $e;
             Alert::error('Gagal', 'Terjadi kesalahan.'.$e->getMessage());
             return redirect()->back();
         } catch(QueryException $e){
@@ -500,12 +505,25 @@ class PenghasilanTidakTeraturController extends Controller
             ImportPenghasilanTidakTeraturModel::insert($inserted);
             DB::commit();
 
+            // Hitung pph
+            foreach($nip as $key => $item){
+                DB::beginTransaction();
+                $bulan = (int) Carbon::parse($request->get('tanggal'))->format('m');
+                $tahun = (int) Carbon::parse($request->get('tanggal'))->format('Y');
+                $karyawan = DB::table('mst_karyawan')
+                            ->where('nip', $item)
+                            ->whereNull('tanggal_penonaktifan')
+                            ->first();
+                $pph = HitungPPH::getTerutang((int) $bulan, $tahun, $karyawan);
+                DB::commit();
+            }
+
             if(Carbon::parse($request->get('tanggal'))->format('m') == 12 && Carbon::now()->format('d') > 25){
                 $gajiPerBulanController = new GajiPerBulanController;
                 foreach($nip as $key => $item){
                     DB::beginTransaction();
                     $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($request->get('tanggal'))->format('Y'), Carbon::parse($request->get('tanggal'))->format('m'));
-                    PPHModel::where('nip', $request->nip)
+                    PPHModel::where('nip', $item)
                         ->where('tahun', Carbon::parse($request->get('tanggal'))->format('Y'))
                         ->where('bulan', 12)
                         ->update([

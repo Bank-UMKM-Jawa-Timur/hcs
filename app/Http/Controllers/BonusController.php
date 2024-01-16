@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\KaryawanExport;
+use App\Helpers\HitungPPH;
 use App\Models\KaryawanModel;
 use App\Models\PPHModel;
 use App\Models\TunjanganModel;
@@ -125,8 +126,20 @@ class BonusController extends Controller
                     'created_at' => Carbon::parse($request->get('tanggal'))
                 ]);
 
+                
             }
             \DB::commit();
+            // Hitung pph
+            for ($i=0; $i < count($data_nip); $i++) {
+                $bulan = (int) Carbon::parse($request->get('tanggal'))->format('m');
+                $tahun = (int) Carbon::parse($request->get('tanggal'))->format('Y');
+                $karyawan = DB::table('mst_karyawan')
+                            ->where('nip', $data_nip[$i])
+                            ->whereNull('tanggal_penonaktifan')
+                            ->first();
+                $pph = HitungPPH::getTerutang((int) $bulan, $tahun, $karyawan);
+            }
+
             if(Carbon::parse($request->get('tanggal'))->format('m') == 12 && Carbon::now()->format('d') > 25){
                 \DB::beginTransaction();
                 $gajiPerBulanController = new GajiPerBulanController;
