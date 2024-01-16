@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Models\CabangModel;
 use App\Models\ImportPenghasilanTidakTeraturModel;
 use App\Models\KaryawanModel;
 use App\Models\SpModel;
@@ -338,6 +339,11 @@ class PenghasilanTidakTeraturRepository
     public function TunjanganSelected($id)
     {
         $data = TunjanganModel::find($id);
+        return $data;
+    }
+
+    public function getCabang($kdCabang){
+        $data = CabangModel::select('kd_cabang','nama_cabang')->where('kd_cabang',$kdCabang)->first();
         return $data;
     }
 }

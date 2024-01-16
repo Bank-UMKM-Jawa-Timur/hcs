@@ -296,24 +296,32 @@ class BonusController extends Controller
             $datetime = new DateTime($old_tanggal);
             $new_tanggal = $datetime->format('Y-m-d');
 
-            DB::table('penghasilan_tidak_teratur')
-            ->where('id_tunjangan', $old_tunjangan)
-            ->where('kd_entitas', $kd_entitas)
-            ->where(DB::raw('DATE(created_at)'), $new_tanggal)
-            ->delete();
-            for ($i = 0; $i < count($data_nip); $i++) {
+            $repo = new PenghasilanTidakTeraturRepository;
+            $dataFromCabang = $repo->getCabang($request->get('kdEntitas'));
+            $dataCabangCanEdit = $repo->getCabang($kd_entitas);
+
+            if ($request->get('kdEntitas') == $kd_entitas) {
                 DB::table('penghasilan_tidak_teratur')
-                ->insert([
-                    'nip' => $data_nip[$i],
-                    'id_tunjangan' => $tunjangan->id,
-                    'nominal' => $data_nominal[$i],
-                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
-                    'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
-                    'created_at' => Carbon::parse($request->get('tanggal')),
-                    'kd_entitas' => $kd_entitas,
-                ]);
+                ->where('id_tunjangan', $old_tunjangan)
+                ->where(DB::raw('DATE(created_at)'), $new_tanggal)
+                ->delete();
+                for ($i = 0; $i < count($data_nip); $i++) {
+                    DB::table('penghasilan_tidak_teratur')
+                    ->insert([
+                        'nip' => $data_nip[$i],
+                        'id_tunjangan' => $tunjangan->id,
+                        'nominal' => $data_nominal[$i],
+                        'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
+                        'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
+                        'created_at' => Carbon::parse($request->get('tanggal')),
+                        'kd_entitas' => $kd_entitas,
+                    ]);
+                }
+                \DB::commit();
+            }else{
+                Alert::error('Terjadi Kesalahan', 'Cabang '.$dataCabangCanEdit->nama_cabang.' Tidak Bisa Edit data Bonus '.$dataFromCabang->nama_cabang);
+                return redirect()->route('bonus.index');
             }
-            \DB::commit();
 
             Alert::success('Berhasil', 'Berhasil menyimpan bonus.');
             return redirect()->route('bonus.index');

@@ -692,25 +692,34 @@ class PenghasilanTidakTeraturController extends Controller
 
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
 
-            DB::table('penghasilan_tidak_teratur')
-            ->where('id_tunjangan', $old_tunjangan)
-            ->where(DB::raw('DATE(created_at)'), $old_tanggal)
-            ->delete();
-            foreach ($nip as $key => $item) {
-                array_push($inserted, [
-                    'nip' => $item,
-                    'id_tunjangan' => $old_tunjangan,
-                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
-                    'tahun' => (int) Carbon::parse($request->get('tanggal'))->format('Y'),
-                    'nominal' => str_replace('.', '', $nominal[$key]),
-                    'kd_entitas' => $kd_entitas,
-                    'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
-                    'created_at' => $request->get('tanggal')
-                ]);
-            }
+            $repo = new PenghasilanTidakTeraturRepository;
+            $dataFromCabang = $repo->getCabang($request->get('kdEntitas'));
+            $dataCabangCanEdit = $repo->getCabang($kd_entitas);
 
-            ImportPenghasilanTidakTeraturModel::insert($inserted);
-            DB::commit();
+            if ($request->get('kdEntitas') == $kd_entitas) {
+                DB::table('penghasilan_tidak_teratur')
+                ->where('id_tunjangan', $old_tunjangan)
+                ->where(DB::raw('DATE(created_at)'), $old_tanggal)
+                ->delete();
+                foreach ($nip as $key => $item) {
+                    array_push($inserted, [
+                        'nip' => $item,
+                        'id_tunjangan' => $old_tunjangan,
+                        'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
+                        'tahun' => (int) Carbon::parse($request->get('tanggal'))->format('Y'),
+                        'nominal' => str_replace('.', '', $nominal[$key]),
+                        'kd_entitas' => $kd_entitas,
+                        'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
+                        'created_at' => $request->get('tanggal')
+                    ]);
+                }
+    
+                ImportPenghasilanTidakTeraturModel::insert($inserted);
+                DB::commit();
+            }else{
+                Alert::error('Terjadi Kesalahan', 'Cabang '.$dataCabangCanEdit->nama_cabang.' Tidak Bisa Edit data Penghasilan '.$dataFromCabang->nama_cabang);
+                return redirect()->route('penghasilan-tidak-teratur.index');
+            }
 
             Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan');
             return redirect()->route('penghasilan-tidak-teratur.index');

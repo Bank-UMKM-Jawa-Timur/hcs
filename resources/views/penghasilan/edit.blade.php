@@ -347,7 +347,7 @@
                             </div>
                             <div class="col">
                                 <label for="tanggal">Tanggal</label>
-                                <input type="date" class="form-control" name="tanggal" required>
+                                <input type="date" class="form-control" name="tanggal" value="{{ \Carbon\Carbon::parse($old_created_at)->translatedFormat('Y-m-d') }}" required>
                             </div>
                             <div class="col">
                                 <label for="">Data Excel</label>
@@ -374,6 +374,7 @@
                         <input type="text" name="kd_entitas" class="form-control kd-entitas-input" value="" readonly hidden>
                         <input type="hidden" name="old_tanggal" value="{{$old_created_at}}">
                         <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
+                        <input type="hidden" name="kdEntitas" value="{{Request()->kdEntitas}}">
                         <button type="submit" class="is-btn btn-info hidden" id="button-simpan">Simpan</button>
                     </div>
                 </div>

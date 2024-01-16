@@ -14,6 +14,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\KaryawanExport;
 use App\Exports\ExportVitamin;
+use App\Repository\PenghasilanTidakTeraturRepository;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -260,57 +261,67 @@ class PenghasilanTeraturController extends Controller
             $old_tunjangan = $request->get('old_tunjangan');
             $old_tanggal = $request->get('old_tanggal');
             $created_at = $request->get('created_at');
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
 
-            DB::table('transaksi_tunjangan')
-            ->where('id_tunjangan', $old_tunjangan)
-            ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $old_tanggal)
-            ->where('created_at', $created_at)
-            ->delete();
+            $repo = new PenghasilanTidakTeraturRepository;
+            $dataFromCabang = $repo->getCabang($request->get('kdEntitas'));
+            $dataCabangCanEdit = $repo->getCabang($kd_entitas);
 
-            if ($nip) {
-                if (is_array($nip)) {
-                    for ($i = 0; $i < $total; $i++) {
-                        DB::table('transaksi_tunjangan')->insert([
-                            'nip' => $nip[$i],
-                            'nominal' => $nominal[$i],
-                            'id_tunjangan' => $id_tunjangan,
-                            'tahun' => date('Y'),
-                            'tanggal' => $tanggal,
-                            'bulan' => $bulanReq,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
-
-                        $gaji = GajiPerBulanModel::where('nip', $nip[$i])
-                            ->where('bulan', $bulanReq)
-                            ->where('tahun', $tahun)
-                            ->first();
-                        $tunjangan = TunjanganModel::find($old_tunjangan);
-                        if ($gaji) {
-                            if ($tunjangan->nama_tunjangan == 'Transport') {
-                                $gaji->update([
-                                    'tj_transport' => $nominal[$i] + $gaji->tj_transport
-                                ]);
-                            } elseif ($tunjangan->nama_tunjangan == 'Pulsa') {
-                                $gaji->update([
-                                    'tj_pulsa' => $nominal[$i] + $gaji->tj_pulsa
-                                ]);
-                            } elseif ($tunjangan->nama_tunjangan == 'Vitamin') {
-                                $gaji->update([
-                                    'tj_vitamin' => $nominal[$i] + $gaji->tj_vitamin
-                                ]);
-                            } elseif ($tunjangan->nama_tunjangan == 'Uang Makan') {
-                                $gaji->update([
-                                    'uang_makan' => $nominal[$i] + $gaji->uang_makan
-                                ]);
+            if ($request->get('kdEntitas') == $kd_entitas) {
+                DB::table('transaksi_tunjangan')
+                ->where('id_tunjangan', $old_tunjangan)
+                ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $old_tanggal)
+                ->where('created_at', $created_at)
+                ->delete();
+    
+                if ($nip) {
+                    if (is_array($nip)) {
+                        for ($i = 0; $i < $total; $i++) {
+                            DB::table('transaksi_tunjangan')->insert([
+                                'nip' => $nip[$i],
+                                'nominal' => $nominal[$i],
+                                'id_tunjangan' => $id_tunjangan,
+                                'tahun' => date('Y'),
+                                'tanggal' => $tanggal,
+                                'bulan' => $bulanReq,
+                                'kd_entitas' => $kd_entitas,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+    
+                            $gaji = GajiPerBulanModel::where('nip', $nip[$i])
+                                ->where('bulan', $bulanReq)
+                                ->where('tahun', $tahun)
+                                ->first();
+                            $tunjangan = TunjanganModel::find($old_tunjangan);
+                            if ($gaji) {
+                                if ($tunjangan->nama_tunjangan == 'Transport') {
+                                    $gaji->update([
+                                        'tj_transport' => $nominal[$i] + $gaji->tj_transport
+                                    ]);
+                                } elseif ($tunjangan->nama_tunjangan == 'Pulsa') {
+                                    $gaji->update([
+                                        'tj_pulsa' => $nominal[$i] + $gaji->tj_pulsa
+                                    ]);
+                                } elseif ($tunjangan->nama_tunjangan == 'Vitamin') {
+                                    $gaji->update([
+                                        'tj_vitamin' => $nominal[$i] + $gaji->tj_vitamin
+                                    ]);
+                                } elseif ($tunjangan->nama_tunjangan == 'Uang Makan') {
+                                    $gaji->update([
+                                        'uang_makan' => $nominal[$i] + $gaji->uang_makan
+                                    ]);
+                                }
                             }
                         }
                     }
                 }
+            }else{
+                Alert::error('Terjadi Kesalahan', 'Cabang '.$dataCabangCanEdit->nama_cabang.' Tidak Bisa Edit data Penghasilan '.$dataFromCabang->nama_cabang);
+                return redirect()->route('bonus.index');
             }
 
             Alert::success('Success', 'Berhasil menyimpan data');
-
             return redirect()->route('penghasilan.import-penghasilan-teratur.index');
         } catch (\Exception $e) {
             Alert::error('Error', $e->getMessage());

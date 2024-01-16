@@ -192,7 +192,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
             Route::get('template-uang-duka', 'templateBiayaDuka')->name('templateBiayaDuka');
             Route::get('/lock', 'lock')->name('lock');
             Route::get('/unlock', 'unlock')->name('unlock');
-            Route::get('/edit-tunjangan/{idTunjangan}/{tanggal}', 'editTunjangan')->name('edit-tunjangan-tidak-teratur');
+            Route::get('/edit-tunjangan/{idTunjangan}/{tanggal}/{kdEntitas}', 'editTunjangan')->name('edit-tunjangan-tidak-teratur');
             Route::post('/edit-tunjangan/post', 'editTunjanganPost')->name('edit-tunjangan-tidak-teratur-post');
         });
 

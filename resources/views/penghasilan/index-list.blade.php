@@ -109,7 +109,8 @@
                                                     @endphp
                                                     <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur', [
                                                         'idTunjangan' => $item->tunjangan_id,
-                                                        'tanggal' => $item->tanggal ])}}" class="btn btn-outline-warning p-1">Edit</a>
+                                                        'tanggal' => $item->tanggal,
+                                                        'kdEntitas' => $item->kd_entitas])}}" class="btn btn-outline-warning p-1">Edit</a>
                                                 @endcan
                                             @else
                                                 @can('penghasilan - unlock - penghasilan tidak teratur')

@@ -29,7 +29,8 @@ class PenghasilanTeraturRepository
                     DB::raw('SUM(transaksi_tunjangan.nominal) as total_nominal'),
                     DB::raw('COUNT(transaksi_tunjangan.id) as total_data'),
                     DB::raw("IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', mst_cabang.nama_cabang) as entitas"),
-                    'transaksi_tunjangan.created_at'
+                    'transaksi_tunjangan.created_at',
+                    'transaksi_tunjangan.kd_entitas',
                 )
                 ->join('mst_karyawan', 'mst_karyawan.nip', 'transaksi_tunjangan.nip')
                 ->join('mst_tunjangan', 'mst_tunjangan.id', 'transaksi_tunjangan.id_tunjangan')

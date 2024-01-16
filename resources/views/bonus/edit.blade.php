@@ -334,6 +334,7 @@
                     <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
                     <input type="hidden" name="old_tanggal" value="{{$old_created_at}}">
                     <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
+                    <input type="hidden" name="kdEntitas" value="{{Request()->entitas}}">
                     <button type="submit" class="is-btn is-primary hidden" id="button-simpan">Simpan</button>
                 </div>
             </div>

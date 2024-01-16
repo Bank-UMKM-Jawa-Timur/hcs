@@ -83,7 +83,6 @@
                                         <td>
                                             @if ($item->is_lock != 1)
                                                 @if (auth()->user()->hasRole('kepegawaian'))
-                                                    @if ($item->kd_entitas == '000')
                                                         @can('penghasilan - lock - bonus')
                                                             <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}&entitas={{$item->kd_entitas}}"
                                                                 class="btn btn-success p-1">Lock</a>
@@ -91,9 +90,9 @@
                                                         @can('penghasilan - edit - bonus')
                                                             <a href="{{ route('edit-tunjangan-bonus', [
                                                                 'idTunjangan' => $item->id_tunjangan,
-                                                                'tanggal' => \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') ])}}" class="btn btn-outline-warning p-1">Edit</a>
+                                                                'tanggal' => \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d'),
+                                                                'kdEntitas' => $item->kd_entitas ])}}" class="btn btn-outline-warning p-1">Edit</a>
                                                         @endcan
-                                                    @endif
                                                 @else
                                                     {{-- Cabang --}}
                                                     @can('penghasilan - lock - bonus')

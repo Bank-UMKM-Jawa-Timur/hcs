@@ -81,6 +81,7 @@
             <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
             <input type="hidden" name="created_at" value="{{\Request::get('createdAt')}}">
             <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
+            <input type="hidden" name="kdEntitas" class="form-control" value="{{ Request()->entitas }}" readonly>
             <div class="d-flex justify-content-start">
                 <button type="submit" class="btn btn-primary d-none" id="btn-simpan">Simpan</button>
             </div>
