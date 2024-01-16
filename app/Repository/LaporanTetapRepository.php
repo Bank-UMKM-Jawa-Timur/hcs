@@ -459,7 +459,8 @@ class LaporanTetapRepository
                                                         'nip',
                                                         DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
                                                         DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
-                                                        DB::raw('SUM(total_pph) AS nominal'),
+                                                        DB::raw('CAST(SUM(total_pph) AS UNSIGNED) AS nominal'),
+                                                        DB::raw('CAST(SUM(terutang) AS UNSIGNED) AS terutang'),
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('nip', $karyawan->nip)
@@ -811,8 +812,15 @@ class LaporanTetapRepository
             $total_pph_dilunasi = 0;
             if ($karyawan_bruto?->pphDilunasi) {
                 $pphDilunasi = $karyawan_bruto->pphDilunasi;
+                $pphDilunasiArr = $karyawan_bruto->pphDilunasi->toArray();
                 foreach ($pphDilunasi as $key => $value) {
-                    $total_pph_dilunasi += intval($value->nominal);
+                    $terutang = 0;
+                    if (array_key_exists(($key - 1), $pphDilunasiArr)) {
+                        $terutang = $pphDilunasiArr[($key - 1)]['terutang'];
+                    }
+                    $nominal_pph = intval($value->nominal) + $terutang;
+                    $value->total_pph = $nominal_pph;
+                    $total_pph_dilunasi += $nominal_pph;
                 }
             }
             $pphPasal21->pph_telah_dilunasi = $total_pph_dilunasi;
@@ -1231,7 +1239,8 @@ class LaporanTetapRepository
                                                         'nip',
                                                         DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
                                                         DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
-                                                        DB::raw('SUM(total_pph) AS nominal'),
+                                                        DB::raw('CAST(SUM(total_pph) AS UNSIGNED) AS nominal'),
+                                                        DB::raw('CAST(SUM(terutang) AS UNSIGNED) AS terutang'),
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('nip', $karyawan->nip)
@@ -1586,8 +1595,15 @@ class LaporanTetapRepository
             $total_pph_dilunasi = 0;
             if ($karyawan_bruto?->pphDilunasi) {
                 $pphDilunasi = $karyawan_bruto->pphDilunasi;
+                $pphDilunasiArr = $karyawan_bruto->pphDilunasi->toArray();
                 foreach ($pphDilunasi as $key => $value) {
-                    $total_pph_dilunasi += intval($value->nominal);
+                    $terutang = 0;
+                    if (array_key_exists(($key - 1), $pphDilunasiArr)) {
+                        $terutang = $pphDilunasiArr[($key - 1)]['terutang'];
+                    }
+                    $nominal_pph = intval($value->nominal) + $terutang;
+                    $value->total_pph = $nominal_pph;
+                    $total_pph_dilunasi += $nominal_pph;
                 }
             }
             $pphPasal21->pph_telah_dilunasi = $total_pph_dilunasi;

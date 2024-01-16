@@ -118,6 +118,7 @@ class RoleSeeder extends Seeder
             'laporan - laporan pergerakan karir - laporan penonaktifan',
             'laporan - laporan jamsostek',
             'laporan - laporan dpp',
+            'laporan - laporan rekap tetap',
             // LOG
             'log',
             'log - log aktivitas',
@@ -415,6 +416,8 @@ class RoleSeeder extends Seeder
             'penghasilan - edit - penghasilan teratur',
             'penghasilan - edit - penghasilan tidak teratur',
             'penghasilan - edit - bonus',
+            'laporan',
+            'laporan - laporan rekap tetap',
         ];
         $user_permissions = [
             'dashboard',

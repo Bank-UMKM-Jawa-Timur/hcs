@@ -37,7 +37,6 @@ class LaporanTetapController extends Controller
         } else {
             $kantor = 'pusat';
         }
-        // dd($kantor);
         Session::put('kantor', $kantor);
         $search = $request->get('q');
         $data = $request->has('tahun') ? $this->repo->get($kantor, $search, $limit, false, intval($year)) : null;
