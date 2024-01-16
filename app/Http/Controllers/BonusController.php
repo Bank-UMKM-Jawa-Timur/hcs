@@ -119,7 +119,7 @@ class BonusController extends Controller
                     'nip' => $data_nip[$i],
                     'id_tunjangan' => $tunjangan->id,
                     'nominal' => $data_nominal[$i],
-                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
                     'kd_entitas' => $id_cabang,
                     'created_at' => Carbon::parse($request->get('tanggal'))
@@ -279,7 +279,7 @@ class BonusController extends Controller
             $tunjangan = TunjanganModel::where('id', $request->get('kategori_bonus'))->first();
             $old_tunjangan = $request->get('old_tunjangan');
             $old_tanggal = $request->get('old_tanggal');
-            $kd_entitas = $request->get('kd_entitas');
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
             $datetime = new DateTime($old_tanggal);
             $new_tanggal = $datetime->format('Y-m-d');
 
@@ -294,7 +294,7 @@ class BonusController extends Controller
                     'nip' => $data_nip[$i],
                     'id_tunjangan' => $tunjangan->id,
                     'nominal' => $data_nominal[$i],
-                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
                     'created_at' => Carbon::parse($request->get('tanggal')),
                     'kd_entitas' => $kd_entitas,

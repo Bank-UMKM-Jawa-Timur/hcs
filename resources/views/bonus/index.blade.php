@@ -83,7 +83,7 @@
                                         <td>
                                             @if ($item->is_lock != 1)
                                                 @if (auth()->user()->hasRole('kepegawaian'))
-                                                    @if ($item->entitas == '000')
+                                                    @if ($item->kd_entitas == '000')
                                                         @can('penghasilan - lock - bonus')
                                                             <a href="{{route('bonus-lock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}&entitas={{$item->kd_entitas}}"
                                                                 class="btn btn-success p-1">Lock</a>
