@@ -126,7 +126,7 @@
                                         @forelse ($proses_list as $item)
                                             @php
                                                 $total_bruto += $item->bruto;
-                                                $total_potongan += $item->total_potongan;
+                                                $total_potongan += $item->grand_total_potongan;
                                                 $total_netto += $item->netto;
                                                 $total_pph += $item->total_pph;
                                             @endphp
@@ -170,11 +170,11 @@
                                                         Rp {{number_format($item->bruto, 0, ',', '.')}}
                                                     </td>
                                                 @endif
-                                                @if ($item->total_potongan == 0)
+                                                @if ($item->grand_total_potongan == 0)
                                                     <td class="text-center">-</td>
                                                 @else
                                                     <td class="text-right">
-                                                        Rp {{number_format($item->total_potongan, 0, ',', '.')}}
+                                                        Rp {{number_format($item->grand_total_potongan, 0, ',', '.')}}
                                                     </td>
                                                 @endif
                                                 @if ($item->netto < 0)
@@ -320,7 +320,7 @@
                                         @forelse ($final_list as $item)
                                             @php
                                                 $total_bruto += $item->bruto;
-                                                $total_potongan += $item->total_potongan;
+                                                $total_potongan += $item->grand_total_potongan;
                                                 $total_netto += $item->netto;
                                                 $total_pph += $item->total_pph;
                                             @endphp
@@ -345,11 +345,11 @@
                                                         Rp {{number_format($item->bruto, 0, ',', '.')}}
                                                     </td>
                                                 @endif
-                                                @if ($item->total_potongan == 0)
+                                                @if ($item->grand_total_potongan == 0)
                                                     <td class="text-center">-</td>
                                                 @else
                                                     <td class="text-right">
-                                                        Rp {{number_format($item->total_potongan, 0, ',', '.')}}
+                                                        Rp {{number_format($item->grand_total_potongan, 0, ',', '.')}}
                                                     </td>
                                                 @endif
                                                 @if ($item->netto < 0)

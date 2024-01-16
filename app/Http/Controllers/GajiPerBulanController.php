@@ -123,7 +123,7 @@ class GajiPerBulanController extends Controller
             'proses_list' => $proses_list,
             'final_list' => $final_list,
         ];
-// return $proses_list;
+
         return view('gaji_perbulan.index', $data);
     }
 
