@@ -211,13 +211,13 @@
                 @foreach ($ttdKaryawan as $item)
                     @if ($item->kd_jabatan == 'PBO' || $item->kd_jabatan == 'PC')
                         <div>
-                            <p class="p-0 m-0 mb-5">{{ $cabang->nama_cabang }},{{ date('d M Y', strtotime($tanggal)) }}</p>
+                            <p class="p-0 m-0 mb-5">{{ $cabang->nama_cabang }}, {{ $tanggal }}</p>
                             <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $item->nama_karyawan }}</p>
                             <p class="p-0 m-0">{{ $item->jabatan_result }}</p>
                         </div>
                     @elseif ($item->kd_bagian == 'B-UMAK')
                         <div>
-                            <p class="p-0 m-0 mb-5">{{ $cabang->nama_cabang }},{{ date('d M Y', strtotime($tanggal)) }}</p>
+                            <p class="p-0 m-0 mb-5">{{ $cabang->nama_cabang }}, {{ $tanggal }}</p>
                             <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $item->nama_karyawan }}</p>
                             <p class="p-0 m-0">{{ $item->jabatan_result.' '.$item->bagian->nama_bagian }}</p>
                         </div>
