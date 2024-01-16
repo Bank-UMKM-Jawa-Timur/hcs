@@ -367,7 +367,35 @@
 
                     $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
 
-                    $no19 = floor(($no17 / 12) * $total_ket);
+                    if($total_ket < 12){
+                        $no19 = 0;
+                        for ($i=0; $i < 12; $i++) { 
+                            if ($gj[$i] != null) {
+                                $penghasilanBruto = array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i];
+                                $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
+                                    ->where('kode_ptkp', 'like' , "%$status;%")
+                                    ->where(function($query) use ($penghasilanBruto) {
+                                        $query->where(function($q2) use ($penghasilanBruto) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBruto)
+                                                ->where('nominal_end', '>=', $penghasilanBruto);
+                                        })->orWhere(function($q2) use ($penghasilanBruto) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBruto)
+                                                ->where('nominal_end', 0);
+                                        });
+                                    })
+                                    ->first();
+                                    $pengali = 0;
+                                    if ($lapisanPenghasilanBruto) {
+                                        $pengali = $lapisanPenghasilanBruto->pengali;
+                                    }
+    
+                                    $pph = $penghasilanBruto * ($pengali / 100);
+                                    $no19 += floor($pph);
+                            }
+                        }
+                    } else {
+                        $no19 = floor(($no17 / 12) * $total_ket);
+                    }
                 @endphp
 
                 <div class="row m-0 ">
