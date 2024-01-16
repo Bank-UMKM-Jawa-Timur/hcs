@@ -226,9 +226,9 @@ class PenghasilanTidakTeraturController extends Controller
                     ->where('id_tunjangan', $id_ptt[$j])
                     ->where('tahun', $tahun)
                     ->where('bulan', $i)
-                    ->first();
+                    ->sum('nominal');
                 if($data != null){
-                    $peng[$k] = ($penghasilan != null) ? $penghasilan->nominal : 0;
+                    $peng[$k] = ($penghasilan != null) ? $penghasilan : 0;
                 } else {
                     $peng[$k] = 0;
                 }
@@ -249,10 +249,10 @@ class PenghasilanTidakTeraturController extends Controller
                     ->where('id_tunjangan', $id_bonus[$j])
                     ->where('tahun', $tahun)
                     ->where('bulan', $i)
-                    ->first();
+                    ->sum('nominal');
 
                 if($data != null){
-                    $bon[$l] = ($bns != null) ? $bns->nominal : 0;
+                    $bon[$l] = ($bns != null) ? $bns : 0;
                 } else{
                     $bon[$l] = 0;
                 }
