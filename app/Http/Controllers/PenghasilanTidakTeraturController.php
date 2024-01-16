@@ -535,21 +535,24 @@ class PenghasilanTidakTeraturController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show($idTunjangan,Request $request)
     {
         if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - detail')) {
             return view('roles.forbidden');
         }
         try{
-            $idTunjangan = $request->get('idTunjangan');
-            $tanggal = $request->get('tanggal');
+            $bulan = $request->bulan;
+            $createdAt = $request->createdAt;
+            // $idTunjangan = $request->get('idTunjangan');
+            // $tanggal = $request->get('tanggal');
             $limit = $request->has('page_length') ? $request->get('page_length') : 10;
             $page = $request->has('page') ? $request->get('page') : 1;
             $search = $request->get('q');
 
             $repo = new PenghasilanTidakTeraturRepository();
-            $data = $repo->getAllPenghasilan($search, $limit, $page, $tanggal, $idTunjangan);
-            $tunjangan = $data[0]->nama_tunjangan;
+            $data = $repo->getAllPenghasilan($search, $limit, $page, $bulan, $createdAt, $idTunjangan);
+            $tunjangan = $repo->getNameTunjangan($idTunjangan);
+            
             return view('penghasilan.detail', compact(['data','tunjangan']));
         } catch(Exception $e){
             Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());

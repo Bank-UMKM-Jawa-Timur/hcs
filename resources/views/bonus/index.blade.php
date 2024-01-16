@@ -8,7 +8,7 @@
     </div>
     <div class="card-header row mt-3 mr-8 pr-5" >
         @can('penghasilan - import - bonus - import')
-            <a href="{{ route('bonus.create') }}" class="ml-3">
+            <a href="{{ route('bonus.import-data') }}" class="ml-3">
                 <button class="is-btn is-primary">Import</button>
             </a>
         @endcan

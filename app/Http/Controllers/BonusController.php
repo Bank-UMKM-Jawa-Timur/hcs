@@ -62,6 +62,18 @@ class BonusController extends Controller
         ]);
     }
 
+    public function import()
+    {
+        // Need permission
+        if (!auth()->user()->can('penghasilan - import - bonus - import')) {
+            return view('roles.forbidden');
+        }
+        $tunjangan = TunjanganModel::select('nama_tunjangan','id')->where('kategori','bonus')->where('is_import',1)->get();
+        return view('bonus.import',[
+            'data_tunjangan' => $tunjangan
+        ]);
+    }
+
     public function show($id){
 
     }
