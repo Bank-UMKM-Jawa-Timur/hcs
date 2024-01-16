@@ -21,47 +21,6 @@
                     <div class="table-responsive overflow-hidden content-center">
                         <form id="form" method="get">
                             <div class="row">
-                                @if (auth()->user()->hasRole('cabang'))
-                                    <input type="hidden" name="kantor" value="cabang">
-                                @else
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="">Kantor<span class="text-danger">*</span></label>
-                                            <select name="kantor" id="kantor"
-                                                class="form-control">
-                                                <option value="0">-- Pilih kantor --</option>
-                                                <option value="keseluruhan" @if(\Request::get('kantor') == 'keseluruhan') selected @endif
-                                                    {{old('kantor') == 'keseluruhan' ? 'selected' : ''}}>Keseluruhan</option>
-                                                <option value="pusat" @if(\Request::get('kantor') == 'pusat') selected @endif
-                                                    {{old('kantor') == 'pusat' ? 'selected' : ''}}>Pusat</option>
-                                                <option value="cabang" @if(\Request::get('kantor') != '' && \Request::get('kantor') != 'pusat') selected @endif
-                                                    {{old('kantor') == 'cabang' ? 'selected' : ''}}>Cabang</option>
-                                            </select>
-                                            @error('kantor')
-                                                <small class="text-danger">{{ucfirst($message)}}</small>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                @endif
-                                @if (auth()->user()->hasRole('cabang'))
-                                    <input type="hidden" name="cabang" value="{{auth()->user()->kd_cabang}}">
-                                @else
-                                    <div class="col cabang-input @if(\Request::get('kantor') == 'pusat' || \Request::get('kantor') == '0')d-none @endif">
-                                        <div class="form-group">
-                                            <label for="">Cabang<span class="text-danger">*</span></label>
-                                            <select name="cabang" id="cabang"
-                                                class="form-control select2">
-                                                <option value="0">-- Pilih cabang --</option>
-                                                @foreach ($cabang as $item)
-                                                    <option value="{{$item->kd_cabang}}" @if(\Request::get('cabang') == $item->kd_cabang) selected @endif>{{$item->nama_cabang}}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('cabang')
-                                                <small class="text-danger">{{ucfirst($message)}}</small>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                @endif
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="">Tahun<span class="text-danger">*</span></label>
@@ -84,7 +43,7 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                @if (\Request::has('kantor') && count($data) > 0)
+                                @if (\Request::has('tahun') && count($data) > 0)
                                     <div class="mr-2" id="btn-download">
                                         <a href="{{ route('download-rekap-tetap') }}" download
                                             class="m-0 btn btn-lg is-btn btn-warning">
@@ -96,7 +55,7 @@
                                     <input type="submit" value="Tampilkan" class="is-btn is-primary">
                                 </div>
                             </div>
-                            @if (\Request::has('kantor'))
+                            @if (\Request::has('tahun'))
                                 <div class="d-flex justify-content-between mb-4">
                                     <div class="p-2 mt-4">
                                     <label for="page_length" class="mr-3 text-sm text-neutral-400">show</label>

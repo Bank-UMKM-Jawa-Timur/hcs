@@ -73,18 +73,18 @@
                 <td>{{ $item->display_jabatan }}</td>
                 <td>{{ $item->keluarga->status_kawin ?? '-' }}</td>
                 <td>{{ $item->total_masa_kerja ? $item->total_masa_kerja : 0 }}</td>
-                <td class="text-right">{{ number_format($item->penghasilan_bruto->penghasilan_rutin, 0, '.', '.') }}</td>
-                <td class="text-right">{{ number_format($item->penghasilan_bruto->penghasilan_tidak_rutin, 0, '.', '.') }}</td>
-                <td class="text-right">{{ number_format($item->penghasilan_bruto->total_penghasilan, 0, '.', '.') }}</td>
-                <td class="text-right">{{ $item->pengurangan_penghasilan ? number_format($item->pengurangan_penghasilan->biaya_jabatan, 0, '.', '.') : 0 }}</td>
-                <td class="text-right">{{ $item->pengurangan_penghasilan ? number_format($item->pengurangan_penghasilan->total_pengurangan_bruto, 0, '.', '.') : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? number_format($item->perhitungan_pph21->total_penghasilan_neto, 0, '.', '.') : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? number_format($item->perhitungan_pph21->jumlah_penghasilan_neto_pph21, 0, '.', '.') : 0 }}</td>
+                <td class="text-right">{{ $item->penghasilan_bruto ? number_format($item->penghasilan_bruto->penghasilan_rutin ?? 0, 0, '.', '.') : 0 }}</td>
+                <td class="text-right">{{ $item->penghasilan_bruto ? number_format($item->penghasilan_bruto->penghasilan_tidak_rutin ?? 0, 0, '.', '.') : 0 }}</td>
+                <td class="text-right">{{ $item->penghasilan_bruto ? number_format($item->penghasilan_bruto->total_penghasilan ?? 0, 0, '.', '.') : 0 }}</td>
+                <td class="text-right">{{ $item->pengurangan_penghasilan ? number_format($item->pengurangan_penghasilan->biaya_jabatan ?? 0, 0, '.', '.') : 0 }}</td>
+                <td class="text-right">{{ $item->pengurangan_penghasilan ? number_format($item->pengurangan_penghasilan->total_pengurangan_bruto ?? 0, 0, '.', '.') : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? number_format($item->perhitungan_pph21->total_penghasilan_neto ?? 0, 0, '.', '.') : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? number_format($item->perhitungan_pph21->jumlah_penghasilan_neto_pph21 ?? 0, 0, '.', '.') : 0 }}</td>
                 <td class="text-right">{{ $item->ptkp ? number_format($item->ptkp->ptkp_tahun, 0, '.', '.') : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? number_format($item->perhitungan_pph21->pph_pasal_21->penghasilan_kena_pajak_setahun, 0, '.', '.') : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? number_format($item->perhitungan_pph21->pph_pasal_21->pph_21_terutang, 0, '.', '.') : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? number_format($item->perhitungan_pph21->pph_pasal_21->pph_telah_dilunasi, 0, '.', '.') : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? $kurungDepan . number_format($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar, 0, '.', '.') . $kurungBelakang : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? number_format($item->perhitungan_pph21->pph_pasal_21->penghasilan_kena_pajak_setahun ?? 0, 0, '.', '.') : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? number_format($item->perhitungan_pph21->pph_pasal_21->pph_21_terutang ?? 0, 0, '.', '.') : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? number_format($item->perhitungan_pph21->pph_pasal_21->pph_telah_dilunasi ?? 0, 0, '.', '.') : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? $kurungDepan . number_format($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar ?? 0, 0, '.', '.') . $kurungBelakang : 0 }}</td>
             </tr>
         @empty
             <tr>
@@ -95,33 +95,33 @@
     <tfoot>
         <tr>
             <th colspan="7" class="text-center">Total</th>
-            <th class="text-right">{{ number_format($totalTeratur, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalTidakTeratur, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalPenghasilanBruto, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalBiayaJabatan, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalIuranPensiun, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalPenghasilanNeto, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalPenghasilanNetoSetahun, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalPtkp, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalPkp, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalPph21Terutang, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalPph21Dibayar, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($totalKekuranganPph21, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalTeratur ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalTidakTeratur ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalPenghasilanBruto ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalBiayaJabatan ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalIuranPensiun ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalPenghasilanNeto ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalPenghasilanNetoSetahun ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalPtkp ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalPkp ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalPph21Terutang ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalPph21Dibayar ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($totalKekuranganPph21 ?? 0, 0, '.', '.') }}</th>
         </tr>
         <tr>
             <th colspan="7" class="text-center">Grand Total</th>
-            <th class="text-right">{{ number_format($grandTotal->totalTeratur, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalTidakTeratur, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalPenghasilanBruto, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalBiayaJabatan, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalIuranPensiun, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalPenghasilanNeto, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalPenghasilanNetoSetahun, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalPtkp, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalPkp, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalPph21Terutang, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalPph21Dibayar, 0, '.', '.') }}</th>
-            <th class="text-right">{{ number_format($grandTotal->totalKekuranganPph21, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalTeratur ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalTidakTeratur ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalPenghasilanBruto ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalBiayaJabatan ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalIuranPensiun ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalPenghasilanNeto ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalPenghasilanNetoSetahun ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalPtkp ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalPkp ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalPph21Terutang ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalPph21Dibayar ?? 0, 0, '.', '.') }}</th>
+            <th class="text-right">{{ number_format($grandTotal->totalKekuranganPph21 ?? 0, 0, '.', '.') }}</th>
         </tr>
     </tfoot>
 </table>

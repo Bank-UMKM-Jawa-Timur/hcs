@@ -43,18 +43,18 @@
         @endphp
         @forelse ($data as $key => $item)
             @php
-                $totalTeratur += $item->penghasilan_bruto->penghasilan_rutin;
-                $totalTidakTeratur += $item->penghasilan_tidak_rutin;
-                $totalPenghasilanBruto += $item->penghasilan_bruto->total_penghasilan;
-                $totalBiayaJabatan += $item->pengurangan_penghasilan->biaya_jabatan;
-                $totalIuranPensiun += $item->pengurangan_penghasilan->total_pengurangan_bruto;
-                $totalPenghasilanNeto += $item->perhitungan_pph21->total_penghasilan_neto;
-                $totalPenghasilanNetoSetahun += $item->perhitungan_pph21->jumlah_penghasilan_neto_pph21;
+                $totalTeratur += $item->penghasilan_bruto->penghasilan_rutin ?? 0;
+                $totalTidakTeratur += $item->penghasilan_tidak_rutin ?? 0;
+                $totalPenghasilanBruto += $item->penghasilan_bruto->total_penghasilan ?? 0;
+                $totalBiayaJabatan += $item->pengurangan_penghasilan->biaya_jabatan ?? 0;
+                $totalIuranPensiun += $item->pengurangan_penghasilan->total_pengurangan_bruto ?? 0;
+                $totalPenghasilanNeto += $item->perhitungan_pph21->total_penghasilan_neto ?? 0;
+                $totalPenghasilanNetoSetahun += $item->perhitungan_pph21->jumlah_penghasilan_neto_pph21 ?? 0;
                 $totalPtkp += $item->ptkp->ptkp_tahun ?? 0;
-                $totalPkp += $item->perhitungan_pph21->pph_pasal_21->penghasilan_kena_pajak_setahun;
-                $totalPph21Terutang += $item->perhitungan_pph21->pph_pasal_21->pph_21_terutang;
-                $totalPph21Dibayar += $item->perhitungan_pph21->pph_pasal_21->pph_telah_dilunasi;
-                $totalKekuranganPph21 += $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar;
+                $totalPkp += $item->perhitungan_pph21->pph_pasal_21->penghasilan_kena_pajak_setahun ?? 0;
+                $totalPph21Terutang += $item->perhitungan_pph21->pph_pasal_21->pph_21_terutang ?? 0;
+                $totalPph21Dibayar += $item->perhitungan_pph21->pph_pasal_21->pph_telah_dilunasi ?? 0;
+                $totalKekuranganPph21 += $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar ?? 0;
 
                 $kurungDepan = '';
                 $kurungBelakang = '';
@@ -73,18 +73,18 @@
                 <td>{{ $item->display_jabatan }}</td>
                 <td>{{ $item->keluarga->status_kawin ?? '-' }}</td>
                 <td>{{ $item->total_masa_kerja ? $item->total_masa_kerja : 0 }}</td>
-                <td class="text-right">{{ $item->penghasilan_bruto->penghasilan_rutin }}</td>
-                <td class="text-right">{{ $item->penghasilan_bruto->penghasilan_tidak_rutin }}</td>
-                <td class="text-right">{{ $item->penghasilan_bruto->total_penghasilan }}</td>
-                <td class="text-right">{{ $item->pengurangan_penghasilan ? $item->pengurangan_penghasilan->biaya_jabatan : 0 }}</td>
-                <td class="text-right">{{ $item->pengurangan_penghasilan ? $item->pengurangan_penghasilan->total_pengurangan_bruto : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? $item->perhitungan_pph21->total_penghasilan_neto : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? $item->perhitungan_pph21->jumlah_penghasilan_neto_pph21 : 0 }}</td>
+                <td class="text-right">{{ $item->penghasilan_bruto->penghasilan_rutin ?? 0 }}</td>
+                <td class="text-right">{{ $item->penghasilan_bruto->penghasilan_tidak_rutin ?? 0 }}</td>
+                <td class="text-right">{{ $item->penghasilan_bruto->total_penghasilan ?? 0 }}</td>
+                <td class="text-right">{{ $item->pengurangan_penghasilan ? $item->pengurangan_penghasilan->biaya_jabatan ?? 0 : 0 }}</td>
+                <td class="text-right">{{ $item->pengurangan_penghasilan ? $item->pengurangan_penghasilan->total_pengurangan_bruto ?? 0 : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? $item->perhitungan_pph21->total_penghasilan_neto ?? 0 : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? $item->perhitungan_pph21->jumlah_penghasilan_neto_pph21 ?? 0 : 0 }}</td>
                 <td class="text-right">{{ $item->ptkp ? $item->ptkp->ptkp_tahun : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? $item->perhitungan_pph21->pph_pasal_21->penghasilan_kena_pajak_setahun : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? $item->perhitungan_pph21->pph_pasal_21->pph_21_terutang : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? $item->perhitungan_pph21->pph_pasal_21->pph_telah_dilunasi : 0 }}</td>
-                <td class="text-right">{{ $item->perhitungan_pph21 ? $kurungDepan . $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar . $kurungBelakang : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? $item->perhitungan_pph21->pph_pasal_21->penghasilan_kena_pajak_setahun ?? 0 : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? $item->perhitungan_pph21->pph_pasal_21->pph_21_terutang ?? 0 : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? $item->perhitungan_pph21->pph_pasal_21->pph_telah_dilunasi ?? 0 : 0 }}</td>
+                <td class="text-right">{{ $item->perhitungan_pph21 ? $kurungDepan . $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar ?? 0 . $kurungBelakang : 0 }}</td>
             </tr>
         @empty
             <tr>

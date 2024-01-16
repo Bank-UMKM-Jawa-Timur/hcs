@@ -156,7 +156,7 @@ class LaporanTetapRepository
             ->where(function($query) use ($kantor, $kode_cabang_arr, $search) {
                 $query->whereNull('tanggal_penonaktifan')
                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
-                    if ($kantor != 'pusat' && $kantor != 'keseluruhan') {
+                    if ($kantor != 'pusat') {
                         $q->where('mst_karyawan.kd_entitas', $kantor);
                     } else if($kantor == 'pusat'){
                         $q->whereRaw("(kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR kd_entitas IS null or kd_entitas = '')");
@@ -492,15 +492,15 @@ class LaporanTetapRepository
                                             ")
                                             ->first();
 
+            $gaji_bruto = 0;
+            $tunjangan_lainnya_bruto = 0;
+            $total_gaji_bruto = 0;
+            $total_jamsostek = 0;
+            $total_pengurang_bruto = 0;
             if ($karyawan_bruto) {
-                $gaji_bruto = 0;
-                $tunjangan_lainnya_bruto = 0;
                 // Get jamsostek
                 if ($karyawan_bruto->allGajiByKaryawan) {
                     $allGajiByKaryawan = $karyawan_bruto->allGajiByKaryawan;
-                    $total_gaji_bruto = 0;
-                    $total_jamsostek = 0;
-                    $total_pengurang_bruto = 0;
                     foreach ($allGajiByKaryawan as $key => $value) {
                         array_push($month_paided_arr, intval($value->bulan));
                         $gaji_bruto += $value->total_gaji ? intval($value->total_gaji) : 0;
@@ -662,10 +662,10 @@ class LaporanTetapRepository
             // Perhitungan Pph 21
             $perhitunganPph21 = new \stdClass();
 
-            $total_rutin = $penghasilanBruto->penghasilan_rutin;
-            $total_tidak_rutin = $penghasilanBruto->penghasilan_tidak_rutin;
-            $bonus_sum = $penghasilanBruto->total_bonus;
-            $pengurang = $penguranganPenghasilan->total_pengurangan_bruto;
+            $total_rutin = $penghasilanBruto?->penghasilan_rutin ?? 0;
+            $total_tidak_rutin = $penghasilanBruto?->penghasilan_tidak_rutin ?? 0;
+            $bonus_sum = $penghasilanBruto?->total_bonus ?? 0;
+            $pengurang = $penguranganPenghasilan?->total_pengurangan_bruto ?? 0;
             $total_ket = $month_on_year_paid;
 
             // Get jumlah penghasilan neto
@@ -809,7 +809,7 @@ class LaporanTetapRepository
 
             // 6. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi
             $total_pph_dilunasi = 0;
-            if ($karyawan_bruto->pphDilunasi) {
+            if ($karyawan_bruto?->pphDilunasi) {
                 $pphDilunasi = $karyawan_bruto->pphDilunasi;
                 foreach ($pphDilunasi as $key => $value) {
                     $total_pph_dilunasi += intval($value->nominal);
@@ -1264,9 +1264,12 @@ class LaporanTetapRepository
                                             ")
                                             ->first();
 
+            $gaji_bruto = 0;
+            $tunjangan_lainnya_bruto = 0;
+            $total_gaji_bruto = 0;
+            $total_jamsostek = 0;
+            $total_pengurang_bruto = 0;
             if ($karyawan_bruto) {
-                $gaji_bruto = 0;
-                $tunjangan_lainnya_bruto = 0;
                 // Get jamsostek
                 if ($karyawan_bruto->allGajiByKaryawan) {
                     $allGajiByKaryawan = $karyawan_bruto->allGajiByKaryawan;
@@ -1434,11 +1437,11 @@ class LaporanTetapRepository
             // Perhitungan Pph 21
             $perhitunganPph21 = new \stdClass();
 
-            $total_rutin = $penghasilanBruto->penghasilan_rutin;
-            $total_tidak_rutin = $penghasilanBruto->penghasilan_tidak_rutin;
-            $bonus_sum = $penghasilanBruto->total_bonus;
-            $pengurang = $penguranganPenghasilan->total_pengurangan_bruto;
-            $total_ket = $month_on_year_paid;
+            $total_rutin = $penghasilanBruto->penghasilan_rutin ?? 0;
+            $total_tidak_rutin = $penghasilanBruto->penghasilan_tidak_rutin ?? 0;
+            $bonus_sum = $penghasilanBruto->total_bonus ?? 0;
+            $pengurang = $penguranganPenghasilan->total_pengurangan_bruto ?? 0;
+            $total_ket = $month_on_year_paid ?? 0;
 
             // Get jumlah penghasilan neto
             $jumlah_penghasilan = property_exists($penghasilanBruto, 'total_keseluruhan') ? $penghasilanBruto->total_keseluruhan : 0;
@@ -1581,7 +1584,7 @@ class LaporanTetapRepository
 
             // 6. PPh Pasal 21 dan PPh Pasal 26 yang telah dipotong/dilunasi
             $total_pph_dilunasi = 0;
-            if ($karyawan_bruto->pphDilunasi) {
+            if ($karyawan_bruto?->pphDilunasi) {
                 $pphDilunasi = $karyawan_bruto->pphDilunasi;
                 foreach ($pphDilunasi as $key => $value) {
                     $total_pph_dilunasi += intval($value->nominal);
