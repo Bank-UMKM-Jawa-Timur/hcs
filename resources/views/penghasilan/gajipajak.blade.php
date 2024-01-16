@@ -385,13 +385,12 @@
                                         });
                                     })
                                     ->first();
-                                    $pengali = 0;
-                                    if ($lapisanPenghasilanBruto) {
-                                        $pengali = $lapisanPenghasilanBruto->pengali;
-                                    }
-    
-                                    $pph = $penghasilanBruto * ($pengali / 100);
-                                    $no19 += floor($pph);
+                                $pengali = 0;
+                                if ($lapisanPenghasilanBruto) {
+                                    $pengali = $lapisanPenghasilanBruto->pengali;
+                                }
+                                $pph = $penghasilanBruto * ($pengali / 100);
+                                $no19 += round($pph);
                             }
                         }
                     } else {
