@@ -110,7 +110,7 @@
                                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
 
                                         dataNip.push({ nip: value['NIP'], row: key + 1 });
-                                        dataNominal.push(value['Nominal'])
+                                        dataNominal.push(value['Nominal'].replace(/[ ,.Rprp]/g, ""))
                                         if(sheet_data[key].hasOwnProperty(keterangan)){
                                             dataKeterangan.push(value[keterangan])
                                         }

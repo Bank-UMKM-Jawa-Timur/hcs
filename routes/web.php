@@ -165,8 +165,10 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::resource('/rekap-tetap', LaporanTetapController::class);
 
     // Bonus Data
+    Route::get('bonus/import-data', [BonusController::class, 'import'])->name('bonus.import-data');
     Route::get('bonus/excel', [BonusController::class, 'fileExcel'])->name('bonus.excel');
-    Route::get('bonus/{id}', [BonusController::class, 'detail'])->name('bonus.detail');
+    Route::get('bonus/detail/{id}', [BonusController::class, 'detail'])->name('bonus.detail');
+
     Route::resource('bonus', BonusController::class);
     Route::resource('/thr', THRController::class);
     Route::get('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'index'])->name('profil-kantor-pusat.index');
