@@ -826,7 +826,15 @@ class LaporanTetapRepository
             $pphPasal21->pph_telah_dilunasi = $total_pph_dilunasi;
 
             // 7. PPh Pasal 21 yang masih harus dibayar
-            $pph_harus_dibayar = $pph_21_terutang - $total_pph_dilunasi;
+            if(count($karyawan_bruto?->pphDilunasi) == 12){
+                $pph_harus_dibayar = $pph_21_terutang - $total_pph_dilunasi;
+            } else{
+                $pph_harus_dibayar = DB::table('pph_yang_dilunasi')
+                    ->where('nip', $karyawan->nip)
+                    ->where('tahun', $year)
+                    ->orderBy('id', 'desc')
+                    ->first()?->terutang ?? 0;
+            }
             $pphPasal21->pph_harus_dibayar = $pph_harus_dibayar;
 
             $perhitunganPph21->pph_pasal_21 = $pphPasal21;
@@ -1609,7 +1617,15 @@ class LaporanTetapRepository
             $pphPasal21->pph_telah_dilunasi = $total_pph_dilunasi;
 
             // 7. PPh Pasal 21 yang masih harus dibayar
-            $pph_harus_dibayar = $pph_21_terutang - $total_pph_dilunasi;
+            if(count($karyawan_bruto?->pphDilunasi) == 12){
+                $pph_harus_dibayar = $pph_21_terutang - $total_pph_dilunasi;
+            } else{
+                $pph_harus_dibayar = DB::table('pph_yang_dilunasi')
+                    ->where('nip', $karyawan->nip)
+                    ->where('tahun', $year)
+                    ->orderBy('id', 'desc')
+                    ->first()?->terutang ?? 0;
+            }
             $pphPasal21->pph_harus_dibayar = $pph_harus_dibayar;
 
             $perhitunganPph21->pph_pasal_21 = $pphPasal21;
