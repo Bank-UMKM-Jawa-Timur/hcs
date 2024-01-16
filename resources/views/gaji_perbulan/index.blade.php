@@ -104,13 +104,14 @@
                                             <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Bulan</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Tanggal</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">File</th>
-                                            <th style="border: 1px solid #dee2e6;" class="text-center" colspan="3">Total</th>
+                                            <th style="border: 1px solid #dee2e6;" class="text-center" colspan="4">Total</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Aksi</th>
                                         </tr>
                                         <tr>
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Bruto</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Potongan</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Netto</th>
+                                            <th style="border: 1px solid #dee2e6;" class="text-center">PPh</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -120,12 +121,14 @@
                                             $total_bruto = 0;
                                             $total_potongan = 0;
                                             $total_netto = 0;
+                                            $total_pph = 0;
                                         @endphp
                                         @forelse ($proses_list as $item)
                                             @php
                                                 $total_bruto += $item->bruto;
                                                 $total_potongan += $item->total_potongan;
                                                 $total_netto += $item->netto;
+                                                $total_pph += $item->total_pph;
                                             @endphp
                                             <tr>
                                                 <td class="text-center">{{ $i++ }}</td>
@@ -185,6 +188,17 @@
                                                         Rp {{number_format($item->netto, 0, ',', '.')}}
                                                     </td>
                                                 @endif
+                                                @if ($item->total_pph < 0)
+                                                    <td class="text-right">
+                                                        Rp ({{number_format(str_replace('-', '', $item->total_pph), 0, ',', '.')}})
+                                                    </td>
+                                                @elseif ($item->total_pph == 0)
+                                                    <td class="text-center">-</td>
+                                                @else
+                                                    <td class="text-right">
+                                                        Rp {{number_format($item->total_pph, 0, ',', '.')}}
+                                                    </td>
+                                                @endif
                                                 <td class="text-center">
                                                     @if($item->status == 'proses')
                                                         @if($item->total_penyesuaian > 0)
@@ -214,7 +228,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="{{ auth()->user()->hasRole('admin') ? 11 : 10 }}" class="text-center">Belum ada penghasilan yang diproses.</td>
+                                                <td colspan="{{ auth()->user()->hasRole('admin') ? 12 : 11 }}" class="text-center">Belum ada penghasilan yang diproses.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -239,6 +253,13 @@
                                                 @if ($total_netto > 0)
                                                     <th class="text-right">
                                                         RP {{number_format($total_netto, 0, ',', '.')}}
+                                                    </th>
+                                                @else
+                                                    <th class="text-center">-</th>
+                                                @endif
+                                                @if ($total_pph > 0)
+                                                    <th class="text-right">
+                                                        RP {{number_format($total_pph, 0, ',', '.')}}
                                                     </th>
                                                 @else
                                                     <th class="text-center">-</th>
@@ -279,12 +300,13 @@
                                             <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Bulan</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">Tanggal</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center" rowspan="2">File</th>
-                                            <th style="border: 1px solid #dee2e6;" class="text-center" colspan="3">Total</th>
+                                            <th style="border: 1px solid #dee2e6;" class="text-center" colspan="4">Total</th>
                                         </tr>
                                         <tr>
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Bruto</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Potongan</th>
                                             <th style="border: 1px solid #dee2e6;" class="text-center">Netto</th>
+                                            <th style="border: 1px solid #dee2e6;" class="text-center">PPh</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -293,12 +315,14 @@
                                             $total_bruto = 0;
                                             $total_potongan = 0;
                                             $total_netto = 0;
+                                            $total_pph = 0;
                                         @endphp
                                         @forelse ($final_list as $item)
                                             @php
                                                 $total_bruto += $item->bruto;
                                                 $total_potongan += $item->total_potongan;
                                                 $total_netto += $item->netto;
+                                                $total_pph += $item->total_pph;
                                             @endphp
                                             <tr>
                                                 <td class="text-center">{{ $i++ }}</td>
@@ -339,10 +363,21 @@
                                                         Rp {{number_format($item->netto, 0, ',', '.')}}
                                                     </td>
                                                 @endif
+                                                @if ($item->total_pph < 0)
+                                                    <td class="text-right">
+                                                        Rp ({{number_format(str_replace('-', '', $item->total_pph), 0, ',', '.')}})
+                                                    </td>
+                                                @elseif ($item->total_pph == 0)
+                                                    <td class="text-center">-</td>
+                                                @else
+                                                    <td class="text-right">
+                                                        Rp {{number_format($item->total_pph, 0, ',', '.')}}
+                                                    </td>
+                                                @endif
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="{{auth()->user()->hasRole('admin') ? 10 : 9}}" class="text-center">Belum ada penghasilan yang telah selesai diproses.</td>
+                                                <td colspan="{{auth()->user()->hasRole('admin') ? 11 : 10}}" class="text-center">Belum ada penghasilan yang telah selesai diproses.</td>
                                             </tr>
                                         @endforelse
                                         @if ($final_list)
@@ -369,6 +404,17 @@
                                                     </th>
                                                 @else
                                                     <th class="text-center">-</th>
+                                                @endif
+                                                @if ($item->total_pph < 0)
+                                                    <td class="text-right">
+                                                        Rp ({{number_format(str_replace('-', '', $item->total_pph), 0, ',', '.')}})
+                                                    </td>
+                                                @elseif ($item->total_pph == 0)
+                                                    <td class="text-center">-</td>
+                                                @else
+                                                    <td class="text-right">
+                                                        Rp {{number_format($item->total_pph, 0, ',', '.')}}
+                                                    </td>
                                                 @endif
                                             </tr>
                                         </tfoot>

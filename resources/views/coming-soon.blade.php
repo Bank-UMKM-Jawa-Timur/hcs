@@ -22,7 +22,7 @@
         </div>
         <div class="container text-center mb-5">
             <h2 class="font-weight-bold display-3 text-danger">Coming Soon!</h2>
-            <p class="lead text-muted">Halaman sedang dalam tahap pengembangan, mohon tunggu beberapa saat</p>
+            <p class="lead text-muted">Halaman sedang dalam tahap pengembangan.</p>
         </div>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -16,6 +16,7 @@ class GajiPerBulanRepository
 
         $data = DB::table('batch_gaji_per_bulan AS batch')
                 ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+                ->join('pph_yang_dilunasi AS pph', 'pph.gaji_per_bulan_id', 'gaji.id')
                 ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
                 ->join('mst_cabang AS cab', 'cab.kd_cabang', 'batch.kd_entitas')
                 ->select(
@@ -29,6 +30,7 @@ class GajiPerBulanRepository
                     'batch.status',
                     'gaji.bulan',
                     'gaji.tahun',
+                    DB::raw('CAST(SUM(pph.total_pph) AS UNSIGNED) AS total_pph'),
                     DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS bruto'),
                     DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan')
                 )

@@ -133,10 +133,8 @@
                             $total_gaji = $item->gaji ? $item->gaji->total_gaji : 0;
                             $pph_harus_dibayar = 0;
                             if ($item->perhitungan_pph21) {
-                                if ($item->perhitungan_pph21->pph_pasal_21) {
-                                    if ($item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar) {
-                                        $pph_harus_dibayar = $item->perhitungan_pph21->pph_pasal_21->pph_harus_dibayar;
-                                    }
+                                if ($item->perhitungan_pph21->pph21_pp58) {
+                                    $pph_harus_dibayar = $item->perhitungan_pph21->pph21_pp58;
                                 }
                             }
 
