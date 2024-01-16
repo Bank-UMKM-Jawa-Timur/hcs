@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ExportBiayaDuka;
 use App\Exports\ExportBiayaKesehatan;
 use App\Exports\ExportBiayaTidakTeratur;
+use App\Helpers\HitungPPH;
 use App\Imports\PenghasilanImport;
 use App\Models\GajiPerBulanModel;
 use App\Models\ImportPenghasilanTidakTeraturModel;
@@ -370,7 +371,7 @@ class PenghasilanTidakTeraturController extends Controller
                 DB::beginTransaction();
                 $gajiPerBulanController = new GajiPerBulanController;
                 $pphTerutang = $gajiPerBulanController->storePPHDesember($request->nip, $tahun, $bulan);
-                $test = PPHModel::where('nip', $request->nip)
+                PPHModel::where('nip', $request->nip)
                     ->where('tahun', $tahun)
                     ->where('bulan', 12)
                     ->update([
@@ -380,11 +381,15 @@ class PenghasilanTidakTeraturController extends Controller
 
                 DB::commit();
             }
+            $karyawan = DB::table('mst_karyawan')
+                            ->where('nip', $request->nip)
+                            ->whereNull('tanggal_penonaktifan')
+                            ->first();
+            $pph = HitungPPH::getTerutang((int) $bulan, $tahun, $karyawan);
             Alert::success('Berhasil', 'Berhasil menambahkan data.');
             return redirect()->route('penghasilan-tidak-teratur.index');
         } catch(Exception $e){
             DB::rollBack();
-            return $e;
             Alert::error('Gagal', 'Terjadi kesalahan.'.$e->getMessage());
             return redirect()->back();
         } catch(QueryException $e){
@@ -507,12 +512,25 @@ class PenghasilanTidakTeraturController extends Controller
             ImportPenghasilanTidakTeraturModel::insert($inserted);
             DB::commit();
 
+            // Hitung pph
+            foreach($nip as $key => $item){
+                DB::beginTransaction();
+                $bulan = (int) Carbon::parse($request->get('tanggal'))->format('m');
+                $tahun = (int) Carbon::parse($request->get('tanggal'))->format('Y');
+                $karyawan = DB::table('mst_karyawan')
+                            ->where('nip', $item)
+                            ->whereNull('tanggal_penonaktifan')
+                            ->first();
+                $pph = HitungPPH::getTerutang((int) $bulan, $tahun, $karyawan);
+                DB::commit();
+            }
+
             if(Carbon::parse($request->get('tanggal'))->format('m') == 12 && Carbon::now()->format('d') > 25){
                 $gajiPerBulanController = new GajiPerBulanController;
                 foreach($nip as $key => $item){
                     DB::beginTransaction();
                     $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($request->get('tanggal'))->format('Y'), Carbon::parse($request->get('tanggal'))->format('m'));
-                    PPHModel::where('nip', $request->nip)
+                    PPHModel::where('nip', $item)
                         ->where('tahun', Carbon::parse($request->get('tanggal'))->format('Y'))
                         ->where('bulan', 12)
                         ->update([
@@ -542,21 +560,24 @@ class PenghasilanTidakTeraturController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show($idTunjangan,Request $request)
     {
         if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - detail')) {
             return view('roles.forbidden');
         }
         try{
-            $idTunjangan = $request->get('idTunjangan');
-            $tanggal = $request->get('tanggal');
+            $bulan = $request->bulan;
+            $createdAt = $request->createdAt;
+            // $idTunjangan = $request->get('idTunjangan');
+            // $tanggal = $request->get('tanggal');
             $limit = $request->has('page_length') ? $request->get('page_length') : 10;
             $page = $request->has('page') ? $request->get('page') : 1;
             $search = $request->get('q');
 
             $repo = new PenghasilanTidakTeraturRepository();
-            $data = $repo->getAllPenghasilan($search, $limit, $page, $tanggal, $idTunjangan);
-            $tunjangan = $data[0]->nama_tunjangan;
+            $data = $repo->getAllPenghasilan($search, $limit, $page, $bulan, $createdAt, $idTunjangan);
+            $tunjangan = $repo->getNameTunjangan($idTunjangan);
+            
             return view('penghasilan.detail', compact(['data','tunjangan']));
         } catch(Exception $e){
             Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());

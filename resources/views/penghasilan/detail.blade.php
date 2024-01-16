@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="card-header">
-        <h6> Tunjangan : {{ $tunjangan }}</h6>
+        <h6> Tunjangan : {{ $tunjangan->nama_tunjangan }}</h6>
     </div>
 </div>
 
@@ -18,6 +18,8 @@
         <div class="col-lg-12">
             <div class="table-responsive overflow-hidden content-center">
                 <form action="" id="form" method="get">
+                    <input type="hidden" name="bulan" value="{{\Request::get('bulan')}}">
+                    <input type="hidden" name="createdAt" value="{{\Request::get('createdAt')}}">
                     <div class="d-flex justify-content-between mb-4">
                         <div class="p-2 mt-4">
                             <label for="page_length" class="mr-3 text-sm text-neutral-400">show</label>
@@ -96,3 +98,29 @@
     </div>
 </div>
 @endsection
+@push('script')
+    <script>
+        $('#page_length').on('change', function () { 
+            $('#form').submit();
+        })
+
+        var btn_pagination = $(`.pagination`).find('a')
+        var page_url = window.location.href
+        $(`.pagination`).find('a').each(function(i, obj) {
+            if (page_url.includes('page_length')) {
+                btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
+            }
+            if (page_url.includes('q')) {
+                btn_pagination[i].href += `&q=${$('#q').val()}`
+            }
+            if (page_url.includes('bulan')) {
+                var bulan = "{{\Request::get('bulan')}}"
+                btn_pagination[i].href += `&bulan=${bulan}`
+            }
+            if (page_url.includes('createdAt')) {
+                var createdAt = "{{\Request::get('createdAt')}}"
+                btn_pagination[i].href += `&createdAt=${createdAt}`
+            }
+        })
+    </script>
+@endpush

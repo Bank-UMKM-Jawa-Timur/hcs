@@ -131,10 +131,9 @@
 
                                 var invalidNamaRows = [];
                                 $.each(sheet_data,function(key, value) {
-                                    console.log(value);
                                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
                                         dataNip.push({ nip: value['NIP'], row: key + 1 });
-                                        dataNominal.push(value['Nominal']);
+                                        dataNominal.push(value['Nominal'].replace(/[ ,.Rprp]/g, ""));
                                         no_rek.push(value['No Rekening']);
                                         // dataKdEntitas.push(value['Nominal'])
                                         if(sheet_data[key].hasOwnProperty(keterangan)){

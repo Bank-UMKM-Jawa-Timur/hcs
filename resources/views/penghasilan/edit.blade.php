@@ -56,7 +56,7 @@
                 } else{
                     var keterangan = 'Keterangan';
                     if(kategori == 'Uang Duka' || kategori == 'Pengganti Biaya Kesehatan'){
-                        keterangan = kategori == 'uang duka' ? 'Yang Meninggal' : 'Keterangan';
+                        keterangan = kategori == 'Uang Duka' ? 'Yang Meninggal' : 'Keterangan';
                         $("#keterangan").html(keterangan);
                         $("#keterangan").removeClass('hidden');
                     } else{
@@ -98,16 +98,19 @@
 
                                 var checkNip = [];
 
+                                var noCheckEmpty = 1;
+                                var no = 1;
+
                                 var hasError = false;
                                 var hasSuccess = false;
 
                                 var invalidNamaRows = [];
-                                console.log(sheet_data);
                                 $.each(sheet_data,function(key, value) {
+                                    console.log(value[keterangan]);
                                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
 
                                         dataNip.push({ nip: value['NIP'], row: key + 1 });
-                                        dataNominal.push(value['Nominal'])
+                                        dataNominal.push(value['Nominal'].replace(/[ ,.Rprp]/g, ""))
                                         if(sheet_data[key].hasOwnProperty(keterangan)){
                                             dataKeterangan.push(value[keterangan])
                                         }
@@ -140,41 +143,73 @@
                                             $('#table-data').removeClass('hidden');
                                             var new_body_tr = ``
                                             $.each(res,function(key,value) {
-                                                console.log(rowKeterangan);
                                                 nipDataRequest.push(value.nip);
                                                 dataKdEntitas.push(value.kd_entitas)
                                                 // if (res.some(checkUsername)) {
                                                 if (value.cek == '-') {
-                                                    checkNip.push(value.nip);
-                                                    hasError = true
-                                                }
-                                                grand_total += parseInt(dataNominal[key])
-                                                var rowKeterangan = kategori == 'Uang Duka' || kategori == 'Pengganti Biaya Kesehatan' ? `
-                                                    <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                        <span>${dataKeterangan[key]}</span>
-                                                    </td>` : ``;
-                                                new_body_tr += `
-                                                    <tr>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span>${key + 1}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.no_rekening ?? '-'}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span>${formatRupiah(dataNominal[key])}</span>
-                                                        </td>
-                                                        ${rowKeterangan}
-                                                    </tr>
-                                                `;
+                                                    checkNip.push(value.nip + ' baris ' + noCheckEmpty++);
+                                                    hasError = true;
 
+                                                    grand_total += parseInt(dataNominal[key])
+                                                    var rowKeterangan = kategori == 'Uang Duka' || kategori == 'Pengganti Biaya Kesehatan' ? `
+                                                        <td class="table-danger">
+                                                            <span>${dataKeterangan[key]}</span>
+                                                        </td>` : ``;
+                                                    new_body_tr += `
+                                                        <tr>
+                                                            <td class="table-danger">
+                                                                <span>${no++}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span class="text-danger">${value.nip}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span class="text-danger">${value.nama_karyawan}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span class="text-danger">${value.no_rekening ?? '-'}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span>${formatRupiah(dataNominal[key])}</span>
+                                                            </td>
+                                                            ${rowKeterangan}
+                                                        </tr>
+                                                    `;
+                                                }
                                             })
+
+                                            // Data yang benar 
+                                            $.each(res,function(key,value) {
+                                                if (value.cek == '-') {
+                                                }else{
+                                                    grand_total += parseInt(dataNominal[key])
+                                                    var rowKeterangan = kategori == 'Uang Duka' || kategori == 'Pengganti Biaya Kesehatan' ? `
+                                                        <td class="">
+                                                            <span>${dataKeterangan[key]}</span>
+                                                        </td>` : ``;
+                                                    new_body_tr += `
+                                                        <tr>
+                                                            <td class="">
+                                                                <span>${no++}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.no_rekening ?? '-'}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span>${formatRupiah(dataNominal[key])}</span>
+                                                            </td>
+                                                            ${rowKeterangan}
+                                                        </tr>
+                                                    `;
+                                                }
+                                            })
+
                                             if (hasError == true) {
                                                 var message = ``;
                                                 message += `Data tidak ditemukan di NIP :${checkNip}.</br> Silahkan cek kembali di excel dan upload ulang.`

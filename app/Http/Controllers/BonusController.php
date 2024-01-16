@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\KaryawanExport;
+use App\Helpers\HitungPPH;
 use App\Models\KaryawanModel;
 use App\Models\PPHModel;
 use App\Models\TunjanganModel;
@@ -62,6 +63,18 @@ class BonusController extends Controller
         ]);
     }
 
+    public function import()
+    {
+        // Need permission
+        if (!auth()->user()->can('penghasilan - import - bonus - import')) {
+            return view('roles.forbidden');
+        }
+        $tunjangan = TunjanganModel::select('nama_tunjangan','id')->where('kategori','bonus')->where('is_import',1)->get();
+        return view('bonus.import',[
+            'data_tunjangan' => $tunjangan
+        ]);
+    }
+
     public function show($id){
 
     }
@@ -107,14 +120,26 @@ class BonusController extends Controller
                     'nip' => $data_nip[$i],
                     'id_tunjangan' => $tunjangan->id,
                     'nominal' => $data_nominal[$i],
-                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
                     'kd_entitas' => $id_cabang,
                     'created_at' => Carbon::parse($request->get('tanggal'))
                 ]);
 
+                
             }
             \DB::commit();
+            // Hitung pph
+            for ($i=0; $i < count($data_nip); $i++) {
+                $bulan = (int) Carbon::parse($request->get('tanggal'))->format('m');
+                $tahun = (int) Carbon::parse($request->get('tanggal'))->format('Y');
+                $karyawan = DB::table('mst_karyawan')
+                            ->where('nip', $data_nip[$i])
+                            ->whereNull('tanggal_penonaktifan')
+                            ->first();
+                $pph = HitungPPH::getTerutang((int) $bulan, $tahun, $karyawan);
+            }
+
             if(Carbon::parse($request->get('tanggal'))->format('m') == 12 && Carbon::now()->format('d') > 25){
                 \DB::beginTransaction();
                 $gajiPerBulanController = new GajiPerBulanController;
@@ -267,7 +292,7 @@ class BonusController extends Controller
             $tunjangan = TunjanganModel::where('id', $request->get('kategori_bonus'))->first();
             $old_tunjangan = $request->get('old_tunjangan');
             $old_tanggal = $request->get('old_tanggal');
-            $kd_entitas = $request->get('kd_entitas');
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
             $datetime = new DateTime($old_tanggal);
             $new_tanggal = $datetime->format('Y-m-d');
 
@@ -282,7 +307,7 @@ class BonusController extends Controller
                     'nip' => $data_nip[$i],
                     'id_tunjangan' => $tunjangan->id,
                     'nominal' => $data_nominal[$i],
-                    'bulan' => Carbon::parse($request->get('tanggal'))->format('m'),
+                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
                     'created_at' => Carbon::parse($request->get('tanggal')),
                     'kd_entitas' => $kd_entitas,

@@ -28,7 +28,7 @@
             var url;
 
             $('.btn-import').on('click',function(element) {
-                url = "{{ route('api.get.karyawan') }}";
+                url = "{{ route('api.get.karyawan2') }}";
                 $('#table-data').addClass('hidden');
                 $('#table_item tbody').empty();
                 $('#alert-container').addClass('hidden');
@@ -63,6 +63,8 @@
                                 var no_rek = [];
 
                                 var checkNip = [];
+                                var noCheckEmty = 1;
+                                var no = 1;
 
                                 var hasError = false;
                                 var hasSuccess = false;
@@ -72,7 +74,7 @@
                                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
 
                                         dataNip.push({ nip: value['NIP'], row: key + 1 });
-                                        dataNominal.push(value['Nominal']);
+                                        dataNominal.push(value['Nominal'].replace(/[ ,.Rprp]/g, ""));
                                         no_rek.push(value['No Rekening'])
                                     }
                                 })
@@ -105,30 +107,58 @@
                                                 nipDataRequest.push(value.nip);
                                                 // if (res.some(checkUsername)) {
                                                 if (value.cek == '-') {
-                                                    checkNip.push(value.nip);
+                                                    checkNip.push(value.nip + ' baris ' + noCheckEmty++);
                                                     hasError = true
+                                                    grand_total += parseInt(dataNominal[key])
+                                                    new_body_tr += `
+                                                        <tr>
+                                                            <td class="table-danger">
+                                                                <span>${no++}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span class="text-danger">${value.nip}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span class="text-danger">${value.nama_karyawan}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span class="text-danger">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
+                                                            </td>
+                                                            <td class="table-danger">
+                                                                <span>${formatRupiah(dataNominal[key])}</span>
+                                                            </td>
+                                                        </tr>
+                                                    `;
                                                 }
-                                                grand_total += parseInt(dataNominal[key])
-                                                new_body_tr += `
-                                                    <tr>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span>${key + 1}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span class="${value.cek == '-' ? 'text-danger' : ''}">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
-                                                        </td>
-                                                        <td class="${value.cek == '-' ? 'table-danger' : ''}">
-                                                            <span>${formatRupiah(dataNominal[key])}</span>
-                                                        </td>
-                                                    </tr>
-                                                `;
-
+                                            })
+                                            $.each(res,function(key,value) {
+                                                // nipDataRequest.push(value.nip);
+                                                // if (res.some(checkUsername)) {
+                                                if (value.cek == '-') {
+                                                    // checkNip.push(value.nip);
+                                                    // hasError = true
+                                                }else{
+                                                    grand_total += parseInt(dataNominal[key])
+                                                    new_body_tr += `
+                                                        <tr>
+                                                            <td class="">
+                                                                <span>${no++}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span class="${value.cek == '-' ? 'text-danger' : ''}">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
+                                                            </td>
+                                                            <td class="">
+                                                                <span>${formatRupiah(dataNominal[key])}</span>
+                                                            </td>
+                                                        </tr>
+                                                    `;
+                                                }
                                             })
                                             if (hasError == true) {
                                                 var message = ``;

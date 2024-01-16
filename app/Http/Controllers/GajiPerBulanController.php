@@ -123,7 +123,7 @@ class GajiPerBulanController extends Controller
             'proses_list' => $proses_list,
             'final_list' => $final_list,
         ];
-
+// return $proses_list;
         return view('gaji_perbulan.index', $data);
     }
 
@@ -884,7 +884,7 @@ class GajiPerBulanController extends Controller
                                                 ->where('tahun', $tahun)
                                                 ->update($employee);
 
-                    $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $tunjangan, $ptkp, $tanggal, $total_gaji);
+                    $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji);
                     $pph = [
                         'gaji_per_bulan_id' => $gaji->id,
                         'nip' => $item->nip,
@@ -942,7 +942,7 @@ class GajiPerBulanController extends Controller
                                             ->where('tahun', $tahun)
                                             ->first();
                         if (!$pph_bulan_ini) {
-                            $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $tunjangan, $ptkp, $tanggal, $total_gaji);
+                            $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji);
 
                             $pph = [
                                 'gaji_per_bulan_id' => $gaji_id,

@@ -124,7 +124,7 @@
                                                 @php
                                                     $cant_detail = true;
                                                 @endphp
-                                                <a href="{{ route('penghasilan-tidak-teratur.detail') }}?idTunjangan={{ $item->tunjangan_id }}&tanggal={{ $item->tanggal }}" class="btn btn-outline-info p-1">Detail</a>
+                                                <a href="{{ route('penghasilan-tidak-teratur.detail', $item->tunjangan_id) }}?bulan={{$item->bulan}}&createdAt={{$item->created_at}}" class="btn btn-outline-info p-1">Detail</a>
                                             @endcan
                                             @if (!$cant_detail && !$cant_lock_edit && !$cant_unlock)
                                                 -
@@ -156,6 +156,9 @@
 
 @push('script')
 <script>
+    $('#page_length').on('change', function () { 
+        $('#form').submit()
+    })
 // $(document).ready(function() {
 //     var table = $('#table').DataTable({
 //         'autoWidth': false,
