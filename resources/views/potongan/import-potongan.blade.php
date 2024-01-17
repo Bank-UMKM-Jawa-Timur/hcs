@@ -52,12 +52,13 @@
                     <select name="tahun" id="tahun" class="form-control">
                         <option value="">Pilih Tahun</option>
                         @php
+                            $earliest = 2024;
                             $tahunSaatIni = date('Y');
                             $awal = $tahunSaatIni - 5;
                             $akhir = $tahunSaatIni + 5;
                         @endphp
 
-                        @for ($tahun = $awal; $tahun <= $akhir; $tahun++)
+                        @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
                             <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
                                 {{ $tahun }}</option>
                         @endfor

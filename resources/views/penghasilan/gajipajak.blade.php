@@ -67,17 +67,23 @@
                     </div>
                     @php
                     $already_selected_value = date('y');
-                    $earliest_year = 2022;
+                    $earliest_year = 2024;
                     @endphp
                     <div class="col-md-4">
                         <label for="tahun">Tahun:</label>
                         <div class="form-group">
-                            <select name="tahun" class="form-control">
-                                <option value="">--- Pilih Tahun ---</option>
-                                @foreach (range(date('Y'), $earliest_year) as $x)
-                                    <option value="{{ $x }}" @selected($request->tahun == $x)>{{ $x }}</option>
-                                @endforeach
-                            </select>
+                            <option value="">Pilih Tahun</option>
+                            @php
+                                $earliest = 2024;
+                                $tahunSaatIni = date('Y');
+                                $awal = $tahunSaatIni - 5;
+                                $akhir = $tahunSaatIni + 5;
+                            @endphp
+
+                            @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
+                                <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
+                                    {{ $tahun }}</option>
+                            @endfor
                         </div>
                     </div>
                 </div>

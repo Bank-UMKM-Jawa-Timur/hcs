@@ -50,7 +50,7 @@ $status = isset($status) ? $status : null;
         <div class="row m-0">
             @php
             $already_selected_value = date('y');
-            $earliest_year = 2022;
+            $earliest_year = 2024;
             @endphp
             <div class="col-md-4">
                 <label for="tahun">Tahun</label>
