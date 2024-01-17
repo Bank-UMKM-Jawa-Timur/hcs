@@ -56,10 +56,18 @@ $status = isset($status) ? $status : null;
                 <label for="tahun">Tahun</label>
                 <div class="form-group">
                     <select name="tahun" id="tahun" class="form-control" required>
-                        <option value="">--- Pilih Tahun ---</option>
-                        @foreach (range(date('Y'), $earliest_year) as $x)
-                        <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
-                        @endforeach
+                        <option value="">Pilih Tahun</option>
+                        @php
+                            $earliest = 2024;
+                            $tahunSaatIni = date('Y');
+                            $awal = $tahunSaatIni - 5;
+                            $akhir = $tahunSaatIni + 5;
+                        @endphp
+
+                        @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
+                            <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
+                                {{ $tahun }}</option>
+                        @endfor
                     </select>
                 </div>
             </div>
