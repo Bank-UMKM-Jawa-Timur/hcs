@@ -48,7 +48,7 @@
                                 <select name="tahun" class="select2 form-control" required>
                                     <option value="">Pilih Tahun</option>
 
-                                    @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
+                                    @for ($tahun = $earliest; $tahun <= $tahunAkhir; $tahun++)
                                         <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
                                             {{ $tahun }}</option>
                                     @endfor
