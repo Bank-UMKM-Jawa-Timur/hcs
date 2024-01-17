@@ -68,14 +68,13 @@ class PenghasilanTeraturController extends Controller
             $is_pusat = auth()->user()->hasRole('kepegawaian');
 
             if ($is_pusat) {
-                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
-                    // ->where('kd_cabang', auth()->user()->kd_cabang)
-                    ->whereIn('nip', $nip_id)
-                    ->whereNull('tanggal_penonaktifan')
-                    ->get();
+                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening','kd_entitas')
+                        ->whereIn('nip', $nip_id)
+                        ->whereNull('tanggal_penonaktifan')
+                        ->get();
             }
             if($is_cabang){
-                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening')
+                $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening','kd_entitas')
                     ->where('kd_entitas', auth()->user()->kd_cabang)
                     ->whereIn('nip', $nip_id)
                     ->whereNull('tanggal_penonaktifan')

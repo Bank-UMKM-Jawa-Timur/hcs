@@ -170,15 +170,24 @@
             })
 
             $('#filter').on('click', function(e) {
-                // console.log('askdaskdjasldjldj');
+                let kdEntitasUser = `{{ auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000' }}`
+                let kdEntitasData = `{{ Request()->entitas }}`
                 var penghasilan = $('#penghasilan').val();
                 var filePenghasilan = $('#file-penghasilan').val();
 
                 if (penghasilan && filePenghasilan) {
-                    importExcel();
-                    $('#table_item tbody').empty();
-                    $('#error-penghasilan').addClass('d-none')
-                    $('#error-file').addClass('d-none')
+                    if (kdEntitasUser === kdEntitasData) {
+                        importExcel();
+                        $('#table_item tbody').empty();
+                        $('#error-penghasilan').addClass('d-none')
+                        $('#error-file').addClass('d-none')
+                    }else{
+                        if (kdEntitasUser === '000') {
+                            alertWarning("Pusat Tidak Bisa Edit Data Cabang");
+                        }else{
+                            alertWarning("Tidak Bisa Edit Data Cabang");
+                        }
+                    }
                 } else {
                     if (penghasilan == "" && filePenghasilan) {
                         $('#error-penghasilan').removeClass('d-none').html('Kategori belum di pilih.')
