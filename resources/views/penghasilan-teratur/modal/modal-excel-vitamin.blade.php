@@ -40,15 +40,17 @@
                             <div class="form-group" id="periode">
                                 <label for="" class="form-label">Periode</label>
                                 @php
+                                    $earliest = 2024;
                                     $tahunSaatIni = date('Y');
                                     $tahunAwal = $tahunSaatIni - 5;
                                     $tahunAkhir = $tahunSaatIni + 5;
                                 @endphp
                                 <select name="tahun" class="select2 form-control" required>
                                     <option value="">Pilih Tahun</option>
-                                    @for ($tahun = $tahunAwal; $tahun <= $tahunAkhir; $tahun++)
-                                        <option {{ Request()->tahun == $tahun ? 'selected' : '' }}
-                                            value="{{ $tahun }}">{{ $tahun }}</option>
+
+                                    @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
+                                        <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
+                                            {{ $tahun }}</option>
                                     @endfor
                                 </select>
                                 @error('periode')

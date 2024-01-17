@@ -50,7 +50,7 @@ $request = isset($request) ? $request : null;
         <div class="row m-0">
             @php
             $already_selected_value = date('y');
-            $earliest_year = 2022;
+            $earliest_year = 2024;
 
             if($status != null){
             $cek_data = DB::table('gaji_per_bulan')
@@ -63,10 +63,18 @@ $request = isset($request) ? $request : null;
                 <label for="tahun">Tahun</label>
                 <div class="form-group">
                     <select name="tahun" id="tahun" class="form-control" required>
-                        <option value="">--- Pilih Tahun ---</option>
-                        @foreach (range(date('Y'), $earliest_year) as $x)
-                        <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
-                        @endforeach
+                        <option value="">Pilih Tahun</option>
+                        @php
+                            $earliest = 2024;
+                            $tahunSaatIni = date('Y');
+                            $awal = $tahunSaatIni - 5;
+                            $akhir = $tahunSaatIni + 5;
+                        @endphp
+
+                        @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
+                            <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
+                                {{ $tahun }}</option>
+                        @endfor
                     </select>
                 </div>
             </div>
