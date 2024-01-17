@@ -50,8 +50,8 @@
         <div class="form-group col-md-6">
             <label for="">SK PJS</label>
             <div class="custom-file">
-                <input type="file" class="custom-file-input @error('file_sk') is-invalid @enderror" name="file_sk" id="file_sk" accept="application/pdf">
-                <label for="file_sk" class="custom-file-label">Pilih File (PDF)</label>
+                <input type="file" class="custom-file-input @error('file_sk') is-invalid @enderror" name="file_sk" id="validatedCustomFile" accept="application/pdf">
+                <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file(.pdf) ...</label>
                 @error('file_sk')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -66,7 +66,30 @@
 
 
 @push('script')
-    <script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $("#validatedCustomFile").on('change', function(e){
+        var ext = this.value.match(/\.([^\.]+)$/)[1];
+        if(ext != 'pdf'){
+            Swal.fire({
+                title: 'Terjadi Kesalahan.',
+                text: 'File harus PDF',
+                icon: 'error'
+            })
+        }
+    })
+    
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+            var name = document.getElementById("validatedCustomFile").files[0].name;
+            var ext = name.match(/\.([^\.]+)$/)[1];
+            var nextSibling = e.target.nextElementSibling
+            if(ext == 'pdf'){
+                nextSibling.innerText = name
+            } else {
+                nextSibling.innerText = ''
+                $("#validatedCustomFile").val('Choose File(.pdf) ...')
+            }
+        });
         const posArray = JSON.parse('@php echo json_encode($jabatan) @endphp');
 
         const nipSelect = $('#nip').select2({

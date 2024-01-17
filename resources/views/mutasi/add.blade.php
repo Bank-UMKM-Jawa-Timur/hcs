@@ -210,8 +210,8 @@
                 <div class="col-md-4 form-group">
                     <label for="file_sk">Dokumen SK</label>
                     <div class="custom-file col-md-12">
-                        <input type="file" name="file_sk" class="custom-file-input" id="validatedCustomFile">
-                        <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file...</label>
+                        <input type="file" name="file_sk" class="custom-file-input" id="validatedCustomFile" accept=".pdf">
+                        <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file(.pdf) ...</label>
                     </div>  
                     @error('file_sk')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -231,11 +231,29 @@
 @endsection
 
 @push('script')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    $("#validatedCustomFile").on('change', function(e){
+        var ext = this.value.match(/\.([^\.]+)$/)[1];
+        if(ext != 'pdf'){
+            Swal.fire({
+                title: 'Terjadi Kesalahan.',
+                text: 'File harus PDF',
+                icon: 'error'
+            })
+        }
+    })
+    
     document.querySelector('.custom-file-input').addEventListener('change', function (e) {
             var name = document.getElementById("validatedCustomFile").files[0].name;
+            var ext = name.match(/\.([^\.]+)$/)[1];
             var nextSibling = e.target.nextElementSibling
-            nextSibling.innerText = name
+            if(ext == 'pdf'){
+                nextSibling.innerText = name
+            } else {
+                nextSibling.innerText = ''
+                $("#validatedCustomFile").val('Choose File(.pdf) ...')
+            }
         });
 // $(document).ready(function() {
 //     var table = $('#table').DataTable({
