@@ -67,17 +67,23 @@
                     </div>
                     @php
                     $already_selected_value = date('y');
-                    $earliest_year = 2022;
+                    $earliest_year = 2024;
                     @endphp
                     <div class="col-md-4">
                         <label for="tahun">Tahun:</label>
                         <div class="form-group">
-                            <select name="tahun" class="form-control">
-                                <option value="">--- Pilih Tahun ---</option>
-                                @foreach (range(date('Y'), $earliest_year) as $x)
-                                    <option value="{{ $x }}" @selected($request->tahun == $x)>{{ $x }}</option>
-                                @endforeach
-                            </select>
+                            <option value="">Pilih Tahun</option>
+                            @php
+                                $earliest = 2024;
+                                $tahunSaatIni = date('Y');
+                                $awal = $tahunSaatIni - 5;
+                                $akhir = $tahunSaatIni + 5;
+                            @endphp
+
+                            @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
+                                <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
+                                    {{ $tahun }}</option>
+                            @endfor
                         </div>
                     </div>
                 </div>
@@ -367,7 +373,35 @@
 
                     $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
 
-                    $no19 = floor(($no17 / 12) * $total_ket);
+                    if($total_ket < 12){
+                        $no19 = 0;
+                        for ($i=0; $i < 12; $i++) { 
+                            if ($gj[$i] != null) {
+                                $penghasilanBruto = array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i];
+                                $ter_kategori = \App\Helpers\HitungPPH::getTarifEfektifKategori($status);
+                                $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
+                                    ->where('kategori', $ter_kategori)
+                                    ->where(function($query) use ($penghasilanBruto) {
+                                        $query->where(function($q2) use ($penghasilanBruto) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBruto)
+                                                ->where('nominal_end', '>=', $penghasilanBruto);
+                                        })->orWhere(function($q2) use ($penghasilanBruto) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBruto)
+                                                ->where('nominal_end', 0);
+                                        });
+                                    })
+                                    ->first();
+                                $pengali = 0;
+                                if ($lapisanPenghasilanBruto) {
+                                    $pengali = $lapisanPenghasilanBruto->pengali;
+                                }
+                                $pph = $penghasilanBruto * ($pengali / 100);
+                                $no19 += round($pph);
+                            }
+                        }
+                    } else {
+                        $no19 = floor(($no17 / 12) * $total_ket);
+                    }
                 @endphp
 
                 <div class="row m-0 ">

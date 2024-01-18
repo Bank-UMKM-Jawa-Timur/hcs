@@ -10,26 +10,29 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 class RekapTetapExport implements FromView, WithColumnFormatting
 {
     private $data;
+    private $FORMAT_NUMBER;
+
     public function __construct($data)
     {
+        $this->FORMAT_NUMBER = '_(* #,##_);_(* (#,##);_(* "-"_);_(@_)';
         $this->data = $data;
     }
 
     public function columnFormats(): array
     {
         return [
-            'H' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'I' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'J' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'K' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'L' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'M' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'N' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'O' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'P' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'Q' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'R' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            'S' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
+            'H' => $this->FORMAT_NUMBER,
+            'I' => $this->FORMAT_NUMBER,
+            'J' => $this->FORMAT_NUMBER,
+            'K' => $this->FORMAT_NUMBER,
+            'L' => $this->FORMAT_NUMBER,
+            'M' => $this->FORMAT_NUMBER,
+            'N' => $this->FORMAT_NUMBER,
+            'O' => $this->FORMAT_NUMBER,
+            'P' => $this->FORMAT_NUMBER,
+            'Q' => $this->FORMAT_NUMBER,
+            'R' => $this->FORMAT_NUMBER,
+            'S' => $this->FORMAT_NUMBER,
         ];
     }
 

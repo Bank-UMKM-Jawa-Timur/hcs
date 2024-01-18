@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Repository\CabangRepository;
 use Illuminate\Support\Facades\DB;
 
 class HitungPPH
@@ -61,8 +62,9 @@ class HitungPPH
 
         $pph = 0;
         $kode_ptkp = $ptkp->kode == 'TK' ? 'TK/0' : $ptkp->kode;
+        $ter_kategori = HitungPPH::getTarifEfektifKategori($kode_ptkp);
         $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
-                                    ->where('kode_ptkp', 'like' , "%$kode_ptkp;%")
+                                    ->where('kategori', $ter_kategori)
                                     ->where(function($query) use ($penghasilanBruto) {
                                         $query->where(function($q2) use ($penghasilanBruto) {
                                             $q2->where('nominal_start', '<=', $penghasilanBruto)
@@ -79,7 +81,7 @@ class HitungPPH
         }
 
         $pph = $penghasilanBruto * ($pengali / 100);
-
+        $pph = round($pph);
         if (!$full_month) {
             if ($bulan > 1) {
                 $last_month = intval($bulan) - 1;
@@ -87,7 +89,7 @@ class HitungPPH
             }
         }
 
-        return round($pph);
+        return $pph;
     }
 
     public static function getTerutang($bulan, $tahun, $karyawan) {
@@ -179,15 +181,29 @@ class HitungPPH
     }
 
     public static function getJamsostek($karyawan, $total_gaji) {
+        $kd_entitas = null;
+        $cabangRepo = new CabangRepository;
+        $kode_cabang_arr = $cabangRepo->listCabang(true);
+        if (!$karyawan->kd_entitas) {
+            $kd_entitas = '000';
+        } else {
+            if (in_array($karyawan->kd_entitas, $kode_cabang_arr)) {
+                $kd_entitas = $karyawan->kd_entitas;
+            }
+            else {
+                $kd_entitas = '000';
+            }
+        }
+
         // Get Jamsostek
         $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
-                                ->where('kd_cabang', $karyawan->kd_entitas)
+                                ->where('kd_cabang', $kd_entitas)
                                 ->where('active', 1)
                                 ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
                                 ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
                                 ->first();
         $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
-                                ->where('kd_cabang', $karyawan->kd_entitas)
+                                ->where('kd_cabang', $kd_entitas)
                                 ->where('active', 1)
                                 ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
                                 ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
@@ -249,8 +265,33 @@ class HitungPPH
         return $jamsostek;
     }
 
-    public static function getTotalGaji($karyawan, $bulan, $tahun) {
-        // $gaji =
+    public static function getTarifEfektifKategori($status_ptkp) {
+        $ter_a = [
+            'TK/0',
+            'TK/1',
+            'K/0'
+        ];
+        $ter_b = [
+            'TK/2',
+            'K/1',
+            'TK/3',
+            'K/2',
+        ];
+        $ter_c = [
+            'K/3'
+        ];
+        if (in_array($status_ptkp, $ter_a)) {
+            return 'Ter A';
+        }
+        else if (in_array($status_ptkp, $ter_b)) {
+            return 'Ter B';
+        }
+        else if (in_array($status_ptkp, $ter_c)) {
+            return 'Ter C';
+        }
+        else {
+            return 'undifined';
+        }
     }
     // function getPPHBulanIni($bulan, $tahun, $karyawan, $ptkp, $tanggal)
     // {

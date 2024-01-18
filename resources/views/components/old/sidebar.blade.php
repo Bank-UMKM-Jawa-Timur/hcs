@@ -613,19 +613,21 @@
                             </a>
                         </li>
                         @endcan
-                        <li style="margin-top: -15px" class="@active('rekap-tetap.index')">
-                            <a href="{{ route('rekap-tetap.index') }}">
-                                <div class="d-flex justify-content-start">
-                                    <span class="icon">
-                                        <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
-                                    </span>
-                                    <span>
-                                        <p>Laporan Rekap Tetap</p>
-                                    </span>
-                                </div>
-                                <p></p>
-                            </a>
-                        </li>
+                        @can('laporan - laporan rekap tetap')
+                            <li style="margin-top: -15px" class="@active('rekap-tetap.index')">
+                                <a href="{{ route('rekap-tetap.index') }}">
+                                    <div class="d-flex justify-content-start">
+                                        <span class="icon">
+                                            <iconify-icon icon="ph:circle-duotone" class="icon"></iconify-icon>
+                                        </span>
+                                        <span>
+                                            <p>Laporan Rekap Tetap</p>
+                                        </span>
+                                    </div>
+                                    <p></p>
+                                </a>
+                            </li>
+                        @endcan
                     </ul>
                 </li>
                 @endcan

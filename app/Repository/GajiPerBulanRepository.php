@@ -21,6 +21,7 @@ class GajiPerBulanRepository
                 ->join('mst_cabang AS cab', 'cab.kd_cabang', 'batch.kd_entitas')
                 ->select(
                     'batch.id',
+                    'batch.kd_entitas',
                     'cab.nama_cabang AS kantor',
                     'batch.tanggal_input',
                     'batch.tanggal_final',
@@ -32,7 +33,7 @@ class GajiPerBulanRepository
                     'gaji.tahun',
                     DB::raw('CAST(SUM(pph.total_pph) AS UNSIGNED) AS total_pph'),
                     DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS bruto'),
-                    DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan')
+                    DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan'),
                 )
                 ->when($is_cabang, function($query) {
                     $kd_cabang = auth()->user()->kd_cabang;
@@ -53,9 +54,118 @@ class GajiPerBulanRepository
                 ->paginate($limit, ['*'], 'page', $page);
 
         foreach ($data as $key => $item) {
+            $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
+                ->where('mst_profil_kantor.kd_cabang', $item->kd_entitas)
+                ->where('active', 1)
+                ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
+                ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
+                ->first();
+            $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
+                ->where('kd_cabang', $item->kd_entitas)
+                ->where('active', 1)
+                ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
+                ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
+                ->first();
+            if (!$hitungan_penambah && !$hitungan_pengurang) {
+                $persen_jkk = 0;
+                $persen_jht = 0;
+                $persen_jkm = 0;
+                $persen_kesehatan = 0;
+                $persen_jp_penambah = 0;
+                $persen_dpp = 0;
+                $persen_jp_pengurang = 0;
+                $batas_atas = 0;
+                $batas_bawah = 0;
+                $jp_jan_feb = 0;
+                $jp_mar_des = 0;
+            }else{
+                $persen_jkk = $hitungan_penambah->jkk;
+                $persen_jht = $hitungan_penambah->jht;
+                $persen_jkm = $hitungan_penambah->jkm;
+                $persen_kesehatan = $hitungan_penambah->kesehatan;
+                $persen_jp_penambah = $hitungan_penambah->jp;
+                $persen_dpp = $hitungan_pengurang->dpp;
+                $persen_jp_pengurang = $hitungan_pengurang->jp;
+                $batas_atas = $hitungan_penambah->kesehatan_batas_atas;
+                $batas_bawah = $hitungan_penambah->kesehatan_batas_bawah;
+                $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
+                $jp_mar_des = $hitungan_pengurang->jp_mar_des;
+            }
             // Get Bruto & Netto
             $netto = 0;
-            $netto = $item->bruto - $item->total_potongan;
+            $grand_total_potongan = $item->total_potongan;
+
+            // Get Potongan(JP1%, DPP 5%)
+            $gaji_obj = DB::table('gaji_per_bulan AS gaji')
+                        ->select(
+                            'm.nama_karyawan',
+                            'm.npwp',
+                            'm.no_rekening',
+                            'm.tanggal_penonaktifan',
+                            'm.kpj',
+                            'm.jkn',
+                            'm.status_karyawan',
+                            'gaji.bulan',
+                            'gaji.tahun',
+                            'gaji.gj_pokok',
+                            'gaji.tj_keluarga',
+                            'gaji.tj_kesejahteraan',
+                            DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS UNSIGNED) AS gaji'),
+                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_gaji"),
+                        )
+                        ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+                        ->where('gaji.batch_id', $item->id)
+                        ->get();
+            $total_dpp = 0;
+            $total_bpjs_tk = 0;
+            foreach ($gaji_obj as $value) {
+                $gaji = $value->gaji;
+                $total_gaji = $value->total_gaji;
+                $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
+                if($value->status_karyawan == 'IKJP') {
+                    $dpp = 0;
+                    $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
+                } else{
+                    $gj_pokok = $value->gj_pokok;
+                    $tj_keluarga = $value->tj_keluarga;
+                    $tj_kesejahteraan = $value->tj_kesejahteraan;
+    
+                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
+                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
+                    if($gaji >= $nominal_jp){
+                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                    } else {
+                        $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
+                    }
+                }
+                $dpp = round($dpp);
+                $total_dpp += $dpp;
+                $jp_1_persen = $jp_1_persen;
+    
+                // Get BPJS TK
+                if ($value->bulan > 2) {
+                    if ($total_gaji > $jp_mar_des) {
+                        $bpjs_tk = $jp_mar_des * 1 / 100;
+                    }
+                    else {
+                        $bpjs_tk = $total_gaji * 1 / 100;
+                    }
+                }
+                else {
+                    if ($total_gaji >= $jp_jan_feb) {
+                        $bpjs_tk = $jp_jan_feb * 1 / 100;
+                    }
+                    else {
+                        $bpjs_tk = $total_gaji * 1 / 100;
+                    }
+                }
+                $bpjs_tk = $bpjs_tk;
+                $total_bpjs_tk += $bpjs_tk;
+            }
+            $grand_total_potongan = ($item->total_potongan + $total_bpjs_tk + $total_dpp);
+            $item->grand_total_potongan= $grand_total_potongan;
+
+            $netto = $item->bruto - $grand_total_potongan;
             $item->netto = $netto;
 
             // Cek apakah ada perubahan data penghasilan

@@ -123,7 +123,7 @@ class GajiPerBulanController extends Controller
             'proses_list' => $proses_list,
             'final_list' => $final_list,
         ];
-// return $proses_list;
+
         return view('gaji_perbulan.index', $data);
     }
 
@@ -1763,8 +1763,26 @@ class GajiPerBulanController extends Controller
             $ttdKaryawan = null;
         }
 
+        $namaBulan = [
+            "01" => "Januari",
+            "02" => "Februari",
+            "03" => "Maret",
+            "04" => "April",
+            "05" => "Mei",
+            "06" => "Juni",
+            "07" => "July",
+            "08" => "Agustus",
+            "09" => "Septemper",
+            "10" => "Oktober",
+            "11" => "November",
+            "12" => "Desember"
+        ];
+        $tanggalSekarang = date('d', strtotime($data->tanggal_input));
+        $bulanSekarang = $namaBulan[date('m')];
+        $tahunSekarang = date('Y', strtotime($data->tanggal_input));
+        $tanggal = $tanggalSekarang . ' ' . $bulanSekarang . ' ' . $tahunSekarang;
 
-        return view('gaji_perbulan.cetak-pdf',['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $data->tanggal_input,'ttdKaryawan' => $ttdKaryawan,'cabang' => $cabang]);
+        return view('gaji_perbulan.cetak-pdf',['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $tanggal,'ttdKaryawan' => $ttdKaryawan,'cabang' => $cabang]);
     }
 
     public function updateTanggalCetak($id) {

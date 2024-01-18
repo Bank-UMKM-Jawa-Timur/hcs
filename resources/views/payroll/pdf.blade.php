@@ -197,14 +197,17 @@
                                     <label for="">Tahun<span class="text-danger">*</span></label>
                                     <select name="tahun" id="tahun"
                                         class="form-control">
-                                        <option value="0">-- Pilih tahun --</option>
+                                        <option value="">Pilih Tahun</option>
                                         @php
-                                            $sekarang = date('Y');
-                                            $awal = $sekarang - 5;
-                                            $akhir = $sekarang + 5;
+                                            $earliest = 2024;
+                                            $tahunSaatIni = date('Y');
+                                            $awal = $tahunSaatIni - 5;
+                                            $akhir = $tahunSaatIni + 5;
                                         @endphp
-                                        @for($i=$awal;$i<=$akhir;$i++)
-                                            <option value="{{$i}}" @if(\Request::get('tahun') == $i) selected @endif>{{$i}}</option>
+
+                                        @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
+                                            <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
+                                                {{ $tahun }}</option>
                                         @endfor
                                     </select>
                                     @error('tahun')
