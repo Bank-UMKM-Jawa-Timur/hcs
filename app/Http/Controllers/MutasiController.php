@@ -139,6 +139,7 @@ class MutasiController extends Controller
      */
     public function store(MutasiRequest $request)
     {
+        // return $request->all();
         if($request->tunjangan != null){
             if(count($request->tunjangan) > 0){
                 foreach($request->tunjangan as $key => $item){
@@ -146,7 +147,7 @@ class MutasiController extends Controller
                         ->where('id', $request->tunjangan[$key])
                         ->first('nama_tunjangan');
         
-                    if($request->id_tk[$key] != 0){
+                    if($request->id_tk[$key] != 0 || $request->id_tk[$key] != null){
                         DB::table('history_penyesuaian')
                             ->insert([
                                 'nip' => $request->nip,
@@ -164,22 +165,24 @@ class MutasiController extends Controller
                                 'updated_at' => now()
                             ]);
                     } else{
-                        DB::table('tunjangan_karyawan')
-                            ->insert([
-                                'nip' => $request->nip,
-                                'id_Tunjangan' => ($request->tunjangan[$key] != null) ? $request->tunjangan[$key] : null,
-                                'nominal' => ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
-                                'created_at' => now()
-                            ]);
-                        DB::table('history_penyesuaian')
-                            ->insert([
-                                'nip' => $request->nip,
-                                'keterangan' => "Penambahan Tunjangan ".$tj->nama_tunjangan,
-                                'nominal_lama' => $request->nominal_lama[$key],
-                                'nominal_baru' =>  ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
-                                'id_tunjangan' => $item,
-                                'created_at' => now()
-                            ]);
+                        if($request->tunjangan[$key] != null || $request->tunjangan[$key] != 0){
+                            DB::table('tunjangan_karyawan')
+                                ->insert([
+                                    'nip' => $request->nip,
+                                    'id_Tunjangan' => ($request->tunjangan[$key] != null) ? $request->tunjangan[$key] : null,
+                                    'nominal' => ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
+                                    'created_at' => now()
+                                ]);
+                            DB::table('history_penyesuaian')
+                                ->insert([
+                                    'nip' => $request->nip,
+                                    'keterangan' => "Penambahan Tunjangan ".$tj->nama_tunjangan,
+                                    'nominal_lama' => $request->nominal_lama[$key],
+                                    'nominal_baru' =>  ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
+                                    'id_tunjangan' => $item,
+                                    'created_at' => now()
+                                ]);
+                        }
                     }
                 }
             }
