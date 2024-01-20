@@ -30,7 +30,7 @@ class PenambahBrutoSeeder extends Seeder
             4635133,
             3368275,
             2241054,
-            2241054,
+            2256050,
             2340668,
             4624787,
             2945544,
