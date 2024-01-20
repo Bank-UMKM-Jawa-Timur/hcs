@@ -123,7 +123,27 @@
                                     </div>
                                     <input type="hidden" name="id_pasangan" value="{{ $is?->id }}">
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Status PTKP</label>
+                                        <select name="status_ptkp" id="" class="@error('status_ptkp') is-invalid @enderror form-control">
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'K/0' ? 'selected' : '' }} value="K/0">K/0</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'K/1' ? 'selected' : '' }} value="K/1">K/1</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'K/2' ? 'selected' : '' }} value="K/2">K/2</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'K/3' ? 'selected' : '' }} value="K/3">K/3</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'K/I/0' ? 'selected' : '' }} value="K/3">K/I/0</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'K/I/1' ? 'selected' : '' }} value="K/3">K/I/1</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'K/I/2' ? 'selected' : '' }} value="K/3">K/I/2</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'K/I/3' ? 'selected' : '' }} value="K/3">K/I/3</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'TK' ? 'selected' : '' }} value="K/3">TK</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'TK/1' ? 'selected' : '' }} value="K/3">TK/1</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'TK/2' ? 'selected' : '' }} value="K/3">TK/2</option>
+                                            <option {{ old('status_ptkp', $data->status_ptkp) == 'TK/3' ? 'selected' : '' }} value="K/3">TK/3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Kewarganegaraan</label>
                                         <select name="kewarganegaraan" id="" class="@error('kewarganegaraan') is-invalid @enderror form-control">

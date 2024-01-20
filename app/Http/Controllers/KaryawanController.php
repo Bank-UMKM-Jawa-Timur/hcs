@@ -351,6 +351,7 @@ class KaryawanController extends Controller
             'gj_pokok' => 'required',
             'status_karyawan' => 'required|not_in:-',
             'jabatan' => 'required|not_in:-',
+            'status_ptkp' => 'required|not_in:-',
             'tgl_mulai' => 'required'
         ]);
 
@@ -382,6 +383,7 @@ class KaryawanController extends Controller
                     'kewarganegaraan' => $request->get('kewarganegaraan'),
                     'jk' => $request->get('jk'),
                     'status' => $request->get('status_pernikahan'),
+                    'status_ptkp' => $request->get('status_ptkp'),
                     'alamat_ktp' => $request->get('alamat_ktp'),
                     'alamat_sek' => $request->get('alamat_sek'),
                     'kpj' => $request->get('kpj'),
@@ -697,6 +699,7 @@ class KaryawanController extends Controller
                 'jkn' => 'required',
                 'gj_pokok' => 'required',
                 'status_karyawan' => 'required|not_in:-',
+                'status_ptkp' => 'required|not_in:-',
                 'tgl_mulai' => 'required'
             ]);
         }
@@ -773,6 +776,7 @@ class KaryawanController extends Controller
                         'kewarganegaraan' => $request->get('kewarganegaraan'),
                         'jk' => $request->get('jk'),
                         'status' => $request->get('status_pernikahan'),
+                        'status_ptkp' => $request->get('status_ptkp'),
                         'alamat_ktp' => $request->get('alamat_ktp'),
                         'alamat_sek' => $request->get('alamat_sek'),
                         'kpj' => $request->get('kpj'),
