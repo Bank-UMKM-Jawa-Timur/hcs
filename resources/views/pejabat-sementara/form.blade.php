@@ -130,7 +130,7 @@
                 $('#kantor').val('cabang').trigger('change').attr('disabled', true);
             }
 
-            if(value == 'PIMDIV' || value == 'PSD') {
+            if(value == 'PIMDIV' || value == 'PSD' || value == "DIRUT" || value == "DIRHAN" || value == "DIRPEM" || value == "DIRUMK") {
                 $('#kantor').val('pusat').trigger('change').attr('disabled', true);
             }
         });
