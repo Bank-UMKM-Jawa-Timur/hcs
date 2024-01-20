@@ -549,7 +549,7 @@
         $("#jabatan").change(function(){
             var value = $(this).val();
             $("#kantor_row2").show();
-            if(value == "PIMDIV"){
+            if(value == "PIMDIV" || value == "DIRHAN" || value == "DIRPEM" || value == "DIRUMK" || value == "DIRUT" || value == "KOMU" || value == "KOM"){
                 $("#kantor").val("1")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");

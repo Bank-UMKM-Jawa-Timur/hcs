@@ -643,6 +643,11 @@ $('#nip').select2({
                 kantor.attr("disabled", true);
             }
 
+            if(value == "DIRUT" || value == "DIRHAN" || value == "DIRPEM" || value == "DIRUMK") {
+                kantor.val("1").change();
+                kantor.attr("disabled", true);
+            }
+
             if(value == "PC" || value == "PBP") {
                 kantor.val("2").change();
                 kantor.attr("disabled", true);
