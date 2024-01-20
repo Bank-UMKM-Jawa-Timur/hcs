@@ -539,7 +539,7 @@
                             $('#divisi').append('<option value="'+item.kd_divisi+'" '+ (kd_div === item.kd_divisi ? 'selected' : '') +'>'+item.nama_divisi+'</option>')
                         });
                         var value = $('#divisi').val();
-                        if($("#jabatan").val() != 'PIMDIV') {
+                        if($("#jabatan").val() != 'PIMDIV' || $("#jabatan") != "DIRHAN" || $("#jabatan") != "DIRPEM" || $("#jabatan") != "DIRUMK" || $("#jabatan") != "DIRUT" || $("#jabatan") != "KOMU" || $("#jabatan") != "KOM") {
                             divisiChange(value);
     
                             $("#kantor_row2").empty();
@@ -669,7 +669,7 @@
         function jabatanChange(){
             var value = $("#jabatan").val();
             $("#kantor_row2").show();
-            if(value == "PIMDIV"){
+            if(value == "PIMDIV" || value == "DIRHAN" || value == "DIRPEM" || value == "DIRUMK" || value == "DIRUT" || value == "KOMU" || value == "KOM"){
                 $("#kantor").val("1")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");

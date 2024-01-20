@@ -441,7 +441,6 @@
                                     url: "{{ route('get_subdivisi') }}?divisiID="+divisi,
                                     datatype: "JSON",
                                     success: function(res1){
-                                        console.log(res1);
                                         $('#sub_divisi').empty();
                                         $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
                                         $.each(res1, function(i, item){
@@ -525,13 +524,13 @@
         $("#jabatan").change(function(){
             var value = $(this).val();
             $("#kantor_row2").show();
-            if(value == "PIMDIV"){
+            if(value == "PIMDIV" || value == "DIRHAN" || value == "DIRPEM" || value == "DIRUMK" || value == "DIRUT" || value == "KOMU" || value == "KOM"){
                 $("#kantor").val("1")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
                 $("kantor_row2").removeClass("col-md-6")
-                $("#kantor_row2").empty();
-                $("#kantor_row3").empty()
+                $("#kantor_row2").hide();
+                $("#kantor_row3").hide()
             } else if(value == "PSD"){
                 $("#kantor").val("1")
                 kantorChange();
@@ -540,13 +539,13 @@
                 $("#kantor").val("2")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
-                $("#kantor_row2").empty();
+                $("#kantor_row2").hide();
             } else if(value == "PBO"){
                 kantorChange();
                 $('#kantor').removeAttr("disabled")
                 $("kantor_row2").removeClass("col-md-6")
-                $("#kantor_row2").empty();
-                $("#kantor_row3").empty()
+                $("#kantor_row2").hide();
+                $("#kantor_row3").hide()
             } else if(value == "-"){
                 kantorChange();
             }else {
@@ -933,7 +932,7 @@
         function jabatanChange(){
             var value = $("#jabatan").val();
             $("#kantor_row2").show();
-            if(value == "PIMDIV"){
+            if(value == "PIMDIV" || value == "DIRHAN" || value == "DIRPEM" || value == "DIRUMK" || value == "DIRUT" || value == "KOMU" || value == "KOM"){
                 $("#kantor").val("1")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
