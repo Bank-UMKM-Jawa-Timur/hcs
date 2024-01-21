@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('mst_karyawan', function (Blueprint $table) {
-            $table->string('nip', 25)->nullable()->change();
+        Schema::table('mst_karyawan', function(Blueprint $table) {
+            $table->dropPrimary();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('mst_karyawan', function (Blueprint $table) {
-            $table->string('nip', 25)->nullable(false)->change();
+        Schema::table('mst_karyawan', function(Blueprint $table) {
+            $table->primary('nip');
         });
     }
 };
