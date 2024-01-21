@@ -78,11 +78,12 @@
                                 $tahunSaatIni = date('Y');
                                 $awal = $tahunSaatIni - 5;
                                 $akhir = $tahunSaatIni + 5;
+                                $tahunInput = $tahun;
                             @endphp
 
-                            @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
-                                <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
-                                    {{ $tahun }}</option>
+                            @for ($tahunInput = $earliest; $tahunInput <= $akhir; $tahunInput++)
+                                <option {{ Request()->tahun == $tahunInput ? 'selected' : '' }} value="{{ $tahunInput }}">
+                                    {{ $tahunInput }}</option>
                             @endfor
                         </div>
                     </div>
