@@ -150,6 +150,7 @@ class PayrollRepository
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                                        DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
                                         'kredit_koperasi',
                                         'iuran_koperasi',
                                         'kredit_pegawai',
@@ -275,6 +276,7 @@ class PayrollRepository
             $bpjs_kesehatan = 0;
             $potongan = new \stdClass();
             $total_gaji = 0;
+            $tunjangan_rutin = 0;
             $total_potongan = 0;
             $penghasilan_rutin = 0;
             $penghasilan_tidak_rutin = 0;
@@ -287,6 +289,7 @@ class PayrollRepository
                 $obj_gaji = $karyawan->gaji;
                 $gaji = round($obj_gaji->gaji);
                 $total_gaji = round($obj_gaji->total_gaji);
+                $tunjangan_rutin = round($obj_gaji->tunjangan_rutin);
 
                 if($total_gaji > 0){
                     $jkk = 0;
@@ -661,7 +664,7 @@ class PayrollRepository
             $total_ket = $month_on_year_paid;
 
             // Get PPh21 PP58
-            $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji);
+            $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji, $tunjangan_rutin);
             $perhitunganPph21->pph21_pp58 = $pph21_pp58;
 
             // Get jumlah penghasilan neto
@@ -946,6 +949,7 @@ class PayrollRepository
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                                        DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
                                         'kredit_koperasi',
                                         'iuran_koperasi',
                                         'kredit_pegawai',
@@ -1060,6 +1064,7 @@ class PayrollRepository
             $bpjs_kesehatan = 0;
             $potongan = new \stdClass();
             $total_gaji = 0;
+            $tunjangan_rutin = 0;
             $total_potongan = 0;
             $penghasilan_rutin = 0;
             $penghasilan_tidak_rutin = 0;
@@ -1072,6 +1077,7 @@ class PayrollRepository
                 $obj_gaji = $karyawan->gaji;
                 $gaji = round($obj_gaji->gaji);
                 $total_gaji = round($obj_gaji->total_gaji);
+                $tunjangan_rutin = round($obj_gaji->tunjangan_rutin);
 
                 if($total_gaji > 0){
                     $jkk = 0;
@@ -1446,7 +1452,7 @@ class PayrollRepository
             $total_ket = $month_on_year_paid;
 
             // Get PPh21 PP58
-            $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji);
+            $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji, $tunjangan_rutin);
             $perhitunganPph21->pph21_pp58 = $pph21_pp58;
 
             // Get jumlah penghasilan neto
@@ -1832,6 +1838,7 @@ class PayrollRepository
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                                        DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
                                         'kredit_koperasi',
                                         'iuran_koperasi',
                                         'kredit_pegawai',
@@ -1924,6 +1931,7 @@ class PayrollRepository
             $bpjs_kesehatan = 0;
             $potongan = new \stdClass();
             $total_gaji = 0;
+            $tunjangan_rutin = 0;
             $total_potongan = 0;
             $penghasilan_rutin = 0;
             $penghasilan_tidak_rutin = 0;
@@ -1936,6 +1944,7 @@ class PayrollRepository
                 $obj_gaji = $karyawan->gaji;
                 $gaji = round($obj_gaji->gaji);
                 $total_gaji = round($obj_gaji->total_gaji);
+                $tunjangan_rutin = round($obj_gaji->tunjangan_rutin);
 
                 if($total_gaji > 0){
                     $jkk = 0;
@@ -2299,7 +2308,7 @@ class PayrollRepository
             $total_ket = $month_on_year_paid;
 
             // Get PPh21 PP58
-            $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji);
+            $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji, $tunjangan_rutin);
             $perhitunganPph21->pph21_pp58 = $pph21_pp58;
 
             // Get jumlah penghasilan neto

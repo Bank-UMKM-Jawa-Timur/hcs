@@ -822,6 +822,7 @@ class GajiPerBulanController extends Controller
                 }
 
                 $total_gaji = $item->gj_pokok + $item->gj_penyesuaian +  $tunjangan[0] + $tunjangan[1] + $tunjangan[2] + $tunjangan[4] + $tunjangan[6] + $tunjangan[5] + $tunjangan[7] + $tunjangan[8] + $tunjangan[9] + $tunjangan[15];
+                $tunjangan_rutin = $tunjangan[10] + $tunjangan[11] + $tunjangan[12] + $tunjangan[13];
 
                 if ($request->has('batch_id')) {
                     $employee = [
@@ -860,7 +861,7 @@ class GajiPerBulanController extends Controller
                                                 ->where('tahun', $tahun)
                                                 ->update($employee);
 
-                    $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji);
+                    $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin);
                     $pph = [
                         'gaji_per_bulan_id' => $gaji->id,
                         'nip' => $item->nip,
@@ -918,7 +919,7 @@ class GajiPerBulanController extends Controller
                                             ->where('tahun', $tahun)
                                             ->first();
                         if (!$pph_bulan_ini) {
-                            $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji);
+                            $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin);
 
                             $pph = [
                                 'gaji_per_bulan_id' => $gaji_id,

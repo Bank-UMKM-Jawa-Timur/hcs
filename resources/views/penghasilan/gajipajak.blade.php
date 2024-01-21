@@ -101,7 +101,8 @@
                 $status = 'TK';
                 if ($karyawan->status_ptkp) {
                     $status = $karyawan->status_ptkp;
-                } {
+                } 
+                else {
                     if ($karyawan->status == 'K' || $karyawan->status == 'Kawin') {
                         $anak = DB::table('mst_karyawan')
                             ->where('keluarga.nip', $karyawan->nip)
@@ -375,13 +376,16 @@
                     }
 
                     $no17 = (($persen5 + $persen15 + $persen25 + $persen30 + $persen35) / 1000) * 1000;
-
+                    $pphArr = [];
+                    $pengaliArr = [];
+                    $brutoArr = [];
                     if($total_ket < 12){
                         $no19 = 0;
                         for ($i=0; $i < 12; $i++) { 
                             if ($gj[$i] != null) {
                                 $penghasilanBruto = array_sum($gj[$i]) + array_sum($penghasilan[$i]) + array_sum($bonus[$i]) + $jamsostek[$i];
-                                $ter_kategori = \App\Helpers\HitungPPH::getTarifEfektifKategori($status);
+                                $status_ptkp = $status == 'TK' ? 'TK/0' : $status;
+                                $ter_kategori = \App\Helpers\HitungPPH::getTarifEfektifKategori($status_ptkp);
                                 $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
                                     ->where('kategori', $ter_kategori)
                                     ->where(function($query) use ($penghasilanBruto) {
@@ -399,6 +403,9 @@
                                     $pengali = $lapisanPenghasilanBruto->pengali;
                                 }
                                 $pph = $penghasilanBruto * ($pengali / 100);
+                                array_push($pphArr, $pph);
+                                array_push($pengaliArr, ($pengali / 100));
+                                array_push($brutoArr, $penghasilanBruto);
                                 $no19 += round($pph);
                             }
                         }
@@ -406,7 +413,6 @@
                         $no19 = floor(($no17 / 12) * $total_ket);
                     }
                 @endphp
-
                 <div class="row m-0 ">
                     <div class="col-lg-12">
                         <h6>B.1. RINCIAN PENGHASILAN</h6>
