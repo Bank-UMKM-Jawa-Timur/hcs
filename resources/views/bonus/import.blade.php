@@ -60,6 +60,7 @@
 
                 var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
                 var grand_total = 0;
+                var tanggal = $("#tanggal").val();
                 var test = $("#upload_csv").val();
                 var sheet_data = [];
                 if (regex.test($("#upload_csv").val().toLowerCase())) {
@@ -87,6 +88,8 @@
                                 var no_rek = [];
 
                                 var checkNip = [];
+                                var checkFinal = [];
+                                var NoCheckFinal = false;
                                 var noCheckEmpty = 1;
                                 var no = 1;
 
@@ -111,7 +114,8 @@
                                         type: "POST",
                                         url: url,
                                         data: {
-                                            nip: JSON.stringify(dataNip)
+                                            nip: JSON.stringify(dataNip),
+                                            tanggal: tanggal
                                         },
                                         beforeSend: function () {
                                             // Display a loading message or indicator before the API call
@@ -125,128 +129,144 @@
                                             `);
                                         },
                                         success: function (res) {
-                                            $('#table-data').removeClass('hidden');
-                                            var new_body_tr = ``
-                                            const duplicateNIP = findDuplicateNIP(res);
-                                            $.each(res,function(key,value) {
-                                                let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
-                                                if (value.cek == '-') {
-                                                    // Jika nip tidak ditemukan
-                                                    if (nipDuplicate) {
-                                                        checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
-                                                        hasError = true
-                                                    }
-                                                    else {
-                                                        checkNip.push(value.nip + " baris " + noCheckEmpty++);
-                                                        hasError = true
-                                                    }
-
-                                                    nipDataRequest.push(value.nip);
-                                                    grand_total += parseInt(dataNominal[key])
-                                                    new_body_tr += `
-                                                        <tr>
-                                                            <td class="table-danger">
-                                                                <span>${no++}</span>
-                                                            </td>
-                                                            <td class="table-danger">
-                                                                <span class="text-danger">${value.nip}</span>
-                                                            </td>
-                                                            <td class="table-danger">
-                                                                <span class="text-danger">${value.nama_karyawan}</span>
-                                                            </td>
-                                                            <td class="table-danger">
-                                                                <span class="text-danger">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
-                                                            </td>
-                                                            <td class="table-danger">
-                                                                <span>${formatRupiah(dataNominal[key])}</span>
-
-                                                            </td>
-                                                        </tr>
-                                                    `;
-                                                }
-                                                else {
-                                                    // Nip ditemukan
-                                                    if (nipDuplicate) {
-                                                        checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
-                                                        hasError = true
-
-                                                        nipDataRequest.push(value.nip);
-                                                        grand_total += parseInt(dataNominal[key])
-                                                        new_body_tr += `
-                                                            <tr>
-                                                                <td class="table-danger">
-                                                                    <span>${no++}</span>
-                                                                </td>
-                                                                <td class="table-danger">
-                                                                    <span class="text-danger">${value.nip}</span>
-                                                                </td>
-                                                                <td class="table-danger">
-                                                                    <span class="text-danger">${value.nama_karyawan}</span>
-                                                                </td>
-                                                                <td class="table-danger">
-                                                                    <span class="text-danger">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
-                                                                </td>
-                                                                <td class="table-danger">
-                                                                    <span>${formatRupiah(dataNominal[key])}</span>
-
-                                                                </td>
-                                                            </tr>
-                                                        `;
-                                                    }
-                                                }
-                                            })
-                                            $.each(res,function(key,value) {
-                                                // if (res.some(checkUsername)) {
-                                                if (value.cek == '-') {
-                                                    // checkNip.push(value.nip);
-                                                    // hasError = true
-                                                }else{
+                                                $('#table-data').removeClass('hidden');
+                                                var new_body_tr = ``
+                                                const duplicateNIP = findDuplicateNIP(res);
+                                                $.each(res,function(key,value) {
                                                     let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
-                                                    if (!nipDuplicate) {
-                                                        nipDataRequest.push(value.nip);
-                                                        grand_total += parseInt(dataNominal[key])
-                                                        new_body_tr += `
-                                                            <tr>
-                                                                <td class="">
-                                                                    <span>${no++}</span>
-                                                                </td>
-                                                                <td class="">
-                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
-                                                                </td>
-                                                                <td class="">
-                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
-                                                                </td>
-                                                                <td class="">
-                                                                    <span class="${value.cek == '-' ? 'text-danger' : ''}">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
-                                                                </td>
-                                                                <td class="">
-                                                                    <span>${formatRupiah(dataNominal[key])}</span>
+                                                    if (value.status == 1) {
+                                                        checkFinal.push(value.nip);
+                                                        hasError = true
+                                                        NoCheckFinal = true
+                                                    } else {
+                                                        NoCheckFinal = false
+                                                        if (value.cek == '-') {
+                                                            // Jika nip tidak ditemukan
+                                                            if (nipDuplicate) {
+                                                                checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
+                                                                hasError = true
+                                                            }
+                                                            else {
+                                                                checkNip.push(value.nip + " baris " + noCheckEmpty++);
+                                                                hasError = true
+                                                            }
 
-                                                                </td>
-                                                            </tr>
-                                                        `;
+                                                            nipDataRequest.push(value.nip);
+                                                            grand_total += parseInt(dataNominal[key])
+                                                            new_body_tr += `
+                                                                <tr>
+                                                                    <td class="table-danger">
+                                                                        <span>${no++}</span>
+                                                                    </td>
+                                                                    <td class="table-danger">
+                                                                        <span class="text-danger">${value.nip}</span>
+                                                                    </td>
+                                                                    <td class="table-danger">
+                                                                        <span class="text-danger">${value.nama_karyawan}</span>
+                                                                    </td>
+                                                                    <td class="table-danger">
+                                                                        <span class="text-danger">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
+                                                                    </td>
+                                                                    <td class="table-danger">
+                                                                        <span>${formatRupiah(dataNominal[key])}</span>
+
+                                                                    </td>
+                                                                </tr>
+                                                            `;
+                                                        }
+                                                        else {
+                                                            // Nip ditemukan
+                                                            if (nipDuplicate) {
+                                                                checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
+                                                                hasError = true
+
+                                                                nipDataRequest.push(value.nip);
+                                                                grand_total += parseInt(dataNominal[key])
+                                                                new_body_tr += `
+                                                                    <tr>
+                                                                        <td class="table-danger">
+                                                                            <span>${no++}</span>
+                                                                        </td>
+                                                                        <td class="table-danger">
+                                                                            <span class="text-danger">${value.nip}</span>
+                                                                        </td>
+                                                                        <td class="table-danger">
+                                                                            <span class="text-danger">${value.nama_karyawan}</span>
+                                                                        </td>
+                                                                        <td class="table-danger">
+                                                                            <span class="text-danger">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
+                                                                        </td>
+                                                                        <td class="table-danger">
+                                                                            <span>${formatRupiah(dataNominal[key])}</span>
+
+                                                                        </td>
+                                                                    </tr>
+                                                                `;
+                                                            }
+                                                        }
+                                                    }
+                                                })
+                                                $.each(res,function(key,value) {
+                                                    // if (res.some(checkUsername)) {
+                                                    if (value.cek == '-') {
+                                                        // checkNip.push(value.nip);
+                                                        // hasError = true
+                                                    }else{
+                                                        let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
+                                                        if (!nipDuplicate) {
+                                                            nipDataRequest.push(value.nip);
+                                                            grand_total += parseInt(dataNominal[key])
+                                                            new_body_tr += `
+                                                                <tr>
+                                                                    <td class="">
+                                                                        <span>${no++}</span>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nip}</span>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        <span class="${value.cek == '-' ? 'text-danger' : ''}">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        <span>${formatRupiah(dataNominal[key])}</span>
+
+                                                                    </td>
+                                                                </tr>
+                                                            `;
+                                                        }
+                                                    }
+
+                                                })
+                                                if (hasError == true) {
+                                                    if (NoCheckFinal == true) {
+                                                        var message = ``;
+                                                        message += `Tidak bisa memilih tanggal ` + tanggal + `, karena sudah melakukan finalisasi.`
+                                                        alertDanger(message)
+                                                        $('#button-simpan').addClass('hidden');
+                                                        $('#table-data').addClass('hidden');
+                                                        $('#grand_total').addClass('hidden');
+                                                    } else {
+                                                        var message = ``;
+                                                        message += `Data tidak ditemukan pada NIP :<span class="font-weight-bold"> ${checkNip}</span> <br> <span class="pt-3 font-italic">Harap cek pada file excel kembali dan silahkan upload ulang.</span>`
+                                                        $('#button-simpan').addClass('hidden');
+                                                        alertDanger(message)
                                                     }
                                                 }
-
-                                            })
-                                            if (hasError == true) {
-                                                var message = ``;
-                                                message += `Data tidak ditemukan pada NIP :<span class="font-weight-bold"> ${checkNip}</span> <br> <span class="pt-3 font-italic">Harap cek pada file excel kembali dan silahkan upload ulang.</span>`
-                                                $('#button-simpan').addClass('hidden');
-                                                alertDanger(message)
-                                            }
-                                            if (hasError != true) {
-                                                alertSuccess('Data Valid.');
-                                                $('.nominal-input').val(dataNominal)
-                                                $('.nip').val(nipDataRequest);
-                                                $('#button-simpan').removeClass('hidden');
-                                            }
-                                            var total_grand = grand_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-                                            $('#grand').html(`
-                                                <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
-                                                <p id="grand-total" class="font-weight-bold">Grand Total : ${total_grand}</p>
-                                            `)
-                                            $('#table_item tbody').append(new_body_tr);
+                                                if (hasError != true) {
+                                                    alertSuccess('Data Valid.');
+                                                    $('.nominal-input').val(dataNominal)
+                                                    $('.nip').val(nipDataRequest);
+                                                    $('#button-simpan').removeClass('hidden');
+                                                }
+                                                var total_grand = grand_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                                                $('#grand').html(`
+                                                    <p id="total-data" class="font-weight-bold">Total Data : ${dataNip.length}</p>
+                                                    <p id="grand-total" class="font-weight-bold">Grand Total : ${total_grand}</p>
+                                                `)
+                                                $('#table_item tbody').append(new_body_tr);
 
                                         },
                                         complete: function () {
@@ -374,7 +394,7 @@
                         </div>
                         <div class="col kategori-tunjangan-select">
                             <label for="">Tanggal</label>
-                            <input type="date" class="form-control" name="tanggal" id="">
+                            <input type="date" class="form-control" name="tanggal" id="tanggal">
                         </div>
                         <div class="col">
                             <label for="">Data Excel</label>

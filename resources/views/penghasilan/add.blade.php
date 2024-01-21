@@ -69,7 +69,7 @@
 
             $('.btn-import').on('click',function(element) {
                 var kategori = $("#kategori").val();
-                var tanggal = $(`#tanggal`).val()
+                var tanggal = $(`#tanggal`).val();
                 if(kategori == ''){
                     Swal.fire({
                         icon: 'error',
@@ -169,6 +169,7 @@
                                             `);
                                         },
                                         success: function (res) {
+                                            console.log(res);
                                             $('#table-data').removeClass('hidden');
                                             var new_body_tr = ``
                                             const duplicateNIP = findDuplicateNIP(res);
