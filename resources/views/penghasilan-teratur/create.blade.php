@@ -313,6 +313,8 @@
 
                 var checkNip = [];
                 var rowEmpty = [];
+                var checkFinal = [];
+                var NoCheckFinal = false;
                 var noEmpty = 1;
                 var checkNipTunjangan = [];
                 var namaTunjangan = [];
@@ -341,6 +343,7 @@
                     data: {
                         nip: JSON.stringify(dataNip),
                         tanggal: hari_ini,
+                        bulan: bulanReq,
                         id_tunjangan: id_tunjangan,
                     },
                     beforeSend: function () {
@@ -361,44 +364,50 @@
                         var headerMessage = `harap cek kembali pada file excel yang di upload.`;
                         const duplicateNIP = findDuplicateNIP(res);
                         $.each(res,function(key,value) {
-                            if (value.cek_nip == false) {
-                                checkNip.push(value.nip + " baris " + noEmpty++);
-                                hasError = true;
-                                hasNip = true;
-                                hasTunjangan = false;
-                            } else if (value.cek_tunjangan == true) {
-                                checkNipTunjangan.push(value.nip + " baris " + noEmpty++);
-                                namaTunjangan.push(value.tunjangan.nama_tunjangan);
-                                hasError = true;
-                                hasTunjangan = true;
-                                hasNip = false;
-                            }
-                            if (value.cek_nip == false || value.cek_tunjangan == true) {
-                                hasError = true;
-                                hasNip = true;
-                                hasTunjangan = false;
-                                grandTotalNominal += parseInt(dataNominal[key])
-                                nipDataRequest.push(value.nip);
-                                no++;
-                                new_body_tr += `
-                                        <tr class="table-danger">
-                                        <td>
-                                            ${no}
-                                        </td>
-                                        <td>
-                                            ${value.nip}
-                                        </td>
-                                        <td>
-                                            ${value.nama_karyawan}
-                                        </td>
-                                        <td>
-                                            ${no_rek[key] == undefined ? '-' : no_rek[key]}
-                                        </td>
-                                        <td>
-                                            ${formatRupiah(dataNominal[key].toString())}
-                                        </td>
-                                    </tr>
-                                `;
+                            if (value.status == 1) {
+                                checkFinal.push(value.nip);
+                                hasError = true
+                                NoCheckFinal = true
+                            } else {
+                                if (value.cek_nip == false) {
+                                    checkNip.push(value.nip + " baris " + noEmpty++);
+                                    hasError = true;
+                                    hasNip = true;
+                                    hasTunjangan = false;
+                                } else if (value.cek_tunjangan == true) {
+                                    checkNipTunjangan.push(value.nip + " baris " + noEmpty++);
+                                    namaTunjangan.push(value.tunjangan.nama_tunjangan);
+                                    hasError = true;
+                                    hasTunjangan = true;
+                                    hasNip = false;
+                                }
+                                if (value.cek_nip == false || value.cek_tunjangan == true) {
+                                    hasError = true;
+                                    hasNip = true;
+                                    hasTunjangan = false;
+                                    grandTotalNominal += parseInt(dataNominal[key])
+                                    nipDataRequest.push(value.nip);
+                                    no++;
+                                    new_body_tr += `
+                                            <tr class="table-danger">
+                                            <td>
+                                                ${no}
+                                            </td>
+                                            <td>
+                                                ${value.nip}
+                                            </td>
+                                            <td>
+                                                ${value.nama_karyawan}
+                                            </td>
+                                            <td>
+                                                ${no_rek[key] == undefined ? '-' : no_rek[key]}
+                                            </td>
+                                            <td>
+                                                ${formatRupiah(dataNominal[key].toString())}
+                                            </td>
+                                        </tr>
+                                    `;
+                                }
                             }
                             // if (value.cek_nip || value.cek_tunjangan) {
                             //     let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
@@ -472,8 +481,23 @@
                                 `;
                             }
                         })
-
                         if (hasError == true) {
+                            if (NoCheckFinal == true) {
+                                var message = ``;
+                                message += `Tidak bisa memilih bulan ` + getMonth(bulanReq) + `, karena sudah melakukan finalisasi.`
+                                $('#alert-massage').html(`
+                                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                                        <strong>Data tidak valid.</strong><br>
+                                        ${message}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                `)
+                                $('#table_item tbody').empty();
+                                $('#hasil-filter').addClass('d-none');
+                                $('#btn-simpan').addClass('d-none');
+                            } else {
                                 if (hasNip == true) {
                                     message += `${checkNip}`
                                     tittleMessage += `Tidak ditemukan`
@@ -500,6 +524,7 @@
                                         formatRupiah(grandTotalNominal.toString())
                                     }</p>
                                 `)
+                            }
                         }else{
                             $('#alert-massage').html(`
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -541,6 +566,14 @@
                 });
                 $("#loadingModal").modal("show");
             })
+
+            function getMonth(bulan) {
+                bulans = parseInt(bulan);
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+                return months[bulans - 1];
+            }
+
             function alertWarning(message) {
                 Swal.fire({
                     tittle: 'Warning!',

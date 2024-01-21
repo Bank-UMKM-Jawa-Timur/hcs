@@ -85,6 +85,7 @@ class PenghasilanTeraturController extends Controller
                 $nip = $value['nip'];
                 $row = $value['row'];
                 $tanggal = Request()->get('tanggal');
+                $bulan = Request()->get('bulan');
                 $id_tunjangan = Request()->get('id_tunjangan');
 
 
@@ -99,15 +100,51 @@ class PenghasilanTeraturController extends Controller
                     ->whereYear('tk.tanggal', date('Y', strtotime($tanggal)))
                     ->first();
 
-                return [
-                    'row' => $row,
-                    'nip' => $nip_exist ? $nip_exist->nip : $nip,
-                    'cek_nip' => $nip_exist ? true : false,
-                    'cek_tunjangan' => $tunjangan ? true : false,
-                    'tunjangan' => $tunjangan,
-                    'nama_karyawan' => $nip_exist ? $nip_exist->nama_karyawan : 'Karyawan Tidak Ditemukan',
-                    'no_rekening' => $nip_exist ? $nip_exist->no_rekening : 'No Rek Tidak Ditemukan',
-                ];
+                $finalisasi = DB::table('gaji_per_bulan as gaji')
+                ->join('batch_gaji_per_bulan as batch', 'gaji.batch_id', 'batch.id')
+                ->where('batch.status', 'final')
+                ->where('gaji.nip', $nip)
+                ->orderByDesc('batch.tanggal_input')
+                ->first();
+
+                if ($finalisasi) {
+                    if ($finalisasi->bulan == $bulan) {
+                        return [
+                            'status' =>  1,
+                            'row' => $row,
+                            'nip' => $nip_exist ? $nip_exist->nip : $nip,
+                            'cek_nip' => $nip_exist ? true : false,
+                            'cek_tunjangan' => $tunjangan ? true : false,
+                            'tunjangan' => $tunjangan,
+                            'nama_karyawan' => $nip_exist ? $nip_exist->nama_karyawan : 'Karyawan Tidak Ditemukan',
+                            'no_rekening' => $nip_exist ? $nip_exist->no_rekening : 'No Rek Tidak Ditemukan',
+                        ];
+                    } else {
+                        return [
+                            'status' =>  2,
+                            'row' => $row,
+                            'nip' => $nip_exist ? $nip_exist->nip : $nip,
+                            'cek_nip' => $nip_exist ? true : false,
+                            'cek_tunjangan' => $tunjangan ? true : false,
+                            'tunjangan' => $tunjangan,
+                            'nama_karyawan' => $nip_exist ? $nip_exist->nama_karyawan : 'Karyawan Tidak Ditemukan',
+                            'no_rekening' => $nip_exist ? $nip_exist->no_rekening : 'No Rek Tidak Ditemukan',
+                        ];
+                    }
+
+                } else {
+                    return [
+                        'status' =>  3,
+                        'row' => $row,
+                        'nip' => $nip_exist ? $nip_exist->nip : $nip,
+                        'cek_nip' => $nip_exist ? true : false,
+                        'cek_tunjangan' => $tunjangan ? true : false,
+                        'tunjangan' => $tunjangan,
+                        'nama_karyawan' => $nip_exist ? $nip_exist->nama_karyawan : 'Karyawan Tidak Ditemukan',
+                        'no_rekening' => $nip_exist ? $nip_exist->no_rekening : 'No Rek Tidak Ditemukan',
+                    ];
+                }
+
             })->toArray();
             return response()->json($response);
 
@@ -272,7 +309,7 @@ class PenghasilanTeraturController extends Controller
                 ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $old_tanggal)
                 ->where('created_at', $created_at)
                 ->delete();
-    
+
                 if ($nip) {
                     if (is_array($nip)) {
                         for ($i = 0; $i < $total; $i++) {
@@ -287,7 +324,7 @@ class PenghasilanTeraturController extends Controller
                                 'created_at' => now(),
                                 'updated_at' => now(),
                             ]);
-    
+
                             $gaji = GajiPerBulanModel::where('nip', $nip[$i])
                                 ->where('bulan', $bulanReq)
                                 ->where('tahun', $tahun)
