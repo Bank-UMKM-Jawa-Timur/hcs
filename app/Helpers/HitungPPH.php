@@ -61,6 +61,7 @@ class HitungPPH
         $penghasilanBruto = $penghasilanRutin + $penghasilanTidakRutin + $jamsostek;
 
         $pph = 0;
+
         $kode_ptkp = $ptkp->kode == 'TK' ? 'TK/0' : $ptkp->kode;
         $ter_kategori = HitungPPH::getTarifEfektifKategori($kode_ptkp);
         $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
@@ -129,14 +130,11 @@ class HitungPPH
         $pph_full_month = 0;
 
         // Get PTKP
-        $ptkp = HitungPPH::getPTKP($karyawan->nip, $karyawan->status);
+        $ptkp = HitungPPH::getPTKP($karyawan);
         
         $pph_full_month = HitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, true);
 
         $terutang = $pph_full_month - $pph_final;
-        if ($karyawan->nip == '00193') {
-            // dd($total_gaji, $pph_full_month, $pph_final, $terutang);
-        }
 
         if ($terutang > 0) {
             // Update terutang on table
@@ -151,28 +149,32 @@ class HitungPPH
         return $terutang;
     }
 
-    public static function getPTKP($nip, $karyawan_status) {
-        // Get status pernikahan untuk kode ptkp
-        if ($karyawan_status == 'K' || $karyawan_status == 'Kawin') {
-            $anak = DB::table('mst_karyawan')
-                ->where('keluarga.nip', $nip)
-                ->whereIn('enum', ['Suami', 'Istri'])
-                ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
-                ->orderByDesc('id')
-                ->first('jml_anak');
-            if ($anak != null && $anak->jml_anak > 3) {
-                $status = 'K/3';
-            } else if ($anak != null) {
-                $jml_anak = $anak->jml_anak ? $anak->jml_anak : 0;
-                $status = 'K/' . $jml_anak;
-            } else {
-                $status = 'K/0';
-            }
+    public static function getPTKP($karyawan) {
+        if ($karyawan->status_ptkp) {
+            $status = $karyawan->status_ptkp;
         }
         else {
-            $status = 'TK';
+            // Get status pernikahan untuk kode ptkp
+            if ($karyawan->status == 'K' || $karyawan->status == 'Kawin') {
+                $anak = DB::table('mst_karyawan')
+                    ->where('keluarga.nip', $karyawan->nip)
+                    ->whereIn('enum', ['Suami', 'Istri'])
+                    ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
+                    ->orderByDesc('id')
+                    ->first('jml_anak');
+                if ($anak != null && $anak->jml_anak > 3) {
+                    $status = 'K/3';
+                } else if ($anak != null) {
+                    $jml_anak = $anak->jml_anak ? $anak->jml_anak : 0;
+                    $status = 'K/' . $jml_anak;
+                } else {
+                    $status = 'K/0';
+                }
+            }
+            else {
+                $status = 'TK';
+            }
         }
-
         // Get PTKP
         $ptkp = DB::table('set_ptkp')
                 ->where('kode', $status)

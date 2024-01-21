@@ -748,31 +748,7 @@ class GajiPerBulanController extends Controller
                     }
                 }
 
-                // Get status pernikahan untuk kode ptkp
-                if ($item->status == 'K' || $item->status == 'Kawin') {
-                    $anak = DB::table('mst_karyawan')
-                        ->where('keluarga.nip', $item->nip)
-                        ->whereIn('enum', ['Suami', 'Istri'])
-                        ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
-                        ->orderByDesc('id')
-                        ->first('jml_anak');
-                    if ($anak != null && $anak->jml_anak > 3) {
-                        $status = 'K/3';
-                    } else if ($anak != null) {
-                        $jml_anak = $anak->jml_anak ? $anak->jml_anak : 0;
-                        $status = 'K/' . $jml_anak;
-                    } else {
-                        $status = 'K/0';
-                    }
-                }
-                else {
-                    $status = 'TK';
-                }
-
-                // Get PTKP
-                $ptkp = DB::table('set_ptkp')
-                        ->where('kode', $status)
-                        ->first();
+                $ptkp = HitungPPH::getPTKP($item);
 
                 // Get penambah & pengurang bruto
                 if (!$item->kd_entitas) {
@@ -1354,7 +1330,6 @@ class GajiPerBulanController extends Controller
     }
 
     public function getPPHDesember($bulan, $tahun, $karyawan, $ptkp){
-        // dd([$bulan, $tahun]);
         $tanggal = date('Y-m-d', strtotime(Carbon::createFromFormat('Y-m-d', date('Y') . '-' . $bulan . '-' . '26')));
         $pph = 0;
         $tunjangan = array();
@@ -1563,29 +1538,7 @@ class GajiPerBulanController extends Controller
                 }
             }
 
-            // Get status pernikahan untuk kode ptkp
-            if ($item->status == 'K' || $item->status == 'Kawin') {
-                $anak = DB::table('mst_karyawan')
-                    ->where('keluarga.nip', $item->nip)
-                    ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
-                    ->orderByDesc('id')
-                    ->first('jml_anak');
-                if ($anak != null && $anak->jml_anak > 3) {
-                    $status = 'K/3';
-                } else if ($anak != null) {
-                    $status = 'K/' . $anak->jml_anak;
-                } else {
-                    $status = 'K/0';
-                }
-            }
-            else {
-                $status = 'TK';
-            }
-
-            // Get PTKP
-            $ptkp = DB::table('set_ptkp')
-                    ->where('kode', $status)
-                    ->first();
+            $ptkp = HitungPPH::getPTKP($item);
 
             // Get penambah & pengurang bruto
             if (in_array($item->kd_entitas, $cabang)) {

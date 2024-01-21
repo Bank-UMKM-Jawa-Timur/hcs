@@ -99,18 +99,22 @@
                 $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
                 $total_ket = 0;
                 $status = 'TK';
-                if ($karyawan->status == 'K' || $karyawan->status == 'Kawin') {
-                    $anak = DB::table('mst_karyawan')
-                        ->where('keluarga.nip', $karyawan->nip)
-                        ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
-                        ->whereIn('enum', ['Suami', 'Istri'])
-                        ->first('jml_anak');
-                    if ($anak != null && $anak->jml_anak > 3) {
-                        $status = 'K/3';
-                    } else if ($anak != null) {
-                        $status = 'K/'.$anak->jml_anak;
-                    } else {
-                        $status = 'K/0';
+                if ($karyawan->status_ptkp) {
+                    $status = $karyawan->status_ptkp;
+                } {
+                    if ($karyawan->status == 'K' || $karyawan->status == 'Kawin') {
+                        $anak = DB::table('mst_karyawan')
+                            ->where('keluarga.nip', $karyawan->nip)
+                            ->join('keluarga', 'keluarga.nip', 'mst_karyawan.nip')
+                            ->whereIn('enum', ['Suami', 'Istri'])
+                            ->first('jml_anak');
+                        if ($anak != null && $anak->jml_anak > 3) {
+                            $status = 'K/3';
+                        } else if ($anak != null) {
+                            $status = 'K/'.$anak->jml_anak;
+                        } else {
+                            $status = 'K/0';
+                        }
                     }
                 }
                 function formatNpwp($npwp) {
@@ -123,9 +127,7 @@
                     return $ret;
                 }
                 $status_pegawai = $karyawan->ket;
-                $ptkp = DB::table('set_ptkp')
-                    ->where('kode', $status)
-                    ->first();
+                $ptkp = \App\Helpers\HitungPPH::getPTKP($karyawan);
 
                 for ($i=0; $i < 12; $i++) {
                     if ((array_sum($gj[$i]) + $jamsostek[$i] + array_sum($penghasilan[$i]) != 0)) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\HitungPPH;
 use App\Imports\ImportPotonganGaji;
 use App\Models\KaryawanModel;
 use Illuminate\Http\Request;
@@ -224,26 +225,7 @@ class SlipGajiController extends Controller
             ->where('tahun', $tahun)
             ->count('*');
         foreach($karyawan as $i => $item){
-            // Get Status Karyawan Untuk PTKP
-            if($item->status != 'K' || $item->status != 'TK'){
-                $status = 'TK';
-            } else{
-                $status = $item->status;
-                if($status == 'K'){
-                    $jmlAnak = DB::table('keluarga')
-                        ->where('nip')
-                        ->whereIn('enum', ['Suami', 'Istri'])
-                        ->first();
-                    $jmlAnak = ($jmlAnak != null) ? $jmlAnak->jml_anak : '0';
-                    if($jmlAnak > 3){
-                        $jmlAnak = 3;
-                    }
-                    $status = $status.'/'.$jmlAnak;
-                }
-            }
-            $ptkp = DB::table('set_ptkp')
-                ->where('kode', $status)
-                ->first();
+            $ptkp = HitungPPH::getPTKP($item);
 
             $data[$i]['nama'] = $item->nama_karyawan;
 
