@@ -7,6 +7,7 @@ use App\Http\Resources\Api\KaryawanResource;
 use App\Models\KaryawanModel;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Bus\Batch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -112,20 +113,56 @@ class KaryawanController extends Controller
             // }
 
             $response = $explode_data->map(function ($item) use ($data) {
+                $tanggal = Request()->get('tanggal');
                 $nip = $item['nip'];
                 $row = $item['row'];
 
                 // Check if the NIP is found in the server-side data
                 $found = $data->where('nip', $nip)->first();
+                $finalisasi = DB::table('gaji_per_bulan as gaji')
+                ->join('batch_gaji_per_bulan as batch', 'gaji.batch_id', 'batch.id')
+                ->where('batch.status', 'final')
+                ->where('gaji.nip', $nip)
+                ->orderByDesc('batch.tanggal_input')
+                ->first();
 
-                return [
-                    'row' => $row,
-                    'nip' => $found ? $found->nip : $nip,
-                    'cek' => $found ? null : '-',
-                    'kd_entitas' => $found->kd_entitas ?? '000',
-                    'nama_karyawan' => $found ? $found->nama_karyawan : 'Karyawan Tidak Ditemukan',
-                    'no_rekening' => $found ? $found->no_rekening : 'No Rek Tidak Ditemukan',
-                ];
+                if ($finalisasi) {
+                    if ($finalisasi->tanggal_input < $tanggal) {
+                        return [
+                            'status' => 1,
+                            'message' => 'success',
+                            'row' => $row,
+                            'nip' => $found ? $found->nip : $nip,
+                            'cek' => $found ? null : '-',
+                            'kd_entitas' => $found->kd_entitas ?? '000',
+                            'nama_karyawan' => $found ? $found->nama_karyawan : 'Karyawan Tidak Ditemukan',
+                            'no_rekening' => $found ? $found->no_rekening : 'No Rek Tidak Ditemukan',
+                        ];
+                    } else {
+                        return [
+                            'status' => 2,
+                            'message' => 'success',
+                            'row' => $row,
+                            'nip' => $found ? $found->nip : $nip,
+                            'cek' => $found ? null : '-',
+                            'kd_entitas' => $found->kd_entitas ?? '000',
+                            'nama_karyawan' => $found ? $found->nama_karyawan : 'Karyawan Tidak Ditemukan',
+                            'no_rekening' => $found ? $found->no_rekening : 'No Rek Tidak Ditemukan',
+                        ];
+                    }
+
+                } else {
+                    return [
+                        'status' => 3,
+                        'message' => 'success',
+                        'row' => $row,
+                        'nip' => $found ? $found->nip : $nip,
+                        'cek' => $found ? null : '-',
+                        'kd_entitas' => $found->kd_entitas ?? '000',
+                        'nama_karyawan' => $found ? $found->nama_karyawan : 'Karyawan Tidak Ditemukan',
+                        'no_rekening' => $found ? $found->no_rekening : 'No Rek Tidak Ditemukan',
+                    ];
+                }
             })->toArray();
 
             return response()->json($response);

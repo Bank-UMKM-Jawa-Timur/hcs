@@ -95,7 +95,7 @@ class PenghasilanTidakTeraturController extends Controller
             ->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan')
             ->select('mst_karyawan.*', 'mst_jabatan.nama_jabatan')
             ->first();
-            
+
         if (!$karyawan->kd_entitas) {
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('kd_cabang', '000')
@@ -347,6 +347,7 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function insertPenghasilan(Request $request) {
+        return $request;
         try{
             DB::beginTransaction();
             $bulan = intval(date('m', strtotime($request->tanggal)));
@@ -366,7 +367,7 @@ class PenghasilanTidakTeraturController extends Controller
                     'created_at' => $request->tanggal
                 ]);
             DB::commit();
-            
+
             if($bulan == 12  && Carbon::now()->format('d') > 25){
                 DB::beginTransaction();
                 $gajiPerBulanController = new GajiPerBulanController;
@@ -449,6 +450,50 @@ class PenghasilanTidakTeraturController extends Controller
         }
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
         return view('penghasilan.add-input-tidak-teratur', compact('data'));
+    }
+
+    public function validasiInsert(Request $request){
+        $nip = $request->get('nip');
+        $tanggal = $request->get('tanggal');
+        $dataReady = DB::table('gaji_per_bulan as gaji')
+        ->join('batch_gaji_per_bulan as batch', 'gaji.batch_id', 'batch.id')
+        ->where('batch.status', 'final')
+        ->where('gaji.nip', $nip)
+        ->orderByDesc('batch.tanggal_input')
+        ->first();
+
+        // return ['tangal' => $tanggal, 'data' => $dataReady->tanggal_input];
+
+        $res = [];
+        if ($dataReady) {
+            if ($tanggal > $dataReady->tanggal_input) {
+                $res = [
+                    'kode' => 1,
+                    'status' => 'succses',
+                    'message' => 'Tidak bisa memilih tanggal ' . $tanggal. ', karena sudah melakukan finalisasi.',
+                    'data' => $dataReady
+                ];
+            }
+            else{
+                $res = [
+                    'kode' => 2,
+                    'status' => 'succses',
+                    'message' => 'Bisa memilih tanggal ini.',
+                    'data' => $dataReady
+                ];
+            }
+        } else {
+            $res = [
+                'kode' => 3,
+                'status' => 'succses',
+                'message' => Null,
+                'data' => null
+            ];
+        }
+
+
+
+        return response()->json($res);
     }
 
     /**
@@ -577,7 +622,7 @@ class PenghasilanTidakTeraturController extends Controller
             $repo = new PenghasilanTidakTeraturRepository();
             $data = $repo->getAllPenghasilan($search, $limit, $page, $bulan, $createdAt, $idTunjangan);
             $tunjangan = $repo->getNameTunjangan($idTunjangan);
-            
+
             return view('penghasilan.detail', compact(['data','tunjangan']));
         } catch(Exception $e){
             Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());
@@ -720,7 +765,7 @@ class PenghasilanTidakTeraturController extends Controller
                         'created_at' => $request->get('tanggal')
                     ]);
                 }
-    
+
                 ImportPenghasilanTidakTeraturModel::insert($inserted);
                 DB::commit();
             }else{

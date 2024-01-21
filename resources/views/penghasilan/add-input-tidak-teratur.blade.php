@@ -20,7 +20,8 @@
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="tanggal">Tanggal:</label>
-                    <input type="date" name="tanggal" id="" class="form-control" required>
+                    <input type="date" name="tanggal" id="tanggal" class="form-control" required>
+                    <h6 class="mt-2 text-danger d-none" id="error-message"></h6>
                     @error('tanggal')
                         <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -74,6 +75,31 @@
         $('.rupiah').keyup(function(){
             var angka = $(this).val();
             $(".rupiah").val(formatRupiah(angka));
+        })
+
+        $(`#tanggal`).on('change', function (){
+            const tanggal = $(this).val();
+            const nip = $(`#nip`).val();
+
+            $.ajax({
+                type: "GET",
+                url: `{{ url('penghasilan-tidak-teratur/validasi-insert') }}`,
+                data: {
+                    nip: nip,
+                    tanggal: tanggal,
+                },
+                success: function(res){
+                    // console.log(typeof(res.kode));
+                    console.log(res);
+                    if (res.kode == 1) {
+                        $(`#error-message`).removeClass('d-none').html(res.message)
+                        $(`#tanggal`).val('')
+                    }
+                    else {
+                        $(`#error-message`).addClass('d-none')
+                    }
+                }
+            })
         })
     </script>
 @endpush

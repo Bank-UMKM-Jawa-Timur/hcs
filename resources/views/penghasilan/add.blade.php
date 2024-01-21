@@ -69,6 +69,7 @@
 
             $('.btn-import').on('click',function(element) {
                 var kategori = $("#kategori").val();
+                var tanggal = $(`#tanggal`).val()
                 if(kategori == ''){
                     Swal.fire({
                         icon: 'error',
@@ -123,6 +124,8 @@
                                 var no_rek = [];
 
                                 var checkNip = [];
+                                var checkFinal = [];
+                                var NoCheckFinal = false;
                                 var noCheckEmpty = 1;
                                 var no = 1;
 
@@ -151,7 +154,8 @@
                                         type: "POST",
                                         url: url,
                                         data: {
-                                            nip: JSON.stringify(dataNip)
+                                            nip: JSON.stringify(dataNip),
+                                            tanggal: tanggal
                                         },
                                         beforeSend: function () {
                                             // Display a loading message or indicator before the API call
@@ -170,50 +174,22 @@
                                             const duplicateNIP = findDuplicateNIP(res);
                                             $.each(res,function(key,value) {
                                                 let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
-                                                if (value.cek == '-') {
-                                                    // Jika nip tidak ditemukan
-                                                    if (nipDuplicate) {
-                                                        checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
-                                                        hasError = true
-                                                    }
-                                                    else {
-                                                        checkNip.push(value.nip + " baris " + noCheckEmpty++);
-                                                        hasError = true
-                                                    }
-                                                    nipDataRequest.push(value.nip);
-                                                    grand_total += parseInt(dataNominal[key])
-                                                    var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
-                                                        <td class="table-danger">
-                                                            <span>${dataKeterangan[key]}</span>
-                                                        </td>` : ``;
-                                                    new_body_tr += `
-                                                        <tr>
-                                                            <td class="table-danger">
-                                                                <span>${no++}</span>
-                                                            </td>
-                                                            <td class="table-danger">
-                                                                <span class="text-danger">${value.nip}</span>
-                                                            </td>
-                                                            <td class="table-danger">
-                                                                <span class="text-danger">${value.nama_karyawan}</span>
-                                                            </td>
-                                                            <td class="table-danger">
-                                                                <span class="text-danger">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
-                                                            </td>
-                                                            <td class="table-danger">
-                                                                <span>${formatRupiah(dataNominal[key])}</span>
-
-                                                            </td>
-                                                            ${rowKeterangan}
-                                                        </tr>
-                                                    `;
-                                                }
-                                                else {
-                                                    // Nip ditemukan
-                                                    if (nipDuplicate) {
-                                                        checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
-                                                        hasError = true
-
+                                                if (value.status == 1) {
+                                                    checkFinal.push(value.nip);
+                                                    hasError = true
+                                                    NoCheckFinal = true
+                                                } else {
+                                                    NoCheckFinal = false
+                                                    if (value.cek == '-') {
+                                                        // Jika nip tidak ditemukan
+                                                        if (nipDuplicate) {
+                                                            checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
+                                                            hasError = true
+                                                        }
+                                                        else {
+                                                            checkNip.push(value.nip + " baris " + noCheckEmpty++);
+                                                            hasError = true
+                                                        }
                                                         nipDataRequest.push(value.nip);
                                                         grand_total += parseInt(dataNominal[key])
                                                         var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
@@ -241,6 +217,41 @@
                                                                 ${rowKeterangan}
                                                             </tr>
                                                         `;
+                                                    }
+                                                    else {
+                                                        // Nip ditemukan
+                                                        if (nipDuplicate) {
+                                                            checkNip.push("Duplikasi " + value.nip + " baris " + noCheckEmpty++);
+                                                            hasError = true
+
+                                                            nipDataRequest.push(value.nip);
+                                                            grand_total += parseInt(dataNominal[key])
+                                                            var rowKeterangan = kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan' ? `
+                                                                <td class="table-danger">
+                                                                    <span>${dataKeterangan[key]}</span>
+                                                                </td>` : ``;
+                                                            new_body_tr += `
+                                                                <tr>
+                                                                    <td class="table-danger">
+                                                                        <span>${no++}</span>
+                                                                    </td>
+                                                                    <td class="table-danger">
+                                                                        <span class="text-danger">${value.nip}</span>
+                                                                    </td>
+                                                                    <td class="table-danger">
+                                                                        <span class="text-danger">${value.nama_karyawan}</span>
+                                                                    </td>
+                                                                    <td class="table-danger">
+                                                                        <span class="text-danger">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
+                                                                    </td>
+                                                                    <td class="table-danger">
+                                                                        <span>${formatRupiah(dataNominal[key])}</span>
+
+                                                                    </td>
+                                                                    ${rowKeterangan}
+                                                                </tr>
+                                                            `;
+                                                        }
                                                     }
                                                 }
                                             })
@@ -286,10 +297,19 @@
                                                 }
                                             })
                                             if (hasError == true) {
-                                                var message = ``;
-                                                message += `Data tidak ditemukan di NIP :${checkNip}.</br> Silahkan cek kembali di excel dan upload ulang.`
-                                                $('#button-simpan').addClass('hidden');
-                                                alertDanger(message)
+                                                if (NoCheckFinal == true) {
+                                                    var message = ``;
+                                                    message += `Tidak bisa memilih tanggal ` + tanggal + `, karena sudah melakukan finalisasi.`
+                                                    alertDanger(message)
+                                                    $('#button-simpan').addClass('hidden');
+                                                    $('#table-data').addClass('hidden');
+                                                    $('#grand_total').addClass('hidden');
+                                                } else {
+                                                    var message = ``;
+                                                    message += `Data tidak ditemukan di NIP :${checkNip}.</br> Silahkan cek kembali di excel dan upload ulang.`
+                                                    $('#button-simpan').addClass('hidden');
+                                                    alertDanger(message)
+                                                }
                                             }
                                             if (hasError != true) {
                                                 alertSuccess('Data Valid.');
@@ -421,7 +441,7 @@
                         </div>
                         <div class="col">
                             <label for="tanggal">Tanggal</label>
-                            <input type="date" class="form-control" name="tanggal" required>
+                            <input type="date" class="form-control" name="tanggal" id="tanggal" required>
                         </div>
                         <div class="col">
                             <label for="">Data Excel</label>
