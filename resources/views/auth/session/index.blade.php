@@ -57,7 +57,30 @@
                     <td>Pusat</td>
                     <td>08:03:20</td>
                     <td>Aktif</td>
-                    <td class="flex justify-center"><button class="btn btn-primary-light">Resset</button></td>
+                    <td class="flex justify-center">
+                        <button type="button" class="btn btn-primary-light" data-modal-toggle="modal" data-modal-id="confirmResetModal">Resset</button>
+                        {{-- modal reset --}}
+                        <div class="modal-layout hidden" id="confirmResetModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal modal-sm">
+                                <div class="modal-head">
+                                    <div class="heading">
+                                        <h2>Konfirmasi Reset Session</h2>
+                                    </div>
+                                    <button type="button" data-modal-dismiss="confirmResetModal"  class="modal-close"><i class="ti ti-x"></i></button>
+                                </div>
+                                <div class="modal-body text-left">
+                                    <h2>Apakah Anda Yakin Ingin Reset Session ... ini </b>?</h2>
+                                </div>
+                                <div class="modal-footer to-right">
+                                    <button type="button" data-modal-dismiss="confirmResetModal" class="btn btn-light" type="button">Batal</button>
+                                    {{-- <form action="" method="POST">
+                                        @csrf --}}
+                                            <button data-modal-dismiss="confirmResetModal" class="btn btn-primary" type="submit">Hapus</button>
+                                    {{-- </form> --}}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
