@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\PotonganController;
@@ -142,6 +143,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::resource('/user', UserController::class);
     Route::get('/reset-pass/{id}', [UserController::class, 'resetPass'])->name('resetPass');
     Route::post('/reset-password/{id}', [UserController::class, 'updatePass'])->name("updatePass");
+    Route::get('/session-list', [AuthenticatedSessionController::class, 'index'])->name("session-list");
 
     Route::resource('/potongan', PotonganController::class);
     Route::post('/get-karyawan-by-nip', [PotonganController::class, 'getKaryawanByNip'])->name('karyawan-by-entitas');

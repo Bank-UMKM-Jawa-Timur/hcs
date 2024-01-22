@@ -839,6 +839,13 @@
                                                                 </a>
                                                             </li>
                                                         @endcan
+                                                        <li>
+                                                            <a href="{{ route('session-list') }}">
+                                                                <button class="btn-link @active('session-list', 'active-link')">
+                                                                    <span>Session</span>
+                                                                </button>
+                                                            </a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </li>

@@ -24,6 +24,10 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
+    public function index(){
+        return view('auth.session.index');
+    }
+
     public function store(LoginRequest $request)
     {
         try {
