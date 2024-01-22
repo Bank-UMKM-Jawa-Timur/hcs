@@ -14,6 +14,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\KaryawanExport;
 use App\Exports\ExportVitamin;
+use App\Helpers\HitungPPH;
 use App\Repository\PenghasilanTidakTeraturRepository;
 use Carbon\Carbon;
 use Exception;
@@ -168,8 +169,8 @@ class PenghasilanTeraturController extends Controller
         if (!auth()->user()->can('penghasilan - import - penghasilan teratur - import')) {
             return view('roles.forbidden');
         }
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $tanggalVal = GajiPerBulanModel::where('bulan', Carbon::now()->format('m'))
                 ->where('tahun', Carbon::now()->format('Y'))
                 ->first();
@@ -185,7 +186,7 @@ class PenghasilanTeraturController extends Controller
             $nip = explode(',', $request->get('nip'));
             $total = count($nip);
             $bulan = $request->get('bulan');
-            $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
+            $bulanReq = ($bulan < 10) ? (int)ltrim($bulan, '0') : (int)$bulan;
 
             $tanggal = date('Y-m-d', strtotime(date('Y') . '-' . $bulan . '-' . date('d')));
             $tahun = date("Y", strtotime($tanggal));
@@ -234,9 +235,53 @@ class PenghasilanTeraturController extends Controller
                 }
             }
 
-            Alert::success('Success', 'Berhasil menyimpan data');
+            DB::commit();
+            
+            DB::beginTransaction();
+            for ($i=0; $i < count($nip); $i++) { 
+                $karyawan = DB::table('mst_karyawan')
+                                ->where('nip', $nip[$i])
+                                ->first();
+                $ptkp = HitungPPH::getPTKP($karyawan);
+                $gaji = DB::table('gaji_per_bulan')
+                            ->select(
+                                '*',
+                                DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
+                                DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                            )
+                            ->where('nip', $nip[$i])
+                            ->where('tahun', $tahun)
+                            ->where('bulan', $bulanReq)
+                            ->first();
+                $total_gaji = 0;
+                $tunjangan_rutin = 0;
+                if ($gaji) {
+                    $total_gaji = $gaji->gaji;
+                }
+                $id_tunjangan = [11, 12, 13, 14];
+                $tunjangan = DB::table('transaksi_tunjangan')
+                                ->where('nip', $nip[$i])
+                                ->whereIn('id_tunjangan', $id_tunjangan)
+                                ->whereYear('tanggal', intval($tahun))
+                                ->whereMonth('tanggal', intval($bulan))
+                                ->get();
+                foreach ($tunjangan as $key => $value) {
+                    $tunjangan_rutin += $value->nominal;
+                }
+
+                $pph = HitungPPH::getPPh58($bulanReq, $tahun, $karyawan, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin);
+
+                DB::table('pph_yang_dilunasi')
+                    ->where('nip', $nip[$i])
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $bulanReq)
+                    ->update([
+                        'total_pph' => $pph
+                    ]);
+            }
             DB::commit();
 
+            Alert::success('Success', 'Berhasil menyimpan data');
             return redirect()->route('penghasilan.import-penghasilan-teratur.index');
         } catch (\Exception $e) {
             DB::rollBack();
