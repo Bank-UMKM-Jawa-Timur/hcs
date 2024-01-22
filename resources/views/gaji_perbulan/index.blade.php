@@ -18,21 +18,21 @@
 <div class="head mt-5">
     <div class="lg:flex gap-5 justify-between items-center">
         <div class="heading">
-            <h2 class="text-2xl font-bold tracking-tighter">Proses Penghasilan</h2>
+            <h2 class="text-2xl font-bold tracking-tighter">Proses Penggajian</h2>
             <div class="breadcrumb">
-             <a href="#" class="text-sm text-gray-500">Penghasilan</a>
-             <i class="ti ti-circle-filled text-theme-primary"></i>
-             <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Proses Penghsilan</a>
+                <a href="#" class="text-sm text-gray-500">Penggajian</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Proses Penggajian</a>
             </div>
         </div>
         <div class="button-wrapper flex gap-3 lg:mt-0 mt-5">
-          @if (auth()->user()->hasRole('kepegawaian'))
+            @if (auth()->user()->hasRole('kepegawaian'))
                 {{--  <button class="btn btn-primary-light lg:text-base text-xs" data-modal-id="penghasilan-kantor-modal" data-modal-toggle="modal"><i class="ti ti-file-import"></i> Penghasilan Semua Kantor</button>  --}}
             @endif
             @can('penghasilan - proses penghasilan')
                 <button class="btn btn-primary btn-proses lg:text-base text-xs" data-modal-id="proses-modal" data-modal-toggle="modal"><i class="ti ti-plus"></i> Proses Penghasilan</button>
             @endcan
-          </div>
+        </div>
     </div>
 </div>
 @php
@@ -40,19 +40,18 @@ $already_selected_value = date('Y');
 $earliest_year = 2022;
 @endphp
 <div class="p-5">
-  <div id="alert-additional-content-1" class="p-4 mb-4 text-blue-500 border border-blue-300 rounded-lg bg-blue-50  " role="alert">
+    <div id="alert-additional-content-1" class="p-4 mb-4 text-blue-500 border border-blue-300 rounded-lg bg-blue-50  " role="alert">
     <div class="flex items-center">
-      <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-      </svg>
-      <span class="sr-only">Info</span>
-      <h3 class="text-lg font-medium">Pemberitahuan</h3>
+        <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+        </svg>
+        <span class="sr-only">Info</span>
+        <h3 class="text-lg font-medium">Pemberitahuan</h3>
     </div>
-    <div class="mt-2 mb-4 text-sm">
-      Harap cek kembali data tunjangan sebelum melakukan proses tunjangan.
+        <div class="mt-2 mb-4 text-sm">
+            Pastikan data <b>penghasilan teratur sudah ter-upload semua</b>, karena akan berpengaruh pada pembentukan pajak.
+        </div>
     </div>
-
-  </div>
 </div>
 <div class="body-pages">
     <form id="form-filter" action="{{route('gaji_perbulan.index')}}" method="get">

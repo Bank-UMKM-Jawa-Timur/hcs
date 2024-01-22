@@ -387,7 +387,12 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
         return view('karyawan.import.status-ptkp');
     });
     Route::post('/post-import-status-ptkp', [KaryawanController::class, 'importStatusPtkp'])->name('import-status-ptkp');
-
+    // Route update karyawan
+    Route::get('/import-update-karyawan', function(){
+        return view('karyawan.import.update-karyawan');
+    });
+    Route::post('/post-import-data-karyawan', [KaryawanController::class, 'importUpdateKaryawan'])->name('import-data-karyawan');
+  
     Route::prefix('reset-sessions')
         ->name('reset-sessions.')
         ->group(function(){

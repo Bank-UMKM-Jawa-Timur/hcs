@@ -419,7 +419,7 @@
                                                 <a href="{{ route('gaji_perbulan.index') }}">
                                                     <button class="btn-link @active('gaji_perbulan', 'active-link')">
                                                         <i class="ti ti-circle"></i>
-                                                        <span>Proses Penghasilan</span>
+                                                        <span>Proses Penggajian</span>
                                                     </button>
                                                 </a>
                                             </li>
