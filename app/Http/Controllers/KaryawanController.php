@@ -8,6 +8,7 @@ use App\Imports\ImportDataKeluarga;
 use App\Imports\ImportKaryawan;
 use App\Imports\ImportNpwpRekening;
 use App\Imports\ImportStatusPTKP;
+use App\Imports\ImportUpdateKaryawan;
 use App\Imports\UpdateStatusImport;
 use App\Imports\UpdateTunjanganImport;
 use App\Models\JabatanModel;
@@ -1261,6 +1262,15 @@ class KaryawanController extends Controller
     public function importStatusPtkp(Request $request){
         $file = $request->file('upload_csv');
         $import = new ImportStatusPTKP;
+        $import = $import->import($file);
+
+        Alert::success('Berhasil', 'Berhasil mengimport data excel');
+        return redirect()->route('karyawan.index');
+    }
+
+    public function importUpdateKaryawan(Request $request){
+        $file = $request->file('upload');
+        $import = new ImportUpdateKaryawan;
         $import = $import->import($file);
 
         Alert::success('Berhasil', 'Berhasil mengimport data excel');
