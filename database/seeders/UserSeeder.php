@@ -16,13 +16,19 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')
+        $user_id = DB::table('users')
+                    ->insertGetId([
+                        'name' => 'Admin',
+                        'username' => 'admin',
+                        'email' => 'admin@mail.com',
+                        'password' => Hash::make('12345678'),
+                        'created_at' => now()
+                    ]);
+        DB::table('model_has_roles')
             ->insert([
-                'name' => 'Admin',
-                'username' => 'admin',
-                'email' => 'admin@mail.com',
-                'password' => Hash::make('12345678'),
-                'created_at' => now()
+                'role_id' => 1,
+                'model_type' => 'App\Models\User',
+                'model_id' => $user_id,
             ]);
     }
 }

@@ -69,21 +69,26 @@ Route::get('/dashboard', function () {
 
 Route::prefix('component')->group(function(){
     Route::get('button', function(){
-        return view('components.new.button'); 
+       return view('components.new.button'); 
     })->name('component.button');
     Route::get('table', function(){
-        return view('components.new.table'); 
+       return view('components.new.table'); 
     })->name('component.table');
     Route::get('form', function(){
-        return view('components.new.form'); 
+       return view('components.new.form'); 
     })->name('component.form');
     Route::get('modal', function(){
-        return view('components.new.modal'); 
+       return view('components.new.modal'); 
     })->name('component.modal');
     Route::get('loader', function(){
-        return view('components.new.loader'); 
+       return view('components.new.loader'); 
     })->name('component.loader');
 });
+
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::middleware('auth:user,karyawan')->group(function () {
+
+// });
 
 Route::prefix('graph')->group(function () {
     Route::get('/detail-per-cabang', [HomeController::class, 'perCabang'])->name('per-cabang');
@@ -117,6 +122,7 @@ Route::prefix('graph')->group(function () {
 
 Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::resource('/kantor', KantorController::class);
+    Route::resource('role', RoleMasterController::class);
     Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);
     Route::resource('/sub_divisi', \App\Http\Controllers\SubdivisiController::class);
     Route::resource('/jabatan', \App\Http\Controllers\JabatanController::class);
