@@ -1,74 +1,64 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 @include('vendor.select2')
 
 @section('content')
-<div class="card-header">
-    <div class="card-header">
-        <div class="card-title">
-            <h5 class="card-title">History Jabatan</h5>
-            <p class="card-title"><a href="">History </a> > <a href="{{ route('history_jabatan.index') }}">Jabatan</a></p>
+<div class="head mt-5">
+    <div class="flex gap-5 justify-between items-center">
+        <div class="heading">
+            <h2 class="text-2xl font-bold tracking-tighter">History Jabatan</h2>
+            <div class="breadcrumb">
+                <a href="#" class="text-sm text-gray-500">History</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('history_jabatan.index') }}" class="text-sm text-gray-500 font-bold">Jabatan</a>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="card-body">
-    <div class="row m-0">
-        <div class="col">
-            <h5>Cari Karyawan</h5>
+<div class="body-pages">
+    <div class="table-wrapping">
+            <h4 class="font-bold">Cari Karyawan</h4>
             <form action="{{ route('history_jabatan.store') }}" method="post">
                 @csrf
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="">Karyawan:</label>
-                            <select name="nip" id="nip" class="form-control"></select>
-                        </div>
+                <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
+                    <div class="input-box">
+                        <label for="">Karyawan:</label>
+                        <select name="nip" id="nip" class="form-input"></select>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <label for="">Status Jabatan</label>
-                            <input type="text" id="status_jabatan" class="form-control" disabled>
-                        </div>
+                    <div class="input-box">
+                        <label for="">Status Jabatan</label>
+                        <input type="text" id="status_jabatan" class="form-input-disabled" disabled>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <label for="">Pangkat dan Golongan Sekarang</label>
-                            <input type="text" id="panggol" class="form-control" disabled>
-                            <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-control">
-                        </div>
+                    <div class="input-box">
+                        <label for="">Pangkat dan Golongan Sekarang</label>
+                        <input type="text" id="panggol" class="form-input-disabled" disabled>
+                        <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-input-disabled">
                     </div>
                 </div>
-                <div class="row">
+                <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
                     <input type="hidden" id="bagian_lama" name="bagian_lama">
                     <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
-                    <div class="" id="">
-        
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
+                    <div class="input-box">
                             <label for="">Jabatan Sekarang</label>
-                            <input type="text" class="form-control" disabled name="" id="jabatan_lama">
+                            <input type="text" class="form-input-disabled" disabled name="" id="jabatan_lama">
                             <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
-                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
+                    <div class="input-box">
                             <label for="">Kantor Sekarang</label>
-                            <input type="text" class="form-control" disabled name="" id="kantor_lama">
-                        </div>
+                            <input type="text" class="form-input-disabled" disabled name="" id="kantor_lama">
+                    </div>
+                    <div class="" id="">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <button type="submit" class="btn btn-info">Tampilkan</button>
-                    </div>
+                <div class="mt-5">
+                    <button type="submit" class="btn btn-primary">Tampilkan</button>
                 </div>
             </form>
             <br>
             <hr>
             <h5 class="text-center">Data History Jabatan <br> <b> {{ $data_karyawan->nama_karyawan }}</b></h5>
             <div style="" class="table-responsive text-center">
-                <table class="table text-center cell-border table-striped" id="table" style="width: 100%; white-space: nowrap; overflow-y:hidden;">
+                <table class="tables text-center cell-border table-striped" id="table" style="width: 100%; white-space: nowrap; overflow-y:hidden;">
                     <thead class="sticky-top text-center">
                         <tr>
                             <th class="sticky-col">#</th>
@@ -133,7 +123,6 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
         </div>
     </div>
 @endsection

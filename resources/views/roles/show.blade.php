@@ -1,39 +1,65 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 @section('content')
-    <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title">Show Roles</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('role.index') }}">Roles</a> > <a>Show Data</a></p>
-        </div>
-    </div>
-    <div class="card-body ml-3 mr-3">
-        <div class="row">
-            <div class="col">
-                <label for="name">Role</label>
-                <input type="text" class="@error('name') is-invalid @enderror form-control" name="name" id="name" value="{{ old('role', $data->name) }}" placeholder="Nama Role" readonly>
-
-                <div class="position-relative form-group mt-4">
-                    <label for="Hak Akses">Hak Akses</label>
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="tableHakAkses">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($dataPermissions as $item)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td> {{ ucwords(str_replace('-','/',$item->name)) }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+<div class="head mt-5">
+    <div class="flex gap-5 justify-between items-center">
+        <div class="heading">
+            <h2 class="text-2xl font-bold tracking-tighter">Show Roles</h2>
+            <div class="breadcrumb">
+                <a href="/" class="text-sm text-gray-500">Setting</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="/" class="text-sm text-gray-500 font-bold">Master</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('role.index') }}" class="text-sm text-gray-500 font-bold">Show</a>
             </div>
         </div>
+        <div class="button-wrapper">
+            <form id="form" method="get">
+                <div class="input-box">
+                    <label for="q">Cari</label>
+                    <input type="search" name="q" id="q" class="form-input" placeholder="Cari disini..."
+                        class="form-control p-2" value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
+                </div>
+            </form>
+        </div>
     </div>
+</div>
+<button class="btn-scroll-to-top btn btn-primary hidden absolute bottom-5 right-5 z-20">
+    To Top <iconify-icon icon="mdi:arrow-top" class="ml-2 mt-1"></iconify-icon>
+</button>
+
+<div class="body-pages">
+    <div class="table-wrapping">
+        <div class="input-box">
+            <label for="name">Role</label>
+            <input type="text" class="@error('name') is-invalid @enderror form-input" name="name" id="name" value="{{ old('role', $data->name) }}" placeholder="Nama Role" readonly>
+        </div>
+        <table class="tables mt-5">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding-left: 25px">No</th>
+                    <th style="text-align: left">Nama</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($selected as $item)
+                    <tr>
+                        <td style="text-align: left; padding-left: 30px">{{ $loop->iteration }}</td>
+                        <td style="text-align: left"> {{ ucwords(str_replace('-','/',$item->name)) }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <th colspan="2">Data Kosong</th>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 @endsection
+@push('extraScript')
+    <script>
+        $('#page_length').on('change', function() {
+            $('#form').submit()
+        })
+    </script>
+@endpush

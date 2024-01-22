@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\MstProfilKantorModel;
+use App\Models\PemotongPajakPenguranganModel;
+use App\Models\PemotongPajakTambahanModel;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -22,6 +24,7 @@ class KantorCabangController extends Controller
      */
     public function index()
     {
+        // Need permission
         $data = DB::table('mst_cabang')
                 ->select(
                     'mst_cabang.*',
@@ -42,6 +45,7 @@ class KantorCabangController extends Controller
      */
     public function create()
     {
+        // Need permission
         return view('cabang.add');
     }
 
@@ -101,6 +105,7 @@ class KantorCabangController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = DB::table('mst_cabang')
             ->select(
                 'mst_cabang.*',
@@ -112,11 +117,34 @@ class KantorCabangController extends Controller
                 'p.email',
                 'p.npwp_pemimpin_cabang',
                 'p.nama_pemimpin_cabang',
+                'p.id as id_profil'
             )
             ->where('mst_cabang.kd_cabang', $id)
             ->leftJoin('mst_profil_kantor AS p', 'p.kd_cabang', 'mst_cabang.kd_cabang')
             ->first();
 
+        if($data->id_profil != null){
+            $data->penambah = PemotongPajakTambahanModel::where('pemotong_pajak_tambahan.id_profil_kantor', $data->id_profil)
+                ->select(
+                    'pemotong_pajak_tambahan.*'
+                )
+                ->join('mst_profil_kantor AS p', 'p.id', 'pemotong_pajak_tambahan.id_profil_kantor')
+                ->orderBy('active', 'DESC')
+                ->orderBy('id', 'DESC')
+                ->first();
+
+            $data->pengurang = PemotongPajakPenguranganModel::where('pemotong_pajak_pengurangan.id_profil_kantor', $data->id_profil)
+                ->select(
+                    'pemotong_pajak_pengurangan.*'
+                )
+                ->join('mst_profil_kantor AS p', 'p.id', 'pemotong_pajak_pengurangan.id_profil_kantor')
+                ->orderBy('active', 'DESC')
+                ->orderBy('id', 'DESC')
+                ->first();
+        } else {
+            $data->pengurang = null;
+            $data->penambah = null;
+        }
         return view('cabang.edit', ['data' => $data]);
     }
 
@@ -193,6 +221,48 @@ class KantorCabangController extends Controller
                 $currentProfil->npwp_pemimpin_cabang = $request->npwp_pemimpin_cabang;
                 $currentProfil->nama_pemimpin_cabang = $request->nama_pemimpin_cabang;
                 $currentProfil->save();
+
+                $pengurang = PemotongPajakPenguranganModel::where('id_profil_kantor', $currentProfil->id)->first();
+                $penambah = PemotongPajakTambahanModel::where('id_profil_kantor', $currentProfil->id)->first();
+                
+                if($pengurang && date('Y', strtotime($pengurang?->created_at) == date('Y', strtotime(now())))){
+                    $pengurang->dpp = $request->dpp;
+                    $pengurang->jp_jan_feb = str_replace('.', '',$request->jp_jan_feb);
+                    $pengurang->jp_mar_des = str_replace('.', '',$request->jp_mar_des);
+                    $pengurang->save();
+                } else {
+                    PemotongPajakPenguranganModel::insert([
+                        'id_profil_kantor' => $currentProfil->id,
+                        'dpp' => $request->dpp,
+                        'jp_jan_feb' => str_replace('.', '', $request->jp_jan_feb),
+                        'jp_mar_des' => str_replace('.', '', $request->jp_mar_des),
+                        'created_at' => now()
+                    ]);
+                }
+
+                if($penambah && date('Y', strtotime($penambah?->created_at) == date('Y', strtotime(now())))){
+                    $penambah->jkk = $request->jkk;
+                    $penambah->jht = $request->jht;
+                    $penambah->jkm = $request->jkm;
+                    $penambah->kesehatan = $request->kesehatan;
+                    $penambah->kesehatan_batas_atas = str_replace('.', '', $request->kesehatan_batas_atas);
+                    $penambah->kesehatan_batas_bawah = str_replace('.', '', $request->kesehatan_batas_bawah);
+                    $penambah->jp = $request->jp;
+                    $penambah->total = $request->total;
+                } else {
+                    PemotongPajakTambahanModel::insert([
+                        'id_profil_kantor' => $currentProfil->id,
+                        'jkk' => $request->jkk,
+                        'jht' => $request->jht,
+                        'jkm' => $request->jkm,
+                        'kesehatan' => $request->kesehatan,
+                        'kesehatan_batas_atas' => str_replace('.', '', $request->kesehatan_batas_atas),
+                        'kesehatan_batas_bawah' => str_replace('.', '', $request->kesehatan_batas_bawah),
+                        'jp' => $request->jp,
+                        'total' => $request->total,
+                        'created_at' => now()
+                    ]);
+                }
             }
             else {
                 // create new profile
@@ -228,6 +298,27 @@ class KantorCabangController extends Controller
                 $newProfil->npwp_pemimpin_cabang = $request->npwp_pemimpin_cabang;
                 $newProfil->nama_pemimpin_cabang = $request->nama_pemimpin_cabang;
                 $newProfil->save();
+                $profilId = $newProfil->id;
+
+                PemotongPajakTambahanModel::insert([
+                    'id_profil_kantor' => $profilId,
+                    'jkk' => $request->jkk,
+                    'jht' => $request->jht,
+                    'jkm' => $request->jkm,
+                    'kesehatan' => $request->kesehatan,
+                    'kesehatan_batas_atas' => str_replace('.', '', $request->kesehatan_batas_atas),
+                    'kesehatan_batas_bawah' => str_replace('.', '', $request->kesehatan_batas_bawah),
+                    'jp' => $request->jp,
+                    'total' => $request->total,
+                    'created_at' => now()
+                ]);
+                PemotongPajakPenguranganModel::insert([
+                    'id_profil_kantor' => $profilId,
+                    'dpp' => $request->dpp,
+                    'jp_jan_feb' => str_replace('.', '', $request->jp_jan_feb),
+                    'jp_mar_des' => str_replace('.', '', $request->jp_mar_des),
+                    'created_at' => now()
+                ]);
             }
 
             DB::commit();
@@ -254,6 +345,7 @@ class KantorCabangController extends Controller
      */
     public function destroy($id)
     {
+        // Need permission
         try{
             DB::table('mst_cabang')
                 ->where('kd_cabang', $id)

@@ -85,5 +85,12 @@
             `);
         }
     });
+
+    
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+        var name = document.getElementById("sk_pemberhentian").files[0].name;
+        var nextSibling = e.target.nextElementSibling
+        nextSibling.innerText = name
+    });
 </script>
 @endpush

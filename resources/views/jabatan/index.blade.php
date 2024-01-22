@@ -1,21 +1,33 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 
 @section('content')
-    <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title">Data Jabatan</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('jabatan.index') }}">Jabatan</a></p>
+    <div class="head mt-5">
+        <div class="flex gap-5 justify-between items-center">
+            <div class="heading">
+                <h2 class="text-2xl font-bold tracking-tighter">Data Jabatan</h2>
+                <div class="breadcrumb">
+                    <a href="#" class="text-sm text-gray-500">Setting</a>
+                    <i class="ti ti-circle-filled text-theme-primary"></i>
+                    <a href="#" class="text-sm text-gray-500 font-bold">Master</a>
+                    <i class="ti ti-circle-filled text-theme-primary"></i>
+                    <a href="{{ route('jabatan.index') }}" class="text-sm text-gray-500 font-bold">Jabatan</a>
+                </div>
+            </div>
+            <div class="button-wrapper flex gap-3">
+                @if (auth()->user()->can('setting - master - jabatan - create jabatan'))
+                    <a href="{{ route('jabatan.create') }}" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Data
+                        Jabatan</a>
+                @endif
+            </div>
         </div>
+    </div>
 
-        <div class="card-body">
-            <div class="col">
-                <div class="row">
-                    <a class="mb-3" href="{{ route('jabatan.create') }}">
-                      <button class="btn btn-primary">tambah jabatan</button>
-                    </a>
-                    <div class="table-responsive overflow-hidden content-center">
-                      <table class="table whitespace-nowrap" id="table" style="width: 100%">
-                          <thead class=" text-primary">
+    <div class="body-pages">
+        <div class="table-wrapping">
+            <div class="col-lg-12">
+                <div class="table-responsive overflow-hidden content-center">
+                    <table class="table whitespace-nowrap" id="table" style="width: 100%">
+                        <thead class=" text-primary">
                             <th>
                                 No
                             </th>
@@ -25,11 +37,11 @@
                             <th>
                                 Aksi
                             </th>
-                          </thead>
-                          @php
-                              $no = 1;
-                          @endphp
-                          <tbody>
+                        </thead>
+                        @php
+                            $no = 1;
+                        @endphp
+                        <tbody>
                             @foreach ($data as $item)
                                 <tr>
                                     <td>
@@ -39,41 +51,33 @@
                                         {{ $item->nama_jabatan }}
                                     </td>
                                     <td>
-                                      {{-- <div class="row"> --}}
-                                        <a href="{{ route('jabatan.edit', $item->kd_jabatan) }}">
-                                          <button class="btn btn-warning">
-                                            Edit
-                                          </button>
-                                        </a>
-                                        
-                                        {{-- <form action="{{ route('jabatan.destroy', $item->id) }}" method="POST">
-                                          @csrf
-                                          @method('DELETE')
-                                      
-                                          <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                                        </form> --}}
-                                      {{-- </div> --}}
+                                        @if (auth()->user()->can('setting - master - jabatan - edit jabatan'))
+                                            <a href="{{ route('jabatan.edit', $item->kd_jabatan) }}">
+                                                <button class="btn btn-warning-light">
+                                                    Edit
+                                                </button>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
-                          </tbody>
-                        </table>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
 @endsection
 
-@section('custom_script')
-  <script>
-    $(document).ready(function() {
-        var table = $('#table').DataTable({
-            'autoWidth': false,
-            'dom': 'Rlfrtip',
-            'colReorder': {
-                'allowReorder': false
-            }
+@push('extraScript')
+    <script>
+        $(document).ready(function() {
+            var table = $('#table').DataTable({
+                'autoWidth': false,
+                'dom': 'Rlfrtip',
+                'colReorder': {
+                    'allowReorder': false
+                }
+            });
         });
-    });
-  </script>
-@endsection 
+    </script>
+@endpush

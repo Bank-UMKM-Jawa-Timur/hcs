@@ -1,93 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('style/assets/img/apple-icon.png') }}">
-  <link rel="icon" type="image/png" href="{{ asset('style/assets/img/logo.png') }}">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <title>
-    Human Capital System | BANK UMKM JATIM
-  </title>  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css"/>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
-  
-  <link rel="stylesheet" href="{{ asset('style/assets/css/login.css.map') }}"/>
-  <link rel="stylesheet" href="{{ asset('style/assets/css/login.css') }}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Human Capital System | BANK UMKM JATIM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    @vite('resources/css/app.css')
 </head>
-<body>
-  <main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
-    <div class="container all-card">
-      <div class="card login-card">
-        <div class="row no-gutters">
-          <div class="col-md-5">
-            <img src="{{ asset('style/assets/img/Security-amico.png') }}" alt="login" class="login-card-img">
-          </div>
-          <div class="col-md-7">
-            <div class="card-body text-center">
-              <div class="brand-wrapper">
-                <img src="{{ asset('style/assets/img/logo.png') }}" alt="logo" class="logo">
+<body class="bg-gray-50 ">
+  @include('sweetalert::alert')
+  <div class="flex w-full h-screen gap-5">
+      <div class="bg-white lg:w-[40%] w-full border-r">
+          <div class="form-login mt-[10vh] space-y-2">
+              <div class="flex justify-center gap-4">
+                  <img src="{{ asset('style/assets/img/logo.png') }}" alt="logo" class="w-[30px] mt-[5px]">
+                  <div>
+                  <h2 class="mt-3 font-bold text-xs tracking-tighter uppercase">  Human Capital System</h2>
+                  </div>
               </div>
-              <p class="login-card-description">Welcome !</p>
-              <p class="login-card-sub-description">Human Capital System</p>
-                <div class="container">
-                  <div class="row justify-content-center align-items-center">
-                    <div class="formulir col-6 col-md-7 col-6">
-                      <form class="form-group" method="POST" action="{{ route('login') }}">
-                        @csrf
-                        <div class="row">
-                          <div class="col">
-                            <div class="form-group">
-                              <label for="email" class="sr-only">Email</label>
-                              <input autofocus placeholder="Masukkan email" id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                              @error('email')
-                                  <span class="invalid-feedback" role="alert">
-                                      <strong>{{ $message }}</strong>
-                                  </span>
-                              @enderror
-                            </div>
-                            <div class="form-group">
-                              <label for="password" class="sr-only">Password</label>
-                              <input id="password" placeholder="Masukkan password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                              @error('password')
-                                  <span class="invalid-feedback" role="alert">
-                                      <strong>{{ $message }}</strong>
-                                  </span>
-                              @enderror
-                            </div>
-                            <div class="custom-checkbox col-6">
-                              <input type="checkbox" class="custom-control-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                              <label class="custom-control-label" for="remember">Remember me</label>
-                            </div>              
-                          </div>
-                        </div>
-                        <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login">
-                    </form>
+              <div class="text-center space-y-2 pb-3 pt-3">
+                  <h2 class="font-bold tracking-tighter text-3xl text-[#1F2937]">Selamat datang! </h2>
+                  <p class="text-xs text-gray-400">Silahkan masuk untuk melanjutkan!</p>
+              </div>
+                @if (session('success'))
+                <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-50 dark:text-green-400 dark:border-green-200" role="alert">
+                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                      <span class="font-medium">{{ session('success') }}</span>
                     </div>
                   </div>
-                </div>
-                {{-- <a href="#!" class="forgot-password-link">Forgot password?</a>
-                <p class="login-card-footer-text">Don't have an account? <a href="#!" class="text-reset">Register here</a></p> --}}
-                <nav class="login-card-footer-nav">
-                  <span class="copyright">
-                    © <script>
-                      document.write(new Date().getFullYear())
-                    </script>, BANK UMKM JATIM
-                  </span>
-                </nav>
-            </div>
+                @endif
+              <form action="{{ route('login') }}" method="POST" class="space-y-5">
+                  @csrf
+                  <div class="input-box">
+                      <label for="email">Email atau NIP</label>
+                      <input type="text" class="border rounded-md text-sm bg-gray-50/80 border-neutral-200 px-5 py-3 w-full outline-none focus:ring-2 focus:ring-blue-300" placeholder=""
+                          id="email" name="input_type" value="{{ old('input_type') }}">
+                      @error('email')
+                          <span>{{ $message }}</span>
+                      @enderror
+                      @error('username')
+                          <span>{{ $message }}</span>
+                      @enderror
+                  </div>
+                  <div class="input-box">
+                      <label for="password">Password</label>
+                      <input type="password" id="password" name="password" class="border rounded-md text-sm bg-gray-50/80 border-neutral-200 px-5 py-3 w-full outline-none focus:ring-2 focus:ring-blue-300" placeholder="">
+                      @error('password')
+                          <span>{{ $message }}</span>
+                      @enderror
+                  </div>
+                  <button type="submit" class="btn-login bg-theme-primary text-sm drop-shadow-lg text-white w-full">Masuk</button>
+                  <div class="copyright text-center text-xs    font-semibold text-neutral-800">
+                      &copy; Copyright 2022 - {{ date('Y') }} PT. BPR Jatim
+                  </div>
+              </form>
           </div>
-        </div>
       </div>
-    </div>
-  </main>
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      <div class="bg-gray-50 w-full lg:block hidden">
+          <img src="{{ asset('style/assets/img/login.svg') }}"  class="max-w-3xl mx-auto" alt="">
+      </div>
+  </div>
 </body>
 </html>

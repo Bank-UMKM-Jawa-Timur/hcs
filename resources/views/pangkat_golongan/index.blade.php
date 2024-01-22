@@ -1,85 +1,88 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 
 @section('content')
-    <div class="card-header">
-        <div class="card-header">
-          <h5 class="card-title">Data Pangkat Dan Golongan</h5>
-          <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('pangkat_golongan.index') }}">Pangkat Dan Golongan</a></p>
-        </div>
-    
-        <div class="card-body">
-            <div class="col">
-                <div class="row">
-                    <a class="mb-3" href="{{ route('pangkat_golongan.create') }}">
-                      <button class="btn btn-primary">tambah pangkat dan golongan</button>
-                    </a>
-                    <div class="table-responsive overflow-hidden content-center">
-                      <table class="table whitespace-nowrap" id="table" style="width: 100%">
-                          <thead class=" text-primary">
-                            <th>
-                                No
-                            </th>
-                            <th>
-                                Pangkat
-                            </th>
-                            <th>
-                                Golongan
-                            </th>
-                            <th>
-                                Aksi
-                            </th>
-                          </thead>
-                          @php
-                              $no = 1;
-                          @endphp
-                          <tbody>
-                            @foreach ($data as $item)
-                                <tr>
-                                    <td>
-                                        {{ $no++ }}
-                                    </td>
-                                    <td>
-                                        {{ $item->pangkat }}
-                                    </td>
-                                    <td>
-                                        {{ $item->golongan }}
-                                    </td>
-                                    <td>
-                                      {{-- <div class="row"> --}}
-                                        <a href="{{ route('pangkat_golongan.edit', $item->golongan) }}">
-                                          <button class="btn btn-warning">
-                                            Edit
-                                          </button>
-                                        </a>
-                                        
-                                        {{-- <form action="{{ route('pangkat_golongan.destroy', $item->golongan) }}" method="POST">
-                                          @csrf
-                                          @method('DELETE')
-                                      
-                                          <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                                        </form> --}}
-                                      {{-- </div> --}}
-                                    </td>
-                                </tr>
-                            @endforeach
-                          </tbody>
-                        </table>
+    <div class="head mt-5">
+        <div class="flex gap-5 justify-between items-center">
+            <div class="heading">
+                <h2 class="text-2xl font-bold tracking-tighter">Data Pangkat Dan Golongan</h2>
+                <div class="breadcrumb">
+                    <a href="#" class="text-sm text-gray-500">Setting</a>
+                    <i class="ti ti-circle-filled text-theme-primary"></i>
+                    <a href="#" class="text-sm text-gray-500 font-bold">Master</a>
+                    <i class="ti ti-circle-filled text-theme-primary"></i>
+                    <a href="{{ route('pangkat_golongan.index') }}" class="text-sm text-gray-500 font-bold">Pangkat Dan
+                        Golongan</a>
                 </div>
             </div>
+            <div class="button-wrapper flex gap-3">
+                @if (auth()->user()->can('setting - master - pangkat & golongan - create pangkat & golongan'))
+                    <a href="{{ route('pangkat_golongan.create') }}" class="btn btn-primary"><i class="ti ti-plus"></i>
+                        Tambah Pangkat
+                        dan Golongan</a>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <div class="body-pages">
+        <div class="table-wrapping">
+            <table class="table whitespace-nowrap" id="table" style="width: 100%">
+                <thead class=" text-primary">
+                    <th>
+                        No
+                    </th>
+                    <th>
+                        Pangkat
+                    </th>
+                    <th>
+                        Golongan
+                    </th>
+                    <th>
+                        Aksi
+                    </th>
+                </thead>
+                @php
+                    $no = 1;
+                @endphp
+                <tbody>
+                    @foreach ($data as $item)
+                        <tr>
+                            <td>
+                                {{ $no++ }}
+                            </td>
+                            <td>
+                                {{ $item->pangkat }}
+                            </td>
+                            <td>
+                                {{ $item->golongan }}
+                            </td>
+                            <td>
+                                @if (auth()->user()->can('setting - master - pangkat & golongan - edit pangkat & golongan'))
+                                    <a href="{{ route('pangkat_golongan.edit', $item->golongan) }}">
+                                        <button class="btn btn-warning-light">
+                                            Edit
+                                        </button>
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 @endsection
 
-@section('custom_script')
-  <script>
-   $(document).ready(function() {
-        var table = $('#table').DataTable({
-            'autoWidth': false,
-            'dom': 'Rlfrtip',
-            'colReorder': {
-                'allowReorder': false
-            }
+@push('extraScript')
+    <script>
+        $(document).ready(function() {
+            var table = $('#table').DataTable({
+                'autoWidth': false,
+                'dom': 'Rlfrtip',
+                'colReorder': {
+                    'allowReorder': false
+                }
+            });
         });
-    });
-  </script>
-@endsection 
+    </script>
+@endpush

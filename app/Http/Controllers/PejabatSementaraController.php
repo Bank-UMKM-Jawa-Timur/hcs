@@ -11,6 +11,7 @@ use App\Service\EntityService;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PejabatSementaraController extends Controller
 {
@@ -21,14 +22,26 @@ class PejabatSementaraController extends Controller
         $this->repo = new PejabatSementaraRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $pjs = PjsModel::with(['karyawan', 'jabatan'])->get();
+        if (!auth()->user()->can('manajemen karyawan - data penjabat sementara')) {
+            return view('roles.forbidden');
+        }
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+
+        $karyawanRepo = new PejabatSementaraRepository();
+        $search = $request->get('q');
+        $pjs = $karyawanRepo->getAllPejabatSementara($search, $limit, $page);
+
         return view('pejabat-sementara.index', compact('pjs'));
     }
 
     public function create()
     {
+        if (!auth()->user()->can('manajemen karyawan - tambah penjabat sementara')) {
+            return view('roles.forbidden');
+        }
         $jabatan = JabatanModel::whereNotIn('kd_jabatan', [
             'IKJP', 'NST', 'ST',
         ])->get();
@@ -38,6 +51,9 @@ class PejabatSementaraController extends Controller
 
     public function store(PejabatSementaraRequest $request)
     {
+        if (!auth()->user()->can('manajemen karyawan - tambah penjabat sementara')) {
+            return view('roles.forbidden');
+        }
         $request->merge([
             'kd_entitas' => EntityService::getEntityFromRequest($request),
         ]);
@@ -53,6 +69,9 @@ class PejabatSementaraController extends Controller
 
     public function history(Request $request)
     {
+        if (!auth()->user()->can('histori - penjabat sementara')) {
+            return view('roles.forbidden');
+        }
         $pjs = $karyawan = null;
 
         if ($request->kategori) {
@@ -76,6 +95,10 @@ class PejabatSementaraController extends Controller
 
     public function destroy(Request $request, $id)
     {
+        // Need permission
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')) {
+            return view('roles.forbidden');
+        }
         $pjs = PjsModel::findOrFail($id);
         if($pjs->tanggal_mulai < $request->tgl_berakhir){
             $this->repo->deactivate($pjs, $request->tgl_berakhir);

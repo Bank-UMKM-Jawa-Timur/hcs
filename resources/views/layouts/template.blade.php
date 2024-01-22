@@ -36,8 +36,10 @@ Coded by www.creative-tim.com
     <link href="{{ asset('style/assets/demo/demo.css') }}" rel="stylesheet" />
     <link href="{{ asset('style/assets/css/datatables.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('style/assets/css/loading.css') }}">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    {{--  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">  --}}
+    {{-- Set Token --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <style>
         /* Chrome, Safari, Edge, Opera */
@@ -52,26 +54,12 @@ Coded by www.creative-tim.com
             -moz-appearance: textfield;
         }
 
-        .loader-wrapper {
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 100px;
-            position: fixed;
-            background-color: rgba(110, 110, 110, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         .vh-100 {
             height: 90vh !important;
         }
     </style>
     @stack('style')
-
 </head>
-
 <body>
     <div class="wrapper">
         <div class="sidebar" data-color="white" data-active-color="danger">
@@ -85,485 +73,26 @@ Coded by www.creative-tim.com
                     Human Capital System
                 </a>
             </div>
-
             <div class="row row-offcanvas row-offcanvas-left vh-100" style="width: 1700px">
                 <div class="col-md-3 col-lg-2 sidebar-offcanvas h-100 overflow-auto bg-light pl-0" id="sidebar"
                     role="navigation">
-                    <ul class="nav flex-column sticky-top pl-2 mt-0">
-                        <li class="@active('home')">
-                            <a href="{{ route('home') }}" style="font-weight: bolder">
-                                <i class="nc-icon nc-bank" style="font-weight: bolder"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        {{-- Menu Manajemen Karyawan --}}
-                        {{-- <li
-                            class="@active('karyawan,pengkinian_data,klasifikasi,mutasi,demosi,promosi,penonaktifan,import,pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit,surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit,reminder-pensiun.index,reminder-pensiun.show')">
-                            --}}
-                        <li
-                            class="{{ request()->is(
-                                'karyawan',
-                                'karyawan/*',
-                                'reminder_pensiun',
-                                'reminder_pensiun/*',
-                                'pengkinian_data',
-                                'pengkinian_data/*',
-                                'mutasi',
-                                'mutasi/*',
-                                'demosi',
-                                'demosi/*',
-                                'promosi',
-                                'promosi/*',
-                                'penonaktifan',
-                                'penonaktifan/*',
-                                'pejabat-sementara',
-                                'surat-peringatan',
-                            )
-                                ? 'active'
-                                : '' }}">
-                            <a class="nav-link" href="#submenu1" data-toggle="collapse" data-target="#submenu1"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-tile-56" style="font-weight: bolder"></i>
-                                Manajemen Karyawan
-                            </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is(
-                                'karyawan',
-                                'karyawan/*',
-                                'reminder_pensiun',
-                                'reminder_pensiun/*',
-                                'pengkinian_data',
-                                'pengkinian_data/*',
-                                'mutasi',
-                                'mutasi/*',
-                                'demosi',
-                                'demosi/*',
-                                'promosi',
-                                'promosi/*',
-                                'penonaktifan',
-                                'penonaktifan/*',
-                                'pejabat-sementara',
-                                'surat-peringatan',
-                            )
-                                ? 'show'
-                                : '' }}"
-                                id="submenu1">
-                                <li style="margin-top: -15px" class="@active('karyawan.index,karyawan.create,karyawan.edit,karyawan.show,import,klasifikasi')">
-                                    <a href="{{ route('karyawan.index') }}">
-                                        <i class="nc-icon nc-badge"></i>
-                                        <p>Karyawan </p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('reminder-pensiun.index,reminder-pensiun.show')">
-                                    <a href="{{ route('reminder-pensiun.index') }}">
-                                        <i class="nc-icon nc-badge"></i>
-                                        <p>Data Masa Pensiun</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('pengkinian_data.index,pengkinian_data.create,pengkinian_data.edit,pengkinian_data.show,import')">
-                                    <a href="{{ route('pengkinian_data.index') }}">
-                                        <i class="nc-icon nc-ruler-pencil"></i>
-                                        <p>Pengkinian Data </p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li class="dropdown {{ request()->is(
-                                    'mutasi',
-                                    'mutasi/*',
-                                    'demosi',
-                                    'demosi/*',
-                                    'promosi',
-                                    'promosi/*',
-                                    'penonaktifan',
-                                    'penonaktifan/*',
-                                )
-                                    ? 'active'
-                                    : '' }}"
-                                    style="margin-top: -15px">
-                                    <a data-toggle="dropdown" aria-expanded="false">
-                                        <i class="nc-icon nc-chart-bar-32"></i>
-                                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Pergerakan Karir </p>
-                                        <p></p>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                        <a class="dropdown-item @active('mutasi.index')"
-                                            href="{{ route('mutasi.index') }}">Mutasi</a>
-                                        <a class="dropdown-item @active('demosi.index')"
-                                            href="{{ route('demosi.index') }}">Demosi</a>
-                                        <a class="dropdown-item @active('promosi.index')"
-                                            href="{{ route('promosi.index') }}">Promosi</a>
-                                        <a class="dropdown-item @active('karyawan.penonaktifan')"
-                                            href="{{ route('penonaktifan.index') }}">Penonaktifan</a>
-                                    </div>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('pejabat-sementara.index,pejabat-sementara.create,pejabat-sementara.edit')">
-                                    <a href="{{ route('pejabat-sementara.index') }}">
-                                        <i class="nc-icon nc-tie-bow"></i>
-                                        <p>Penjabat Sementara</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li class="dropdown @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')" style="margin-top: -15px">
-                                    <a data-toggle="dropdown" aria-expanded="false">
-                                        <i class="nc-icon nc-bell-55"></i>
-                                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Reward & Punishment
-                                        </p>
-                                        <p></p>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                        <a class="dropdown-item @active('surat-peringatan.index,surat-peringatan.create,surat-peringatan.edit')"
-                                            href="{{ route('surat-peringatan.index') }}">Surat Peringatan</a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                        {{-- Menu Penghasilan --}}
-                        <li
-                            class="@active('pajak_penghasilan') {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }}">
-                            <a class="nav-link" href="#submenu2" data-toggle="collapse" data-target="#submenu2"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-tag-content" style="font-weight: bolder"></i>
-                                Penghasilan
-                            </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 {{ request()->is('gaji_perbulan', 'gaji_perbulan/*') ? 'active' : '' }} @active('pajak_penghasilan', 'show')"
-                                id="submenu2">
-                                <li style="margin-top: -15px" class="@active('gaji_perbulan')">
-                                    <a href="{{ route('gaji_perbulan.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Proses Penghasilan</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('pajak_penghasilan')">
-                                    <a href="{{ route('pajak_penghasilan.index') }}">
-                                        <i class="nc-icon nc-scissors"></i>
-                                        <p>Pajak Penghasilan</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('pajak_penghasilan.create')">
-                                    <a href="{{ route('pajak_penghasilan.create') }}">
-                                        <i class="nc-icon nc-ruler-pencil"></i>
-                                        <p>Tambah Penghasilan</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        {{-- Menu Histori --}}
-                        <li class="@active('history')">
-                            <a class="nav-link" href="#submenu3" data-toggle="collapse" data-target="#submenu3"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-compass-05" style="font-weight: bolder"></i>
-                                Histori
-                            </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('history', 'show')"
-                                id="submenu3">
-                                <li style="margin-top: -15px" class="@active('history_jabatan')">
-                                    <a href="{{ route('history_jabatan.index') }}">
-                                        <i class="nc-icon nc-briefcase-24"></i>
-                                        <p>Jabatan</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('pejabat-sementara.history')">
-                                    <a href="{{ route('pejabat-sementara.history') }}">
-                                        <i class="nc-icon nc-tie-bow"></i>
-                                        <p>Penjabat Sementara</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('surat-peringatan.history')">
-                                    <a href="{{ route('surat-peringatan.history') }}?tahun={{ date('Y') }}">
-                                        <i class="nc-icon nc-email-85"></i>
-                                        <p>Surat Peringatan</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        {{-- Menu Laporan --}}
-                        <li
-                            class="{{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek') ? 'active' : '' }}">
-                            <a class="nav-link" href="#submenu4" data-toggle="collapse" data-target="#submenu4"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-paper" style="font-weight: bolder"></i>
-                                Laporan
-                            </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('laporan,index_dpp', 'show')"
-                                id="submenu4">
-                                <li class="dropdown {{ request()->is(
-                                    'laporan-pergerakan-karir/laporan-mutasi',
-                                    'laporan-pergerakan-karir/laporan-demosi',
-                                    'laporan-pergerakan-karir/laporan-promosi',
-                                    'laporan-pergerakan-karir/laporan-penonaktifan',
-                                )
-                                    ? 'active'
-                                    : '' }}"
-                                    style="margin-top: -15px">
-                                    <a data-toggle="dropdown" aria-expanded="false">
-                                        <i class="nc-icon nc-single-copy-04"></i>
-                                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Laporan Pergerakan
-                                            Karir </p>
-                                        <p></p>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                        <a class="dropdown-item" href="{{ route('laporan-mutasi.index') }}">Laporan
-                                            Mutasi</a>
-                                        <a class="dropdown-item" href="{{ route('laporan-demosi.index') }}">Laporan
-                                            Demosi</a>
-                                        <a class="dropdown-item" href="{{ route('laporan-promosi.index') }}">Laporan
-                                            Promosi</a>
-                                        <a class="dropdown-item"
-                                            href="{{ route('laporan-penonaktifan.index') }}">Laporan Penonaktifan</a>
-                                    </div>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('laporan_jamsostek')">
-                                    <a href="{{ route('laporan_jamsostek.index') }}">
-                                        <i class="nc-icon nc-single-copy-04"></i>
-                                        <p>Laporan Jamsostek</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('index_dpp')">
-                                    <a href="{{ route('index_dpp') }}">
-                                        <i class="nc-icon nc-single-copy-04"></i>
-                                        <p>Laporan DPP</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        {{-- Menu Gaji --}}
-                        <li class="@active('slipIndex') {{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                            <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu5"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-credit-card" style="font-weight: bolder"></i>
-                                Gaji
-                            </a>
-                            <ul class="sub-menu {{ request()->is('gaji', 'gaji/*') ? 'show' : '' }} list-unstyled flex-column collapse pl-2 @active('slipIndex', 'show')"
-                                id="submenu5">
-                                <li style="margin-top: -15px"
-                                    class="{{ request()->is('gaji', 'gaji/*') ? 'active' : '' }}">
-                                    <a href="{{ route('gaji.index') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Lampiran Gaji</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('slipIndex')">
-                                    <a href="{{ route('slipIndex') }}">
-                                        <i class="nc-icon nc-money-coins"></i>
-                                        <p>Slip Jurnal</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        {{-- Menu Migrasi Data --}}
-                        <li class="@active('migrasi')">
-                            <a class="nav-link" href="#submenu8" data-toggle="collapse" data-target="#submenu8"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-cloud-upload-94" style="font-weight: bolder"></i>
-                                Migrasi
-                            </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2 @active('migrasi')"
-                                id="submenu8">
-                                <li style="margin-top: -15px" class="@active('migrasiJabatan')">
-                                    <a href="{{ route('migrasiJabatan') }}">
-                                        <i class="nc-icon nc-cloud-upload-94"></i>
-                                        <p>Jabatan</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('migrasiPJS')">
-                                    <a href="{{ route('migrasiPJS') }}">
-                                        <i class="nc-icon nc-cloud-upload-94"></i>
-                                        <p>Penjabat Sementara</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('migrasiSP')">
-                                    <a href="{{ route('migrasiSP') }}">
-                                        <i class="nc-icon nc-cloud-upload-94"></i>
-                                        <p>Surat Peringatan</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        {{-- Menu Log Aktivitas --}}
-                        <li>
-                            <a class="nav-link" href="#submenu5" data-toggle="collapse" data-target="#submenu6"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-tap-01" style="font-weight: bolder"></i>
-                                Log
-                            </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2" id="submenu6"
-                                aria-expanded="false">
-                                <li style="margin-top: -15px">
-                                    <a href="#">
-                                        <i class="nc-icon nc-refresh-69"></i>
-                                        <p>Log Aktivitas</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        {{-- Menu Setting --}}
-                        <li class="@active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database')">
-                            <a class="nav-link" href="#submenu6" data-toggle="collapse" data-target="#submenu7"
-                                style="font-weight: bolder">
-                                <i class="nc-icon nc-settings" style="font-weight: bolder"></i>
-                                Setting
-                            </a>
-                            <ul class="sub-menu list-unstyled flex-column collapse pl-2
-                            {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur,database', 'show') --}}
-                            "
-                                id="submenu7">
-                                <li class="dropdown @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show')" style="margin-top: -15px">
-                                    <a data-toggle="dropdown" aria-expanded="false">
-                                        <i class="nc-icon nc-box"></i>
-                                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Master </p>
-                                        <p></p>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                        <a class="dropdown-item @active('cabang.index')"
-                                            href="{{ route('cabang.index') }}">Kantor Cabang</a>
-                                        <a class="dropdown-item @active('divisi.index')"
-                                            href="{{ route('divisi.index') }}">Divisi</a>
-                                        <a class="dropdown-item @active('sub_divisi.index')"
-                                            href="{{ route('sub_divisi.index') }}">Sub Divisi</a>
-                                        <a class="dropdown-item @active('bagian.index')"
-                                            href="{{ route('bagian.index') }}">Bagian</a>
-                                        <a class="dropdown-item @active('jabatan.index')"
-                                            href="{{ route('jabatan.index') }}">Jabatan</a>
-                                        <a class="dropdown-item @active('pangkat_golongan.index')"
-                                            href="{{ route('pangkat_golongan.index') }}">Pangkat & Golongan</a>
-                                        <a class="dropdown-item @active('tunjangan.index')"
-                                            href="{{ route('tunjangan.index') }}">Tunjangan</a>
-                                        <a class="dropdown-item @active('umur.index')"
-                                            href="{{ route('umur.index') }}">Rentang Umur</a>
-                                        <a class="dropdown-item @active('umur.index')"
-                                            href="{{ route('ptkp.index') }}">Penghasilan tanpa Pajak</a>
-                                    </div>
-                                </li>
-                                @php
-                                    $profilKantorPusat = \DB::table('mst_profil_kantor')->select('id','kd_cabang')->where('kd_cabang', '000')->first();
-                                @endphp
-                                <li class="dropdown
-                                {{-- @active('cabang,divisi,sub_divisi,bagian,jabatan,pangkat_golongan,tunjangan,umur', 'show') --}}
-                                " style="margin-top: -15px">
-                                    <a data-toggle="dropdown" aria-expanded="false">
-                                        <i class="nc-icon nc-bank"></i>
-                                        <p class="dropdown-toggle" id="navbarDropdownMenuLink">Kantor Pusat </p>
-                                        <p></p>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                        <a class="dropdown-item @active('cabang.index')"
-                                            href="{{ route('profil-kantor-pusat.index') }}">Profil</a>
-                                        <a class="dropdown-item @active('divisi.index')"
-                                            href="{{ route('penambahan-bruto.index') }}?profil_kantor={{$profilKantorPusat ? $profilKantorPusat->id : ''}}">Penambahan Bruto</a>
-                                        <a class="dropdown-item @active('sub_divisi.index')"
-                                            href="{{ route('pengurangan-bruto.index') }}?profil_kantor={{$profilKantorPusat ? $profilKantorPusat->id : ''}}">Pengurangan Bruto</a>
-                                    </div>
-                                </li>
-                                <li style="margin-top: -15px">
-                                    <a href="#">
-                                        <i class="nc-icon nc-single-02"></i>
-                                        <p>User Akses</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                                <li style="margin-top: -15px" class="@active('database')">
-                                    <a href="{{ route('database.index') }}">
-                                        <i class="nc-icon nc-vector"></i>
-                                        <p>Database</p>
-                                        <p></p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                    @include('components.old.sidebar')
                 </div>
             </div>
-
         </div>
         <div class="main-panel">
-            <!-- Navbar -->
-            <nav class="navbar fixed-top navbar-expand-lg navbar-absolute navbar-transparent">
-                <div class="container-fluid">
-                    <div class="navbar-wrapper">
-                        <div class="navbar-toggle">
-                            <button type="button" class="navbar-toggler">
-                                <span class="navbar-toggler-bar bar1"></span>
-                                <span class="navbar-toggler-bar bar2"></span>
-                                <span class="navbar-toggler-bar bar3"></span>
-                            </button>
-                        </div>
-                    </div>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
-                        aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-bar navbar-kebab"></span>
-                        <span class="navbar-toggler-bar navbar-kebab"></span>
-                        <span class="navbar-toggler-bar navbar-kebab"></span>
-                    </button>
-                    <div class="collapse navbar-collapse justify-content-end" id="navigation">
-                        <ul class="card m-sm-1  navbar-nav">
-                            <li class="nav-item btn-rotate">
-                                <a class="nav-link noHover">
-                                    <i class="nc-icon nc-watch-time"></i>
-                                    <p id="DisplayClock" class="" onload="showTime()"></p>
-                                </a>
-                            </li>
-                        </ul>
-                        <ul class="card m-sm-1 navbar-nav">
-                            <li class="nav-item btn-rotate dropdown">
-                                <a class="nav nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="nc-icon nc-single-02"></i>
-                                    {{-- @if (session('status')) --}}
-                                    <p>Halo, {{ auth()->user()->name }}</p>
-                                    <p></p>
-                                    {{-- @endif --}}
-                                </a>
-                                <div class="dropdown-menu dropdown-primary dropdown-menu-right"
-                                    aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                    document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                        class="d-none">
-                                        @csrf
-                                    </form>
-
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            <!-- End Navbar -->
-
-            {{-- Content --}}
-
+            @include('components.old.navbar')
             <div class="content">
-
                 <div class="card">
                     @yield('content')
                     @include('sweetalert::alert')
                 </div>
-
             </div>
             {{-- End Content --}}
-            <footer class="footer footer-black  footer-white ">
+            <footer class="footer footer-black border-top footer-white ">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="credits ml-auto">
+                    <div class="ml-4 d-flex justify-content-start">
+                        <div class="">
                             <span class="copyright">
                                 BANK UMKM JATIM ©
                                 <script>
@@ -577,20 +106,10 @@ Coded by www.creative-tim.com
         </div>
     </div>
 
-    <div class="loader-wrapper">
-        <div class="la-line-spin-clockwise-fade la-dark la-2x">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    </div>
+    @include('components.old.loader')
 
     <!--   Core JS Files   -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="{{ asset('style/assets/js/core/jquery.min.js') }}"></script>
     <script src="{{ asset('style/assets/js/core/popper.min.js') }}"></script>
     <script src="{{ asset('style/assets/js/core/bootstrap.min.js') }}"></script>
@@ -600,34 +119,52 @@ Coded by www.creative-tim.com
     <!--  Notifications Plugin    -->
     <script src="{{ asset('style/assets/js/plugins/bootstrap-notify.js') }}"></script>
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="{{ asset('style/assets/js/paper-dashboard.min.js') }}" type="text/javascript"></script>
-    <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
+    {{-- <script src="{{ asset('style/assets/js/paper-dashboard.min.js') }}" type="text/javascript"></script> --}}
+    <!-- Paper Dashboard DEMO methods, dont include it in your project! -->
     <script src="{{ asset('style/assets/demo/demo.js') }}"></script>
     <!-- Jam Realtime -->
     <script src="{{ asset('style/assets/js/jam.js') }}" async></script>
     <script src="{{ asset('style/assets/js/Datatables.js') }}"></script>
     <script src="{{ asset('style/assets/js/ReorderWithResize.js') }}"></script>
     <script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            demo.initChartsPages();
-        });
+    <script src="{{ asset('vendor/apexchart/apexcharts.js') }}"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.0/moment.min.js"></script>
 
+    <script>
         var url = window.location;
 
-        // for sidebar menu entirely but not cover treeview
-        // $('ul.nav>li>a').filter(function() {
-        //   return this.href == url;
-        // }).parent().addClass('active');
+        function formatNumber(number, precision = 0) {
+            const numberParts = Number(Math.abs(number)).toFixed(precision).split('.');
+            const integerPart = numberParts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            const decimalPart = numberParts[1] || '0';
+        
+            if (precision == 0) {
+                return `${number < 0 ? '-' : ''}${integerPart}`;
+            }
+            else {
+                return `${number < 0 ? '-' : ''}${integerPart},${decimalPart}`;
+            }
+        }
 
-        // // for treeview
-        // $('ul.sub-menu>li>a').filter(function() {
-        //   return this.href == url;
-        // }).parentsUntil(".nav > .sub-menu").addClass('active show');
+        function formatRupiahExcel(number, precision = 0, formatted = true) {
+            // Format the number using toLocaleString with the specified precision and 'id-ID' as the locale
+            const numberFormatted = formatNumber(number, precision);
 
-        // $('ul.sub-menu>li.dropdown>div.dropdown-menu>a').filter(function() {
-        //   return this.href == url;
-        // }).parentsUntil(".nav > .sub-menu").addClass('active');
+            // Check if the number is negative
+            if (isNaN(number)) {
+                return '-';
+            }
+            else {
+                if (number < 0) {
+                    return formatted ? `(${numberFormatted.slice(1)})` : number;
+                } else if (number === 0) {
+                    return '-';
+                } else {
+                    return formatted ? numberFormatted : number;
+                }
+            }
+        }
 
         function formatRupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
@@ -643,7 +180,7 @@ Coded by www.creative-tim.com
             }
 
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
 
         function formatRupiahKoma(angka, prefix) {
@@ -666,6 +203,24 @@ Coded by www.creative-tim.com
         $(window).on("load", function() {
             $(".loader-wrapper").fadeOut("slow");
         });
+
+        String.prototype.ucwords = function() {
+            str = this.toLowerCase();
+            return str.replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g,
+                function(s){
+                return s.toUpperCase();
+            });
+        };
+
+        function generateCsrfToken() {
+            var token = "{{csrf_token()}}"
+            if (token == '') {
+                generateCsrfToken();
+            }
+            else {
+                return token;
+            }
+        }
     </script>
     @yield('custom_script')
     @stack('script')

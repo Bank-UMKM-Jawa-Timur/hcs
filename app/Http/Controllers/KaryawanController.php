@@ -7,12 +7,14 @@ use App\Http\Requests\Karyawan\PenonaktifanRequest;
 use App\Imports\ImportDataKeluarga;
 use App\Imports\ImportKaryawan;
 use App\Imports\ImportNpwpRekening;
+use App\Imports\ImportStatusPTKP;
 use App\Imports\UpdateStatusImport;
 use App\Imports\UpdateTunjanganImport;
 use App\Models\JabatanModel;
 use App\Models\KaryawanModel;
 use App\Models\PanggolModel;
 use App\Models\PjsModel;
+use App\Models\PotonganModel;
 use App\Models\SpModel;
 use App\Models\UmurModel;
 use App\Repository\KaryawanRepository;
@@ -22,7 +24,9 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -40,6 +44,10 @@ class KaryawanController extends Controller
      */
     public function index(Request $request)
     {
+        if (!auth()->user()->can('manajemen karyawan - data karyawan')) {
+            return view('roles.forbidden');
+        }
+
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
@@ -48,18 +56,20 @@ class KaryawanController extends Controller
         $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
 
         return view('karyawan.index', [
+        // return view('karyawan.index-old', [
             'karyawan' => $data,
         ]);
     }
 
     public function listKaryawan()
     {
+        // Need permission
         return view('karyawan.list');
     }
     
     public function listKaryawanJson(Request $request) {
         $karyawanRepo = new KaryawanRepository();
-        $data = $karyawanRepo->getAllKaryawan();
+        $data = $karyawanRepo->getAllKaryawan('');
         $data = DataTables::collection($data)->toJson();
         // $data = DataTables::of($data)->make(true);
         return $data;
@@ -67,6 +77,7 @@ class KaryawanController extends Controller
 
     public function importStatusIndex()
     {
+        // Need permission
         return view('karyawan.import_update_status');
     }
 
@@ -82,6 +93,7 @@ class KaryawanController extends Controller
 
     public function importNpwpRekeningIndex()
     {
+        // Need permission
         return view('karyawan.import_npwp_rekening');
     }
 
@@ -97,6 +109,10 @@ class KaryawanController extends Controller
 
     public function import()
     {
+        if (!auth()->user()->can('manajemen karyawan - data karyawan - import karyawan')) {
+            return view('roles.forbidden');
+        }
+
         return view('karyawan.import');
     }
 
@@ -289,6 +305,9 @@ class KaryawanController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('manajemen karyawan - data karyawan')) {
+            return view('roles.forbidden');
+        }
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
         $data_jabatan = DB::table('mst_jabatan')
@@ -417,10 +436,19 @@ class KaryawanController extends Controller
                     ->insert([
                         'nip' => $request->get('nip'),
                         'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
-                        'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                        'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
                         'created_at' => now()
                     ]);
             }
+            DB::table('potongan_gaji')
+                ->insert([
+                    'nip' => $request->nip,
+                    'kredit_koperasi' => str_replace('.', '', $request->get('potongan_kredit_koperasi')) ?? 0,
+                    'iuran_koperasi' => str_replace('.', '', $request->get('potongan_iuran_koperasi')) ?? 0,
+                    'kredit_pegawai' => str_replace('.', '', $request->get('potongan_kredit_pegawai')) ?? 0,
+                    'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')) ?? 0,
+                    'created_at' => now()
+                ]);
 
             Alert::success('Berhasil', 'Berhasil menambah karyawan.');
             return redirect()->route('karyawan.index');
@@ -443,6 +471,9 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
+        if (!auth()->user()->can('manajemen karyawan - data karyawan - detail karyawan')) {
+            return view('roles.forbidden');
+        }
         $data_suis = null;
         $karyawan = KaryawanModel::findOrFail($id);
         $data_suis = DB::table('keluarga')
@@ -552,15 +583,36 @@ class KaryawanController extends Controller
 
         // Get SP
         $sp = SpModel::where('nip', $id)->get();
-        // dd($sp);
-        // dd($karyawan->bagian);
+
+        $dppPerhitungan = DB::table('gaji_per_bulan')
+                ->select(
+                    'gj_pokok',
+                    'tj_keluarga',
+                    'tj_kesejahteraan',
+                )
+                ->where('nip', $id)
+                ->first();
+
+        $totalDppPerhitungan = 0;
+        if ($dppPerhitungan) {
+            $gjPokok = $dppPerhitungan->gj_pokok;
+            $tjKeluarga = $dppPerhitungan->tj_keluarga;
+            $tjKesejahteraan = $dppPerhitungan->tj_kesejahteraan;
+            $totalDppPerhitungan = ($gjPokok + $tjKeluarga + 0.5 * $tjKesejahteraan) * 0.05;
+        }
+
+        $potongan = PotonganModel::where('nip', $karyawan->nip)
+                                ->orderBy('id', 'DESC')
+                                ->first();
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,
             'tunjangan' => $data_tunjangan,
             'data_anak' => $data_anak,
             'pjs' => $historyJabatan,
-            'sp' => $sp
+            'sp' => $sp,
+            'dpp_perhitungan' => $totalDppPerhitungan,
+            'potongan' => $potongan,
         ]);
     }
 
@@ -572,6 +624,10 @@ class KaryawanController extends Controller
      */
     public function edit($id)
     {
+        if (!auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan') &&
+            !auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
+            return view('roles.forbidden');
+        }
         $data = DB::table('mst_karyawan')
             ->where('nip', $id)
             ->first();
@@ -581,6 +637,9 @@ class KaryawanController extends Controller
             ->select('tunjangan_karyawan.*')
             ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
             ->get();
+        $data->potongan = DB::table('potongan_gaji')
+                            ->where('nip', $data->nip)
+                            ->first();
         $data->count_tj = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
             ->count('*');
@@ -621,172 +680,216 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
-        $request->validate([
-            'nip' => 'required',
-            'nik' => 'required',
-            'nama' => 'required',
-            'tmp_lahir' => 'required',
-            'tgl_lahir' => 'required',
-            'agama' => 'required|not_in:-',
-            'jk' => 'required|not_in:-',
-            'status_pernikahan' => 'required|not_in:-',
-            'kewarganegaraan' => 'required|not_in:-',
-            'alamat_ktp' => 'required',
-            'kpj' => 'required',
-            'jkn' => 'required',
-            'gj_pokok' => 'required',
-            'status_karyawan' => 'required|not_in:-',
-            'status_ptkp' => 'required|not_in:-',
-            'tgl_mulai' => 'required'
-        ]);
+        if (!auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan') &&
+            !auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
+            return view('roles.forbidden');
+        }
+        if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
+            $request->validate([
+                'nip' => 'required',
+                'nik' => 'required',
+                'nama' => 'required',
+                'tmp_lahir' => 'required',
+                'tgl_lahir' => 'required',
+                'agama' => 'required|not_in:-',
+                'jk' => 'required|not_in:-',
+                'status_pernikahan' => 'required|not_in:-',
+                'kewarganegaraan' => 'required|not_in:-',
+                'alamat_ktp' => 'required',
+                'kpj' => 'required',
+                'jkn' => 'required',
+                'gj_pokok' => 'required',
+                'status_karyawan' => 'required|not_in:-',
+                'status_ptkp' => 'required|not_in:-',
+                'tgl_mulai' => 'required'
+            ]);
+        }
 
+        DB::beginTransaction();
         try {
-            $id_is = $request->get('id_pasangan');
-            if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
-                if ($request->get('id_pasangan') == null) {
-                    DB::table('keluarga')
-                        ->insert([
-                            'enum' => $request->get('is'),
-                            'nama' => $request->get('is_nama'),
-                            'tgl_lahir' => $request->get('is_tgl_lahir'),
-                            'alamat' => $request->get('is_alamat'),
-                            'pekerjaan' => $request->get('is_pekerjaan'),
-                            'jml_anak' => $request->get('is_jml_anak'),
-                            'sk_tunjangan' => $request->get('sk_tunjangan_is'),
-                            'nip' => $request->get('nip'),
-                            'created_at' => now()
-                        ]);
-                } else {
-                    DB::table('keluarga')
-                        ->where('id', $id_is)
-                        ->update([
-                            'enum' => $request->get('is'),
-                            'nama' => $request->get('is_nama'),
-                            'tgl_lahir' => $request->get('is_tgl_lahir'),
-                            'alamat' => $request->get('is_alamat'),
-                            'pekerjaan' => $request->get('is_pekerjaan'),
-                            'jml_anak' => $request->get('is_jml_anak'),
-                            'sk_tunjangan' => $request->get('sk_tunjangan_is'),
-                            'nip' => $request->get('nip'),
-                            'updated_at' => now()
-                        ]);
+            if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
+                $idTkDeleted = explode(',', $request->get('idTkDeleted'));
+                $idPotDeleted = explode(',', $request->get('idPotDeleted'));
+                if(count($idTkDeleted) > 0){
+                    foreach($idTkDeleted as $key => $item){
+                        DB::table('tunjangan_karyawan')
+                            ->where('id', $item)
+                            ->delete();
+                    }
                 }
-            }
-            $entitas = null;
-            if($request->kd_bagian && !isset($request->kd_cabang)){
-                $entitas = null;
-            }
-            else if ($request->get('subdiv') != null) {
-                $entitas = $request->get('subdiv');
-            } else if ($request->get('cabang') != null) {
-                $entitas = $request->get('cabang');
-            } else {
-                $entitas = $request->get('divisi');
-            }
+                if(count($idPotDeleted) > 0){
+                    foreach($idPotDeleted as $key => $item){
+                        DB::table('potongan_gaji')
+                            ->where('id', $item)
+                            ->delete();
+                    }
+                }
+                $id_is = $request->get('id_pasangan');
+                if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
+                    if ($request->get('id_pasangan') == null) {
+                        DB::table('keluarga')
+                            ->insert([
+                                'enum' => $request->get('is'),
+                                'nama' => $request->get('is_nama'),
+                                'tgl_lahir' => $request->get('is_tgl_lahir'),
+                                'alamat' => $request->get('is_alamat'),
+                                'pekerjaan' => $request->get('is_pekerjaan'),
+                                'jml_anak' => $request->get('is_jml_anak'),
+                                'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                                'nip' => $request->get('nip'),
+                                'created_at' => now()
+                            ]);
+                    } else {
+                        DB::table('keluarga')
+                            ->where('id', $id_is)
+                            ->update([
+                                'enum' => $request->get('is'),
+                                'nama' => $request->get('is_nama'),
+                                'tgl_lahir' => $request->get('is_tgl_lahir'),
+                                'alamat' => $request->get('is_alamat'),
+                                'pekerjaan' => $request->get('is_pekerjaan'),
+                                'jml_anak' => $request->get('is_jml_anak'),
+                                'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                                'nip' => $request->get('nip'),
+                                'updated_at' => now()
+                            ]);
+                    }
+                }
+                $entitas = EntityService::getEntityFromRequestEdit($request);
+                $karyawan = DB::table('mst_karyawan')
+                    ->where('nip', $id)
+                    ->first();
 
-            $karyawan = DB::table('mst_karyawan')
-                ->where('nip', $id)
-                ->first();
+                DB::table('mst_karyawan')
+                    ->where('nip', $id)
+                    ->update([
+                        'nip' => $request->get('nip'),
+                        'nama_karyawan' => $request->get('nama'),
+                        'nik' => $request->get('nik'),
+                        'ket_jabatan' => $request->get('ket_jabatan'),
+                        'kd_entitas' => $entitas,
+                        'kd_bagian' => $request->get('bagian'),
+                        'kd_jabatan' => $request->get('jabatan'),
+                        'kd_panggol' => $request->get('panggol'),
+                        'kd_agama' => $request->get('agama'),
+                        'tmp_lahir' => $request->get('tmp_lahir'),
+                        'tgl_lahir' => $request->get('tgl_lahir'),
+                        'kewarganegaraan' => $request->get('kewarganegaraan'),
+                        'jk' => $request->get('jk'),
+                        'status' => $request->get('status_pernikahan'),
+                        'status_ptkp' => $request->get('status_ptkp'),
+                        'alamat_ktp' => $request->get('alamat_ktp'),
+                        'alamat_sek' => $request->get('alamat_sek'),
+                        'kpj' => $request->get('kpj'),
+                        'jkn' => $request->get('jkn'),
+                        'gj_pokok' => str_replace('.', "", $request->get('gj_pokok')),
+                        'gj_penyesuaian' => str_replace('.', "", $request->get('gj_penyesuaian')),
+                        'status_karyawan' => $request->get('status_karyawan'),
+                        'status_jabatan' => $request->get('status_jabatan'),
+                        'skangkat' => $request->get('skangkat'),
+                        'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
+                        'no_rekening' => $request->get('no_rek'),
+                        'npwp' => $request->get('npwp'),
+                        'tgl_mulai' => $request->get('tgl_mulai'),
+                        'created_at' => now(),
+                    ]);
 
-            DB::table('mst_karyawan')
-                ->where('nip', $id)
-                ->update([
-                    'nip' => $request->get('nip'),
-                    'nama_karyawan' => $request->get('nama'),
-                    'nik' => $request->get('nik'),
-                    'ket_jabatan' => $request->get('ket_jabatan'),
-                    'kd_entitas' => $entitas,
-                    'kd_bagian' => $request->get('bagian'),
-                    'kd_jabatan' => $request->get('jabatan'),
-                    'kd_panggol' => $request->get('panggol'),
-                    'kd_agama' => $request->get('agama'),
-                    'tmp_lahir' => $request->get('tmp_lahir'),
-                    'tgl_lahir' => $request->get('tgl_lahir'),
-                    'kewarganegaraan' => $request->get('kewarganegaraan'),
-                    'jk' => $request->get('jk'),
-                    'status' => $request->get('status_pernikahan'),
-                    'status_ptkp' => $request->get('status_ptkp'),
-                    'alamat_ktp' => $request->get('alamat_ktp'),
-                    'alamat_sek' => $request->get('alamat_sek'),
-                    'kpj' => $request->get('kpj'),
-                    'jkn' => $request->get('jkn'),
-                    'gj_pokok' => str_replace('.', "", $request->get('gj_pokok')),
-                    'gj_penyesuaian' => str_replace('.', "", $request->get('gj_penyesuaian')),
-                    'status_karyawan' => $request->get('status_karyawan'),
-                    'status_jabatan' => $request->get('status_jabatan'),
-                    'skangkat' => $request->get('skangkat'),
-                    'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
-                    'no_rekening' => $request->get('no_rek'),
-                    'npwp' => $request->get('npwp'),
-                    'tgl_mulai' => $request->get('tgl_mulai'),
-                    'created_at' => now(),
-                ]);
-
-            if($request->get('status_pernikahan') == 'Kawin' && $request->get('is_jml_anak') > 0){
-                if ($request->get('nama_anak')[0] != null) {
-                    foreach ($request->get('nama_anak') as $key => $item) {
-                        if ($request->get('id_anak')[$key] != null) {
-                            DB::table('keluarga')
-                                ->where('id', $request->get('id_anak')[$key])
-                                ->update([
-                                    'nama' => $item,
-                                    'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
-                                    'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
-                                    'nip' => $request->get('nip'),
-                                    'updated_at' => now()
-                                ]);
-                        } else {
-                            DB::table('keluarga')
-                                ->insert([
-                                    'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
-                                    'nama' => $item,
-                                    'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
-                                    'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
-                                    'nip' => $request->get('nip'),
-                                    'created_at' => now()
-                                ]);
+                if($request->get('status_pernikahan') == 'Kawin' && $request->get('is_jml_anak') > 0){
+                    if ($request->get('nama_anak')[0] != null) {
+                        foreach ($request->get('nama_anak') as $key => $item) {
+                            if ($request->get('id_anak')[$key] != null) {
+                                DB::table('keluarga')
+                                    ->where('id', $request->get('id_anak')[$key])
+                                    ->update([
+                                        'nama' => $item,
+                                        'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
+                                        'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
+                                        'nip' => $request->get('nip'),
+                                        'updated_at' => now()
+                                    ]);
+                            } else {
+                                DB::table('keluarga')
+                                    ->insert([
+                                        'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+                                        'nama' => $item,
+                                        'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
+                                        'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
+                                        'nip' => $request->get('nip'),
+                                        'created_at' => now()
+                                    ]);
+                            }
                         }
+                    }
+                }
+
+                for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
+                    if ($request->get('id_tk')[$i] == null) {
+                        DB::table('tunjangan_karyawan')
+                            ->insert([
+                                'nip' => $request->get('nip'),
+                                'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
+                                'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                'created_at' => now()
+                            ]);
+                    } else {
+                        DB::table('tunjangan_karyawan')
+                            ->where('id', $request->get('id_tk')[$i])
+                            ->update([
+                                'nip' => $request->get('nip'),
+                                'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
+                                'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                'updated_at' => now()
+                            ]);
                     }
                 }
             }
 
-            for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
-                if ($request->get('id_tk')[$i] == null) {
-                    DB::table('tunjangan_karyawan')
-                        ->insert([
-                            'nip' => $request->get('nip'),
-                            'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
-                            'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                            'created_at' => now()
+            if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
+                $cekPotongan = DB::table('potongan_gaji')
+                    ->where('nip', $id)
+                    ->count();
+                if($cekPotongan > 0){
+                    DB::table('potongan_gaji')
+                        ->where('nip', $id)
+                        ->update([
+                            'kredit_koperasi' => (int)str_replace('.', '', $request->get('potongan_kredit_koperasi')),
+                            'iuran_koperasi' => (int)str_replace('.', '', $request->get('potongan_iuran_koperasi')),
+                            'kredit_pegawai' => (int)str_replace('.', '', $request->get('potongan_kredit_pegawai')),
+                            'iuran_ik' => (int)str_replace('.', '', $request->get('potongan_iuran_ik')),
+                            'updated_at' => now()
                         ]);
                 } else {
-                    DB::table('tunjangan_karyawan')
-                        ->where('id', $request->get('id_tk')[$i])
-                        ->update([
-                            'nip' => $request->get('nip'),
-                            'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
-                            'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                            'updated_at' => now()
+                    DB::table('potongan_gaji')
+                        ->insert([
+                            'nip' => $id,
+                            'kredit_koperasi' => (int)str_replace('.', '', $request->get('potongan_kredit_koperasi')),
+                            'iuran_koperasi' => (int)str_replace('.', '', $request->get('potongan_iuran_koperasi')),
+                            'kredit_pegawai' => (int)str_replace('.', '', $request->get('potongan_kredit_pegawai')),
+                            'iuran_ik' => (int)str_replace('.', '', $request->get('potongan_iuran_ik')),
+                            'created_at' => now()
                         ]);
                 }
             }
 
+            DB::commit();
             Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e);
-            dd($e);
+            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
+            return redirect()->back();
         } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e);
-            dd($e);
+            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
+            return redirect()->back();
         }
     }
 
     public function penonaktifan(PenonaktifanRequest $request)
     {
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')) {
+            return view('roles.forbidden');
+        }
         if($request->get('tanggal_penonaktifan') > now()) {
             Alert::error('Tanggal penonaktifan tidak boleh lebih dari hari ini.');
             return redirect()->route('penonaktifan.create');
@@ -803,15 +906,26 @@ class KaryawanController extends Controller
 
     public function penonaktifanAdd()
     {
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')) {
+            return view('roles.forbidden');
+        }
         return view('karyawan.penonaktifan.penonaktifan');
     }
 
-    public function indexPenonaktifan()
+    public function indexPenonaktifan(Request $request)
     {
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan')) {
+            return view('roles.forbidden');
+        }
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->has('q') ? $request->get('q') : null;
+
         $karyawanRepo = new KaryawanRepository();
 
-        return view('karyawan.penonaktifan.index', [
-            'karyawan' => $karyawanRepo->getAllKaryawanNonaktif()
+        // return view('karyawan.penonaktifan.index', [
+        return view('karyawan.penonaktifan.index-new', [
+            'karyawan' => $karyawanRepo->getAllKaryawanNonaktif($search, $limit)
         ]);
     }
 
@@ -828,6 +942,7 @@ class KaryawanController extends Controller
 
     public function importKeluargaIndex()
     {
+        // Need permission
         return view('karyawan.import_data_keluarga');
     }
 
@@ -843,10 +958,14 @@ class KaryawanController extends Controller
 
     public function reminderPensiunIndex()
     {
+        if (!auth()->user()->can('manajemen karyawan - data masa pensiunan')) {
+            return view('roles.forbidden');
+        }
         $jabatan = JabatanModel::all();
         $panggol = PanggolModel::all();
 
         return view('karyawan.reminder-pensiun', [
+        // return view('karyawan.reminder-pensiun-old', [
             'karyawan' => null,
             'status' => null,
             'jabatan' => $jabatan,
@@ -856,6 +975,9 @@ class KaryawanController extends Controller
 
     public function reminderPensiunShow(Request $request)
     {
+        if (!auth()->user()->can('manajemen karyawan - data masa pensiunan')) {
+            return view('roles.forbidden');
+        }
         $kantor = $request->kantor;
         $karyawan = collect();
         $status = 0;
@@ -920,12 +1042,48 @@ class KaryawanController extends Controller
             $karyawan->where('status_karyawan', '!=', 'Nonaktif');
             $karyawan->leftJoin('mst_jabatan', 'mst_jabatan.kd_jabatan', 'mst_karyawan.kd_jabatan');
             $karyawan->orderBy('tgl_lahir', 'asc');
-            $karyawan = $karyawan->get();
+            $karyawan = $karyawan->paginate(25);
+
+            if($request->kategori == 1){
+                $karyawan->appends([
+                    'kategori' => 1
+                ]);
+            } else if($request->kategori == 2){
+                $karyawan->appends([
+                    'kategori' => 2,
+                    'divisi' => $request->divisi
+                ]);
+            } else if($request->kategori == 3){
+                $karyawan->appends([
+                    'kategori' => 3,
+                    'divisi' => $request->divisi,
+                    'subDivisi' => $request->subDivisi
+                ]);
+            } else if($request->kategori == 4){
+                $karyawan->appends([
+                    'kategori' => 4,
+                    'divisi' => $request->divisi,
+                    'subDivisi' => $request->subDivisi,
+                    'bagian' => $request->bagian
+                ]);
+            } else if($request->kategori == 5){
+                if($kantor == 'cabang'){
+                    $karyawan->appends([
+                        'kategori' => 5,
+                        'kantor' => 'Cabang',
+                        'cabang' => $request->cabang
+                    ]);
+                } else{
+                    $karyawan->appends([
+                        'kategori' => 5,
+                        'kantor' => 'Pusat'
+                    ]);
+                }
+            }
         }
-        // $date = date('Y-m-d', strtotime($karyawan[4]->tgl_lahir. ' + 56 years'));
-        // dd($date);
-        // dd($karyawan);
+
         return view('karyawan.reminder-pensiun', [
+        // return view('karyawan.reminder-pensiun-old', [
             'status' => $status,
             'karyawan' => $karyawan,
             'jabatan' => $jabatan,
@@ -937,6 +1095,7 @@ class KaryawanController extends Controller
 
     public function exportCV($id)
     {
+        // Need permission
         $data_suis = null;
         $karyawan = KaryawanModel::findOrFail($id);
         $data_suis = DB::table('keluarga')
@@ -1076,5 +1235,35 @@ class KaryawanController extends Controller
         }
         
         return $month;
+    }
+
+    public function getNameKaryawan($nip){
+        $karyawan = DB::table('mst_karyawan')->select('nip', 'nama_karyawan')->where('nip', $nip)->get();
+
+        return response()->json([
+            'data' => $karyawan
+        ]);
+    }
+
+    public function resetPasswordKaryawan(Request $request){
+        $data = KaryawanModel::where('nip',$request->formId)->first();
+
+        DB::table('mst_karyawan')
+            ->where('nip', $request->formId)
+            ->update([
+                'password' => Hash::make($data->nip),
+            ]);
+
+        Alert::success('Berhasil', 'Berhasil Reset Password Karyawan ' . $data->nama_karyawan . ', nip ' . $data->nip);
+        return redirect()->route('karyawan.index');
+    }
+
+    public function importStatusPtkp(Request $request){
+        $file = $request->file('upload_csv');
+        $import = new ImportStatusPTKP;
+        $import = $import->import($file);
+
+        Alert::success('Berhasil', 'Berhasil mengimport data excel');
+        return redirect()->route('karyawan.index');
     }
 }

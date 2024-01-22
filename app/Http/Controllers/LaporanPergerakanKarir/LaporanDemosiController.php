@@ -7,15 +7,24 @@ use App\Service\EntityService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LaporanDemosiController extends Controller
 {
     public function index(Request $request)
     {
+        if (!auth()->user()->can('laporan - laporan pergerakan karir - laporan demosi')) {
+            return view('roles.forbidden');
+        }
         $data = null;
         $start_date = $request->start_date;
         $end_date = $request->end_date;
+
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->has('q') ? $request->get('q') : null;
+
         if ($start_date && $end_date) {
             try {
                 $data = DB::table('demosi_promosi_pangkat')
@@ -30,8 +39,18 @@ class LaporanDemosiController extends Controller
                     ->join('mst_karyawan as karyawan', 'karyawan.nip', '=', 'demosi_promosi_pangkat.nip')
                     ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
                     ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
+                    ->when($search, function($query) use ($search) {
+                        $query->where('karyawan.nip', 'LIKE', "%$search%")
+                            ->orWhere('karyawan.nama_karyawan', 'LIKE', "%$search%");
+                    })
                     ->orderBy('tanggal_pengesahan', 'asc')
-                    ->get();
+                    ->paginate($limit);
+
+                    $data->appends([
+                        'start_date' => $start_date,
+                        'end_date' => $end_date,
+                        'page_length' => $limit,
+                    ]);
 
                 $data->map(function ($mutasi) {
                     $entity = EntityService::getEntity($mutasi->kd_entitas_baru);

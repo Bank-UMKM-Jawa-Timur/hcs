@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MutasiRequest;
+use App\Repository\MutasiRepository;
 use App\Service\EntityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -27,7 +29,7 @@ class MutasiController extends Controller
             'success' => false,
             'message' => 'Data karyawan tidak ditemukan',
         ]);
-        
+
         if(isset($officer->kd_bagian)){
             if($officer->kd_entitas != null && !in_array($officer->kd_entitas, $cbg)){
                 $entity = DB::table('mst_bagian')
@@ -58,55 +60,19 @@ class MutasiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = DB::table('demosi_promosi_pangkat')
-            ->where('keterangan', 'Mutasi')
-            ->select(
-                'demosi_promosi_pangkat.*',
-                'karyawan.*',
-                'newPos.nama_jabatan as jabatan_baru',
-                'oldPos.nama_jabatan as jabatan_lama'
-            )
-            ->join('mst_karyawan as karyawan', 'karyawan.nip', '=', 'demosi_promosi_pangkat.nip')
-            ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
-            ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
-            ->orderBy('tanggal_pengesahan', 'asc')
-            ->get();
+        // Need permission
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data mutasi')) {
+            return view('roles.forbidden');
+        }
 
-        $data->map(function($mutasi) {
-            $entity = EntityService::getEntity($mutasi->kd_entitas_baru);
-            $type = $entity->type;
-            $mutasi->kantor_baru = '-';
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->has('q') ? $request->get('q') : null;
 
-            if($type == 2) $mutasi->kantor_baru = "Cab. " . $entity->cab->nama_cabang;
-            if($type == 1) {
-                if(isset($entity->subDiv)){
-                    $mutasi->kantor_baru = $entity?->subDiv?->nama_subdivisi . " (Pusat)";
-                } else if(isset($entity->div)){
-                    $mutasi->kantor_baru = $entity?->div?->nama_divisi . " (Pusat)";
-                }
-            }
-
-            return $mutasi;
-        });
-
-        $data->map(function($mutasiLama) {
-            $entityLama = EntityService::getEntity($mutasiLama->kd_entitas_lama);
-            $typeLama = $entityLama->type;
-            $mutasiLama->kantor_lama = '-';
-
-            if($typeLama == 2) $mutasiLama->kantor_lama = "Cab. " . $entityLama->cab->nama_cabang;
-            if($typeLama == 1) {
-                if(isset($entityLama->subDiv)){
-                    $mutasiLama->kantor_lama = $entityLama->subDiv->nama_subdivisi . " (Pusat)";
-                } else if(isset($entityLama->div)){
-                    $mutasiLama->kantor_lama = $entityLama->div->nama_divisi . " (Pusat)";
-                }
-            }
-
-            return $mutasiLama;
-        });
+        $repo = new MutasiRepository;
+        $data = $repo->get($search, $limit);
 
         return view('mutasi.index', compact('data'));
     }
@@ -118,6 +84,10 @@ class MutasiController extends Controller
      */
     public function create()
     {
+        // Need permission
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data mutasi - create mutasi')) {
+            return view('roles.forbidden');
+        }
         $data = DB::table('mst_karyawan')
             ->select('nip', 'nama_karyawan', 'kd_jabatan')
             ->get();
@@ -139,7 +109,10 @@ class MutasiController extends Controller
      */
     public function store(MutasiRequest $request)
     {
-        // return $request->all();
+        // Need permission
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data mutasi - create mutasi')) {
+            return view('roles.forbidden');
+        }
         if($request->tunjangan != null){
             if(count($request->tunjangan) > 0){
                 foreach($request->tunjangan as $key => $item){
@@ -187,14 +160,14 @@ class MutasiController extends Controller
                 }
             }
         }
-        
+
         $filename = null;
         if($request->file_sk != null){
             $file = $request->file_sk;
             $folderPath = public_path() . '/upload/pergerakan_karir/';
             $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
             $path = realpath($folderPath);
-    
+
             if(!($path !== true AND is_dir($path))){
                 mkdir($folderPath, 0755, true);
             }

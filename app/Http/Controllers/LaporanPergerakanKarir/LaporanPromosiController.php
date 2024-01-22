@@ -5,15 +5,23 @@ namespace App\Http\Controllers\LaporanPergerakanKarir;
 use App\Http\Controllers\Controller;
 use App\Service\EntityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LaporanPromosiController extends Controller
 {
     public function index(Request $request)
     {
+        if (!auth()->user()->can('laporan - laporan pergerakan karir - laporan promosi')) {
+            return view('roles.forbidden');
+        }
         $data = null;
         $start_date = $request->start_date;
         $end_date = $request->end_date;
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->has('q') ? $request->get('q') : null;
+
         if ($start_date && $end_date) {
             try {
                 $data = DB::table('demosi_promosi_pangkat')
@@ -28,8 +36,18 @@ class LaporanPromosiController extends Controller
                     ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
                     ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
                     ->whereBetween('demosi_promosi_pangkat.tanggal_pengesahan', [$start_date, $end_date])
+                    ->when($search, function($query) use ($search) {
+                        $query->where('karyawan.nip', 'LIKE', "%$search%")
+                            ->orWhere('karyawan.nama_karyawan', 'LIKE', "%$search%");
+                    })
                     ->orderBy('id', 'desc')
-                    ->get();
+                    ->paginate($limit);
+
+                    $data->appends([
+                        'start_date' => $start_date,
+                        'end_date' => $end_date,
+                        'page_length' => $limit,
+                    ]);
 
                 $data->map(function ($mutasi) {
                     $entity = EntityService::getEntity($mutasi->kd_entitas_baru);

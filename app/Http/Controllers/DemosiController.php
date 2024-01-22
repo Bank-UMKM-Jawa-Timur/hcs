@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DemosiRequest;
+use App\Repository\DemosiRepository;
 use App\Service\EntityService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -27,55 +29,19 @@ class DemosiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = DB::table('demosi_promosi_pangkat')
-            ->where('keterangan', 'Demosi')
-            ->select(
-                'demosi_promosi_pangkat.*',
-                'karyawan.*',
-                'newPos.nama_jabatan as jabatan_baru',
-                'oldPos.nama_jabatan as jabatan_lama'
-            )
-            ->join('mst_karyawan as karyawan', 'karyawan.nip', '=', 'demosi_promosi_pangkat.nip')
-            ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
-            ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
-            ->orderBy('tanggal_pengesahan', 'asc')
-            ->get();
+        // Need permission
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data demosi')) {
+            return view('roles.forbidden');
+        }
+        
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->has('q') ? $request->get('q') : null;
 
-        $data->map(function($mutasi) {
-            $entity = EntityService::getEntity($mutasi->kd_entitas_baru);
-            $type = $entity->type;
-            $mutasi->kantor_baru = '-';
-
-            if($type == 2) $mutasi->kantor_baru = "Cab. " . $entity->cab->nama_cabang;
-            if($type == 1) {
-                if(isset($entity->subDiv)){
-                    $mutasi->kantor_baru = $entity?->subDiv?->nama_subdivisi . " (Pusat)";
-                } else if(isset($entity->div)){
-                    $mutasi->kantor_baru = $entity?->div?->nama_divisi . " (Pusat)";
-                }
-            }
-
-            return $mutasi;
-        });
-
-        $data->map(function($mutasiLama) {
-            $entityLama = EntityService::getEntity($mutasiLama->kd_entitas_lama);
-            $typeLama = $entityLama->type;
-            $mutasiLama->kantor_lama = '-';
-
-            if($typeLama == 2) $mutasiLama->kantor_lama = "Cab. " . $entityLama->cab->nama_cabang;
-            if($typeLama == 1) {
-                if(isset($entityLama->subDiv)){
-                    $mutasiLama->kantor_lama = $entityLama->subDiv->nama_subdivisi . " (Pusat)";
-                } else if(isset($entityLama->div)){
-                    $mutasiLama->kantor_lama = $entityLama->div->nama_divisi . " (Pusat)";
-                }
-            }
-
-            return $mutasiLama;
-        });
+        $repo = new DemosiRepository;
+        $data = $repo->get($search, $limit);
 
         return view('demosi.index', compact('data'));
     }
@@ -87,6 +53,9 @@ class DemosiController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data demosi - create demosi')) {
+            return view('roles.forbidden');
+        }
         $data = DB::table('mst_karyawan')
             ->select('nip', 'nama_karyawan', 'kd_panggol')
             ->get();
@@ -108,13 +77,16 @@ class DemosiController extends Controller
      */
     public function store(DemosiRequest $request)
     {
+        if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data demosi - create demosi')) {
+            return view('roles.forbidden');
+        }
         if($request->tunjangan != null){
             if(count($request->tunjangan) > 0){
                 foreach($request->tunjangan as $key => $item){
                     $tj = DB::table('mst_tunjangan')
                         ->where('id', $request->tunjangan[$key])
                         ->first('nama_tunjangan');
-        
+
                     if($request->id_tk[$key] != 0){
                         DB::table('history_penyesuaian')
                             ->insert([
@@ -153,14 +125,14 @@ class DemosiController extends Controller
                 }
             }
         }
-        
+
         $filename = null;
         if($request->file_sk != null){
             $file = $request->file_sk;
             $folderPath = public_path() . '/upload/pergerakan_karir/';
             $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
             $path = realpath($folderPath);
-    
+
             if(!($path !== true AND is_dir($path))){
                 mkdir($folderPath, 0755, true);
             }

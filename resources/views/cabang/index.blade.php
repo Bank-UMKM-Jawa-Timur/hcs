@@ -1,89 +1,70 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 
 @section('content')
-    <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title">Data Kantor Cabang</h5>
-            <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a href="{{ route('cabang.index') }}">Kantor Cabang</p>
-        </div>
-        
-        <div class="card-body">
-            <div class="col">
-                <div class="row">
-                    <a class="mb-3" href="{{ route('cabang.create') }}">
-                      <button class="btn btn-primary">tambah cabang</button>
-                    </a>
-                    <div class="table-responsive overflow-hidden content-center">
-                      <table class="table whitespace-nowrap" id="table" style="width: 100%">
-                          <thead class=" text-primary">
-                            <th>
-                                No
-                            </th>
-                            <th>
-                                Nama Cabang
-                            </th>
-                            <th>
-                                Alamat
-                            </th>
-                            <th class="text-center">
-                                Aksi
-                            </th>
-                          </thead>
-                          @php
-                              $no = 1;
-                          @endphp
-                          <tbody>
-                            @foreach ($data as $item)
-                                <tr>
-                                    <td>
-                                        {{ $no++ }}
-                                    </td>
-                                    <td>
-                                        {{ $item->nama_cabang }}
-                                    </td>
-                                    <td>
-                                        {{ $item->alamat_cabang }}
-                                    </td>
-                                    <td class="text-center">
-                                      {{-- <div class="row"> --}}
-                                        <p style="margin-bottom: 0.4rem !important;">
-                                          <a href="{{ route('cabang.edit', $item->kd_cabang) }}">
-                                            <button class="btn btn-warning">
-                                              @if ($item->kode_cabang_profil) Edit @else Lengkapi Profil Kantor @endif
-                                            </button>
-                                          </a>
-                                        </p>
-                                        @if ($item->kode_cabang_profil)
-                                          <a href="{{ route('penambahan-bruto.index') }}?profil_kantor={{$item->profil_id}}" class="mt-2">
-                                            <button class="btn btn-info">
-                                              Master Penambahan Bruto
-                                            </button>
-                                          </a>
-                                          <a href="{{ route('pengurangan-bruto.index') }}?profil_kantor={{$item->profil_id}}">
-                                            <button class="btn btn-info">
-                                              Master Pengurangan Bruto
-                                            </button>
-                                          </a>
-                                        @endif
-                                        {{-- <form action="{{ route('cabang.destroy', $item->id) }}" method="POST">
-                                          @csrf
-                                          @method('DELETE')
-                                      
-                                          <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                                        </form> --}}
-                                      {{-- </div> --}}
-                                    </td>
-                                </tr>
-                            @endforeach
-                          </tbody>
-                        </table>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="head mt-5">
+  <div class="flex gap-5 justify-between items-center">
+      <div class="heading">
+          <h2 class="text-2xl font-bold tracking-tighter">Data Kantor Cabang</h2>
+          <div class="breadcrumb">
+           <a href="#" class="text-sm text-gray-500">Setting</a>
+           <i class="ti ti-circle-filled text-theme-primary"></i>
+           <a href="#" class="text-sm text-gray-500 font-bold">Master</a>
+           <i class="ti ti-circle-filled text-theme-primary"></i>
+           <a href="{{ route('user.index') }}" class="text-sm text-gray-500 font-bold">Kantor Cabang</a>
+          </div>
+      </div>
+      <div class="button-wrapper flex gap-3">
+          @if(auth()->user()->can('setting - master - kantor cabang - create kantor cabang'))
+            <a href="{{ route('cabang.create') }}" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Cabang</a>
+          @endif
+      </div>
+  </div>
+</div>
+
+<div class="body-pages">
+  <div class="table-wrapping">
+    <table class="table whitespace-nowrap" id="table" style="width: 100%">
+      <thead class=" text-primary">
+        <th>
+            No
+        </th>
+        <th>
+            Nama Cabang
+        </th>
+        <th>
+            Alamat
+        </th>
+        <th class="text-center">
+            Aksi
+        </th>
+      </thead>
+      @php
+          $no = 1;
+      @endphp
+      <tbody>
+        @foreach ($data as $item)
+            <tr>
+                <td>
+                    {{ $no++ }}
+                </td>
+                <td>
+                    {{ $item->nama_cabang }}
+                </td>
+                <td>
+                    {{ $item->alamat_cabang }}
+                </td>
+                <td class="flex">
+                  <a href="{{ route('cabang.edit', $item->kd_cabang) }}" class="btn btn-warning">Edit</a>
+                </td>
+            </tr>
+        @endforeach
+      </tbody>
+  </table>
+  </div>
+</div>
 @endsection
 
-@section('custom_script')
+@push('extraScript')
   <script>
     $(document).ready(function() {
         var table = $('#table').DataTable({
@@ -95,4 +76,4 @@
         });
     });
   </script>
-@endsection 
+@endpush 

@@ -1,23 +1,17 @@
 @extends('layouts.template')
 @section('content')
-    <div class="card-header">
+    <div class="d-lg-flex justify-content-between w-100 p-3">
         <div class="card-header">
-            <h5 class="card-title">Lampiran Gaji</h5>
+            <h5 class="card-title font-weiht-bold">Lampiran Gaji</h5>
             <p class="card-title"><a href="">Gaji</a> > Lampiran Gaji</p>
         </div>
     </div>
-
     <div class="card-body">
         <div class="row m-0">
-            <div class="col-lg-4">
-                <a href="{{ route('gaji.create') }}">
-                    <button class="btn btn-info">import potongan</button>
-                </a>
-            </div>
             <div class="col-lg-12">
                 @php
                     $already_selected_value = date('y');
-                    $earliest_year = 2022;
+                    $earliest_year = 2024;
                 @endphp
                 <form action="{{ route('getLaporanGaji') }}" method="post" class="form-group">
                     @csrf
@@ -32,27 +26,37 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="">Kantor</label>
-                                <select name="kantor" id="kantor" class="form-control">
-                                    <option value="">--- Pilih Kantor ---</option>
-                                    <option value="pusat" {{ $request?->kantor == "pusat" ? 'selected' : '' }}>Pusat</option>
-                                    <option value="cabang" {{ $request?->kantor == "cabang" ? 'selected' : '' }}>Cabang</option>
-                                </select>
+                        @if (!auth()->user()->hasRole('user'))
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Kantor</label>
+                                    <select name="kantor" id="kantor" class="form-control">
+                                        <option value="">--- Pilih Kantor ---</option>
+                                        <option value="pusat" {{ $request?->kantor == "pusat" ? 'selected' : '' }}>Pusat</option>
+                                        <option value="cabang" {{ $request?->kantor == "cabang" ? 'selected' : '' }}>Cabang</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4" id="cabang_col">
-                            
-                        </div>
+                            <div class="col-md-4" id="cabang_col">
+                                
+                            </div>
+                        @endif
                         <div class="col-md-4">
                             <label for="tahun">Tahun</label>
                             <div class="form-group">
                                 <select name="tahun" id="tahun" class="form-control">
-                                    <option value="">--- Pilih Tahun ---</option>
-                                    @foreach (range(date('Y'), $earliest_year) as $x)
-                                        <option @selected($request?->tahun == $x) value="{{ $x }}">{{ $x }}</option>
-                                    @endforeach
+                                    <option value="">Pilih Tahun</option>
+                                    @php
+                                        $earliest = 2024;
+                                        $tahunSaatIni = date('Y');
+                                        $awal = $tahunSaatIni - 5;
+                                        $akhir = $tahunSaatIni + 5;
+                                    @endphp
+
+                                    @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
+                                        <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
+                                            {{ $tahun }}</option>
+                                    @endfor
                                 </select>
                             </div>
                         </div>
@@ -68,7 +72,9 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-info">Tampilkan</button>
+                    <div class="pb-4 pt-4">
+                        <button class="is-btn is-primary">Tampilkan</button>
+                    </div>
                 </form>
             </div>
             @php
@@ -136,7 +142,7 @@
                                     <th>Kredit Koperasi</th>
                                     <th>Iuran Koperasi</th>
                                     <th>Iuran Pegawai</th>
-                                    <th>Iuran</th>
+                                    <th>Iuran IK</th>
                                     <th>Total Potongan</th>
                                     <th>Total yang Diterima</th>
                                 </tr>

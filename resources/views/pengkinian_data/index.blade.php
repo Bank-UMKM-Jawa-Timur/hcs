@@ -1,197 +1,152 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 
 @section('content')
-      <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title">Pengkinian Data Karyawan</h5>
-            <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > Pengkinian Data</p>
+    <div class="head mt-5">
+        <div class="flex gap-5 justify-between items-center">
+            <div class="heading">
+                <h2 class="text-2xl font-bold tracking-tighter">Pengkinian Data</h2>
+                <div class="breadcrumb">
+                    <a href="#" class="text-sm text-gray-500">Manajemen Karyawan</a>
+                    <i class="ti ti-circle-filled text-theme-primary"></i>
+                    <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Pengkinian Data</a>
+                </div>
+            </div>
+            <div class="button-wrapper flex gap-3">
+                @can('manajemen karyawan - pengkinian data - create pengkinian data')
+                    <a href="{{ route('pengkinian_data.create') }}" class="btn btn-primary"><i class="ti ti-plus"></i>
+                        Pengkinian Data</a>
+                @elsecan('manajemen karyawan - pengkinian data - import pengkinian data')
+                    <a href="{{ route('pengkinian-data-import-index') }}" class="btn btn-primary"><i class="ti ti-plus"></i>
+                        Import Pengkinian</a>
+                @endcan
+            </div>
         </div>
-
-        <div class="card-body">
-            <div class="col">
-                <div class="row">
-                    <a class="mb-3" href="{{ route('pengkinian_data.create') }}">
-                      <button class="btn btn-primary">Pengkinian Data</button>
-                    </a>
-                    <a class="ml-3" href="{{ route('pengkinian-data-import-index') }}">
-                      <button class="btn btn-primary">Import Pengkinian</button>
-                    </a>
-                    <div class="table-responsive overflow-hidden content-center">
-                      <table class="table whitespace-nowrap" id="table" style="width: 100%">
-                        <thead class="text-primary">
-                          <th>No</th>
-                          <th>
-                            NIP
-                          </th>
-                          <th>
-                            NIK
-                          </th>
-                          <th>
-                              Nama karyawan
-                          </th>
-                          <th>
-                            Kantor
-                          </th>
-                          <th>
-                            Jabatan
-                          </th>
-                          <th>
-                              Aksi
-                          </th>
-                        </thead>
+    </div>
+    <div class="body-pages">
+        <div class="table-wrapping">
+        <form id="form" method="get">
+            <div class="layout-component">
+                <div class="shorty-table">
+                    <label for="page_length">Show</label>
+                    <select name="page_length" class="mr-3 text-sm text-neutral-400 page_length" id="page_length">
+                        <option value="10"
+                            @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
+                            10</option>
+                        <option value="20"
+                            @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>
+                            20</option>
+                        <option value="50"
+                            @isset($_GET['page_length']) {{ $_GET['page_length'] == 50 ? 'selected' : '' }} @endisset>
+                            50</option>
+                        <option value="100"
+                            @isset($_GET['page_length']) {{ $_GET['page_length'] == 100 ? 'selected' : '' }} @endisset>
+                            100</option>
+                    </select>
+                    <label for="page_length">entries</label>
+                </div>
+                <div class="input-search">
+                    <i class="ti ti-search"></i>
+                    <input type="search" placeholder="Search" name="q" id="q"
+                        value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
+                </div>
+            </div>
+            <table class="tables">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>NIP</th>
+                        <th>NIK</th>
+                        <th>Nama Karyawan</th>
+                        <th>Kantor</th>
+                        <th>Jabatan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                        $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                        $start = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
+                        $end = $page == 1 ? $page_length : $start + $page_length - 1;
+                        $i = $page == 1 ? 1 : $start;
+                    @endphp
+                    @foreach ($data as $item)
                         @php
-                            $num = 0;
-                            $no = 1;
+                            $cabang = 'Pusat';
+                            if ($item->nama_cabang) {
+                                $cabang = $item->nama_cabang;
+                            }
                         @endphp
-                        <tbody>
-                          @foreach ($data_pusat as $item)
-                            @php
-                              $jabatan = 'Pusat';
-                            @endphp
-                              <tr>
-                                  <td>
-                                    @php
-                                        $num = $no++;
-                                    @endphp
-                                    {{ $num }}
-                                  </td>
-                                  <td>{{ $item->nip }}</td>
-                                  <td>{{ $item->nik }}</td>
-                                  <td>
-                                    {{ $item->nama_karyawan }}
-                                  </td>
-                                  <td>
-                                    {{ $jabatan }}
-                                  </td>
-                                  <td>
-                                    @php
-                                        $ket = null;
-                                        if($item->ket_jabatan != null){
-                                          $ket = ' ('.$item->ket_jabatan.')';
-                                        }
-                                        $st_jabatan = DB::table('mst_jabatan')
-                                          ->where('kd_jabatan', $item->kd_jabatan)
-                                          ->first();
+                        <tr>
+                            <td>{{ $i++ }}
+                            </td>
+                            <td>{{ $item->nip }}</td>
+                            <td>{{ $item->nik }}</td>
+                            <td>{{ $item->nama_karyawan }}</td>
+                            <td>{{ $cabang }}</td>
+                            <td>
+                                @php
+                                    $ket = null;
+                                    if ($item->ket_jabatan != null) {
+                                        $ket = ' (' . $item->ket_jabatan . ')';
+                                    }
+                                    $st_jabatan = DB::table('mst_jabatan')
+                                        ->where('kd_jabatan', $item->kd_jabatan)
+                                        ->first();
 
-                                        $bagian = '';
-                                        if ($item->kd_bagian != null) {
-                                          $bagian1 = DB::table('mst_bagian')
+                                    $bagian = '';
+                                    if ($item->kd_bagian != null) {
+                                        $bagian1 = DB::table('mst_bagian')
                                             ->select('nama_bagian')
                                             ->where('kd_bagian', $item->kd_bagian)
                                             ->first();
 
-                                            if (isset($bagian1)) {
-                                              $bagian = $bagian1->nama_bagian;
-                                            }
+                                        if (isset($bagian1)) {
+                                            $bagian = $bagian1->nama_bagian;
                                         }
-                                    @endphp
-
-                                    @if ($item->status_jabatan == "Penjabat")
-                                        Pj.{{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
-                                    @elseif($item->status_jabatan == "Penjabat Sementara")
-                                        Pjs.{{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
-                                    @else
-                                    {{ $item->nama_jabatan . ' ' . $bagian.$ket }} 
-                                    @endif
-                                  </td>
-                                  <td style="min-width: 130px">
-                                    <div class="container">
-                                        <a href="{{ route('pengkinian_data.show', $item->nip) }}">
-                                          <button class="btn btn-outline-info p-1" style="min-width: 60px">
-                                            Detail
-                                          </button>
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                              </tr>
-                          @endforeach
-                          {{-- Foreach Data selain Pusat --}}
-                          @foreach ($cabang as $item)
-                              @php
-                                  $data_cabang =  DB::select("SELECT history_pengkinian_data_karyawan.id, history_pengkinian_data_karyawan.nip, history_pengkinian_data_karyawan.nik, history_pengkinian_data_karyawan.nama_karyawan, history_pengkinian_data_karyawan.kd_entitas, history_pengkinian_data_karyawan.kd_jabatan, history_pengkinian_data_karyawan.kd_bagian, history_pengkinian_data_karyawan.ket_jabatan, history_pengkinian_data_karyawan.status_karyawan, mst_jabatan.nama_jabatan, history_pengkinian_data_karyawan.status_jabatan FROM `history_pengkinian_data_karyawan` JOIN mst_jabatan ON mst_jabatan.kd_jabatan = history_pengkinian_data_karyawan.kd_jabatan WHERE history_pengkinian_data_karyawan.kd_entitas = '".$item->kd_cabang."' ORDER BY CASE WHEN history_pengkinian_data_karyawan.kd_jabatan='PIMDIV' THEN 1 WHEN history_pengkinian_data_karyawan.kd_jabatan='PSD' THEN 2 WHEN history_pengkinian_data_karyawan.kd_jabatan='PC' THEN 3 WHEN history_pengkinian_data_karyawan.kd_jabatan='PBO' THEN 4 WHEN history_pengkinian_data_karyawan.kd_jabatan='PBP' THEN 5 WHEN history_pengkinian_data_karyawan.kd_jabatan='PEN' THEN 6 WHEN history_pengkinian_data_karyawan.kd_jabatan='ST' THEN 7 WHEN history_pengkinian_data_karyawan.kd_jabatan='IKJP' THEN 8 WHEN history_pengkinian_data_karyawan.kd_jabatan='NST' THEN 9 END ASC");
-                              @endphp
-
-                              @foreach ($data_cabang as $i)
-                                  <tr>
-                                    <td>{{ $num++ }}</td>
-                                    <td>{{ $i->nip }}</td>
-                                    <td>{{ $i->nik }}</td>
-                                    <td>{{ $i->nama_karyawan }}</td>
-                                    <td>
-                                      @php
-                                          $data = DB::table('mst_cabang')
-                                            ->where('kd_cabang', $i->kd_entitas)
-                                            ->first();
-
-                                            if (isset($data)) {
-                                              $data = $data->nama_cabang;
-                                            } 
-                                      @endphp
-                                      {{ $data }}
-                                    </td>
-                                    <td>
-                                      @php
-                                          $ket = null;
-                                          if($i->ket_jabatan != null){
-                                            $ket = ' ('.$i->ket_jabatan.')';
-                                          }
-                                          $st_jabatan = DB::table('mst_jabatan')
-                                            ->where('kd_jabatan', $i->kd_jabatan)
-                                            ->first();
-
-                                          $bagian = '';
-                                          if ($i->kd_bagian != null) {
-                                            $bagian1 = DB::table('mst_bagian')
-                                              ->select('nama_bagian')
-                                              ->where('kd_bagian', $i->kd_bagian)
-                                              ->first();
-
-                                              if (isset($bagian1)) {
-                                                $bagian = $bagian1->nama_bagian;
-                                              }
-                                          }
-                                      @endphp
-
-                                      @if ($i->status_jabatan == "Penjabat")
-                                          Pj.{{ $i->nama_jabatan . ' ' . $bagian.$ket }} 
-                                      @elseif($i->status_jabatan == "Penjabat Sementara")
-                                          Pjs.{{ $i->nama_jabatan . ' ' . $bagian.$ket }} 
-                                      @else
-                                      {{ $i->nama_jabatan . ' ' . $bagian.$ket }} 
-                                      @endif
-                                    </td>
-                                    <td style="min-width: 130px">
-                                      <div class="container">
-                                          <a href="{{ route('pengkinian_data.show', $i->nip) }}">
-                                            <button class="btn btn-outline-info p-1" style="min-width: 60px">
-                                              Detail
-                                            </button>
-                                          </a>
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                              @endforeach
-                          @endforeach
-                        </tbody>
-                      </table>
-              </div>
+                                    }
+                                @endphp
+                                @if ($item->status_jabatan == 'Penjabat')
+                                    Pj.{{ $item->nama_jabatan . ' ' . $bagian . $ket }}
+                                @elseif($item->status_jabatan == 'Penjabat Sementara')
+                                    Pjs.{{ $item->nama_jabatan . ' ' . $bagian . $ket }}
+                                @else
+                                    {{ $item->nama_jabatan . ' ' . $bagian . $ket }}
+                                @endif
+                            </td>
+                            <td class="flex justify-center">
+                                @can('manajemen karyawan - pengkinian data - detail pengkinian data')
+                                    <a href="{{ route('pengkinian_data.show', $item->nip) }}"
+                                        class="btn btn-primary-light">
+                                        Detail
+                                    </a>
+                                @else
+                                    -
+                                @endcan
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <div class="table-footer">
+                <div class="showing">
+                    Showing {{ $start }} to {{ $end }} of {{ $data->total() }} entries
+                </div>
+                <div class="pagination">
+                    @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                        {{ $data->links('pagination::tailwind') }}
+                    @endif
+                </div>
             </div>
+        </form>
         </div>
     </div>
 @endsection
 
-@section('custom_script')
-  <script>
-    $(document).ready(function() {
-        var table = $('#table').DataTable({
-            'autoWidth': false,
-            'dom': 'Rlfrtip',
-            'colReorder': {
-                'allowReorder': false
-            }
-        });
-    });
-  </script>
-@endsection
+@push('extraScript')
+    <script>
+        $('.page_length').on('change', function() {
+            $('#form').submit()
+        })
+    </script>
+@endpush

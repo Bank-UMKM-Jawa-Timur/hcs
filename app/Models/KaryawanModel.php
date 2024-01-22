@@ -4,13 +4,18 @@ namespace App\Models;
 
 use App\Enum\KategoriPenonaktifan;
 use App\Service\EntityService;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
-class KaryawanModel extends Model
+class KaryawanModel extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     protected $table = 'mst_karyawan';
     protected $primaryKey = 'nip';
@@ -90,13 +95,74 @@ class KaryawanModel extends Model
         return $this->hasOne(KeluargaModel::class, 'nip');
     }
 
+    public function gaji() {
+        return $this->hasOne(GajiPerBulanModel::class, 'nip');
+    }
+
+    public function allGajiByKaryawan() {
+        return $this->hasMany(GajiPerBulanModel::class, 'nip');
+    }
+
+    public function tunjanganKaryawan() {
+        return $this->hasOne(TunjanganKaryawanModel::class, 'nip');
+    }
+
     public function tunjangan()
     {
         return $this->belongsToMany(
             TunjanganModel::class,
             'tunjangan_karyawan',
             'nip',
-            'id_tunjangan'
+            'id_tunjangan',
         )->withPivot('nominal');
+    }
+
+    public function tunjanganTidakTetap()
+    {
+        return $this->belongsToMany(
+            TunjanganModel::class,
+            'penghasilan_tidak_teratur',
+            'nip',
+            'id_tunjangan',
+        )->withPivot('nominal');
+    }
+
+    public function sumTunjanganTidakTetapKaryawan()
+    {
+        return $this->belongsToMany(
+            TunjanganModel::class,
+            'penghasilan_tidak_teratur',
+            'nip',
+            'id_tunjangan',
+        );
+    }
+
+    public function bonus()
+    {
+        return $this->belongsToMany(
+            TunjanganModel::class,
+            'penghasilan_tidak_teratur',
+            'nip',
+            'id_tunjangan',
+        )->withPivot('nominal');
+    }
+
+    public function sumBonusKaryawan()
+    {
+        return $this->belongsToMany(
+            TunjanganModel::class,
+            'penghasilan_tidak_teratur',
+            'nip',
+            'id_tunjangan',
+        );
+    }
+
+    public function potonganGaji()
+    {
+        return $this->belongsTo(PotonganGajiModel::class, 'nip', 'nip');
+    }
+
+    public function pphDilunasi() {
+        return $this->hasMany(PPHModel::class, 'nip');
     }
 }

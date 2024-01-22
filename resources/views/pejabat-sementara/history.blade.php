@@ -1,60 +1,69 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 @include('vendor.select2')
 
 @section('content')
-<div class="card-header">
+{{-- <div class="card-header">
     <div class="card-header">
         <div class="card-title">
-            <h5 class="card-title">History Penjabat Sementara (PJS)</h5>
-            <p class="card-title"><a href="/">Histori </a> > <a href="{{ route('pejabat-sementara.history') }}">History Penjabat Sementara</a></p>
+            <h5 class="card-title font-weight-bold">History Penjabat Sementara (PJS)</h5>
+            <p class="card-title"><a href="/">Histori </a> > <a href="{{ route('pejabat-sementara.history') }}">History
+                    Penjabat Sementara</a></p>
+        </div>
+    </div>
+</div> --}}
+<div class="head mt-5">
+    <div class="flex gap-5 justify-between items-center">
+        <div class="heading">
+            <h2 class="text-2xl font-bold tracking-tighter">History Penjabat Sementara (PJS)</h2>
+            <div class="breadcrumb">
+                <a href="#" class="text-sm text-gray-500">History</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('pejabat-sementara.history') }}" class="text-sm text-gray-500 font-bold">History
+                    Penjabat Sementara</a>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="card-body">
-    <form action="{{ route('pejabat-sementara.history') }}" method="post">
-        @csrf
-        <div class="col">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="kategori">Kategori</label>
-                        <select name="kategori" id="kategori" class="form-control">
-                            <option value="">-- Pilih --</option>
-                            <option value="aktif" @selected(request()?->kategori == 'aktif')>Aktif</option>
-                            <option value="karyawan" @selected(request()->nip)>Karyawan</option>
-                        </select>
-                    </div>
+<div class="body-pages">
+    <div class="table-wrapping">
+        <form action="{{ route('pejabat-sementara.history') }}" method="post">
+            @csrf
+            <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
+                <div class="input-box">
+                    <label for="kategori">Kategori</label>
+                    <select name="kategori" id="kategori" class="form-input" required>
+                        <option value="">-- Pilih --</option>
+                        <option value="aktif" @selected(request()?->kategori == 'aktif')>Aktif</option>
+                        <option value="karyawan" @selected(request()->nip)>Karyawan</option>
+                    </select>
                 </div>
-                <div class="col-md-4" id="nip-wrapper">
+                <div class="input-box" id="nip-wrapper">
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <button class="btn btn-primary" type="submit">Tampilkan</button>
-                </div>
+            <div class="mt-5">
+                <button class="btn btn-primary" type="submit">Tampilkan</button>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 @if($pjs)
-<div class="card ml-3 mr-3 mb-3 mt-3 shadow">
-    <div class="col-md-12">
-        <div class="table-responsive overflow-hidden pt-2">
-            <table class="table text-center cell-border stripe" id="pjs-table" style="width: 100%;">
-                <thead style="background-color: #CCD6A6;">
-                    <tr>
-                        <th class="text-center">No</th>
-                        <th class="text-center">NIP</th>
-                        <th class="text-center">Nama Karyawan</th>
-                        <th class="text-center">Jabatan</th>
-                        <th class="text-center">Mulai</th>
-                        <th class="text-center">Berakhir</th>
-                        <th class="text-center">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
+<div class="body-pages">
+    <div class="table-wrapping">
+        <table class="tables-stripped border-none" id="pjs-table" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">NIP</th>
+                    <th class="text-center">Nama Karyawan</th>
+                    <th class="text-center">Jabatan</th>
+                    <th class="text-center">Mulai</th>
+                    <th class="text-center">Berakhir</th>
+                    <th class="text-center">Status</th>
+                </tr>
+            </thead>
+            <tbody>
                 @foreach ($pjs as $data)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
@@ -66,9 +75,8 @@
                     <td>{{ !$data->tanggal_berakhir ? 'Aktif' : 'Nonaktif' }}</td>
                 </tr>
                 @endforeach
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
 </div>
 @endif
@@ -76,10 +84,11 @@
 
 @push('style')
 <style>
-    .dataTables_wrapper .dataTables_filter{
+    .dataTables_wrapper .dataTables_filter {
         float: right;
     }
-    .dataTables_wrapper .dataTables_length{
+
+    .dataTables_wrapper .dataTables_length {
         float: left;
     }
 
@@ -89,7 +98,7 @@
 </style>
 @endpush
 
-@push('script')
+@push('extraScript')
 <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
@@ -128,22 +137,40 @@
         @endisset
     }
 
+    var valKaryawan = $('#kategori').find(":selected").val();
+
+    if (valKaryawan == "karyawan") {
+        console.log(valKaryawan);
+        $('#nip-wrapper').html(`
+                <div class="input-box">
+                    <label for="nip">Karyawan</label>
+                    <select name="nip" id="nip" class="form-input" required></select>
+                </div>
+            `);
+
+        initNIP();
+    }else{
+        $('#nip-wrapper').empty();
+    }
+
     $('#kategori').change(function() {
         const value = $(this).val();
+        console.log(value);
 
-        if(value == 'karyawan') {
+        if(value === 'karyawan') {
             $('#nip-wrapper').html(`
-                <div class="form-group">
+                <div class="input-box">
                     <label for="nip">Karyawan</label>
-                    <select name="nip" id="nip" class="form-control"></select>
+                    <select name="nip" id="nip" class="form-input" required></select>
                 </div>
             `);
 
             initNIP();
-            return;
+        }else{
+            $('#nip-wrapper').empty();
         }
 
-        $('#nip-wrapper').empty();
+
     });
 
     $('#pjs-table').DataTable({

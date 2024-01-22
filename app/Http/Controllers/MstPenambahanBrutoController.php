@@ -22,6 +22,7 @@ class MstPenambahanBrutoController extends Controller
      */
     public function index(Request $request)
     {
+        // Need permission
         $data = PemotongPajakTambahanModel::where('pemotong_pajak_tambahan.id_profil_kantor', $request->profil_kantor)
                                         ->select(
                                             'pemotong_pajak_tambahan.*',
@@ -43,6 +44,7 @@ class MstPenambahanBrutoController extends Controller
      */
     public function create(Request $request)
     {
+        // Need permission
         $kd_cabang = '';
         $kantor = MstProfilKantorModel::select('kd_cabang')->where('id', $request->profil_kantor)->first();
         if ($kantor)
@@ -132,6 +134,7 @@ class MstPenambahanBrutoController extends Controller
      */
     public function edit($id)
     {
+        // Need permission
         $data = PemotongPajakTambahanModel::find($id);
         $kd_cabang = '';
         $kantor = MstProfilKantorModel::select('kd_cabang')->where('id', $data->id_profil_kantor)->first();
@@ -208,6 +211,7 @@ class MstPenambahanBrutoController extends Controller
      */
     public function destroy($id, Request $request)
     {
+        // Need permission
         try{
             $url = route('penambahan-bruto.index').'?profil_kantor='.$request->id_profil_kantor;
 

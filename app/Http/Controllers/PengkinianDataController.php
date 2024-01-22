@@ -11,11 +11,19 @@ use App\Models\PengkinianKaryawanModel;
 use App\Models\PengkinianPjsModel;
 use App\Models\PjsModel;
 use App\Models\SpModel;
+use App\Repository\CabangRepository;
+use App\Repository\PengkinianDataRepository;
 use App\Service\EntityService;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PengkinianDataController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function postPengkinianImport(Request $request)
     {
         try{
@@ -35,6 +43,9 @@ class PengkinianDataController extends Controller
 
     public function pengkinian_data_index()
     {
+        if (!auth()->user()->can('manajemen karyawan - pengkinian data - import pengkinian data')) {
+            return view('roles.forbidden');
+        }
         return view('pengkinian_data.import');
     }
     /**
@@ -42,19 +53,22 @@ class PengkinianDataController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cbg = array();
-        $cabang = DB::table('mst_cabang')
-            ->get();
-        foreach($cabang as $i){
-            array_push($cbg, $i->kd_cabang);
+        if (!auth()->user()->can('manajemen karyawan - pengkinian data')) {
+            return view('roles.forbidden');
         }
-        $data_pusat = DB::select("SELECT history_pengkinian_data_karyawan.id, history_pengkinian_data_karyawan.nip, history_pengkinian_data_karyawan.nik, history_pengkinian_data_karyawan.nama_karyawan, history_pengkinian_data_karyawan.kd_entitas, history_pengkinian_data_karyawan.kd_jabatan, history_pengkinian_data_karyawan.kd_bagian, history_pengkinian_data_karyawan.ket_jabatan, history_pengkinian_data_karyawan.status_karyawan, mst_jabatan.nama_jabatan, history_pengkinian_data_karyawan.status_jabatan FROM `history_pengkinian_data_karyawan` JOIN mst_jabatan ON mst_jabatan.kd_jabatan = history_pengkinian_data_karyawan.kd_jabatan WHERE history_pengkinian_data_karyawan.kd_entitas NOT IN('".implode("', '", $cbg)."') or history_pengkinian_data_karyawan.kd_entitas IS NULL ORDER BY CASE WHEN history_pengkinian_data_karyawan.kd_jabatan='PIMDIV' THEN 1 WHEN history_pengkinian_data_karyawan.kd_jabatan='PSD' THEN 2 WHEN history_pengkinian_data_karyawan.kd_jabatan='PC' THEN 3 WHEN history_pengkinian_data_karyawan.kd_jabatan='PBO' THEN 4 WHEN history_pengkinian_data_karyawan.kd_jabatan='PBP' THEN 5 WHEN history_pengkinian_data_karyawan.kd_jabatan='PEN' THEN 6 WHEN history_pengkinian_data_karyawan.kd_jabatan='ST' THEN 7 WHEN history_pengkinian_data_karyawan.kd_jabatan='IKJP' THEN 8 WHEN history_pengkinian_data_karyawan.kd_jabatan='NST' THEN 9 END ASC");
-        // dd($data_pusat);
+
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->get('q');
+
+        $pengkinianDataRepo = new PengkinianDataRepository();
+        $data_pusat = $pengkinianDataRepo->getData($search, $limit, $page);
+
         return view('pengkinian_data.index', [
-            'data_pusat' => $data_pusat,
-            'cabang' => $cabang
+        // return view('pengkinian_data.index-old', [
+            'data' => $data_pusat
         ]);
     }
 
@@ -65,6 +79,9 @@ class PengkinianDataController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->can('manajemen karyawan - pengkinian data - create pengkinian data')) {
+            return view('roles.forbidden');
+        }
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
         $data_jabatan = DB::table('mst_jabatan')
@@ -92,7 +109,9 @@ class PengkinianDataController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        if (!auth()->user()->can('manajemen karyawan - pengkinian data - update pengkinian data')) {
+            return view('roles.forbidden');
+        }
         $nip = $request->nip;
         $request->validate([
             'nip' => 'required',
@@ -338,8 +357,11 @@ class PengkinianDataController extends Controller
      */
     public function show($id)
     {
+        if (!auth()->user()->can('manajemen karyawan - pengkinian data - detail pengkinian data')) {
+            return view('roles.forbidden');
+        }
         $data_suis = null;
-        
+
         $karyawan = PengkinianKaryawanModel::findOrFail($id);
         $data_suis = DB::table('history_pengkinian_data_keluarga')
             ->where('nip', $karyawan->nip)

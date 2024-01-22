@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Service\EntityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Laravel\Ui\Presets\Vue;
 
@@ -16,6 +17,9 @@ class HistoryJabatanController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->can('histori - jabatan')) {
+            return view('roles.forbidden');
+        }
         return view('history.index');
     }
 

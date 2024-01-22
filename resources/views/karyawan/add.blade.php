@@ -5,7 +5,7 @@
 @section('content')
     <div class="card-header">
         <div class="card-header">
-            <h5 class="card-title">Tambah Data Karyawan</h5>
+            <h5 class="card-title font-weight-bold">Tambah Data Karyawan</h5>
             <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="{{ route('karyawan.index') }}">Karyawan</a> > Tambah</p>
         </div>
     </div>
@@ -38,13 +38,13 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Nama Karyawan</label>
-                                    <input type="text" class="@error('nama') is-invalid @enderror form-control" name="nama" id="" value="{{ old('nama') }}">
+                                    <input type="text" class="@error('nama') is-invalid @enderror form-control textOnly" name="nama" id="" value="{{ old('nama') }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Tempat Lahir</label>
-                                    <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-control" name="tmp_lahir" id="" value="{{ old('tmp_lahir') }}">
+                                    <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-control textOnly" name="tmp_lahir" id="" value="{{ old('tmp_lahir') }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -368,7 +368,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control rupiah" onkeyup="formatRupiah(this)">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -384,10 +384,47 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="card p-2 ml-3 mr-3 shadow">
+                    <div class="card-header" id="headingFive">
+                        <h6 class="ml-3" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                            <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">Data Potongan</a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                        <div class="row m-0 pb-3 col-md-12" id="row_potongan">
+                            <div class="col col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label for="is_nama">Kredit Koperasi</label>
+                                    <input type="number" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="col col-md-3 col-sm-6">
+                                <div class="form-group">
+                                    <label for="is_nama">Iuran Koperasi</label>
+                                    <input type="number" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="col col-md-3 col-sm-6">
+                                <div class="form-group">
+                                    <label for="is_nama">Kredit Pegawai</label>
+                                    <input type="number" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="col col-md-3 col-sm-6">
+                                <div class="form-group">
+                                    <label for="is_nama">Iuran IK</label>
+                                    <input type="number" id="potongan_iuran_ik" name="potongan_iuran_ik" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="row m-3">
-                <button type="submit" id="submit" class="btn btn-info">Simpan</button>
+                <button type="submit" id="submit" class="is-btn is-primary">Simpan</button>
             </div>
         </form>
     </div>
@@ -399,6 +436,7 @@
         let status = $('#status');
         $('#kantor').attr("disabled", "disabled");
         var x =1;
+        var countIdPotongan = 1
 
         $("#is_jml_anak").keyup(function(){
             $("#row_anak").empty();
@@ -631,7 +669,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control rupiah" onkeyup="formatRupiah($(this).val())">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -679,6 +717,106 @@
                 $("#labelGajiPokok").html("Honorarium")
             } else{
                 $("#labelGajiPokok").html("Gaji Pokok")
+            }
+        })
+
+        $('#collapseFive').on('click', "#btn-add-potongan", function(){
+            $('#collapseFive').append(`
+                <hr class="mx-4">
+                <div class="row m-0 pb-3 col-md-12" id="row_tunjangan">
+                    <div class="col col-md-4 col-sm-6">
+                        <div class="form-group">
+                            <label for="is">Tahun</label>
+                            <select name="potongan_tahun[]" id="potongan_tahun"
+                                class="form-control">
+                                <option value="0">-- Pilih tahun --</option>
+                                @php
+                                    $sekarang = date('Y');
+                                    $awal = $sekarang - 5;
+                                    $akhir = $sekarang + 5;
+                                @endphp
+                                @for($i=$awal;$i<=$akhir;$i++)
+                                    <option value="{{$i}}">{{$i}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col col-md-4 col-sm-6">
+                        <div class="form-group">
+                            <label for="is">Bulan</label>
+                            <select name="potongan_bulan[]" id="potongan_bulan"
+                                class="form-control">
+                                <option value="0">-- Pilih bulan --</option>
+                                <option value="1">Januari</option>
+                                <option value="2">Februari</option>
+                                <option value="3">Maret</option>
+                                <option value="4">April</option>
+                                <option value="5">Mei</option>
+                                <option value="6">Juni</option>
+                                <option value="7">Juli</option>
+                                <option value="8">Agustus</option>
+                                <option value="9">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col col-md-4 col-sm-6">
+                        <div class="form-group">
+                            <label for="is_nama">Kredit Koperasi</label>
+                            <input type="number" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi[]" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="col col-md-3 col-sm-6">
+                        <div class="form-group">
+                            <label for="is_nama">Iuran Koperasi</label>
+                            <input type="number" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi[]" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="col col-md-3 col-sm-6">
+                        <div class="form-group">
+                            <label for="is_nama">Kredit Pegawai</label>
+                            <input type="number" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai[]" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="col col-md-3 col-sm-6">
+                        <div class="form-group">
+                            <label for="is_nama">Iuran IK</label>
+                            <input type="number" id="potongan_iuran_ik" name="potongan_iuran_ik[]" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="col col-md-1">
+                        <button class="btn btn-info mt-3" type="button" id="btn-add-potongan">
+                            <i class="bi-plus-lg"></i>
+                        </button>
+                    </div>
+                    <div class="col col-md-1">
+                        <button class="btn btn-info mt-3" type="button" id="btn-delete-potongan">
+                            <i class="bi-dash-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            `);
+            countIdPotongan++
+        });
+
+        $('#collapseFive').on('click', "#btn-delete-potongan", function(){
+            var row = $(this).closest('.row')
+            var hr = row.parent().find('hr').remove()
+            var value = row.children('#id_pot').val()
+            if(countIdPotongan > 1){
+                $(this).closest('.row').remove()
+                $(this).closest('.row').parent().find('hr').remove()
+                countIdPotongan--;
+            }
+        })
+
+        $(".textOnly").keydown(function(event){
+            var inputValue = event.which;
+            // allow letters and whitespaces only.
+            if(!(inputValue >= 65 && inputValue <= 120) && (inputValue != 32 && inputValue != 0)) { 
+                event.preventDefault(); 
             }
         })
     </script>

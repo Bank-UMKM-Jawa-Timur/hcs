@@ -1,71 +1,106 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 
 @section('content')
-<div class="card">
-    <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title">Laporan Mutasi</h5>
-            <p class="card-title"><a href="#">Laporan</a> > <a href="#">Laporan Pergerakan Karir</a> > <a
-                    href="{{ route('laporan-mutasi.index') }}">Laporan Mutasi</a></p>
+        <div class="head mt-5">
+            <div class="heading">
+                <h2 class="card-title">Laporan Mutasi</h2>
+            </div>
+            <div class="breadcrumb">
+                <a href="#" class="text-sm text-gray-500">Laporan</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="#" class="text-sm text-gray-500 font-bold">Laporan Pergerakan Karir</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('laporan-mutasi.index') }}" class="text-sm text-gray-500 font-bold">Laporan Mutasi</a>
+               </div>  
         </div>
-
-        <div class="card-body">
-            <form action="" method="get">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="">Dari</label>
-                            <input type="date" name="start_date" id="start_date" class="form-control"
-                                value="{{ old('start_date', Request::get('start_date')) }}" required>
+        <div class="body-pages">
+            <div class="card">
+                <form id="form" action="" method="get">
+                    <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
+                        <div class="col-md-4">
+                            <div class="input-box">
+                                <label for="">Dari</label>
+                                <input type="date" name="start_date" id="start_date" class="form-input"
+                                    value="{{ old('start_date', Request::get('start_date')) }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-box">
+                                <label for="">Sampai</label>
+                                <input type="date" name="end_date" id="end_date" class="form-input"
+                                    value="{{ old('end_date', Request::get('end_date')) }}" required>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="">Sampai</label>
-                            <input type="date" name="end_date" id="end_date" class="form-control"
-                                value="{{ old('end_date', Request::get('end_date')) }}" required>
+                    <div class="row">
+                        <div class="col-md-12 pt-5">
+                            <button class="btn btn-primary" type="submit"><i class="ti ti-filter"></i>Tampilkan</button>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <button class="btn btn-info" type="submit">Tampilkan</button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
             @isset($data)
-            <div class="row mt-4 px-3">
-                <div class="table-responsive">
-                    <table class="table" id="table_export">
-                        <thead class="text-primary">
-                            <th>
-                                #
-                            </th>
-                            <th>
-                                NIP
-                            </th>
-                            <th>
-                                Nama Karyawan
-                            </th>
-                            <th>
-                                Tanggal Mutasi
-                            </th>
-                            <th>
-                                Jabatan Lama
-                            </th>
-                            <th>
-                                Jabatan Baru
-                            </th>
-                            <th>
-                                Kantor Lama
-                            </th>
-                            <th>
-                                Kantor Baru
-                            </th>
-                            <th>
-                                Bukti SK
-                            </th>
+            <div class="row mt-1">
+                <div class="table-wrapping">
+                    <div class="layout-component">
+                        <div class="shorty-table">
+                            <label for="">Show</label>
+                            <select name="page_length" id="page_length" class="form-input">
+                                <option value="10"
+                                @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
+                                10</option>
+                            <option value="20"
+                                @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>
+                                20</option>
+                            <option value="50"
+                                @isset($_GET['page_length']) {{ $_GET['page_length'] == 50 ? 'selected' : '' }} @endisset>
+                                50</option>
+                            <option value="100"
+                                @isset($_GET['page_length']) {{ $_GET['page_length'] == 100 ? 'selected' : '' }} @endisset>
+                                100</option>
+                            </select>
+                            <label for="">entries</label>
+                        </div>
+                    </div>
+                    <table class="tables"  id="table_export">
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    NIP
+                                </th>
+                                <th>
+                                    Nama Karyawan
+                                </th>
+                                <th>
+                                    Tanggal Mutasi
+                                </th>
+                                <th>
+                                    Jabatan Lama
+                                </th>
+                                <th>
+                                    Jabatan Baru
+                                </th>
+                                <th>
+                                    Kantor Lama
+                                </th>
+                                <th>
+                                    Kantor Baru
+                                </th>
+                                <th>
+                                    Bukti SK
+                                </th>
+                            </tr>
                         </thead>
+                        @php
+                            $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                            $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                            $start = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
+                            $end = $page == 1 ? $page_length : $start + $page_length - 1;
+                            $i = $page == 1 ? 1 : $start;
+                        @endphp
                         <tbody>
                             @php
                             $i = 1;
@@ -107,16 +142,25 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{-- <div class="table-footer">
+                        <div class="showing">
+                            Showing {{ $start }} to {{ $end }} of {{ $data->total() }} entries
+                        </div>
+                        <div>
+                            @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                            {{ $data->links('pagination::tailwind') }}
+                        @endif
+                        </div>
+                    </div> --}}
                 </div>
             </div>
+        </form>
             @endisset
         </div>
-    </div>
 
-</div>
 @endsection
 
-@section('custom_script')
+@section('extraScript')
 <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
@@ -126,9 +170,12 @@
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
 <script>
+    $('#page_length').on('change', function() {
+            $('#form').submit()
+        })
     var start_date = document.getElementById("start_date").value;
         var end_date = document.getElementById("end_date").value;
-        
+
         $("#table_export").DataTable({
 
             dom : "Bfrtip",
@@ -157,12 +204,12 @@
                     customize: function (doc) {
                         var now = new Date();
 						var jsDate = now.getDate()+' / '+(now.getMonth()+1)+' / '+now.getFullYear();
-                        
-                        doc.styles.tableHeader.fontSize = 10; 
+
+                        doc.styles.tableHeader.fontSize = 10;
                         doc.defaultStyle.fontSize = 9;
                         doc.defaultStyle.alignment = 'center';
                         doc.styles.tableHeader.alignment = 'center';
-                        
+
                         doc.content[1].margin = [0, 0, 0, 0];
                         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
 
@@ -195,20 +242,20 @@
                         var last = null;
                         var current = null;
                         var bod = [];
-        
+
                         var css = '@page { size: landscape; }',
                             head = win.document.head || win.document.getElementsByTagName('head')[0],
                             style = win.document.createElement('style');
-        
+
                         style.type = 'text/css';
                         style.media = 'print';
-        
+
                         if (style.styleSheet) {
                             style.styleSheet.cssText = css;
                         } else {
                             style.appendChild(win.document.createTextNode(css));
                         }
-        
+
                         head.appendChild(style);
 
                         $(win.document.body).find('h1')
@@ -227,10 +274,22 @@
                 }
             ]
         });
-        
+
         $(".buttons-excel").attr("class","btn btn-success mb-2");
         $(".buttons-pdf").attr("class","btn btn-success mb-2");
         $(".buttons-print").attr("class","btn btn-success mb-2");
 
+
+
+        var btn_pagination = $('.pagination').find('a')
+        var page_url = window.location.href
+        $('.pagination').find('a').each(function(i, obj) {
+            if (page_url.includes('page_length')) {
+                btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
+            }
+            if (page_url.includes('q')) {
+                btn_pagination[i].href += `&q=${$('#q').val()}`
+            }
+        })
 </script>
 @endsection

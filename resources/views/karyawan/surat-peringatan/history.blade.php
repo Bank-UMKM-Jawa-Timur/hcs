@@ -22,7 +22,7 @@
     <div class="card-header">
         <div class="card-header">
             <div class="card-title">
-                <h5 class="card-title">Histori Surat Peringatan</h5>
+                <h5 class="card-title font-weight-bold">Histori Surat Peringatan</h5>
                 <p class="card-title"><a href="">Histori</a> > <a href="/surat-peringatan">Surat Peringatan</a></p>
             </div>
         </div>
@@ -35,7 +35,7 @@
                     <div class="form-group">
                         <label for="kategori">Kategori</label>
                         <select id="kategori" class="form-control">
-                            <option value="">Semua Data</option>
+                            <option value="" selected>Semua Data</option>
                             <option value="nip" @selected($request->nip)>Karyawan</option>
                             <option value="tanggal" @selected($request->first_date || $request->end_date)>Tanggal</option>
                             <option value="tahun" @selected($request->tahun)>Tahun</option>
@@ -44,7 +44,9 @@
                 </div>
             </div>
             <div class="row" id="kategori-wrapper"></div>
-            <button type="submit" class="btn btn-primary">Tampilkan</button>
+            <div class="pt-4 pb-4">
+                <button type="submit" class="is-btn is-primary">Tampilkan</button>
+            </div>
         </form>
     </div>
 
@@ -163,10 +165,16 @@ function initNIP() {
         @endif
     @endisset
 }
+const wrapper1 = $('#kategori-wrapper');
+var valKategori = $('#kategori').find(":selected").val();
+wrapper1.html('');
+wrapper1.append(generateKategori(valKategori));
+
 
 $('#kategori').change(function() {
     const wrapper = $('#kategori-wrapper');
     const kategori = $(this).val();
+    console.log(kategori);
 
     wrapper.html('');
     wrapper.append(generateKategori(kategori));
