@@ -1,6 +1,7 @@
 @extends('layouts.app-template')
 
 @section('content')
+@include('auth.session.modal')
 <div class="head mt-5">
     <div class="flex gap-5 justify-between items-center">
         <div class="heading">
@@ -123,29 +124,7 @@
                                 @if ($item->user_id == 1)
                                     -
                                 @else
-                                <button type="button" class="btn btn-primary-light" data-modal-toggle="modal" data-modal-id="confirmResetModal">Reset</button>
-                                {{-- modal reset --}}
-                                <div class="modal-layout hidden" id="confirmResetModal" tabindex="-1" aria-hidden="true">
-                                    <div class="modal modal-sm">
-                                        <div class="modal-head">
-                                            <div class="heading">
-                                                <h2>Konfirmasi Reset Session</h2>
-                                            </div>
-                                            <button type="button" data-modal-dismiss="confirmResetModal"  class="modal-close"><i class="ti ti-x"></i></button>
-                                        </div>
-                                        <div class="modal-body text-left">
-                                            <h2>Apakah Anda Yakin Ingin Reset Session ini</b>?</h2>
-                                        </div>
-                                        <div class="modal-footer to-right">
-                                            <button type="button" data-modal-dismiss="confirmResetModal" class="btn btn-light" type="button">Batal</button>
-                                            <form action="{{ route('reset-sessions.reset') }}" method="POST" enctype="multipart/form-data">
-                                                @csrf
-                                                    <input type="hidden" name="id" value="{{ $item->id }}">
-                                                    <button data-modal-dismiss="confirmResetModal" class="btn btn-primary" type="submit">Reset</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                                    <button type="button" class="btn btn-primary-light btnModal" data-id="{{ $item->id }}" data-modal-toggle="modal" data-modal-id="confirmResetModal">Reset</button>
                                 @endif
                             </td>
                         </tr>
@@ -180,3 +159,13 @@
     </div>
 </div>
 @endsection
+@push('script')
+    <script>
+        $(".btnModal").on('click', function(){
+            $("#confirmResetModal").removeClass('hidden')
+            let id = $(this).data('id')
+            console.log(id);
+            $("#idReset").val(id)
+        })
+    </script>
+@endpush
