@@ -147,7 +147,6 @@
         }
     }
 </script>
-    @yield('extraScript')
     @stack('extraScript')
     @stack('script')
     @yield('custom_script')

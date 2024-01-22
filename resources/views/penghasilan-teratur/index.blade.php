@@ -166,7 +166,7 @@
 </div>
 @endsection
 
-@section('extraScript')
+@push('extraScript')
 <script>
     $('#page_length').on('change', function() {
             $('#form').submit()
@@ -183,4 +183,4 @@
             }
         })
 </script>
-@endsection
+@endpush

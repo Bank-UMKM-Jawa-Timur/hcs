@@ -84,7 +84,7 @@
 </script>
 @endpush
 
-@section('extraScript')
+@push('extraScript')
 <script>
     $('#nip').change(function(e) {
 
@@ -126,4 +126,4 @@
                 })
             });
 </script>
-@endsection
+@endpush

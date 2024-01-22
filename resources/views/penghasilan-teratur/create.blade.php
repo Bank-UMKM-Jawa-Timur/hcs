@@ -130,7 +130,7 @@
     }
     </script>
 
-@section('extraScript')
+@push('extraScript')
     <script>
         // $('.preloader').removeClass('hidden')
 
@@ -656,4 +656,4 @@
 
         });
     </script>
-@endsection
+@endpush

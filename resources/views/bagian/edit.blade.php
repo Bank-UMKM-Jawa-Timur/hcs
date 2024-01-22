@@ -68,7 +68,7 @@
     </div>
 @endsection
 
-@section('extraScript')
+@push('extraScript')
     <script>
         var lastTrigger = 0;
 
@@ -160,4 +160,4 @@
 
         $('#kantor').trigger('change');
     </script>
-@endsection
+@endpush

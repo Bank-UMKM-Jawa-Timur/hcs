@@ -254,7 +254,7 @@ $request = isset($request) ? $request : null;
 
 @endsection
 
-@section('extraScript')
+@push('extraScript')
 <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
@@ -493,4 +493,4 @@ $request = isset($request) ? $request : null;
         $('#kategori').trigger('change');
         $('#kantor').trigger('change');
 </script>
-@endsection
+@endpush
