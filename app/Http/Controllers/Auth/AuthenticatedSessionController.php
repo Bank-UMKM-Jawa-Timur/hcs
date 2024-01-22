@@ -25,6 +25,10 @@ class AuthenticatedSessionController extends Controller
     }
 
     public function index(){
+        if (!auth()->user()->hasRole('admin')) {
+            return view('roles.forbidden');
+        }
+        
         return view('auth.session.index');
     }
 

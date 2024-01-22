@@ -839,6 +839,7 @@
                                                                 </a>
                                                             </li>
                                                         @endcan
+                                                        @if (auth()->user()->hasRole('admin'))
                                                         <li>
                                                             <a href="{{ route('session-list') }}">
                                                                 <button class="btn-link @active('session-list', 'active-link')">
@@ -846,6 +847,7 @@
                                                                 </button>
                                                             </a>
                                                         </li>
+                                                        @endif
                                                     </ul>
                                                 </div>
                                             </li>
