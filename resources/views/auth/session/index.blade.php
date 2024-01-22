@@ -17,101 +17,156 @@
 </div>
 <div class="body-pages">
     <div class="table-wrapping">
-        <div class="layout-component">
-            <div class="shorty-table">
-                <label for="">Show</label>
-                <select name="" id="">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                </select>
-                <label for="">entries</label>
+        <form action="" method="get">
+            <div class="layout-component">
+                <div class="shorty-table">
+                    <label for="">Show</label>
+                    <select name="page_length" class="mr-3 text-sm text-neutral-400 page_length" id="page_length">
+                        <option value="10"
+                            @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
+                            10</option>
+                        <option value="20"
+                            @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>
+                            20</option>
+                        <option value="50"
+                            @isset($_GET['page_length']) {{ $_GET['page_length'] == 50 ? 'selected' : '' }} @endisset>
+                            50</option>
+                        <option value="100"
+                            @isset($_GET['page_length']) {{ $_GET['page_length'] == 100 ? 'selected' : '' }} @endisset>
+                            100</option>
+                    </select>
+                    <label for="">entries</label>
+                </div>
+                <div class="input-search">
+                    <i class="ti ti-search"></i>
+                    <input type="search" placeholder="Search" name="q" id="q"
+                            value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
+                </div>
             </div>
-            <div class="input-search">
-                <i class="ti ti-search"></i>
-                <input type="search" placeholder="Search" name="q" id="q">
-            </div>
-        </div>
-        <table class="tables">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Id Address</th>
-                    <th>Email</th>
-                    <th>Nama</th>
-                    <th>Role</th>
-                    <th>Cabang</th>
-                    <th>Lama Login</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>127.0.0.1</td>
-                    <td>admin@bprjatim.com</td>
-                    <td>Admin</td>
-                    <td>Admin</td>
-                    <td>Pusat</td>
-                    <td>08:03:20</td>
-                    <td>Aktif</td>
-                    <td class="flex justify-center">
-                        <button type="button" class="btn btn-primary-light" data-modal-toggle="modal" data-modal-id="confirmResetModal">Resset</button>
-                        {{-- modal reset --}}
-                        <div class="modal-layout hidden" id="confirmResetModal" tabindex="-1" aria-hidden="true">
-                            <div class="modal modal-sm">
-                                <div class="modal-head">
-                                    <div class="heading">
-                                        <h2>Konfirmasi Reset Session</h2>
+            <table class="tables">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>IP Address</th>
+                        <th>Email / NIP</th>
+                        <th>Nama</th>
+                        <th>Role</th>
+                        <th>Cabang</th>
+                        <th>Lama Login</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                        $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                        $start = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
+                        $end = $page == 1 ? $page_length : $start + $page_length - 1;
+                        $i = $page == 1 ? 1 : $start;
+                    @endphp
+                    @forelse ($data as $key => $item)
+                        @php
+                            // Waktu login pengguna
+                            $startTime = new DateTime($item->created_at);
+                            
+                            // Waktu saat ini
+                            $endTime = new DateTime('now');
+                        
+                            // Hitung perbedaan waktu
+                            $interval = $endTime->diff($startTime);
+                        
+                            // Format waktu
+                            $hours = $interval->h;
+                            $minutes = $interval->i;
+                            $seconds = $interval->s;
+                        @endphp
+                        <tr>
+                            <td>{{ $i++ }}</td>
+                            <td>{{ $item->ip_address }}</td>
+                            <td>{{ $item->nip ?? $item->email }}</td>
+                            <td>{{ $item->nama_karyawan ?? $item->name }}</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>
+                                <span class="clock_{{$item->id}}"></span>
+                                <script>
+                                    currentTime({{$hours}}, {{$minutes}}, {{$seconds}}, "clock_{{$item->id}}")
+                                    function currentTime(h, m, s, widget_id) {
+                                        let hh = parseInt(h);
+                                        let mm = parseInt(m);
+                                        let ss = parseInt(s);
+                                        ss++;
+                            
+                                        if (ss > 59) {
+                                            mm++;
+                                            ss = 0;
+                                        }
+                            
+                                        if (mm > 59) {
+                                            hh++;
+                                            mm = 0;
+                                        }
+                            
+                                        hh = (hh < 10) ? "0" + hh : hh;
+                                        mm = (mm < 10) ? "0" + mm : mm;
+                                        ss = (ss < 10) ? "0" + ss : ss;
+                            
+                                        let time = hh + ":" + mm + ":" + ss;
+                                        document.querySelector(`.${widget_id}`).innerHTML = time;
+                                        var t = setTimeout(function(){ currentTime(hh, mm, ss, `${widget_id}`) }, 1000); 
+                                    }
+                                </script>
+                            </td>
+                            <td>Aktif</td>
+                            <td class="flex justify-center">
+                                @if ($item->user_id == 1)
+                                    -
+                                @else
+                                <button type="button" class="btn btn-primary-light" data-modal-toggle="modal" data-modal-id="confirmResetModal">Reset</button>
+                                {{-- modal reset --}}
+                                <div class="modal-layout hidden" id="confirmResetModal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal modal-sm">
+                                        <div class="modal-head">
+                                            <div class="heading">
+                                                <h2>Konfirmasi Reset Session</h2>
+                                            </div>
+                                            <button type="button" data-modal-dismiss="confirmResetModal"  class="modal-close"><i class="ti ti-x"></i></button>
+                                        </div>
+                                        <div class="modal-body text-left">
+                                            <h2>Apakah Anda Yakin Ingin Reset Session ini</b>?</h2>
+                                        </div>
+                                        <div class="modal-footer to-right">
+                                            <button type="button" data-modal-dismiss="confirmResetModal" class="btn btn-light" type="button">Batal</button>
+                                            <form action="{{ route('reset-sessions.reset') }}" method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                    <input type="hidden" name="id" value="{{ $item->id }}">
+                                                    <button data-modal-dismiss="confirmResetModal" class="btn btn-primary" type="submit">Reset</button>
+                                            </form>
+                                        </div>
                                     </div>
-                                    <button type="button" data-modal-dismiss="confirmResetModal"  class="modal-close"><i class="ti ti-x"></i></button>
                                 </div>
-                                <div class="modal-body text-left">
-                                    <h2>Apakah Anda Yakin Ingin Reset Session ... ini </b>?</h2>
-                                </div>
-                                <div class="modal-footer to-right">
-                                    <button type="button" data-modal-dismiss="confirmResetModal" class="btn btn-light" type="button">Batal</button>
-                                    {{-- <form action="" method="POST">
-                                        @csrf --}}
-                                            <button data-modal-dismiss="confirmResetModal" class="btn btn-primary" type="submit">Hapus</button>
-                                    {{-- </form> --}}
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="table-footer">
-            <div class="showing">
-                Showing 1 to 5 of 2450 entries
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9">Mohon maaf data belum tersedia</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+            <div class="table-footer">
+                <div class="showing">
+                    Showing {{ $start }} to {{ $end }} of {{ $data->total() }} entries
+                </div>
+                <div class="pagination">
+                    @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                        {{ $data->appends(Request()->except('page'))->links('pagination::tailwind') }}
+                    @endif
+                </div>
             </div>
-            <div class="pagination">
-                <a href="" class="item-pg item-pg-prev">
-                    Prev
-                </a>
-                <a href="#" class="item-pg active-pg">
-                    1
-                </a>
-                <a href="#" class="item-pg">
-                    2
-                </a>
-                <a href="#" class="item-pg">
-                    3
-                </a>
-                <a href="#" class="item-pg">
-                    4
-                </a>
-                <a href="#" class="item-pg of-the-data">
-                    of 100
-                </a>
-                <a href="" class="item-pg item-pg-next">
-                    Next
-                </a>
-            </div>
-        </div>
+        </form>
         {{-- <div class="table-footer">
             <div class="showing">
                 Showing {{ $start }} to {{ $end }} of {{ $karyawan->total() }} entries

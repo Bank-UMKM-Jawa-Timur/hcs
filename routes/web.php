@@ -387,5 +387,12 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
         return view('karyawan.import.status-ptkp');
     });
     Route::post('/post-import-status-ptkp', [KaryawanController::class, 'importStatusPtkp'])->name('import-status-ptkp');
+
+    Route::prefix('reset-sessions')
+        ->name('reset-sessions.')
+        ->group(function(){
+            Route::get('/', [UserController::class, 'indexSession'])->name('index');
+            Route::post('/reset', [UserController::class, 'resetSession'])->name('reset');
+        });
 });
 require __DIR__.'/auth.php';
