@@ -287,4 +287,63 @@ class UserController extends Controller
         return redirect()->route('user.index');
     }
 
+    public function indexSession(Request $request){
+        if (!auth()->user()->can('setting - master - user - edit user')) {
+            return view('roles.forbidden');
+        }
+
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+
+        $search = $request->get('q');
+        $data = $this->getDataSessions($search, $limit);
+
+        return view('auth.session.index', compact('data'));
+    }
+
+    public function resetSession(Request $request){
+        if (!auth()->user()->can('setting - master - user - edit user')) {
+            return view('roles.forbidden');
+        }
+
+        DB::beginTransaction();
+        $id = $request->get('id');
+        try{
+            $user = DB::table('sessions')
+                ->select('users.name', 'mst_karyawan.nama_karyawan', 'sessions.id', 'sessions.user_id')
+                ->whereNotNull('user_id')
+                ->where('sessions.id', $id)
+                ->leftJoin('users', 'users.id', 'sessions.user_id')
+                ->leftJoin('mst_karyawan', 'mst_karyawan.nip', 'sessions.user_id')
+                ->first();
+            DB::table('sessions')
+                ->where('id', $id)
+                ->delete();
+            DB::commit();
+
+            Alert::success('Berhasil', 'Berhasil reset session untuk user ' . $user?->nama_karyawan ?? $user?->name);
+            return redirect()->route('reset-sessions.index');
+        } catch(Exception $e){
+            DB::rollBack();
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        } catch(QueryException $e){
+            DB::rollBack();
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        }
+    }
+
+    private function getDataSessions($search, $limit = 10){
+        $data = DB::table('sessions')
+            ->select('users.name', 'mst_karyawan.nama_karyawan', 'sessions.id', 'sessions.user_id', 'sessions.ip_address', 'sessions.created_at', 'users.email', 'mst_karyawan.nip')
+            ->whereNotNull('user_id')
+            ->leftJoin('users', 'users.id', 'sessions.user_id')
+            ->leftJoin('mst_karyawan', 'mst_karyawan.nip', 'sessions.user_id')
+            ->when($search, function ($query) use ($search) {
+                $query->where('users.name', 'like', "%$search%")
+                ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%");
+            })
+            ->paginate($limit);
+        return $data;
+    }
 }

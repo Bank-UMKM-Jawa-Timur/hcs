@@ -10,6 +10,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
@@ -21,6 +22,14 @@ class AuthenticatedSessionController extends Controller
     public function create(): View
     {
         return view('auth.login');
+    }
+
+    public function index(){
+        if (!auth()->user()->hasRole('admin')) {
+            return view('roles.forbidden');
+        }
+        
+        return view('auth.session.index');
     }
 
     public function store(LoginRequest $request)
@@ -35,6 +44,13 @@ class AuthenticatedSessionController extends Controller
 
             if ($user || $karyawan) {
                 if (($user && Hash::check($request->password, $user->password)) || ($karyawan && Hash::check($request->password, $karyawan->password))) {
+                    $checkSession = DB::table('sessions')
+                        ->where('user_id', $user->id ?? $karyawan->nip)
+                        ->count();
+                    if($checkSession > 0){
+                        Alert::warning('Peringatan', 'Akun sedang digunakan di perangkat lain');
+                        return redirect()->back();
+                    }
                     if (Auth::guard('karyawan')->attempt(['nip' => $request->input_type, 'password' => $request->password])) {
                         // $request->authenticate();
                         $request->session()->regenerate();

@@ -839,6 +839,15 @@
                                                                 </a>
                                                             </li>
                                                         @endcan
+                                                        @if (auth()->user()->hasRole('admin'))
+                                                        <li>
+                                                            <a href="{{ route('reset-sessions.index') }}">
+                                                                <button class="btn-link @active('reset-sessions', 'active-link')">
+                                                                    <span>Session</span>
+                                                                </button>
+                                                            </a>
+                                                        </li>
+                                                        @endif
                                                     </ul>
                                                 </div>
                                             </li>
