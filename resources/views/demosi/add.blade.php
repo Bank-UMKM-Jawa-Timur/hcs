@@ -254,7 +254,7 @@
                     @enderror
                 </div>
                 <div class="col-md-4 input-box">
-                    <label for="file_sk">Dokumen SK</label>
+                    <label for="file_sk">Dokumen SK <span class="text-red-500 text-sm">*(Pdf)</span></label>
                     <div class="custom-file col-md-12">
                         <input type="file" name="file_sk" class="form-input" id="validatedCustomFile" accept=".pdf">
                         {{-- <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose
