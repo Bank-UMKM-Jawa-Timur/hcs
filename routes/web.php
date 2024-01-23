@@ -392,6 +392,8 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
         return view('karyawan.import.update-karyawan');
     });
     Route::post('/post-import-data-karyawan', [KaryawanController::class, 'importUpdateKaryawan'])->name('import-data-karyawan');
+    Route::post('/get-data-import-karyawan', [KaryawanController::class, 'getDataImportKaryawan'])->name('get-data-import-karyawan');
+  
     Route::prefix('reset-sessions')
         ->name('reset-sessions.')
         ->group(function(){

@@ -1293,11 +1293,96 @@ class KaryawanController extends Controller
     }
 
     public function importUpdateKaryawan(Request $request){
-        $file = $request->file('upload');
-        $import = new ImportUpdateKaryawan;
-        $import = $import->import($file);
+        // $file = $request->file('upload');
+        // $import = new ImportUpdateKaryawan;
+        // $import = $import->import($file);
+        $nip = explode(',', $request->nip);
+        $norek = explode(',', $request->norek);
+        $npwp = explode(',', $request->npwp);
+        $ptkp = explode(',', $request->ptkp);
+        $pendidikan = explode(',', $request->pendidikan);
+        $alamat_ktp = explode(',', $request->alamat_ktp);
+        $alamat_dom = explode(',', $request->alamat_dom);
+        // return $request->all();
+
+        DB::beginTransaction();
+        try{
+            foreach($nip as $key => $item){
+                $karyawan = KaryawanModel::where('nip', $item)->first();
+                $karyawan->no_rekening = $norek[$key] == '-' ? $karyawan->no_rekening : $norek[$key];
+                $karyawan->npwp = $npwp[$key] == '-' ? $karyawan->npwp : $npwp[$key];
+                $karyawan->status_ptkp = $ptkp[$key] == '-' ? $karyawan->status_ptkp : $ptkp[$key];
+                $karyawan->pendidikan_major = $pendidikan[$key] == '-' ? $karyawan->pendidikan_major : $pendidikan[$key];
+                $karyawan->alamat_ktp = $alamat_ktp[$key] == '-' ? $karyawan->alamat_ktp : $alamat_ktp[$key];
+                $karyawan->alamat_sek = $alamat_dom[$key] == '-' ? $karyawan->alamat_sek : $request->alamat_dom[$key];
+                $karyawan->save();
+            }
+            DB::commit();
+        } catch(Exception $e){
+            DB::rollBack();
+            dd($e);
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        } catch (QueryException $e){
+            DB::rollBack();
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        }
 
         Alert::success('Berhasil', 'Berhasil mengimport data excel');
         return redirect()->route('karyawan.index');
+    }
+
+    public function getDataImportKaryawan(Request $request){
+        try{
+            $dataReq = $request->import;
+            $dataRequest = collect(json_decode($dataReq, true));
+            $nipId = $dataRequest->pluck('nip')->toArray();
+            $karyawan = KaryawanModel::whereIn('nip', $nipId)
+                ->get();
+            $response = $dataRequest->map(function($data) use ($karyawan){
+                $nip = $data['nip'];
+                $nipExists = $karyawan->where('nip', $nip)->first();
+                if($nipExists != null){
+                    return [
+                        'nip' => $nip,
+                        'cek_nip' => $nipExists ? true : false,
+                        'status' => 2,
+                        'nama_karyawan' => $nipExists->nama_karyawan,
+                        'norek' => $data['norek'] != $nipExists->no_rekening ? $data['norek'] : '-',
+                        'npwp' => str_replace(['.', '-'], '', $data['npwp'] ?? 'npwp') != $nipExists->npwp ? str_replace(['.', '-'], '', $data['npwp'] ?? '-') ?? '-' : '-',
+                        'ptkp' => $data['ptkp'] ?? '-' != $nipExists->status_ptkp ? $data['ptkp'] ?? '-' : '-',
+                        'pendidikan' => $data['pendidikan'] != $nipExists->pendidikan ? $data['pendidikan'] : '-',
+                        'jurusan' => $data['jurusan'] ?? '-' != $nipExists->pendidikan_major ? $data['jurusan'] ?? '-' : '-',
+                        'alamat_ktp' => $data['alamat_ktp'] != $nipExists->alamat_ktp ? $data['alamat_ktp'] : '-',
+                        'alamat_dom' => $data['alamat_dom'] ?? '-' != $nipExists->alamat_sek ? $data['alamat_dom']  ?? '-' : '-',
+                    ];
+                } else {
+                    return [
+                        'nip' => $nip,
+                        'cek_nip' => $nipExists ? true : false,
+                        'status' => 1,
+                        'nama_karyawan' => '-',
+                        'norek' => '-',
+                        'npwp' => '-',
+                        'ptkp' => '-',
+                        'pendidikan' => '-',
+                        'jurusan' => '-',
+                        'alamat_ktp' => '-',
+                        'alamat_dom' => '-',
+                    ];
+                }
+            })->toArray();
+    
+            return response()->json($response);
+        } catch (Exception $e){
+            return response()->json([
+                'message' => 'Terjadi kesalahan. ' . $e->getMessage()
+            ]);
+        } catch (QueryException $e){
+            return response()->json([
+                'message' => 'Terjadi kesalahan. ' . $e->getMessage()
+            ]);
+        }
     }
 }
