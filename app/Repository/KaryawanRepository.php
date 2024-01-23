@@ -156,13 +156,12 @@ class KaryawanRepository
                         });
                     });
             })
-            ->orderBy('mst_karyawan.kd_entitas', 'asc')
-            ->orderBy('kd_cabang', 'asc')
             ->orderByRaw($this->orderRaw)
+            ->orderBy('kd_cabang', 'asc')
             ->orderBy('nip', 'asc')
             ->paginate($limit);
         }
-// return $karyawan;
+
         $this->addEntity($karyawan);
 
         foreach ($karyawan as $key => $value) {

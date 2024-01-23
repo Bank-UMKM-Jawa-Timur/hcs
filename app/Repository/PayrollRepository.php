@@ -254,9 +254,9 @@ class PayrollRepository
                                 WHEN mst_karyawan.kd_jabatan='NST' THEN 8
                                 WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
                             ")
+                            ->orderByRaw($this->orderRaw)
                             ->orderBy('status_kantor', 'asc')
                             ->orderBy('kd_cabang', 'asc')
-                            ->orderByRaw($this->orderRaw)
                             ->orderBy('nip', 'asc')
                             ->orderBy('mst_karyawan.kd_entitas')
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
@@ -2023,9 +2023,9 @@ class PayrollRepository
                             ->where(function($query) use ($batch) {
                                 $query->where('batch.id', $batch->id);
                             })
+                            ->orderByRaw($this->orderRaw)
                             ->orderBy('status_kantor', 'asc')
                             ->orderBy('kd_cabang', 'asc')
-                            ->orderByRaw($this->orderRaw)
                             ->orderBy('nip', 'asc')
                             ->orderBy('mst_karyawan.kd_entitas')
                             ->get();
