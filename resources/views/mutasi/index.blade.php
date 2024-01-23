@@ -130,7 +130,7 @@
                     </div>
                     <div class="pagination">
                         @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                            {{ $data->links('pagination::tailwind-new') }}
+                            {{ $data->links('pagination::tailwind') }}
                         @endif
                     </div>
                 </div>
@@ -143,6 +143,17 @@
     <script>
         $('.page_length').on('change', function() {
             $('#form').submit()
+        })
+        // Adjust pagination url
+        var btn_pagination = $('.pagination').find('a')
+        var page_url = window.location.href
+        $('.pagination').find('a').each(function(i, obj) {
+            if (page_url.includes('page_length')) {
+                btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
+            }
+            if (page_url.includes('q')) {
+                btn_pagination[i].href += `&q=${$('#q').val()}`
+            }
         })
     </script>
 @endpush
