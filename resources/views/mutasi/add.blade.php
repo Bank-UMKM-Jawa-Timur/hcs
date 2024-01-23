@@ -138,7 +138,7 @@
             <hr>
             <h6 class="font-bold text-lg mt-5">Pembaruan Data Tunjangan</h6>
             <div class="mt-5" id="tj">
-                <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+                <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5">
                     <div class="input-box">
                         <label for="is">Tunjangan</label>
                         <select name="tunjangan[]" id="row_tunjangan" class="form-input">
@@ -469,7 +469,7 @@ $('#nip').select2({
                         $.each(res.data_tj, function(i, item){
                             var idTj = item.id_tunjangan
                             $("#tj").append(`
-                                <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-3">
+                                <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-3">
                                     <div class="input-box">
                                         <label for="is">Tunjangan</label>
                                         <select name="tunjangan[]" id="tunjangan`+i+`" class="form-input">
@@ -501,7 +501,7 @@ $('#nip').select2({
                         })
                     } else{
                         $('#tj').append(`
-                            <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-3">
+                            <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-3">
                                 <div class="input-box">
                                     <label for="is">Tunjangan</label>
                                     <select name="tunjangan[]" id="row_tunjangan" class="form-input">
@@ -533,9 +533,9 @@ $('#nip').select2({
                 }
             })
         });
-        $('#btn-add').on('click', function(){
+        $('#tj').on('click', '#btn-add', function(){
             $('#tj').append(`
-                <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-3">
+                <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-3">
                     <div class="input-box">
                         <label for="is">Tunjangan</label>
                         <select name="tunjangan[]" id="row_tunjangan" class="form-input">
@@ -565,9 +565,9 @@ $('#nip').select2({
             `);
             x++
         });
-        $('#btn-delete').on('click', function(){
-            console.log("DELETE");
-            var row = $(this).closest('.grid')
+
+        $('#tj').on('click', "#btn-delete", function(){
+            var row = $(this).closest('.row')
             var value = row.children('#id_tk').val()
             console.log(value);
             if(x > 1){
@@ -583,10 +583,10 @@ $('#nip').select2({
                             }
                         }
                     })
-                    $(this).closest('.grid').remove()
+                    $(this).closest('.row').remove()
                     x--;
                 } else{
-                    $(this).closest('.grid').remove()
+                    $(this).closest('.row').remove()
                     x--;
                 }
             }
