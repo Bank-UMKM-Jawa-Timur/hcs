@@ -54,8 +54,7 @@
                     <div
                         class="tab-menu relative after:absolute after:inset-x-0 after:top-1/2 after:block after:h-0.5 after:-translate-y-1/2 after:rounded-lg after:bg-gray-100">
                         <ol class="relative z-10 flex justify-between text-sm font-medium text-gray-500">
-
-                            <li class="flex items-center gap-2 bg-white p-2 tab-btn active" data-tab="biodata">
+                            <li class="flex items-center gap-2 bg-white p-2 tab-btn active cursor-pointer" data-tab="biodata">
                                 <span class="count-circle h-6 w-6 rounded-full text-white text-center text-[10px]/6 font-bold">
                                     1
                                 </span>
@@ -63,7 +62,7 @@
                                 <span class="hidden sm:block"> Biodata Karyawan </span>
                             </li>
 
-                            <li class="flex items-center gap-2 bg-white p-2 tab-btn" data-tab="data-karyawan">
+                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="data-karyawan">
                                 <span class="count-circle h-6 w-6 rounded-full text-center text-[10px]/6 font-bold text-white">
                                     2
                                 </span>
@@ -71,14 +70,14 @@
                                 <span class="hidden sm:block"> Data Karyawan </span>
                             </li>
 
-                            <li class="flex items-center gap-2 bg-white p-2 tab-btn" data-tab="keluarga">
+                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="keluarga">
                                 <span class="count-circle h-6 w-6 rounded-full  text-white text-center text-[10px]/6 font-bold">
                                     3
                                 </span>
 
                                 <span class="hidden sm:block"> Data Keluarga</span>
                             </li>
-                            <li class="flex items-center gap-2 bg-white p-2 tab-btn" data-tab="tunjangan">
+                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="tunjangan">
                                 <span class="count-circle h-6 w-6 rounded-full  text-white text-center text-[10px]/6 font-bold">
                                     4
                                 </span>
@@ -531,16 +530,18 @@
                                             </button>
                                         </div>
                                     @endif
-                                    <div class="col-md-1">
-                                        <button class="btn btn-danger" type="button" data-id_parent="{{$key}}" id="btn-delete-tunjangan">
-                                            <i class="ti ti-minus"></i>
-                                        </button>
-                                    </div>
+                                    @if ($key > 0)
+                                        <div class="col-md-1">
+                                            <button class="btn btn-danger" type="button" data-id_parent="{{$key}}" id="btn-delete-tunjangan">
+                                                <i class="ti ti-minus"></i>
+                                            </button>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                         @endforeach
-                    <div class="grid items-center lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10" id="new_item"></div>
+                    <div id="new_item"></div>
                 </div>
             @elsecan('manajemen karyawan - data karyawan - edit karyawan - edit potongan')
                 <div class="card tab-pane active" id="potongan">
@@ -1042,7 +1043,7 @@
             // console.log('masuk');
             x++;
             $('#new_item').append(`
-                <div id="parent_tunjangan${x}">
+                <div id="parent_tunjangan${x}" class="grid items-center lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10">
                     <div class="col-md-5">
                         <div class="input-box">
                             <label for="is">Tunjangan </label>
@@ -1075,12 +1076,12 @@
             `);
         });
 
-        $(`#btn-delete-tunjangan`).on('click', function() {
+        $(document).on('click', '#btn-delete-tunjangan', function() {
             const parent = $(this).data("id_parent");
             const parents = '#parent_tunjangan' + parent;
             $(`${parents}`).remove();
             x--;
-        })
+        });
 
         $('#collapseFive').on('click', "#btn-add-potongan", function() {
             $('#collapseFive').append(`
