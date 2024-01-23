@@ -347,6 +347,8 @@
                                     <button class="btn-link @active('pajak_penghasilan','penghasilan/get-gaji') {{ request()->is(
                                         'penghasilan-tidak-teratur',
                                         'penghasilan-tidak-teratur/*',
+                                        'edit-tunjangan-bonus/*',
+                                        'penghasilan/edit-tunjangan',
                                         'bonus',
                                         'bonus/*',
                                         'potongan',
@@ -386,6 +388,9 @@
                                     class="accordion-menu {{ request()->is(
                                         'penghasilan-tidak-teratur',
                                         'penghasilan-tidak-teratur/*',
+                                        'edit-tunjangan-bonus',
+                                        'edit-tunjangan-bonus/*',
+                                        'penghasilan/edit-tunjangan',
                                         'bonus',
                                         'bonus/*',
                                         'potongan',
@@ -437,7 +442,7 @@
                                         @can('penghasilan - import - penghasilan teratur')
                                             <li class="item-link">
                                                 <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}">
-                                                    <button class="btn-link @active('penghasilan.import-penghasilan-teratur.index', 'active-link')">
+                                                    <button class="btn-link @active('penghasilan.import-penghasilan-teratur.index', 'active-link') {{ request()->is('penghasilan/import-penghasilan-teratur/create','penghasilan/edit-tunjangan') ? 'active-link' : '' }}">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Penghasilan Teratur</span>
                                                     </button>
@@ -447,7 +452,7 @@
                                         @can('penghasilan - import - penghasilan tidak teratur')
                                             <li class="item-link">
                                                 <a href="{{ route('penghasilan-tidak-teratur.index') }}">
-                                                    <button class="btn-link @active('penghasilan-tidak-teratur.index', 'active-link')">
+                                                    <button class="btn-link {{ request()->is('penghasilan-tidak-teratur/detail/*','penghasilan-tidak-teratur','penghasilan-tidak-teratur/edit-tunjangan/*','penghasilan-tidak-teratur/input-tidak-teratur') ? 'active-link' : '' }}">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Penghasilan Tidak Teratur</span>
                                                     </button>
@@ -457,7 +462,7 @@
                                         @can('penghasilan - import - bonus')
                                             <li class="item-link">
                                                 <a href="{{ route('bonus.index') }}">
-                                                    <button class="btn-link @active('bonus.index', 'active-link')">
+                                                    <button class="btn-link {{ request()->is('bonus/import-data','edit-tunjangan-bonus/*') ? 'active-link' : '' }} @active('bonus.index', 'active-link')">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Bonus</span>
                                                     </button>
