@@ -18,15 +18,22 @@ class KaryawanRepository
     {
         $this->cabang = CabangModel::pluck('kd_cabang');
         $this->orderRaw = "
-            CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
-            WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
-            WHEN mst_karyawan.kd_jabatan='PC' THEN 3
-            WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
-            WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
-            WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
-            WHEN mst_karyawan.kd_jabatan='ST' THEN 7
-            WHEN mst_karyawan.kd_jabatan='NST' THEN 8
-            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
+            CASE 
+            WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
+            WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
+            WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
+            WHEN mst_karyawan.kd_jabatan='DIRHAN' THEN 4
+            WHEN mst_karyawan.kd_jabatan='KOMU' THEN 5
+            WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 6
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 7
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 8
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 9
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 10
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 11
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 12
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 13
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 14
+            WHEN mst_karyawan.kd_jabatan='KOM' THEN 15 END ASC
         ";
     }
 
@@ -50,7 +57,6 @@ class KaryawanRepository
                 'mst_karyawan.status_jabatan',
                 'mst_karyawan.ket_jabatan',
                 'mst_karyawan.kd_entitas',
-                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
             )
             ->leftJoin('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
             ->with('jabatan')
@@ -90,7 +96,6 @@ class KaryawanRepository
                 }
             })
             ->orderByRaw($this->orderRaw)
-            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
             ->paginate($limit);
         }else{
             $is_pusat = auth()->user()->hasRole('kepegawaian');
@@ -110,15 +115,11 @@ class KaryawanRepository
                 'mst_karyawan.status_jabatan',
                 'mst_karyawan.ket_jabatan',
                 'mst_karyawan.kd_entitas',
-                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
             )
             ->leftJoin('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
             ->with('jabatan')
             ->with('bagian')
             ->whereNull('tanggal_penonaktifan')
-            // ->when($is_pusat, function($query) use ($kd_cabang) {
-            //     $query->whereRaw("(kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR kd_entitas IS null or kd_entitas = '')");
-            // })
             ->where(function ($query) use ($search, $kd_cabang) {
                 $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
                     ->orWhere('mst_karyawan.nip', 'like', "%$search%")
@@ -155,14 +156,13 @@ class KaryawanRepository
                         });
                     });
             })
-            ->orderBy('status_kantor', 'asc')
+            ->orderBy('mst_karyawan.kd_entitas', 'asc')
             ->orderBy('kd_cabang', 'asc')
             ->orderByRaw($this->orderRaw)
             ->orderBy('nip', 'asc')
-            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
             ->paginate($limit);
         }
-
+// return $karyawan;
         $this->addEntity($karyawan);
 
         foreach ($karyawan as $key => $value) {

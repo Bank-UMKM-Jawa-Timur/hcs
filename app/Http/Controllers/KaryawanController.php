@@ -57,7 +57,6 @@ class KaryawanController extends Controller
         $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
 
         return view('karyawan.index', [
-        // return view('karyawan.index-old', [
             'karyawan' => $data,
         ]);
     }
