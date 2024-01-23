@@ -347,6 +347,8 @@
                                     <button class="btn-link @active('pajak_penghasilan','penghasilan/get-gaji') {{ request()->is(
                                         'penghasilan-tidak-teratur',
                                         'penghasilan-tidak-teratur/*',
+                                        'edit-tunjangan-bonus/*',
+                                        'penghasilan/edit-tunjangan',
                                         'bonus',
                                         'bonus/*',
                                         'potongan',
@@ -386,6 +388,9 @@
                                     class="accordion-menu {{ request()->is(
                                         'penghasilan-tidak-teratur',
                                         'penghasilan-tidak-teratur/*',
+                                        'edit-tunjangan-bonus',
+                                        'edit-tunjangan-bonus/*',
+                                        'penghasilan/edit-tunjangan',
                                         'bonus',
                                         'bonus/*',
                                         'potongan',
@@ -437,7 +442,7 @@
                                         @can('penghasilan - import - penghasilan teratur')
                                             <li class="item-link">
                                                 <a href="{{ route('penghasilan.import-penghasilan-teratur.index') }}">
-                                                    <button class="btn-link @active('penghasilan.import-penghasilan-teratur.index', 'active-link')">
+                                                    <button class="btn-link @active('penghasilan.import-penghasilan-teratur.index', 'active-link') {{ request()->is('penghasilan/import-penghasilan-teratur/create','penghasilan/edit-tunjangan') ? 'active-link' : '' }}">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Penghasilan Teratur</span>
                                                     </button>
@@ -447,7 +452,7 @@
                                         @can('penghasilan - import - penghasilan tidak teratur')
                                             <li class="item-link">
                                                 <a href="{{ route('penghasilan-tidak-teratur.index') }}">
-                                                    <button class="btn-link @active('penghasilan-tidak-teratur.index', 'active-link')">
+                                                    <button class="btn-link {{ request()->is('penghasilan-tidak-teratur/detail/*','penghasilan-tidak-teratur','penghasilan-tidak-teratur/edit-tunjangan/*','penghasilan-tidak-teratur/input-tidak-teratur') ? 'active-link' : '' }}">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Penghasilan Tidak Teratur</span>
                                                     </button>
@@ -457,7 +462,7 @@
                                         @can('penghasilan - import - bonus')
                                             <li class="item-link">
                                                 <a href="{{ route('bonus.index') }}">
-                                                    <button class="btn-link @active('bonus.index', 'active-link')">
+                                                    <button class="btn-link {{ request()->is('bonus/import-data','edit-tunjangan-bonus/*') ? 'active-link' : '' }} @active('bonus.index', 'active-link')">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Bonus</span>
                                                     </button>
@@ -566,7 +571,7 @@
                             <li class="item-link relative">
                                 <a href="#">
                                     <button
-                                        class="btn-link {{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek', 'laporan-rekapitulasi/*') ? 'active' : '' }}"
+                                        class="btn-link {{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek', 'laporan-rekapitulasi/*','laporan-rekapitulasi') ? 'active-link' : '' }}"
                                         data-accordion-target="#laporan" aria-expanded="false" aria-controls="laporan">
                                         <i class="ti ti-message-report"></i>
                                         <span>Laporan</span>
@@ -575,7 +580,7 @@
                                         </span>
                                     </button>
                                 </a>
-                                <div class="accordion-menu {{ request()->is('laporan', 'index_dpp') ? 'show' : 'hidden' }}"
+                                <div class="accordion-menu {{ request()->is('laporan', 'index_dpp','laporan-rekapitulasi') ? 'show' : 'hidden' }}"
                                     id="laporan">
                                     <ul class="sub-menu">
                                         @can('laporan - laporan pergerakan karir')
@@ -665,7 +670,7 @@
                                         {{-- @can('laporan - laporan rekap tetap') --}}
                                             <li class="item-link">
                                                 <a href="{{ route('laporan-rekapitulasi.index') }}">
-                                                    <button class="btn-link {{ request()->is('laporan-rekapitulasi.index') }}">
+                                                    <button class="btn-link {{ request()->is('laporan-rekapitulasi.index','laporan-rekapitulasi') ? 'active-link' : '' }}">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Laporan Rekap Tetap</span>
                                                     </button>

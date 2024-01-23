@@ -714,6 +714,8 @@ class PenghasilanTidakTeraturController extends Controller
             $tunjangan = $repo->getNameTunjangan($idTunjangan);
             $nameCabang = $repo->getNameCabang($kd_entitas);
 
+            // dd($data);
+
             return view('penghasilan.detail', compact(['data','tunjangan','nameCabang']));
         } catch(Exception $e){
             Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());

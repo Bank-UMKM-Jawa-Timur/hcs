@@ -70,8 +70,20 @@
                                     @error('bulan')
                                         <span class="text-red-500 text-xs">{{ $message }}</span>
                                     @enderror
-
                                 </div>
+                                @if (auth()->user()->hasRole(['kepegawaian','hrd']))
+                                <div class="input-box">
+                                    <label for="selectfield">Cabang</label>
+                                    <select name="cabang" class="form-input" required>
+                                        <option value="">-- Pilih Cabang --</option>
+                                        @foreach ($cabang as $item)
+                                            @if ($item->kd_cabang != '000')
+                                            <option value="{{ $item->kd_cabang }}" {{ $item->kd_cabang == Request('cabang') ? 'selected' : '' }}>{{ $item->nama_cabang }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @endif
                             </div>
                             <div class="flex justify-end w-fit my-3">
                                 @if (\Request::has('tahun') && count($data) > 0)
