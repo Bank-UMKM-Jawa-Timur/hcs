@@ -131,6 +131,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::resource('/pangkat_golongan', \App\Http\Controllers\PangkatGolonganController::class);
     Route::resource('/tunjangan', \App\Http\Controllers\TunjanganController::class);
     Route::resource('/karyawan', \App\Http\Controllers\KaryawanController::class);
+    Route::get('export-karyawan', [\App\Http\Controllers\KaryawanController::class, 'exportKaryawan']);
     Route::get('/get-name-karyawan/{nip}', [\App\Http\Controllers\KaryawanController::class, 'getNameKaryawan']);
     Route::get('list-karyawan', [\App\Http\Controllers\KaryawanController::class, 'listKaryawan']);
     Route::resource('/mutasi', \App\Http\Controllers\MutasiController::class);

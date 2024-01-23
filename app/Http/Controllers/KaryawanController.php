@@ -62,6 +62,20 @@ class KaryawanController extends Controller
         ]);
     }
 
+    public function exportKaryawan(Request $request)
+    {
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+
+        $karyawanRepo = new KaryawanRepository();
+        $search = $request->get('q');
+        $data = $karyawanRepo->getDataKaryawanExport();
+
+        return view('karyawan.export', [
+            'karyawan' => $data,
+        ]);
+    }
+
     public function listKaryawan()
     {
         // Need permission
