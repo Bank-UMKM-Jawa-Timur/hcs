@@ -110,7 +110,7 @@ class GajiPerBulanController extends Controller
 
     public function index(Request $request)
     {
-        if (!auth()->user()->can('penghasilan')) {
+        if (!auth()->user()->can('penghasilan - proses penghasilan')) {
             return view('roles.forbidden');
         }
 

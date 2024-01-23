@@ -29,7 +29,7 @@
             @if (auth()->user()->hasRole('kepegawaian'))
                 {{--  <button class="btn btn-primary-light lg:text-base text-xs" data-modal-id="penghasilan-kantor-modal" data-modal-toggle="modal"><i class="ti ti-file-import"></i> Penghasilan Semua Kantor</button>  --}}
             @endif
-            @can('penghasilan - proses penghasilan')
+            @can('penghasilan - proses penghasilan - proses')
                 <button class="btn btn-primary btn-proses lg:text-base text-xs" data-modal-id="proses-modal" data-modal-toggle="modal"><i class="ti ti-plus"></i> Proses Penghasilan</button>
             @endcan
         </div>
@@ -205,12 +205,12 @@ $earliest_year = 2022;
                     <td class="text-center border-none  justify-center flex">
                         @if($item->status == 'proses')
                             @if($item->total_penyesuaian > 0)
-                                @can('penghasilan - proses penghasilan')
+                                @can('penghasilan - proses penghasilan - proses')
                                     <a href="#" data-modal-id="penyesuaian-modal" data-modal-toggle="modal"  class="btn btn-warning  btn-perbarui"
                                         data-batch_id="{{$item->id}}">Perbarui</a>
                                 @endcan
                             @else
-                                @can('penghasilan - proses penghasilan')
+                                @can('penghasilan - proses penghasilan - proses')
                                     @if ($item->tanggal_cetak != null)
                                         @if ($item->file != null)
                                             @php
