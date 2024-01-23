@@ -299,6 +299,21 @@ class HitungPPH
             return 'undifined';
         }
     }
+
+    public static function getPajakInsentif($nip, $bulan, $tahun, int $nominal, $tipe = 'kredit') {
+        $pengali = 0;
+        if ($tipe == 'kredit') {
+            $pengali = floatval(config('global.pengali_insentif_kredit'));
+        }
+        if ($tipe == 'penagihan') {
+            $pengali = floatval(config('global.pengali_insentif_penagihan'));
+        }
+        
+        $result = $nominal * $pengali;
+
+        return round($result);
+    }
+
     // function getPPHBulanIni($bulan, $tahun, $karyawan, $ptkp, $tanggal)
     // {
     //     $pph = 0;

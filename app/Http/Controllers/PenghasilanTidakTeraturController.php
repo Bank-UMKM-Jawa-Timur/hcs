@@ -353,18 +353,63 @@ class PenghasilanTidakTeraturController extends Controller
             $tahun = date('Y', strtotime($request->tanggal));
 
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+            $nominal = (int) str_replace('.', '', $request->nominal);
+            $now = now();
 
             DB::table('penghasilan_tidak_teratur')
                 ->insert([
                     'nip' => $request->nip,
                     'id_tunjangan' => $request->id_tunjangan,
-                    'nominal' => str_replace('.', '', $request->nominal),
+                    'nominal' => $nominal,
                     'kd_entitas' => $kd_entitas,
                     'bulan' => $bulan,
                     'tahun' => $tahun,
                     'keterangan' => $request->keterangan,
                     'created_at' => $request->tanggal
                 ]);
+            // save pajak insentif
+            if ($request->id_tunjangan == 31) {
+                // Insentif kredit
+                $pajak = HitungPPH::getPajakInsentif($request->nip, $bulan, $tahun, $nominal, 'kredit');
+                $current = PPHModel::where('nip', $request->nip)
+                            ->where('tahun', $tahun)
+                            ->where('bulan', $bulan)
+                            ->first('insentif_kredit');
+                $current_nominal = 0;
+                if ($current) {
+                    $current_nominal = $current->insentif_kredit;
+                }
+                $pajak += $current_nominal;
+
+                PPHModel::where('nip', $request->nip)
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $bulan)
+                    ->update([
+                        'insentif_kredit' => $pajak,
+                        'updated_at' => $now
+                    ]);
+            }
+            if ($request->id_tunjangan == 32) {
+                // Insentif penagihan
+                $pajak = HitungPPH::getPajakInsentif($request->nip, $bulan, $tahun, $nominal, 'penagihan');
+                $current = PPHModel::where('nip', $request->nip)
+                            ->where('tahun', $tahun)
+                            ->where('bulan', $bulan)
+                            ->first('insentif_penagihan');
+                $current_nominal = 0;
+                if ($current) {
+                    $current_nominal = $current->insentif_penagihan;
+                }
+                $pajak += $current_nominal;
+
+                PPHModel::where('nip', $request->nip)
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $bulan)
+                    ->update([
+                        'insentif_penagihan' => $pajak,
+                        'updated_at' => $now
+                    ]);
+            }
             DB::commit();
 
             if($bulan == 12  && Carbon::now()->format('d') > 25){
@@ -532,28 +577,75 @@ class PenghasilanTidakTeraturController extends Controller
                 $keterangan = explode(',', $request->get('keterangan'));
             }
             $inserted = array();
+            $inserted = array();
             $tunjangan = $request->get('kategori');
-            // if($tunjangan == 'spd'){
-            //     $tunjangan = $request->get('kategori_spd');
-            // }
+
             $idTunjangan = TunjanganModel::where('nama_tunjangan', 'like', "%$tunjangan%")->first();
 
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
 
+            $now = now();
             foreach($nip as $key => $item){
+                $bulan = (int) Carbon::parse($request->get('tanggal'))->format('m');
+                $tahun = (int) Carbon::parse($request->get('tanggal'))->format('Y');
+                $nominal = (int) str_replace('.', '', $nominal[$key]);
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $idTunjangan->id,
-                    'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
-                    'tahun' => (int) Carbon::parse($request->get('tanggal'))->format('Y'),
-                    'nominal' => str_replace('.', '', $nominal[$key]),
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                    'nominal' => $nominal,
                     'kd_entitas' => $kd_entitas,
                     'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
                     'created_at' => $request->get('tanggal')
                 ]);
+                
+                if ($idTunjangan->id == 31) {
+                    // Insentif kredit
+                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, $nominal, 'kredit');
+                    $current = PPHModel::where('nip', $item)
+                                ->where('tahun', $tahun)
+                                ->where('bulan', $bulan)
+                                ->first('insentif_kredit');
+                    $current_nominal = 0;
+                    if ($current) {
+                        $current_nominal = $current->insentif_kredit;
+                    }
+                    $pajak += $current_nominal;
+
+                    PPHModel::where('nip', $item)
+                        ->where('tahun', $tahun)
+                        ->where('bulan', $bulan)
+                        ->update([
+                            'insentif_kredit' => $pajak,
+                            'updated_at' => $now
+                        ]);
+                }
+                if ($idTunjangan->id == 32) {
+                    // Insentif penagihan
+                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, $nominal, 'penagihan');
+                    $current = PPHModel::where('nip', $item)
+                                ->where('tahun', $tahun)
+                                ->where('bulan', $bulan)
+                                ->first('insentif_penagihan');
+                    $current_nominal = 0;
+                    if ($current) {
+                        $current_nominal = $current->insentif_penagihan;
+                    }
+                    $pajak += $current_nominal;
+
+                    PPHModel::where('nip', $item)
+                        ->where('tahun', $tahun)
+                        ->where('bulan', $bulan)
+                        ->update([
+                            'insentif_penagihan' => $pajak,
+                            'updated_at' => $now
+                        ]);
+                }
             }
 
             ImportPenghasilanTidakTeraturModel::insert($inserted);
+
             DB::commit();
 
             // Hitung pph

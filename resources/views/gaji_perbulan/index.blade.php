@@ -30,14 +30,14 @@
                 {{--  <button class="btn btn-primary-light lg:text-base text-xs" data-modal-id="penghasilan-kantor-modal" data-modal-toggle="modal"><i class="ti ti-file-import"></i> Penghasilan Semua Kantor</button>  --}}
             @endif
             @can('penghasilan - proses penghasilan')
-                <button class="btn btn-primary btn-proses lg:text-base text-xs" data-modal-id="proses-modal" data-modal-toggle="modal"><i class="ti ti-plus"></i> Proses Penghasilan</button>
+                <button class="btn btn-primary btn-proses lg:text-base text-xs" data-modal-id="proses-modal" data-modal-toggle="modal"><i class="ti ti-plus"></i> Proses Penggajian</button>
             @endcan
         </div>
     </div>
 </div>
 @php
-$already_selected_value = date('Y');
-$earliest_year = 2022;
+    $already_selected_value = date('Y');
+    $earliest_year = 2022;
 @endphp
 <div class="p-5">
     <div id="alert-additional-content-1" class="p-4 mb-4 text-blue-500 border border-blue-300 rounded-lg bg-blue-50  " role="alert">
