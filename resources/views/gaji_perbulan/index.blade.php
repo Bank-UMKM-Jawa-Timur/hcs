@@ -36,8 +36,8 @@
     </div>
 </div>
 @php
-$already_selected_value = date('Y');
-$earliest_year = 2022;
+    $already_selected_value = date('Y');
+    $earliest_year = 2022;
 @endphp
 <div class="p-5">
     <div id="alert-additional-content-1" class="p-4 mb-4 text-blue-500 border border-blue-300 rounded-lg bg-blue-50  " role="alert">

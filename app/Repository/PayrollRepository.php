@@ -286,6 +286,17 @@ class PayrollRepository
                             }
 
         foreach ($data as $key => $karyawan) {
+            $insentif = DB::table('pph_yang_dilunasi')
+                        ->select(
+                            'insentif_kredit',
+                            'insentif_penagihan',
+                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS UNSIGNED) AS total_pajak_insentif')
+                        )
+                        ->where('nip', $karyawan->nip)
+                        ->where('bulan', (int) $month)
+                        ->where('tahun', (int) $year)
+                        ->first();
+            $karyawan->insentif = $insentif;
             $ptkp = null;
             if ($karyawan->keluarga) {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
@@ -484,6 +495,9 @@ class PayrollRepository
                                                         DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
                                                         DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
                                                         DB::raw('SUM(total_pph) AS nominal'),
+                                                        DB::raw('CAST(SUM(insentif_kredit) AS UNSIGNED) AS insentif_kredit'),
+                                                        DB::raw('CAST(SUM(insentif_penagihan) AS UNSIGNED) AS insentif_penagihan'),
+                                                        DB::raw('CAST((SUM(insentif_kredit) + SUM(insentif_penagihan)) AS UNSIGNED) AS total_pajak_insentif')
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('nip', $karyawan->nip)
@@ -647,7 +661,12 @@ class PayrollRepository
                         }
                     }
                 }
-                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi;
+                // Get insentif
+                $total_pajak_insentif = 0;
+                if ($karyawan->insentif) {
+                    $total_pajak_insentif = $karyawan->insentif->total_pajak_insentif;
+                }
+                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi - $total_pajak_insentif;
             }
 
             // Get Tunjangan lainnya (T.Makan, T.Pulsa, T.Transport, T.Vitamin, T.Tidak teratur, Bonus)
@@ -1113,6 +1132,17 @@ class PayrollRepository
                                 ->where('batch.status', 'final');
                             })->get();
         foreach ($data as $key => $karyawan) {
+            $insentif = DB::table('pph_yang_dilunasi')
+                        ->select(
+                            'insentif_kredit',
+                            'insentif_penagihan',
+                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS UNSIGNED) AS total_pajak_insentif')
+                        )
+                        ->where('nip', $karyawan->nip)
+                        ->where('bulan', (int) $month)
+                        ->where('tahun', (int) $year)
+                        ->first();
+            $karyawan->insentif = $insentif;
             $ptkp = null;
             if ($karyawan->keluarga) {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
@@ -1311,6 +1341,9 @@ class PayrollRepository
                                                         DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
                                                         DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
                                                         DB::raw('SUM(total_pph) AS nominal'),
+                                                        DB::raw('CAST(SUM(insentif_kredit) AS UNSIGNED) AS insentif_kredit'),
+                                                        DB::raw('CAST(SUM(insentif_penagihan) AS UNSIGNED) AS insentif_penagihan'),
+                                                        DB::raw('CAST((SUM(insentif_kredit) + SUM(insentif_penagihan)) AS UNSIGNED) AS total_pajak_insentif')
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('nip', $karyawan->nip)
@@ -1474,7 +1507,12 @@ class PayrollRepository
                         }
                     }
                 }
-                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi;
+                // Get insentif
+                $total_pajak_insentif = 0;
+                if ($karyawan->insentif) {
+                    $total_pajak_insentif = $karyawan->insentif->total_pajak_insentif;
+                }
+                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi - $total_pajak_insentif;
             }
 
             // Get Tunjangan lainnya (T.Makan, T.Pulsa, T.Transport, T.Vitamin, T.Tidak teratur, Bonus)
@@ -1727,8 +1765,23 @@ class PayrollRepository
         $total_dpp = 0;
         $total_total_gaji = 0;
         $total_pph_harus_dibayar = 0;
+        $total_pajak_insentif = 0;
 
         foreach ($data as $item) {
+            $insentif = DB::table('pph_yang_dilunasi')
+                        ->select(
+                            'insentif_kredit',
+                            'insentif_penagihan',
+                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS UNSIGNED) AS total_pajak_insentif')
+                        )
+                        ->where('nip', $item->nip)
+                        ->where('bulan', (int) $month)
+                        ->where('tahun', (int) $year)
+                        ->first();
+            $item->insentif = $insentif;
+            if ($insentif) {
+                $total_pajak_insentif += $insentif->total_pajak_insentif;
+            }
             $total_gaji = $item->gaji ? number_format($item->gaji->total_gaji, 0, ',', '.') : 0;
             $dpp = $item->potongan ? number_format($item->potongan->dpp, 0, ',', '.') : 0;
             $bpjs_tk = $item->bpjs_tk ? number_format($item->bpjs_tk, 0, ',', '.') : 0;
@@ -1760,21 +1813,23 @@ class PayrollRepository
             $total_dpp += $item->gaji->dpp;
             $total_total_gaji += $item->gaji->total_gaji;
             // Get pph dilunasi
-            $karyawan_bruto = $item->karyawan_bruto;
-            if ($karyawan_bruto->pphDilunasi) {
-                if (count($karyawan_bruto->pphDilunasi) > 0) {
-                    $total_pph_harus_dibayar += $karyawan_bruto->pphDilunasi[0]->nominal;
-                    $terutang = DB::table('pph_yang_dilunasi')
-                                    ->select('terutang')
-                                    ->where('nip', $item->nip)
-                                    ->where('tahun', $karyawan_bruto->pphDilunasi[$last_index]->tahun)
-                                    ->where('bulan', intval($karyawan_bruto->pphDilunasi[$last_index]->bulan - 1))
-                                    ->first();
-                        if ($terutang) {
-                            $pph_dilunasi += $terutang->terutang;
-                        }
-                }
-            }
+            // $karyawan_bruto = $item->karyawan_bruto;
+            // if ($karyawan_bruto->pphDilunasi) {
+            //     if (count($karyawan_bruto->pphDilunasi) > 0) {
+            //         $last_index = count($karyawan_bruto->pphDilunasi) - 1;
+            //         $total_pph_harus_dibayar += $karyawan_bruto->pphDilunasi[0]->nominal;
+            //         $terutang = DB::table('pph_yang_dilunasi')
+            //                         ->select('terutang')
+            //                         ->where('nip', $item->nip)
+            //                         ->where('tahun', $karyawan_bruto->pphDilunasi[$last_index]->tahun)
+            //                         ->where('bulan', intval($karyawan_bruto->pphDilunasi[$last_index]->bulan - 1))
+            //                         ->first();
+            //         if ($terutang) {
+            //             $pph_dilunasi += $terutang->terutang;
+            //         }
+            //     }
+            // }
+            $total_pph_harus_dibayar += $item->pph_dilunasi_bulan_ini;
 
             // count total payroll
             $grand_footer_total_gaji += str_replace('.', '', $total_gaji);
@@ -1787,6 +1842,7 @@ class PayrollRepository
             $grand_footer_total_potongan += str_replace('.', '', $total_potongan);
             $grand_footer_total_diterima += str_replace('.', '', $total_diterima);
         }
+
         $result = [
             'total_gj_pokok' => $total_gj_pokok,
             'total_gj_penyesuaian' => $total_gj_penyesuaian,
@@ -1809,6 +1865,7 @@ class PayrollRepository
             'total_dpp' => $total_dpp,
             'total_total_gaji' => $total_total_gaji,
             'total_pph_harus_dibayar' => $total_pph_harus_dibayar,
+            'total_pajak_insentif' => $total_pajak_insentif,
             'grand_total_gaji' => $grand_footer_total_gaji,
             'grand_bpjs_tk' => $grand_footer_bpjs_tk,
             'grand_dpp' => $grand_footer_dpp,
@@ -2030,6 +2087,17 @@ class PayrollRepository
                             ->orderBy('mst_karyawan.kd_entitas')
                             ->get();
         foreach ($data as $key => $karyawan) {
+            $insentif = DB::table('pph_yang_dilunasi')
+                        ->select(
+                            'insentif_kredit',
+                            'insentif_penagihan',
+                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS UNSIGNED) AS total_pajak_insentif')
+                        )
+                        ->where('nip', $karyawan->nip)
+                        ->where('bulan', (int) $month)
+                        ->where('tahun', (int) $year)
+                        ->first();
+            $karyawan->insentif = $insentif;
             $ptkp = null;
             if ($karyawan->keluarga) {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
@@ -2228,6 +2296,9 @@ class PayrollRepository
                                                         DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
                                                         DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
                                                         DB::raw('SUM(total_pph) AS nominal'),
+                                                        DB::raw('CAST(SUM(insentif_kredit) AS UNSIGNED) AS insentif_kredit'),
+                                                        DB::raw('CAST(SUM(insentif_penagihan) AS UNSIGNED) AS insentif_penagihan'),
+                                                        DB::raw('CAST((SUM(insentif_kredit) + SUM(insentif_penagihan)) AS UNSIGNED) AS total_pajak_insentif')
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('nip', $karyawan->nip)
@@ -2380,7 +2451,12 @@ class PayrollRepository
                         }
                     }
                 }
-                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi;
+                // Get insentif
+                $total_pajak_insentif = 0;
+                if ($karyawan->insentif) {
+                    $total_pajak_insentif = $karyawan->insentif->total_pajak_insentif;
+                }
+                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi - $total_pajak_insentif;
             }
 
             // Get Tunjangan lainnya (T.Makan, T.Pulsa, T.Transport, T.Vitamin, T.Tidak teratur, Bonus)

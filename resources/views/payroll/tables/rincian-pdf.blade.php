@@ -117,6 +117,7 @@
                         $footer_gj_penyesuaian = 0;
                         $footer_total_gaji = 0;
                         $footer_pph_harus_dibayar = 0;
+                        $footer_pajak_insentif = 0;
                     @endphp
                     @forelse ($data as $key => $item)
                         @php
@@ -132,6 +133,7 @@
                             $gj_penyesuaian = $item->gaji ? $item->gaji->gj_penyesuaian : 0;
                             $total_gaji = $item->gaji ? $item->gaji->total_gaji : 0;
                             $pph_harus_dibayar = $item->pph_dilunasi_bulan_ini;
+                            $pajak_insentif = $item->insentif->total_pajak_insentif;
 
                             // count total
                             $footer_gj_pokok += $gj_pokok;
@@ -146,6 +148,7 @@
                             $footer_gj_penyesuaian += $gj_penyesuaian;
                             $footer_total_gaji += $total_gaji;
                             $footer_pph_harus_dibayar += $pph_harus_dibayar;
+                            $footer_pajak_insentif += $pajak_insentif;
                         @endphp
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
