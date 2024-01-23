@@ -61,5 +61,19 @@
         $('#page_length').on('change', function() {
             $('#form').submit()
         })
+
+        // $('#scroll-body').on('click', function () {
+        //     $('#scroll-body').animate({
+        //         scrollTop: $("#scroll-body").offset().top
+        //     }, 400);
+        // });
+
+        // $('#scroll-body').scroll(function () {
+        //     if ($('#scroll-body').scrollTop() > 400) {
+        //         $(".btn-scroll-to-top").removeClass("hidden");
+        //     } else {
+        //         $(".btn-scroll-to-top").addClass("hidden");
+        //     }
+        // });
     </script>
 @endpush
