@@ -174,41 +174,7 @@ class PenghasilanTidakTeraturRepository
         $kd_cabang = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
-        // $data = ImportPenghasilanTidakTeraturModel::join('mst_tunjangan', 'mst_tunjangan.id', 'penghasilan_tidak_teratur.id_tunjangan')
-        //     ->selectRaw("
-        //         mst_tunjangan.id as tunjangan_id, 
-        //         penghasilan_tidak_teratur.kd_entitas, 
-        //         penghasilan_tidak_teratur.created_at, 
-        //         mst_tunjangan.kategori, 
-        //         is_lock, 
-        //         penghasilan_tidak_teratur.bulan, 
-        //         tahun, 
-        //         COUNT(penghasilan_tidak_teratur.id) as total, 
-        //         nama_tunjangan, 
-        //         penghasilan_tidak_teratur.created_at as tanggal, 
-        //         penghasilan_tidak_teratur.id_tunjangan, 
-        //         SUM(penghasilan_tidak_teratur.nominal) as grand_total, 
-        //         IF(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang where kd_cabang != '000'), 'Pusat', 
-        //         mst_cabang.nama_cabang) as entitas")
-        //     ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
-        //     ->leftJoin('mst_cabang', 'mst_cabang.kd_cabang', 'mst_karyawan.kd_entitas')
-        //     ->having('grand_total', '>', 0)
-        //     ->where('mst_tunjangan.kategori', 'tidak teratur')
-        //     ->where(function ($query) use ($search) {
-        //         $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
-        //             ->orWhere('nominal', 'like', "%$search%");
-        //     })
-        //     ->where(function ($query) use ($kd_cabang, $kode_cabang_arr) {
-        //         if ($kd_cabang != 'pusat') {
-        //             $query->where('mst_karyawan.kd_entitas', $kd_cabang);
-        //         }
-        //     })
-        //     ->groupBy('bulan')
-        //     ->groupBy('tahun')
-        //     ->groupBy('nama_tunjangan')
-        //     ->orderBy('penghasilan_tidak_teratur.created_at', 'desc')
-        //     ->paginate($limit);
-            
+
         $data = DB::table('penghasilan_tidak_teratur')
                 ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                 ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
@@ -243,100 +209,100 @@ class PenghasilanTidakTeraturRepository
                         $query->where('mst_karyawan.kd_entitas', $kd_cabang);
                     }
                 })
-                ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'tanggal', 'penghasilan_tidak_teratur.kd_entitas')
+                ->groupBy('mst_tunjangan.id', 'penghasilan_tidak_teratur.created_at', 'penghasilan_tidak_teratur.kd_entitas')
                 ->orderBy('penghasilan_tidak_teratur.kd_entitas')
                 ->orderBy('mst_tunjangan.id', 'ASC')
                 ->paginate($limit);
         return $data;
     }
 
-    public function getAllPenghasilan($search, $limit=10, $page=1, $bulan, $createdAt, $idTunjangan){
+    public function getAllPenghasilan($search, $limit=10, $page=1, $bulan, $createdAt, $idTunjangan, $kd_entitas){
+        $createdAt = date('Y-m-d', strtotime($createdAt));
+        $cabangRepo = new CabangRepository;
+        $kode_cabang_arr = $cabangRepo->listCabang(true);
+
         $karyawanRepo = new KaryawanRepository();
-        $penghasilan = KaryawanModel::select('nama_tunjangan', 'id_tunjangan', 'nominal', 'tahun', 'bulan', 'keterangan', 'penghasilan_tidak_teratur.created_at','mst_karyawan.nip', 'mst_karyawan.nik', 'mst_karyawan.nama_karyawan', 'mst_karyawan.kd_bagian', 'mst_karyawan.kd_jabatan', 'mst_karyawan.kd_entitas', 'mst_karyawan.tanggal_penonaktifan', 'mst_karyawan.status_jabatan', 'mst_karyawan.ket_jabatan', DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor"))
-            ->join('penghasilan_tidak_teratur', 'mst_karyawan.nip', 'penghasilan_tidak_teratur.nip')
-            ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', 'mst_tunjangan.id')
-            ->leftJoin('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
-            ->with('jabatan')
-            ->with('bagian')
-            ->whereNull('tanggal_penonaktifan')
-            ->where('nominal', '>', 0)
-            ->where('penghasilan_tidak_teratur.created_at', $createdAt)
-            ->where('penghasilan_tidak_teratur.bulan', $bulan)
-            ->where('id_tunjangan', $idTunjangan)
-            ->where(function ($query) use ($search) {
-                $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
-                    ->orWhere('mst_karyawan.nik', 'like', "%$search%")
-                    ->orWhere('mst_karyawan.nip', 'like', "%$search%")
-                    ->orWhere('mst_karyawan.kd_bagian', 'like', "%$search%")
-                    ->orWhere('mst_karyawan.kd_jabatan', 'like', "%$search%")
-                    ->orWhere('mst_karyawan.kd_entitas', 'like', "%$search%")
-                    ->orWhere('mst_karyawan.status_jabatan', 'like', "%$search%")
-                    ->orWhere('c.kd_cabang', 'like', "%$search%")
-                    ->orWhere('c.nama_cabang', 'like', "%$search%")
-                    ->orWhere('mst_karyawan.ket_jabatan', 'like', "%$search%")
-                    ->orWhereHas('jabatan', function($query3) use ($search) {
-                        $query3->where("nama_jabatan", 'like', "%$search%");
-                    })
-                    ->orWhereHas('bagian', function($query3) use ($search) {
-                        $query3->where("nama_bagian", 'like', "%$search%");
-                    })
-                    ->orWhere(function($query2) use ($search) {
-                        $query2->orWhereHas('jabatan', function($query3) use ($search) {
-                            $query3->where("nama_jabatan", 'like', "%$search%")
-                                ->orWhereRaw("MATCH(nama_jabatan) AGAINST('$search')");
-                        })
-                        ->whereHas('bagian', function($query3) use ($search) {
-                            $query3->whereRaw("MATCH(nama_bagian) AGAINST('$search')")
-                                ->orWhereRaw("MATCH(nama_bagian) AGAINST('$search')");
-                        });
-                    });
+        $penghasilan = KaryawanModel::select(
+                    'nama_tunjangan',
+                    'id_tunjangan',
+                    'nominal',
+                    'tahun',
+                    'bulan',
+                    'keterangan',
+                    'penghasilan_tidak_teratur.created_at','mst_karyawan.nip',
+                    'mst_karyawan.nik',
+                    'mst_karyawan.nama_karyawan',
+                    'mst_karyawan.kd_bagian',
+                    'mst_karyawan.kd_jabatan',
+                    'mst_karyawan.kd_entitas',
+                    'mst_karyawan.tanggal_penonaktifan',
+                    'mst_karyawan.status_jabatan',
+                    'mst_karyawan.ket_jabatan',
+                    DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor"),
+                )
+                ->join('penghasilan_tidak_teratur', 'mst_karyawan.nip', 'penghasilan_tidak_teratur.nip')
+                ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', 'mst_tunjangan.id')
+                ->leftJoin('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
+                ->with('jabatan')
+                ->with('bagian')
+                ->whereNull('tanggal_penonaktifan')
+                ->where('penghasilan_tidak_teratur.id_tunjangan', $idTunjangan)
+                ->whereDate('penghasilan_tidak_teratur.created_at', $createdAt)
+                ->where('penghasilan_tidak_teratur.bulan', $bulan)
+                ->where('mst_tunjangan.kategori','tidak teratur')
+                ->where(function ($query) use ($search) {
+                    $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
+                        ->orWhere('nominal', 'like', "%$search%")
+                        ->orWhere('c.nama_cabang', 'like', "%$search%");
+                })
+                ->where(function ($query) use ($kd_entitas, $kode_cabang_arr) {
+                    if ($kd_entitas != 'pusat') {
+                        $query->where('mst_karyawan.kd_entitas', $kd_entitas);
+                    }
+                })
+                ->orderBy('penghasilan_tidak_teratur.kd_entitas')
+                ->orderBy('mst_tunjangan.id', 'ASC')
+                ->paginate($limit);
 
-                if ($search == 'pusat') {
-                    $query->orWhereRaw('mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang)');
-                }
-            })
-            ->orderBy('penghasilan_tidak_teratur.created_at', 'desc')
-            ->paginate($limit);
+        $karyawanRepo->getEntity($penghasilan);
 
-            $karyawanRepo->getEntity($penghasilan);
+        foreach ($penghasilan as $key => $value) {
+            $prefix = match ($value->status_jabatan) {
+                'Penjabat' => 'Pj. ',
+                'Penjabat Sementara' => 'Pjs. ',
+                default => '',
+            };
 
-            foreach ($penghasilan as $key => $value) {
-                $prefix = match ($value->status_jabatan) {
-                    'Penjabat' => 'Pj. ',
-                    'Penjabat Sementara' => 'Pjs. ',
-                    default => '',
-                };
-
-                if ($value->jabatan) {
-                    $jabatan = $value->jabatan->nama_jabatan;
-                } else {
-                    $jabatan = 'undifined';
-                }
-
-                $ket = $value->ket_jabatan ? "({$value->ket_jabatan})" : '';
-
-                if (isset($value->entitas->subDiv)) {
-                    $entitas = $value->entitas->subDiv->nama_subdivisi;
-                } elseif (isset($value->entitas->div)) {
-                    $entitas = $value->entitas->div->nama_divisi;
-                } else {
-                    $entitas = '';
-                }
-
-                if ($jabatan == 'Pemimpin Sub Divisi') {
-                    $jabatan = 'PSD';
-                } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
-                    $jabatan = 'PBO';
-                } elseif ($jabatan == 'Pemimpin Bidang Pemasaran') {
-                    $jabatan = 'PBP';
-                } else {
-                    $jabatan = $value->jabatan ? $value->jabatan->nama_jabatan : 'undifined';
-                }
-
-                $display_jabatan = $prefix . ' ' . $jabatan . ' ' . $entitas . ' ' . $value?->bagian?->nama_bagian . ' ' . $ket;
-                $value->display_jabatan = $display_jabatan;
+            if ($value->jabatan) {
+                $jabatan = $value->jabatan->nama_jabatan;
+            } else {
+                $jabatan = 'undifined';
             }
-            return $penghasilan;
+
+            $ket = $value->ket_jabatan ? "({$value->ket_jabatan})" : '';
+
+            if (isset($value->entitas->subDiv)) {
+                $entitas = $value->entitas->subDiv->nama_subdivisi;
+            } elseif (isset($value->entitas->div)) {
+                $entitas = $value->entitas->div->nama_divisi;
+            } else {
+                $entitas = '';
+            }
+
+            if ($jabatan == 'Pemimpin Sub Divisi') {
+                $jabatan = 'PSD';
+            } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
+                $jabatan = 'PBO';
+            } elseif ($jabatan == 'Pemimpin Bidang Pemasaran') {
+                $jabatan = 'PBP';
+            } else {
+                $jabatan = $value->jabatan ? $value->jabatan->nama_jabatan : 'undifined';
+            }
+
+            $display_jabatan = $prefix . ' ' . $jabatan . ' ' . $entitas . ' ' . $value?->bagian?->nama_bagian . ' ' . $ket;
+            $value->display_jabatan = $display_jabatan;
+        }
+        return $penghasilan;
     }
 
     public function lockBonus(array $data){

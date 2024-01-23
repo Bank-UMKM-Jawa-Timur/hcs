@@ -21,10 +21,10 @@
             </a>
             @endcan
             @can('penghasilan - import - penghasilan tidak teratur - create')
-               <a href="{{ route('penghasilan-tidak-teratur.input-tidak-teratur') }}">
+                <a href="{{   route('penghasilan-tidak-teratur.input-tidak-teratur') }}">
                     <button class="btn btn-primary"><i class="ti ti-plus"></i> Tambah</button>
-               </a>
-            @endcan            
+                </a> 
+            @endcan
         </div>
     </div>
 </div>
@@ -130,7 +130,7 @@
                         @php
                         $cant_detail = true;
                         @endphp
-                        <a href="{{ route('penghasilan-tidak-teratur.detail', $item->tunjangan_id) }}?bulan={{$item->bulan}}&createdAt={{$item->created_at}}"
+                        <a href="{{ route('penghasilan-tidak-teratur.detail', $item->tunjangan_id) }}?bulan={{$item->bulan}}&createdAt={{$item->created_at}}&kd_entitas={{$item->kd_entitas}}"
                             class="btn btn-primary-light ml-1">Detail</a>
                         @endcan
                         @if (!$cant_detail && !$cant_lock_edit && !$cant_unlock)
@@ -150,7 +150,7 @@
                 Showing {{$start}} to {{$end}} of {{$data->total()}} entries
             </div>
             @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
-            {{ $data->links('pagination::tailwind') }}
+                {{ $data->links('pagination::tailwind') }}
             @endif
 
         </div>

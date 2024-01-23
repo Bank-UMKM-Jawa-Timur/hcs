@@ -23,6 +23,7 @@
             <h6 class="text-lg text-neutral-600"> Tunjangan : {{$tunjangan->nama_tunjangan}}</h6>
             <input type="hidden" name="bulan" value="{{\Request::get('bulan')}}">
             <input type="hidden" name="createdAt" value="{{\Request::get('createdAt')}}">
+            <input type="hidden" name="kd_entitas" value="{{\Request::get('kd_entitas')}}">
             <div class="layout-component">
                 <div class="shorty-table">
                     <label for="page_length">Show</label>
@@ -53,8 +54,8 @@
                     <th>No</th>
                     <th>NIP</th>
                     <th>Nama Karyawan</th>
-                    <th>Jabatan</th>
                     <th>Kantor</th>
+                    <th>Jabatan</th>
                     <th>Nominal</th>
                 </thead>
                 <tbody>
@@ -123,6 +124,10 @@
             if (page_url.includes('createdAt')) {
                 var createdAt = "{{\Request::get('createdAt')}}"
                 btn_pagination[i].href += `&createdAt=${createdAt}`
+            }
+            if (page_url.includes('kd_entitas')) {
+                var kd_entitas = "{{\Request::get('kd_entitas')}}"
+                btn_pagination[i].href += `&kd_entitas=${kd_entitas}`
             }
         })
     </script>

@@ -610,16 +610,15 @@ class PenghasilanTidakTeraturController extends Controller
             return view('roles.forbidden');
         }
         try{
-            $bulan = $request->bulan;
+            $bulan = (int)$request->bulan;
             $createdAt = $request->createdAt;
-            // $idTunjangan = $request->get('idTunjangan');
-            // $tanggal = $request->get('tanggal');
             $limit = $request->has('page_length') ? $request->get('page_length') : 10;
             $page = $request->has('page') ? $request->get('page') : 1;
             $search = $request->get('q');
+            $kd_entitas = $request->get('kd_entitas');
 
             $repo = new PenghasilanTidakTeraturRepository();
-            $data = $repo->getAllPenghasilan($search, $limit, $page, $bulan, $createdAt, $idTunjangan);
+            $data = $repo->getAllPenghasilan($search, $limit, $page, $bulan, $createdAt, $idTunjangan, $kd_entitas);
             $tunjangan = $repo->getNameTunjangan($idTunjangan);
 
             return view('penghasilan.detail', compact(['data','tunjangan']));
