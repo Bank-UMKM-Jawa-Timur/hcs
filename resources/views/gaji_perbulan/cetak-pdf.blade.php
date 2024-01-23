@@ -209,18 +209,25 @@
             @endif
             @if (auth()->user()->hasRole('cabang'))
                 @foreach ($ttdKaryawan as $item)
-                    @if ($item->kd_jabatan == 'PBO' || $item->kd_jabatan == 'PC')
+                    @if ($item->kd_jabatan == 'PC')
+                        <div></div>
                         <div>
                             <p class="p-0 m-0 mb-5">{{ $cabang->nama_cabang }}, {{ $tanggal }}</p>
                             <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $item->nama_karyawan }}</p>
                             <p class="p-0 m-0">{{ $item->jabatan_result }}</p>
                         </div>
+                    @elseif ($item->kd_jabatan == 'PBO' || $item->kd_jabatan == 'PC')
+                        {{--  <div>
+                            <p class="p-0 m-0 mb-5">{{ $cabang->nama_cabang }}, {{ $tanggal }}</p>
+                            <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $item->nama_karyawan }}</p>
+                            <p class="p-0 m-0">{{ $item->jabatan_result }}</p>
+                        </div>  --}}
                     @elseif ($item->kd_bagian == 'B-UMAK')
-                        <div>
+                        {{--  <div>
                             <p class="p-0 m-0 mb-5">{{ $cabang->nama_cabang }}, {{ $tanggal }}</p>
                             <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $item->nama_karyawan }}</p>
                             <p class="p-0 m-0">{{ $item->jabatan_result.' '.$item->bagian->nama_bagian }}</p>
-                        </div>
+                        </div>  --}}
                     @endif
                 @endforeach
             @endif
