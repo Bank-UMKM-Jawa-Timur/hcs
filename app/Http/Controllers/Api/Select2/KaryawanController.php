@@ -70,7 +70,7 @@ class KaryawanController extends Controller
             ->whereNull('tanggal_penonaktifan')
             ->where('status_karyawan', '!=', 'Nonaktif')
             ->orderByRaw($this->orderRaw)
-            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+            ->orderBy('mst_karyawan.kd_entitas')
             ->simplePaginate();
 
         return $this->paginateResponse($karyawan);
@@ -98,7 +98,7 @@ class KaryawanController extends Controller
             })
             ->whereNull('tanggal_penonaktifan');
             $data = $karyawan->orderByRaw($this->orderRaw)
-                            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+                            ->orderBy('mst_karyawan.kd_entitas')
                             ->simplePaginate();
 
         return $this->response($data, KaryawanResource::collection($data));
@@ -136,7 +136,7 @@ class KaryawanController extends Controller
                             ->whereNull('tanggal_penonaktifan');
                     })
                     ->orderByRaw($this->orderRaw)
-                    ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+                    ->orderBy('mst_karyawan.kd_entitas')
                     ->get();
 
         return $this->response($karyawan, KaryawanResource::collection($karyawan));
@@ -159,7 +159,7 @@ class KaryawanController extends Controller
             ->where('status_karyawan', '!=', 'Nonaktif')
             ->whereNull('tanggal_penonaktifan')
             ->orderByRaw($this->orderRaw)
-            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+            ->orderBy('mst_karyawan.kd_entitas')
             ->simplePaginate();
 
         return $this->response($karyawan, KaryawanResource::collection($karyawan));

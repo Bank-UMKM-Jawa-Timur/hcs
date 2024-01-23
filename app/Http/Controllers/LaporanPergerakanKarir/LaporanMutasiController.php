@@ -41,7 +41,7 @@ class LaporanMutasiController extends Controller
                         $query->where('karyawan.nip', 'LIKE', "%$search%")
                             ->orWhere('karyawan.nama_karyawan', 'LIKE', "%$search%");
                     })
-                    ->orderBy('id', 'desc')
+                    ->orderBy('demosi_promosi_pangkat.id', 'desc')
                     ->paginate($limit);
 
                     $data->appends([

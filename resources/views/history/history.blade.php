@@ -23,29 +23,36 @@
                 <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
                     <div class="input-box">
                         <label for="">Karyawan:</label>
-                        <select name="nip" id="nip" class="form-input"></select>
+                        <select name="nip" id="nip" class="form-input" required></select>
                     </div>
                     <div class="input-box">
                         <label for="">Status Jabatan</label>
-                        <input type="text" id="status_jabatan" class="form-input-disabled" disabled>
+                        <input type="text" id="status_jabatan" name="status_jawaban"
+                            class="form-input-disabled" value="{{old('status_jawaban', \Request::get('status_jawaban'))}}" readonly>
                     </div>
                     <div class="input-box">
                         <label for="">Pangkat dan Golongan Sekarang</label>
-                        <input type="text" id="panggol" class="form-input-disabled" disabled>
-                        <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-input-disabled">
+                        <input type="text" id="panggol" class="form-input-disabled" readonly>
+                        <input type="hidden" id="panggol_lama" name="panggol_lama"
+                            class="form-input-disabled" value="{{old('panggol_lama', \Request::get('panggol_lama'))}}">
                     </div>
                 </div>
                 <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
-                    <input type="hidden" id="bagian_lama" name="bagian_lama">
-                    <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
+                    <input type="hidden" id="bagian_lama" name="bagian_lama"
+                        value="{{old('bagian_lama', \Request::get('bagian_lama'))}}">
+                    <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama"
+                        value="{{old('status_jawaban_lama', \Request::get('status_jawaban_lama'))}}">
                     <div class="input-box">
-                            <label for="">Jabatan Sekarang</label>
-                            <input type="text" class="form-input-disabled" disabled name="" id="jabatan_lama">
-                            <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
+                        <label for="">Jabatan Sekarang</label>
+                        <input type="text" class="form-input-disabled" name="jabatan_lama" id="jabatan_lama"
+                            value="{{old('jabatan_lama', \Request::get('jabatan_lama'))}}"readonly>
+                        <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama"
+                            value="{{old('id_jabatan_lama', \Request::get('id_jabatan_lama'))}}">
                     </div>
                     <div class="input-box">
                             <label for="">Kantor Sekarang</label>
-                            <input type="text" class="form-input-disabled" disabled name="" id="kantor_lama">
+                            <input type="text" class="form-input-disabled" name="kantor_lama" id="kantor_lama"
+                                value="{{old('kantor_lama', \Request::get('kantor_lama'))}}" readonly>
                     </div>
                     <div class="" id="">
                     </div>
@@ -92,7 +99,6 @@
                                 if ($key != 0) {
                                     $mulaKerja = new DateTime(date('d-M-Y', strtotime($item['tanggal_pengesahan'])));
                                     $waktuSekarang = new DateTime(date('d-M-Y', strtotime($karyawan[$key - 1]['tanggal_pengesahan'])));
-                
                                     $hitung = $waktuSekarang->diff($mulaKerja);
                                     $masaKerja = $hitung->format('%y Tahun | %m Bulan | %d Hari');
                                 }
@@ -129,78 +135,62 @@
 
 @push('script')
 <script>
-    // $(document).ready(function() {
-    //     var table = $('#table').DataTable({
-    //         autoWidth: false,
-    //         scrollY: false,
-    //         scrollX: true,
-    //         dom: Rlfrtip,
-    //         colReorder: {
-    //             'allowReorder': false
-    //         }
-    //     });
-    // })
+    const nipSelect = $('#nip').select2({
+        ajax: {
+            url: '{{ route('api.select2.karyawan') }}'
+        },
+        templateResult: function(data) {
+            if(data.loading) return data.text;
+            return $(`
+                <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
+            `);
+        }
+    });
 
-const nipSelect = $('#nip').select2({
-    ajax: {
-        url: '{{ route('api.select2.karyawan') }}'
-    },
-    templateResult: function(data) {
-        if(data.loading) return data.text;
-        return $(`
-            <span>${data.nama}<br><span class="text-secondary">${data.id} - ${data.jabatan}</span></span>
-        `);
-    }
-});
+    nipSelect.append(`
+        <option value="{{$data_karyawan?->nip}}">{{$data_karyawan?->nip}} - {{$data_karyawan?->nama_karyawan}}</option>
+    `).trigger('change');
 
-nipSelect.append(`
-    <option value="{{$data_karyawan?->nip}}">{{$data_karyawan?->nip}} - {{$data_karyawan?->nama_karyawan}}</option>
-`).trigger('change');
+    $(document).ready( function () {
+        $('#table').DataTable();
+    });
+
+    $("#nip").val("{{ $data_karyawan?->nip }}").trigger('change');
+    $('#nip').change(function(e) {
+        const nip = $(this).val();
+
+        $.ajax({
+            url: "{{ route('getDataKaryawan') }}",
+            data: {nip},
+            dataType: 'JSON',
+            success: (data) => {
+                if(!data.success) return;
+
+                $('input[name=kd_entity]').val(data.karyawan.kd_entitas);
+                $('#jabatan_lama').val(data.karyawan.jabatan.nama_jabatan || '');
+                $('#kantor_lama').val(data.karyawan.kd_entitas);
+                $('#id_jabatan_lama').val(data.karyawan.jabatan.kd_jabatan);
+                $("#status_jabatan").val(data.karyawan.status_jabatan)
+                $("#bagian_lama").val(data.karyawan.kd_bagian)
+                $("#panggol").val(data.karyawan.kd_panggol + " - " + data.karyawan.pangkat)
+                //$("#panggol_lama").val(data.karyawan.kd_panggol)
+                $("#status_jabatan_lama").val(data.karyawan.status_jabatan)
+            }
+        });
+
+        $.ajax({
+            url: '{{ route('getDataGjPromosi') }}?nip='+nip,
+            dataType: "json",
+            type: "Get",
+            success: function(res){
+                x = res.data_tj.length
+                $("#gj_pokok").removeAttr("disabled")
+                $("#gj_penyesuaian").removeAttr("disabled")
+                $("#gj_pokok").val(formatRupiah(res.data_gj.gj_pokok.toString()))
+                $("#gj_penyesuaian").val(formatRupiah(res.data_gj.gj_penyesuaian.toString()))
+                $("#tj").empty();
+            }
+        })
+    });
 </script>
 @endpush
-
-@section('custom_script')
-    <script>
-        $(document).ready( function () {
-            $('#table').DataTable();
-        });
-
-        $("#nip").val("{{ $data_karyawan?->nip }}").trigger('change');
-        $('#nip').change(function(e) {
-            const nip = $(this).val();
-
-            $.ajax({
-                url: "{{ route('getDataKaryawan') }}",
-                data: {nip},
-                dataType: 'JSON',
-                success: (data) => {
-                    if(!data.success) return;
-
-                    $('input[name=kd_entity]').val(data.karyawan.kd_entitas);
-                    $('#jabatan_lama').val(data.karyawan.jabatan.nama_jabatan || '');
-                    $('#kantor_lama').val(data.karyawan.kd_entitas);
-                    $('#id_jabatan_lama').val(data.karyawan.jabatan.kd_jabatan);
-                    $("#status_jabatan").val(data.karyawan.status_jabatan)
-                    $("#bagian_lama").val(data.karyawan.kd_bagian)
-                    $("#panggol").val(data.karyawan.kd_panggol + " - " + data.karyawan.pangkat)
-                    $("#panggol_lama").val(data.karyawan.kd_panggol)
-                    $("#status_jabatan_lama").val(data.karyawan.status_jabatan)
-                }
-            });
-
-            $.ajax({
-                url: '{{ route('getDataGjPromosi') }}?nip='+nip,
-                dataType: "json",
-                type: "Get",
-                success: function(res){
-                    x = res.data_tj.length
-                    $("#gj_pokok").removeAttr("disabled")
-                    $("#gj_penyesuaian").removeAttr("disabled")
-                    $("#gj_pokok").val(formatRupiah(res.data_gj.gj_pokok.toString()))
-                    $("#gj_penyesuaian").val(formatRupiah(res.data_gj.gj_penyesuaian.toString()))
-                    $("#tj").empty();
-                }
-            })
-        });
-    </script>
-@endsection
