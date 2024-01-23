@@ -571,7 +571,7 @@
                             <li class="item-link relative">
                                 <a href="#">
                                     <button
-                                        class="btn-link {{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek', 'laporan-rekapitulasi/*') ? 'active' : '' }}"
+                                        class="btn-link {{ request()->is('laporan-pergerakan-karir/*', 'dpp', 'laporan_jamsostek', 'laporan-rekapitulasi/*','laporan-rekapitulasi') ? 'active-link' : '' }}"
                                         data-accordion-target="#laporan" aria-expanded="false" aria-controls="laporan">
                                         <i class="ti ti-message-report"></i>
                                         <span>Laporan</span>
@@ -580,7 +580,7 @@
                                         </span>
                                     </button>
                                 </a>
-                                <div class="accordion-menu {{ request()->is('laporan', 'index_dpp') ? 'show' : 'hidden' }}"
+                                <div class="accordion-menu {{ request()->is('laporan', 'index_dpp','laporan-rekapitulasi') ? 'show' : 'hidden' }}"
                                     id="laporan">
                                     <ul class="sub-menu">
                                         @can('laporan - laporan pergerakan karir')
@@ -670,7 +670,7 @@
                                         {{-- @can('laporan - laporan rekap tetap') --}}
                                             <li class="item-link">
                                                 <a href="{{ route('laporan-rekapitulasi.index') }}">
-                                                    <button class="btn-link {{ request()->is('laporan-rekapitulasi.index') }}">
+                                                    <button class="btn-link {{ request()->is('laporan-rekapitulasi.index','laporan-rekapitulasi') ? 'active-link' : '' }}">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Laporan Rekap Tetap</span>
                                                     </button>
