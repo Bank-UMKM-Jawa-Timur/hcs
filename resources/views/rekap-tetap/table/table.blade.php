@@ -204,7 +204,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <th colspan="2" class="text-center">Total</th>
+            <th colspan="2" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Total</th>
             <th class="text-right">{{ formatRupiahExcel($totalGaji ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($totalUangMakan ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($totalPulsa ?? 0, 0, true) }}</th>
@@ -230,7 +230,7 @@
             <th class="text-right">{{ formatRupiahExcel($totalPPh ?? 0, 0, true) }}</th>
         </tr>
         <tr>
-            <th colspan="2" class="text-center">Grand Total</th>
+            <th colspan="2" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Grand Total</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalGaji ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalUangMakan ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPulsa ?? 0, 0, true) }}</th>

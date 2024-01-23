@@ -7,9 +7,9 @@
         <div class="heading">
             <h2 class="text-2xl font-bold tracking-tighter">Pajak Penghasilan</h2>
             <div class="breadcrumb">
-             <a href="#" class="text-sm text-gray-500">Penghasilan</a>
-             <i class="ti ti-circle-filled text-theme-primary"></i>
-             <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Pajak Penghsilan</a>
+                <a href="#" class="text-sm text-gray-500">Penghasilan</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Pajak Penghsilan</a>
             </div>
         </div>
     </div>
@@ -21,7 +21,7 @@
         <div class="grid lg:grid-cols-3 items-center gap-5 md:grid-cols-2 grid-cols-1">
             <div class="input-box">
                 <label for="id_label_single">
-                   Karyawan
+                    Karyawan
                 </label>
                 <select class="select-2 select-2-tailwind"  name="nip" id="nip" >
                     <option selected>-- Pilih Nama Karyawan--</option>
@@ -29,7 +29,7 @@
             </div>
             <div class="input-box">
                 <label for="id_label_single">
-                   Mode Lihat Data
+                    Mode Lihat Data
                 </label>
                 <select class="form-input" name="mode" >
                     <option selected>-- Pilih Mode Lihat Data --</option>
@@ -43,7 +43,7 @@
             @endphp
             <div class="input-box">
                 <label for="id_label_single">
-                   Tahun
+                    Tahun
                 </label>
                 <select class="form-input"  name="tahun">
                     @php
@@ -59,11 +59,11 @@
                     @endfor
                 </select>
             </div>
-           <div class="">
-            <a href="penghasilan/gajipajak">
-                <button class="btn btn-primary" type="submit"><i class="ti ti-filter"></i>Tampilkan</button>
-            </a>
-           </div>
+            <div class="">
+                <a href="penghasilan/gajipajak">
+                    <button class="btn btn-primary" type="submit"><i class="ti ti-filter"></i>Tampilkan</button>
+                </a>
+            </div>
         </div>
         </form>
     </div>
