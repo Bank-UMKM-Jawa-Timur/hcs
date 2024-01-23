@@ -34,7 +34,10 @@ class DemosiRepository
                     ) AS kantor_baru
                 ")
             )
-            ->join('mst_karyawan as karyawan', 'karyawan.nip', 'demosi_promosi_pangkat.nip')
+            ->join('mst_karyawan as karyawan', function($join) {
+                $join->on('karyawan.nip', 'demosi_promosi_pangkat.nip')
+                    ->orOn('karyawan.nip', 'demosi_promosi_pangkat.nip_baru');
+            })
             ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', 'demosi_promosi_pangkat.kd_jabatan_baru')
             ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', 'demosi_promosi_pangkat.kd_jabatan_lama')
             // Kantor lama

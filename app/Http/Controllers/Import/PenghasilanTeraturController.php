@@ -435,13 +435,15 @@ class PenghasilanTeraturController extends Controller
         $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;
         $page = Request()->has('page') ? Request()->get('page') : 1;
 
+        $kdEntitas = Request()->get('kdEntitas');
         $search = Request()->get('q');
         $repo = new PenghasilanTeraturRepository;
         $data = $repo->getDetailTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit);
 
         return view('penghasilan-teratur.detail', [
             'data' => $data,
-            'tunjangan' => $repo->getNamaTunjangan($idTunjangan)
+            'tunjangan' => $repo->getNamaTunjangan($idTunjangan),
+            'nameCabang' => $repo->getNameCabang($kdEntitas)
         ]);
     }
 

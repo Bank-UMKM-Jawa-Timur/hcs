@@ -113,145 +113,155 @@ class MutasiController extends Controller
         if (!auth()->user()->can('manajemen karyawan - pergerakan karir - data mutasi - create mutasi')) {
             return view('roles.forbidden');
         }
-        if($request->tunjangan != null){
-            if(count($request->tunjangan) > 0){
-                foreach($request->tunjangan as $key => $item){
-                    $tj = DB::table('mst_tunjangan')
-                        ->where('id', $request->tunjangan[$key])
-                        ->first('nama_tunjangan');
-        
-                    if($request->id_tk[$key] != 0 || $request->id_tk[$key] != null){
-                        DB::table('history_penyesuaian')
-                            ->insert([
-                                'nip' => $request->nip,
-                                'keterangan' => "Penyesuaian Tunjangan ".$tj->nama_tunjangan,
-                                'nominal_lama' => $request->nominal_lama[$key],
-                                'nominal_baru' => str_replace('.', '',$request->nominal_tunjangan[$key]),
-                                'id_tunjangan' => $item,
-                                'created_at' => now()
-                            ]);
-                        DB::table('tunjangan_karyawan')
-                            ->where('id', $request->id_tk[$key])
-                            ->update([
-                                'id_tunjangan' => $item,
-                                'nominal' => str_replace('.', '',$request->nominal_tunjangan[$key]),
-                                'updated_at' => now()
-                            ]);
-                    } else{
-                        if($request->tunjangan[$key] != null || $request->tunjangan[$key] != 0){
-                            DB::table('tunjangan_karyawan')
-                                ->insert([
-                                    'nip' => $request->nip,
-                                    'id_Tunjangan' => ($request->tunjangan[$key] != null) ? $request->tunjangan[$key] : null,
-                                    'nominal' => ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
-                                    'created_at' => now()
-                                ]);
+
+        DB::beginTransaction();
+        try {
+            if($request->tunjangan != null){
+                if(count($request->tunjangan) > 0){
+                    foreach($request->tunjangan as $key => $item){
+                        $tj = DB::table('mst_tunjangan')
+                            ->where('id', $request->tunjangan[$key])
+                            ->first('nama_tunjangan');
+            
+                        if($request->id_tk[$key] != 0 || $request->id_tk[$key] != null){
                             DB::table('history_penyesuaian')
                                 ->insert([
                                     'nip' => $request->nip,
-                                    'keterangan' => "Penambahan Tunjangan ".$tj->nama_tunjangan,
+                                    'keterangan' => "Penyesuaian Tunjangan ".$tj->nama_tunjangan,
                                     'nominal_lama' => $request->nominal_lama[$key],
-                                    'nominal_baru' =>  ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
+                                    'nominal_baru' => str_replace('.', '',$request->nominal_tunjangan[$key]),
                                     'id_tunjangan' => $item,
                                     'created_at' => now()
                                 ]);
+                            DB::table('tunjangan_karyawan')
+                                ->where('id', $request->id_tk[$key])
+                                ->update([
+                                    'id_tunjangan' => $item,
+                                    'nominal' => str_replace('.', '',$request->nominal_tunjangan[$key]),
+                                    'updated_at' => now()
+                                ]);
+                        } else{
+                            if($request->tunjangan[$key] != null || $request->tunjangan[$key] != 0){
+                                DB::table('tunjangan_karyawan')
+                                    ->insert([
+                                        'nip' => $request->nip,
+                                        'id_Tunjangan' => ($request->tunjangan[$key] != null) ? $request->tunjangan[$key] : null,
+                                        'nominal' => ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
+                                        'created_at' => now()
+                                    ]);
+                                DB::table('history_penyesuaian')
+                                    ->insert([
+                                        'nip' => $request->nip,
+                                        'keterangan' => "Penambahan Tunjangan ".$tj->nama_tunjangan,
+                                        'nominal_lama' => $request->nominal_lama[$key],
+                                        'nominal_baru' =>  ($request->nominal_tunjangan[$key] != null) ? str_replace('.', '',$request->nominal_tunjangan[$key]) : null,
+                                        'id_tunjangan' => $item,
+                                        'created_at' => now()
+                                    ]);
+                            }
                         }
                     }
                 }
             }
-        }
 
-        $filename = null;
-        if($request->file_sk != null){
-            $file = $request->file_sk;
-            $folderPath = public_path() . '/upload/pergerakan_karir/';
-            $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
-            $path = realpath($folderPath);
+            $filename = null;
+            if($request->file_sk != null){
+                $file = $request->file_sk;
+                $folderPath = public_path() . '/upload/pergerakan_karir/';
+                $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
+                $path = realpath($folderPath);
 
-            if(!($path !== true AND is_dir($path))){
-                mkdir($folderPath, 0755, true);
+                if(!($path !== true AND is_dir($path))){
+                    mkdir($folderPath, 0755, true);
+                }
+                $file->move($folderPath, $filename);
             }
-            $file->move($folderPath, $filename);
+            $karyawan = DB::table('mst_karyawan')
+                ->select('gj_pokok', 'gj_penyesuaian')
+                ->where('nip', $request->nip)
+                ->first();
+            DB::table('history_penyesuaian')
+                ->insert([
+                    'nip' => $request->nip,
+                    'keterangan' => 'Penyesuaian Gaji Pokok',
+                    'nominal_baru' => str_replace('.', '', $request->gj_pokok),
+                    'nominal_lama' => $karyawan->gj_pokok,
+                    'created_At' => now()
+                ]);
+
+            DB::table('history_penyesuaian')
+                ->insert([
+                    'nip' => $request->nip,
+                    'keterangan' => 'Penyesuaian Gaji Penyesuaian',
+                    'nominal_baru' => str_replace('.', '', $request->gj_penyesuaian),
+                    'nominal_lama' => $karyawan->gj_penyesuaian,
+                    'created_At' => now()
+                ]);
+
+            DB::table('mst_karyawan')
+                ->where('nip', $request->nip)
+                ->update([
+                    'gj_pokok' => str_replace('.', '', $request->gj_pokok),
+                    'gj_penyesuaian' => str_replace('.', '', $request->gj_penyesuaian)
+                ]);
+            $entity = EntityService::getEntityFromRequest($request);
+            $entityLama = $request->kd_entity;
+            if($request->kd_bagian_lama != null)
+                $entityLama = EntityService::getFromBranch($request->kd_bagian_lama);
+
+            $promosi = DB::table('demosi_promosi_pangkat')
+                        ->insert([
+                            'nip' => $request->nip,
+                            'tanggal_pengesahan' => $request->tanggal_pengesahan,
+                            'bukti_sk' => $request->bukti_sk,
+                            'keterangan' => 'Mutasi',
+                            'kd_entitas_lama' => $entityLama,
+                            'kd_entitas_baru' => $entity,
+                            'kd_jabatan_lama' => $request->id_jabatan_lama,
+                            'kd_jabatan_baru' => $request->id_jabatan_baru,
+                            'kd_bagian' => $request->kd_bagian,
+                            'kd_bagian_lama' => $request->bagian_lama,
+                            'kd_panggol_lama' => $request->panggol_lama,
+                            'kd_panggol_baru' => $request->panggol,
+                            'status_jabatan_lama' => $request->status_jabatan_lama,
+                            'status_jabatan_baru' => $request->status_jabatan,
+                            'nip_lama' => $request->nip,
+                            'nip_baru' => $request->nip_baru,
+                            'file_sk' => $filename,
+                            'created_at' => now(),
+                        ]);
+
+            if(!$promosi) {
+                Alert::error('Error', 'Gagal menambahkan data mutasi.');
+                return back()->withInput();
+            }
+
+            $officer = DB::table('mst_karyawan')
+                ->where('nip', $request->nip)
+                ->update([
+                    'nip' => $request->nip_baru ?? $request->nip,
+                    'kd_jabatan' => $request->id_jabatan_baru,
+                    'ket_jabatan' => $request->ket_jabatan,
+                    'kd_entitas' => $entity,
+                    'kd_bagian' => $request->kd_bagian,
+                    'status_jabatan' => $request->status_jabatan,
+                    'kd_panggol' => $request->panggol,
+                    'updated_at' => now(),
+                ]);
+    
+            if($officer < 1) {
+                Alert::error('Error', 'Gagal mengupdate data karyawan');
+                return back()->withInput();
+            }
+
+            DB::commit();
+            Alert::success('Berhasil', 'Berhasil menambahkan data mutasi.');
+            return redirect()->route('mutasi.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Alert::error('Error', $e->getMessage());
+            return redirect()->back();
         }
-        $karyawan = DB::table('mst_karyawan')
-            ->select('gj_pokok', 'gj_penyesuaian')
-            ->where('nip', $request->nip)
-            ->first();
-        DB::table('history_penyesuaian')
-            ->insert([
-                'nip' => $request->nip,
-                'keterangan' => 'Penyesuaian Gaji Pokok',
-                'nominal_baru' => str_replace('.', '', $request->gj_pokok),
-                'nominal_lama' => $karyawan->gj_pokok,
-                'created_At' => now()
-            ]);
-
-        DB::table('history_penyesuaian')
-            ->insert([
-                'nip' => $request->nip,
-                'keterangan' => 'Penyesuaian Gaji Penyesuaian',
-                'nominal_baru' => str_replace('.', '', $request->gj_penyesuaian),
-                'nominal_lama' => $karyawan->gj_penyesuaian,
-                'created_At' => now()
-            ]);
-
-        DB::table('mst_karyawan')
-            ->where('nip', $request->nip)
-            ->update([
-                'gj_pokok' => str_replace('.', '', $request->gj_pokok),
-                'gj_penyesuaian' => str_replace('.', '', $request->gj_penyesuaian)
-            ]);
-        $entity = EntityService::getEntityFromRequest($request);
-        $entityLama = $request->kd_entity;
-        if($request->kd_bagian_lama != null)
-            $entityLama = EntityService::getFromBranch($request->kd_bagian_lama);
-        $promosi = DB::table('demosi_promosi_pangkat')
-            ->insert([
-                'nip' => $request->nip,
-                'tanggal_pengesahan' => $request->tanggal_pengesahan,
-                'bukti_sk' => $request->bukti_sk,
-                'keterangan' => 'Mutasi',
-                'kd_entitas_lama' => $entityLama,
-                'kd_entitas_baru' => $entity,
-                'kd_jabatan_lama' => $request->id_jabatan_lama,
-                'kd_jabatan_baru' => $request->id_jabatan_baru,
-                'kd_bagian' => $request->kd_bagian,
-                'kd_bagian_lama' => $request->bagian_lama,
-                'kd_panggol_lama' => $request->panggol_lama,
-                'kd_panggol_baru' => $request->panggol,
-                'status_jabatan_lama' => $request->status_jabatan_lama,
-                'status_jabatan_baru' => $request->status_jabatan,
-                'nip_lama' => $request->nip,
-                'nip_baru' => $request->nip_baru,
-                'file_sk' => $filename,
-                'created_at' => now(),
-            ]);
-
-        if(!$promosi) {
-            Alert::error('Error', 'Gagal menambahkan data mutasi.');
-            return back()->withInput();
-        }
-
-        $officer = DB::table('mst_karyawan')
-            ->where('nip', $request->nip)
-            ->update([
-                'nip' => $request->nip_baru ?? $request->nip,
-                'kd_jabatan' => $request->id_jabatan_baru,
-                'ket_jabatan' => $request->ket_jabatan,
-                'kd_entitas' => $entity,
-                'kd_bagian' => $request->kd_bagian,
-                'status_jabatan' => $request->status_jabatan,
-                'kd_panggol' => $request->panggol,
-                'updated_at' => now(),
-            ]);
-
-        if($officer < 1) {
-            Alert::error('Error', 'Gagal mengupdate data karyawan');
-            return back()->withInput();
-        }
-
-        Alert::success('Berhasil', 'Berhasil menambahkan data mutasi.');
-        return redirect()->route('mutasi.index');
     }
 
     /**

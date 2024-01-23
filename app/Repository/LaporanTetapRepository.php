@@ -186,7 +186,7 @@ class LaporanTetapRepository
             ->orderBy('kd_cabang', 'asc')
             ->orderByRaw($this->orderRaw)
             ->orderBy('nip', 'asc')
-            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+            ->orderBy('mst_karyawan.kd_entitas')
             ->where(function($query) use ($kantor, $kode_cabang_arr, $search) {
                 $query->whereNull('tanggal_penonaktifan')
                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
@@ -1016,7 +1016,7 @@ class LaporanTetapRepository
             ->orderBy('kd_cabang', 'asc')
             ->orderByRaw($this->orderRaw)
             ->orderBy('nip', 'asc')
-            ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+            ->orderBy('mst_karyawan.kd_entitas')
             ->where(function($query) use ($kantor, $kode_cabang_arr, $search) {
                 $query->whereNull('tanggal_penonaktifan')
                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {

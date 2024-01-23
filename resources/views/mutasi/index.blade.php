@@ -130,7 +130,7 @@
                     </div>
                     <div class="pagination">
                         @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                            {{ $data->links('pagination::tailwind-new') }}
+                            {{ $data->links('pagination::tailwind') }}
                         @endif
                     </div>
                 </div>

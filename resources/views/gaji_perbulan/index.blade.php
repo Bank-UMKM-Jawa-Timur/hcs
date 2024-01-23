@@ -29,7 +29,7 @@
             @if (auth()->user()->hasRole('kepegawaian'))
                 {{--  <button class="btn btn-primary-light lg:text-base text-xs" data-modal-id="penghasilan-kantor-modal" data-modal-toggle="modal"><i class="ti ti-file-import"></i> Penghasilan Semua Kantor</button>  --}}
             @endif
-            @can('penghasilan - proses penghasilan')
+            @can('penghasilan - proses penghasilan - proses')
                 <button class="btn btn-primary btn-proses lg:text-base text-xs" data-modal-id="proses-modal" data-modal-toggle="modal"><i class="ti ti-plus"></i> Proses Penghasilan</button>
             @endcan
         </div>
@@ -56,17 +56,21 @@ $earliest_year = 2022;
 <div class="body-pages">
     <form id="form-filter" action="{{route('gaji_perbulan.index')}}" method="get">
         <input type="hidden" name="tab" id="tab" value="{{\Request::has('tab') ? \Request::get('tab') : 'proses'}}">
-        <div class="tab-wrapper">
-            <button type="button" class="btn-tab active-tab" data-tab="proses">Proses</button>
-            <button type="button" class="btn-tab" data-tab="final">Final</button>
+        <div class="tab-wrapper nav-tabs">
+            <button type="button" class="btn-tab @if(!\Request::has('tab')) active-tab @endif @if (\Request::has('tab')))
+            @if(\Request::get('tab') == 'proses') active-tab @endif
+            @endif" data-tab="proses">Proses</button>
+            <button type="button" class="btn-tab @if(\Request::get('tab') == 'final') active-tab @else  @endif" data-tab="final">Final</button>
         </div>
-        <div class="tab-content table-wrapping" id="proses">
+        <div class="tab-content table-wrapping @if(!\Request::has('tab')) block @endif @if (\Request::has('tab'))
+        @if(\Request::get('tab') == 'proses') active show @else hidden @endif
+        @endif" id="proses">
             <div class="layout-component">
                 <div class="shorty-table">
                     <label for="">Show</label>
-                    <select name="page_length" id="page_length">
+                <select name="page_length" id="page_length_proses" class="page_length">
                     <option value="10"
-                    @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
+                    @isset($_GET['page_length']) {{ $_GET['page_length'][0] == 10 ? 'selected' : '' }} @endisset>
                     10</option>
                 <option value="20"
                     @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>
@@ -86,12 +90,12 @@ $earliest_year = 2022;
                 </div>
             </div>
             <table class="tables-stripped">
-            @php
-                $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
-                $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
-                $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
-            @endphp
+                @php
+                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                    $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                    $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
+                    $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
+                @endphp
                 <thead>
                     <tr>
                         <th rowspan="2">No</th>
@@ -114,13 +118,13 @@ $earliest_year = 2022;
                 </thead>
                 <tbody>
                 @php
-                $i = 1;
-                $months = array(1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember');
-                $total_bruto = 0;
-                $total_potongan = 0;
-                $total_netto = 0;
-                $total_pph = 0;
-            @endphp
+                    $i = 1;
+                    $months = array(1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember');
+                    $total_bruto = 0;
+                    $total_potongan = 0;
+                    $total_netto = 0;
+                    $total_pph = 0;
+                @endphp
             @forelse ($proses_list as $item)
                 @php
                     $total_bruto += $item->bruto;
@@ -201,21 +205,19 @@ $earliest_year = 2022;
                     <td class="text-center border-none  justify-center flex">
                         @if($item->status == 'proses')
                             @if($item->total_penyesuaian > 0)
-                                @can('penghasilan - proses penghasilan')
+                                @can('penghasilan - proses penghasilan - proses')
                                     <a href="#" data-modal-id="penyesuaian-modal" data-modal-toggle="modal"  class="btn btn-warning  btn-perbarui"
                                         data-batch_id="{{$item->id}}">Perbarui</a>
                                 @endcan
                             @else
-                                @can('penghasilan - proses penghasilan')
+                                @can('penghasilan - proses penghasilan - proses')
                                     @if ($item->tanggal_cetak != null)
                                         @if ($item->file != null)
                                             @php
                                                 $now = date('Y-m-d');
                                             @endphp
-                                            {{--  @if ($item->tanggal_input == $now)  --}}
                                                 <a href="#" class="btn btn-success btn-final"
                                                     data-batch_id="{{$item->id}}"><i class="ti ti-circle-check"></i>Finalisasi</a>
-                                            {{--  @endif  --}}
                                         @endif
                                     @endif
                                 @endcan
@@ -275,11 +277,11 @@ $earliest_year = 2022;
             </div>
         </div>
         </div>
-        <div class="tab-content table-wrapping hidden" id="final">
+        <div class="tab-content table-wrapping @if(\Request::get('tab') == 'final') block @else hidden @endif" id="final" id="final">
             <div class="layout-component">
                 <div class="shorty-table">
                     <label for="">Show</label>
-                    <select  name="page_length" id="page_length">
+                    <select  name="page_length" id="page_length_final" class="page_length">
                     <option value="10"
                     @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
                     10</option>
@@ -329,12 +331,12 @@ $earliest_year = 2022;
                 </thead>
                 <tbody>
                 @php
-                $i = 1;
-                $total_bruto = 0;
-                $total_potongan = 0;
-                $total_netto = 0;
-                $total_pph = 0;
-            @endphp
+                    $i = 1;
+                    $total_bruto = 0;
+                    $total_potongan = 0;
+                    $total_netto = 0;
+                    $total_pph = 0;
+                @endphp
                 @forelse ($final_list as $item)
                 @php
                 $total_bruto += $item->bruto;

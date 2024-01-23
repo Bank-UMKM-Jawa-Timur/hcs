@@ -15,7 +15,7 @@
             </div>
             <div class="button-wrapper flex gap-3">
                 @can('manajemen karyawan - pergerakan karir - data penonaktifan karyawan - tambah penonaktifan karyawan')
-                    <a href="{{ route('promosi.index') }}" class="btn btn-primary"><i class="ti ti-plus"></i>
+                    <a href="{{ route('promosi.create') }}" class="btn btn-primary"><i class="ti ti-plus"></i>
                         Tambah Promosi
                     </a>
                 @endcan

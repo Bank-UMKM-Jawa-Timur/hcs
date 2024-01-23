@@ -110,7 +110,7 @@ class GajiPerBulanController extends Controller
 
     public function index(Request $request)
     {
-        if (!auth()->user()->can('penghasilan')) {
+        if (!auth()->user()->can('penghasilan - proses penghasilan')) {
             return view('roles.forbidden');
         }
 
@@ -1683,7 +1683,7 @@ class GajiPerBulanController extends Controller
                     ->whereNotIn('kd_jabatan',['ST','NST'])
                     ->whereNull('tanggal_penonaktifan')
                     ->orderByRaw($this->orderRaw)
-                    ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+                    ->orderBy('mst_karyawan.kd_entitas')
                     ->get()
                     ->reverse();
 
@@ -1753,14 +1753,16 @@ class GajiPerBulanController extends Controller
         try {
             $kd_entitas = auth()->user()->kd_cabang;
             $batch = DB::table('batch_gaji_per_bulan')->where('id',$id)->first();
-            if ($batch) {
-                if ($batch->kd_entitas == $kd_entitas) {
-                    if (!$batch->tanggal_cetak) {
-                        $now = Carbon::now();
-                        DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
-                            'tanggal_cetak' => $now,
-                            'updated_at' => $now,
-                        ]);
+            if (auth()->user()->can('penghasilan - proses penghasilan - proses')) {
+                if ($batch) {
+                    if ($batch->kd_entitas == $kd_entitas) {
+                        if (!$batch->tanggal_cetak) {
+                            $now = Carbon::now();
+                            DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
+                                'tanggal_cetak' => $now,
+                                'updated_at' => $now,
+                            ]);
+                        }
                     }
                 }
             }

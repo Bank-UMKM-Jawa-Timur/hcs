@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('style')
 </head>
 <body class="font-plus-jakarta-sans">
     @yield('loader')
@@ -27,20 +28,19 @@
         <div class="layout-sidebar">
             @include('layouts.new.sidebar')
         </div>
-        <div class="layout-pages w-full overflow-y-auto h-screen">
+        <div class="layout-pages w-full overflow-y-auto h-screen relative" id="scroll-body">
             @include('layouts.new.header')
             <div class="pages">
                 @yield('content')
                 @include('sweetalert::alert')
             </div>
-          <div class="p-5">
-            <footer class="bg-white rounded-lg shadow sm:flex sm:items-center sm:justify-center p-4 sm:p-6 xl:p-8">
-                <p class="mb-4 text-sm text-center text-gray-500 dark:text-gray-400 sm:mb-0">
-                    &copy; {{ date('Y') }} BANK UMKM JATIM. All rights reserved.
-                </p>
-        
-            </footer>
-          </div>
+            <div class="p-5 inset-x-0 bottom-0">
+                <footer class="bg-white rounded-lg shadow sm:flex sm:items-center sm:justify-center p-4 sm:p-6 xl:p-8">
+                    <p class="mb-4 text-sm text-center text-gray-500 dark:text-gray-400 sm:mb-0">
+                        &copy; {{ date('Y') }} BANK UMKM JATIM. All rights reserved.
+                    </p>
+                </footer>
+            </div>
         </div>
 
     </div>
@@ -49,6 +49,7 @@
 {{-- javascript plugins --}}
 <script src="{{ asset('style/assets/js/core/jquery.min.js') }}"></script>
 <script src="{{ asset('style/plugins/js/select2.min.js') }}"></script>
+<script src="{{ asset('resources/js/app.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -146,6 +147,20 @@
             return token;
         }
     }
+    $('.page_length').on('change', function() {
+        $('#form').submit()
+    })
+    // Adjust pagination url
+    var btn_pagination = $('.pagination').find('a')
+    var page_url = window.location.href
+    $('.pagination').find('a').each(function(i, obj) {
+        if (page_url.includes('page_length')) {
+            btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
+        }
+        if (page_url.includes('q')) {
+            btn_pagination[i].href += `&q=${$('#q').val()}`
+        }
+    })
 </script>
     @stack('extraScript')
     @stack('script')

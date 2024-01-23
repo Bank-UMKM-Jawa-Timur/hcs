@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 @include('vendor.select2')
 
 @php
@@ -18,41 +18,47 @@
             width: 90%;
         }
     </style>
-
-    <div class="card-header">
-        <div class="card-header">
-            <div class="card-title">
-                <h5 class="card-title font-weight-bold">Histori Surat Peringatan</h5>
-                <p class="card-title"><a href="">Histori</a> > <a href="/surat-peringatan">Surat Peringatan</a></p>
+    <div class="head mt-5">
+        <div class="flex gap-5 justify-between items-center">
+            <div class="heading">
+                <h2 class="text-2xl font-bold tracking-tighter">Histori Surat Peringatan</h2>
+                <div class="breadcrumb">
+                    <a href="#" class="text-sm text-gray-500">Histori</a>
+                    <i class="ti ti-circle-filled text-theme-primary"></i>
+                    <a href="/" class="text-sm text-gray-500 font-bold">Surat Peringatan</a>
+                </div>
             </div>
+
         </div>
     </div>
 
-    <div class="card-body ml-3 mr-3">
-        <form action="{{ route('surat-peringatan.history') }}" method="get">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
+    <div class="body-pages">
+        <div class="table-wrapping">
+            <form action="{{ route('surat-peringatan.history') }}" method="get">
+                <div class="flex items-center gap-3">
+                    <div class="input-box w-1/2">
                         <label for="kategori">Kategori</label>
-                        <select id="kategori" class="form-control">
+                        <select id="kategori" class="form-input">
                             <option value="" selected>Semua Data</option>
                             <option value="nip" @selected($request->nip)>Karyawan</option>
                             <option value="tanggal" @selected($request->first_date || $request->end_date)>Tanggal</option>
                             <option value="tahun" @selected($request->tahun)>Tahun</option>
                         </select>
                     </div>
+                    <div class="w-1/2">
+                        <div class="grid grid-cols-2 gap-4" id="kategori-wrapper"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="row" id="kategori-wrapper"></div>
-            <div class="pt-4 pb-4">
-                <button type="submit" class="is-btn is-primary">Tampilkan</button>
-            </div>
-        </form>
+                <div class="pt-4 pb-4">
+                    <button type="submit" class="btn btn-primary is-btn is-primary">Tampilkan</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div class="card ml-3 mr-3 mb-3 mt-3 shadow">
-        <div class="col-md-12">
-            <div class="table-responsive overflow-hidden pt-2">
+    <div class="body-pages">
+        <div class="table-wrapping">
+            <div class="">
                 <table class="table text-center cell-border stripe" id="sp-table" style="width: 100%;">
                     <thead style="background-color: #CCD6A6;">
                         <tr>
@@ -100,9 +106,9 @@
 function generateKategori(kategori) {
     if(kategori == 'tahun') {
         return `
-        <div class="form-group col-md-4">
+        <div class="input-box col-md-4">
             <label for="year">Tahun</label>
-            <select name="tahun" id="year" class="form-control">
+            <select name="tahun" id="year" class="form-input">
                 @for ($year = $firstYear; $year <= date('Y'); $year++)
                     <option value="{{ $year }}" @selected($year == $request->tahun)>{{ $year }}</option>
                 @endfor
@@ -113,25 +119,25 @@ function generateKategori(kategori) {
 
     if(kategori == 'nip') {
         return `
-        <div class="form-group col-md-4">
+        <div class="input-box col-md-4">
             <label for="nip">Karyawan</label>
-            <select class="form-control" id="nip" name="nip"></select>
+            <select class="form-input" id="nip" name="nip"></select>
         </div>
         `;
     }
 
     if(kategori == 'tanggal') {
         return `
-        <div class="form-group col-md-4">
+        <div class="input-box col-md-4">
             <label for="first-date">Tanggal Awal</label>
-            <input class="form-control @error('first_date') is-invalid @enderror" type="date" id="first-date" name="first_date" value="{{ $request->first_date }}">
+            <input class="form-input @error('first_date') is-invalid @enderror" type="date" id="first-date" name="first_date" value="{{ $request->first_date }}">
             @error('first_date')
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-        <div class="form-group col-md-4">
+        <div class="input-box col-md-4">
             <label for="end-date">Tanggal Akhir</label>
-            <input class="form-control" type="date" id="end-date" name="end_date" value="{{ $request->end_date }}">
+            <input class="form-input" type="date" id="end-date" name="end_date" value="{{ $request->end_date }}">
         </div>
         `;
     }
