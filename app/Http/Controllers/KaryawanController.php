@@ -66,7 +66,7 @@ class KaryawanController extends Controller
         // Need permission
         return view('karyawan.list');
     }
-    
+
     public function listKaryawanJson(Request $request) {
         $karyawanRepo = new KaryawanRepository();
         $data = $karyawanRepo->getAllKaryawan('');
@@ -660,7 +660,10 @@ class KaryawanController extends Controller
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
 
+        // return $data;
+
         return view('karyawan.edit', [
+        // return view('karyawan.edit-old', [
             'data' => $data,
             'panggol' => $data_panggol,
             'is' => $data_is,
@@ -680,33 +683,34 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // return $request;
         if (!auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan') &&
             !auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
             return view('roles.forbidden');
         }
-        if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
-            $request->validate([
-                'nip' => 'required',
-                'nik' => 'required',
-                'nama' => 'required',
-                'tmp_lahir' => 'required',
-                'tgl_lahir' => 'required',
-                'agama' => 'required|not_in:-',
-                'jk' => 'required|not_in:-',
-                'status_pernikahan' => 'required|not_in:-',
-                'kewarganegaraan' => 'required|not_in:-',
-                'alamat_ktp' => 'required',
-                'kpj' => 'required',
-                'jkn' => 'required',
-                'gj_pokok' => 'required',
-                'status_karyawan' => 'required|not_in:-',
-                'status_ptkp' => 'required|not_in:-',
-                'tgl_mulai' => 'required'
-            ]);
-        }
 
         DB::beginTransaction();
         try {
+            if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
+                $request->validate([
+                    'nip' => 'required',
+                    'nik' => 'required',
+                    'nama' => 'required',
+                    'tmp_lahir' => 'required',
+                    'tgl_lahir' => 'required',
+                    'agama' => 'required|not_in:-',
+                    'jk' => 'required|not_in:-',
+                    'status_pernikahan' => 'required|not_in:-',
+                    'kewarganegaraan' => 'required|not_in:-',
+                    'alamat_ktp' => 'required',
+                    'kpj' => 'required',
+                    'jkn' => 'required',
+                    'gj_pokok' => 'required',
+                    'status_karyawan' => 'required|not_in:-',
+                    'status_ptkp' => 'required|not_in:-',
+                    'tgl_mulai' => 'required'
+                ]);
+            }
             if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
                 $idTkDeleted = explode(',', $request->get('idTkDeleted'));
                 $idPotDeleted = explode(',', $request->get('idPotDeleted'));
@@ -876,11 +880,11 @@ class KaryawanController extends Controller
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
+            Alert::error('Tejadi kesalahan', $e->getMessage());
             return redirect()->back();
         } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
+            Alert::error('Tejadi kesalahan', $e->getMessage());
             return redirect()->back();
         }
     }
@@ -1222,10 +1226,10 @@ class KaryawanController extends Controller
         // PHP program to calculate age in years
         // Define the date of birth
         $dateOfBirth = '14-02-2022';
-        
+
         // Get today's date
         $now = date("Y-m-d");
-        
+
         // Calculate the time difference between the two dates
         $diff = date_diff(date_create($dateOfBirth), date_create($now));
         $year = $diff->format('%y');
@@ -1233,7 +1237,7 @@ class KaryawanController extends Controller
         if ($year > 0) {
             $month += ($year * 12);
         }
-        
+
         return $month;
     }
 
