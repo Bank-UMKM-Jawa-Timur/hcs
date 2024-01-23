@@ -13,80 +13,61 @@
                     <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Data masa Pensiun</a>
                 </div>
             </div>
-            <div class="button-wrapper flex gap-3">
-                <button class="btn btn-primary"><i class="ti ti-plus"></i> Tambah</button>
-            </div>
         </div>
     </div>
+
     <div class="body-pages">
-        <form action="{{ route('reminder-pensiun.show') }}"  method="get">
-            <div class="card  w-full">
-                <div class="grid lg:grid-cols-4 gap-5 items-center md:grid-cols-2 grid-cols-1">
-                    <div>
-                        <div class="input-box">
-                            <span class="flex gap-2 items-center">
-                                <h2 class="font-semibold text-sm">Kategori</h2>
-                            </span>
-                            <select name="kategori" id="kategori" class="form-input" required>
-                                <option value="">-- Pilih Kategori --</option>
-                                <option @selected($request?->kategori == 1) value="1">Keseluruhan</option>
-                                <option @selected($request?->kategori == 2) value="2">Divisi</option>
-                                <option @selected($request?->kategori == 3) value="3">Sub Divisi</option>
-                                <option @selected($request?->kategori == 4) value="4">Bagian</option>
-                                <option @selected($request?->kategori == 5) value="5">Kantor</option>
-                            </select>
-                        </div> 
-                    </div>
-                    <div id="kantor_col">
+        <div class="table-wrapping pt-3">
+            <form action="{{ route('reminder-pensiun.show') }}"  method="get">
+                <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
+                    <div class="input-box">
+                        <label for="">Kategori</label>
+                        <select name="kategori" id="kategori" class="form-input" required>
+                            <option value="">-- Pilih Kategori --</option>
+                            <option @selected($request?->kategori == 1) value="1">Keseluruhan</option>
+                            <option @selected($request?->kategori == 2) value="2">Divisi</option>
+                            <option @selected($request?->kategori == 3) value="3">Sub Divisi</option>
+                            <option @selected($request?->kategori == 4) value="4">Bagian</option>
+                            <option @selected($request?->kategori == 5) value="5">Kantor</option>
+                        </select>
+                    </div> 
+                    <div class="input-box" id="kantor_col">
                     </div>
     
-                    <div id="cabang_col">
+                    <div class="input-box" id="cabang_col">
                     </div>
     
-                    <div id="divisi_col">
+                    <div class="input-box" id="divisi_col">
                     </div>
     
-                    <div id="subDivisi_col">
+                    <div class="input-box" id="subDivisi_col">
                     </div>
     
-                    <div id="bagian_col">
+                    <div class="input-box" id="bagian_col">
                     </div>
     
-                    <div id="jabatan_col">
+                    <div class="input-box" id="jabatan_col">
                     </div>
     
-                    <div id="panggol_col">
+                    <div class="input-box" id="panggol_col">
                     </div>
     
-                    <div id="status_col">
+                    <div class="input-box" id="status_col">
                     </div>
 
-                    <div id="pendidikan_col">
+                    <div class="input-box" id="pendidikan_col">
                     </div>
-                    <div class="col-span-4">
-                        <button class="btn btn-primary" type="submit"><i class="ti ti-filter"></i>Tampilkan</button>
-                    </div>
-                 </div>
-            </div>
-        </form>
-        @if ($karyawan != null)
-            <div class="table-wrapping mt-5">
-                {{-- <div class="layout-component">
-                <div class="shorty-table">
-                    <label for="">Show</label>
-                    <select name="" id="">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                    </select>
-                    <label for="">entries</label>
                 </div>
-                <div class="input-search">
-                    <i class="ti ti-search"></i>
-                    <input type="search" placeholder="Search" name="q" id="q">
+                <div class="mt-5">
+                    <button class="btn btn-primary" type="submit"><i class="ti ti-filter"></i>Tampilkan</button>
                 </div>
-            </div> --}}
+            </form>
+        </div>
+    </div>
+    @if ($karyawan != null)
+    <div class="body-pages pt-0">
+        <div class="table-wrapping">
+            {{-- <div class="table-wrapping mt-5"> --}}
                 <table class="tables-stripped">
                     <thead>
                         <tr>
@@ -1006,12 +987,10 @@
                 success: (res) => {
                     $('#divisi_col').empty();
                     $('#divisi_col').append(`
-                        <div class="input-box">
                             <label for="divisi">Divisi</label>
                             <select name="divisi" id="divisi" class="form-input">
                                 <option value="-">--- Pilih Divisi ---</option>
                             </select>
-                        </div>
                     `);
 
                     $.each(res, (i, item) => {
@@ -1023,12 +1002,10 @@
 
                     $('#subDivisi_col').empty();
                     $('#subDivisi_col').append(`
-                        <div class="input-box">
                             <label for="subDivisi">Sub Divisi</label>
                             <select name="subDivisi" id="subDivisi" class="form-input">
                                 <option value="-">--- Pilih Sub Divisi ---</option>
                             </select>
-                        </div>
                     `);
 
                     $('#divisi').change(function(e) {
@@ -1056,13 +1033,10 @@
 
                                     $('#bagian_col').empty();
                                     $('#bagian_col').append(`
-
-                                        <div class="input-box">
                                             <label for="bagian">Bagian</label>
                                             <select name="bagian" id="bagian" class="form-input">
                                                 <option value="-">--- Pilih Bagian ---</option>
                                             </select>
-                                        </div>
                                     `);
 
                                     $("#subDivisi").change(function() {
@@ -1107,14 +1081,12 @@
         function generateOffice() {
             const office = '{{ $request?->kantor }}';
             $('#kantor_col').append(`
-                <div class="input-box">
                     <label for="kantor">Kantor</label>
                     <select name="kantor" class="form-input" id="kantor">
                         <option value="-">--- Pilih Kantor ---</option>
                         <option ${ office == "Pusat" ? 'selected' : '' } value="Pusat">Pusat</option>
                         <option ${ office == "Cabang" ? 'selected' : '' } value="Cabang">Cabang</option>
                     </select>
-                </div>
             `);
 
             $('#kantor').change(function(e) {
@@ -1133,12 +1105,10 @@
                     dataType: 'JSON',
                     success: (res) => {
                         $('#cabang_col').append(`
-                            <div class="input-box">
                                 <label for="cabang">Cabang</label>
                                 <select name="cabang" id="cabang" class="form-input">
                                     <option value="-">--- Pilih Cabang ---</option>
                                 </select>
-                            </div>
                         `);
 
                         $.each(res[0], (i, item) => {
@@ -1155,7 +1125,6 @@
         function generateOfficeGaji() {
             const office = '{{ $request?->kantor }}';
             $('#kantor_col').append(`
-                <div class="input-box">
                     <label for="kantor">Kantor</label>
                     <select name="kantor" class="form-input" id="kantor">
                         <option value="-">--- Pilih Kantor ---</option>
@@ -1163,7 +1132,6 @@
                         <option ${ office == "Pusat" ? 'selected' : '' } value="Pusat">Pusat</option>
                         <option ${ office == "Cabang" ? 'selected' : '' } value="Cabang">Cabang</option>
                     </select>
-                </div>
             `);
 
             $('#kantor').change(function(e) {
@@ -1182,12 +1150,10 @@
                     dataType: 'JSON',
                     success: (res) => {
                         $('#cabang_col').append(`
-                            <div class="input-box">
                                 <label for="cabang">Cabang</label>
                                 <select name="cabang" id="cabang" class="form-input">
                                     <option value="-">--- Pilih Cabang ---</option>
                                 </select>
-                            </div>
                         `);
 
                         $.each(res[0], (i, item) => {
@@ -1204,7 +1170,6 @@
         function generateJabatan() {
             const jabatan = '{{ $request?->jabatan }}';
             $('#jabatan_col').append(`
-                <div class="input-box">
                     <label for="jabatan">Jabatan</label>
                     <select name="jabatan" id="jabatan" class="form-input">
                         <option value="-">--- Pilih Jabatan ---</option>
@@ -1212,14 +1177,12 @@
                             <option ${ jabatan == "{{ $item->kd_jabatan }}" ? 'selected' : '' } value="{{ $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
                         @endforeach
                     </select>
-                </div>
             `);
         }
 
         function generatePanggol() {
             const panggol = '{{ $request?->panggol }}';
             $('#panggol_col').append(`
-                <div class="input-box">
                     <label for="panggol">Jabatan</label>
                     <select name="panggol" id="panggol" class="form-input">
                         <option value="-">--- Pilih Jabatan ---</option>
@@ -1227,14 +1190,12 @@
                             <option ${ panggol == "{{ $item->golongan }}" ? 'selected' : '' } value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
                         @endforeach
                     </select>
-                </div>
             `);
         }
 
         function generateStatus() {
             const status = '{{ $request?->status }}';
             $('#status_col').append(`
-                <div class="input-box">
                     <label for="status">Status</label>
                     <select name="status" id="status" class="form-input">
                         <option value="-">--- Pilih Status ---</option>
@@ -1242,14 +1203,12 @@
                             <option ${ status == "{{ $item }}" ? 'selected' : '' } value="{{ $item }}">{{ $item }}</option>
                         @endforeach
                     </select>
-                </div>
             `);
         }
 
         function generatePendidikan() {
             const pendidikan = '{{ $request?->pendidikan }}';
             $('#pendidikan_col').append(`
-                <div class="input-box">
                     <label for="pendidikan">Pendidikan</label>
                     <select name="pendidikan" id="pendidikan" class="form-input">
                         <option value="-">--- Pilih Pendidikan ---</option>
@@ -1257,7 +1216,6 @@
                             <option ${ pendidikan == "{{ $item }}" ? 'selected' : '' } value="{{ $item }}">{{ $item }}</option>
                         @endforeach
                     </select>
-                </div>
             `);
         }
 
