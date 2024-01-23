@@ -425,7 +425,7 @@ class JaminanController extends Controller
         if (!auth()->user()->can('laporan - laporan dpp')) {
             return view('roles.forbidden');
         }
-        return view('jaminan.dpp_index');
+        return view('jaminan.dpp_index', ['status' => null]);
     }
 
     public function getDPP(Request $request)
