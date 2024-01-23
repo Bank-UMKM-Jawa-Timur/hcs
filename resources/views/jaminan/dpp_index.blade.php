@@ -21,16 +21,16 @@ $request = isset($request) ? $request : null;
         <div class="heading">
             <h2 class="text-2xl font-bold tracking-tighter">Laporan DPP</h2>
             <div class="breadcrumb">
-             <a href="#" class="text-sm text-gray-500">Laporan</a>
-             <i class="ti ti-circle-filled text-theme-primary"></i>
-             <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Laporan DPP</a>
+                <a href="#" class="text-sm text-gray-500">Laporan</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Laporan DPP</a>
             </div>
         </div>
     </div>
 </div>
 
 <div class="body-pages">
-    <form action="{{ route('filter-laporan') }}" method="post">
+    <form action="{{ route('get-dpp') }}" method="post">
         @csrf
         <div class="card space-y-5">
             <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 m-0">
@@ -97,161 +97,158 @@ $request = isset($request) ? $request : null;
                 </div>
             </div>
         </div>
-
     </form>
-            @if ($status != null)
+    @if ($status != null)
+        <div class="table-wrapping mt-10">
+            <div class="col-md-12">
+            @if ($cek_data == 0)
                 <div class="table-wrapping mt-10">
                     <div class="col-md-12">
-                    @if ($cek_data == 0)
-                        <div class="table-wrapping mt-10">
-                            <div class="col-md-12">
-                                <h5 class="text-center align-item-center"><b>Data Ini Masih Belum Diproses ({{ getMonth($bulan) }} {{ $tahun
-                                        }})</b></h5>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($status == 1)
-                        <div class="table-wrapping">
-                            <table class="tables-stripped" id="table_export" style="width: 100%">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: center">Kode Kantor</th>
-                                        <th style="text-align: center">Nama Kantor</th>
-                                        <th style="text-align: center">DPP</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>-</td>
-                                        <td>Kantor Pusat</td>
-                                        <td>{{ number_format($dpp_pusat, 0, ".", ",") }}</td>
-                                    </tr>
-                
-                                    @php
-                                    $total_tunjangan_keluarga = array();
-                                    $total_tunjangan_kesejahteraan = array();
-                                    $total_gj_cabang = array();
-                                    $total_jamsostek = array();
-                
-                                    $total_dpp = array();
-                
-                                    array_push($total_dpp, $dpp_pusat);
-                                    @endphp
-                
-                                    @foreach ($data_cabang as $item)
-                                    @php
-                                    $nama_cabang = DB::table('mst_cabang')
-                                    ->where('kd_cabang', $item->kd_entitas)
-                                    ->first();
-                                    @endphp
-                                    <tr>
-                                        <td>{{ $item->kd_entitas }}</td>
-                                        <td>{{ $nama_cabang->nama_cabang }}</td>
-                                        @php
-                                        $total_tunjangan_keluarga = array();
-                                        $total_tunjangan_kesejahteraan = array();
-                                        $total_gj_cabang = array();
-                                        $gj_cabang = null;
-                
-                                        $karyawan = DB::table('mst_karyawan')
-                                        ->where('kd_entitas', $item->kd_entitas)
-                                        ->whereNotIn('status_karyawan', ['Kontrak Perpanjangan', 'IKJP'])
-                                        ->get();
-                                        // Cek Data Di Table Gaji Perbulan
-                
-                                        // Jika Data Tidak Tersedia Di Gaji Perbulan
-                                        if($cek_data == 0){
-                                        foreach($karyawan as $i){
-                                        if($i->status_karyawan == 'Tetap'){
-                                        $data_gaji = DB::table('mst_karyawan')
-                                        ->where('nip', $i->nip)
-                                        ->select('gj_pokok', 'gj_penyesuaian')
-                                        ->first();
-                                        $data_tj_keluarga = DB::table('tunjangan_karyawan')
-                                        ->where('nip', $i->nip)
-                                        ->where('id_tunjangan', 1)
-                                        ->first();
-                                        $data_tj_kesejahteraan = DB::table('tunjangan_karyawan')
-                                        ->where('nip', $i->nip)
-                                        ->where('id_tunjangan', 8)
-                                        ->first();
-                
-                                        array_push($total_gj_cabang, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
-                                        array_push($total_tunjangan_keluarga, ($data_tj_keluarga != null) ? $data_tj_keluarga->nominal :
-                                        0);
-                                        array_push($total_tunjangan_kesejahteraan, ($data_tj_kesejahteraan != null) ?
-                                        $data_tj_kesejahteraan->nominal : 0);
-                                        }
-                                        }
-                                        } else{
-                                        foreach($karyawan as $i){
-                                        if($i->status_karyawan == 'Tetap'){
-                                        $data_gaji = DB::table('gaji_per_bulan')
-                                        ->where('nip', $i->nip)
-                                        ->where('bulan', $bulan)
-                                        ->where('tahun', $tahun)
-                                        ->first();
-                
-                                        array_push($total_tunjangan_keluarga, ($data_gaji != null) ? $data_gaji->tj_keluarga : 0);
-                                        array_push($total_tunjangan_kesejahteraan, ($data_gaji != null) ? $data_gaji->tj_kesejahteraan :
-                                        0);
-                                        array_push($total_gj_cabang, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
-                                        }
-                                        }
-                                        }
-                
-                                        $gj_cabang = round((array_sum($total_gj_cabang) + array_sum($total_tunjangan_keluarga) +
-                                        (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13);
-                
-                                        array_push($total_dpp, $gj_cabang);
-                                        @endphp
-                                        <td>{{ number_format($gj_cabang, 0, ".", ",") }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot style="font-weight: bold">
-                                    <tr>
-                                        <td colspan="2" style="text-align: center">
-                                            Jumlah
-                                        </td>
-                                        <td style="background-color: #FED049; text-align: center;">{{ number_format(array_sum($total_dpp), 0, ".", ",") }}
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    @elseif($status == 2)
-                        <div class="table-wrapping overflow-hidden pt-2">
-                            <table class="tables text-center cell-border stripe" id="table_export" style="width: 100%">
-                                <thead style="background-color: #CCD6A6">
-                                    <th style="text-align: center">NIP</th>
-                                    <th style="text-align: center">Nama Karyawan</th>
-                                    <th style="text-align: center">DPP</th>
-                                </thead>
-                                <tbody>
-                                    @for ($i = 0; $i < count($karyawan); $i++) @if ($karyawan[$i]->status_karyawan == 'Tetap')
-                                        <tr>
-                                            <td>{{ $karyawan[$i]->nip }}</td>
-                                            <td>{{ $karyawan[$i]->nama_karyawan }}</td>
-                                            <td>{{ isset($dpp[$i]) ? number_format($dpp[$i], 0, ".", ",") : '0' }}</td>
-                                        </tr>
-                                        @endif
-                                        @endfor
-                                </tbody>
-                                <tfoot style="font-weight: bold">
-                                    <tr>
-                                        <td colspan="2" style="text-align: center">Jumlah</td>
-                                        <td style="background-color: #FED049; text-align: center;">{{ number_format(array_sum($dpp), 0, ".", ",") }}</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    @endif
+                        <h5 class="text-center align-item-center"><b>Data Ini Masih Belum Diproses ({{ getMonth($bulan) }} {{ $tahun
+                                }})</b></h5>
                     </div>
                 </div>
             @endif
+            @if ($status == 1)
+                <div class="table-wrapping">
+                    <table class="tables-stripped" id="table_export" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center">Kode Kantor</th>
+                                <th style="text-align: center">Nama Kantor</th>
+                                <th style="text-align: center">DPP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>-</td>
+                                <td>Kantor Pusat</td>
+                                <td>{{ number_format($dpp_pusat, 0, ".", ",") }}</td>
+                            </tr>
+        
+                            @php
+                            $total_tunjangan_keluarga = array();
+                            $total_tunjangan_kesejahteraan = array();
+                            $total_gj_cabang = array();
+                            $total_jamsostek = array();
+        
+                            $total_dpp = array();
+        
+                            array_push($total_dpp, $dpp_pusat);
+                            @endphp
+        
+                            @foreach ($data_cabang as $item)
+                            @php
+                            $nama_cabang = DB::table('mst_cabang')
+                            ->where('kd_cabang', $item->kd_entitas)
+                            ->first();
+                            @endphp
+                            <tr>
+                                <td>{{ $item->kd_entitas }}</td>
+                                <td>{{ $nama_cabang->nama_cabang }}</td>
+                                @php
+                                $total_tunjangan_keluarga = array();
+                                $total_tunjangan_kesejahteraan = array();
+                                $total_gj_cabang = array();
+                                $gj_cabang = null;
+        
+                                $karyawan = DB::table('mst_karyawan')
+                                ->where('kd_entitas', $item->kd_entitas)
+                                ->whereNotIn('status_karyawan', ['Kontrak Perpanjangan', 'IKJP'])
+                                ->get();
+                                // Cek Data Di Table Gaji Perbulan
+        
+                                // Jika Data Tidak Tersedia Di Gaji Perbulan
+                                if($cek_data == 0){
+                                foreach($karyawan as $i){
+                                if($i->status_karyawan == 'Tetap'){
+                                $data_gaji = DB::table('mst_karyawan')
+                                ->where('nip', $i->nip)
+                                ->select('gj_pokok', 'gj_penyesuaian')
+                                ->first();
+                                $data_tj_keluarga = DB::table('tunjangan_karyawan')
+                                ->where('nip', $i->nip)
+                                ->where('id_tunjangan', 1)
+                                ->first();
+                                $data_tj_kesejahteraan = DB::table('tunjangan_karyawan')
+                                ->where('nip', $i->nip)
+                                ->where('id_tunjangan', 8)
+                                ->first();
+        
+                                array_push($total_gj_cabang, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
+                                array_push($total_tunjangan_keluarga, ($data_tj_keluarga != null) ? $data_tj_keluarga->nominal :
+                                0);
+                                array_push($total_tunjangan_kesejahteraan, ($data_tj_kesejahteraan != null) ?
+                                $data_tj_kesejahteraan->nominal : 0);
+                                }
+                                }
+                                } else{
+                                foreach($karyawan as $i){
+                                if($i->status_karyawan == 'Tetap'){
+                                $data_gaji = DB::table('gaji_per_bulan')
+                                ->where('nip', $i->nip)
+                                ->where('bulan', $bulan)
+                                ->where('tahun', $tahun)
+                                ->first();
+        
+                                array_push($total_tunjangan_keluarga, ($data_gaji != null) ? $data_gaji->tj_keluarga : 0);
+                                array_push($total_tunjangan_kesejahteraan, ($data_gaji != null) ? $data_gaji->tj_kesejahteraan :
+                                0);
+                                array_push($total_gj_cabang, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
+                                }
+                                }
+                                }
+        
+                                $gj_cabang = round((array_sum($total_gj_cabang) + array_sum($total_tunjangan_keluarga) +
+                                (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13);
+        
+                                array_push($total_dpp, $gj_cabang);
+                                @endphp
+                                <td>{{ number_format($gj_cabang, 0, ".", ",") }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot style="font-weight: bold">
+                            <tr>
+                                <td colspan="2" style="text-align: center">
+                                    Jumlah
+                                </td>
+                                <td style="background-color: #FED049; text-align: center;">{{ number_format(array_sum($total_dpp), 0, ".", ",") }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            @elseif($status == 2)
+                <div class="table-wrapping overflow-hidden pt-2">
+                    <table class="tables text-center cell-border stripe" id="table_export" style="width: 100%">
+                        <thead style="background-color: #CCD6A6">
+                            <th style="text-align: center">NIP</th>
+                            <th style="text-align: center">Nama Karyawan</th>
+                            <th style="text-align: center">DPP</th>
+                        </thead>
+                        <tbody>
+                            @for ($i = 0; $i < count($karyawan); $i++) @if ($karyawan[$i]->status_karyawan == 'Tetap')
+                                <tr>
+                                    <td>{{ $karyawan[$i]->nip }}</td>
+                                    <td>{{ $karyawan[$i]->nama_karyawan }}</td>
+                                    <td>{{ isset($dpp[$i]) ? number_format($dpp[$i], 0, ".", ",") : '0' }}</td>
+                                </tr>
+                                @endif
+                                @endfor
+                        </tbody>
+                        <tfoot style="font-weight: bold">
+                            <tr>
+                                <td colspan="2" style="text-align: center">Jumlah</td>
+                                <td style="background-color: #FED049; text-align: center;">{{ number_format(array_sum($dpp), 0, ".", ",") }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            @endif
+            </div>
         </div>
-    </div>
+    @endif
 </div>
 <button class="btn-scroll-to-top btn btn-primary fixed hidden bottom-5 right-5">
     To Top <iconify-icon icon="mdi:arrow-top" class="ml-2 mt-1"></iconify-icon>

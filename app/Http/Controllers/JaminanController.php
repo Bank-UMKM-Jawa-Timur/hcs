@@ -433,6 +433,7 @@ class JaminanController extends Controller
         if (!auth()->user()->can('laporan - laporan dpp')) {
             return view('roles.forbidden');
         }
+
         $kantor = $request->kantor;
         $kategori = $request->kategori;
         $tahun = $request->tahun;
