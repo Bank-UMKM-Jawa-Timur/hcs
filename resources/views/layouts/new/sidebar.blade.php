@@ -212,7 +212,7 @@
                                                 aria-labelledby="headingTwo">
                                                 <ul class="sub-menu pl-2 ml-3 space-y-2 border-them border-l-2 text-sm">
                                                     <li>
-                                                        <a href="#">
+                                                        <a href="{{ route('surat-peringatan.index') }}">
                                                             <button class="btn-link">
                                                                 <span>Surat Peringatan</span>
                                                             </button>
