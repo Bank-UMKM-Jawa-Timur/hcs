@@ -56,5 +56,17 @@ class PenghasilanTidakTeraturSeeder extends Seeder
             'status' => 2,
             'created_at' => now()
         ]);
+        DB::table('mst_tunjangan')
+        ->insert([
+            'nama_tunjangan' => 'Insentif Kredit',
+            'status' => 2,
+            'created_at' => now()
+        ]);
+        DB::table('mst_tunjangan')
+        ->insert([
+            'nama_tunjangan' => 'Insentif Penagihan',
+            'status' => 2,
+            'created_at' => now()
+        ]);
     }
 }

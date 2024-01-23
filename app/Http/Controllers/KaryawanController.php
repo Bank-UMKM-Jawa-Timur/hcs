@@ -17,6 +17,7 @@ use App\Models\PanggolModel;
 use App\Models\PjsModel;
 use App\Models\PotonganModel;
 use App\Models\SpModel;
+use App\Models\TunjanganModel;
 use App\Models\UmurModel;
 use App\Repository\KaryawanRepository;
 use App\Service\EmployeeService;
@@ -66,7 +67,7 @@ class KaryawanController extends Controller
         // Need permission
         return view('karyawan.list');
     }
-    
+
     public function listKaryawanJson(Request $request) {
         $karyawanRepo = new KaryawanRepository();
         $data = $karyawanRepo->getAllKaryawan('');
@@ -118,6 +119,9 @@ class KaryawanController extends Controller
 
     public function upload_karyawan(Request $request)
     {
+        $request->validate([
+            'upload_csv' => 'required',
+        ]);
         $file = $request->file('upload_csv');
         $import = new ImportKaryawan;
         $import = $import->import($file);
@@ -320,6 +324,7 @@ class KaryawanController extends Controller
             ->get();
 
         return view('karyawan.add', [
+        // return view('karyawan.add-old', [
             'panggol' => $data_panggol,
             'jabatan' => $data_jabatan,
             'agama' => $data_agama,
@@ -336,27 +341,28 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nip' => 'required',
-            'nik' => 'required',
-            'nama' => 'required',
-            'tmp_lahir' => 'required',
-            'tgl_lahir' => 'required',
-            'agama' => 'required|not_in:-',
-            'jk' => 'required|not_in:-',
-            'status_pernikahan' => 'required|not_in:-',
-            'kewarganegaraan' => 'required|not_in:-',
-            'alamat_ktp' => 'required',
-            'kpj' => 'required',
-            'jkn' => 'required',
-            'gj_pokok' => 'required',
-            'status_karyawan' => 'required|not_in:-',
-            'jabatan' => 'required|not_in:-',
-            'status_ptkp' => 'required|not_in:-',
-            'tgl_mulai' => 'required'
-        ]);
-
         try {
+            $request->validate([
+                'nip' => 'required',
+                'nik' => 'required',
+                'nama' => 'required',
+                'tmp_lahir' => 'required',
+                'tgl_lahir' => 'required',
+                'agama' => 'required|not_in:-',
+                'jk' => 'required|not_in:-',
+                'status_pernikahan' => 'required|not_in:-',
+                'kewarganegaraan' => 'required|not_in:-',
+                'alamat_ktp' => 'required',
+                'kpj' => 'required',
+                'jkn' => 'required',
+                'gj_pokok' => 'required',
+                'status_karyawan' => 'required|not_in:-',
+                'jabatan' => 'required|not_in:-',
+                'status_ptkp' => 'required|not_in:-',
+                'tgl_mulai' => 'required'
+            ]);
+
+
             $entitas = null;
             if($request->kd_bagian && !isset($request->kd_cabang)){
                 $entitas = null;
@@ -454,12 +460,12 @@ class KaryawanController extends Controller
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e);
-            return redirect()->route('karyawan.index');
+            Alert::error('Tejadi kesalahan', $e);
+            return redirect()->back();
         } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e);
-            return redirect()->route('karyawan.index');
+            Alert::error('Tejadi kesalahan', $e);
+            return redirect()->back();
         }
     }
 
@@ -636,6 +642,7 @@ class KaryawanController extends Controller
             ->where('nip', $id)
             ->select('tunjangan_karyawan.*')
             ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+            ->orderBy('tunjangan_karyawan.id')
             ->get();
         $data->potongan = DB::table('potongan_gaji')
                             ->where('nip', $data->nip)
@@ -660,7 +667,10 @@ class KaryawanController extends Controller
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
 
+        // return $data;
+
         return view('karyawan.edit', [
+        // return view('karyawan.edit-old', [
             'data' => $data,
             'panggol' => $data_panggol,
             'is' => $data_is,
@@ -680,33 +690,34 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // return $request;
         if (!auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan') &&
             !auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
             return view('roles.forbidden');
         }
-        if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
-            $request->validate([
-                'nip' => 'required',
-                'nik' => 'required',
-                'nama' => 'required',
-                'tmp_lahir' => 'required',
-                'tgl_lahir' => 'required',
-                'agama' => 'required|not_in:-',
-                'jk' => 'required|not_in:-',
-                'status_pernikahan' => 'required|not_in:-',
-                'kewarganegaraan' => 'required|not_in:-',
-                'alamat_ktp' => 'required',
-                'kpj' => 'required',
-                'jkn' => 'required',
-                'gj_pokok' => 'required',
-                'status_karyawan' => 'required|not_in:-',
-                'status_ptkp' => 'required|not_in:-',
-                'tgl_mulai' => 'required'
-            ]);
-        }
 
         DB::beginTransaction();
         try {
+            if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
+                $request->validate([
+                    'nip' => 'required',
+                    'nik' => 'required',
+                    'nama' => 'required',
+                    'tmp_lahir' => 'required',
+                    'tgl_lahir' => 'required',
+                    'agama' => 'required|not_in:-',
+                    'jk' => 'required|not_in:-',
+                    'status_pernikahan' => 'required|not_in:-',
+                    'kewarganegaraan' => 'required|not_in:-',
+                    'alamat_ktp' => 'required',
+                    'kpj' => 'required',
+                    'jkn' => 'required',
+                    'gj_pokok' => 'required',
+                    'status_karyawan' => 'required|not_in:-',
+                    'status_ptkp' => 'required|not_in:-',
+                    'tgl_mulai' => 'required'
+                ]);
+            }
             if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
                 $idTkDeleted = explode(',', $request->get('idTkDeleted'));
                 $idPotDeleted = explode(',', $request->get('idPotDeleted'));
@@ -822,26 +833,40 @@ class KaryawanController extends Controller
                     }
                 }
 
-                for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
-                    if ($request->get('id_tk')[$i] == null) {
-                        DB::table('tunjangan_karyawan')
-                            ->insert([
-                                'nip' => $request->get('nip'),
-                                'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
-                                'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                'created_at' => now()
-                            ]);
-                    } else {
-                        DB::table('tunjangan_karyawan')
-                            ->where('id', $request->get('id_tk')[$i])
-                            ->update([
-                                'nip' => $request->get('nip'),
-                                'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
-                                'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                'updated_at' => now()
-                            ]);
+                // data tunjangan
+                $item_id = $request->tunjangan;
+                $itemLamaIds = DB::table('tunjangan_karyawan')->where('nip', $id)->pluck('id')->toArray();
+                // foreach ($itemLamaIds as $itemLamaId) {
+                //     if (is_null($item_id) || !in_array($itemLamaId, $item_id)) {
+                //         // hapus item yang tidak ada dalam $item_id
+                //         DB::table('tunjangan_karyawan')->where('id', $itemLamaId)->delete();
+                //     }
+                // }
+
+                if (is_array($item_id))
+                {
+                    for ($i = 0; $i < count($item_id); $i++) {
+                        if ($request->get('id_tk')[$i] == null) {
+                            DB::table('tunjangan_karyawan')
+                                ->insert([
+                                    'nip' => $request->get('nip'),
+                                    'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
+                                    'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                    'created_at' => now()
+                                ]);
+                        } else {
+                            DB::table('tunjangan_karyawan')
+                                ->where('id', $request->get('id_tk')[$i])
+                                ->update([
+                                    'nip' => $request->get('nip'),
+                                    'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
+                                    'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                    'updated_at' => now()
+                                ]);
+                        }
                     }
                 }
+
             }
 
             if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
@@ -876,11 +901,11 @@ class KaryawanController extends Controller
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
+            Alert::error('Tejadi kesalahan', $e->getMessage());
             return redirect()->back();
         } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
+            Alert::error('Tejadi kesalahan', $e->getMessage());
             return redirect()->back();
         }
     }
@@ -1222,10 +1247,10 @@ class KaryawanController extends Controller
         // PHP program to calculate age in years
         // Define the date of birth
         $dateOfBirth = '14-02-2022';
-        
+
         // Get today's date
         $now = date("Y-m-d");
-        
+
         // Calculate the time difference between the two dates
         $diff = date_diff(date_create($dateOfBirth), date_create($now));
         $year = $diff->format('%y');
@@ -1233,7 +1258,7 @@ class KaryawanController extends Controller
         if ($year > 0) {
             $month += ($year * 12);
         }
-        
+
         return $month;
     }
 

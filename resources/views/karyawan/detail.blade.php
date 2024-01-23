@@ -100,7 +100,7 @@
             <div class="row ">
                 <label class="w-2/4 mt-2">Status Pernikahan</label>
                 <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled"  value="{{ $status ?? '-' }}">
+                    <input type="text" disabled class="form-input-disabled"  value="{{ $karyawan->status ?? '-' }}">
                 </div>
             </div>
             <div class="row ">
@@ -318,7 +318,7 @@
                 <label class="w-2/4 mt-2">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium' : 'Gaji Pokok' }}</label>
                 <div class="w-full">
                     @if (isset($karyawan->gj_pokok) != null)
-                        <input type="text" disabled class="form-input-disabled" value="{{ number_format($karyawan->gj_pokok, 0, ",", ".") }}">
+                        <input type="text" disabled class="form-input-disabled" value="{{'Rp. '. number_format($karyawan->gj_pokok, 0, ",", ".") }}">
                     @else
                         <input type="text" disabled class="form-input-disabled" value="-">
                     @endif
@@ -328,7 +328,7 @@
                 <label class="w-2/4 mt-2">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium Penyesuaian' : 'Gaji Penyesuaian' }}</label>
                 <div class="w-full">
                     @if (isset($karyawan->gj_penyesuaian) != null)
-                        <input type="text" disabled class="form-input-disabled" value="{{ number_format($karyawan->gj_penyesuaian, 0, ",", ".") }}">
+                        <input type="text" disabled class="form-input-disabled" value="{{ 'Rp. '. number_format($karyawan->gj_penyesuaian, 0, ",", ".") }}">
                     @else
                         <input type="text" disabled class="form-input-disabled" value="-">
                     @endif
@@ -359,7 +359,7 @@
             <div class="row ">
                 <label for="" class="w-2/4 mt-2">Total Gaji</label>
                 <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled" value="Rp. {{ number_format($totalGaji) }}" />
+                    <input type="text" disabled class="form-input-disabled" value="Rp. {{ number_format($totalGaji, 0, ",", ".") }}" />
                 </div>
             </div>
             @if ($potongan != null)

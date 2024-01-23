@@ -182,9 +182,9 @@ class LaporanTetapRepository
             // ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
             // ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
+            ->orderByRaw($this->orderRaw)
             ->orderBy('status_kantor', 'asc')
             ->orderBy('kd_cabang', 'asc')
-            ->orderByRaw($this->orderRaw)
             ->orderBy('nip', 'asc')
             ->orderBy('mst_karyawan.kd_entitas')
             ->where(function($query) use ($kantor, $kode_cabang_arr, $search) {
@@ -1012,9 +1012,9 @@ class LaporanTetapRepository
             // ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
             // ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
+            ->orderByRaw($this->orderRaw)
             ->orderBy('status_kantor', 'asc')
             ->orderBy('kd_cabang', 'asc')
-            ->orderByRaw($this->orderRaw)
             ->orderBy('nip', 'asc')
             ->orderBy('mst_karyawan.kd_entitas')
             ->where(function($query) use ($kantor, $kode_cabang_arr, $search) {

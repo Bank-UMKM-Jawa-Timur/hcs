@@ -62,11 +62,11 @@
                 <tr>
                     <th>No</th>
                     <th>Nama Tunjangan</th>
-                    @if (auth()->user()->hasRole('cabang') != 'cabang')
+                    {{-- @if (auth()->user()->hasRole('cabang') != 'cabang')
                     <th>
                         Kantor
                     </th>
-                    @endif
+                    @endif --}}
                     <th>Total Data</th>
                     <th>Grand Total</th>
                     <th>Tanggal</th>
@@ -85,11 +85,11 @@
                 <tr>
                     <td>{{ $i++ }}</td>
                     <td>{{ $item->nama_tunjangan }}</td>
-                    @if (auth()->user()->hasRole('cabang') != 'cabang')
+                    {{-- @if (auth()->user()->hasRole('cabang') != 'cabang')
                     <td>
                         {{ $item->entitas ?? 'Pusat' }}
                     </td>
-                    @endif
+                    @endif --}}
                     <td>{{ $item->total }}</td>
                     <td>Rp {{ $item->grand_total ? number_format($item->grand_total, 0, '.', '.') : 0}}</td>
                     <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>

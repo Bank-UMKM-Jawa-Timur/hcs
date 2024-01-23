@@ -145,272 +145,272 @@
                 return $hasil_rupiah;
             }
         @endphp
-            @if ($data != null)
-            <div class="table-wrapping my-4 shadow" id="reportPrinting">
-               <div class="col-md-12">
-                    @if ($request->kategori == 1)
-                        <div class="card-body ml-0 mr-0 mt-0 pb-5">
-                            <div class="flex justify-between m-0 mt-1">
-                                <div class="flex w-fit">
-                                    <div class="image">
-                                        <img src="{{ asset('style/assets/img/logo.png') }}">
-                                    </div>
-                                    <div class="text">
-                                        <p>BANK BPR JATIM<br>BANK UMKM JAWA TIMUR</p>
-                                    </div>
+        @if ($data != null)
+        <div class="table-wrapping my-4 shadow" id="reportPrinting">
+            <div class="col-md-12">
+                @if ($request->kategori == 1)
+                    <div class="card-body ml-0 mr-0 mt-0 pb-5">
+                        <div class="flex justify-between m-0 mt-1">
+                            <div class="flex w-fit">
+                                <div class="image">
+                                    <img src="{{ asset('style/assets/img/logo.png') }}">
                                 </div>
+                                <div class="text">
+                                    <p>BANK BPR JATIM<br>BANK UMKM JAWA TIMUR</p>
+                                </div>
+                            </div>
 
-                                <div class="w-50">
-                                    <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold"><u>SLIP - JURNAL</u></p>
-                                    <p class="col-sm-12 text-center mt-2" style="font-size: 12px;">Tanggal: 25 Januari 2022</p>
+                            <div class="w-50">
+                                <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold"><u>SLIP - JURNAL</u></p>
+                                <p class="col-sm-12 text-center mt-2" style="font-size: 12px;">Tanggal: 25 Januari 2022</p>
+                            </div>
+                            <div class="col-sm-12 text-right">
+                                <input type="button" class="btn btn-success" id="printPageButton" style="margin-bottom: 5px" value="Print" onClick="printReport()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive overflow-hidden" style="align-content: center">
+                        <table class="table text-center table-bordered" style="border: 1px solid #ddd !important;">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Keterangan</th>
+                                    <th>Kode Rekening</th>
+                                    <th>Debet</th>
+                                    <th>Kredit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for ($i = 0; $i < count($data['item']); $i++)
+                                <tr>
+                                    <td>{{ $i + 1 }}</td>
+                                    @if ($data['item'][$i] == "Biaya Pegawai")
+                                        <td style="text-align: left">{{ $data['item'][$i] }}</td>
+                                    @else
+                                        <td style="text-align: center;">{{ $data['item'][$i] }}</td>
+                                    @endif
+                                    <td>{{ $data['kode_rekening'][$i] }}</td>
+                                    @if ($i == 0)
+                                        <td class="text-end">{{ ($data[$i] != 0) ? rupiah($data[$i]) : '-' }}</td>
+                                        <td class="text-end">-</td>
+                                    @else
+                                        <td class="text-end">-</td>
+                                        <td class="text-end">{{ ($data[$i] != 0) ? rupiah($data[$i]) : '-' }}</td>
+                                    @endif
+                                </tr>
+                                @endfor
+                            </tbody>
+                            <tfoot style="font-weight: bold">
+                                <tr>
+                                    <td colspan="3">
+                                        Total
+                                    </td>
+                                    <td class="text-end">{{ rupiah($data[0]) }}</td>
+                                    <td class="text-end">{{ rupiah($data[0]) }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="card-body mb-2">
+                        <div class="grid grid-cols-2">
+                            <div class="col">
+                                <div class="flex flex-col mt-1">
+                                    <p class="col-sm-12 text-center" style="font-size: 14px">Mengetahui</p>
+                                    <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>FARIDA FIRDIANSYAH</u></p>
+                                    <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Pimpinan Cabang</p>
                                 </div>
-                                <div class="col-sm-12 text-right">
-                                    <input type="button" class="btn btn-success" id="printPageButton" style="margin-bottom: 5px" value="Print" onClick="printReport()">
+                            </div>
+
+                            <div class="col">
+                                <div class="flex flex-col mt-1">
+                                    <p class="col-sm-12 text-center" style="font-size: 14px">Dibuat</p>
+                                    <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>KOES RACHMAWATI</u></p>
+                                    <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Penyelia Umum</p>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="table-responsive overflow-hidden" style="align-content: center">
-                            <table class="table text-center table-bordered" style="border: 1px solid #ddd !important;">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Keterangan</th>
-                                        <th>Kode Rekening</th>
-                                        <th>Debet</th>
-                                        <th>Kredit</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for ($i = 0; $i < count($data['item']); $i++)
-                                    <tr>
-                                        <td>{{ $i + 1 }}</td>
-                                        @if ($data['item'][$i] == "Biaya Pegawai")
-                                            <td style="text-align: left">{{ $data['item'][$i] }}</td>
-                                        @else
-                                            <td style="text-align: center;">{{ $data['item'][$i] }}</td>
-                                        @endif
-                                        <td>{{ $data['kode_rekening'][$i] }}</td>
-                                        @if ($i == 0)
-                                            <td class="text-end">{{ ($data[$i] != 0) ? rupiah($data[$i]) : '-' }}</td>
-                                            <td class="text-end">-</td>
-                                        @else
-                                            <td class="text-end">-</td>
-                                            <td class="text-end">{{ ($data[$i] != 0) ? rupiah($data[$i]) : '-' }}</td>
-                                        @endif
-                                    </tr>
-                                    @endfor
-                                </tbody>
-                                <tfoot style="font-weight: bold">
-                                    <tr>
-                                        <td colspan="3">
-                                            Total
-                                        </td>
-                                        <td class="text-end">{{ rupiah($data[0]) }}</td>
-                                        <td class="text-end">{{ rupiah($data[0]) }}</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-
-                        <div class="card-body mb-2">
-                            <div class="grid grid-cols-2">
-                                <div class="col">
-                                    <div class="flex flex-col mt-1">
-                                        <p class="col-sm-12 text-center" style="font-size: 14px">Mengetahui</p>
-                                        <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>FARIDA FIRDIANSYAH</u></p>
-                                        <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Pimpinan Cabang</p>
-                                    </div>
+                    </div>
+                @elseif($request->kategori == 2)
+                    <div class="card-body ml-0 mr-0 mt-0 pb-5">
+                        <div class="flex justify-between m-0 mt-1">
+                            <div class="flex w-fit">
+                                <div class="image">
+                                    <img src="{{ asset('style/assets/img/logo.png') }}">
                                 </div>
+                                <div class="text">
+                                    <p>BANK BPR JATIM<br>BANK UMKM JAWA TIMUR</p>
+                                </div>
+                            </div>
 
-                                <div class="col">
-                                    <div class="flex flex-col mt-1">
-                                        <p class="col-sm-12 text-center" style="font-size: 14px">Dibuat</p>
-                                        <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>KOES RACHMAWATI</u></p>
-                                        <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Penyelia Umum</p>
-                                    </div>
+                            <div class="w-50">
+                                <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold"><u>SLIP - JURNAL</u></p>
+                                <p class="col-sm-12 text-center mt-2" style="font-size: 12px;">Tanggal: 25 Januari 2022</p>
+                            </div>
+                            <div class="col-sm-12 text-right">
+                                <input type="button" class="btn btn-success" id="printPageButton" style="margin-bottom: 5px" value="Print" onClick="printReport()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive overflow-hidden" style="align-content: center">
+                        <table class="table text-center table-bordered" style="border: 1px solid #ddd !important;">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Keterangan</th>
+                                    <th>Kode Rekening</th>
+                                    <th>Debet</th>
+                                    <th>Kredit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {{ $j++ }}
+                                    </td>
+                                    <td>Non Operasional Lainnya</td>
+                                    <td>53705</td>
+                                    <td>{{ ($data['tj_vitamin'] != 0) ? rupiah($data['tj_vitamin']) : '-' }}</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{$j++}}
+                                    </td>
+                                    <td>
+                                        Tabungan Sikemas
+                                    </td>
+                                    <td>
+                                        20102
+                                    </td>
+                                    <td>-</td>
+                                    <td>{{ ($data['tj_vitamin'] != 0) ? rupiah($data['tj_vitamin']) : '-' }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot style="font-weight: bold">
+                                <tr>
+                                    <td colspan="3">
+                                        Total
+                                    </td>
+                                    <td>{{ ($data['tj_vitamin'] != 0) ? rupiah($data['tj_vitamin']) : '-' }}</td>
+                                    <td>{{ ($data['tj_vitamin'] != 0) ? rupiah($data['tj_vitamin']) : '-' }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="card-body mb-2">
+                        <div class="grid grid-cols-2">
+                            <div class="col">
+                                <div class="flex flex-col mt-1">
+                                    <p class="col-sm-12 text-center" style="font-size: 14px">Mengetahui</p>
+                                    <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>FARIDA FIRDIANSYAH</u></p>
+                                    <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Pimpinan Cabang</p>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="flex flex-col mt-1">
+                                    <p class="col-sm-12 text-center" style="font-size: 14px">Dibuat</p>
+                                    <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>KOES RACHMAWATI</u></p>
+                                    <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Penyelia Umum</p>
                                 </div>
                             </div>
                         </div>
-                    @elseif($request->kategori == 2)
-                        <div class="card-body ml-0 mr-0 mt-0 pb-5">
-                            <div class="flex justify-between m-0 mt-1">
-                                <div class="flex w-fit">
-                                    <div class="image">
-                                        <img src="{{ asset('style/assets/img/logo.png') }}">
-                                    </div>
-                                    <div class="text">
-                                        <p>BANK BPR JATIM<br>BANK UMKM JAWA TIMUR</p>
-                                    </div>
+                    </div>
+                @elseif($request->kategori == 3)
+                    <div class="card-body ml-0 mr-0 mt-0 pb-5">
+                        <div class="flex justify-between m-0 mt-1">
+                            <div class="flex w-fit">
+                                <div class="image">
+                                    <img src="{{ asset('style/assets/img/logo.png') }}">
                                 </div>
+                                <div class="text">
+                                    <p>BANK BPR JATIM<br>BANK UMKM JAWA TIMUR</p>
+                                </div>
+                            </div>
 
-                                <div class="w-50">
-                                    <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold"><u>SLIP - JURNAL</u></p>
-                                    <p class="col-sm-12 text-center mt-2" style="font-size: 12px;">Tanggal: 25 Januari 2022</p>
+                            <div class="w-50">
+                                <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold"><u>SLIP - JURNAL</u></p>
+                                <p class="col-sm-12 text-center mt-2" style="font-size: 12px;">Tanggal: 25 Januari 2022</p>
+                            </div>
+                            <div class="col-sm-12 text-right">
+                                <input type="button" class="btn btn-success" id="printPageButton" style="margin-bottom: 5px" value="Print" onClick="printReport()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive overflow-hidden" style="align-content: center">
+                        <table class="table text-center table-bordered" style="border: 1px solid #ddd !important;">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Keterangan</th>
+                                    <th>Kode Rekening</th>
+                                    <th>Debet</th>
+                                    <th>Kredit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {{ $j++ }}
+                                    </td>
+                                    <td>Biaya Dibayar Dimuka - Lainnya</td>
+                                    <td>18310</td>
+                                    <td>{{ ($data['thr'] != 0) ? rupiah($data['thr']) : '-' }}</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{$j++}}
+                                    </td>
+                                    <td>
+                                        Tabungan Sikemas
+                                    </td>
+                                    <td>
+                                        20102
+                                    </td>
+                                    <td>-</td>
+                                    <td>{{ ($data['thr'] != 0) ? rupiah($data['thr']) : '-' }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot style="font-weight: bold">
+                                <tr>
+                                    <td colspan="3">
+                                        Total
+                                    </td>
+                                    <td>{{ ($data['thr'] != 0) ? rupiah($data['thr']) : '-' }}</td>
+                                    <td>{{ ($data['thr'] != 0) ? rupiah($data['thr']) : '-' }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="card-body mb-2">
+                        <div class="grid grid-cols-2">
+                            <div class="col">
+                                <div class="flex flex-col mt-1">
+                                    <p class="col-sm-12 text-center" style="font-size: 14px">Mengetahui</p>
+                                    <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>FARIDA FIRDIANSYAH</u></p>
+                                    <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Pimpinan Cabang</p>
                                 </div>
-                                <div class="col-sm-12 text-right">
-                                    <input type="button" class="btn btn-success" id="printPageButton" style="margin-bottom: 5px" value="Print" onClick="printReport()">
+                            </div>
+
+                            <div class="col">
+                                <div class="flex flex-col mt-1">
+                                    <p class="col-sm-12 text-center" style="font-size: 14px">Dibuat</p>
+                                    <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>KOES RACHMAWATI</u></p>
+                                    <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Penyelia Umum</p>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="table-responsive overflow-hidden" style="align-content: center">
-                            <table class="table text-center table-bordered" style="border: 1px solid #ddd !important;">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Keterangan</th>
-                                        <th>Kode Rekening</th>
-                                        <th>Debet</th>
-                                        <th>Kredit</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            {{ $j++ }}
-                                        </td>
-                                        <td>Non Operasional Lainnya</td>
-                                        <td>53705</td>
-                                        <td>{{ ($data['tj_vitamin'] != 0) ? rupiah($data['tj_vitamin']) : '-' }}</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            {{$j++}}
-                                        </td>
-                                        <td>
-                                            Tabungan Sikemas
-                                        </td>
-                                        <td>
-                                            20102
-                                        </td>
-                                        <td>-</td>
-                                        <td>{{ ($data['tj_vitamin'] != 0) ? rupiah($data['tj_vitamin']) : '-' }}</td>
-                                    </tr>
-                                </tbody>
-                                <tfoot style="font-weight: bold">
-                                    <tr>
-                                        <td colspan="3">
-                                            Total
-                                        </td>
-                                        <td>{{ ($data['tj_vitamin'] != 0) ? rupiah($data['tj_vitamin']) : '-' }}</td>
-                                        <td>{{ ($data['tj_vitamin'] != 0) ? rupiah($data['tj_vitamin']) : '-' }}</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-
-                        <div class="card-body mb-2">
-                            <div class="grid grid-cols-2">
-                                <div class="col">
-                                    <div class="flex flex-col mt-1">
-                                        <p class="col-sm-12 text-center" style="font-size: 14px">Mengetahui</p>
-                                        <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>FARIDA FIRDIANSYAH</u></p>
-                                        <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Pimpinan Cabang</p>
-                                    </div>
-                                </div>
-
-                                <div class="col">
-                                    <div class="flex flex-col mt-1">
-                                        <p class="col-sm-12 text-center" style="font-size: 14px">Dibuat</p>
-                                        <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>KOES RACHMAWATI</u></p>
-                                        <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Penyelia Umum</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @elseif($request->kategori == 3)
-                        <div class="card-body ml-0 mr-0 mt-0 pb-5">
-                            <div class="flex justify-between m-0 mt-1">
-                                <div class="flex w-fit">
-                                    <div class="image">
-                                        <img src="{{ asset('style/assets/img/logo.png') }}">
-                                    </div>
-                                    <div class="text">
-                                        <p>BANK BPR JATIM<br>BANK UMKM JAWA TIMUR</p>
-                                    </div>
-                                </div>
-
-                                <div class="w-50">
-                                    <p class="col-sm-12 text-center" style="font-size: 18px; font-weight: bold"><u>SLIP - JURNAL</u></p>
-                                    <p class="col-sm-12 text-center mt-2" style="font-size: 12px;">Tanggal: 25 Januari 2022</p>
-                                </div>
-                                <div class="col-sm-12 text-right">
-                                    <input type="button" class="btn btn-success" id="printPageButton" style="margin-bottom: 5px" value="Print" onClick="printReport()">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-responsive overflow-hidden" style="align-content: center">
-                            <table class="table text-center table-bordered" style="border: 1px solid #ddd !important;">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Keterangan</th>
-                                        <th>Kode Rekening</th>
-                                        <th>Debet</th>
-                                        <th>Kredit</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            {{ $j++ }}
-                                        </td>
-                                        <td>Biaya Dibayar Dimuka - Lainnya</td>
-                                        <td>18310</td>
-                                        <td>{{ ($data['thr'] != 0) ? rupiah($data['thr']) : '-' }}</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            {{$j++}}
-                                        </td>
-                                        <td>
-                                            Tabungan Sikemas
-                                        </td>
-                                        <td>
-                                            20102
-                                        </td>
-                                        <td>-</td>
-                                        <td>{{ ($data['thr'] != 0) ? rupiah($data['thr']) : '-' }}</td>
-                                    </tr>
-                                </tbody>
-                                <tfoot style="font-weight: bold">
-                                    <tr>
-                                        <td colspan="3">
-                                            Total
-                                        </td>
-                                        <td>{{ ($data['thr'] != 0) ? rupiah($data['thr']) : '-' }}</td>
-                                        <td>{{ ($data['thr'] != 0) ? rupiah($data['thr']) : '-' }}</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-
-                        <div class="card-body mb-2">
-                            <div class="grid grid-cols-2">
-                                <div class="col">
-                                    <div class="flex flex-col mt-1">
-                                        <p class="col-sm-12 text-center" style="font-size: 14px">Mengetahui</p>
-                                        <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>FARIDA FIRDIANSYAH</u></p>
-                                        <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Pimpinan Cabang</p>
-                                    </div>
-                                </div>
-
-                                <div class="col">
-                                    <div class="flex flex-col mt-1">
-                                        <p class="col-sm-12 text-center" style="font-size: 14px">Dibuat</p>
-                                        <p class="col-sm-12 text-center" style="font-size: 14px; font-weight: bold; margin-top: 60px"><u>KOES RACHMAWATI</u></p>
-                                        <p class="col-sm-12 text-center mt-2" style="font-size: 13px;">Penyelia Umum</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                </div>
+                    </div>
+                @endif
             </div>
-            @endif
+        </div>
+        @endif
     </div>
 @endsection
 

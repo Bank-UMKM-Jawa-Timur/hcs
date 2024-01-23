@@ -36,7 +36,8 @@ class SlipGajiController extends Controller
         }else if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
             return view('roles.forbidden');
         }
-        return view('slip_gaji.slip_jurnal', ['data' => null, 'kategori' => null, 'request' => null]);
+        // return view('slip_gaji.slip_jurnal', ['data' => null, 'kategori' => null, 'request' => null]);
+        return view('slip_gaji.coming-soon', ['data' => null, 'kategori' => null, 'request' => null]);
     }
 
     function getSlipJurnal($request, $kategori, $karyawan)

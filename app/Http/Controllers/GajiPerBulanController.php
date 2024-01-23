@@ -110,7 +110,7 @@ class GajiPerBulanController extends Controller
 
     public function index(Request $request)
     {
-        if (!auth()->user()->can('penghasilan')) {
+        if (!auth()->user()->can('penghasilan - proses penghasilan')) {
             return view('roles.forbidden');
         }
 
@@ -869,12 +869,62 @@ class GajiPerBulanController extends Controller
                                                 ->update($employee);
 
                     $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin);
+
+                    // Hitung pajak intensif
+                    $nominal_kredit = 0;
+                    $nominal_penagihan = 0;
+
+                    if ($bulan > 1) {
+                        $tanggal_filter = $tahun.'-'.$bulan.'-'.'25';
+                        $nominal_kredit = (int) DB::table('penghasilan_tidak_teratur')
+                                            ->where('nip', $item->nip)
+                                            ->where('id_tunjangan', 31) // kredit
+                                            ->where('tahun', (int) $tahun)
+                                            ->where('bulan', (int) $bulan)
+                                            ->whereDate('created_at', '<=', $tanggal_filter)
+                                            ->sum('nominal');
+                        $nominal_penagihan = (int) DB::table('penghasilan_tidak_teratur')
+                                                ->where('nip', $item->nip)
+                                                ->where('id_tunjangan', 32) // penagihan
+                                                ->where('tahun', (int) $tahun)
+                                                ->where('bulan', (int) $bulan)
+                                                ->whereDate('created_at', '<=', $tanggal_filter)
+                                                ->sum('nominal');
+                    }
+                    else {
+                        $nominal_kredit = (int) DB::table('penghasilan_tidak_teratur')
+                                                ->where('nip', $item->nip)
+                                                ->where('id_tunjangan', 31) // kredit
+                                                ->where('tahun', (int) $tahun)
+                                                ->where('bulan', (int) $bulan)
+                                                ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                                                ->sum('nominal');
+                        $nominal_penagihan = (int) DB::table('penghasilan_tidak_teratur')
+                                                ->where('nip', $item->nip)
+                                                ->where('id_tunjangan', 32) // penagihan
+                                                ->where('tahun', (int) $tahun)
+                                                ->where('bulan', (int) $bulan)
+                                                ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                                                ->sum('nominal');
+                    }
+                    $pajak_kredit = 0;
+                    $pajak_penagihan = 0;
+
+                    if ($nominal_kredit > 0) {
+                        $pajak_kredit = HitungPPH::getPajakInsentif($item->nip, (int) $bulan, (int) $tahun, $nominal_kredit, 'kredit');
+                    }
+                    if ($nominal_penagihan > 0) {
+                        $pajak_penagihan = HitungPPH::getPajakInsentif($item->nip, (int) $bulan, (int) $tahun, $nominal_penagihan, 'penagihan');
+                    }
+
                     $pph = [
                         'gaji_per_bulan_id' => $gaji->id,
                         'nip' => $item->nip,
                         'bulan' => $bulan,
                         'tahun' => $tahun,
                         'total_pph' => $total_pph,
+                        'insentif_kredit' => $pajak_kredit,
+                        'insentif_penagihan' => $pajak_penagihan,
                         'updated_at' => $now
                     ];
                     PPHModel::where('gaji_per_bulan_id', $gaji->id)
@@ -928,12 +978,61 @@ class GajiPerBulanController extends Controller
                         if (!$pph_bulan_ini) {
                             $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin);
 
+                            // Hitung pajak intensif
+                            $nominal_kredit = 0;
+                            $nominal_penagihan = 0;
+
+                            if ($bulan > 1) {
+                                $tanggal_filter = $tahun.'-'.$bulan.'-'.'25';
+                                $nominal_kredit = (int) DB::table('penghasilan_tidak_teratur')
+                                                    ->where('nip', $item->nip)
+                                                    ->where('id_tunjangan', 31) // kredit
+                                                    ->where('tahun', (int) $tahun)
+                                                    ->where('bulan', (int) $bulan)
+                                                    ->whereDate('created_at', '<=', $tanggal_filter)
+                                                    ->sum('nominal');
+                                $nominal_penagihan = (int) DB::table('penghasilan_tidak_teratur')
+                                                        ->where('nip', $item->nip)
+                                                        ->where('id_tunjangan', 32) // penagihan
+                                                        ->where('tahun', (int) $tahun)
+                                                        ->where('bulan', (int) $bulan)
+                                                        ->whereDate('created_at', '<=', $tanggal_filter)
+                                                        ->sum('nominal');
+                            }
+                            else {
+                                $nominal_kredit = (int) DB::table('penghasilan_tidak_teratur')
+                                                        ->where('nip', $item->nip)
+                                                        ->where('id_tunjangan', 31) // kredit
+                                                        ->where('tahun', (int) $tahun)
+                                                        ->where('bulan', (int) $bulan)
+                                                        ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                                                        ->sum('nominal');
+                                $nominal_penagihan = (int) DB::table('penghasilan_tidak_teratur')
+                                                        ->where('nip', $item->nip)
+                                                        ->where('id_tunjangan', 32) // penagihan
+                                                        ->where('tahun', (int) $tahun)
+                                                        ->where('bulan', (int) $bulan)
+                                                        ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                                                        ->sum('nominal');
+                            }
+                            $pajak_kredit = 0;
+                            $pajak_penagihan = 0;
+
+                            if ($nominal_kredit > 0) {
+                                $pajak_kredit = HitungPPH::getPajakInsentif($item->nip, (int) $bulan, (int) $tahun, $nominal_kredit, 'kredit');
+                            }
+                            if ($nominal_penagihan > 0) {
+                                $pajak_penagihan = HitungPPH::getPajakInsentif($item->nip, (int) $bulan, (int) $tahun, $nominal_penagihan, 'penagihan');
+                            }
+
                             $pph = [
                                 'gaji_per_bulan_id' => $gaji_id,
                                 'nip' => $item->nip,
                                 'bulan' => $bulan,
                                 'tahun' => $tahun,
                                 'total_pph' => $total_pph,
+                                'insentif_kredit' => $pajak_kredit,
+                                'insentif_penagihan' => $pajak_penagihan,
                                 'tanggal' => now(),
                                 'created_at' => now()
                             ];
@@ -1753,14 +1852,16 @@ class GajiPerBulanController extends Controller
         try {
             $kd_entitas = auth()->user()->kd_cabang;
             $batch = DB::table('batch_gaji_per_bulan')->where('id',$id)->first();
-            if ($batch) {
-                if ($batch->kd_entitas == $kd_entitas) {
-                    if (!$batch->tanggal_cetak) {
-                        $now = Carbon::now();
-                        DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
-                            'tanggal_cetak' => $now,
-                            'updated_at' => $now,
-                        ]);
+            if (auth()->user()->can('penghasilan - proses penghasilan - proses')) {
+                if ($batch) {
+                    if ($batch->kd_entitas == $kd_entitas) {
+                        if (!$batch->tanggal_cetak) {
+                            $now = Carbon::now();
+                            DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
+                                'tanggal_cetak' => $now,
+                                'updated_at' => $now,
+                            ]);
+                        }
                     }
                 }
             }

@@ -35,4 +35,6 @@ return [
         "cabangkepanjen@bankumkm.id",
         "cabangsampang@bankumkm.id"
     ],
+    'pengali_insentif_kredit' => 0.05, // 5%
+    'pengali_insentif_penagihan' => 0.05, // 5%
 ];
