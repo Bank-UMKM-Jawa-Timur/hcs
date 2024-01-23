@@ -186,7 +186,7 @@
                         </div>
                         <div class="form-horizontal">
                             <div class="w-full">
-                                <label>STATUS PERKAWAINAN</label>
+                                <label>STATUS PERKAWINAN</label>
                             </div>
                             <div class="w-full">
                                 <input type="text" class="form-input-disabled"  value="{{ $status }}" readonly>
