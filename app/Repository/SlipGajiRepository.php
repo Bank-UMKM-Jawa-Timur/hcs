@@ -293,8 +293,6 @@ class SlipGajiRepository
                                             DB::raw('SUM(potongan_gaji.iuran_ik) AS iuran_ik'),
                                             DB::raw('(SUM(potongan_gaji.kredit_koperasi) + SUM(potongan_gaji.iuran_koperasi) + SUM(potongan_gaji.kredit_pegawai) + SUM(potongan_gaji.iuran_ik)) AS total_potongan'),
                                         )
-                                        ->groupBy('potongan_gaji.bulan')
-                                        ->groupBy('potongan_gaji.tahun')
                                         ->sum('potongan_gaji.kredit_koperasi');
                                 }
                             ])
