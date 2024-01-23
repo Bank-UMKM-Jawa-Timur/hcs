@@ -185,8 +185,9 @@ class BonusController extends Controller
         $search = $request->get('q');
         $data = $this->repo->getDetailBonus($search, $limit,$page, $id, $tgl, $kd_entitas);
         $tunjangan = $this->repo->getNameTunjangan($id);
+        $nameCabang = $this->repo->getNameCabang($kd_entitas);
 
-        return view('bonus.detail',['data' => $data, 'tunjangan' => $tunjangan]);
+        return view('bonus.detail',['data' => $data, 'tunjangan' => $tunjangan, 'nameCabang' => $nameCabang]);
     }
 
     /**

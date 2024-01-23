@@ -620,8 +620,9 @@ class PenghasilanTidakTeraturController extends Controller
             $repo = new PenghasilanTidakTeraturRepository();
             $data = $repo->getAllPenghasilan($search, $limit, $page, $bulan, $createdAt, $idTunjangan, $kd_entitas);
             $tunjangan = $repo->getNameTunjangan($idTunjangan);
+            $nameCabang = $repo->getNameCabang($kd_entitas);
 
-            return view('penghasilan.detail', compact(['data','tunjangan']));
+            return view('penghasilan.detail', compact(['data','tunjangan','nameCabang']));
         } catch(Exception $e){
             Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());
             return back();

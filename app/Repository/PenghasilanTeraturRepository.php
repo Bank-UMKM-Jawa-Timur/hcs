@@ -101,6 +101,17 @@ class PenghasilanTeraturRepository
         return $tunjangan;
     }
 
+    public function getNameCabang($kdEntitas){
+        $data = DB::table('mst_cabang')->select(
+            'kd_cabang',
+            'nama_cabang'
+            )
+        ->where('kd_cabang', $kdEntitas)
+        ->first();
+
+        return $data;
+    }
+
     public function excelVitamin($bulan, $tahun){
         $cabang = CabangModel::select('kd_cabang')->pluck('kd_cabang');
         if (auth()->user()->kd_cabang != null) {
