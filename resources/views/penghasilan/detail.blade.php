@@ -20,7 +20,10 @@
 <div class="body-pages">
     <div class="table-wrapping">
         <form id="form" action="">
-            <h6 class="text-lg text-neutral-600"> Tunjangan : {{$tunjangan->nama_tunjangan}}</h6>
+            <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 flex gap-7" role="alert">
+                <h6 class="text-sm text-blue-900 font-semibold"> Tunjangan : <b>{{$tunjangan->nama_tunjangan}}</b></h6>
+                <h6 class="text-sm text-blue-900 font-semibold"> Cabang : <b>{{$nameCabang->nama_cabang}}</b></h6>
+            </div>
             <input type="hidden" name="bulan" value="{{\Request::get('bulan')}}">
             <input type="hidden" name="createdAt" value="{{\Request::get('createdAt')}}">
             <input type="hidden" name="kd_entitas" value="{{\Request::get('kd_entitas')}}">
@@ -54,7 +57,7 @@
                     <th>No</th>
                     <th>NIP</th>
                     <th>Nama Karyawan</th>
-                    <th>Kantor</th>
+                    {{-- <th>Kantor</th> --}}
                     <th>Jabatan</th>
                     <th>Nominal</th>
                 </thead>
@@ -74,7 +77,7 @@
                             <td>{{ $i++ }}</td>
                             <td>{{ $item->nip }}</td>
                             <td>{{ $item->nama_karyawan }}</td>
-                            <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}</td>
+                            {{-- <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}</td> --}}
                             <td>{{$item->display_jabatan}}</td>
                             <td>{{ rupiah($item->nominal) }}</td>
                         </tr>

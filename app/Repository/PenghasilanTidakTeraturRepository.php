@@ -63,6 +63,17 @@ class PenghasilanTidakTeraturRepository
         return $data;
     }
 
+    public function getNameCabang($kdEntitas){
+        $data = DB::table('mst_cabang')->select(
+            'kd_cabang',
+            'nama_cabang'
+            )
+        ->where('kd_cabang', $kdEntitas)
+        ->first();
+
+        return $data;
+    }
+
     public function getDetailBonus($search, $limit=10, $page=1, $id, $tgl, $kd_entitas) {
         $format_tgl = Carbon::parse($tgl)->format('y-m-d');
         $bonus = DB::table('penghasilan_tidak_teratur')
