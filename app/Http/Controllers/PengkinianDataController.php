@@ -303,7 +303,6 @@ class PengkinianDataController extends Controller
                     }
                 }
             }
-
             if($request->tunjangan[0] != null){
                 for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
                     if ($request->get('id_tk')[$i] == null) {
