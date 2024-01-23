@@ -155,15 +155,15 @@
                         var message = "success"
                         $('#error-penghasilan').addClass('hidden')
                     } else {
-                        if (value == 12) {
-                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
-                        } else if (value == 13 && tanggal > 5) {
-                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
-                        }
+                        // if (value == 12) {
+                        //     var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
+                        // } else if (value == 13 && tanggal > 5) {
+                        //     var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
+                        // }
 
                         // alertWarning(message)
-                        $('#error-penghasilan').removeClass('hidden').html(message)
-                        $("#penghasilan-kat").val("")
+                        // $('#error-penghasilan').removeClass('hidden').html(message)
+                        // $("#penghasilan-kat").val("")
                     }
                 } else if(value == 13){
                     if (tanggal >= 1 && tanggal <= 5 ) {
@@ -171,17 +171,15 @@
                         $('#error-penghasilan').addClass('hidden')
                     }
                     else {
-                        if (value == 12) {
-                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
-                            nmbr++
-
-                            $('#error-penghasilan').removeClass('hidden').html(message)
-                            $("#penghasilan-kat").val("")
-                        } else if (value == 13) {
-                            // var message = 'kosong'
-                            $('#error-penghasilan').addClass('hidden')
-                        }
-
+                        // if (value == 12) {
+                        //     var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
+                        //     nmbr++
+                        //     $('#error-penghasilan').removeClass('hidden').html(message)
+                        //     $("#penghasilan-kat").val("")
+                        // } else if (value == 13) {
+                        //     // var message = 'kosong'
+                        //     $('#error-penghasilan').addClass('hidden')
+                        // }
                     }
                 } else {
                     $('#error-penghasilan').addClass('hidden')
