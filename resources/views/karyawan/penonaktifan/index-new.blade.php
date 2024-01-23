@@ -102,7 +102,7 @@
                     </div>
                     <div class="pagination">
                         @if ($karyawan instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                            {{ $karyawan->links('pagination::tailwind-new') }}
+                            {{ $karyawan->links('pagination::tailwind') }}
                         @endif
                     </div>
                 </div>

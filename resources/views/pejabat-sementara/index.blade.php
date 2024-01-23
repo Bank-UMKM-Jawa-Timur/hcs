@@ -99,7 +99,7 @@
                     </div>
                     <div class="pagination">
                         @if ($pjs instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                            {{ $pjs->links('pagination::tailwind-new') }}
+                            {{ $pjs->links('pagination::tailwind') }}
                         @endif
                     </div>
                 </div>

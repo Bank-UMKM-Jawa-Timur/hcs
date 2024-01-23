@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 @include('vendor.select2')
 
 @php
@@ -18,41 +18,45 @@
             width: 90%;
         }
     </style>
-
-    <div class="card-header">
-        <div class="card-header">
-            <div class="card-title">
-                <h5 class="card-title font-weight-bold">Histori Surat Peringatan</h5>
-                <p class="card-title"><a href="">Histori</a> > <a href="/surat-peringatan">Surat Peringatan</a></p>
+    <div class="head mt-5">
+        <div class="flex gap-5 justify-between items-center">
+            <div class="heading">
+                <h2 class="text-2xl font-bold tracking-tighter">Histori Surat Peringatan</h2>
+                <div class="breadcrumb">
+                    <a href="#" class="text-sm text-gray-500">Histori</a>
+                    <i class="ti ti-circle-filled text-theme-primary"></i>
+                    <a href="/" class="text-sm text-gray-500 font-bold">Surat Peringatan</a>
+                </div>
             </div>
+
         </div>
     </div>
 
-    <div class="card-body ml-3 mr-3">
-        <form action="{{ route('surat-peringatan.history') }}" method="get">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
+    <div class="body-pages">
+        <div class="table-wrapping">
+            <form action="{{ route('surat-peringatan.history') }}" method="get">
+                <div class="flex">
+                    <div class="input-box w-full">
                         <label for="kategori">Kategori</label>
-                        <select id="kategori" class="form-control">
+                        <select id="kategori" class="form-input">
                             <option value="" selected>Semua Data</option>
                             <option value="nip" @selected($request->nip)>Karyawan</option>
                             <option value="tanggal" @selected($request->first_date || $request->end_date)>Tanggal</option>
                             <option value="tahun" @selected($request->tahun)>Tahun</option>
                         </select>
                     </div>
+                    <div class="row w-" id="kategori-wrapper"></div>
                 </div>
-            </div>
-            <div class="row" id="kategori-wrapper"></div>
-            <div class="pt-4 pb-4">
-                <button type="submit" class="is-btn is-primary">Tampilkan</button>
-            </div>
-        </form>
+                <div class="pt-4 pb-4">
+                    <button type="submit" class="btn btn-primary is-btn is-primary">Tampilkan</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div class="card ml-3 mr-3 mb-3 mt-3 shadow">
-        <div class="col-md-12">
-            <div class="table-responsive overflow-hidden pt-2">
+    <div class="body-pages">
+        <div class="table-wrapping">
+            <div class="">
                 <table class="table text-center cell-border stripe" id="sp-table" style="width: 100%;">
                     <thead style="background-color: #CCD6A6;">
                         <tr>

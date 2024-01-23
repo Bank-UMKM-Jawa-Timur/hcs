@@ -38,7 +38,7 @@
                 <p class="mb-4 text-sm text-center text-gray-500 dark:text-gray-400 sm:mb-0">
                     &copy; {{ date('Y') }} BANK UMKM JATIM. All rights reserved.
                 </p>
-        
+
             </footer>
           </div>
         </div>
@@ -146,6 +146,20 @@
             return token;
         }
     }
+    $('.page_length').on('change', function() {
+        $('#form').submit()
+    })
+    // Adjust pagination url
+    var btn_pagination = $('.pagination').find('a')
+    var page_url = window.location.href
+    $('.pagination').find('a').each(function(i, obj) {
+        if (page_url.includes('page_length')) {
+            btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
+        }
+        if (page_url.includes('q')) {
+            btn_pagination[i].href += `&q=${$('#q').val()}`
+        }
+    })
 </script>
     @stack('extraScript')
     @stack('script')
