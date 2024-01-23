@@ -118,6 +118,9 @@ class KaryawanController extends Controller
 
     public function upload_karyawan(Request $request)
     {
+        $request->validate([
+            'upload_csv' => 'required',
+        ]);
         $file = $request->file('upload_csv');
         $import = new ImportKaryawan;
         $import = $import->import($file);
