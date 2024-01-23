@@ -259,6 +259,7 @@ class PenghasilanTidakTeraturRepository
                 ->whereNull('tanggal_penonaktifan')
                 ->where('penghasilan_tidak_teratur.id_tunjangan', $idTunjangan)
                 ->whereDate('penghasilan_tidak_teratur.created_at', $createdAt)
+                ->where('penghasilan_tidak_teratur.kd_entitas', $kd_entitas)
                 ->where('penghasilan_tidak_teratur.bulan', $bulan)
                 ->where('mst_tunjangan.kategori','tidak teratur')
                 ->where(function ($query) use ($search) {
@@ -266,11 +267,11 @@ class PenghasilanTidakTeraturRepository
                         ->orWhere('nominal', 'like', "%$search%")
                         ->orWhere('c.nama_cabang', 'like', "%$search%");
                 })
-                ->where(function ($query) use ($kd_entitas, $kode_cabang_arr) {
-                    if ($kd_entitas != 'pusat') {
-                        $query->where('mst_karyawan.kd_entitas', $kd_entitas);
-                    }
-                })
+                // ->where(function ($query) use ($kd_entitas, $kode_cabang_arr) {
+                //     if ($kd_entitas != 'pusat') {
+                //         $query->where('mst_karyawan.kd_entitas', $kd_entitas);
+                //     }
+                // })
                 ->orderBy('penghasilan_tidak_teratur.kd_entitas')
                 ->orderBy('mst_tunjangan.id', 'ASC')
                 ->paginate($limit);
