@@ -55,7 +55,7 @@ class SlipGajiRepository
         ->with('bagian')
         ->where('nip',$nip)
         ->orderByRaw($this->orderRaw)
-        ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+        ->orderBy('mst_karyawan.kd_entitas')
         ->get();
 
         foreach ($karyawan as $key => $value) {

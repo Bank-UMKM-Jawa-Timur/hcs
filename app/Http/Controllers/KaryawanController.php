@@ -71,7 +71,7 @@ class KaryawanController extends Controller
         $karyawanRepo = new KaryawanRepository();
         $data = $karyawanRepo->getAllKaryawan('');
         $data = DataTables::collection($data)->toJson();
-        // $data = DataTables::of($data)->make(true);
+
         return $data;
     }
 

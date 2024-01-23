@@ -41,6 +41,7 @@ class HistoryJabatanController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         $nip = $request->nip;
         $data_karyawan = DB::table('mst_karyawan')->where('nip', $nip)->first();
         $karyawan = DB::table('demosi_promosi_pangkat')
@@ -54,7 +55,7 @@ class HistoryJabatanController extends Controller
             ->join('mst_karyawan as karyawan', 'karyawan.nip', '=', 'demosi_promosi_pangkat.nip')
             ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
             ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
-            ->orderBy('id', 'desc')
+            ->orderBy('demosi_promosi_pangkat.id', 'desc')
             ->get();
 
         $karyawan->map(function($data) {
@@ -128,7 +129,6 @@ class HistoryJabatanController extends Controller
             }
         }
         usort($dataHistory, fn($a, $b) => strtotime($a["tanggal_pengesahan"]) - strtotime($b["tanggal_pengesahan"]));
-        // dd($dataHistory[0]['tanggal_pengesahan']);
 
         return view('history.history', ['karyawan' => $dataHistory, 'data_karyawan' => $data_karyawan, 'data_migrasi' => $data_migrasi]);
     }
