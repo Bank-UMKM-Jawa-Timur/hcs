@@ -18,16 +18,16 @@ class CetakGajiRepository
             WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
             WHEN mst_karyawan.kd_jabatan='DIRHAN' THEN 4
             WHEN mst_karyawan.kd_jabatan='KOMU' THEN 5
-            WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 6
-            WHEN mst_karyawan.kd_jabatan='PSD' THEN 7
-            WHEN mst_karyawan.kd_jabatan='PC' THEN 8
-            WHEN mst_karyawan.kd_jabatan='PBP' THEN 9
-            WHEN mst_karyawan.kd_jabatan='PBO' THEN 10
-            WHEN mst_karyawan.kd_jabatan='PEN' THEN 11
-            WHEN mst_karyawan.kd_jabatan='ST' THEN 12
-            WHEN mst_karyawan.kd_jabatan='NST' THEN 13
-            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 14
-            WHEN mst_karyawan.kd_jabatan='KOM' THEN 15 END ASC
+            WHEN mst_karyawan.kd_jabatan='KOM' THEN 7
+            WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 8
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 9
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 10
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 11
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 12
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 13
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 14
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 15
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 16 END ASC
         ";
     }
 
