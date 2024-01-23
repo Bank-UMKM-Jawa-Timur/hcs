@@ -1,144 +1,110 @@
-@extends('layouts.app-template')
+@extends('layouts.template')
 @include('vendor.select2')
 @section('content')
-{{-- <div class="card-header">
     <div class="card-header">
-        <h5 class="card-title font-weight-bold">Tambah Demosi</h5>
-        <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a
-                href="{{ route('demosi.index') }}">Demosi</a> > Tambah</p>
-    </div>
-</div> --}}
-<div class="head mt-5">
-    <div class="flex gap-5 justify-between items-center">
-        <div class="heading">
-            <h2 class="text-2xl font-bold tracking-tighter">Tambah Demosi</h2>
-            <div class="breadcrumb">
-                <a href="#" class="text-sm text-gray-500">Manajemen Karyawan</a>
-                <i class="ti ti-circle-filled text-theme-primary"></i>
-                <a href="#" class="text-sm text-gray-500 font-bold">Pergerakan Karir</a>
-                <i class="ti ti-circle-filled text-theme-primary"></i>
-                <a href="{{ route('demosi.index') }}" class="text-sm text-gray-500 font-bold">Demosi</a>
-                <i class="ti ti-circle-filled text-theme-primary"></i>
-                <p class="text-sm text-gray-500 font-bold">Tambah</p>
-            </div>
+        <div class="card-header">
+            <h5 class="card-title font-weight-bold">Tambah Demosi</h5>
+            <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="{{ route('demosi.index') }}">Demosi</a> > Tambah</p>
         </div>
     </div>
-</div>
 
-<div class="body-pages">
-    <div class="table-wrapping">
-        <form action="{{ route('demosi.store') }}" method="POST" enctype="multipart/form-data" name="divis"
-            class="form-group">
+    <div class="card-body ml-3 mr-3">
+        <form action="{{ route('demosi.store') }}" method="POST" enctype="multipart/form-data" name="divis" class="form-group">
             @csrf
             <input type="hidden" name="kd_entity" value="">
             <input type="hidden" name="kd_bagian_lama">
-            <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
-                <div class="input-box">
-                    <label for="">Karyawan:</label>
-                    <select name="nip" id="nip" class="form-input"></select>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="">Karyawan:</label>
+                        <select name="nip" id="nip" class="form-control"></select>
+                    </div>
                 </div>
-                <div class="input-box">
-                    <label for="">Status Jabatan</label>
-                    <input type="text" id="status_jabatan" class="form-input" disabled>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="">Status Jabatan</label>
+                        <input type="text" id="status_jabatan" class="form-control" disabled>
+                    </div>
                 </div>
-                <div class="input-box">
-                    <label for="">Pangkat dan Golongan Sekarang</label>
-                    <input type="text" id="panggol" class="form-input" disabled>
-                    <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-input">
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="">Pangkat dan Golongan Sekarang</label>
+                        <input type="text" id="panggol" class="form-control" disabled>
+                        <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-control">
+                    </div>
                 </div>
             </div>
-            <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
+            <div class="row">
                 <input type="hidden" id="bagian_lama" name="bagian_lama">
                 <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
-                <div class="input-box">
-                    <label for="">Jabatan Sekarang</label>
-                    <input type="text" class="form-input" disabled name="" id="jabatan_lama">
-                    <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
-                </div>
-                <div class="input-box">
-                    <label for="">Kantor Sekarang</label>
-                    <input type="text" class="form-input" disabled name="" id="kantor_lama">
-                </div>
                 <div class="" id="">
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">Jabatan Sekarang</label>
+                        <input type="text" class="form-control" disabled name="" id="jabatan_lama">
+                        <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">Kantor Sekarang</label>
+                        <input type="text" class="form-control" disabled name="" id="kantor_lama">
+                    </div>
                 </div>
             </div>
             <hr>
-            <h6 class="mt-5 font-bold text-lg">Pembaruan NIP</h6>
-            <div class="row grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
-                <div class="input-box">
+            <div class="row align-content-center">
+                <div class="col-lg-12">
+                    <h6>Pembaruan NIP</h6>
+                </div>
+                <div class="col-md-6 form-group">
                     <label for="NIP Baru">
                         NIP Baru
                     </label>
-                    <input type="text" class="form-input" name="nip_baru" id="nip_baru">
+                    <input type="text" class="form-control" name="nip_baru" id="nip_baru">
                 </div>
             </div>
-            <hr class="mt-5 mb-5">
-                <h6 class="font-bold text-lg">Pembaruan Data Jabatan</h6>
-            <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
-                    <div class="input-box">
+            <hr>
+            <div class="row align-content-center">
+                <div class="col-lg-12">
+                    <h6>Pembaruan Data Jabatan</h6>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
                         <label for="">Status Jabatan</label>
-                        <select name="status_jabatan" id=""
-                            class="@error('status_jabatan') is-invalid @enderror form-input">
+                        <select name="status_jabatan" id="" class="@error('status_jabatan') is-invalid @enderror form-control">
                             <option value="">--- Pilih ---</option>
                             <option value="Definitif">Definitif</option>
                             <option value="Penjabat">Penjabat</option>
                         </select>
                     </div>
-                    <div class="input-box">
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
                         <label for="">Pangkat dan Golongan</label>
-                        <select name="panggol" id="" class="@error('status_jabatan') is-invalid @enderror form-input">
+                        <select name="panggol" id="" class="@error('status_jabatan') is-invalid @enderror form-control">
                             <option value="">--- Pilih ---</option>
                             @foreach ($panggol as $item)
-                            <option value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
+                                <option value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
                             @endforeach
                         </select>
                     </div>
-            </div>
-            <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
-                <div class="input-box">
-                    <label for="">Jabatan Baru</label>
-                    <select name="id_jabatan_baru" id="jabatan_baru"
-                        class="@error('id_jabatan_baru') @enderror form-input">
-                        <option value="-">--- Pilih ---</option>
-                        @foreach ($jabatan as $item)
-                        <option {{ old('id_jabatan_baru')==$item->kd_jabatan ? 'selected' : '-' }} value="{{
-                            $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
-                        @endforeach
-                    </select>
-                    @error('id_jabatan_baru')
-                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
-                    @enderror
                 </div>
-                <div class="input-box">
-                    <label for="kantor">Kantor</label>
-                    <select name="kantor" id="kantor" class="@error('kantor') @enderror form-input" disabled>
-                        <option value="-">--- Pilih Kantor ---</option>
-                        <option @selected(old('kantor')=='1' ) value="1">Kantor Pusat</option>
-                        <option @selected(old('kantor')=='2' ) value="2">Kantor Cabang</option>
-                    </select>
-                    @error('kantor')
-                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="input-box" id="divisions-section"></div>
-                <div class="input-box" id="subdivs-section"></div>
-                <div class="input-box" id="bagians-section"></div>
-                <div class="input-box" id="branches-section"></div>
             </div>
-            {{-- <div class="row align-content-center">
+            <div class="row align-content-center">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="">Jabatan Baru</label>
-                        <select name="id_jabatan_baru" id="jabatan_baru"
-                            class="@error('id_jabatan_baru') @enderror form-control">
+                        <select name="id_jabatan_baru" id="jabatan_baru" class="@error('id_jabatan_baru') @enderror form-control">
                             <option value="-">--- Pilih ---</option>
                             @foreach ($jabatan as $item)
-                            <option {{ old('id_jabatan_baru')==$item->kd_jabatan ? 'selected' : '-' }} value="{{
-                                $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
+                                <option {{ old('id_jabatan_baru') == $item->kd_jabatan ? 'selected' : '-' }} value="{{ $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
                             @endforeach
                         </select>
                         @error('id_jabatan_baru')
-                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -147,11 +113,11 @@
                         <label for="kantor">Kantor</label>
                         <select name="kantor" id="kantor" class="@error('kantor') @enderror form-control" disabled>
                             <option value="-">--- Pilih Kantor ---</option>
-                            <option @selected(old('kantor')=='1' ) value="1">Kantor Pusat</option>
-                            <option @selected(old('kantor')=='2' ) value="2">Kantor Cabang</option>
+                            <option @selected(old('kantor') == '1') value="1">Kantor Pusat</option>
+                            <option @selected(old('kantor') == '2') value="2">Kantor Cabang</option>
                         </select>
                         @error('kantor')
-                        <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -159,52 +125,30 @@
                 <div id="subdivs-section"></div>
                 <div id="bagians-section"></div>
                 <div id="branches-section"></div>
-            </div> --}}
-            <hr class="mb-5">
-            <h6 class="font-bold text-lg">Pembaruan Data Gaji</h6>
-            <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
-                    <div class="input-box">
-                        <label for="gj_pokok">Gaji Pokok</label>
-                        <input class="form-input" type="text" name="gj_pokok" id="gj_pokok" disabled>
-                    </div>
-                    <div class="input-box">
-                        <label for="gj_penyesuaian">Gaji Penyesuaian</label>
-                        <input class="form-input" type="text" name="gj_penyesuaian" id="gj_penyesuaian" disabled>
-                    </div>
             </div>
-            <hr class="mt-5 mb-5">
-            <h6 class="font-bold text-lg">Pembaruan Data Tunjangan</h6>
-            <div class="mt-3" id="tj">
-                <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
-                    <div class="input-box">
-                        <label for="is">Tunjangan</label>
-                        <select name="tunjangan[]" id="row_tunjangan" class="form-input">
-                            <option value="">--- Pilih ---</option>
-                            @foreach ($tunjangan as $item)
-                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
-                            @endforeach
-                        </select>
+            <hr>
+            <div class="row align-content-center">
+                <div class="col-lg-12">
+                    <h6>Pembaruan Data Gaji</h6>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="gj_pokok">Gaji Pokok</label>
+                        <input class="form-control" type="text" name="gj_pokok" id="gj_pokok" disabled>
                     </div>
-                    <div class="input-box">
-                        <label for="is_nama">Nominal</label>
-                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="gj_penyesuaian">Gaji Penyesuaian</label>
+                        <input class="form-control" type="text" name="gj_penyesuaian" id="gj_penyesuaian" disabled>
                     </div>
-                    <div class="input-box mt-8">
-                        <div class="flex gap-10">
-                            <button class="btn btn-primary" type="button" id="btn-add">
-                                <i class="ti ti-plus"></i>
-                            </button>
-                            <button class="btn btn-primary-light" type="button" id="btn-delete">
-                                <i class="ti ti-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <input type="hidden" name="id_tk[]" id="id_tk" value="">
-                    <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="0">
                 </div>
             </div>
-            {{-- <div class="row align-content-center">
+            <hr>
+            <div class="row align-content-center">
                 <div class="col-lg-12">
+                    <h6>Pembaruan Data Tunjangan</h6>
                 </div>
                 <div class="col-lg-12" id="tj">
                     <div class="row pb-3">
@@ -214,7 +158,7 @@
                                 <select name="tunjangan[]" id="row_tunjangan" class="form-control">
                                     <option value="">--- Pilih ---</option>
                                     @foreach ($tunjangan as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -239,48 +183,51 @@
                         </div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
             <hr>
-            <h6 class="mt-5 font-bold text-lg">Pengesahan</h6>
-            <div class="row grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
-                <div class="input-box">
-                    <label for="">Tanggal Pengesahan</label>
-                    <input type="date" class="form-input"
-                        name="@error('tanggal_pengesahan') @enderror tanggal_pengesahan" id=""
-                        value="{{ old('tanggal_pengesahan') }}">
-                    @error('tanggal_pengesahan')
-                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
-                    @enderror
+            <div class="row align-content-center justify-content-center">
+                <div class="col-lg-12">
+                    <h6>Pengesahan</h6>
                 </div>
-                <div class="input-box">
-                    <label for="">Surat Keputusan</label>
-                    <input type="text" class="@error('bukti_sk') @enderror form-input" name="bukti_sk"
-                        id="inputGroupFile01" value="{{ old('bukti_sk') }}">
-                    @error('bukti_sk')
-                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
-                    @enderror
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">Tanggal Pengesahan</label>
+                        <input type="date" class="form-control" name="@error('tanggal_pengesahan') @enderror tanggal_pengesahan" id="" value="{{ old('tanggal_pengesahan') }}">
+                        @error('tanggal_pengesahan')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
-                <div class="col-md-4 input-box">
+                <div class= "col-md-4">
+                    <div class="form-group">
+                        <label for="">Surat Keputusan</label>
+                        <input type="text" class="@error('bukti_sk') @enderror form-control" name="bukti_sk" id="inputGroupFile01" value="{{ old('bukti_sk') }}">
+                        @error('bukti_sk')
+                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-4 form-group">
                     <label for="file_sk">Dokumen SK</label>
                     <div class="custom-file col-md-12">
-                        <input type="file" name="file_sk" class="form-input" id="validatedCustomFile"
-                            accept=".pdf">
-                        {{-- <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file(.pdf)
-                            ...</label> --}}
-                    </div>
+                        <input type="file" name="file_sk" class="custom-file-input" id="validatedCustomFile" accept=".pdf">
+                        <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file(.pdf) ...</label>
+                    </div>  
                     @error('file_sk')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="">Keterangan Jabatan</label>
+                        <textarea name="ket_jabatan" class="form-control" id="ket_jabatan"></textarea>
+                    </div>
+                </div>
             </div>
-            <div class="input-box">
-                <label for="">Keterangan Jabatan</label>
-                <textarea name="ket_jabatan" class="form-input" id="ket_jabatan"></textarea>
+                <button type="submit" class="is-btn is-primary-light">Simpan</button>
             </div>
-            <button type="submit" class="btn btn-primary mt-5">Simpan</button>
         </form>
     </div>
-</div>
 @endsection
 
 @push('script')
@@ -334,8 +281,8 @@ $('#nip').select2({
 
 
 @section('custom_script')
-<script>
-    var x = 0;
+    <script>
+        var x = 0;
         // Give divisi option's value
         function fillDivision(data) {
             const section = $('#divisions-section');
@@ -343,10 +290,12 @@ $('#nip').select2({
             section.empty();
             section.addClass('col-md-4');
             section.append(`
+                <div class="form-group">
                     <label for="divisi">Divisi</label>
-                    <select name="kd_divisi" id="divisi" class="form-input">
+                    <select name="kd_divisi" id="divisi" class="form-control">
                         <option value="">--- Pilih divisi ---</option>
-                    </select>`
+                    </select>
+                </div>`
             );
 
             $.each(data, function(i, item){
@@ -376,10 +325,12 @@ $('#nip').select2({
 
             section.addClass('col-md-4');
             section.append(`
+                <div class="form-group">
                     <label for="sub_divisi">Sub divisi</label>
-                    <select name="kd_subdiv" id="sub_divisi" class="form-input">
+                    <select name="kd_subdiv" id="sub_divisi" class="form-control">
                         <option value="">--- Pilih sub divisi ---</option>
-                    </select>`
+                    </select>
+                </div>`
             );
 
             $('#sub_divisi').empty();
@@ -409,10 +360,12 @@ $('#nip').select2({
 
             section.addClass('col-md-4');
             section.append(`
+                <div class="form-group">
                     <label for="kd_bagian">Bagian</label>
-                    <select name="kd_bagian" id="kd_bagian" class="form-input">
+                    <select name="kd_bagian" id="kd_bagian" class="form-control">
                         <option value="">--- Pilih ---</option>
-                    </select>`
+                    </select>
+                </div>`
             );
 
             $('#kd_bagian').empty();
@@ -430,10 +383,12 @@ $('#nip').select2({
 
             $('#divisions-section').addClass('col-md-4');
             $("#divisions-section").append(`
+                    <div class="form-group">
                         <label for="kd_cabang">Cabang</label>
-                        <select name="kd_cabang" id="cabang" class="form-input">
+                        <select name="kd_cabang" id="cabang" class="form-control">
                             <option value="">--- Pilih Cabang ---</option>
-                        </select>`
+                        </select>
+                    </div>`
             );
             $.each(data, function(i, item){
                 $('#cabang').append('<option value="'+item.kd_cabang+'">'+item.nama_cabang+'</option>')
@@ -501,65 +456,73 @@ $('#nip').select2({
                         $.each(res.data_tj, function(i, item){
                             var idTj = item.id_tunjangan
                             $("#tj").append(`
-                                <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
-                                    <div class="input-box">
-                                        <label for="is">Tunjangan</label>
-                                        <select name="tunjangan[]" id="tunjangan`+i+`" class="form-input">
-                                            <option value="">--- Pilih ---</option>
-                                            @foreach ($tunjangan as $item)
-                                            <option value="{{ $item->id }}" ${ idTj === {{ $item->id }} ? 'selected' : '' }>{{ $item->nama_tunjangan }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="input-box">
-                                        <label for="is_nama">Nominal</label>
-                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input" value="`+formatRupiah(item.nominal.toString())+`">
-                                    </div>
-                                    <div class="input-box mt-8">
-                                        <div class="flex gap-10">
-                                            <button class="btn btn-primary" type="button" id="btn-add">
-                                                <i class="ti ti-plus"></i>
-                                            </button>
-                                            <button class="btn btn-primary-light" type="button" id="btn-delete">
-                                                <i class="ti ti-minus"></i>
-                                            </button>
+                            <div class="row" id="row_tunjangan">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="is">Tunjangan</label>
+                                            <select name="tunjangan[]" id="tunjangan`+i+`" class="form-control">
+                                                <option value="">--- Pilih ---</option>
+                                                @foreach ($tunjangan as $item)
+                                                    <option value="{{ $item->id }}" ${ idTj === {{ $item->id }} ? 'selected' : '' }>{{ $item->nama_tunjangan }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <input type="hidden" name="id_tk[]" id="id_tk" value="`+item.id+`">
                                     <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="`+item.nominal+`">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="is_nama">Nominal</label>
+                                            <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control" value="`+formatRupiah(item.nominal.toString())+`">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 mt-3">
+                                        <button class="btn btn-info" type="button" id="btn-add">
+                                            <i class="bi-plus-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-1 mt-3">
+                                        <button class="btn btn-info" type="button" id="btn-delete">
+                                            <i class="bi-dash-lg"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             `);
                             setTunjangan(i, item.id_tunjangan)
                         })
                     } else{
                         $('#tj').append(`
-                        <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
-                            <div class="input-box">
-                                <label for="is">Tunjangan</label>
-                                <select name="tunjangan[]" id="row_tunjangan" class="form-input">
-                                    <option value="">--- Pilih ---</option>
-                                    @foreach ($tunjangan as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="input-box">
-                                <label for="is_nama">Nominal</label>
-                                <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
-                            </div>
-                            <div class="input-box mt-8">
-                                <div class="flex gap-10">
-                                    <button class="btn btn-primary" type="button" id="btn-add">
-                                        <i class="ti ti-plus"></i>
+                            <div class="row pb-3">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="is">Tunjangan</label>
+                                        <select name="tunjangan[]" id="row_tunjangan" class="form-control">
+                                            <option value="">--- Pilih ---</option>
+                                            @foreach ($tunjangan as $item)
+                                                <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                                <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="0">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="is_nama">Nominal</label>
+                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-1 mt-3">
+                                    <button class="btn btn-info" type="button" id="btn-add">
+                                        <i class="bi-plus-lg"></i>
                                     </button>
-                                    <button class="btn btn-primary-light" type="button" id="btn-delete">
-                                        <i class="ti ti-minus"></i>
+                                </div>
+                                <div class="col-md-1 mt-3">
+                                    <button class="btn btn-info" type="button" id="btn-delete">
+                                        <i class="bi-dash-lg"></i>
                                     </button>
                                 </div>
                             </div>
-                            <input type="hidden" name="id_tk[]" id="id_tk" value="">
-                            <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="0">
-                        </div>
                         `);
                     }
                 }
@@ -567,33 +530,37 @@ $('#nip').select2({
         });
         $('#tj').on('click', "#btn-add", function(){
             $('#tj').append(`
-                <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
-                    <div class="input-box">
-                        <label for="is">Tunjangan</label>
-                        <select name="tunjangan[]" id="row_tunjangan" class="form-input">
-                            <option value="">--- Pilih ---</option>
-                            @foreach ($tunjangan as $item)
-                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="input-box">
-                        <label for="is_nama">Nominal</label>
-                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
-                    </div>
-                    <div class="input-box mt-8">
-                        <div class="flex gap-10">
-                            <button class="btn btn-primary" type="button" id="btn-add">
-                                <i class="ti ti-plus"></i>
-                            </button>
-                            <button class="btn btn-primary-light" type="button" id="btn-delete">
-                                <i class="ti ti-minus"></i>
-                            </button>
+            <div class="row pb-3">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is">Tunjangan</label>
+                                    <select name="tunjangan[]" id="row_tunjangan" class="form-control">
+                                        <option value="">--- Pilih ---</option>
+                                        @foreach ($tunjangan as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                            <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="0">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="is_nama">Nominal</label>
+                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-add">
+                                    <i class="bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-info" type="button" id="btn-delete">
+                                    <i class="bi-dash-lg"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <input type="hidden" name="id_tk[]" id="id_tk" value="">
-                    <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="0">
-                </div>
             `);
             x++
         });
@@ -686,5 +653,5 @@ $('#nip').select2({
                 kantor.attr("disabled", true);
             }
         });
-</script>
+    </script>
 @endsection

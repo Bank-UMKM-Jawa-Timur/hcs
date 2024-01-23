@@ -1,11 +1,11 @@
 @extends('layouts.app-template')
 @include('vendor.select2')
 @section('content')
-    <div class="head mt-5">
-        <div class="flex gap-5 justify-between items-center">
-            <div class="heading">
-                <h2 class="text-2xl font-bold tracking-tighter">Tambah Mutasi</h2>
-                <div class="breadcrumb">
+<div class="head mt-5">
+    <div class="flex gap-5 justify-between items-center">
+        <div class="heading">
+            <h2 class="text-2xl font-bold tracking-tighter">Tambah Mutasi</h2>
+            <div class="breadcrumb">
                 <a href="#" class="text-sm text-gray-500">Manajemen Karyawan</a>
                 <i class="ti ti-circle-filled text-theme-primary"></i>
                 <a href="#" class="text-sm text-gray-500 font-bold">Pergerakan Karir</a>
@@ -13,30 +13,31 @@
                 <a href="{{ route('mutasi.index') }}" class="text-sm text-gray-500 font-bold">Mutasi</a>
                 <i class="ti ti-circle-filled text-theme-primary"></i>
                 <p class="text-sm text-gray-500 font-bold">Tambah</p>
-                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="body-pages">
-        <div class="table-wrapping">
-        <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data" name="divis" class="form-group">
+<div class="body-pages">
+    <div class="table-wrapping">
+        <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data" name="divis"
+            class="form-group">
             @csrf
             <input type="hidden" name="kd_entity" value="">
             <input type="hidden" name="kd_bagian_lama">
             <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
                 <div class="input-box">
-                        <label for="">Karyawan:</label>
-                        <select name="nip" id="nip" class="form-input"></select>
+                    <label for="">Karyawan:</label>
+                    <select name="nip" id="nip" class="form-input"></select>
                 </div>
                 <div class="input-box">
-                        <label for="">Status Jabatan</label>
-                        <input type="text" id="status_jabatan" class="form-input" disabled>
+                    <label for="">Status Jabatan</label>
+                    <input type="text" id="status_jabatan" class="form-input" disabled>
                 </div>
                 <div class="input-box">
-                        <label for="">Pangkat dan Golongan Sekarang</label>
-                        <input type="text" id="panggol" class="form-input" disabled>
-                        <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-input">
+                    <label for="">Pangkat dan Golongan Sekarang</label>
+                    <input type="text" id="panggol" class="form-input" disabled>
+                    <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-input">
                 </div>
             </div>
             <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
@@ -71,46 +72,49 @@
                 <h6 class="font-bold text-lg">Pembaruan Data Jabatan</h6>
                 <br>
                 <div class="input-box">
-                        <label for="">Status Jabatan</label>
-                        <select name="status_jabatan" id="" class="@error('status_jabatan') is-invalid @enderror form-input">
-                            <option value="">--- Pilih ---</option>
-                            <option value="Definitif">Definitif</option>
-                            <option value="Penjabat">Penjabat</option>
-                        </select>
+                    <label for="">Status Jabatan</label>
+                    <select name="status_jabatan" id=""
+                        class="@error('status_jabatan') is-invalid @enderror form-input">
+                        <option value="">--- Pilih ---</option>
+                        <option value="Definitif">Definitif</option>
+                        <option value="Penjabat">Penjabat</option>
+                    </select>
                 </div>
                 <div class="input-box">
-                        <label for="">Pangkat dan Golongan</label>
-                        <select name="panggol" id="" class="@error('status_jabatan') is-invalid @enderror form-input">
-                            <option value="">--- Pilih ---</option>
-                            @foreach ($panggol as $item)
-                                <option value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
-                            @endforeach
-                        </select>
+                    <label for="">Pangkat dan Golongan</label>
+                    <select name="panggol" id="" class="@error('status_jabatan') is-invalid @enderror form-input">
+                        <option value="">--- Pilih ---</option>
+                        @foreach ($panggol as $item)
+                        <option value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
                 <div class="input-box">
-                        <label for="">Jabatan Baru</label>
-                        <select name="id_jabatan_baru" id="jabatan_baru" class="@error('id_jabatan_baru') @enderror form-input">
-                            <option value="-">--- Pilih ---</option>
-                            @foreach ($jabatan as $item)
-                                <option {{ old('id_jabatan_baru') == $item->kd_jabatan ? 'selected' : '-' }} value="{{ $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
-                            @endforeach
-                        </select>
-                        @error('id_jabatan_baru')
-                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
-                        @enderror
+                    <label for="">Jabatan Baru</label>
+                    <select name="id_jabatan_baru" id="jabatan_baru"
+                        class="@error('id_jabatan_baru') @enderror form-input">
+                        <option value="-">--- Pilih ---</option>
+                        @foreach ($jabatan as $item)
+                        <option {{ old('id_jabatan_baru')==$item->kd_jabatan ? 'selected' : '-' }} value="{{
+                            $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
+                        @endforeach
+                    </select>
+                    @error('id_jabatan_baru')
+                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="input-box">
-                        <label for="kantor">Kantor</label>
-                        <select name="kantor" id="kantor" class="@error('kantor') @enderror form-input" disabled>
-                            <option value="-">--- Pilih Kantor ---</option>
-                            <option @selected(old('kantor') == '1') value="1">Kantor Pusat</option>
-                            <option @selected(old('kantor') == '2') value="2">Kantor Cabang</option>
-                        </select>
-                        @error('kantor')
-                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
-                        @enderror
+                    <label for="kantor">Kantor</label>
+                    <select name="kantor" id="kantor" class="@error('kantor') @enderror form-input" disabled>
+                        <option value="-">--- Pilih Kantor ---</option>
+                        <option @selected(old('kantor')=='1' ) value="1">Kantor Pusat</option>
+                        <option @selected(old('kantor')=='2' ) value="2">Kantor Cabang</option>
+                    </select>
+                    @error('kantor')
+                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div id="divisions-section"></div>
                 <div id="subdivs-section"></div>
@@ -122,12 +126,12 @@
                 <h6 class="font-bold text-lg">Pembaruan Data Gaji</h6>
                 <br>
                 <div class="input-box">
-                        <label for="gj_pokok">Gaji Pokok</label>
-                        <input class="form-input" type="text" name="gj_pokok" id="gj_pokok" disabled>
+                    <label for="gj_pokok">Gaji Pokok</label>
+                    <input class="form-input" type="text" name="gj_pokok" id="gj_pokok" disabled>
                 </div>
                 <div class="input-box">
-                        <label for="gj_penyesuaian">Gaji Penyesuaian</label>
-                        <input class="form-input" type="text" name="gj_penyesuaian" id="gj_penyesuaian" disabled>
+                    <label for="gj_penyesuaian">Gaji Penyesuaian</label>
+                    <input class="form-input" type="text" name="gj_penyesuaian" id="gj_penyesuaian" disabled>
                 </div>
             </div>
             <br>
@@ -140,7 +144,7 @@
                         <select name="tunjangan[]" id="row_tunjangan" class="form-input">
                             <option value="">--- Pilih ---</option>
                             @foreach ($tunjangan as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -163,35 +167,35 @@
                 </div>
             </div>
             <br>
-                {{-- <div class="col-lg-12" id="tj">
-                    <h6 class="font-bold text-lg">Pembaruan Data Tunjangan</h6>
-                    <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
-                        <br>
-                        <div class="input-box">
-                                <label for="is">Tunjangan</label>
-                                <select name="tunjangan[]" id="row_tunjangan" class="form-input">
-                                    <option value="">--- Pilih ---</option>
-                                    @foreach ($tunjangan as $item)
-                                        <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
-                                    @endforeach
-                                </select>
-                        </div>
-                        <div class="input-box">
-                                <label for="is_nama">Nominal</label>
-                                <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
-                        </div>
-                        <div class="input-box flex gap-5">
-                            <button class="btn btn-primary" type="button" id="btn-add">
-                                <i class="ti ti-plus"></i>
-                            </button>
-                            <button class="btn btn-primary-light" type="button" id="btn-delete">
-                                <i class="ti ti-minus"></i>
-                            </button>
-                        </div>
+            {{-- <div class="col-lg-12" id="tj">
+                <h6 class="font-bold text-lg">Pembaruan Data Tunjangan</h6>
+                <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
+                    <br>
+                    <div class="input-box">
+                        <label for="is">Tunjangan</label>
+                        <select name="tunjangan[]" id="row_tunjangan" class="form-input">
+                            <option value="">--- Pilih ---</option>
+                            @foreach ($tunjangan as $item)
+                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <input type="hidden" name="id_tk[]" id="id_tk" value="">
-                    <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="0">
-                </div> --}}
+                    <div class="input-box">
+                        <label for="is_nama">Nominal</label>
+                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
+                    </div>
+                    <div class="input-box flex gap-5">
+                        <button class="btn btn-primary" type="button" id="btn-add">
+                            <i class="ti ti-plus"></i>
+                        </button>
+                        <button class="btn btn-primary-light" type="button" id="btn-delete">
+                            <i class="ti ti-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                <input type="hidden" name="nominal_lama[]" id="nominal_lama" value="0">
+            </div> --}}
             <hr>
             <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
                 <div class="col-lg-12">
@@ -199,27 +203,31 @@
                 </div>
                 <br>
                 <div class="input-box">
-                        <label for="">Tanggal Pengesahan</label>
-                        <input type="date" class="form-input" name="@error('tanggal_pengesahan') @enderror tanggal_pengesahan" id="" value="{{ old('tanggal_pengesahan') }}">
-                        @error('tanggal_pengesahan')
-                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
-                        @enderror
+                    <label for="">Tanggal Pengesahan</label>
+                    <input type="date" class="form-input"
+                        name="@error('tanggal_pengesahan') @enderror tanggal_pengesahan" id=""
+                        value="{{ old('tanggal_pengesahan') }}">
+                    @error('tanggal_pengesahan')
+                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
-                <div class= "input-box">
-                        <label for="">Surat Keputusan</label>
-                        <input type="text" class="@error('bukti_sk') @enderror form-input" name="bukti_sk" id="inputGroupFile01" value="{{ old('bukti_sk') }}">
-                        @error('bukti_sk')
-                            <div class="mt-2 alert alert-danger">{{ $message }}</div>
-                        @enderror
+                <div class="input-box">
+                    <label for="">Surat Keputusan</label>
+                    <input type="text" class="@error('bukti_sk') @enderror form-input" name="bukti_sk"
+                        id="inputGroupFile01" value="{{ old('bukti_sk') }}">
+                    @error('bukti_sk')
+                    <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="input-box">
                     <label for="file_sk">Dokumen SK</label>
                     <div class="custom-file col-md-12">
                         <input type="file" name="file_sk" class="form-input" id="validatedCustomFile" accept=".pdf">
-                        {{-- <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file(.pdf) ...</label> --}}
-                    </div>  
+                        {{-- <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose
+                            file(.pdf) ...</label> --}}
+                    </div>
                     @error('file_sk')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                    <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -227,13 +235,12 @@
                 <label for="">Keterangan Jabatan</label>
                 <textarea name="ket_jabatan" class="form-input" id="ket_jabatan"></textarea>
             </div>
-             <div class="mt-3">
+            <div class="mt-3">
                 <button type="submit" class="btn btn-primary">Simpan</button>
-             </div>
             </div>
         </form>
     </div>
-    </div>
+</div>
 @endsection
 
 @push('extraScript')
@@ -287,8 +294,8 @@ $('#nip').select2({
 
 
 @section('custom_script')
-    <script>
-        var x = 0;
+<script>
+    var x = 0;
         // Give divisi option's value
         function fillDivision(data) {
             const section = $('#divisions-section');
@@ -648,5 +655,5 @@ $('#nip').select2({
                 kantor.attr("disabled", true);
             }
         });
-    </script>
+</script>
 @endsection
