@@ -13,7 +13,10 @@
     <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script>
-        $('#page_length').on('change', function() {
+        $('#page_length_proses').on('change', function() {
+            $('#form-filter').submit()
+        })
+        $('#page_length_final').on('change', function() {
             $('#form-filter').submit()
         })
 
@@ -23,9 +26,10 @@
             $(".loader-wrapper").fadeOut("slow");
         })
 
-        $('.nav-tabs li').on('click', function() {
+        $('.nav-tabs button').on('click', function() {
             $('#tab').val($(this).data('tab'))
             refreshPagination();
+
         })
 
         refreshPagination();
@@ -41,7 +45,7 @@
                 return uri + separator + key + "=" + value;
             }
         }
-        // {{--  function refreshPagination() {
+        //  function refreshPagination() {
         //     var btn_pagination = $(`.pagination`).find('a')
         //     var page_url = window.location.href
         //     $(`#myTabContent .active .pagination`).find('a').each(function(i, obj) {
@@ -69,18 +73,23 @@
         //             btn_pagination[i].href += `&q=${$('#q').val()}`
         //         }
         //     })
-        // }  --}}
+        // }
 
         function refreshPagination() {
             var btn_pagination = $("#myTabContent .active .pagination").find("a");
             var page_url = window.location.href;
 
             // Your custom query parameter and its value
+            let tab = $('#tab').val();
             var customParam = "";
-
             customParam += "&tab=" + $('#tab').val();
-            customParam += "&page_length=" + $('#page_length').val();
-            //customParam += "&q=" + $('#q').val();
+            if (tab == 'proses') {
+                customParam += "&page_length=" + $('#page_length_proses').val();
+            } else {
+                customParam += "&page_length=" + $('#page_length_final').val();
+
+            }
+            customParam += "&q=" + $('#q').val();
 
             btn_pagination.each(function (i, obj) {
                 // Clone the original href to avoid modifying the original link
