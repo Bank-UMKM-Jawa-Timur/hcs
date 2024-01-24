@@ -593,6 +593,13 @@
                         }
                     },
                     {
+                        data: "gaji.tj_teller",
+                        class: 'text-right',
+                        render:function(data, type, row){
+                            return formatRupiahExcel(data)
+                        }
+                    },
+                    {
                         data: "gaji.gj_penyesuaian",
                         class: 'text-right',
                         render:function(data, type, row){
@@ -737,67 +744,98 @@
                         .reduce( function (a, b) {
                             return Math.round(a) + Math.round(b);
                     }, 0 );
-                    var grandTotalGajiPenyesuian = api
+                    var grandTotalGajiTeller = api
                         .column( 11 )
                         .data()
                         .reduce( function (a, b) {
                             return Math.round(a) + Math.round(b);
                     }, 0 );
-                    var totalGajiPenyesuian = api
-                        .column( 11 ,{page:"current"})
+                    var totalGajiTeller = api
+                        .column( 11 ,{page:"current"} )
                         .data()
                         .reduce( function (a, b) {
                             return Math.round(a) + Math.round(b);
                     }, 0 );
-                    var grandTotalGajiTotal = api
+                    var grandTotalGajiPenyesuian = api
                         .column( 12 )
                         .data()
                         .reduce( function (a, b) {
                             return Math.round(a) + Math.round(b);
                     }, 0 );
-                    var totalGajiTotal = api
+                    var totalGajiPenyesuian = api
                         .column( 12 ,{page:"current"})
                         .data()
                         .reduce( function (a, b) {
                             return Math.round(a) + Math.round(b);
                     }, 0 );
+                    var grandTotalGajiTotal = api
+                        .column( 13 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return Math.round(a) + Math.round(b);
+                    }, 0 );
+                    var totalGajiTotal = api
+                        .column( 13 ,{page:"current"})
+                        .data()
+                        .reduce( function (a, b) {
+                            return Math.round(a) + Math.round(b);
+                    }, 0 );
                     var grandTotalGajiPPH = api
-                    .column( 13 )
+                    .column( 14 )
                     .data()
                     .reduce( function (a, b) {
                         return Math.round(a) + Math.round(b);
                     }, 0 );
                     var totalGajiPPH = api
-                    .column( 13 ,{page:"current"})
+                    .column( 14 ,{page:"current"})
                     .data()
                     .reduce( function (a, b) {
                         return Math.round(a) + Math.round(b);
                     }, 0 );
-                    $( api.column( 0 ).footer('.total') ).html('Total');
+                    // $( api.column( 0 ).footer('.total') ).html('Total');
                     var displayTotalGajiPokok = formatRupiahExcel(totalGajiPokok)
-                    $( api.column( 2 ).footer('.total') ).html(displayTotalGajiPokok);
+                    // $( api.column( 2 ).footer('.total') ).html(displayTotalGajiPokok);
                     var displayTotalGajiKeluarga = formatRupiahExcel(totalGajiKeluarga)
-                    $( api.column( 3 ).footer('.total') ).html(displayTotalGajiKeluarga);
+                    // $( api.column( 3 ).footer('.total') ).html(displayTotalGajiKeluarga);
                     var displayTotalGajiListrik = formatRupiahExcel(totalGajiListrik)
-                    $( api.column( 4 ).footer('.total') ).html(displayTotalGajiListrik);
+                    // $( api.column( 4 ).footer('.total') ).html(displayTotalGajiListrik);
                     var displayTotalGajiJabatan = formatRupiahExcel(totalGajiJabatan)
-                    $( api.column( 5 ).footer('.total') ).html(displayTotalGajiJabatan);
+                    // $( api.column( 5 ).footer('.total') ).html(displayTotalGajiJabatan);
                     var displayTotalGajiKhusus = formatRupiahExcel(totalGajiKhusus)
-                    $( api.column( 6 ).footer('.total') ).html(displayTotalGajiKhusus);
+                    // $( api.column( 6 ).footer('.total') ).html(displayTotalGajiKhusus);
                     var displayTotalGajiPerumahan = formatRupiahExcel(totalGajiPerumahan)
-                    $( api.column( 7 ).footer('.total') ).html(displayTotalGajiPerumahan);
+                    // $( api.column( 7 ).footer('.total') ).html(displayTotalGajiPerumahan);
                     var displayTotalGajiPelaksana = formatRupiahExcel(totalGajiPelaksana)
-                    $( api.column( 8 ).footer('.total') ).html(displayTotalGajiPelaksana);
+                    // $( api.column( 8 ).footer('.total') ).html(displayTotalGajiPelaksana);
                     var displayTotalGajiKemahalan = formatRupiahExcel(totalGajiKemahalan)
-                    $( api.column( 9 ).footer('.total') ).html(displayTotalGajiKemahalan);
+                    // $( api.column( 9 ).footer('.total') ).html(displayTotalGajiKemahalan);
                     var displayTotalGajiKesejahteraan = formatRupiahExcel(totalGajiKesejahteraan)
-                    $( api.column( 10 ).footer('.total') ).html(displayTotalGajiKesejahteraan);
+                    // $( api.column( 10 ).footer('.total') ).html(displayTotalGajiKesejahteraan);
+                    var displayTotalGajiTeller = formatRupiahExcel(totalGajiTeller)
+                    // $( api.column( 11 ).footer('.total') ).html(displayTotalGajiTeller);
                     var displayTotalGajiPenyesuian = formatRupiahExcel(totalGajiPenyesuian)
-                    $( api.column( 11 ).footer('.total') ).html(displayTotalGajiPenyesuian);
+                    // $( api.column( 12 ).footer('.total') ).html(displayTotalGajiPenyesuian);
                     var displayTotalGajiTotal = formatRupiahExcel(totalGajiTotal)
-                    $( api.column( 12 ).footer('.total') ).html(displayTotalGajiTotal);
+                    // $( api.column( 13 ).footer('.total') ).html(displayTotalGajiTotal);
                     var displayTotalGajiPPH = formatRupiahExcel(totalGajiPPH)
-                    $( api.column( 13 ).footer('.total') ).html(displayTotalGajiPPH);
+                    // $( api.column( 14 ).footer('.total') ).html(displayTotalGajiPPH);
+                    console.log(`pph: ${totalGajiPPH}`);
+                    $('tfoot tr.total').html(`
+                        <th colspan="2" class="text-center">Total</th>
+                        <th class="text-right">${displayTotalGajiPokok}</th>
+                        <th class="text-right">${displayTotalGajiKeluarga}</th>
+                        <th class="text-right">${displayTotalGajiListrik}</th>
+                        <th class="text-right">${displayTotalGajiJabatan}</th>
+                        <th class="text-right">${displayTotalGajiKhusus}</th>
+                        <th class="text-right">${displayTotalGajiPerumahan}</th>
+                        <th class="text-right">${displayTotalGajiPelaksana}</th>
+                        <th class="text-right">${displayTotalGajiKemahalan}</th>
+                        <th class="text-right">${displayTotalGajiKesejahteraan}</th>
+                        <th class="text-right">${displayTotalGajiTeller}</th>
+                        <th class="text-right">${displayTotalGajiPenyesuian}</th>
+                        <th class="text-right">${displayTotalGajiTotal}</th>
+                        <th class="text-right">${displayTotalGajiPPH}</th>
+                    `);
 
                     grandTotalGajiPokok = Math.round(grandTotalGajiPokok)
                     var displayGrandTotalGajiPokok = formatRupiahExcel(grandTotalGajiPokok)
@@ -817,6 +855,8 @@
                     var displayGrandTotalGajiKemahalan = formatRupiahExcel(grandTotalGajiKemahalan)
                     grandTotalGajiKesejahteraan = Math.round(grandTotalGajiKesejahteraan)
                     var displayGrandTotalGajiKesejahteraan = formatRupiahExcel(grandTotalGajiKesejahteraan)
+                    grandTotalGajiTeller = Math.round(grandTotalGajiTeller)
+                    var displayGrandTotalGajiTeller = formatRupiahExcel(grandTotalGajiTeller)
                     grandTotalGajiPenyesuian = Math.round(grandTotalGajiPenyesuian)
                     var displayGrandTotalGajiPenyesuian = formatRupiahExcel(grandTotalGajiPenyesuian)
                     grandTotalGajiTotal = Math.round(grandTotalGajiTotal)
@@ -835,6 +875,7 @@
                         <th class="text-right">${displayGrandTotalGajiPelaksana}</th>
                         <th class="text-right">${displayGrandTotalGajiKemahalan}</th>
                         <th class="text-right">${displayGrandTotalGajiKesejahteraan}</th>
+                        <th class="text-right">${displayGrandTotalGajiTeller}</th>
                         <th class="text-right">${displayGrandTotalGajiPenyesuian}</th>
                         <th class="text-right">${displayGrandTotalGajiTotal}</th>
                         <th class="text-right">${displayGrandTotalGajiPPH}</th>
