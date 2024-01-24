@@ -678,12 +678,10 @@ class PenghasilanTidakTeraturController extends Controller
             Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan');
             return redirect()->route('penghasilan-tidak-teratur.index');
         } catch(Exception $e){
-            return $e;
             DB::rollBack();
             Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('pajak_penghasilan.create');
         } catch(QueryException $e){
-            return $e;
             DB::rollBack();
             Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('pajak_penghasilan.create');
