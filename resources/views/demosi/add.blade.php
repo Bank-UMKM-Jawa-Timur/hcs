@@ -32,11 +32,11 @@
                 </div>
                 <div class="input-box">
                     <label for="">Status Jabatan</label>
-                    <input type="text" id="status_jabatan" class="form-input" disabled>
+                    <input type="text" id="status_jabatan" class="form-input-disabled" placeholder="Status Jabatan" disabled>
                 </div>
                 <div class="input-box">
                     <label for="">Pangkat dan Golongan Sekarang</label>
-                    <input type="text" id="panggol" class="form-input" disabled>
+                    <input type="text" id="panggol" class="form-input-disabled" placeholder="Pangkat dan Golongan Sekarang" disabled>
                     <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-input">
                 </div>
             </div>
@@ -45,24 +45,24 @@
                 <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
                 <div class="input-box">
                     <label for="">Jabatan Sekarang</label>
-                    <input type="text" class="form-input" disabled name="" id="jabatan_lama">
+                    <input type="text" class="form-input-disabled" placeholder="Jabatan Sekarang" disabled name="" id="jabatan_lama">
                     <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
                 </div>
                 <div class="input-box">
                     <label for="">Kantor Sekarang</label>
-                    <input type="text" class="form-input" disabled name="" id="kantor_lama">
+                    <input type="text" class="form-input-disabled" placeholder="Kantor Sekarang" disabled name="" id="kantor_lama">
                 </div>
                 <div class="" id="">
                 </div>
             </div>
             <hr>
             <h6 class="mt-5 font-bold text-lg">Pembaruan NIP</h6>
-            <div class="row grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
+            <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
                 <div class="input-box">
                     <label for="NIP Baru">
                         NIP Baru
                     </label>
-                    <input type="text" class="form-input" name="nip_baru" id="nip_baru">
+                    <input type="text" class="form-input" placeholder="Masukkan NIP Baru" name="nip_baru" id="nip_baru">
                 </div>
             </div>
             <hr class="mt-5 mb-5">
@@ -158,17 +158,17 @@
             <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
                 <div class="input-box">
                     <label for="gj_pokok">Gaji Pokok</label>
-                    <input class="form-input" type="text" name="gj_pokok" id="gj_pokok" disabled>
+                    <input class="form-input" placeholder="Gaji Pokok" type="text" name="gj_pokok" id="gj_pokok" disabled>
                 </div>
                 <div class="input-box">
                     <label for="gj_penyesuaian">Gaji Penyesuaian</label>
-                    <input class="form-input" type="text" name="gj_penyesuaian" id="gj_penyesuaian" disabled>
+                    <input class="form-input" placeholder="Gaji Penyesuaian" type="text" name="gj_penyesuaian" id="gj_penyesuaian" disabled>
                 </div>
             </div>
             <hr class="mt-5 mb-5">
             <h6 class="font-bold text-lg">Pembaruan Data Tunjangan</h6>
-            <div class="mt-3" id="tj">
-                <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
+            <div class="my-3" id="tj">
+                <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
                     <div class="input-box">
                         <label for="is">Tunjangan</label>
                         <select name="tunjangan[]" id="row_tunjangan" class="form-input">
@@ -235,7 +235,7 @@
             </div> --}}
             <hr>
             <h6 class="mt-5 font-bold text-lg">Pengesahan</h6>
-            <div class="row grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
+            <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
                 <div class="input-box">
                     <label for="">Tanggal Pengesahan</label>
                     <input type="date" class="form-input"
@@ -248,7 +248,7 @@
                 <div class="input-box">
                     <label for="">Surat Keputusan</label>
                     <input type="text" class="@error('bukti_sk') @enderror form-input" name="bukti_sk"
-                        id="inputGroupFile01" value="{{ old('bukti_sk') }}">
+                        id="inputGroupFile01" value="{{ old('bukti_sk') }}" placeholder="Surat Keputusan">
                     @error('bukti_sk')
                     <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -289,18 +289,7 @@
             })
         }
     })
-    
-    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-            var name = document.getElementById("validatedCustomFile").files[0].name;
-            var ext = name.match(/\.([^\.]+)$/)[1];
-            var nextSibling = e.target.nextElementSibling
-            if(ext == 'pdf'){
-                nextSibling.innerText = name
-            } else {
-                nextSibling.innerText = ''
-                $("#validatedCustomFile").val('Choose File(.pdf) ...')
-            }
-        });
+
 // $(document).ready(function() {
 //     var table = $('#table').DataTable({
 //         'autoWidth': false,
@@ -312,6 +301,7 @@
 // })
 
 $('#nip').select2({
+    placeholder: 'Pilih Karyawan',
     ajax: {
         url: '{{ route('api.select2.karyawan') }}'
     },
@@ -452,7 +442,7 @@ $('#nip').select2({
                         $('#kantor_lama').val("Pusat");
                         if(data.karyawan.entitas.subDiv != null){
                             jabatan = " " + data.karyawan.entitas.subDiv.nama_subdivisi
-                        }  
+                        }
                         if(data.karyawan.entitas.div != null && data.karyawan.entitas.subDiv == null){
                             jabatan = " " + data.karyawan.entitas.div.nama_divisi
                         }
@@ -494,7 +484,7 @@ $('#nip').select2({
                         $.each(res.data_tj, function(i, item){
                             var idTj = item.id_tunjangan
                             $("#tj").append(`
-                                <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
+                                <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
                                     <div class="input-box">
                                         <label for="is">Tunjangan</label>
                                         <select name="tunjangan[]" id="tunjangan`+i+`" class="form-input">
@@ -526,7 +516,7 @@ $('#nip').select2({
                         })
                     } else{
                         $('#tj').append(`
-                        <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
+                        <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
                             <div class="input-box">
                                 <label for="is">Tunjangan</label>
                                 <select name="tunjangan[]" id="row_tunjangan" class="form-input">
@@ -560,7 +550,7 @@ $('#nip').select2({
         });
         $('#tj').on('click', "#btn-add", function(){
             $('#tj').append(`
-                <div class="row grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
+                <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 mt-5">
                     <div class="input-box">
                         <label for="is">Tunjangan</label>
                         <select name="tunjangan[]" id="row_tunjangan" class="form-input">
@@ -591,9 +581,8 @@ $('#nip').select2({
             x++
         });
         $('#tj').on('click', "#btn-delete", function(){
-            var row = $(this).closest('.row')
+            var row = $(this).closest('.grid')
             var value = row.children('#id_tk').val()
-            console.log(value);
             if(x > 1){
                 if(value != null){
                     $.ajax({
@@ -607,10 +596,10 @@ $('#nip').select2({
                             }
                         }
                     })
-                    $(this).closest('.row').remove()
+                    $(this).closest('.grid').remove()
                     x--;
                 } else{
-                    $(this).closest('.row').remove()
+                    $(this).closest('.grid').remove()
                     x--;
                 }
             }

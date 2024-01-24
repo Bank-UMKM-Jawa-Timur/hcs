@@ -38,11 +38,11 @@
                 </div>
                 <div class="input-box">
                     <label for="">Status Jabatan</label>
-                    <input type="text" id="status_jabatan" class="form-input" disabled>
+                    <input type="text" id="status_jabatan" placeholder="Status Jabatan" class="form-input-disabled" disabled>
                 </div>
                 <div class="input-box">
                     <label for="">Pangkat dan Golongan Sekarang</label>
-                    <input type="text" id="panggol" class="form-input" disabled>
+                    <input type="text" id="panggol" class="form-input-disabled" placeholder="Pangkat dan Golongan Sekarang" disabled>
                     <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-input">
                 </div>
             </div>
@@ -51,12 +51,12 @@
                 <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
                 <div class="input-box">
                     <label for="">Jabatan Sekarang</label>
-                    <input type="text" class="form-input" disabled name="" id="jabatan_lama">
+                    <input type="text" class="form-input-disabled" placeholder="Jabatan Sekarang" disabled name="" id="jabatan_lama">
                     <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
                 </div>
                 <div class="input-box">
                     <label for="">Kantor Sekarang</label>
-                    <input type="text" class="form-input" disabled name="" id="kantor_lama">
+                    <input type="text" class="form-input-disabled" disabled name="" placeholder="Kantor Sekarang" id="kantor_lama">
                 </div>
                 <div class="" id="">
                 </div>
@@ -68,7 +68,7 @@
                     <label for="NIP Baru">
                         NIP Baru
                     </label>
-                    <input type="text" class="form-input" name="nip_baru" id="nip_baru">
+                    <input type="text" class="form-input" name="nip_baru" placeholder="Pembaruan NIP" id="nip_baru">
                 </div>
             </div>
             <hr>
@@ -129,11 +129,11 @@
             <div class="row grid lg:grid-cols-2 grid-cols-1 gap-5 mt-5">
                 <div class="input-box">
                     <label for="gj_pokok">Gaji Pokok</label>
-                    <input class="form-input" type="text" name="gj_pokok" id="gj_pokok" disabled>
+                    <input class="form-input" type="text" placeholder="Gaji Pokok" name="gj_pokok" id="gj_pokok" disabled>
                 </div>
                 <div class="input-box">
                     <label for="gj_penyesuaian">Gaji Penyesuaian</label>
-                    <input class="form-input" type="text" name="gj_penyesuaian" id="gj_penyesuaian" disabled>
+                    <input class="form-input" type="text" placeholder="Gaji Penyesuian" name="gj_penyesuaian" id="gj_penyesuaian" disabled>
                 </div>
             </div>
             <hr>
@@ -182,7 +182,7 @@
                 <div class="input-box">
                     <label for="">Surat Keputusan</label>
                     <input type="text" class="@error('bukti_sk') @enderror form-input" name="bukti_sk"
-                        id="inputGroupFile01" value="{{ old('bukti_sk') }}">
+                        id="inputGroupFile01" value="{{ old('bukti_sk') }}" placeholder="Surat Keputusan">
                     @error('bukti_sk')
                     <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -202,7 +202,7 @@
             </div>
             <div class="input-box">
                 <label for="">Keterangan Jabatan</label>
-                <textarea name="ket_jabatan" class="form-input" id="ket_jabatan"></textarea>
+                <textarea name="ket_jabatan" class="form-input" id="ket_jabatan" placeholder="Keterangan Jabatan"></textarea>
             </div>
             <button type="submit" class="btn btn-primary mt-5">Simpan</button>
         </form>
@@ -223,18 +223,7 @@
             })
         }
     })
-    
-    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-            var name = document.getElementById("validatedCustomFile").files[0].name;
-            var ext = name.match(/\.([^\.]+)$/)[1];
-            var nextSibling = e.target.nextElementSibling
-            if(ext == 'pdf'){
-                nextSibling.innerText = name
-            } else {
-                nextSibling.innerText = ''
-                $("#validatedCustomFile").val('Choose File(.pdf) ...')
-            }
-        });
+
 // $(document).ready(function() {
 //     var table = $('#table').DataTable({
 //         'autoWidth': false,
@@ -246,6 +235,7 @@
 // })
 
 $('#nip').select2({
+    placeholder: "Pilih Karyawan",
     ajax: {
         url: '{{ route('api.select2.karyawan') }}'
     },
@@ -388,7 +378,7 @@ $('#nip').select2({
                         $('#kantor_lama').val("Pusat");
                         if(data.karyawan.entitas.subDiv != null){
                             jabatan = " " + data.karyawan.entitas.subDiv.nama_subdivisi
-                        }  
+                        }
                         if(data.karyawan.entitas.div != null && data.karyawan.entitas.subDiv == null){
                             jabatan = " " + data.karyawan.entitas.div.nama_divisi
                         }
@@ -527,7 +517,7 @@ $('#nip').select2({
             x++
         });
         $('#tj').on('click', "#btn-delete", function(){
-            var row = $(this).closest('.row')
+            var row = $(this).closest('.grid')
             var value = row.children('#id_tk').val()
             console.log(value);
             if(x > 1){
@@ -543,10 +533,10 @@ $('#nip').select2({
                             }
                         }
                     })
-                    $(this).closest('.row').remove()
+                    $(this).closest('.grid').remove()
                     x--;
                 } else{
-                    $(this).closest('.row').remove()
+                    $(this).closest('.grid').remove()
                     x--;
                 }
             }

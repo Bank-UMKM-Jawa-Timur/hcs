@@ -401,7 +401,7 @@
         @apply h-[45px];
     }
     .select2.select2-container .select2-selection .select2-selection__rendered {
-        @apply mt-[0.5rem] ml-[0.4rem];
+        /* @apply mt-[0.5rem] ml-[0.4rem] pb-5; */
     }
     .select2.select2-container .select2-selection .select2-selection__arrow {
         @apply mt-[0.3rem] mr-[0.3rem];

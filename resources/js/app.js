@@ -80,7 +80,7 @@ $(document).click(function (e) {
     $(".dropdown-account-menu").addClass("hidden");
 });
 
-$('#scroll-body').on('click', function () {
+$('.btn-scroll-to-top').on('click', function () {
     $('#scroll-body').animate({
         scrollTop: $("#scroll-body").offset().top
     }, 400);

@@ -32,11 +32,11 @@
                 </div>
                 <div class="input-box">
                     <label for="">Status Jabatan</label>
-                    <input type="text" id="status_jabatan" class="form-input" disabled>
+                    <input type="text" id="status_jabatan" class="form-input-disabled" disabled placeholder="Status Jabatan">
                 </div>
                 <div class="input-box">
                     <label for="">Pangkat dan Golongan Sekarang</label>
-                    <input type="text" id="panggol" class="form-input" disabled>
+                    <input type="text" id="panggol" class="form-input-disabled bg-slate-200" disabled placeholder="Pangkat dan Golongan Sekarang">
                     <input type="hidden" id="panggol_lama" name="panggol_lama" class="form-input">
                 </div>
             </div>
@@ -45,12 +45,12 @@
                 <input type="hidden" id="status_jabatan_lama" name="status_jabatan_lama">
                 <div class="input-box">
                     <label for="">Jabatan Sekarang</label>
-                    <input type="text" class="form-input" disabled name="" id="jabatan_lama">
+                    <input type="text" class="form-input-disabled" placeholder="Jabatan Sekarang" disabled name="" id="jabatan_lama">
                     <input type="hidden" id="id_jabatan_lama" name="id_jabatan_lama">
                 </div>
                 <div class="input-box">
                     <label for="">Kantor Sekarang</label>
-                    <input type="text" class="form-input" disabled name="" id="kantor_lama">
+                    <input type="text" class="form-input-disabled" placeholder="Kantor Sekarang" disabled name="" id="kantor_lama">
                 </div>
                 <div class="" id="">
                 </div>
@@ -63,7 +63,7 @@
                     <label for="NIP Baru">
                         NIP Baru
                     </label>
-                    <input type="text" class="form-input" name="nip_baru" id="nip_baru">
+                    <input type="text" class="form-input" name="nip_baru" id="nip_baru" placeholder="Masukkan NIP Baru">
                 </div>
             </div>
             <br>
@@ -127,11 +127,11 @@
                 <br>
                 <div class="input-box">
                     <label for="gj_pokok">Gaji Pokok</label>
-                    <input class="form-input" type="text" name="gj_pokok" id="gj_pokok" disabled>
+                    <input class="form-input" type="text" name="gj_pokok" id="gj_pokok" disabled placeholder="Gaji Pokok">
                 </div>
                 <div class="input-box">
                     <label for="gj_penyesuaian">Gaji Penyesuaian</label>
-                    <input class="form-input" type="text" name="gj_penyesuaian" id="gj_penyesuaian" disabled>
+                    <input class="form-input" type="text" name="gj_penyesuaian" id="gj_penyesuaian" disabled placeholder="Gaji Penyesuaian">
                 </div>
             </div>
             <br>
@@ -214,7 +214,7 @@
                 <div class="input-box">
                     <label for="">Surat Keputusan</label>
                     <input type="text" class="@error('bukti_sk') @enderror form-input" name="bukti_sk"
-                        id="inputGroupFile01" value="{{ old('bukti_sk') }}">
+                        id="inputGroupFile01" value="{{ old('bukti_sk') }}" placeholder="Surat Keputusan">
                     @error('bukti_sk')
                     <div class="mt-2 alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -233,7 +233,7 @@
             </div>
             <div class="input-box mt-5">
                 <label for="">Keterangan Jabatan</label>
-                <textarea name="ket_jabatan" class="form-input" id="ket_jabatan"></textarea>
+                <textarea name="ket_jabatan" class="form-input" id="ket_jabatan" placeholder="Keterangan Jabatan"></textarea>
             </div>
             <div class="mt-3">
                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -256,18 +256,6 @@
             })
         }
     })
-    
-    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-            var name = document.getElementById("validatedCustomFile").files[0].name;
-            var ext = name.match(/\.([^\.]+)$/)[1];
-            var nextSibling = e.target.nextElementSibling
-            if(ext == 'pdf'){
-                nextSibling.innerText = name
-            } else {
-                nextSibling.innerText = ''
-                $("#validatedCustomFile").val('Choose File(.pdf) ...')
-            }
-        });
 // $(document).ready(function() {
 //     var table = $('#table').DataTable({
 //         'autoWidth': false,
@@ -279,6 +267,7 @@
 // })
 
 $('#nip').select2({
+    placeholder: "Pilih Karyawan",
     ajax: {
         url: '{{ route('api.select2.karyawan') }}'
     },
@@ -427,7 +416,7 @@ $('#nip').select2({
                         $('#kantor_lama').val("Pusat");
                         if(data.karyawan.entitas.subDiv != null){
                             jabatan = " " + data.karyawan.entitas.subDiv.nama_subdivisi
-                        }  
+                        }
                         if(data.karyawan.entitas.div != null && data.karyawan.entitas.subDiv == null){
                             jabatan = " " + data.karyawan.entitas.div.nama_divisi
                         }
