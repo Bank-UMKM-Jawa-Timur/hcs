@@ -23,7 +23,7 @@
             @can('penghasilan - import - penghasilan tidak teratur - create')
                 <a href="{{   route('penghasilan-tidak-teratur.input-tidak-teratur') }}">
                     <button class="btn btn-primary"><i class="ti ti-plus"></i> Tambah</button>
-                </a> 
+                </a>
             @endcan
         </div>
     </div>
@@ -111,11 +111,13 @@
                         @php
                         $cant_lock_edit = true;
                         @endphp
-                        <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur', [
+                        <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur-new')}}?idTunjangan={{$item->tunjangan_id}}&tanggal={{$item->tanggal}}&kdEntitas={{$item->kd_entitas}}&bulan={{$item->bulan}}"
+                            class="btn btn-warning-light ml-1">Edit</a>
+                        {{-- <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur', [
                                                         'idTunjangan' => $item->tunjangan_id,
                                                         'tanggal' => $item->tanggal,
                                                         'kdEntitas' => $item->kd_entitas])}}"
-                            class="btn btn-warning-light ml-1">Edit</a>
+                            class="btn btn-warning-light ml-1">Edit</a> --}}
                         @endcan
                         @else
                         @can('penghasilan - unlock - penghasilan tidak teratur')
@@ -160,7 +162,7 @@
 
 @push('script')
 <script>
-    $('#page_length').on('change', function () { 
+    $('#page_length').on('change', function () {
         $('#form').submit()
     })
 
