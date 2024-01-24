@@ -12,6 +12,7 @@
             <th class="text-center">T. Pelaksana</th>
             <th class="text-center">T. Kemahalan</th>
             <th class="text-center">T. Kesejahteraan</th>
+            <th class="text-center">T. Teller</th>
             <th class="text-center">Penyesuaian</th>
             <th class="text-center">Total</th>
             <th class="text-center">PPH 21</th>
@@ -29,6 +30,7 @@
             $footer_tj_pelaksana = 0;
             $footer_tj_kemahalan = 0;
             $footer_tj_kesejahteraan = 0;
+            $footer_tj_teller = 0;
             $footer_gj_penyesuaian = 0;
             $footer_total_gaji = 0;
             $footer_pph_harus_dibayar = 0;
@@ -54,6 +56,7 @@
                 $tj_pelaksana = $item->gaji ? $item->gaji->tj_pelaksana : 0;
                 $tj_kemahalan = $item->gaji ? $item->gaji->tj_kemahalan : 0;
                 $tj_kesejahteraan = $item->gaji ? $item->gaji->tj_kesejahteraan : 0;
+                $tj_teller = $item->gaji ? $item->gaji->tj_teller : 0;
                 $gj_penyesuaian = $item->gaji ? $item->gaji->gj_penyesuaian : 0;
                 $total_gaji = $item->gaji ? $item->gaji->total_gaji : 0;
                 $pph_harus_dibayar = $item->pph_dilunasi_bulan_ini;
@@ -68,6 +71,7 @@
                 $footer_tj_pelaksana += $tj_pelaksana;
                 $footer_tj_kemahalan += $tj_kemahalan;
                 $footer_tj_kesejahteraan += $tj_kesejahteraan;
+                $footer_tj_teller += $tj_teller;
                 $footer_gj_penyesuaian += $gj_penyesuaian;
                 $footer_total_gaji += $total_gaji;
                 $footer_pph_harus_dibayar += $pph_harus_dibayar;
@@ -84,6 +88,7 @@
                 <td class="text-right">{{ formatRupiahExcel($tj_pelaksana, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($tj_kemahalan, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($tj_kesejahteraan, 0, true) }}</td>
+                <td class="text-right">{{ formatRupiahExcel($tj_teller, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($gj_penyesuaian, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($total_gaji, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($pph_harus_dibayar, 0, true) }}</td>
@@ -106,6 +111,7 @@
             <th class="text-right">{{ formatRupiahExcel($footer_tj_pelaksana, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($footer_tj_kemahalan, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($footer_tj_kesejahteraan, 0, true) }}</th>
+            <th class="text-right">{{ formatRupiahExcel($footer_tj_teller, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($footer_gj_penyesuaian, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($footer_total_gaji, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($footer_pph_harus_dibayar, 0, true) }}</th>
@@ -121,6 +127,7 @@
             <th class="text-right">{{ formatRupiahExcel($total['total_tj_pelaksana'], 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($total['total_tj_kemahalan'], 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($total['total_tj_kesejahteraan'], 0, true) }}</th>
+            <th class="text-right">{{ formatRupiahExcel($total['total_tj_teller'], 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($total['total_gj_penyesuaian'], 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($total['total_total_gaji'], 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($total['total_pph_harus_dibayar'], 0, true) }}</th>
