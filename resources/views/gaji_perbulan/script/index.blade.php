@@ -211,20 +211,21 @@
             var tanggal = $(this).val()
             // Create a Date object from the date string
             var dateObject = new Date(tanggal);
+            var currentDate = new Date();
 
             // Get the month (0-indexed, so January is 0, February is 1, and so on)
             const month = dateObject.getMonth() + 1;
             const year = dateObject.getFullYear();
 
-            // Get month & year penghasilan terakhir
-            if (year.toString().length == 4) {
-                const last_month = $('#proses-modal #bulan_terakhir').val()
-                const last_year = $('#proses-modal #tahun_terakhir').val()
-                const dif_month = parseInt(month) - parseInt(last_month);
-                if (dif_month > 1) {
+            // Get current date
+            const currentMonth = currentDate.getMonth() + 1;
+            const currentYear = currentDate.getFullYear();
+
+            if (year == currentYear) {
+                if (month != currentMonth) {
                     Swal.fire({
                         title: 'Peringatan',
-                        text: 'Tanggal penghasilan hanya diperbolehkan H+1 dari bulan penghasilan terakhir',
+                        text: 'Bulan yang dipilih tidak sesuai dengan bulan saat ini',
                         icon: 'warning',
                         iconColor: '#da271f',
                         confirmButtonText: 'Oke',
@@ -233,30 +234,48 @@
                     $(this).val('')
                 }
                 else {
-                    if (((year == last_year) && (month == last_month)) || (year == last_year) && (month < last_month)) {
-                        // Clear tanggal
-                        Swal.fire({
-                            title: 'Peringatan',
-                            text: 'Harap pilih tanggal setelah tanggal penghasilan terakhir',
-                            icon: 'warning',
-                            iconColor: '#da271f',
-                            confirmButtonText: 'Oke',
-                            confirmButtonColor: "#da271f",
-                        })
-                        $(this).val('')
-                    }
-                    else if (year < last_year) {
-                        Swal.fire({
-                            title: 'Peringatan',
-                            text: 'Harap pilih tanggal setelah tanggal penghasilan terakhir',
-                            icon: 'warning',
-                            iconColor: '#da271f',
-                            confirmButtonText: 'Oke',
-                            confirmButtonColor: "#da271f",
-                        })
-                        $(this).val('')
+                    if (year.toString().length == 4) {
+                        const last_month = $('#proses-modal #bulan_terakhir').val()
+                        const last_year = $('#proses-modal #tahun_terakhir').val()
+                        const dif_month = parseInt(month) - parseInt(last_month);
+                        if (dif_month > 1) {
+                            Swal.fire({
+                                title: 'Peringatan',
+                                text: 'Tanggal penggajian hanya diperbolehkan H+1 dari bulan penggajian terakhir',
+                                icon: 'warning',
+                                iconColor: '#da271f',
+                                confirmButtonText: 'Oke',
+                                confirmButtonColor: "#da271f",
+                            })
+                            $(this).val('')
+                        }
+                        else {
+                            if (((year == last_year) && (month == last_month))) {
+                                // Clear tanggal
+                                Swal.fire({
+                                    title: 'Peringatan',
+                                    text: 'Sudah dilakukan proses penggajian pada periode ini',
+                                    icon: 'warning',
+                                    iconColor: '#da271f',
+                                    confirmButtonText: 'Oke',
+                                    confirmButtonColor: "#da271f",
+                                })
+                                $(this).val('')
+                            }
+                        }
                     }
                 }
+            }
+            else {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: 'Tahun yang dipilih tidak sesuai dengan tahun saat ini',
+                    icon: 'warning',
+                    iconColor: '#da271f',
+                    confirmButtonText: 'Oke',
+                    confirmButtonColor: "#da271f",
+                })
+                $(this).val('')
             }
         })
 
