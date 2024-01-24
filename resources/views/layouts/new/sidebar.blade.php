@@ -669,7 +669,7 @@
                                         @endcan
                                         {{-- @can('laporan - laporan rekap tetap') --}}
                                             <li class="item-link">
-                                                <a href="{{ route('laporan-rekapitulasi.index') }}">
+                                                <a href="{{ route('laporan-rekapitulasi.index') }}?tahun={{ date('Y') }}&bulan={{ (int)date('m') }}">
                                                     <button class="btn-link {{ request()->is('laporan-rekapitulasi.index','laporan-rekapitulasi') ? 'active-link' : '' }}">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Laporan Rekap Tetap</span>
