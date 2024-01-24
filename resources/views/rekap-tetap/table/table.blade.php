@@ -51,6 +51,7 @@
     <tbody >
         @php
             $totalGaji = 0;
+            $totalGajiOpsi = 0;
             $totalUangMakan = 0;
             $totalPulsa = 0;
             $totalVitamin = 0;
@@ -149,7 +150,7 @@
                 $brutoPPH = $pphNataru + $pphJaspro + $pph21;
 
                 // Hitung total per page
-                $totalGaji += $item->gaji ? $item->gaji->total_gaji : 0;
+                $totalGaji += $item->gaji ? $item->gaji->total_gaji : $item->gj_pokok;
                 $totalUangMakan += $item->gaji ? $item->gaji->uang_makan : 0;
                 $totalPulsa += $item->gaji ? $item->gaji->tj_pulsa : 0;
                 $totalVitamin += $item->gaji ? $item->gaji->tj_vitamin : 0;
@@ -172,7 +173,7 @@
             <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
                 <td style="position: sticky; left: 0; background-color: white; z-index: 2;">{{ $item->nama_karyawan }}</td>
-                <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->total_gaji ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
+                <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->total_gaji ?? 0, 0, true) : formatRupiahExcel($item->gj_pokok ?? 0, 0, true) }}</td>
                 <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->uang_makan ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
                 <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->tj_pulsa ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
                 <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->tj_vitamin ?? 0, 0, true) : formatRupiahExcel(0) }}</td>

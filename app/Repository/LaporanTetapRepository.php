@@ -177,6 +177,7 @@ class LaporanTetapRepository
                 'ket_jabatan',
                 'alamat_ktp',
                 'jk',
+                'gj_pokok',
                 DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
             )
             // ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
@@ -884,6 +885,8 @@ class LaporanTetapRepository
             $perhitunganPph21->pph_pasal_21 = $pphPasal21;
             $karyawan->perhitungan_pph21 = $perhitunganPph21;
         }
+
+        // dd($data);
         return $data;
     }
 
@@ -1007,6 +1010,7 @@ class LaporanTetapRepository
                 'ket_jabatan',
                 'alamat_ktp',
                 'jk',
+                'gj_pokok',
                 DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
             )
             // ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
@@ -1735,7 +1739,7 @@ class LaporanTetapRepository
         $totalPPh = 0;
 
         foreach($data as $key => $item){
-            $totalGaji += $item->gaji->total_gaji ?? 0;
+            $totalGaji += $item->gaji->total_gaji ?? $item->gj_pokok;
             $totalUangMakan += $item->gaji->uang_makan ?? 0;
             $totalPulsa += $item->gaji->tj_pulsa ?? 0;
             $totalVitamin += $item->gaji->tj_vitamin ?? 0;
@@ -1843,6 +1847,7 @@ class LaporanTetapRepository
         $returnData->totalBruto = $totalBruto;
         $returnData->totalPPh = $totalPPh;
 
+        // dd($returnData);
         return $returnData;
     }
 }
