@@ -335,6 +335,7 @@
                             $total_tj_kemahalan = null;
                             $total_tj_kesejahteraan = null;
                             $total_tj_khusus = null;
+                            $total_tj_teller = null;
                             $total_jamsostek = null;
                             $total_uang_makan = null;
                             $total_tj_pulsa = null;
@@ -344,7 +345,7 @@
                             <tr>
                                 <th rowspan="2">Bulan</th>
                                 <th rowspan="2">Gaji<br>Pokok</th>
-                                <th colspan="9">Tunjangan</th>
+                                <th colspan="10">Tunjangan</th>
                                 <th rowspan="2">Total<br>Gaji</th>
                                 <th rowspan="2">Penambah<br>Bruto<br>Jamsostek</th>
                                 <th rowspan="2">Tunjangan<br>Uang<br>Makan</th>
@@ -361,6 +362,7 @@
                                 <th>Pelaksana</th>
                                 <th>Kemahalan</th>
                                 <th>Kesejahteraan</th>
+                                <th>Teller</th>
                                 <th>Khusus</th>
                             </tr>
                         </thead>
@@ -376,6 +378,7 @@
                                 $total_tj_pelaksana += $gj[$i]['tj_pelaksana'];
                                 $total_tj_kemahalan += $gj[$i]['tj_kemahalan'];
                                 $total_tj_kesejahteraan += $gj[$i]['tj_kesejahteraan'];
+                                $total_tj_teller += $gj[$i]['tj_teller'];
                                 if ($gj[$i]['tj_multilevel']) {
                                     $total_tj_khusus += $gj[$i]['tj_multilevel'];
                                 }
@@ -394,7 +397,7 @@
 
                                 $total_gaji =  $total_gj_pokok + $total_tj_keluarga + $total_tj_jabatan + $total_gj_penyesuaian
                                             + $total_tj_perumahan + $total_tj_telepon + $total_tj_pelaksana + $total_tj_kemahalan
-                                            + $total_tj_kesejahteraan;
+                                            + $total_tj_kesejahteraan + $total_tj_teller;
 
                                 $tj_khusus = 0;
                                 if ($gj[$i]['tj_multilevel']) {
@@ -408,7 +411,7 @@
                                 }
                                 $total_gaji_bln = ($gj[$i]['gj_pokok']) + ($gj[$i]['tj_keluarga']) + ($gj[$i]['tj_jabatan']) + ($gj[$i]['gj_penyesuaian'])
                                                 + ($gj[$i]['tj_perumahan']) + ($gj[$i]['tj_telepon']) + ($gj[$i]['tj_pelaksana']) + ( $gj[$i]['tj_kemahalan'])
-                                                + ($gj[$i]['tj_kesejahteraan']) + $tj_khusus;
+                                                + ($gj[$i]['tj_kesejahteraan']) + $tj_khusus + ($gj[$i]['tj_teller']);
                             @endphp
                                 <tr>
                                     <td>{{ $bulan[$i] }}</td>
@@ -421,6 +424,7 @@
                                     <td>{{ ($gj[$i]['tj_pelaksana'] != 0) ? rupiah($gj[$i]['tj_pelaksana']) : '-' }}</td>
                                     <td>{{ ($gj[$i]['tj_kemahalan'] != 0) ? rupiah($gj[$i]['tj_kemahalan']) : '-' }}</td>
                                     <td>{{ ($gj[$i]['tj_kesejahteraan'] != 0) ? rupiah($gj[$i]['tj_kesejahteraan']) : '-' }}</td>
+                                    <td>{{ ($gj[$i]['tj_teller'] != 0) ? rupiah($gj[$i]['tj_teller']) : '-' }}</td>
                                     <td>{{ ($tj_khusus != 0) ? rupiah($tj_khusus) : '-' }}</td>
                                     <td>{{ ($total_gaji_bln != 0 ) ? rupiah($total_gaji_bln) : '-' }}</td>
                                     <td>{{ ($jamsostek[$i] != 0) ? rupiah($jamsostek[$i]) : '-' }}</td>
@@ -445,6 +449,7 @@
                                 <td style="background-color: #FED049; ">{{ rupiah($total_tj_pelaksana) }}</td>
                                 <td style="background-color: #FED049; ">{{ rupiah($total_tj_kemahalan) }}</td>
                                 <td style="background-color: #FED049; ">{{ rupiah($total_tj_kesejahteraan) }}</td>
+                                <td style="background-color: #FED049; ">{{ rupiah($total_tj_teller) }}</td>
                                 <td style="background-color: #FED049; ">{{ rupiah($total_tj_khusus) }}</td>
                                 <td style="background-color: #cecece; ">{{ rupiah($total_gaji) }}</td>
                                 <td class="bg-theme-primary text-white">{{ rupiah($total_jamsostek) }}</td>
