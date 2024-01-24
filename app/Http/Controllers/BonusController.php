@@ -263,6 +263,7 @@ class BonusController extends Controller
         $tanggal = $request->get('tanggal');
         $repo = new PenghasilanTidakTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
+
         return view('bonus.edit-import', [
             'penghasilan' => $penghasilan,
             'old_id' => $id,
