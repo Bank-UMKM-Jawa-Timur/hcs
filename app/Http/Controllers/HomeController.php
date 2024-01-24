@@ -161,8 +161,8 @@ class HomeController extends Controller
         $bulanReq = ($bulan_ini < 10) ? ltrim($bulan_ini, '0') : $bulan_ini;
 
         $tunjangan = GajiPerBulanModel::select(
-            DB::raw('round(SUM(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_perumahan + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_transport + tj_pulsa + tj_vitamin + uang_makan), 0) as gaji'),
-            DB::raw('round(SUM(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_perumahan + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel), 0) as total_gaji'),
+            DB::raw('round(SUM(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_perumahan + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_teller + tj_multilevel + tj_transport + tj_pulsa + tj_vitamin + uang_makan), 0) as gaji'),
+            DB::raw('round(SUM(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_perumahan + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_teller + tj_multilevel), 0) as total_gaji'),
             DB::raw('round(AVG(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_perumahan + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel), 0) as rata_rata'),
             DB::raw('round(AVG(gj_pokok), 0) as gj_pokok'),
             DB::raw('round(AVG(gj_penyesuaian), 0) as gj_penyesuaian'),
@@ -173,6 +173,7 @@ class HomeController extends Controller
             DB::raw('round(AVG(tj_kemahalan), 0) as tj_kemahalan'),
             DB::raw('round(AVG(tj_pelaksana), 0) as tj_pelaksana'),
             DB::raw('round(AVG(tj_kesejahteraan), 0) as tj_kesejahteraan'),
+            DB::raw('round(AVG(tj_teller), 0) as tj_teller'),
             DB::raw('round(AVG(tj_multilevel), 0) as tj_multilevel'),
             DB::raw('round(AVG(tj_transport), 0) as tj_transport'),
             DB::raw('round(AVG(tj_pulsa), 0) as tj_pulsa'),

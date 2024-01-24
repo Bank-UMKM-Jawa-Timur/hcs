@@ -831,6 +831,11 @@ class GajiPerBulanController extends Controller
                 $total_gaji = $item->gj_pokok + $item->gj_penyesuaian +  $tunjangan[0] + $tunjangan[1] + $tunjangan[2] + $tunjangan[3] + $tunjangan[4] + $tunjangan[6] + $tunjangan[5] + $tunjangan[7] + $tunjangan[8] + $tunjangan[9] + $tunjangan[15];
                 $tunjangan_rutin = $tunjangan[10] + $tunjangan[11] + $tunjangan[12] + $tunjangan[13];
 
+                $dpp = 0;
+                if ($item->status_karyawan != 'IKJP' || $item->status_karyawan != 'Kontrak Perpanjangan') {
+                    $dpp = (($item->gj_pokok + $tunjangan[0]) + ($tunjangan[7] * 0.5) * 0.05);
+                }
+
                 if ($request->has('batch_id')) {
                     $employee = [
                         'gj_pokok' => $item->gj_pokok,
@@ -849,7 +854,7 @@ class GajiPerBulanController extends Controller
                         'tj_pulsa' => $tunjangan[11],
                         'tj_vitamin' => $tunjangan[12],
                         'uang_makan' => $tunjangan[13],
-                        'dpp' => $tunjangan[14],
+                        'dpp' => $dpp,
                         'tj_fungsional' => $tunjangan[15],
                         'updated_at' => $now,
                         'kredit_koperasi' => $kredit_koperasi,
@@ -961,7 +966,7 @@ class GajiPerBulanController extends Controller
                             'tj_pulsa' => $tunjangan[11],
                             'tj_vitamin' => $tunjangan[12],
                             'uang_makan' => $tunjangan[13],
-                            'dpp' => $tunjangan[14],
+                            'dpp' => $dpp,
                             'tj_fungsional' => $tunjangan[15],
                             'created_at' => now(),
                             'kredit_koperasi' => $kredit_koperasi,
