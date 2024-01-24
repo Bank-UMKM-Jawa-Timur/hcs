@@ -128,6 +128,6 @@
                 var kdEntitas = "{{\Request::get('kdEntitas')}}"
                 btn_pagination[i].href += `&kdEntitas=${kdEntitas}`
             }
-        })
+        })  
 </script>
 @endpush

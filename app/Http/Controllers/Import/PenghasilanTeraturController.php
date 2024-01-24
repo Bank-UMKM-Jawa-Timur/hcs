@@ -236,9 +236,9 @@ class PenghasilanTeraturController extends Controller
             }
 
             DB::commit();
-            
+
             DB::beginTransaction();
-            for ($i=0; $i < count($nip); $i++) { 
+            for ($i=0; $i < count($nip); $i++) {
                 $karyawan = DB::table('mst_karyawan')
                                 ->where('nip', $nip[$i])
                                 ->first();
@@ -314,18 +314,73 @@ class PenghasilanTeraturController extends Controller
         return redirect()->route('penghasilan.import-penghasilan-teratur.index');
     }
 
-    public function editTunjangan(Request $request){
+    public function editTunjanganImport(Request $request){
         $id = $request->get('idTunjangan');
         $tanggal = $request->get('createdAt');
         $bulan = $request->get('bulan');
         $repo = new PenghasilanTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
-        return view('penghasilan-teratur.edit', [
+        return view('penghasilan-teratur.edit-import', [
             'penghasilan' => $penghasilan,
             'old_id' =>$id,
             'old_tanggal' => $tanggal,
             'bulan' => $bulan
         ]);
+    }
+    public function editTunjangan(Request $request){
+        $tanggal = $request->tanggal;
+        $createdAt = $request->createdAt;
+        $idTunjangan = $request->get('idTunjangan');
+        $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;
+        $page = Request()->has('page') ? Request()->get('page') : 1;
+
+        $kdEntitas = Request()->get('kdEntitas');
+        $search = Request()->get('q');
+        $repo = new PenghasilanTeraturRepository;
+        $data = $repo->getEditTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit);
+        $tunjangan = $repo->getNamaTunjangan($idTunjangan);
+        return view('penghasilan-teratur.edit', [
+            'data' => $data,
+            'tunjangan' => $tunjangan,
+            'nameCabang' => $repo->getNameCabang($kdEntitas)
+        ]);
+    }
+    public function editTunjanganNew(Request $request){
+        try {
+            $item_id = $request->item_id;
+            $createdAt = $request->createdAt;
+            $tanggal = $request->tanggal;
+            $itemLamaId = DB::table('transaksi_tunjangan')->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $tanggal)
+                ->where('transaksi_tunjangan.created_at', $createdAt)->where('id_tunjangan', $request->id_tunjangan)->pluck('id');
+
+            for ($i = 0; $i < count($itemLamaId); $i++) {
+                if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
+                    // hapus item yang tidak ada dalam $item_id
+                    DB::table('transaksi_tunjangan')->where('id', $itemLamaId[$i])->delete();
+                }
+            }
+
+            if (is_array($item_id)) {
+                for ($i = 0; $i < count($item_id); $i++) {
+                    $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
+                    DB::table('transaksi_tunjangan')->where('id', $item_id[$i])->update([
+                        'nominal' => $nominal
+                    ]);
+                }
+            }
+
+            Alert::success('Success', 'Berhasil edit data penghasilan');
+            return redirect()->route('penghasilan.import-penghasilan-teratur.index');
+        } catch (\Exception $e) {
+            //  dd($e->getMessage());
+            Alert::error('Error', $e->getMessage());
+            return back();
+        } catch (\Illuminate\Database\QueryException $e) {
+            //  dd($e->getMessage());
+            Alert::error('Error', $e->getMessage());
+            return back();
+        }
+
     }
 
     public function editTunjanganPost(Request $request){

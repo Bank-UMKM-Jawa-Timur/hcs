@@ -70,19 +70,19 @@ Route::get('/dashboard', function () {
 
 Route::prefix('component')->group(function(){
     Route::get('button', function(){
-       return view('components.new.button'); 
+       return view('components.new.button');
     })->name('component.button');
     Route::get('table', function(){
-       return view('components.new.table'); 
+       return view('components.new.table');
     })->name('component.table');
     Route::get('form', function(){
-       return view('components.new.form'); 
+       return view('components.new.form');
     })->name('component.form');
     Route::get('modal', function(){
-       return view('components.new.modal'); 
+       return view('components.new.modal');
     })->name('component.modal');
     Route::get('loader', function(){
-       return view('components.new.loader'); 
+       return view('components.new.loader');
     })->name('component.loader');
 });
 
@@ -163,6 +163,8 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
         Route::get('/lock', [PenghasilanTeraturController::class, 'lock'])->name('lock');
         Route::get('/unlock', [PenghasilanTeraturController::class, 'unlock'])->name('unlock');
         Route::get('/edit-tunjangan', [PenghasilanTeraturController::class, 'editTunjangan'])->name('edit-tunjangan');
+        Route::post('/edit-tunjangan-new', [PenghasilanTeraturController::class, 'editTunjanganNew'])->name('edit-tunjangan-new');
+        Route::get('/edit-tunjangan-import', [PenghasilanTeraturController::class, 'editTunjanganImport'])->name('edit-tunjangan-import');
         Route::post('/edit-tunjangan-post', [PenghasilanTeraturController::class, 'editTunjanganPost'])->name('edit-tunjangan-post');
     });
     Route::post('upload-penghasilan',[GajiPerBulanController::class,'upload'])->name('upload.penghasilanPerBulan');
@@ -197,8 +199,10 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::post('/profil-kantor-pusat', [ProfilKantorPusatController::class, 'update'])->name('profil-kantor-pusat.update');
     Route::get('/bonus-lock', [BonusController::class, 'lock'])->name('bonus-lock');
     Route::get('/bonus-unlock', [BonusController::class, 'unlock'])->name('bonus-unlock');
-    Route::get('/edit-tunjangan-bonus/{idTunjangan}', [BonusController::class, 'editTunjangan'])->name('edit-tunjangan-bonus');
+    Route::get('/edit-tunjangan-bonus', [BonusController::class, 'editTunjangan'])->name('edit-tunjangan-bonus');
+    Route::get('/edit-tunjangan-bonus-new/{idTunjangan}', [BonusController::class, 'editsTunjangan'])->name('edit-tunjangan-bonus-new');
     Route::post('/edit-tunjangan-bonus/post', [BonusController::class, 'editTunjanganPost'])->name('edit-tunjangan-bonus-post');
+    Route::post('/edit-tunjangan-bonus-new/post', [BonusController::class, 'editTunjanganNewPost'])->name('edit-tunjangan-bonus-post-new');
 
     Route::prefix('penghasilan-tidak-teratur')
         ->name('penghasilan-tidak-teratur.')
@@ -214,7 +218,9 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
             Route::get('template-uang-duka', 'templateBiayaDuka')->name('templateBiayaDuka');
             Route::get('/lock', 'lock')->name('lock');
             Route::get('/unlock', 'unlock')->name('unlock');
-            Route::get('/edit-tunjangan/{idTunjangan}/{tanggal}/{kdEntitas}', 'editTunjangan')->name('edit-tunjangan-tidak-teratur');
+            Route::get('/edit-tunjangan', 'editTunjangan')->name('edit-tunjangan-tidak-teratur');
+            Route::get('/edit-tunjangan-new', 'editsTunjangan')->name('edit-tunjangan-tidak-teratur-new');
+            Route::post('/edit-tunjangan-new/post', 'editTunjanganNewPost')->name('edit-tunjangan-tidak-teratur-new-post');
             Route::post('/edit-tunjangan/post', 'editTunjanganPost')->name('edit-tunjangan-tidak-teratur-post');
             Route::get('validasi-insert', 'validasiInsert')->name('validasi-insert');
         });
@@ -394,7 +400,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     });
     Route::post('/post-import-data-karyawan', [KaryawanController::class, 'importUpdateKaryawan'])->name('import-data-karyawan');
     Route::post('/get-data-import-karyawan', [KaryawanController::class, 'getDataImportKaryawan'])->name('get-data-import-karyawan');
-  
+
     Route::prefix('reset-sessions')
         ->name('reset-sessions.')
         ->group(function(){
