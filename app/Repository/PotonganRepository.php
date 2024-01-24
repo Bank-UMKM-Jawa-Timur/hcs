@@ -9,32 +9,26 @@ use Illuminate\Support\Facades\DB;
 class PotonganRepository
 {
     public function getPotongan($search, $limit, $page=1) {
-      $potongan = DB::table('potongan_gaji as p')
-          ->select(
-            'p.id',
-            'p.nip',
-            'p.bulan',
-            'p.tahun',
-            'k.nama_karyawan',
-            DB::raw('COUNT(p.id) as total_data'),
-            DB::raw('SUM(p.kredit_koperasi) as kredit_koperasi'),
-            DB::raw('SUM(p.iuran_koperasi) as iuran_koperasi'),
-            DB::raw('SUM(p.kredit_pegawai) as kredit_pegawai'),
-            DB::raw('SUM(p.iuran_ik) as iuran_ik'),
+        $potongan = DB::table('potongan_gaji as p')
+            ->select(
+                'p.id',
+                'p.nip',
+                'k.nama_karyawan',
+                DB::raw('COUNT(p.id) as total_data'),
+                DB::raw('SUM(p.kredit_koperasi) as kredit_koperasi'),
+                DB::raw('SUM(p.iuran_koperasi) as iuran_koperasi'),
+                DB::raw('SUM(p.kredit_pegawai) as kredit_pegawai'),
+                DB::raw('SUM(p.iuran_ik) as iuran_ik'),
             )
             ->join('mst_karyawan as k','p.nip','=','k.nip')
             ->where(function ($query) use ($search) {
-              $query->where('p.nip', 'like', "%$search%")
-                  ->orWhere('k.nama_karyawan', 'like', "%$search%")
-                  ->orWhere('p.kredit_koperasi', 'like', "%$search%")
-                  ->orWhere('p.iuran_koperasi', 'like', "%$search%")
-                  ->orWhere('p.kredit_pegawai', 'like', "%$search%")
-                  ->orWhere('p.iuran_ik', 'like', "%$search%");
-          })
-            ->groupBy('p.bulan')
-            ->groupBy('p.tahun')
-            ->orderBy('p.bulan')
-            ->orderBy('p.tahun')
+                $query->where('p.nip', 'like', "%$search%")
+                    ->orWhere('k.nama_karyawan', 'like', "%$search%")
+                    ->orWhere('p.kredit_koperasi', 'like', "%$search%")
+                    ->orWhere('p.iuran_koperasi', 'like', "%$search%")
+                    ->orWhere('p.kredit_pegawai', 'like', "%$search%")
+                    ->orWhere('p.iuran_ik', 'like', "%$search%");
+            })
             ->paginate($limit);
 
         return $potongan;
@@ -45,8 +39,6 @@ class PotonganRepository
         ->select(
             'p.id',
             'p.nip',
-            'p.bulan',
-            'p.tahun',
             'k.nama_karyawan',
             'p.kredit_koperasi',
             'p.iuran_koperasi',
@@ -62,8 +54,6 @@ class PotonganRepository
                 ->orWhere('p.kredit_pegawai', 'like', "%$search%")
                 ->orWhere('p.iuran_ik', 'like', "%$search%");
             })
-            ->where('p.bulan', $bulan)
-            ->where('p.tahun', $tahun)
             ->orderBy('p.nip')
             ->paginate($limit);
 

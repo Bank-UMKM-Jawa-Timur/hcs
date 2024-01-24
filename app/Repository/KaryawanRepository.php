@@ -204,6 +204,78 @@ class KaryawanRepository
         return $karyawan;
     }
 
+    public function getDataKaryawanExport() {
+        $karyawan = KaryawanModel::select(
+            'mst_karyawan.nip',
+            'mst_karyawan.nama_karyawan',
+            'mst_karyawan.no_rekening',
+            'mst_karyawan.npwp',
+            'mst_karyawan.status_ptkp',
+            'mst_karyawan.kd_bagian',
+            'mst_karyawan.kd_jabatan',
+            'mst_karyawan.kd_entitas',
+            'mst_karyawan.tanggal_penonaktifan',
+            'mst_karyawan.status_jabatan',
+            'mst_karyawan.ket_jabatan',
+            'mst_karyawan.kd_entitas',
+            DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+        )
+        ->leftJoin('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
+        ->with('jabatan')
+        ->with('bagian')
+        ->whereNull('tanggal_penonaktifan')
+        ->where(function($query) {
+            $query->whereNull('mst_karyawan.status_ptkp')
+                ->orWhereNull('mst_karyawan.no_rekening')
+                ->orWhereNull('mst_karyawan.npwp');
+        })
+        ->orderBy('status_kantor', 'asc')
+        ->orderBy('mst_karyawan.kd_entitas')
+        ->orderByRaw($this->orderRaw)
+        ->get();
+
+        $this->addEntity($karyawan);
+
+        foreach ($karyawan as $key => $value) {
+            $prefix = match ($value->status_jabatan) {
+                'Penjabat' => 'Pj. ',
+                'Penjabat Sementara' => 'Pjs. ',
+                default => '',
+            };
+            
+            if ($value->jabatan) {
+                $jabatan = $value->jabatan->nama_jabatan;
+            } else {
+                $jabatan = 'undifined';
+            }
+            
+            $ket = $value->ket_jabatan ? "({$value->ket_jabatan})" : '';
+            
+            if (isset($value->entitas->subDiv)) {
+                $entitas = $value->entitas->subDiv->nama_subdivisi;
+            } elseif (isset($value->entitas->div)) {
+                $entitas = $value->entitas->div->nama_divisi;
+            } else {
+                $entitas = '';
+            }
+            
+            if ($jabatan == 'Pemimpin Sub Divisi') {
+                $jabatan = 'PSD';
+            } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
+                $jabatan = 'PBO';
+            } elseif ($jabatan == 'Pemimpin Bidang Pemasaran') {
+                $jabatan = 'PBP';
+            } else {
+                $jabatan = $value->jabatan ? $value->jabatan->nama_jabatan : 'undifined';
+            }
+
+            $display_jabatan = $prefix . ' ' . $jabatan . ' ' . $entitas . ' ' . $value?->bagian?->nama_bagian . ' ' . $ket;
+            $value->display_jabatan = $display_jabatan;
+        }
+
+        return $karyawan;
+    }
+
     public function getKaryawanPusat($limit): Collection
     {
         $karyawan = KaryawanModel::select(

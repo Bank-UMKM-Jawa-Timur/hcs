@@ -58,11 +58,11 @@
                 <thead class="text-primary">
                     <th>No</th>
                     <th>Tunjangan</th>
-                    {{-- @if (auth()->user()->hasRole('cabang') != 'cabang')
+                    @if (auth()->user()->hasRole('cabang') != 'cabang')
                         <th>
                             Kantor
                         </th>
-                    @endif --}}
+                    @endif
                     <th>Total Data</th>
                     <th>Grand Total</th>
                     <th>Tanggal</th>
@@ -80,11 +80,11 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{ $item->nama_tunjangan }}</td>
-                            {{-- @if (auth()->user()->hasRole('cabang') != 'cabang')
+                            @if (auth()->user()->hasRole('cabang') != 'cabang')
                                 <td>
                                     {{ $item->entitas ?? 'Pusat' }}
                                 </td>
-                            @endif --}}
+                            @endif
                             <td>{{ $item->total_data }}</td>
                             <td>{{ number_format($item->jumlah_nominal, 0,',','.') }}</td>
                             <td>{{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('d F Y') }}</td>

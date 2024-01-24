@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\KaryawanExportForPotongan;
 use App\Models\KaryawanModel;
+use App\Models\PotonganModel;
 use App\Repository\PotonganRepository;
 use Carbon\Carbon;
 use Exception;
@@ -126,10 +127,20 @@ class PotonganController extends Controller
             if ($nip) {
                 if (is_array($nip)) {
                     for ($i = 0; $i < $total; $i++) {
-                        DB::table('potongan_gaji')->insert([
+                        // Insert
+                        // DB::table('potongan_gaji')->insert([
+                        //     'nip' => $nip[$i],
+                        //     'kredit_koperasi' => $kredit_koperasi[$i],
+                        //     'iuran_koperasi' => $iuran_koperasi[$i],
+                        //     'kredit_pegawai' => $kredit_pegawai[$i],
+                        //     'iuran_ik' => $iuran_ik[$i],
+                        //     'created_at' => now(),
+                        //     'updated_at' => now(),
+                        // ]);
+
+                        // Update
+                        DB::table('potongan_gaji')->where('nip', $nip[$i])->update([
                             'nip' => $nip[$i],
-                            'bulan' => $bulanReq,
-                            'tahun' => $tahun,
                             'kredit_koperasi' => $kredit_koperasi[$i],
                             'iuran_koperasi' => $iuran_koperasi[$i],
                             'kredit_pegawai' => $kredit_pegawai[$i],
@@ -142,7 +153,7 @@ class PotonganController extends Controller
             }
 
             Alert::success('Success', 'Berhasil menyimpan data');
-            return redirect()->route('potongan.index');
+            return redirect()->back();
         } catch (\Exception $e) {
             Alert::error('Error', $e->getMessage());
             return back();

@@ -22,8 +22,6 @@ class ImportPotonganGaji implements ToCollection, WithHeadingRow, SkipsOnError, 
         foreach($collection as $item){
             DB::table('potongan_gaji')
                 ->insert([
-                    'bulan' => $item['bulan'],
-                    'tahun' => $item['tahun'],
                     'nip' => $item['nip'],
                     'kredit_koperasi' => $item['kredit_koperasi'],
                     'iuran_koperasi' => $item['iuran_koperasi'],

@@ -115,10 +115,8 @@ class SlipGajiController extends Controller
                     ->where('nip', $item->nip)
                     ->first();
                 $pengurang = DB::table('potongan_gaji')
-                    ->where('tahun', $tahun)
-                    ->where('bulan', $bulan)
-                    ->where('nip', $item->nip)
-                    ->first();
+                                ->where('nip', $item->nip)
+                                ->first();
                 $data[$i]['potongan'][1] = $dpp->nominal ?? 0;
                 $data[$i]['potongan'][2] = $pengurang->kredit_koperasi ?? 0;
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;
@@ -293,10 +291,8 @@ class SlipGajiController extends Controller
                     ->where('nip', $item->nip)
                     ->first();
                 $pengurang = DB::table('potongan_gaji')
-                    ->where('tahun', $tahun)
-                    ->where('bulan', $bulan)
-                    ->where('nip', $item->nip)
-                    ->first();
+                                ->where('nip', $item->nip)
+                                ->first();
                 $data[$i]['potongan'][1] = $dpp->nominal ?? 0;
                 $data[$i]['potongan'][2] = $pengurang->kredit_koperasi ?? 0;
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;

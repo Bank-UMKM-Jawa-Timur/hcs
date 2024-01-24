@@ -61,11 +61,11 @@
                     <th>
                         Tunjangan
                     </th>
-                    {{-- @if (auth()->user()->hasRole('cabang') != 'cabang')
+                    @if (auth()->user()->hasRole('cabang') != 'cabang')
                     <th>
                         Kantor
                     </th>
-                    @endif --}}
+                    @endif
                     <th>
                         Total Data
                     </th>
@@ -91,11 +91,11 @@
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td>{{ $item->nama_tunjangan }}</td>
-                        {{-- @if (auth()->user()->hasRole('cabang') != 'cabang')
-                        <td>
-                            {{ $item->entitas ?? 'Pusat' }}
-                        </td>
-                        @endif --}}
+                        @if (auth()->user()->hasRole('cabang') != 'cabang')
+                            <td>
+                                {{ $item->entitas ?? 'Pusat' }}
+                            </td>
+                        @endif
                         <td>{{ $item->total_data }}</td>
                         <td>{{ number_format($item->total_nominal, 0, ",", ".") }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>

@@ -32,40 +32,6 @@
         <div class="mt-2 mb-2" id="alert-content">
         </div>
         <div class="row">
-            <div class="col-lg-3">
-                <div class="form-group">
-                    <label for="">Bulan</label>
-                    <select name="bulan" id="bulan" class="form-control">
-                        <option value="">Pilih Bulan</option>
-                        @for ($i = 1; $i <= 12; $i++)
-                            <option {{ Request()->bulan == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}
-                                value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}">
-                                {{ date('F', mktime(0, 0, 0, $i, 1)) }}</option>
-                        @endfor
-                    </select>
-                    <p class="text-danger d-none mt-2" id="error-bulan"></p>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="form-group">
-                    <label for="">Tahun</label>
-                    <select name="tahun" id="tahun" class="form-control">
-                        <option value="">Pilih Tahun</option>
-                        @php
-                            $earliest = 2024;
-                            $tahunSaatIni = date('Y');
-                            $awal = $tahunSaatIni - 5;
-                            $akhir = $tahunSaatIni + 5;
-                        @endphp
-
-                        @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
-                            <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
-                                {{ $tahun }}</option>
-                        @endfor
-                    </select>
-                    <p class="text-danger d-none mt-2" id="error-tahun"></p>
-                </div>
-            </div>
             <div class="col-lg-4">
                 <div class="form-group">
                     <label for="">File</label>
@@ -90,8 +56,6 @@
         <form action="{{ route('import-potongan-post') }}" method="POST">
             @csrf
             <input type="hidden" name="nip" class="form-control nip-input" value="" readonly>
-            <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
-            <input type="hidden" name="tahun" class="form-control tahun-input" value="" readonly>
             <input type="hidden" name="kredit_koperasi" class="form-control kredit-koperasi-input" value="" readonly>
             <input type="hidden" name="iuran_koperasi" class="form-control iuran-koperasi-input" value="" readonly>
             <input type="hidden" name="kredit_pegawai" class="form-control kredit-pegawai-input" value="" readonly>
@@ -160,35 +124,17 @@
     <script>
 
         $('#filter-potongan-import').on('click', function() {
-            var bulan = $('#bulan').val();
-            var tahun = $('#tahun').val();
             var fileCsv = $('#file-csv').val();
 
-            if (bulan && tahun && fileCsv) {
+            if (fileCsv) {
                 importExcel();
                 $('#table_item tbody').empty();
-                $('#error-bulan').addClass('d-none')
-                $('#error-tahun').addClass('d-none')
                 $('#error-file').addClass('d-none')
             } else {
-                if (bulan == "" && tahun && fileCsv) {
-                    $('#error-bulan').removeClass('d-none').html('Bulan belum di pilih.')
-                    $('#error-tahun').addClass('d-none')
-                    $('#error-file').addClass('d-none')
-                }
-                else if (tahun == "" && bulan && fileCsv){
-                    $('#error-tahun').removeClass('d-none').html('Tahun belum di pilih.')
-                    $('#error-bulan').addClass('d-none')
-                    $('#error-file').addClass('d-none')
-                }
-                else if (tahun && bulan && !fileCsv){
-                    $('#error-tahun').addClass('d-none')
-                    $('#error-bulan').addClass('d-none')
+                if (!fileCsv){
                     $('#error-file').removeClass('d-none')
                 }
                 else {
-                    $('#error-bulan').removeClass('d-none').html('Bulan belum di pilih.')
-                    $('#error-tahun').removeClass('d-none').html('Tahun belum di pilih.')
                     $('#error-file').removeClass('d-none')
                 }
             }
@@ -330,8 +276,6 @@
                     `);
                 },
                 success: function(res) {
-                    var bulan = $('#bulan').val();
-                    var tahun = $('#tahun').val();
                     var new_body_tr = ``
                     $.each(res, function(key, value) {
                         nipDataRequest.push(value.nip);
@@ -385,8 +329,6 @@
                         $('.iuran-koperasi-input').val(dataIuranKoprasi);
                         $('.kredit-pegawai-input').val(dataKreditPegawai);
                         $('.iuran_ik-input').val(dataIuranIk);
-                        $('.bulan-input').val(bulan);
-                        $('.tahun-input').val(tahun);
 
                         $('#table_item tbody').append(new_body_tr);
                         $('#hasil-import').removeClass('d-none');
@@ -396,8 +338,6 @@
                         $('.iuran-koperasi-input').val(dataIuranKoprasi);
                         $('.kredit-pegawai-input').val(dataKreditPegawai);
                         $('.iuran_ik-input').val(dataIuranIk);
-                        $('.bulan-input').val(bulan);
-                        $('.tahun-input').val(tahun);
 
                         $('#table_item tbody').append(new_body_tr);
                         $('#hasil-import').removeClass('d-none');

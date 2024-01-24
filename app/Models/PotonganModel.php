@@ -13,8 +13,6 @@ class PotonganModel extends Model
 
     protected $fillable = [
         'nip',
-        'bulan',
-        'tahun',
         'kredit_koperasi',
         'iuran_koperasi',
         'kredit_pegawai',
