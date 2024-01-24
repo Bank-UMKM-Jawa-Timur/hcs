@@ -69,7 +69,7 @@ class PenghasilanTidakTeraturController extends Controller
         foreach($cbg as $item){
             array_push($cabang, $item->kd_cabang);
         }
-        
+
         $tahun = $request->get('tahun');
         $mode = $request->get('mode');
         $nip = $request->get('nip');
@@ -284,7 +284,7 @@ class PenghasilanTidakTeraturController extends Controller
                     $jkm = ($persen_jkm / 100) * $item;
                     $jp_penambah = ($persen_jp_penambah / 100) * $item;
                 }
-    
+
                 if($karyawan->jkn != null){
                     if($item > $batas_atas){
                         $kesehatan = ($batas_atas * ($persen_kesehatan / 100));
@@ -583,26 +583,24 @@ class PenghasilanTidakTeraturController extends Controller
             $idTunjangan = TunjanganModel::where('nama_tunjangan', 'like', "%$tunjangan%")->first();
 
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
-
             $now = now();
             foreach($nip as $key => $item){
                 $bulan = (int) Carbon::parse($request->get('tanggal'))->format('m');
                 $tahun = (int) Carbon::parse($request->get('tanggal'))->format('Y');
-                $nominal = (int) str_replace('.', '', $nominal[$key]);
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $idTunjangan->id,
                     'bulan' => $bulan,
                     'tahun' => $tahun,
-                    'nominal' => $nominal,
+                    'nominal' => (int) str_replace('.', '', $nominal[$key]),
                     'kd_entitas' => $kd_entitas,
                     'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
                     'created_at' => $request->get('tanggal')
                 ]);
-                
+
                 if ($idTunjangan->id == 31) {
                     // Insentif kredit
-                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, $nominal, 'kredit');
+                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, (int) str_replace('.', '', $nominal[$key]), 'kredit');
                     $current = PPHModel::where('nip', $item)
                                 ->where('tahun', $tahun)
                                 ->where('bulan', $bulan)
@@ -680,10 +678,12 @@ class PenghasilanTidakTeraturController extends Controller
             Alert::success('Berhasil', 'Berhasil menambahkan data penghasilan');
             return redirect()->route('penghasilan-tidak-teratur.index');
         } catch(Exception $e){
+            return $e;
             DB::rollBack();
             Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('pajak_penghasilan.create');
         } catch(QueryException $e){
+            return $e;
             DB::rollBack();
             Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('pajak_penghasilan.create');
