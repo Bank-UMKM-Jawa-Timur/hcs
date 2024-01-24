@@ -1739,7 +1739,7 @@ class LaporanTetapRepository
         $totalPPh = 0;
 
         foreach($data as $key => $item){
-            $totalGaji += $item->gaji->total_gaji ?? 0;
+            $totalGaji += $item->gaji->total_gaji ?? $item->gj_pokok;
             $totalUangMakan += $item->gaji->uang_makan ?? 0;
             $totalPulsa += $item->gaji->tj_pulsa ?? 0;
             $totalVitamin += $item->gaji->tj_vitamin ?? 0;
