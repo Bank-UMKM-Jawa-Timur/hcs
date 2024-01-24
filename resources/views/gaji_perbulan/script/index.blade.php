@@ -593,6 +593,13 @@
                         }
                     },
                     {
+                        data: "gaji.tj_teller",
+                        class: 'text-right',
+                        render:function(data, type, row){
+                            return formatRupiahExcel(data)
+                        }
+                    },
+                    {
                         data: "gaji.gj_penyesuaian",
                         class: 'text-right',
                         render:function(data, type, row){
