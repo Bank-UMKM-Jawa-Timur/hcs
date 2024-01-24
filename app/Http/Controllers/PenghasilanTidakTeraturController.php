@@ -323,6 +323,10 @@ class PenghasilanTidakTeraturController extends Controller
         }
         $karyawanController = new KaryawanController;
         $karyawan->masa_kerja = $karyawanController->countAge($karyawan->tanggal_pengangkat);
+        $bonus_title = DB::table('mst_tunjangan')
+                        ->where('kategori', 'bonus')
+                        ->orderBy('id')
+                        ->pluck('nama_tunjangan');
 
         return view('penghasilan.gajipajak', [
             'gj' => $gj,
@@ -330,6 +334,7 @@ class PenghasilanTidakTeraturController extends Controller
             'tunjangan' => $tk,
             'penghasilan' => $ptt,
             'bonus' => $bonus,
+            'bonus_title' => $bonus_title,
             'tahun' => $tahun,
             'karyawan' => $karyawan,
             'request' => $request,

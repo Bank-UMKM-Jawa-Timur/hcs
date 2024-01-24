@@ -276,9 +276,6 @@
                             @for ($i = 0; $i < 12; $i++)
                                 <tr>
                                     <td>{{ $bulan[$i] }}</td>
-                                    {{--  @if ($i == 7)
-                                        @dd($gj[$i], array_sum($gj[$i]),$jamsostek[$i], $jamsostek)
-                                    @endif  --}}
                                     <td>{{ (array_sum($gj[$i]) + $jamsostek[$i] > 0) ? rupiah(array_sum($gj[$i]) + $jamsostek[$i]) : '-' }}</td>
                                     <td>{{ (array_sum($penghasilan[$i]) + array_sum($bonus[$i]) > 0) ? rupiah(array_sum($penghasilan[$i]) + array_sum($bonus[$i])) : '-' }}</td>
                                     @php
@@ -531,10 +528,9 @@
                         <thead>
                             <tr>
                                 <th rowspan="2">Bulan</th>
-                                <th rowspan="2">Tunjangan Hari Raya</th>
-                                <th rowspan="2">Jasa Produksi</th>
-                                <th rowspan="2">Dana Pendidikan</th>
-                                <th rowspan="2">Tambahan <br>Penghasilan</th>
+                                @for($i = 0; $i < count($bonus_title); $i++)
+                                    <th rowspan="2">{{$bonus_title[$i]}}</th>
+                                @endfor
                             </tr>
                         </thead>
                         <tbody>
@@ -543,11 +539,13 @@
                                 $total_jasa_produksi = null;
                                 $total_dana_pendidikan = null;
                                 $total_tambahan_penghasilan = null;
+                                $total_tambahan_kinerja = null;
+                                $total_rekreasi = null;
                             @endphp
                             @for ($i = 0; $i < 12; $i++)
                                 <tr>
                                     <td>{{ $bulan[$i] }}</td>
-                                    @for ($j = 0; $j < 4; $j++)
+                                    @for ($j = 0; $j < count($bonus_title); $j++)
                                         <td>{{ ($bonus[$i][$j] != 0) ? rupiah($bonus[$i][$j]) : '-' }}</td>
                                     @endfor
                                     @php
@@ -555,6 +553,8 @@
                                         $total_jasa_produksi += $bonus[$i][1];
                                         $total_dana_pendidikan += $bonus[$i][2];
                                         $total_tambahan_penghasilan += $bonus[$i][3];
+                                        $total_tambahan_kinerja += $bonus[$i][4];
+                                        $total_rekreasi += $bonus[$i][5];
                                     @endphp
                                 </tr>
                             @endfor
@@ -568,6 +568,8 @@
                                 <td class="bg-theme-primary text-white " colspan="1">{{ rupiah($total_jasa_produksi) }}</td>
                                 <td class="bg-theme-primary text-white " colspan="1">{{ rupiah($total_dana_pendidikan) }}</td>
                                 <td class="bg-theme-primary text-white " colspan="1">{{ rupiah($total_tambahan_penghasilan) }}</td>
+                                <td class="bg-theme-primary text-white " colspan="1">{{ rupiah($total_tambahan_kinerja) }}</td>
+                                <td class="bg-theme-primary text-white " colspan="1">{{ rupiah($total_rekreasi) }}</td>
                             </tr>
                         </tfoot>
                     </table>
