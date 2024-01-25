@@ -1735,7 +1735,14 @@ class LaporanTetapRepository
         $totalBrutoNataru = 0;
         $totalPPHNataru = 0;
         $totalBrutoJaspro = 0;
+        $totalBrutoTambahanPenghasilan = 0;
+        $totalBrutoRekreasi = 0;
+        $totalBrutoTHR = 0;
+        $totalBrutoDanaPendidikan = 0;
+        $totalBrutoPenghargaanKinerja = 0;
         $totalPPHJaspro = 0;
+        $totalPPHTambahanPenghasilan = 0;
+        $totalPPHRekreasi = 0;
         $totalPPH21 = 0;
         $totalPenambahBruto = 0;
         $totalBruto = 0;
@@ -1762,6 +1769,13 @@ class LaporanTetapRepository
             $pphNataru = 0;
             $brutoJaspro = 0;
             $pphJaspro = 0;
+            $brutoTambahanPenghasilan = 0;
+            $brutoRekreasi = 0;
+            $brutoTHR = 0;
+            $brutoDanaPendidikan = 0;
+            $brutoPenghargaanKinerja = 0;
+            $pphTambahanPenghasilan = 0;
+            $pphRekreasi = 0;
             $pph21 = 0;
             $penambahBruto = 0;
             $brutoTotal = 0;
@@ -1791,6 +1805,23 @@ class LaporanTetapRepository
                 if ($value->id_tunjangan == 23) {
                     $brutoJaspro += $value->nominal;
                 }
+                if ($value->id_tunjangan == 26) {
+                    $brutoTambahanPenghasilan += $value->nominal;
+                }
+                if ($value->id_tunjangan == 33) {
+                    $brutoRekreasi += $value->nominal;
+                }
+            }
+            foreach($item?->bonus as $value){
+                if ($value->id_tunjangan == 22) {
+                    $brutoTHR += $value->nominal;
+                }
+                if ($value->id_tunjangan == 24) {
+                    $brutoDanaPendidikan += $value->nominal;
+                }
+                if ($value->id_tunjangan == 28) {
+                    $brutoPenghargaanKinerja += $value->nominal;
+                }    
             }
             foreach ($item?->pphDilunasi as $value) {
                 if ($value->bulan > 1) {
@@ -1811,8 +1842,8 @@ class LaporanTetapRepository
             }
             $penambahBruto = $item->jamsostek;
 
-            $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $brutoNataru + $brutoJaspro + $penambahBruto;
-            $brutoPPH = $pphNataru + $pphJaspro + $pph21;
+            $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $brutoNataru + $brutoJaspro + $penambahBruto + $brutoTambahanPenghasilan + $brutoRekreasi + $brutoDanaPendidikan + $brutoTHR + $brutoPenghargaanKinerja;
+            $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21;
 
             $totalLembur += $lembur;
             $totalPenggantiKesehatan += $penggantiBiayaKesehatan;
@@ -1823,7 +1854,14 @@ class LaporanTetapRepository
             $totalBrutoNataru += $brutoNataru;
             $totalPPHNataru += $pphNataru;
             $totalBrutoJaspro += $brutoJaspro;
+            $totalBrutoTambahanPenghasilan += $brutoTambahanPenghasilan;
+            $totalBrutoRekreasi += $brutoRekreasi;
+            $totalBrutoTHR += $brutoTHR;
+            $totalBrutoDanaPendidikan += $brutoDanaPendidikan;
+            $totalBrutoPenghargaanKinerja += $brutoPenghargaanKinerja;
             $totalPPHJaspro += $pphJaspro;
+            $totalPPHTambahanPenghasilan += $pphTambahanPenghasilan;
+            $totalPPHRekreasi += $pphRekreasi;
             $totalPPH21 += $pph21;
             $totalPenambahBruto += $penambahBruto;
             $totalBruto += $brutoTotal;
@@ -1844,7 +1882,14 @@ class LaporanTetapRepository
         $returnData->totalBrutoNataru = $totalBrutoNataru;
         $returnData->totalPPHNataru = $totalPPHNataru;
         $returnData->totalBrutoJaspro = $totalBrutoJaspro;
+        $returnData->totalBrutoTambahanPenghasilan = $totalBrutoTambahanPenghasilan;
+        $returnData->totalBrutoRekreasi = $totalBrutoRekreasi;
+        $returnData->totalBrutoTHR = $totalBrutoTHR;
+        $returnData->totalBrutoDanaPendidikan = $totalBrutoDanaPendidikan;
+        $returnData->totalBrutoPenghargaanKinerja = $totalBrutoPenghargaanKinerja;
         $returnData->totalPPHJaspro = $totalPPHJaspro;
+        $returnData->totalPPHTambahanPenghasilan = $totalPPHTambahanPenghasilan;
+        $returnData->totalPPHRekreasi = $totalPPHRekreasi;
         $returnData->totalPPH21 = $totalPPH21;
         $returnData->totalPenambahBruto = $totalPenambahBruto;
         $returnData->totalBruto = $totalBruto;

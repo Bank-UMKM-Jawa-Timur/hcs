@@ -1,9 +1,32 @@
+@php
+    $colspanBonus = 3;
+    if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0) {
+        $colspanBonus += 1;
+    }
+    if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0) {
+        $colspanBonus += 1;
+    }
+    if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0) {
+        $colspanBonus += 1;
+    }
+    if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0) {
+        $colspanBonus += 1;
+    }
+@endphp
 <table class="tables table whitespace-nowrap table-bordered" id="table" style="width: 100%;">
     <thead class="text-primary" style="border: 1px solid #e3e3e3 !important; position: sticky; top: 0; background-color: white; z-index: 1;">
         <tr>
-            <th rowspan="2" class="text-center">NO</th>
-            <th rowspan="2" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">NAMA KARYAWAN</th>
-            <th class="text-center">GAJI</th>
+            <th rowspan="3" class="text-center">NO</th>
+            <th rowspan="3" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">NAMA KARYAWAN</th>
+            <th rowspan="3" class="text-center">GAJI</th>
+            <th class="text-center" colspan="5">TERATUR</th>
+            <th class="text-center" colspan="5">TIDAK<br>TERATUR</th>
+            <th class="text-center" colspan="{{ $colspanBonus }}">BONUS</th>
+            <th rowspan="3" class="text-center">PPh Ps 21</th>
+            <th rowspan="3" class="text-center">Penambah Penghasilan Bruto</th>
+            <th rowspan="2" colspan="2" class="text-center">TOTAL</th>
+        </tr>
+        <tr>
             <th class="text-center">UANG MAKAN</th>
             <th class="text-center">PULSA</th>
             <th class="text-center">PENGGANTI VITAMIN</th>
@@ -16,18 +39,21 @@
             <th class="text-center">PINDAH TUGAS</th>
             <th class="text-center">THR</th>
             <th class="text-center">DANA<br>PENDIDIKAN</th>
-            <th class="text-center">TAMBAHAN<br>PENGHASILAN</th>
+            {{-- <th class="text-center">TAMBAHAN<br>PENGHASILAN</th> --}}
             <th class="text-center">PENGHARGAAN<br>KINERJA</th>
-            <th class="text-center">REKREASI</th>
+            {{-- <th class="text-center">REKREASI</th> --}}
             @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
                 <th colspan="2" class="text-center">NATARU</th>
             @endif
             @if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0)
                 <th colspan="2" class="text-center">JASA PRODUKSI + DANA KESEHATAN</th>
             @endif
-            <th rowspan="2" class="text-center">PPh Ps 21</th>
-            <th rowspan="2" class="text-center">Penambah Penghasilan Bruto</th>
-            <th colspan="2" class="text-center">TOTAL</th>
+            @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
+                <th colspan="2" class="text-center">TAMBAHAN<br>PENGHASILAN</th>
+            @endif
+            @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
+                <th colspan="2" class="text-center">REKREASI</th>
+            @endif
         </tr>
         <tr>
             <th class="text-center">BRUTO</th>
@@ -48,6 +74,14 @@
                 <th class="text-center">PPH</th>
             @endif
             @if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0)
+                <th class="text-center">BRUTO</th>
+                <th class="text-center">PPH</th>
+            @endif
+            @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
+                <th class="text-center">BRUTO</th>
+                <th class="text-center">PPH</th>
+            @endif
+            @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
                 <th class="text-center">BRUTO</th>
                 <th class="text-center">PPH</th>
             @endif
@@ -75,6 +109,10 @@
             $totalPPHNataru = 0;
             $totalBrutoJaspro = 0;
             $totalPPHJaspro = 0;
+            $totalBrutoTambahanPenghasilan = 0;
+            $totalPPHTambahanPenghasilan = 0;
+            $totalBrutoRekreasi = 0;
+            $totalPPHRekreasi = 0;
             $totalPPH21 = 0;
             $totalPenambahBruto = 0;
             $totalBruto = 0;
@@ -84,6 +122,12 @@
                 $totalColumns += 2;
             }
             if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0) {
+                $totalColumns += 2;
+            }
+            if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0) {
+                $totalColumns += 2;
+            }
+            if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0) {
                 $totalColumns += 2;
             }
         @endphp
@@ -101,7 +145,9 @@
                 $spdPendidikan = 0;
                 $spdPindahTugas = 0;
                 $tambahanPenghasilan = 0;
+                $pphTambahanPenghasilan = 0;
                 $rekreasi = 0;
+                $pphRekreasi = 0;
                 $brutoNataru = 0;
                 $pphNataru = 0;
                 $brutoJaspro = 0;
@@ -110,6 +156,14 @@
                 $penambahBruto = 0;
                 $brutoTotal = 0;
                 $brutoPPH = 0;
+                $bonus = 0;
+                $totalBonus = 0;
+                $brutoTHR = 0;
+                $totalBrutoTHR = 0;
+                $brutoDanaPendidikan = 0;
+                $totalBrutoDanaPendidikan = 0;
+                $brutoPenghargaanKinerja = 0;
+                $totalBrutoPenghargaanKinerja = 0;
 
                 foreach ($item->tunjanganTidakTetap as $value) {
                     if ($value->id_tunjangan == 16) {
@@ -144,6 +198,18 @@
                     }
                 }
 
+                foreach ($item->bonus as $key => $value) {
+                    if ($value->id_tunjangan == 22) {
+                        $brutoTHR += $value->nominal;
+                    }
+                    if ($value->id_tunjangan == 24) {
+                        $brutoDanaPendidikan += $value->nominal;
+                    }
+                    if ($value->id_tunjangan == 28) {
+                        $brutoPenghargaanKinerja += $value->nominal;
+                    }
+                }
+
                 foreach ($item?->pphDilunasi as $value) {
                     if ($value->bulan > 1) {
                         $pph21 += $value->total_pph;
@@ -164,7 +230,7 @@
                 $penambahBruto = $item->jamsostek;
 
                 $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $bonus + $brutoNataru + $brutoJaspro + $penambahBruto;
-                $brutoPPH = $pphNataru + $pphJaspro + $pph21;
+                $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21;
 
                 // Hitung total per page
                 $totalGaji += $item->gaji ? $item->gaji->total_gaji : $item->gj_pokok;
@@ -182,11 +248,18 @@
                 $totalBrutoNataru += $brutoNataru;
                 $totalPPHNataru += $pphNataru;
                 $totalBrutoJaspro += $brutoJaspro;
+                $totalTambahanPenghasilan += $tambahanPenghasilan;
+                $totalRekreasi += $rekreasi;
                 $totalPPHJaspro += $pphJaspro;
+                $totalPPHTambahanPenghasilan += $pphTambahanPenghasilan;
+                $totalPPHRekreasi += $pphRekreasi;
                 $totalPPH21 += $pph21;
                 $totalPenambahBruto += $penambahBruto;
                 $totalBruto += $brutoTotal;
                 $totalPPh += $brutoPPH;
+                $totalBrutoTHR += $brutoTHR;
+                $totalBrutoDanaPendidikan += $brutoDanaPendidikan;
+                $totalBrutoPenghargaanKinerja += $brutoPenghargaanKinerja;
             @endphp
             <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
@@ -202,7 +275,9 @@
                 <td class="text-right">{{ formatRupiahExcel($spd, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($spdPendidikan, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($spdPindahTugas, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($bonus, 0, true) }}</td>
+                <td class="text-right">{{ formatRupiahExcel($brutoTHR, 0, true) }}</td>
+                <td class="text-right">{{ formatRupiahExcel($brutoDanaPendidikan ?? 0, 0, true) }}</td>
+                <td class="text-right">{{ formatRupiahExcel($brutoPenghargaanKinerja ?? 0, 0, true) }}</td>
                 @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
                     <td class="text-right">{{ formatRupiahExcel($brutoNataru, 0, true) }}</td>
                     <td class="text-right">{{ formatRupiahExcel($pphNataru, 0, true) }}</td>
@@ -210,6 +285,14 @@
                 @if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0)
                     <td class="text-right">{{ formatRupiahExcel($brutoJaspro, 0, true) }}</td>
                     <td class="text-right">{{ formatRupiahExcel($pphJaspro, 0, true) }}</td>
+                @endif
+                @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
+                    <td class="text-right">{{ formatRupiahExcel($tambahanPenghasilan, 0, true) }}</td>
+                    <td class="text-right">{{ formatRupiahExcel($pphTambahanPenghasilan, 0, true) }}</td>
+                @endif
+                @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
+                    <td class="text-right">{{ formatRupiahExcel($rekreasi, 0, true) }}</td>
+                    <td class="text-right">{{ formatRupiahExcel($pphRekreasi, 0, true) }}</td>
                 @endif
                 <td class="text-right">{{ formatRupiahExcel($pph21, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($penambahBruto, 0, true) }}</td>
@@ -236,7 +319,9 @@
             <th class="text-right">{{ formatRupiahExcel($totalSPD ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($totalSPDPendidikan ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($totalSPDPindahTugas ?? 0, 0, true) }}</th>
-            <th class="text-right">{{ formatRupiahExcel($totalBonus ?? 0, 0, true) }}</th>
+            <th class="text-right">{{ formatRupiahExcel($totalTHR ?? 0, 0, true) }}</th>
+            <th class="text-right">{{ formatRupiahExcel($totalBrutoDanaPendidikan ?? 0, 0, true) }}</th>
+            <th class="text-right">{{ formatRupiahExcel($totalBrutoPenghargaanKinerja ?? 0, 0, true) }}</th>
             @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
                 <th class="text-right">{{ formatRupiahExcel($totalBrutoNataru ?? 0, 0, true) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalPPHNataru ?? 0, 0, true) }}</th>
@@ -244,6 +329,14 @@
             @if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0)
                 <th class="text-right">{{ formatRupiahExcel($totalBrutoJaspro ?? 0, 0, true) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalPPHJaspro ?? 0, 0, true) }}</th>
+            @endif
+            @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
+                <th class="text-right">{{ formatRupiahExcel($totalBrutoTambahanPenghasilan ?? 0, 0, true) }}</th>
+                <th class="text-right">{{ formatRupiahExcel($totalPPHTambahanPenghasilan ?? 0, 0, true) }}</th>
+            @endif
+            @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
+                <th class="text-right">{{ formatRupiahExcel($totalBrutoRekreasi ?? 0, 0, true) }}</th>
+                <th class="text-right">{{ formatRupiahExcel($totalPPHRekreasi ?? 0, 0, true) }}</th>
             @endif
             <th class="text-right">{{ formatRupiahExcel($totalPPH21 ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($totalPenambahBruto ?? 0, 0, true) }}</th>
@@ -272,6 +365,16 @@
                 <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoJaspro ?? 0, 0, true) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHJaspro ?? 0, 0, true) }}</th>
             @endif
+            @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
+                <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoTambahanPenghasilan ?? 0, 0, true) }}</th>
+                <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHTambahanPenghasilan ?? 0, 0, true) }}</th>
+            @endif
+            @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
+                <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoRekreasi ?? 0, 0, true) }}</th>
+                <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHRekreasi ?? 0, 0, true) }}</th>
+            @endif
+            <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoDanaPendidikan ?? 0, 0, true) }}</th>
+            <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoPenghargaanKinerja ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPH21 ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPenambahBruto ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBruto ?? 0, 0, true) }}</th>
