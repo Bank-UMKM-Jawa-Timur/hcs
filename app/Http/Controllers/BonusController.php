@@ -129,7 +129,9 @@ class BonusController extends Controller
 
             }
             \DB::commit();
+
             // Hitung pph
+            DB::beginTransaction();
             for ($i=0; $i < count($data_nip); $i++) {
                 $bulan = (int) Carbon::parse($request->get('tanggal'))->format('m');
                 $tahun = (int) Carbon::parse($request->get('tanggal'))->format('Y');
@@ -137,8 +139,9 @@ class BonusController extends Controller
                             ->where('nip', $data_nip[$i])
                             ->whereNull('tanggal_penonaktifan')
                             ->first();
-                $pph = HitungPPH::getTerutang((int) $bulan, $tahun, $karyawan);
+                $pph = HitungPPH::getNewPPH58($request->get('tanggal'), (int) $bulan, $tahun, $karyawan);
             }
+            DB::commit();
 
             if(Carbon::parse($request->get('tanggal'))->format('m') == 12 && Carbon::now()->format('d') > 25){
                 \DB::beginTransaction();
@@ -386,15 +389,17 @@ class BonusController extends Controller
             DB::commit();
 
             // Hitung pph
+            DB::beginTransaction();
             for ($i = 0; $i < count($data_nip); $i++) {
                 $bulan = (int) Carbon::parse($createdAt)->format('m');
                 $tahun = (int) Carbon::parse($createdAt)->format('Y');
                 $karyawan = DB::table('mst_karyawan')
-                ->where('nip', $data_nip[$i])
-                    ->whereNull('tanggal_penonaktifan')
-                    ->first();
-                $pph = HitungPPH::getTerutang((int) $bulan, $tahun, $karyawan);
+                            ->where('nip', $data_nip[$i])
+                            ->whereNull('tanggal_penonaktifan')
+                            ->first();
+                $pph = HitungPPH::getNewPPH58($createdAt, (int) $bulan, $tahun, $karyawan);
             }
+            DB::commit();
 
             if (Carbon::parse($createdAt)->format('m') == 12 && Carbon::now()->format('d') > 25) {
                 \DB::beginTransaction();
