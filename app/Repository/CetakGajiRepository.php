@@ -254,6 +254,8 @@ class CetakGajiRepository
                         $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
                     }
                 }
+                $dpp = round($dpp);
+                $jp_1_persen = round($jp_1_persen);
                 $potongan->dpp = $dpp;
                 $potongan->jp_1_persen = $jp_1_persen;
 
@@ -274,6 +276,7 @@ class CetakGajiRepository
                         $bpjs_tk = $total_gaji * 1 / 100;
                     }
                 }
+                $bpjs_tk = round($bpjs_tk);
 
                 // Penghasilan rutin
                 $penghasilan_rutin = $gaji + $jamsostek;
