@@ -360,7 +360,7 @@ class LaporanTetapRepository
 
                 // Get Potongan(JP1%, DPP 5%)
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP') {
+                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                     $dpp = 0;
                     $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
                 } else{
@@ -582,7 +582,7 @@ class LaporanTetapRepository
                             $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
-                            if($karyawan->status_karyawan == 'IKJP') {
+                            if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                                 $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
                             } else{
                                 $gj_pokok = $value->gj_pokok;
@@ -1188,7 +1188,7 @@ class LaporanTetapRepository
 
                 // Get Potongan(JP1%, DPP 5%)
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP') {
+                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                     $dpp = 0;
                     $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
                 } else{
@@ -1413,7 +1413,7 @@ class LaporanTetapRepository
                             $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
-                            if($karyawan->status_karyawan == 'IKJP') {
+                            if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                                 $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
                             } else{
                                 $gj_pokok = $value->gj_pokok;

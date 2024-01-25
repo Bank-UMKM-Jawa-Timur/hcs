@@ -301,7 +301,7 @@ class PenghasilanTidakTeraturController extends Controller
 
             // Get Pengurang Bruto
             if($item > 0){
-                if($karyawan->status_karyawan == 'IKJP') {
+                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                     array_push($pengurang, ($persen_jp_pengurang / 100) * $item);
                 } else{
                     $gj_pokok = $gj[$key]['gj_pokok'];
@@ -835,7 +835,6 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function editTunjanganNewPost(Request $request){
-        // return $request;s
         DB::beginTransaction();
         try {
             $nip = $request->get('nip');
@@ -844,7 +843,7 @@ class PenghasilanTidakTeraturController extends Controller
             $tanggal = $request->tanggal;
             $itemLamaId = DB::table('penghasilan_tidak_teratur')
                 ->where('penghasilan_tidak_teratur.created_at', $createdAt)->where('id_tunjangan', $request->id_tunjangan)->pluck('id');
-            // return $itemLamaId;
+
             for ($i = 0; $i < count($itemLamaId); $i++) {
                 if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
                     // hapus item yang tidak ada dalam $item_id
@@ -973,7 +972,6 @@ class PenghasilanTidakTeraturController extends Controller
             return redirect()->route('penghasilan-tidak-teratur.index');
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
             Alert::error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('pajak_penghasilan.create');
         } catch (QueryException $e) {

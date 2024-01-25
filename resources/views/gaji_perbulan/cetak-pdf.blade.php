@@ -91,7 +91,11 @@
 @endphp
     <div class="container">
         <h5 class="fw-bold text-center">RINCIAN GAJI PEGAWAI</h5>
-        <h5 class="fw-bold text-center">KANTOR PUSAT</h5>
+        @if (auth()->user()->hasRole('cabang'))
+            <h5 class="fw-bold text-center">KANTOR {{strtoupper($cabang->nama_cabang)}}</h5>
+        @else
+            <h5 class="fw-bold text-center">KANTOR PUSAT</h5>
+        @endif
         <h5 class="fw-bold text-center">BANK BPR JATIM BANK UMKM JAWA TIMUR</h5>
         <h6 class="fw-bold text-center">{{ $bulan[$month] }} {{ $year }}</h6>
         <center style="font-size: 10px; text-align: center" class="text-center">( MASUK TAB. SIKEMAS )</center>

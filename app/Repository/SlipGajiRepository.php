@@ -630,7 +630,7 @@ class SlipGajiRepository
                             $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
-                            if($karyawan->status_karyawan == 'IKJP') {
+                            if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                                 $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
                             } else{
                                 $gj_pokok = $value->gj_pokok;
@@ -983,6 +983,8 @@ class SlipGajiRepository
                                         'tj_kesejahteraan',
                                         'tj_multilevel',
                                         'tj_ti',
+                                        'tj_fungsional',
+                                        DB::raw('(tj_ti + tj_multilevel + tj_fungsional) AS tj_khusus'),
                                         'tj_transport',
                                         'tj_pulsa',
                                         'tj_vitamin',
@@ -1357,7 +1359,7 @@ class SlipGajiRepository
                             $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
-                            if($karyawan->status_karyawan == 'IKJP') {
+                            if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                                 $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
                             } else{
                                 $gj_pokok = $value->gj_pokok;

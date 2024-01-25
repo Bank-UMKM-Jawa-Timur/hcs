@@ -206,7 +206,7 @@
                         @if($item->status == 'proses')
                             @if($item->total_penyesuaian > 0)
                                 @can('penghasilan - proses penghasilan - proses')
-                                    <a href="#" data-modal-id="penyesuaian-modal" data-modal-toggle="modal"  class="btn btn-warning  btn-perbarui"
+                                    <a href="#" data-modal-id="penyesuaian-modal" data-modal-toggle="modal"  class="btn btn-warning btn-perbarui"
                                         data-batch_id="{{$item->id}}">Perbarui</a>
                                 @endcan
                             @else

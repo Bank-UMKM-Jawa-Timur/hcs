@@ -207,30 +207,30 @@ class PenghasilanTeraturController extends Controller
                             'updated_at' => now(),
                         ]);
 
-                        $gaji = GajiPerBulanModel::where('nip', $nip[$i])
-                                                ->where('bulan', $bulanReq)
-                                                ->where('tahun', $tahun)
-                                                ->first();
-                        $tunjangan = TunjanganModel::find($id_tunjangan);
-                        if ($gaji) {
-                            if ($tunjangan->nama_tunjangan == 'Transport') {
-                                $gaji->update([
-                                    'tj_transport' => $nominal[$i] + $gaji->tj_transport
-                                ]);
-                            } elseif ($tunjangan->nama_tunjangan == 'Pulsa') {
-                                $gaji->update([
-                                    'tj_pulsa' => $nominal[$i] + $gaji->tj_pulsa
-                                ]);
-                            } elseif ($tunjangan->nama_tunjangan == 'Vitamin') {
-                                $gaji->update([
-                                    'tj_vitamin' => $nominal[$i] + $gaji->tj_vitamin
-                                ]);
-                            } elseif ($tunjangan->nama_tunjangan == 'Uang Makan') {
-                                $gaji->update([
-                                    'uang_makan' => $nominal[$i] + $gaji->uang_makan
-                                ]);
-                            }
-                        }
+                        // $gaji = GajiPerBulanModel::where('nip', $nip[$i])
+                        //                         ->where('bulan', $bulanReq)
+                        //                         ->where('tahun', $tahun)
+                        //                         ->first();
+                        // $tunjangan = TunjanganModel::find($id_tunjangan);
+                        // if ($gaji) {
+                        //     if ($tunjangan->nama_tunjangan == 'Transport') {
+                        //         $gaji->update([
+                        //             'tj_transport' => $nominal[$i] + $gaji->tj_transport
+                        //         ]);
+                        //     } elseif ($tunjangan->nama_tunjangan == 'Pulsa') {
+                        //         $gaji->update([
+                        //             'tj_pulsa' => $nominal[$i] + $gaji->tj_pulsa
+                        //         ]);
+                        //     } elseif ($tunjangan->nama_tunjangan == 'Vitamin') {
+                        //         $gaji->update([
+                        //             'tj_vitamin' => $nominal[$i] + $gaji->tj_vitamin
+                        //         ]);
+                        //     } elseif ($tunjangan->nama_tunjangan == 'Uang Makan') {
+                        //         $gaji->update([
+                        //             'uang_makan' => $nominal[$i] + $gaji->uang_makan
+                        //         ]);
+                        //     }
+                        // }
                     }
                 }
             }
@@ -426,30 +426,30 @@ class PenghasilanTeraturController extends Controller
                                 'updated_at' => now(),
                             ]);
 
-                            $gaji = GajiPerBulanModel::where('nip', $nip[$i])
-                                ->where('bulan', $bulanReq)
-                                ->where('tahun', $tahun)
-                                ->first();
-                            $tunjangan = TunjanganModel::find($old_tunjangan);
-                            if ($gaji) {
-                                if ($tunjangan->nama_tunjangan == 'Transport') {
-                                    $gaji->update([
-                                        'tj_transport' => $nominal[$i] + $gaji->tj_transport
-                                    ]);
-                                } elseif ($tunjangan->nama_tunjangan == 'Pulsa') {
-                                    $gaji->update([
-                                        'tj_pulsa' => $nominal[$i] + $gaji->tj_pulsa
-                                    ]);
-                                } elseif ($tunjangan->nama_tunjangan == 'Vitamin') {
-                                    $gaji->update([
-                                        'tj_vitamin' => $nominal[$i] + $gaji->tj_vitamin
-                                    ]);
-                                } elseif ($tunjangan->nama_tunjangan == 'Uang Makan') {
-                                    $gaji->update([
-                                        'uang_makan' => $nominal[$i] + $gaji->uang_makan
-                                    ]);
-                                }
-                            }
+                            // $gaji = GajiPerBulanModel::where('nip', $nip[$i])
+                            //     ->where('bulan', $bulanReq)
+                            //     ->where('tahun', $tahun)
+                            //     ->first();
+                            // $tunjangan = TunjanganModel::find($old_tunjangan);
+                            // if ($gaji) {
+                            //     if ($tunjangan->nama_tunjangan == 'Transport') {
+                            //         $gaji->update([
+                            //             'tj_transport' => $nominal[$i] + $gaji->tj_transport
+                            //         ]);
+                            //     } elseif ($tunjangan->nama_tunjangan == 'Pulsa') {
+                            //         $gaji->update([
+                            //             'tj_pulsa' => $nominal[$i] + $gaji->tj_pulsa
+                            //         ]);
+                            //     } elseif ($tunjangan->nama_tunjangan == 'Vitamin') {
+                            //         $gaji->update([
+                            //             'tj_vitamin' => $nominal[$i] + $gaji->tj_vitamin
+                            //         ]);
+                            //     } elseif ($tunjangan->nama_tunjangan == 'Uang Makan') {
+                            //         $gaji->update([
+                            //             'uang_makan' => $nominal[$i] + $gaji->uang_makan
+                            //         ]);
+                            //     }
+                            // }
                         }
                     }
                 }

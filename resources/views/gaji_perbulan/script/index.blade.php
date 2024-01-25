@@ -288,6 +288,7 @@
                 success: function(response) {
                     if (response.status == 'success') {
                         var data = response.data
+                        console.log(data)
                         $('#proses-modal #tahun_terakhir').val(data.penghasilan_tahun_terakhir)
                         $('#proses-modal #bulan_terakhir').val(data.penghasilan_bulan_terakhir)
                         $('#proses-modal #total_karyawan').html(data.total_karyawan)
@@ -577,7 +578,7 @@
                         }
                     },
                     {
-                        data: "gaji.tj_ti",
+                        data: "gaji.tj_khusus",
                         class: 'text-right',
                         render:function(data, type, row){
                             return formatRupiahExcel(data)
