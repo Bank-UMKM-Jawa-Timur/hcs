@@ -20,7 +20,7 @@
                     <br>
                     <br>
                 @endcan
-               <div class="table-wrapping">
+            <div class="table-wrapping">
                 <table class="tables-stripped " id="table-lampiran-gaji" style="width: 100%;">
                     <thead class="text-primary" style="border:1px solid #e3e3e3 !important">
                         <tr>
