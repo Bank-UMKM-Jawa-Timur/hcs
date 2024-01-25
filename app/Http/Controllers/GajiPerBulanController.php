@@ -174,6 +174,8 @@ class GajiPerBulanController extends Controller
             $bruto = 0;
             $potongan = 0;
             $total_dpp = 0;
+            $grandtotal_dpp = 0;
+            $total_jp = 0;
             $total_bpjs_tk = 0;
             
             
@@ -241,6 +243,55 @@ class GajiPerBulanController extends Controller
                     $potongan_karyawan = (int) $potongan_karyawan_obj->potongan;
                 }
                 $potongan += $potongan_karyawan;
+
+                // Get DPP
+                $tunjanganKesejahteraan = (int) DB::table('tunjangan_karyawan')
+                    ->where('nip', $value->nip)
+                    ->whereRaw("nama_tunjangan LIKE '%kesejahteraan%'")
+                    ->join('mst_tunjangan', 'mst_tunjangan.id', 'tunjangan_karyawan.id_tunjangan')
+                    ->sum('nominal');
+                $tunjanganKeluarga = (int) DB::table('tunjangan_karyawan')
+                    ->where('nip', $value->nip)
+                    ->whereRaw("nama_tunjangan LIKE '%Keluarga%'")
+                    ->join('mst_tunjangan', 'mst_tunjangan.id', 'tunjangan_karyawan.id_tunjangan')
+                    ->sum('nominal');
+                $nominal_jp = (date('m') > 2) ? $jp_mar_des : $jp_jan_feb;
+                if($value->status_karyawan == 'IKJP' || $value->status_karyawan == 'Kontrak Perpanjangan') {
+                    $dpp = 0;
+                    $jp_1_persen = round(($persen_jp_pengurang / 100) * $bruto_karyawan, 2);
+                } else{
+                    $gj_pokok = $value->gj_pokok;
+                    $tj_keluarga = $tunjanganKeluarga;
+                    $tj_kesejahteraan = $tunjanganKesejahteraan;
+
+                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
+                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
+                    if($bruto_karyawan >= $nominal_jp){
+                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                    } else {
+                        $jp_1_persen = round($bruto_karyawan * ($persen_jp_pengurang / 100), 2);
+                    }
+                }
+                $dpp = round($dpp);
+                // Get BPJS TK
+                if (date('m') > 2) {
+                    if ($bruto_karyawan > $jp_mar_des) {
+                        $bpjs_tk = $jp_mar_des * 1 / 100;
+                    }
+                    else {
+                        $bpjs_tk = $bruto_karyawan * 1 / 100;
+                    }
+                }
+                else {
+                    if ($bruto_karyawan >= $jp_jan_feb) {
+                        $bpjs_tk = $jp_jan_feb * 1 / 100;
+                    }
+                    else {
+                        $bpjs_tk = $bruto_karyawan * 1 / 100;
+                    }
+                }
+                $potongan += $dpp + $bpjs_tk;
+
                 $gaji_obj = DB::table('gaji_per_bulan AS gaji')
                         ->select(
                             'm.nama_karyawan',
@@ -311,7 +362,7 @@ class GajiPerBulanController extends Controller
             }
 
             // Get Netto
-            $netto = $bruto - $potongan;
+            $netto = $bruto - round($potongan);
 
             // Get Penghasilan terakhir
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
@@ -330,7 +381,7 @@ class GajiPerBulanController extends Controller
             $data = [
                 'total_karyawan' => $total_karyawan,
                 'bruto' => $bruto,
-                'potongan' => $potongan,
+                'potongan' => round($potongan),
                 'netto' => $netto,
                 'penghasilan_tahun_terakhir' => $penghasilan_tahun_terakhir,
                 'penghasilan_bulan_terakhir' => $penghasilan_bulan_terakhir,
