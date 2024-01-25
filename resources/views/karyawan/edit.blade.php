@@ -520,6 +520,7 @@
                                         <input type="text" id="nominal{{ $key }}" name="nominal_tunjangan[]"
                                             value="{{ number_format($tj->nominal, 0, ',', '.') }}" class="form-input"
                                             onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)">
+                                        <input type="hidden" name="id_tunjangan[]" value="{{$tj->id}}">
                                     </div>
                                 </div>
                                 <div class="flex gap-5 mt-6">

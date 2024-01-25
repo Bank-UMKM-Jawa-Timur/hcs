@@ -127,27 +127,31 @@ class PotonganController extends Controller
             if ($nip) {
                 if (is_array($nip)) {
                     for ($i = 0; $i < $total; $i++) {
-                        // Insert
-                        // DB::table('potongan_gaji')->insert([
-                        //     'nip' => $nip[$i],
-                        //     'kredit_koperasi' => $kredit_koperasi[$i],
-                        //     'iuran_koperasi' => $iuran_koperasi[$i],
-                        //     'kredit_pegawai' => $kredit_pegawai[$i],
-                        //     'iuran_ik' => $iuran_ik[$i],
-                        //     'created_at' => now(),
-                        //     'updated_at' => now(),
-                        // ]);
-
-                        // Update
-                        DB::table('potongan_gaji')->where('nip', $nip[$i])->update([
-                            'nip' => $nip[$i],
-                            'kredit_koperasi' => $kredit_koperasi[$i],
-                            'iuran_koperasi' => $iuran_koperasi[$i],
-                            'kredit_pegawai' => $kredit_pegawai[$i],
-                            'iuran_ik' => $iuran_ik[$i],
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
+                        $current = DB::table('potongan_gaji')->where('nip', $nip[$i])->first();
+                        if ($current) {
+                            // Update
+                            DB::table('potongan_gaji')->where('nip', $nip[$i])->update([
+                                'nip' => $nip[$i],
+                                'kredit_koperasi' => $kredit_koperasi[$i],
+                                'iuran_koperasi' => $iuran_koperasi[$i],
+                                'kredit_pegawai' => $kredit_pegawai[$i],
+                                'iuran_ik' => $iuran_ik[$i],
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                        }
+                        else {
+                            // Insert
+                            DB::table('potongan_gaji')->insert([
+                                'nip' => $nip[$i],
+                                'kredit_koperasi' => $kredit_koperasi[$i],
+                                'iuran_koperasi' => $iuran_koperasi[$i],
+                                'kredit_pegawai' => $kredit_pegawai[$i],
+                                'iuran_ik' => $iuran_ik[$i],
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                        }
                     }
                 }
             }

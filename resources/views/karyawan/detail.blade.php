@@ -129,9 +129,9 @@
                 </div>
             </div>
             <hr>
-            <div class="row m-0 ">
+            <div class="row m-0">
                 <div class="col-lg-12">
-                    <h6>No Rekening & NPWP</h6>
+                    <h6 class="row-title">No Rekening & NPWP</h6>
                 </div>
             </div>
             <div class="row ">
@@ -153,9 +153,9 @@
                 </div>
             </div>
             <hr>
-            <div class="row m-0 ">
+            <div class="row m-0">
                 <div class="col-lg-12">
-                    <h6>Data Karyawan</h6>
+                    <h6 class="row-title">Data Karyawan</h6>
                 </div>
             </div>
             <div class="row ">
@@ -297,9 +297,9 @@
                 </div>
             </div>
             <hr>
-            <div class="row m-0 ">
+            <div class="row m-0">
                 <div class="col-lg-12">
-                    <h6>Data Tunjangan Karyawan</h6>
+                    <h6 class="row-title">Data Tunjangan Karyawan</h6>
                 </div>
             </div>
             <div class="row ">
