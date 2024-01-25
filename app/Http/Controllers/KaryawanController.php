@@ -664,8 +664,6 @@ class KaryawanController extends Controller
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
 
-        // return $data;
-
         return view('karyawan.edit', [
         // return view('karyawan.edit-old', [
             'data' => $data,
@@ -831,14 +829,15 @@ class KaryawanController extends Controller
                 }
 
                 // data tunjangan
-                $item_id = $request->tunjangan;
+                $item_id = $request->id_tk;
                 $itemLamaIds = DB::table('tunjangan_karyawan')->where('nip', $id)->pluck('id')->toArray();
-                // foreach ($itemLamaIds as $itemLamaId) {
-                //     if (is_null($item_id) || !in_array($itemLamaId, $item_id)) {
-                //         // hapus item yang tidak ada dalam $item_id
-                //         DB::table('tunjangan_karyawan')->where('id', $itemLamaId)->delete();
-                //     }
-                // }
+                // return  ['item' => $item_id, 'item_lama' => $itemLamaIds];
+                foreach ($itemLamaIds as $itemLamaId) {
+                    if (is_null($item_id) || !in_array($itemLamaId, $item_id)) {
+                        // hapus item yang tidak ada dalam $item_id
+                        DB::table('tunjangan_karyawan')->where('id', $itemLamaId)->delete();
+                    }
+                }
 
                 if (is_array($item_id))
                 {
@@ -1296,5 +1295,58 @@ class KaryawanController extends Controller
 
         Alert::success('Berhasil', 'Berhasil mengimport data excel');
         return redirect()->route('karyawan.index');
+    }
+
+    public function getDataImportKaryawan(Request $request){
+        try{
+            $dataReq = $request->import;
+            $dataRequest = collect(json_decode($dataReq, true));
+            $nipId = $dataRequest->pluck('nip')->toArray();
+            $karyawan = KaryawanModel::whereIn('nip', $nipId)
+                ->get();
+            $response = $dataRequest->map(function($data) use ($karyawan){
+                $nip = $data['nip'];
+                $nipExists = $karyawan->where('nip', $nip)->first();
+                if($nipExists != null){
+                    return [
+                        'nip' => $nip,
+                        'cek_nip' => $nipExists ? true : false,
+                        'status' => 2,
+                        'nama_karyawan' => $nipExists->nama_karyawan,
+                        'norek' => $data['norek'] != $nipExists->no_rekening ? $data['norek'] : '-',
+                        'npwp' => str_replace(['.', '-'], '', $data['npwp'] ?? 'npwp') != $nipExists->npwp ? str_replace(['.', '-'], '', $data['npwp'] ?? '-') ?? '-' : '-',
+                        'ptkp' => $data['ptkp'] ?? '-' != $nipExists->status_ptkp ? $data['ptkp'] ?? '-' : '-',
+                        'pendidikan' => $data['pendidikan'] != $nipExists->pendidikan ? $data['pendidikan'] : '-',
+                        'jurusan' => $data['jurusan'] ?? '-' != $nipExists->pendidikan_major ? $data['jurusan'] ?? '-' : '-',
+                        'alamat_ktp' => $data['alamat_ktp'] != $nipExists->alamat_ktp ? $data['alamat_ktp'] : '-',
+                        'alamat_dom' => $data['alamat_dom'] ?? '-' != $nipExists->alamat_sek ? $data['alamat_dom']  ?? '-' : '-',
+                    ];
+                } else {
+                    return [
+                        'nip' => $nip,
+                        'cek_nip' => $nipExists ? true : false,
+                        'status' => 1,
+                        'nama_karyawan' => '-',
+                        'norek' => '-',
+                        'npwp' => '-',
+                        'ptkp' => '-',
+                        'pendidikan' => '-',
+                        'jurusan' => '-',
+                        'alamat_ktp' => '-',
+                        'alamat_dom' => '-',
+                    ];
+                }
+            })->toArray();
+
+            return response()->json($response);
+        } catch (Exception $e){
+            return response()->json([
+                'message' => 'Terjadi kesalahan. ' . $e->getMessage()
+            ]);
+        } catch (QueryException $e){
+            return response()->json([
+                'message' => 'Terjadi kesalahan. ' . $e->getMessage()
+            ]);
+        }
     }
 }

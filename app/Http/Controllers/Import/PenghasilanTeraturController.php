@@ -236,9 +236,9 @@ class PenghasilanTeraturController extends Controller
             }
 
             DB::commit();
-            
+
             DB::beginTransaction();
-            for ($i=0; $i < count($nip); $i++) { 
+            for ($i=0; $i < count($nip); $i++) {
                 $karyawan = DB::table('mst_karyawan')
                                 ->where('nip', $nip[$i])
                                 ->first();
