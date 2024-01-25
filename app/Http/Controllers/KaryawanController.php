@@ -681,8 +681,6 @@ class KaryawanController extends Controller
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
 
-        return $data;
-
         return view('karyawan.edit', [
         // return view('karyawan.edit-old', [
             'data' => $data,
