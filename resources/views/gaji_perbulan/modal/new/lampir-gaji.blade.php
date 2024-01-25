@@ -5,7 +5,7 @@
                 <div class="heading">
                     <h2 class="modal-title">Lampiran Gaji</h2>
                 </div>
-                <button type="button" class="close" data-modal-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-modal-dismiss="lampiran-gaji-modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>
@@ -44,7 +44,7 @@
                     <tbody>
                     </tbody>
                     <tfoot >
-                        <tr class="total">
+                        <tr class="total_lampiran_gaji">
                             <th colspan="2" class="text-center">Total</th>
                             <th class="text-right"></th>
                             <th></th>

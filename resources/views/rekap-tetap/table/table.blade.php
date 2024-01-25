@@ -89,7 +89,7 @@
             <th class="text-center">PPH</th>
         </tr>
     </thead>
-    <tbody >
+    <tbody>
         @php
             $totalGaji = 0;
             $totalGajiOpsi = 0;

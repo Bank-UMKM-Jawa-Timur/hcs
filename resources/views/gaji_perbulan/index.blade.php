@@ -314,7 +314,7 @@
                 $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
                 $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
             @endphp
-            <table class="tables-stripped">
+            <table class="tables-stripped" id="table_lampiran_gaji">
                 <thead>
                     <tr>
                         <th rowspan="2">No</th>
@@ -359,7 +359,7 @@
                 <td class="text-center">{{ $months[$item->bulan] }}</td>
                 <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
                 <td class="text-center flex justify-center gap-5">
-                    <a href="#" data-modal-id="rincian-modal" data-modal-toggle="modal" class="btn btn-warning btn-rincian"
+                    <a href="#" data-modal-id="rincian-modal" data-modal-target="rincian-modal" data-modal-toggle="rincian-modal" class="btn btn-warning btn-rincian"
                         data-batch_id="{{$item->id}}">Rincian</a>
                     <a href="#" data-modal-id="payroll-modal" data-modal-toggle="modal" class="btn btn-success btn-payroll"
                         data-batch_id="{{$item->id}}">Payroll</a>

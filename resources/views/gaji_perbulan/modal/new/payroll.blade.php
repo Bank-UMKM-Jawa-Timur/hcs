@@ -40,7 +40,7 @@
                     <tbody>
                     </tbody>
                     <tfoot >
-                        <tr class="total">
+                        <tr class="total_payroll">
                             <th colspan="2" class="text-center">Total</th>
                             <th class="text-right"></th>
                             <th></th>
