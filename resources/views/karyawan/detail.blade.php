@@ -596,7 +596,7 @@
             @endif
             <hr>
 
-            <div class="">
+            <div class="{{auth()->user()->hasRole('cabang') ? 'hidden' : ''}}">
                 <div class="col-lg-12">
                     <h6 class="text-2xl font-bold pb-5 pt-5">Histori</h6>
                 </div>
