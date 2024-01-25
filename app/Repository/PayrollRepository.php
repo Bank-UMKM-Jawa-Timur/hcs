@@ -1204,7 +1204,7 @@ class PayrollRepository
 
                 // Get Potongan(JP1%, DPP 5%)
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP') {
+                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                     $dpp = 0;
                     $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
                 } else{
@@ -2159,7 +2159,7 @@ class PayrollRepository
 
                 // Get Potongan(JP1%, DPP 5%)
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP') {
+                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                     $dpp = 0;
                     $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
                 } else{
