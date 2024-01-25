@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('select2')->name('api.select2.')->group(function () {
     Route::controller(KaryawanController::class)->group(function () {
         Route::get('employees', 'karyawan')->name('karyawan');
+        Route::get('employees2', 'karyawan2')->name('karyawan2');
         Route::get('employees-jabatan', 'karyawanJabatan')->name('karyawan.jabatan');
         Route::get('employees-list', 'listKaryawan')->name('list_karyawan');
         Route::get('employees/pjs', 'karyawanPjs')->name('karyawan.pjs');

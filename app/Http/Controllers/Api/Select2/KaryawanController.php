@@ -76,6 +76,36 @@ class KaryawanController extends Controller
         return $this->paginateResponse($karyawan);
     }
 
+    public function karyawan2(Request $request)
+    {
+        $query = $request->q ?? $request->search;
+        $cabang = $request->has('cabang') ? $request->cabang : null;
+        if (auth()->user()->hasRole('cabang')) {
+            $cabang = auth()->user()->kd_cabang;
+        }
+        $hasRole = DB::table('model_has_roles')->select('role_id','model_id')->where('role_id', 5)->get();
+        $dataRole = [];
+        foreach ($hasRole as $item) {
+            array_push($dataRole, $item->model_id);
+        }
+        $karyawan = KaryawanModel::with('jabatan')
+            ->where(function (Builder $builder) use ($query) {
+                $builder->orWhere('nip', 'LIKE', "%{$query}%");
+                $builder->orWhere('nama_karyawan', 'LIKE', "%{$query}%");
+            })
+            ->when($cabang, function($query) use($cabang) {
+                $query->where('kd_entitas', $cabang);
+            })
+            ->whereNull('tanggal_penonaktifan')
+            ->where('status_karyawan', '!=', 'Nonaktif')
+            ->whereNotIn('nip', $dataRole)
+            ->orderByRaw($this->orderRaw)
+            ->orderBy('mst_karyawan.kd_entitas')
+            ->simplePaginate();
+
+        return $this->paginateResponse($karyawan);
+    }
+
     public function karyawanJabatan(Request $request)  {
         $query = $request->q ?? $request->search;
         $kantor = $request->get('kantor');
