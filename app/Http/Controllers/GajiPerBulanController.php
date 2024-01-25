@@ -306,7 +306,7 @@ class GajiPerBulanController extends Controller
                     }
                     $bpjs_tk = $bpjs_tk;
                     $total_bpjs_tk += $bpjs_tk;
-                    $potongan += ($total_dpp + $bpjs_tk);
+                    // $potongan += ($total_dpp + $bpjs_tk);
                 }
             }
 
