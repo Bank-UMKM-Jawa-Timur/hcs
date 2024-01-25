@@ -2,16 +2,17 @@
     <div class="modal modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-head">
-               <div class="heading">
-                <h2 class="modal-title" id="confirmModalLabel">Upload File Lampiran Gaji</h2>
-               </div>
+                <div class="heading">
+                    <h2 class="modal-title" id="confirmModalLabel">Upload File Lampiran Gaji</h2>
+                </div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i class="ti ti-x"></i>
                     </button>
             </div>
             <div class="modal-body space-y-5">
                 <div class="flex">
-                    <a href="#" id="cetak_lampiran_gaji" class="btn btn-primary btn-lampiran-gaji" data-id="">Lampiran Gaji</a>
+                    <a class="ml-2 mb-3 btn btn-primary btn-download-pdf " id="download" href="" data-id="">Lampiran Gaji</a>
+                    {{--  <a href="#" id="cetak_lampiran_gaji" class="btn btn-primary btn-lampiran-gaji" data-id="">Lampiran Gaji</a>  --}}
                 </div>
                 <form action="{{ route('upload.penghasilanPerBulan') }}" enctype="multipart/form-data" method="POST">
                     @csrf

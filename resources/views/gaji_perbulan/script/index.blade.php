@@ -121,6 +121,10 @@
             let target = $(this).data('target');
             $(`${target} #id`).val(batch_id);
             $(`${target} #cetak_lampiran_gaji`).data('id', batch_id);
+            let url = "{{ url('') }}"
+            let downloadUrl = `${url}/cetak-penghasilan/${batch_id}`;
+            $('#download').attr('href', downloadUrl);
+            $('#download').data('id', id);
         })
 
         $('.btn-show').on('click', function() {
@@ -922,6 +926,10 @@
         }
         $(".btn-payroll").on("click", function(){
             var batch_id = $(this).data("batch_id")
+            let url = "{{ url('') }}"
+            let downloadUrl = `${url}/cetak-penghasilan/${batch_id}`;
+            $('#download').attr('href', downloadUrl);
+            $('#download').data('id', id);
             var table = $("#table-payroll").DataTable({
                 ajax: `{{ route('get-rincian-payroll') }}?batch_id=${batch_id}`,
                 processing: true,

@@ -162,14 +162,6 @@
                                     <a class="btn btn-primary" data-modal-id="modalUploadfile" data-modal-toggle="modal" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload Lampiran Gaji</a>
                                 @endif
                             @endcan
-                        @elseif ($item->tanggal_upload != null && $item->tanggal_cetak != null)
-                            @can('penghasilan - proses penghasilan - lampiran gaji')
-                                <a href="#" data-modal-toggle="modal" data-modal-id="lampiran-gaji-modal" class="btn btn-primary  btn-lampiran-gaji" data-id="{{$item->id}}">Lampiran Gaji</a>
-                            @endcan
-                        @else
-                            @can('penghasilan - proses penghasilan - lampiran gaji')
-                                <a href="#" data-modal-toggle="modal" data-modal-id="lampiran-gaji-modal" class="btn btn-primary  btn-lampiran-gaji" data-id="{{$item->id}}">Lampiran Gaji</a>
-                            @endcan
                         @endif
                     </td>
                     @if ($item->bruto == 0)
