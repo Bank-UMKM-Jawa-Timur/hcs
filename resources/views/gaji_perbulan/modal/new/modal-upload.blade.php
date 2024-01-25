@@ -12,7 +12,6 @@
             <div class="modal-body space-y-5">
                 <div class="flex">
                     <a class="ml-2 mb-3 btn btn-primary btn-download-pdf " id="download" href="" data-id="">Lampiran Gaji</a>
-                    {{--  <a href="#" id="cetak_lampiran_gaji" class="btn btn-primary btn-lampiran-gaji" data-id="">Lampiran Gaji</a>  --}}
                 </div>
                 <form action="{{ route('upload.penghasilanPerBulan') }}" enctype="multipart/form-data" method="POST">
                     @csrf
@@ -35,10 +34,6 @@
             </div>
             <div class="modal-footer to-right">
                 <button type="button" class="btn btn-light" data-modal-dismiss="modalUploadfile">Batal</button>
-                {{-- <form action="{{ route('ptkp.destroy', $item->id) }}" method="POST">
-                @csrf
-                @method('DELETE') --}}
-                    {{-- <input type="hidden" name="idPengajuan" value="{{$item->id}}"> --}}
                     <button type="submit" class="btn btn-primary">Upload</button>
                 </form>
             </div>
