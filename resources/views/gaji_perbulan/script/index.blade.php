@@ -122,11 +122,6 @@
             $(`${target} #id`).val(batch_id);
             $(`${target} #cetak_lampiran_gaji`).data('id', batch_id);
         })
-        document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-            var name = document.getElementById("upload_csv").files[0].name;
-            var nextSibling = e.target.nextElementSibling
-            nextSibling.innerText = name
-        });
 
         $('.btn-show').on('click', function() {
             $('#penghasilan-kantor-modal').modal('show')
@@ -538,6 +533,7 @@
             var iteration = 1;
             var table = $("#table-rincian").DataTable({
                 processing: true,
+                destroy: true,
                 serverSide: false,
                 orderCellsTop: true,
                 paging:true,
@@ -1141,7 +1137,7 @@
 
                     $( api.column( 0 ).footer('.total') ).html('Total');
                     $( api.column( 2 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiPokok)));
-                    $( api.column( 3 ).footer('.total') ).html();
+                    $( api.column( 3 ).footer('.total') ).html(`-`);
                     $( api.column( 4 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiDPP)));
                     $( api.column( 5 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiBPJS)));
                     $( api.column( 6 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiKredit)));
@@ -1154,7 +1150,7 @@
                     $('tfoot tr.grandtotalPayroll').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
                         <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiPokok))}</th>
-                        <th class="text-center"></th>
+                        <th class="text-center">-</th>
                         <th class="text-right">${formatRupiahExcel(Math.round(grandTotalDPP))}</th>
                         <th class="text-right">${formatRupiahExcel(Math.round(grandTotalBPJS))}</th>
                         <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiKredit))}</th>
