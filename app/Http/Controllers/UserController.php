@@ -56,6 +56,13 @@ class UserController extends Controller
         if (!auth()->user()->can('setting - master - user - create user')) {
             return view('roles.forbidden');
         }
+
+        // $hasRole = DB::table('model_has_roles')->select('role_id','model_id')->where('role_id', 5)->get();
+        // $dataRole = [];
+        // foreach ($hasRole as $item) {
+        //     array_push($dataRole, $item->model_id);
+        // }
+        // dd($dataRole);
         $karyawan = $this->param->getDataKaryawan();
         $role = $this->param->getRole();
         $cabang = $this->param->getCabang();
@@ -77,46 +84,76 @@ class UserController extends Controller
         if (!auth()->user()->can('setting - master - user - create user')) {
             return view('roles.forbidden');
         }
-
-        $this->validate($request, [
-                'name' => 'required',
-                'email' => 'required|unique:users,email',
-                'role' => 'not_in:0'
-            ], [
-                'required' => ':attribute harus diisi.',
-                'unique' => ':attribute telah digunakan.',
-                'not_in' => ':attribute harus dipilih.'
-            ],[
-                'name' => 'Nama',
-                'email' => 'Email',
-                'role' => 'Role'
-            ]
-        );
+        if ($request->role == 5) {
+            // $this->validate($request, [
+            //         'role' => 'required',
+            //         'karyawan' => 'required',
+            //     ], [
+            //         'required' => ':attribute harus diisi.',
+            //         'unique' => ':attribute telah digunakan.',
+            //         'not_in' => ':attribute harus dipilih.'
+            //     ],[
+            //         'role' => 'Role',
+            //         'karyawan' => 'Karyawan'
+            //     ]
+            // );
+        }else{
+            $this->validate($request, [
+                    'name' => 'required',
+                    'email' => 'required|unique:users,email',
+                    'role' => 'not_in:0'
+                ], [
+                    'required' => ':attribute harus diisi.',
+                    'unique' => ':attribute telah digunakan.',
+                    'not_in' => ':attribute harus dipilih.'
+                ],[
+                    'name' => 'Nama',
+                    'email' => 'Email',
+                    'role' => 'Role'
+                ]
+            );
+        }
 
         DB::beginTransaction();
         try {
-            $dataUser = new User();
-            $dataUser->name = $request->name;
-            $dataUser->username = $request->name;
-            $dataUser->email = $request->email;
-            if ($request->role == 4) {
-                $dataUser->kd_cabang = $request->data_cabang;
-            }
-            if ($request->role == 2 || $request->role == 3) {
-                $dataUser->kd_cabang = '000';
-            }
-            $dataUser->password = Hash::make('12345678');
-            $dataUser->save();
+            if ($request->role == 5) {
+                // if ($request->has('nip')) {
+                    $dataRole = new ModelHasRole();
+                    $dataRole->role_id = $request->role;
+                    $dataRole->model_type = 'App\Models\KaryawanModel';
+                    $dataRole->model_id = $request->nip;
+                    $dataRole->save();
+        
+                    DB::commit();
+                    Alert::success('Berhasil Menambahkan User.');
+                    return redirect()->route('user.index');
+                // }else{
+                // }
+            }else{
+                $dataUser = new User();
+                $dataUser->name = $request->name;
+                $dataUser->username = $request->name;
+                $dataUser->email = $request->email;
+                if ($request->role == 4) {
+                    $dataUser->kd_cabang = $request->data_cabang;
+                }
+                if ($request->role == 2 || $request->role == 3) {
+                    $dataUser->kd_cabang = '000';
+                }
+                $dataUser->password = Hash::make('12345678');
+                $dataUser->save();
+    
+                $dataRole = new ModelHasRole();
+                $dataRole->role_id = $request->role;
+                $dataRole->model_type = 'App\Models\User';
+                $dataRole->model_id = $dataUser->id;
+                $dataRole->save();
+    
+                DB::commit();
+                Alert::success('Berhasil Menambahkan User.');
+                return redirect()->route('user.index');
 
-            $dataRole = new ModelHasRole();
-            $dataRole->role_id = $request->role;
-            $dataRole->model_type = 'App\Models\User';
-            $dataRole->model_id = $dataUser->id;
-            $dataRole->save();
-
-            DB::commit();
-            Alert::success('Berhasil Menambahkan User.');
-            return redirect()->route('user.index');
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             Alert::error($e->getMessage());
