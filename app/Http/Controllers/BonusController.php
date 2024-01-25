@@ -253,24 +253,47 @@ class BonusController extends Controller
         return redirect()->route('bonus.index');
     }
 
-    public function editTunjangan($idTunjangan, Request $request)
+    public function editTunjangan(Request $request)
     {
         // Need permission
         if (!auth()->user()->can('penghasilan - edit - bonus')) {
             return view('roles.forbidden');
         }
-        $id = $idTunjangan;
+        $id = $request->get('idTunjangan');
         $tanggal = $request->get('tanggal');
         $repo = new PenghasilanTidakTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
-        return view('bonus.edit', [
+
+        return view('bonus.edit-import', [
             'penghasilan' => $penghasilan,
             'old_id' => $id,
             'old_created_at' => $tanggal
         ]);
     }
+
+    public function editsTunjangan(Request $request)
+    {
+        // return $request;
+        if (!auth()->user()->can('penghasilan - edit - bonus')) {
+            return view('roles.forbidden');
+        }
+        $id = $request->get('idTunjangan');
+
+        $tgl = $request->get('tanggal');
+        $kd_entitas = $request->get('entitas');
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+
+        $search = $request->get('q');
+        $data = $this->repo->getDetailBonus($search, $limit, $page, $id, $tgl, $kd_entitas);
+        $tunjangan = $this->repo->getNameTunjangan($id);
+        $nameCabang = $this->repo->getNameCabang($kd_entitas);
+
+        return view('bonus.edit', ['data' => $data, 'tunjangan' => $tunjangan, 'nameCabang' => $nameCabang]);
+    }
     public function editTunjanganPost(Request $request)
     {
+
         // Need permission
         if (!auth()->user()->can('penghasilan - edit - bonus')) {
             return view('roles.forbidden');
@@ -329,6 +352,78 @@ class BonusController extends Controller
         } catch (Exception $th) {
             \DB::rollBack();
             return $th;
+        }
+    }
+
+    public function editTunjanganNewPost(Request $request)
+    {
+        // return $request;
+        DB::beginTransaction();
+        try {
+            $data_nip = $request->get('nip');
+            $item_id = $request->item_id;
+            $createdAt = $request->createdAt;
+            $tanggal = $request->tanggal;
+            $itemLamaId = DB::table('penghasilan_tidak_teratur')
+            ->where('penghasilan_tidak_teratur.created_at', $createdAt)->where('id_tunjangan', $request->id_tunjangan)->pluck('id');
+            // return $itemLamaId;
+            for ($i = 0; $i < count($itemLamaId); $i++) {
+                if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
+                    // hapus item yang tidak ada dalam $item_id
+                    DB::table('penghasilan_tidak_teratur')->where('id', $itemLamaId[$i])->delete();
+                }
+            }
+
+            if (is_array($item_id)) {
+                for ($i = 0; $i < count($item_id); $i++) {
+                    $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
+                    DB::table('penghasilan_tidak_teratur')->where('id', $item_id[$i])->update([
+                        'nominal' => $nominal
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            // Hitung pph
+            for ($i = 0; $i < count($data_nip); $i++) {
+                $bulan = (int) Carbon::parse($createdAt)->format('m');
+                $tahun = (int) Carbon::parse($createdAt)->format('Y');
+                $karyawan = DB::table('mst_karyawan')
+                ->where('nip', $data_nip[$i])
+                    ->whereNull('tanggal_penonaktifan')
+                    ->first();
+                $pph = HitungPPH::getTerutang((int) $bulan, $tahun, $karyawan);
+            }
+
+            if (Carbon::parse($createdAt)->format('m') == 12 && Carbon::now()->format('d') > 25) {
+                \DB::beginTransaction();
+                $gajiPerBulanController = new GajiPerBulanController;
+                foreach ($data_nip as $key => $item) {
+                    $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($createdAt)->format('Y'), Carbon::parse($createdAt)->format('m'));
+                    PPHModel::where('nip', $request->nip)
+                        ->where('tahun', Carbon::parse($createdAt)->format('Y'))
+                        ->where('bulan', 12)
+                        ->update([
+                            'total_pph' => $pphTerutang,
+                            'updated_at' => null
+                        ]);
+                }
+                \DB::commit();
+            }
+
+            Alert::success('Success', 'Berhasil edit data penghasilan');
+            return redirect()->route('bonus.index');
+        } catch (\Exception $e) {
+            //  dd($e->getMessage());
+            DB::rollBack();
+            Alert::error('Error', $e->getMessage());
+            return back();
+        } catch (\Illuminate\Database\QueryException $e) {
+            //  dd($e->getMessage());
+            DB::rollBack();
+            Alert::error('Error', $e->getMessage());
+            return back();
         }
     }
 }

@@ -18,13 +18,13 @@
                 </div>
                <div class="table-wrapping">
                 <table class="tables-stripped " id="table-payroll" style="width: 100%;">
-                    <thead class="text-primary" style="border:1px solid #e3e3e3 !important">
+                    <thead class="text-primary text-center" style="border:1px solid #e3e3e3 !important">
                         <tr>
                             <th rowspan="2" class="text-center">No</th>
                             <th rowspan="2" class="text-center">Nama karyawan</th>
                             <th rowspan="2" class="text-center">Gaji</th>
                             <th rowspan="2" class="text-center">No Rek</th>
-                            <th colspan="6" class="text-center">Potongan</th>
+                            <th colspan="6" class="text-center mx-auto" align="center">Potongan</th>
                             <th rowspan="2" class="text-center">Total Potongan</th>
                             <th rowspan="2" class="text-center">Total Yang Diterima</th>
                         </tr>
@@ -54,9 +54,9 @@
                             <th class="text-right"></th>
                         </tr>
                         <tr class="grandtotalPayroll">
-                             <th colspan="2" class="text-center"></th>
-                             <th class="text-right"></th>
-                             <th></th>
+                            <th colspan="2" class="text-center"></th>
+                            <th class="text-right"></th>
+                            <th></th>
                             <th class="text-right"></th>
                             <th class="text-right"></th>
                             <th class="text-right"></th>

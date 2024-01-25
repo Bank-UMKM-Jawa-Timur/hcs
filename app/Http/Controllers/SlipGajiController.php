@@ -399,15 +399,23 @@ class SlipGajiController extends Controller
             $cabang = $karyawan->kd_entitas;
         }
         $orderRaw = "
-            CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
-            WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
-            WHEN mst_karyawan.kd_jabatan='PC' THEN 3
-            WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
-            WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
-            WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
-            WHEN mst_karyawan.kd_jabatan='ST' THEN 7
-            WHEN mst_karyawan.kd_jabatan='NST' THEN 8
-            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
+            CASE 
+            WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
+            WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
+            WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
+            WHEN mst_karyawan.kd_jabatan='DIRHAN' THEN 4
+            WHEN mst_karyawan.kd_jabatan='KOMU' THEN 5
+            WHEN mst_karyawan.kd_jabatan='KOM' THEN 7
+            WHEN mst_karyawan.kd_jabatan='STAD' THEN 8
+            WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 9
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 10
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 11
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 12
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 13
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 14
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 15
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 16
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 17 END ASC
         ";
         $data_karyawan = KaryawanModel::select('nip', 'nama_karyawan', 'kd_entitas')
                                     ->whereNull('tanggal_penonaktifan')

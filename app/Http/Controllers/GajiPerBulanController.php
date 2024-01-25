@@ -41,15 +41,16 @@ class GajiPerBulanController extends Controller
             WHEN mst_karyawan.kd_jabatan='DIRHAN' THEN 4
             WHEN mst_karyawan.kd_jabatan='KOMU' THEN 5
             WHEN mst_karyawan.kd_jabatan='KOM' THEN 7
-            WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 8
-            WHEN mst_karyawan.kd_jabatan='PSD' THEN 9
-            WHEN mst_karyawan.kd_jabatan='PC' THEN 10
-            WHEN mst_karyawan.kd_jabatan='PBP' THEN 11
-            WHEN mst_karyawan.kd_jabatan='PBO' THEN 12
-            WHEN mst_karyawan.kd_jabatan='PEN' THEN 13
-            WHEN mst_karyawan.kd_jabatan='ST' THEN 14
-            WHEN mst_karyawan.kd_jabatan='NST' THEN 15
-            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 16 END ASC
+            WHEN mst_karyawan.kd_jabatan='STAD' THEN 8
+            WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 9
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 10
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 11
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 12
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 13
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 14
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 15
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 16
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 17 END ASC
         ";
         $this->param['namaTunjangan'] = [
             'tj_keluarga',
@@ -172,7 +173,57 @@ class GajiPerBulanController extends Controller
 
             $bruto = 0;
             $potongan = 0;
+            $total_dpp = 0;
+            $grandtotal_dpp = 0;
+            $total_jp = 0;
+            $total_bpjs_tk = 0;
+            
+            
             foreach ($karyawan as $key => $value) {
+                $kd_entitas = null;
+                if (auth()->user()->kd_cabang && auth()->user()->kd_cabang != '000') {
+                    $kd_entitas = auth()->user()->kd_cabang;
+                }
+                else {
+                    $kd_entitas = '000';
+                }
+                $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
+                    ->where('mst_profil_kantor.kd_cabang', $kd_entitas)
+                    ->where('active', 1)
+                    ->join('mst_profil_kantor', 'pemotong_pajak_tambahan.id_profil_kantor', 'mst_profil_kantor.id')
+                    ->select('jkk', 'jht', 'jkm', 'kesehatan', 'kesehatan_batas_atas', 'kesehatan_batas_bawah', 'jp', 'total')
+                    ->first();
+                $hitungan_pengurang = DB::table('pemotong_pajak_pengurangan')
+                    ->where('kd_cabang', $kd_entitas)
+                    ->where('active', 1)
+                    ->join('mst_profil_kantor', 'pemotong_pajak_pengurangan.id_profil_kantor', 'mst_profil_kantor.id')
+                    ->select('dpp', 'jp', 'jp_jan_feb', 'jp_mar_des')
+                    ->first();
+                if (!$hitungan_penambah && !$hitungan_pengurang) {
+                    $persen_jkk = 0;
+                    $persen_jht = 0;
+                    $persen_jkm = 0;
+                    $persen_kesehatan = 0;
+                    $persen_jp_penambah = 0;
+                    $persen_dpp = 0;
+                    $persen_jp_pengurang = 0;
+                    $batas_atas = 0;
+                    $batas_bawah = 0;
+                    $jp_jan_feb = 0;
+                    $jp_mar_des = 0;
+                }else{
+                    $persen_jkk = $hitungan_penambah->jkk;
+                    $persen_jht = $hitungan_penambah->jht;
+                    $persen_jkm = $hitungan_penambah->jkm;
+                    $persen_kesehatan = $hitungan_penambah->kesehatan;
+                    $persen_jp_penambah = $hitungan_penambah->jp;
+                    $persen_dpp = $hitungan_pengurang->dpp;
+                    $persen_jp_pengurang = $hitungan_pengurang->jp;
+                    $batas_atas = $hitungan_penambah->kesehatan_batas_atas;
+                    $batas_bawah = $hitungan_penambah->kesehatan_batas_bawah;
+                    $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
+                    $jp_mar_des = $hitungan_pengurang->jp_mar_des;
+                }
                 // Get bruto per karyawan
                 $tunjangan = (int) DB::table('tunjangan_karyawan')
                                 ->where('nip', $value->nip)
@@ -192,10 +243,126 @@ class GajiPerBulanController extends Controller
                     $potongan_karyawan = (int) $potongan_karyawan_obj->potongan;
                 }
                 $potongan += $potongan_karyawan;
+
+                // Get DPP
+                $tunjanganKesejahteraan = (int) DB::table('tunjangan_karyawan')
+                    ->where('nip', $value->nip)
+                    ->whereRaw("nama_tunjangan LIKE '%kesejahteraan%'")
+                    ->join('mst_tunjangan', 'mst_tunjangan.id', 'tunjangan_karyawan.id_tunjangan')
+                    ->sum('nominal');
+                $tunjanganKeluarga = (int) DB::table('tunjangan_karyawan')
+                    ->where('nip', $value->nip)
+                    ->whereRaw("nama_tunjangan LIKE '%Keluarga%'")
+                    ->join('mst_tunjangan', 'mst_tunjangan.id', 'tunjangan_karyawan.id_tunjangan')
+                    ->sum('nominal');
+                $nominal_jp = (date('m') > 2) ? $jp_mar_des : $jp_jan_feb;
+                if($value->status_karyawan == 'IKJP' || $value->status_karyawan == 'Kontrak Perpanjangan') {
+                    $dpp = 0;
+                    $jp_1_persen = round(($persen_jp_pengurang / 100) * $bruto_karyawan, 2);
+                } else{
+                    $gj_pokok = $value->gj_pokok;
+                    $tj_keluarga = $tunjanganKeluarga;
+                    $tj_kesejahteraan = $tunjanganKesejahteraan;
+
+                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
+                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
+                    if($bruto_karyawan >= $nominal_jp){
+                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                    } else {
+                        $jp_1_persen = round($bruto_karyawan * ($persen_jp_pengurang / 100), 2);
+                    }
+                }
+                $dpp = round($dpp);
+                // Get BPJS TK
+                if (date('m') > 2) {
+                    if ($bruto_karyawan > $jp_mar_des) {
+                        $bpjs_tk = $jp_mar_des * 1 / 100;
+                    }
+                    else {
+                        $bpjs_tk = $bruto_karyawan * 1 / 100;
+                    }
+                }
+                else {
+                    if ($bruto_karyawan >= $jp_jan_feb) {
+                        $bpjs_tk = $jp_jan_feb * 1 / 100;
+                    }
+                    else {
+                        $bpjs_tk = $bruto_karyawan * 1 / 100;
+                    }
+                }
+                $potongan += $dpp + $bpjs_tk;
+
+                $gaji_obj = DB::table('gaji_per_bulan AS gaji')
+                        ->select(
+                            'm.nama_karyawan',
+                            'm.npwp',
+                            'm.no_rekening',
+                            'm.tanggal_penonaktifan',
+                            'm.kpj',
+                            'm.jkn',
+                            'm.status_karyawan',
+                            'gaji.bulan',
+                            'gaji.tahun',
+                            'gaji.gj_pokok',
+                            'gaji.tj_keluarga',
+                            'gaji.tj_kesejahteraan',
+                            DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS UNSIGNED) AS gaji'),
+                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_gaji"),
+                        )
+                        ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+                        ->where('m.nip', $value->id)
+                        ->get();
+                $total_dpp = 0;
+                $total_bpjs_tk = 0;
+                foreach ($gaji_obj as $item_gaji) {
+                    $gaji = $item_gaji->gaji;
+                    $total_gaji = $item_gaji->total_gaji;
+                    $nominal_jp = ($item_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
+                    if($item_gaji->status_karyawan == 'IKJP' || $item_gaji->status_karyawan == 'Kontrak Perpanjangan') {
+                        $dpp = 0;
+                        $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
+                    } else{
+                        $gj_pokok = $item_gaji->gj_pokok;
+                        $tj_keluarga = $item_gaji->tj_keluarga;
+                        $tj_kesejahteraan = $item_gaji->tj_kesejahteraan;
+
+                        // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
+                        $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
+                        if($gaji >= $nominal_jp){
+                            $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                        } else {
+                            $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
+                        }
+                    }
+                    $dpp = round($dpp);
+                    $total_dpp += $dpp;
+                    $jp_1_persen = $jp_1_persen;
+
+                    // Get BPJS TK
+                    if ($item_gaji->bulan > 2) {
+                        if ($total_gaji > $jp_mar_des) {
+                            $bpjs_tk = $jp_mar_des * 1 / 100;
+                        }
+                        else {
+                            $bpjs_tk = $total_gaji * 1 / 100;
+                        }
+                    }
+                    else {
+                        if ($total_gaji >= $jp_jan_feb) {
+                            $bpjs_tk = $jp_jan_feb * 1 / 100;
+                        }
+                        else {
+                            $bpjs_tk = $total_gaji * 1 / 100;
+                        }
+                    }
+                    $bpjs_tk = $bpjs_tk;
+                    $total_bpjs_tk += $bpjs_tk;
+                    // $potongan += ($total_dpp + $bpjs_tk);
+                }
             }
 
             // Get Netto
-            $netto = $bruto - $potongan;
+            $netto = $bruto - round($potongan);
 
             // Get Penghasilan terakhir
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
@@ -214,7 +381,7 @@ class GajiPerBulanController extends Controller
             $data = [
                 'total_karyawan' => $total_karyawan,
                 'bruto' => $bruto,
-                'potongan' => $potongan,
+                'potongan' => round($potongan),
                 'netto' => $netto,
                 'penghasilan_tahun_terakhir' => $penghasilan_tahun_terakhir,
                 'penghasilan_bulan_terakhir' => $penghasilan_bulan_terakhir,
@@ -831,6 +998,11 @@ class GajiPerBulanController extends Controller
                 $total_gaji = $item->gj_pokok + $item->gj_penyesuaian +  $tunjangan[0] + $tunjangan[1] + $tunjangan[2] + $tunjangan[3] + $tunjangan[4] + $tunjangan[6] + $tunjangan[5] + $tunjangan[7] + $tunjangan[8] + $tunjangan[9] + $tunjangan[15];
                 $tunjangan_rutin = $tunjangan[10] + $tunjangan[11] + $tunjangan[12] + $tunjangan[13];
 
+                $dpp = 0;
+                if ($item->status_karyawan != 'IKJP' || $item->status_karyawan != 'Kontrak Perpanjangan') {
+                    $dpp = (($item->gj_pokok + $tunjangan[0]) + ($tunjangan[7] * 0.5) * 0.05);
+                }
+
                 if ($request->has('batch_id')) {
                     $employee = [
                         'gj_pokok' => $item->gj_pokok,
@@ -849,7 +1021,7 @@ class GajiPerBulanController extends Controller
                         'tj_pulsa' => $tunjangan[11],
                         'tj_vitamin' => $tunjangan[12],
                         'uang_makan' => $tunjangan[13],
-                        'dpp' => $tunjangan[14],
+                        'dpp' => $dpp,
                         'tj_fungsional' => $tunjangan[15],
                         'updated_at' => $now,
                         'kredit_koperasi' => $kredit_koperasi,
@@ -961,7 +1133,7 @@ class GajiPerBulanController extends Controller
                             'tj_pulsa' => $tunjangan[11],
                             'tj_vitamin' => $tunjangan[12],
                             'uang_makan' => $tunjangan[13],
-                            'dpp' => $tunjangan[14],
+                            'dpp' => $dpp,
                             'tj_fungsional' => $tunjangan[15],
                             'created_at' => now(),
                             'kredit_koperasi' => $kredit_koperasi,
@@ -1854,27 +2026,43 @@ class GajiPerBulanController extends Controller
             $batch = DB::table('batch_gaji_per_bulan')->where('id',$id)->first();
             if (auth()->user()->can('penghasilan - proses penghasilan - proses')) {
                 if ($batch) {
-                    if ($batch->kd_entitas == $kd_entitas) {
+                    if (!$kd_entitas) {
+                        if ($batch->kd_entitas == '000') {
+                            if (!$batch->tanggal_cetak) {
+                                $now = Carbon::now();
+                                DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
+                                    'tanggal_cetak' => $now,
+                                    'updated_at' => $now,
+                                ]);
+                                $status = 'success';
+                                $message = 'Berhasil memperbarui tanggal cetak';
+                            }
+                        }
+                    }
+                    else if ($batch->kd_entitas == $kd_entitas) {
                         if (!$batch->tanggal_cetak) {
                             $now = Carbon::now();
                             DB::table('batch_gaji_per_bulan')->where('id',$id)->update([
                                 'tanggal_cetak' => $now,
                                 'updated_at' => $now,
                             ]);
+                            $status = 'success';
+                            $message = 'Berhasil memperbarui tanggal cetak';
                         }
                     }
                 }
             }
-
-            $status = 'success';
-            $message = 'Berhasil memperbarui tanggal cetak';
+            
+            $status = 'failed';
+            $message = 'Gagal memperbarui tanggal cetak';
         } catch (\Exception $e) {
             $status = 'failed';
             $message = $e->getMessage();
         } finally {
             $response = [
                 'status' => $status,
-                'message' => $message
+                'message' => $message,
+                'batch' => $batch,
             ];
 
             return response()->json($response);

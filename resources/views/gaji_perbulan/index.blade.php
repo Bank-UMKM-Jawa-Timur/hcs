@@ -1,18 +1,24 @@
 @extends('layouts.app-template')
 
 @section('modal')
-@include('gaji_perbulan.modal.new.proses')
-@include('gaji_perbulan.modal.new.penghasilan-kantor')
-@include('gaji_perbulan.modal.new.modal-upload')
-@include('gaji_perbulan.modal.new.perbarui')
-{{--
---}}
-@include('gaji_perbulan.script.index')
-@include('gaji_perbulan.modal.new.rincian')
-@include('gaji_perbulan.modal.new.payroll')
-@include('gaji_perbulan.modal.new.lampir-gaji')
-
-    @endsection
+    @include('gaji_perbulan.modal.new.proses')
+    @include('gaji_perbulan.modal.new.penghasilan-kantor')
+    @include('gaji_perbulan.modal.new.modal-upload')
+    @include('gaji_perbulan.modal.new.perbarui')
+    {{--
+    --}}
+    @include('gaji_perbulan.script.index')
+    @include('gaji_perbulan.modal.new.rincian')
+    @include('gaji_perbulan.modal.new.payroll')
+    @include('gaji_perbulan.modal.new.lampir-gaji')
+@endsection
+@push('style')
+    <style>
+        table.dataTable>thead>tr>th{
+            text-align: center;
+        }
+    </style>
+@endpush
 
 @section('content')
 <div class="head mt-5">
@@ -206,7 +212,7 @@
                         @if($item->status == 'proses')
                             @if($item->total_penyesuaian > 0)
                                 @can('penghasilan - proses penghasilan - proses')
-                                    <a href="#" data-modal-id="penyesuaian-modal" data-modal-toggle="modal"  class="btn btn-warning  btn-perbarui"
+                                    <a href="#" data-modal-id="penyesuaian-modal" data-modal-toggle="modal"  class="btn btn-warning btn-perbarui"
                                         data-batch_id="{{$item->id}}">Perbarui</a>
                                 @endcan
                             @else

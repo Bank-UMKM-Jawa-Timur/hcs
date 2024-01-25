@@ -22,15 +22,16 @@ class PayrollRepository
             WHEN mst_karyawan.kd_jabatan='DIRHAN' THEN 4
             WHEN mst_karyawan.kd_jabatan='KOMU' THEN 5
             WHEN mst_karyawan.kd_jabatan='KOM' THEN 7
-            WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 8
-            WHEN mst_karyawan.kd_jabatan='PSD' THEN 9
-            WHEN mst_karyawan.kd_jabatan='PC' THEN 10
-            WHEN mst_karyawan.kd_jabatan='PBP' THEN 11
-            WHEN mst_karyawan.kd_jabatan='PBO' THEN 12
-            WHEN mst_karyawan.kd_jabatan='PEN' THEN 13
-            WHEN mst_karyawan.kd_jabatan='ST' THEN 14
-            WHEN mst_karyawan.kd_jabatan='NST' THEN 15
-            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 16 END ASC
+            WHEN mst_karyawan.kd_jabatan='STAD' THEN 8
+            WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 9
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 10
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 11
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 12
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 13
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 14
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 15
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 16
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 17 END ASC
         ";
     }
 
@@ -150,13 +151,14 @@ class PayrollRepository
                                         'tj_multilevel',
                                         'tj_ti',
                                         'tj_fungsional',
+                                        DB::raw('(tj_ti + tj_multilevel + tj_fungsional) AS tj_khusus'),
                                         'tj_transport',
                                         'tj_pulsa',
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                         DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
                                         'kredit_koperasi',
                                         'iuran_koperasi',
@@ -357,7 +359,7 @@ class PayrollRepository
 
                 // Get Potongan(JP1%, DPP 5%)
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP') {
+                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                     $dpp = 0;
                     $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
                 } else{
@@ -459,7 +461,7 @@ class PayrollRepository
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
                                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
                                                     )
                                                     ->where('nip', $karyawan->nip)
@@ -578,7 +580,7 @@ class PayrollRepository
                             $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
-                            if($karyawan->status_karyawan == 'IKJP') {
+                            if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                                 $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
                             } else{
                                 $gj_pokok = $value->gj_pokok;
@@ -1007,13 +1009,14 @@ class PayrollRepository
                                         'tj_multilevel',
                                         'tj_ti',
                                         'tj_fungsional',
+                                        DB::raw('(tj_ti + tj_multilevel + tj_fungsional) AS tj_khusus'),
                                         'tj_transport',
                                         'tj_pulsa',
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                         DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
                                         'kredit_koperasi',
                                         'iuran_koperasi',
@@ -1203,7 +1206,7 @@ class PayrollRepository
 
                 // Get Potongan(JP1%, DPP 5%)
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP') {
+                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                     $dpp = 0;
                     $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
                 } else{
@@ -1305,7 +1308,7 @@ class PayrollRepository
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
                                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
                                                     )
                                                     ->where('nip', $karyawan->nip)
@@ -1424,7 +1427,7 @@ class PayrollRepository
                             $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
-                            if($karyawan->status_karyawan == 'IKJP') {
+                            if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                                 $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
                             } else{
                                 $gj_pokok = $value->gj_pokok;
@@ -1984,13 +1987,14 @@ class PayrollRepository
                                         'tj_multilevel',
                                         'tj_ti',
                                         'tj_fungsional',
+                                        DB::raw('(tj_ti + tj_multilevel + tj_fungsional) AS tj_khusus'),
                                         'tj_transport',
                                         'tj_pulsa',
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                         DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
                                         'kredit_koperasi',
                                         'iuran_koperasi',
@@ -2158,7 +2162,7 @@ class PayrollRepository
 
                 // Get Potongan(JP1%, DPP 5%)
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP') {
+                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                     $dpp = 0;
                     $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
                 } else{
@@ -2260,7 +2264,7 @@ class PayrollRepository
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
                                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
                                                     )
                                                     ->where('nip', $karyawan->nip)
@@ -2368,7 +2372,7 @@ class PayrollRepository
                             $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
-                            if($karyawan->status_karyawan == 'IKJP') {
+                            if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                                 $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
                             } else{
                                 $gj_pokok = $value->gj_pokok;
