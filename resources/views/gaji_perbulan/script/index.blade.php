@@ -362,12 +362,11 @@
             `;
             return row_element;
         }
-        let table = null
+        let table_pembaruan = null
         $('.btn-perbarui').on('click', function() {
             const batch_id = $(this).data('batch_id');
-            table = $('#penyesuaian-table').DataTable({
+            table_pembaruan = $('#penyesuaian-table').DataTable({
                 processing: true,
-                destroy:true,
                 serverSide: false,
                 ajax: `{{ route('gaji_perbulan.penyesuian_json') }}?batch_id=${batch_id}`,
                 columns: [
@@ -413,13 +412,25 @@
                 ],
                 footerCallback: function( row, data, start, end, display ) {
                     var api = this.api(),data;
+                    console.log(data);
                     var intVal = function ( i ) {
                         return typeof i === 'string' ?
                             i.replace(/[\$,]/g, '')*1 :
                             typeof i === 'number' ?
                                 i : 0;
                     };
-                    var grandTotalPenghasilanSebelum = data[0].grandtotal.bruto_lama
+                    var grandTotalPenghasilanSebelum = 0;
+                    var grandTotalPenghasilanSebelum = 0;
+                    var grandTotalPenghasilanSesudah = 0;
+                    var grandTotalPotonganSebelum = 0;
+                    var grandTotalPotonganSesudah = 0;
+                    $.each(data, function(i, item) {
+                        grandTotalPenghasilanSebelum = item.grandtotal.bruto_lama
+                        grandTotalPenghasilanSebelum = item.grandtotal.bruto_baru;
+                        grandTotalPenghasilanSesudah = item.grandtotal.bruto_baru
+                        grandTotalPotonganSebelum = item.grandtotal.potongan_lama
+                        grandTotalPotonganSesudah = item.grandtotal.potongan_baru
+                    });
 
                     var totalPenghasilanSebelum = api
                         .column(4, {page: "current"})
@@ -428,7 +439,6 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    var grandTotalPenghasilanSesudah = data[0].grandtotal.bruto_baru
 
                     var totalPenghasilanSesudah = api
                         .column(5, {page: "current"})
@@ -437,7 +447,6 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    var grandTotalPotonganSebelum = data[0].grandtotal.potongan_lama
 
                     var totalPotonganSebelum = api
                         .column(6, {page: "current"})
@@ -446,7 +455,6 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    var grandTotalPotonganSesudah = data[0].grandtotal.potongan_baru
 
                     var totalPotonganSesudah = api
                         .column(7, {page: "current"})
@@ -455,13 +463,13 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 4 ).footer('.total') ).html( 'Rp ' + totalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 5 ).footer('.total') ).html( 'Rp ' + totalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 6 ).footer('.total') ).html( 'Rp ' + totalPotonganSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 7 ).footer('.total') ).html( 'Rp ' + totalPotonganSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 0 ).footer('.total_pembaruan') ).html('Total');
+                    $( api.column( 4 ).footer('.total_pembaruan') ).html( 'Rp ' + totalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 5 ).footer('.total_pembaruan') ).html( 'Rp ' + totalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 6 ).footer('.total_pembaruan') ).html( 'Rp ' + totalPotonganSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 7 ).footer('.total_pembaruan') ).html( 'Rp ' + totalPotonganSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
-                    $('tfoot tr.grandtotal').html(`
+                    $('tfoot tr.grandTotalPembaruan').html(`
                         <th colspan="4" class="text-center">Grand Total</th>
                         <th class="text-right">Rp ${grandTotalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                         <th class="text-right">Rp ${grandTotalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
@@ -472,9 +480,9 @@
             });
 
             // Add event listener for opening and closing details
-            table.on('click', 'td.dt-control', function (e) {
+            table_pembaruan.on('click', 'td.dt-control', function (e) {
                 let tr = e.target.closest('tr');
-                let row = table.row(tr);
+                let row = table_pembaruan.row(tr);
 
                 if (row.child.isShown()) {
                     // This row is already open - close it

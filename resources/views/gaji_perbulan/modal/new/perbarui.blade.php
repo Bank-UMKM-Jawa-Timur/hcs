@@ -29,14 +29,14 @@
                             </tr>
                         </thead>
                         <tfoot>
-                            <tr class="total">
+                            <tr class="total_pembaruan">
                                 <th class="text-center" colspan="4">Total</th>
                                 <th class="text-right"></th>
                                 <th class="text-right"></th>
                                 <th class="text-right"></th>
                                 <th class="text-right"></th>
                             </tr>
-                            <tr class="grandTotal">
+                            <tr class="grandTotalPembaruan">
                                 <th class="text-center" colspan="4">Grand Total</th>
                                 <th class="text-right"></th>
                                 <th class="text-right"></th>
