@@ -34,7 +34,7 @@ class GajiPerBulanController extends Controller
     public function __construct()
     {
         $this->orderRaw = "
-            CASE 
+            CASE
             WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
             WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
             WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
@@ -126,10 +126,13 @@ class GajiPerBulanController extends Controller
         $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1);
         // Final
         $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1);
+        // sampah
+        $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1);
 
         $data = [
             'proses_list' => $proses_list,
             'final_list' => $final_list,
+            'sampah' => $sampah,
         ];
 
         return view('gaji_perbulan.index', $data);
@@ -177,8 +180,8 @@ class GajiPerBulanController extends Controller
             $grandtotal_dpp = 0;
             $total_jp = 0;
             $total_bpjs_tk = 0;
-            
-            
+
+
             foreach ($karyawan as $key => $value) {
                 $kd_entitas = null;
                 if (auth()->user()->kd_cabang && auth()->user()->kd_cabang != '000') {
@@ -2052,7 +2055,7 @@ class GajiPerBulanController extends Controller
                     }
                 }
             }
-            
+
             $status = 'failed';
             $message = 'Gagal memperbarui tanggal cetak';
         } catch (\Exception $e) {
@@ -2131,5 +2134,48 @@ class GajiPerBulanController extends Controller
 
         $filename = ucwords($tipe) . ' Kantor ' . (!$is_cabang ? 'Pusat' : CabangModel::where('kd_cabang', $kantor)->first()->nama_cabang) . ' Bulan ' . $bulanShow[$bulan] . ' Tahun ' . $tahun . '.xlsx';
         return Excel::download($returnType , $filename);
+    }
+
+    public function delete($id, Request $request)
+    {
+        // return $request;
+        try {
+            $id_batch = Request()->id;
+            DB::table('batch_gaji_per_bulan')->where('id',$id_batch)->update([
+                'deleted_at' => now()
+            ]);
+
+            Alert::success('Data berhasil dihapus.');
+            return redirect()->route('gaji_perbulan.index');
+        } catch (\Exception $e) {
+            //  dd($e->getMessage());
+            Alert::error('Error', $e->getMessage());
+            return back();
+        } catch (\Illuminate\Database\QueryException $e) {
+            //  dd($e->getMessage());
+            Alert::error('Error', $e->getMessage());
+            return back();
+        }
+    }
+
+    public function restore(Request $request)
+    {
+        try {
+            $id_batch = Request()->id;
+            DB::table('batch_gaji_per_bulan')->where('id', $id_batch)->update([
+                'deleted_at' => null
+            ]);
+
+            Alert::success('Data berhasil dikembalikan.');
+            return redirect()->route('gaji_perbulan.index');
+        } catch (\Exception $e) {
+            //  dd($e->getMessage());
+            Alert::error('Error', $e->getMessage());
+            return back();
+        } catch (\Illuminate\Database\QueryException $e) {
+            //  dd($e->getMessage());
+            Alert::error('Error', $e->getMessage());
+            return back();
+        }
     }
 }
