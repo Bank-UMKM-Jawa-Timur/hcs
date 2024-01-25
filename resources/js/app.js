@@ -22,10 +22,6 @@ $(".modal-layout").click(function (e) {
         setTimeout(function () {
             $(".modal-layout").addClass("hidden");
         }, 400);
-    } else {
-        console.error(
-            'Warn: backdrop for this modal are disabled, please remove class "no-backdrop-click" from the modal'
-        );
     }
 });
 

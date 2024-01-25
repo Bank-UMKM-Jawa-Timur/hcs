@@ -324,6 +324,7 @@
                                                             </a>
                                                         </li>
                                                     @endif
+                                                    {{--  @dd(hasPermission('penghasilan - gaji - slip gaji'))  --}}
                                                     @if(hasPermission('penghasilan - gaji - slip gaji'))
                                                         <li>
                                                             <a href="{{ route('slip.index') }}">
@@ -567,7 +568,7 @@
                                 </div>
                             </li>
                         @endcan
-                        {{-- @can('laporan') --}}
+                        @can('laporan')
                             <li class="item-link relative">
                                 <a href="#">
                                     <button
@@ -667,7 +668,7 @@
                                                 </a>
                                             </li>
                                         @endcan
-                                        {{-- @can('laporan - laporan rekap tetap') --}}
+                                        @can('laporan - laporan rekap tetap')
                                             <li class="item-link">
                                                 <a href="{{ route('laporan-rekapitulasi.index') }}?tahun={{ date('Y') }}&bulan={{ (int)date('m') }}">
                                                     <button class="btn-link {{ request()->is('laporan-rekapitulasi.index','laporan-rekapitulasi') ? 'active-link' : '' }}">
@@ -676,11 +677,11 @@
                                                     </button>
                                                 </a>
                                             </li>
-                                        {{-- @endcan --}}
+                                        @endcan
                                     </ul>
                                 </div>
                             </li>
-                        {{-- @endcan --}}
+                        @endcan
                         @can('log')
                             <li class="item-link relative">
                                 <a href="#">

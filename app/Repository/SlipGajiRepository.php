@@ -460,6 +460,7 @@ class SlipGajiRepository
                             $bpjs_tk = $total_gaji * 1 / 100;
                         }
                     }
+                    $bpjs_tk = round($bpjs_tk);
 
                     // Penghasilan rutin
                     $penghasilan_rutin = $gaji + $jamsostek;
@@ -1189,6 +1190,7 @@ class SlipGajiRepository
                         $bpjs_tk = $total_gaji * 1 / 100;
                     }
                 }
+                $bpjs_tk = round($bpjs_tk);
 
                 // Penghasilan rutin
                 $penghasilan_rutin = $gaji + $jamsostek;

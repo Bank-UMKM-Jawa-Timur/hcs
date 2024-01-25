@@ -121,6 +121,10 @@
             let target = $(this).data('target');
             $(`${target} #id`).val(batch_id);
             $(`${target} #cetak_lampiran_gaji`).data('id', batch_id);
+            let url = "{{ url('') }}"
+            let downloadUrl = `${url}/cetak-penghasilan/${batch_id}`;
+            $('#download').attr('href', downloadUrl);
+            $('#download').data('id', id);
         })
 
         $('.btn-show').on('click', function() {
@@ -362,12 +366,12 @@
             `;
             return row_element;
         }
-        let table = null
+        let table_pembaruan = null
         $('.btn-perbarui').on('click', function() {
             const batch_id = $(this).data('batch_id');
-            table = $('#penyesuaian-table').DataTable({
+            table_pembaruan = $('#penyesuaian-table').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 ajax: `{{ route('gaji_perbulan.penyesuian_json') }}?batch_id=${batch_id}`,
                 columns: [
                     {
@@ -412,13 +416,25 @@
                 ],
                 footerCallback: function( row, data, start, end, display ) {
                     var api = this.api(),data;
+                    console.log(data);
                     var intVal = function ( i ) {
                         return typeof i === 'string' ?
                             i.replace(/[\$,]/g, '')*1 :
                             typeof i === 'number' ?
                                 i : 0;
                     };
-                    var grandTotalPenghasilanSebelum = data[0].grandtotal.bruto_lama
+                    var grandTotalPenghasilanSebelum = 0;
+                    var grandTotalPenghasilanSebelum = 0;
+                    var grandTotalPenghasilanSesudah = 0;
+                    var grandTotalPotonganSebelum = 0;
+                    var grandTotalPotonganSesudah = 0;
+                    $.each(data, function(i, item) {
+                        grandTotalPenghasilanSebelum = item.grandtotal.bruto_lama
+                        grandTotalPenghasilanSebelum = item.grandtotal.bruto_baru;
+                        grandTotalPenghasilanSesudah = item.grandtotal.bruto_baru
+                        grandTotalPotonganSebelum = item.grandtotal.potongan_lama
+                        grandTotalPotonganSesudah = item.grandtotal.potongan_baru
+                    });
 
                     var totalPenghasilanSebelum = api
                         .column(4, {page: "current"})
@@ -427,7 +443,6 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    var grandTotalPenghasilanSesudah = data[0].grandtotal.bruto_baru
 
                     var totalPenghasilanSesudah = api
                         .column(5, {page: "current"})
@@ -436,7 +451,6 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    var grandTotalPotonganSebelum = data[0].grandtotal.potongan_lama
 
                     var totalPotonganSebelum = api
                         .column(6, {page: "current"})
@@ -445,7 +459,6 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    var grandTotalPotonganSesudah = data[0].grandtotal.potongan_baru
 
                     var totalPotonganSesudah = api
                         .column(7, {page: "current"})
@@ -454,13 +467,13 @@
                             return Math.round(a) + Math.round(b);
                         }, 0);
 
-                    $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 4 ).footer('.total') ).html( 'Rp ' + totalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 5 ).footer('.total') ).html( 'Rp ' + totalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 6 ).footer('.total') ).html( 'Rp ' + totalPotonganSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 7 ).footer('.total') ).html( 'Rp ' + totalPotonganSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 0 ).footer('.total_pembaruan') ).html('Total');
+                    $( api.column( 4 ).footer('.total_pembaruan') ).html( 'Rp ' + totalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 5 ).footer('.total_pembaruan') ).html( 'Rp ' + totalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 6 ).footer('.total_pembaruan') ).html( 'Rp ' + totalPotonganSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 7 ).footer('.total_pembaruan') ).html( 'Rp ' + totalPotonganSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
-                    $('tfoot tr.grandtotal').html(`
+                    $('tfoot tr.grandTotalPembaruan').html(`
                         <th colspan="4" class="text-center">Grand Total</th>
                         <th class="text-right">Rp ${grandTotalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                         <th class="text-right">Rp ${grandTotalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
@@ -471,9 +484,9 @@
             });
 
             // Add event listener for opening and closing details
-            table.on('click', 'td.dt-control', function (e) {
+            table_pembaruan.on('click', 'td.dt-control', function (e) {
                 let tr = e.target.closest('tr');
-                let row = table.row(tr);
+                let row = table_pembaruan.row(tr);
 
                 if (row.child.isShown()) {
                     // This row is already open - close it
@@ -922,11 +935,15 @@
         }
         $(".btn-payroll").on("click", function(){
             var batch_id = $(this).data("batch_id")
-            var table = $("#table-payroll").DataTable({
+            let url = "{{ url('') }}"
+            let downloadUrl = `${url}/cetak-penghasilan/${batch_id}`;
+            $('#download').attr('href', downloadUrl);
+            $('#download').data('id', id);
+            var table_payroll = $("#table-payroll").DataTable({
                 ajax: `{{ route('get-rincian-payroll') }}?batch_id=${batch_id}`,
                 processing: true,
                 serverSide: false,
-                orderCellsTop: true,
+                destroy: true,
                 paging:true,
                 columns: [
                     {
@@ -1016,12 +1033,6 @@
                 footerCallback: function ( row, data, start, end, display ) {
                     var api = this.api(),data;
                         // converting to interger to find total
-                    var intVal = function ( i ) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '')*1 :
-                            typeof i === 'number' ?
-                                i : 0;
-                    };
                      // Calculate and display grand totals in the second footer
                     var grandTotalGajiPokok = api
                         .column(2)
@@ -1135,17 +1146,17 @@
                         return Math.round(a) + Math.round(b);
                     }, 0 );
 
-                    $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 2 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiPokok)));
-                    $( api.column( 3 ).footer('.total') ).html(`-`);
-                    $( api.column( 4 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiDPP)));
-                    $( api.column( 5 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiBPJS)));
-                    $( api.column( 6 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiKredit)));
-                    $( api.column( 7 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiKoperasi)));
-                    $( api.column( 8 ).footer('.total') ).html(formatRupiahExcel(Math.round(totalGajiPegawai)));
-                    $( api.column( 9 ).footer('.total') ).html( formatRupiahExcel(Math.round(totalGajiIuran)));
-                    $( api.column( 10 ).footer('.total') ).html( formatRupiahExcel(Math.round(totalGajiPotongan)));
-                    $( api.column( 11 ).footer('.total') ).html( formatRupiahExcel(Math.round(totalGajiDiterima)));
+                    $( api.column( 0 ).footer('.total_payroll') ).html('Total');
+                    $( api.column( 2 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiPokok)));
+                    $( api.column( 3 ).footer('.total_payroll') ).html(`-`);
+                    $( api.column( 4 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiDPP)));
+                    $( api.column( 5 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiBPJS)));
+                    $( api.column( 6 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiKredit)));
+                    $( api.column( 7 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiKoperasi)));
+                    $( api.column( 8 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiPegawai)));
+                    $( api.column( 9 ).footer('.total_payroll') ).html( formatRupiahExcel(Math.round(totalGajiIuran)));
+                    $( api.column( 10 ).footer('.total_payroll') ).html( formatRupiahExcel(Math.round(totalGajiPotongan)));
+                    $( api.column( 11 ).footer('.total_payroll') ).html( formatRupiahExcel(Math.round(totalGajiDiterima)));
 
                     $('tfoot tr.grandtotalPayroll').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
@@ -1161,32 +1172,31 @@
                         <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiDiterima))}</th>
 
                     `);
-                },
+                }
+
+
 
             })
             // $("#payroll-modal").modal("show")
             $("#payroll-modal .btn-download-payroll").data('batch', batch_id)
         })
 
-        $('#payroll-modal').on('hidden.bs.modal', function () {
-            $('#payroll-modal').modal('hide')
-            $("#payroll-modal #table-payroll").dataTable().fnDestroy();
-        })
 
-        $('#rincian-modal').on('hidden.bs.modal', function () {
-            $('#rincian-modal').modal('hide')
-            $("#rincian-modal #table-rincian").dataTable().fnDestroy();
-        })
+        // $('#payroll-modal').on('close', function () {
+        //     $("#rincian-modal #table-payroll").dataTable().fnDestroy();
+        // })
 
-        $('#payroll-modal .close').on('click', function () {
-            $('#payroll-modal').modal('hide')
-            $("#payroll-modal #table-payroll").dataTable().fnDestroy();
-        })
+        // $('#rincian-modal').on('close', function () {
+        //     $("#rincian-modal #table-rincian").dataTable().fnDestroy();
+        // })
 
-        $('#rincian-modal .close').on('click', function () {
-            $('#rincian-modal').modal('hide')
-            $("#rincian-modal #table-rincian").dataTable().fnDestroy();
-        })
+        // $('#rincian-modal .close').on('click', function () {
+        //     $("#rincian-modal #table-rincian").dataTable().fnDestroy();
+        // })
+        // $('#lampiran-gaji-modal .close').on('click', function () {
+        //     $('#lampiran-gaji-modal').modal('hide')
+        //     $("#lampiran-gaji-modal #table_lampiran_gaji").dataTable().fnDestroy();
+        // })
 
         $("#payroll-modal .btn-download-payroll").on('click', function(){
             var tipe = 'payroll';
@@ -1207,6 +1217,7 @@
             $('#download').attr('href', downloadUrl);
             $('#download').data('id', id);
             var table = $("#table-lampiran-gaji").DataTable({
+                destroy: true,
                 processing: true,
                 serverSide: false,
                 orderCellsTop: true,
@@ -1427,17 +1438,17 @@
                             return Math.round(a) + Math.round(b);
                     }, 0 );
 
-                    $( api.column( 0 ).footer('.total') ).html('Total');
-                    $( api.column( 2 ).footer('.total') ).html(  Math.round(totalGajiPokok));
-                    $( api.column( 3 ).footer('.total') ).html(`-`);
-                    $( api.column( 4 ).footer('.total') ).html(  Math.round(totalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 5 ).footer('.total') ).html(  Math.round(totalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 6 ).footer('.total') ).html(  Math.round(totalKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 7 ).footer('.total') ).html(  Math.round(totalIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 8 ).footer('.total') ).html(  Math.round(totalKreditPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 9 ).footer('.total') ).html( Math.round(totalIuranIk).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 10 ).footer('.total') ).html( Math.round(totalPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                    $( api.column( 11 ).footer('.total') ).html( Math.round(totalDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 0 ).footer('.total_lampiran_gaji') ).html('Total');
+                    $( api.column( 2 ).footer('.total_lampiran_gaji') ).html(  Math.round(totalGajiPokok));
+                    $( api.column( 3 ).footer('.total_lampiran_gaji') ).html(`-`);
+                    $( api.column( 4 ).footer('.total_lampiran_gaji') ).html(  Math.round(totalBPJS).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 5 ).footer('.total_lampiran_gaji') ).html(  Math.round(totalDPP).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 6 ).footer('.total_lampiran_gaji') ).html(  Math.round(totalKredit).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 7 ).footer('.total_lampiran_gaji') ).html(  Math.round(totalIuran).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 8 ).footer('.total_lampiran_gaji') ).html(  Math.round(totalKreditPegawai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 9 ).footer('.total_lampiran_gaji') ).html( Math.round(totalIuranIk).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 10 ).footer('.total_lampiran_gaji') ).html( Math.round(totalPotongan).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+                    $( api.column( 11 ).footer('.total_lampiran_gaji') ).html( Math.round(totalDiterima).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
                     $('tfoot tr.grandtotalGaji').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
