@@ -21,16 +21,16 @@ $request = isset($request) ? $request : null;
         <div class="heading">
             <h2 class="text-2xl font-bold tracking-tighter">Laporan DPP</h2>
             <div class="breadcrumb">
-             <a href="#" class="text-sm text-gray-500">Laporan</a>
-             <i class="ti ti-circle-filled text-theme-primary"></i>
-             <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Laporan DPP</a>
+                <a href="#" class="text-sm text-gray-500">Laporan</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Laporan DPP</a>
             </div>
         </div>
     </div>
 </div>
 
 <div class="body-pages">
-    <form action="{{ route('filter-laporan') }}" method="post">
+    <form action="{{ route('get-dpp') }}" method="post">
         @csrf
         <div class="card space-y-5">
             <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 m-0">
@@ -52,15 +52,15 @@ $request = isset($request) ? $request : null;
             </div>
             <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-5">
                 @php
-                $already_selected_value = date('y');
-                $earliest_year = 2024;
-    
-                if($status != null){
-                $cek_data = DB::table('gaji_per_bulan')
-                ->where('bulan', $bulan)
-                ->where('tahun', $tahun)
-                ->count('*');
-                }
+                    $already_selected_value = date('y');
+                    $earliest_year = 2024;
+        
+                    if($status != null){
+                        $cek_data = DB::table('gaji_per_bulan')
+                        ->where('bulan', $bulan)
+                        ->where('tahun', $tahun)
+                        ->count('*');
+                    }
                 @endphp
                 <div class="col-md-4">
                     <div class="input-box">
@@ -97,14 +97,17 @@ $request = isset($request) ? $request : null;
                 </div>
             </div>
         </div>
-
     </form>
-    <div class="table-wrapping mt-10">
-        <div class="col-md-12">
-            @if ($status != null)
+    @if ($status != null)
+        <div class="table-wrapping mt-10">
+            <div class="col-md-12">
             @if ($cek_data == 0)
-            <h5 class="text-center align-item-center"><b>Data Ini Masih Belum Diproses ({{ getMonth($bulan) }} {{ $tahun
-                    }})</b></h5>
+                <div class="table-wrapping mt-10">
+                    <div class="col-md-12">
+                        <h5 class="text-center align-item-center"><b>Data Ini Masih Belum Diproses ({{ getMonth($bulan) }} {{ $tahun
+                                }})</b></h5>
+                    </div>
+                </div>
             @endif
             @if ($status == 1)
                 <div class="table-wrapping">
@@ -243,10 +246,9 @@ $request = isset($request) ? $request : null;
                     </table>
                 </div>
             @endif
-    
-            @endif
+            </div>
         </div>
-    </div>
+    @endif
 </div>
 <button class="btn-scroll-to-top btn btn-primary fixed hidden bottom-5 right-5">
     To Top <iconify-icon icon="mdi:arrow-top" class="ml-2 mt-1"></iconify-icon>

@@ -92,9 +92,9 @@
                         <td>{{ $i++ }}</td>
                         <td>{{ $item->nama_tunjangan }}</td>
                         @if (auth()->user()->hasRole('cabang') != 'cabang')
-                        <td>
-                            {{ $item->entitas ?? 'Pusat' }}
-                        </td>
+                            <td>
+                                {{ $item->entitas ?? 'Pusat' }}
+                            </td>
                         @endif
                         <td>{{ $item->total_data }}</td>
                         <td>{{ number_format($item->total_nominal, 0, ",", ".") }}</td>
@@ -106,42 +106,42 @@
                             $cant_unlock = false;
                             @endphp
                             @if ($item->gajiPerBulan == null)
-                            @if ($item->is_lock != 1)
-                            @can('penghasilan - lock - penghasilan teratur')
-                            @php
-                            $cant_lock_edit = true;
-                            @endphp
-                            <a href="{{route('penghasilan.lock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&created_at={{$item->created_at}}"
-                                class="btn btn-success">Lock</a>
-                            @endcan
-                            @can('penghasilan - edit - penghasilan teratur')
-                            @php
-                            $cant_lock_edit = true;
-                            @endphp
-                            <a href="{{ route('penghasilan.edit-tunjangan')}}?idTunjangan={{$item->id_transaksi_tunjangan}}&bulan={{$item->bulan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&createdAt={{$item->created_at}}&entitas={{ $item->kd_entitas }}"
-                                class="btn btn-warning-light">Edit</a>
-                            @endcan
-                            @else
-                            @can('penghasilan - unlock - penghasilan teratur')
-                            @php
-                            $cant_unlock = true;
-                            @endphp
-                            <a href="{{route('penghasilan.unlock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&created_at={{$item->created_at}}"
-                                class="btn btn-success-light">Unlock</a>
-                            @endcan
-                            @endif
+                                @if ($item->is_lock != 1)
+                                    @can('penghasilan - lock - penghasilan teratur')
+                                        @php
+                                            $cant_lock_edit = true;
+                                        @endphp
+                                        <a href="{{route('penghasilan.lock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&created_at={{$item->created_at}}"
+                                            class="btn btn-success">Lock</a>
+                                    @endcan
+                                    @can('penghasilan - edit - penghasilan teratur')
+                                        @php
+                                            $cant_lock_edit = true;
+                                        @endphp
+                                        <a href="{{ route('penghasilan.edit-tunjangan')}}?idTunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&createdAt={{$item->created_at}}&kdEntitas={{ $item->kd_entitas }}&bulan={{$item->bulan}}"
+                                            class="btn btn-warning-light">Edit</a>
+                                    @endcan
+                                @else
+                                    @can('penghasilan - unlock - penghasilan teratur')
+                                        @php
+                                            $cant_unlock = true;
+                                        @endphp
+                                        <a href="{{route('penghasilan.unlock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&created_at={{$item->created_at}}"
+                                            class="btn btn-success-light">Unlock</a>
+                                    @endcan
+                                @endif
                             @endif
                             @can('penghasilan - import - penghasilan teratur - detail')
-                            @php
-                            $cant_detail = true;
-                            @endphp
-                            <a href="{{ route('penghasilan.details', $item->id_transaksi_tunjangan)}}?tanggal={{Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&createdAt={{$item->created_at}}"
-                                class="btn btn-primary-light">
-                                Detail
-                            </a>
+                                @php
+                                    $cant_detail = true;
+                                @endphp
+                                <a href="{{ route('penghasilan.details', $item->id_transaksi_tunjangan)}}?tanggal={{Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&createdAt={{$item->created_at}}&kdEntitas={{ $item->kd_entitas }}"
+                                    class="btn btn-primary-light">
+                                    Detail
+                                </a>
                             @endcan
                             @if (!$cant_detail && !$cant_lock_edit && !$cant_unlock)
-                            -
+                                -
                             @endif
                         </td>
                     </tr>
@@ -158,7 +158,7 @@
                 </div>
                 <div class="pagination">
                     @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                        {{ $data->links('pagination::tailwind-new') }}
+                        {{ $data->links('pagination::tailwind') }}
                     @endif
                 </div>
             </div>

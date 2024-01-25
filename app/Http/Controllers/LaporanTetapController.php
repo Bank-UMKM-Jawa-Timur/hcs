@@ -46,11 +46,14 @@ class LaporanTetapController extends Controller
             $kantor = 'pusat';
         }
         Session::put('kantor', $kantor);
+        if ($request->cabang != null) {
+            $kantor = $request->cabang;
+        }
         $search = $request->get('q');
         $data = $request->has('tahun') && $request->has('bulan') ? $this->repo->get($kantor, $search, $limit, false, intval($year), intval($month)) : null;
         $footer = $request->has('tahun') && $request->has('bulan') ? $this->repo->getTotal($kantor, $search, $limit, false, intval($year), intval($month)) : null;
         $cabang = $this->cabang;
-
+        
         return view('rekap-tetap.index', [
             'cabang' => $cabang,
             'data' => $data,

@@ -91,7 +91,11 @@
 @endphp
     <div class="container">
         <h5 class="fw-bold text-center">RINCIAN GAJI PEGAWAI</h5>
-        <h5 class="fw-bold text-center">KANTOR PUSAT</h5>
+        @if (auth()->user()->hasRole('cabang'))
+            <h5 class="fw-bold text-center">KANTOR {{strtoupper($cabang->nama_cabang)}}</h5>
+        @else
+            <h5 class="fw-bold text-center">KANTOR PUSAT</h5>
+        @endif
         <h5 class="fw-bold text-center">BANK BPR JATIM BANK UMKM JAWA TIMUR</h5>
         <h6 class="fw-bold text-center">{{ $bulan[$month] }} {{ $year }}</h6>
         <center style="font-size: 10px; text-align: center" class="text-center">( MASUK TAB. SIKEMAS )</center>
@@ -141,10 +145,10 @@
                             $total_gaji = $item->gaji ? number_format($item->gaji->total_gaji, 0, ',', '.') : 0;
                             $dpp = $item->potongan ? number_format($item->potongan->dpp, 0, ',', '.') : 0;
                             $bpjs_tk = $item->bpjs_tk ? number_format($item->bpjs_tk, 0, ',', '.') : 0;
-                            $kredit_koperasi = $item->potonganGaji ? number_format($item->potonganGaji->kredit_koperasi, 0, ',', '.') : 0;
-                            $iuran_koperasi = $item->potonganGaji ? number_format($item->gaji->iuran_koperasi, 0, ',', '.') : 0;
-                            $kredit_pegawai = $item->potonganGaji ? number_format($item->gaji->kredit_pegawai, 0, ',', '.') : 0;
-                            $iuran_ik = $item->potonganGaji ? number_format($item->gaji->iuran_ik, 0, ',', '.') : 0;
+                            $kredit_koperasi = $item->potonganGaji ? number_format((int) $item->potonganGaji->kredit_koperasi, 0, ',', '.') : 0;
+                            $iuran_koperasi = $item->potonganGaji ? number_format((int) $item->potonganGaji->iuran_koperasi, 0, ',', '.') : 0;
+                            $kredit_pegawai = $item->potonganGaji ? number_format((int) $item->potonganGaji->kredit_pegawai, 0, ',', '.') : 0;
+                            $iuran_ik = $item->potonganGaji ? number_format((int) $item->potonganGaji->iuran_ik, 0, ',', '.') : 0;
                             $total_potongan = number_format($item->total_potongan, 0, ',', '.');
                             $total_diterima = $item->total_yg_diterima ? number_format($item->total_yg_diterima, 0, ',', '.') : 0;
 

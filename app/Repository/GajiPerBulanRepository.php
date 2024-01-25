@@ -32,7 +32,7 @@ class GajiPerBulanRepository
                     'gaji.bulan',
                     'gaji.tahun',
                     DB::raw('CAST(SUM(pph.total_pph) AS UNSIGNED) AS total_pph'),
-                    DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS bruto'),
+                    DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS bruto'),
                     DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan'),
                 )
                 ->when($is_cabang, function($query) {
@@ -52,7 +52,6 @@ class GajiPerBulanRepository
                 ->groupBy('gaji.bulan')
                 ->groupBy('gaji.tahun')
                 ->paginate($limit);
-                // ->paginate($limit, ['*'], 'page', $page);
 
         foreach ($data as $key => $item) {
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
@@ -112,7 +111,7 @@ class GajiPerBulanRepository
                             'gaji.tj_keluarga',
                             'gaji.tj_kesejahteraan',
                             DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS UNSIGNED) AS gaji'),
-                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_gaji"),
+                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_gaji"),
                         )
                         ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
                         ->where('gaji.batch_id', $item->id)
@@ -123,7 +122,7 @@ class GajiPerBulanRepository
                 $gaji = $value->gaji;
                 $total_gaji = $value->total_gaji;
                 $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($value->status_karyawan == 'IKJP') {
+                if($value->status_karyawan == 'IKJP' || $value->status_karyawan == 'Kontrak Perpanjangan') {
                     $dpp = 0;
                     $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
                 } else{
@@ -146,24 +145,24 @@ class GajiPerBulanRepository
                 // Get BPJS TK
                 if ($value->bulan > 2) {
                     if ($total_gaji > $jp_mar_des) {
-                        $bpjs_tk = $jp_mar_des * 1 / 100;
+                        $bpjs_tk = round($jp_mar_des) * (1 / 100);
                     }
                     else {
-                        $bpjs_tk = $total_gaji * 1 / 100;
+                        $bpjs_tk = round($total_gaji) * (1 / 100);
                     }
                 }
                 else {
                     if ($total_gaji >= $jp_jan_feb) {
-                        $bpjs_tk = $jp_jan_feb * 1 / 100;
+                        $bpjs_tk = round($jp_jan_feb) * (1 / 100);
                     }
                     else {
-                        $bpjs_tk = $total_gaji * 1 / 100;
+                        $bpjs_tk = round($total_gaji) * (1 / 100);
                     }
                 }
                 $bpjs_tk = $bpjs_tk;
                 $total_bpjs_tk += $bpjs_tk;
             }
-            $grand_total_potongan = ($item->total_potongan + $total_bpjs_tk + $total_dpp);
+            $grand_total_potongan = ($item->total_potongan + round($total_bpjs_tk) + round($total_dpp));
             $item->grand_total_potongan= $grand_total_potongan;
 
             $netto = $item->bruto - $grand_total_potongan;
@@ -176,7 +175,7 @@ class GajiPerBulanRepository
                                 ->select(
                                     'gaji.*',
                                     'm.nama_karyawan',
-                                    DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total_penghasilan'),
+                                    DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_penghasilan'),
                                     DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan')
                                 )
                                 ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')

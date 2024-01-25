@@ -8,12 +8,12 @@
                 <div class="breadcrumb">
                     <a href="#" class="text-sm text-gray-500">Manajemen Karyawan</a>
                     <i class="ti ti-circle-filled text-theme-primary"></i>
-                    <a href="{{ route('demosi.index') }}" class="text-sm text-gray-500 font-bold">Penjabat Sementara</a>
+                    <a href="{{ route('pejabat-sementara.index') }}" class="text-sm text-gray-500 font-bold">Penjabat Sementara</a>
                 </div>
             </div>
             <div class="button-wrapper flex gap-3">
                 @can('manajemen karyawan - tambah penjabat sementara')
-                    <a href="{{ route('demosi.create') }}" class="btn btn-primary"><i class="ti ti-plus"></i>
+                    <a href="{{ route('pejabat-sementara.create') }}" class="btn btn-primary"><i class="ti ti-plus"></i>
                         Tambah PJS
                     </a>
                 @endcan
@@ -99,7 +99,7 @@
                     </div>
                     <div class="pagination">
                         @if ($pjs instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                            {{ $pjs->links('pagination::tailwind-new') }}
+                            {{ $pjs->links('pagination::tailwind') }}
                         @endif
                     </div>
                 </div>

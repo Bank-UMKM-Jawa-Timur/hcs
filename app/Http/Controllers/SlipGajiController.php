@@ -36,7 +36,8 @@ class SlipGajiController extends Controller
         }else if (!auth()->user()->can('penghasilan - gaji - slip jurnal')) {
             return view('roles.forbidden');
         }
-        return view('slip_gaji.slip_jurnal', ['data' => null, 'kategori' => null, 'request' => null]);
+        // return view('slip_gaji.slip_jurnal', ['data' => null, 'kategori' => null, 'request' => null]);
+        return view('slip_gaji.coming-soon', ['data' => null, 'kategori' => null, 'request' => null]);
     }
 
     function getSlipJurnal($request, $kategori, $karyawan)
@@ -114,10 +115,8 @@ class SlipGajiController extends Controller
                     ->where('nip', $item->nip)
                     ->first();
                 $pengurang = DB::table('potongan_gaji')
-                    ->where('tahun', $tahun)
-                    ->where('bulan', $bulan)
-                    ->where('nip', $item->nip)
-                    ->first();
+                                ->where('nip', $item->nip)
+                                ->first();
                 $data[$i]['potongan'][1] = $dpp->nominal ?? 0;
                 $data[$i]['potongan'][2] = $pengurang->kredit_koperasi ?? 0;
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;
@@ -292,10 +291,8 @@ class SlipGajiController extends Controller
                     ->where('nip', $item->nip)
                     ->first();
                 $pengurang = DB::table('potongan_gaji')
-                    ->where('tahun', $tahun)
-                    ->where('bulan', $bulan)
-                    ->where('nip', $item->nip)
-                    ->first();
+                                ->where('nip', $item->nip)
+                                ->first();
                 $data[$i]['potongan'][1] = $dpp->nominal ?? 0;
                 $data[$i]['potongan'][2] = $pengurang->kredit_koperasi ?? 0;
                 $data[$i]['potongan'][3] = $pengurang->iuran_koperasi ?? 0;
@@ -402,21 +399,29 @@ class SlipGajiController extends Controller
             $cabang = $karyawan->kd_entitas;
         }
         $orderRaw = "
-            CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
-            WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
-            WHEN mst_karyawan.kd_jabatan='PC' THEN 3
-            WHEN mst_karyawan.kd_jabatan='PBP' THEN 4
-            WHEN mst_karyawan.kd_jabatan='PBO' THEN 5
-            WHEN mst_karyawan.kd_jabatan='PEN' THEN 6
-            WHEN mst_karyawan.kd_jabatan='ST' THEN 7
-            WHEN mst_karyawan.kd_jabatan='NST' THEN 8
-            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
+            CASE 
+            WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
+            WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
+            WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
+            WHEN mst_karyawan.kd_jabatan='DIRHAN' THEN 4
+            WHEN mst_karyawan.kd_jabatan='KOMU' THEN 5
+            WHEN mst_karyawan.kd_jabatan='KOM' THEN 7
+            WHEN mst_karyawan.kd_jabatan='STAD' THEN 8
+            WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 9
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 10
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 11
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 12
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 13
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 14
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 15
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 16
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 17 END ASC
         ";
         $data_karyawan = KaryawanModel::select('nip', 'nama_karyawan', 'kd_entitas')
                                     ->whereNull('tanggal_penonaktifan')
                                     ->where('kd_entitas', $user->kd_cabang)
                                     ->orderByRaw($orderRaw)
-                                    ->orderByRaw('IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0)')
+                                    ->orderBy('mst_karyawan.kd_entitas')
                                     ->get();
         $nip = $user->hasRole('user') ? $user->nip : $request->get('nip');
         $year = $request->get('tahun');

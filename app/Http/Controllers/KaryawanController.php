@@ -62,6 +62,20 @@ class KaryawanController extends Controller
         ]);
     }
 
+    public function exportKaryawan(Request $request)
+    {
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+
+        $karyawanRepo = new KaryawanRepository();
+        $search = $request->get('q');
+        $data = $karyawanRepo->getDataKaryawanExport();
+
+        return view('karyawan.export', [
+            'karyawan' => $data,
+        ]);
+    }
+
     public function listKaryawan()
     {
         // Need permission
@@ -72,7 +86,7 @@ class KaryawanController extends Controller
         $karyawanRepo = new KaryawanRepository();
         $data = $karyawanRepo->getAllKaryawan('');
         $data = DataTables::collection($data)->toJson();
-        // $data = DataTables::of($data)->make(true);
+
         return $data;
     }
 
@@ -119,6 +133,9 @@ class KaryawanController extends Controller
 
     public function upload_karyawan(Request $request)
     {
+        $request->validate([
+            'upload_csv' => 'required',
+        ]);
         $file = $request->file('upload_csv');
         $import = new ImportKaryawan;
         $import = $import->import($file);
@@ -1154,7 +1171,7 @@ class KaryawanController extends Controller
             ->join('mst_karyawan as karyawan', 'karyawan.nip', '=', 'demosi_promosi_pangkat.nip')
             ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
             ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
-            ->orderBy('id', 'desc')
+            ->orderBy('demosi_promosi_pangkat.id', 'desc')
             ->get();
         $pergerakanKarir->map(function($data) {
             if(!$data->kd_entitas_baru) {
@@ -1289,9 +1306,41 @@ class KaryawanController extends Controller
     }
 
     public function importUpdateKaryawan(Request $request){
-        $file = $request->file('upload');
-        $import = new ImportUpdateKaryawan;
-        $import = $import->import($file);
+        // $file = $request->file('upload');
+        // $import = new ImportUpdateKaryawan;
+        // $import = $import->import($file);
+        $nip = explode(',', $request->nip);
+        $norek = explode(',', $request->norek);
+        $npwp = explode(',', $request->npwp);
+        $ptkp = explode(',', $request->ptkp);
+        $pendidikan = explode(',', $request->pendidikan);
+        $alamat_ktp = explode(',', $request->alamat_ktp);
+        $alamat_dom = explode(',', $request->alamat_dom);
+        // return $request->all();
+
+        DB::beginTransaction();
+        try{
+            foreach($nip as $key => $item){
+                $karyawan = KaryawanModel::where('nip', $item)->first();
+                $karyawan->no_rekening = $norek[$key] == '-' ? $karyawan->no_rekening : $norek[$key];
+                $karyawan->npwp = $npwp[$key] == '-' ? $karyawan->npwp : $npwp[$key];
+                $karyawan->status_ptkp = $ptkp[$key] == '-' ? $karyawan->status_ptkp : $ptkp[$key];
+                $karyawan->pendidikan_major = $pendidikan[$key] == '-' ? $karyawan->pendidikan_major : $pendidikan[$key];
+                $karyawan->alamat_ktp = $alamat_ktp[$key] == '-' ? $karyawan->alamat_ktp : $alamat_ktp[$key];
+                $karyawan->alamat_sek = $alamat_dom[$key] == '-' ? $karyawan->alamat_sek : $request->alamat_dom[$key];
+                $karyawan->save();
+            }
+            DB::commit();
+        } catch(Exception $e){
+            DB::rollBack();
+            dd($e);
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        } catch (QueryException $e){
+            DB::rollBack();
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        }
 
         Alert::success('Berhasil', 'Berhasil mengimport data excel');
         return redirect()->route('karyawan.index');

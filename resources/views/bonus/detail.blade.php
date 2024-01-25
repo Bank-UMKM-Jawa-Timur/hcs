@@ -22,7 +22,10 @@
     <div class="body-pages">
         <div class="table-wrapping">
             <div class="">
-                <h6 class="font-bold text-gray-400"> Tunjangan : <b class="text-black">{{$tunjangan->nama_tunjangan}}</b></h6>
+                <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 flex gap-7" role="alert">
+                    <h6 class="text-sm text-blue-900 font-semibold"> Tunjangan : <b>{{$tunjangan->nama_tunjangan}}</b></h6>
+                    <h6 class="text-sm text-blue-900 font-semibold"> Cabang : <b>{{$nameCabang->nama_cabang}}</b></h6>
+                </div>
                 <div class="table-responsive overflow-hidden content-center">
                     <form id="form" method="get">
                         <input type="hidden" name="tanggal" id="tanggal" value="{{\Request::get('tanggal')}}">

@@ -1,5 +1,4 @@
 @extends('layouts.app-template')
-
 @section('content')
         <div class="head mt-5">
             <div class="heading">
@@ -11,7 +10,7 @@
                 <a href="#" class="text-sm text-gray-500 font-bold">Laporan Pergerakan Karir</a>
                 <i class="ti ti-circle-filled text-theme-primary"></i>
                 <a href="{{ route('laporan-penonaktifan.index') }}" class="text-sm text-gray-500 font-bold">Laporan Penonaktifan</a>
-               </div>  
+            </div>
         </div>
         <div class="body-pages">
             <div class="card">
@@ -42,7 +41,7 @@
             @isset($data)
             <div class="row mt-1">
                 <div class="table-wrapping">
-                    <div class="layout-component">
+                    {{--  <div class="layout-component">
                         <div class="shorty-table">
                             <label for="">Show</label>
                             <select name="page_length" id="page_length" class="form-input">
@@ -61,7 +60,7 @@
                             </select>
                             <label for="">entries</label>
                         </div>
-                    </div>
+                    </div>  --}}
                     <table class="tables"  id="table_export">
                         <thead>
                             <tr>
@@ -92,14 +91,14 @@
                             </tr>
                         </thead>
                         @php
-                        $i = 1;
-                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                        $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
-                        $pagination = \App\Helpers\Pagination::generateNumber($page, $page_length);
-                        if ($pagination) {
-                            $i = $pagination['iteration'];
-                        }
-                    @endphp
+                            $i = 1;
+                            $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                            $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                            $pagination = \App\Helpers\Pagination::generateNumber($page, $page_length);
+                            if ($pagination) {
+                                $i = $pagination['iteration'];
+                            }
+                        @endphp
                         <tbody>
                             @php
                             $i = 1;
@@ -160,16 +159,6 @@
                         @endforeach
                         </tbody>
                     </table>
-                    {{-- <div class="table-footer">
-                        <div class="showing">
-                            Showing {{ $start }} to {{ $end }} of {{ $data->total() }} entries
-                        </div>
-                        <div>
-                            @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                            {{ $data->links('pagination::tailwind') }}
-                        @endif
-                        </div>
-                    </div> --}}
                 </div>
             </div>
         </form>
@@ -179,7 +168,7 @@
 @endsection
 
 @push('extraScript')
-<script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
+    <script src="{{ asset('style/assets/js/table2excel.js') }}"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -197,8 +186,12 @@
 
         $("#table_export").DataTable({
             dom: "Bfrtip",
-            iDisplayLength: -1,
-            buttons: [{
+            responsive: true,
+            pageLength: 10,
+            lengthChange: true,
+            lengthMenu: [ 10, 20, 50, 100 ],
+            buttons: [
+                {
                     extend: 'excelHtml5',
                     title: 'Laporan Pergerakan Karir - Penonaktifan (Dari ' + start_date + ' Sampai ' + end_date +
                         ')',
@@ -265,7 +258,7 @@
                         ')',
                     filename: 'Laporan Pergerakan Karir - Penonaktifan (Dari ' + start_date + ' Sampai ' + end_date +
                         ')',
-                    text: 'print',
+                    text: 'Print',
                     footer: true,
                     paperSize: 'A4',
                     customize: function(win) {

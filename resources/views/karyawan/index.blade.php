@@ -172,7 +172,7 @@
                             <button data-modal-dismiss="modal-confirm-${formId}"  class="modal-close" onClick="closeModal()"><i class="ti ti-x"></i></button>
                         </div>
                         <div class="modal-body">
-                            <p class="text-left">Apakah Anda yakin ingin mereset password pengguna, 
+                            <p class="text-left">Apakah Anda yakin ingin mereset password pengguna,
                             <b>${formname}</b> dengan nip, <b>${formId}</b>?</p>
                         </div>
                         <div class="modal-footer to-right">

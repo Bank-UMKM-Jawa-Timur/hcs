@@ -19,9 +19,14 @@
 <div class="body-pages">
     <div class="table-wrapping">
         <form id="form" action="">
-            <h6 class="text-lg text-neutral-600"> Tunjangan : {{$tunjangan->nama_tunjangan}}</h6>
+            {{-- <h6 class="text-lg text-neutral-600"> Tunjangan : {{$tunjangan->nama_tunjangan}}</h6> --}}
+            <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 flex gap-7" role="alert">
+                <h6 class="text-sm text-blue-900 font-semibold"> Tunjangan : <b>{{$tunjangan->nama_tunjangan}}</b></h6>
+                <h6 class="text-sm text-blue-900 font-semibold"> Cabang : <b>{{$nameCabang->nama_cabang ?? '-'}}</b></h6>
+            </div>
             <input type="hidden" name="tanggal" value="{{\Request::get('tanggal')}}">
             <input type="hidden" name="createdAt" value="{{\Request::get('createdAt')}}">
+            <input type="hidden" name="kdEntitas" value="{{\Request::get('kdEntitas')}}">
             <div class="layout-component">
                 <div class="shorty-table">
                     <label for="page_length">Show</label>
@@ -84,7 +89,7 @@
                 </div>
                 <div class="pagination">
                     @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                        {{ $data->links('pagination::tailwind-new', [
+                        {{ $data->links('pagination::tailwind', [
                             'tanggal' => \Request::get('tanggal'),
                             'createdAt' => \Request::get('createdAt')
                             ]) }}
@@ -119,6 +124,10 @@
                 var createdAt = "{{\Request::get('createdAt')}}"
                 btn_pagination[i].href += `&createdAt=${createdAt}`
             }
-        })
+            if (page_url.includes('kdEntitas')) {
+                var kdEntitas = "{{\Request::get('kdEntitas')}}"
+                btn_pagination[i].href += `&kdEntitas=${kdEntitas}`
+            }
+        })  
 </script>
 @endpush

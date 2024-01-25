@@ -80,15 +80,14 @@ $(document).click(function (e) {
     $(".dropdown-account-menu").addClass("hidden");
 });
 
-$(".btn-scroll-to-top").on("click", function () {
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-    });
+$('.btn-scroll-to-top').on('click', function () {
+    $('#scroll-body').animate({
+        scrollTop: $("#scroll-body").offset().top
+    }, 400);
 });
 
-$(window).scroll(function () {
-    if ($(window).scrollTop() > 300) {
+$('#scroll-body').scroll(function () {
+    if ($('#scroll-body').scrollTop() > 400) {
         $(".btn-scroll-to-top").removeClass("hidden");
     } else {
         $(".btn-scroll-to-top").addClass("hidden");

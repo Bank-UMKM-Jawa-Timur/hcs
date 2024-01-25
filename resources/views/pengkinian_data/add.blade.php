@@ -1,18 +1,358 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 @include('vendor.select2')
 @section('content')
-    <div class="card-header">
-        <div class="card-header">
-            <h5 class="card-title">Tambah Pengkinian Data Karyawan</h5>
-            <p class="card-title"><a href="{{ route('karyawan.index') }}">Manajemen Karyawan</a> > <a href="{{ route('pengkinian_data.index') }}">Pengkinian Data</a> > Tambah</p>
+    <div class="head">
+        <div class="heading">
+            <h2>Tambah Pengkinian Data Karyawan</h2>
+            <div class="breadcrumb">
+                <a href="#" class="text-sm text-gray-500">Manajemen Karyawan</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500">Pengkinian Data</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('pengkinian_data.index') }}" class="text-sm text-gray-500">Tambah</a>
+            </div>
         </div>
     </div>
 
-    <div class="card-body">
-        <form action="{{ route('pengkinian_data.store') }}" method="POST" enctype="multipart/form-data" name="karyawan" class="form-group">
+    <div class="p-5">
+        <div class="card sticky top-20">
+            <div>
+                <div class="tab-menu relative after:absolute after:inset-x-0 after:top-1/2 after:block after:h-0.5 after:-translate-y-1/2 after:rounded-lg after:bg-gray-100">
+                  <ol class="relative z-10 flex justify-between text-sm font-medium text-gray-500">
+                    <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer active" data-tab="data-biodata">
+                      <span class="count-circle h-6 w-6 rounded-full text-white text-center text-[10px]/6 font-bold">
+                        1
+                      </span>
+
+                      <span class="hidden sm:block"> Biodata Karyawan </span>
+                    </li>
+
+                    <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer"  data-tab="data-karyawan">
+                      <span
+                        class="count-circle h-6 w-6 rounded-full text-center text-[10px]/6 font-bold text-white"
+                      >
+                        2
+                      </span>
+
+                      <span class="hidden sm:block"> Data Karyawan </span>
+                    </li>
+
+                    <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="data-is">
+                        <span
+                          class="count-circle h-6 w-6 rounded-full text-center text-[10px]/6 font-bold text-white"
+                        >
+                          3
+                        </span>
+
+                        <span class="hidden sm:block"> Data Keluarga </span>
+                    </li>
+
+                    <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="collapseFour">
+                      <span class="count-circle h-6 w-6 rounded-full  text-white text-center text-[10px]/6 font-bold">
+                        4
+                      </span>
+
+                      <span class="hidden sm:block"> Data Tunjangan</span>
+                    </li>
+                  </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="body-pages">
+        <form action="{{ route('pengkinian_data.store') }}" method="POST" enctype="multipart/form-data" name="karyawan" class="input-box">
             @csrf
-            <div id="accordion">
-                <div class="card p-2 ml-3 mr-3 shadow">
+            <div class="card tab-pane active" id="data-biodata">
+                <div class="head-card border-b pb-5">
+                    <h2 class="font-bold text-lg">Biodata Diri</h2>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="col-span-full grid grid-cols-2 gap-2">
+                        <div class="input-box">
+                            <label for="">NIP:</label>
+                            <select name="nip" id="nip" class="form-input"></select>
+                        </div>
+                        <div class="input-box">
+                            <label for="">NIK</label>
+                            <input type="number" placeholder="Masukkan NIK" class="@error('nik') is-invalid @enderror form-input" name="nik" id="nik" value="{{ old('nik') }}">
+                        </div>
+                    </div>
+                    <div class="input-box col-span-full">
+                        <label for="">Nama Karyawan</label>
+                        <input type="text" placeholder="Masukkan nama karyawan" class="@error('nama') is-invalid @enderror form-input" name="nama" id="nama" value="{{ old('nama') }}">
+                    </div>
+                    <div class="input-box col-md-4">
+                        <label for="">Tempat Lahir</label>
+                        <input type="text" placeholder="Masukkan tempat lahir" class="@error('tmp_lahir') is-invalid @enderror form-input" name="tmp_lahir" id="tmp_lahir" value="{{ old('tmp_lahir') }}">
+                    </div>
+                    <div class="input-box col-md-4">
+                        <label for="">Tanggal Lahir</label>
+                        <input type="date" class="@error('tgl_lahir') is-invalid @enderror form-input" name="tgl_lahir" id="tgl_lahir" value="{{ old('tgl_lahir') }}">
+                    </div>
+                    <div class="input-box col-md-4">
+                        <label for="">Agama</label>
+                        <select name="agama" id="agama" class="@error('agama') is-invalid @enderror form-input">
+                            <option value="-">--- Pilih ---</option>
+                            @foreach ($agama as $item)
+                                <option {{ old('agama') == $item->kd_agama ? 'selected' : '' }} value="{{ $item->kd_agama }}">{{ $item->agama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="input-box col-md-6">
+                        <label for="">Jenis Kelamin</label>
+                        <select name="jk" id="jk" class="@error('jk') is-invalid @enderror form-input">
+                            <option {{ old('jk') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
+                            <option {{ old('jk') == 'Laki-Laki' ? 'selected' : '' }} value="Laki-laki">Laki-laki</option>
+                            <option {{ old('jk') == 'Perempuan' ? 'selected' : '' }} value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+                    <div class="input-box col-md-6">
+                        <label for="">Status pernikahan</label>
+                        <select name="status_pernikahan" id="status" class="@error('status_pernikahan') is-invalid @enderror form-input">
+                            <option value="-">--- Pilih ---</option>
+                            <option value="Kawin">Kawin</option>
+                            <option value="Belum Kawin">Belum Kawin</option>
+                            <option value="Cerai">Cerai</option>
+                            <option value="Cerai Mati">Cerai Mati</option>
+                            <option value="Janda">Janda</option>
+                            <option value="Duda">Duda</option>
+                            <option value="Tidak Diketahui">Tidak Diketahui</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="input-box">
+                            <label for="">Kewarganegaraan</label>
+                            <select name="kewarganegaraan" id="kewarganegaraan" class="@error('kewarganegaraan') is-invalid @enderror form-input">
+                                <option {{ old('kewarganegaraan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
+                                <option {{ old('kewarganegaraan') == 'WNI' ? 'selected' : '' }} value="WNI">WNI</option>
+                                <option {{ old('kewarganegaraan') == 'WNA' ? 'selected' : '' }} value="WNA">WNA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-span-full col-md-12">
+                        <div class="input-box">
+                            <label for="">Alamat KTP</label>
+                            <textarea name="alamat_ktp" id="alamat_ktp" class="@error('alamat_ktp') is-invalid @enderror form-input">{{ old('alamat_ktp') }}</textarea>
+                        </div>
+                    </div>
+                    <div class="col-span-full col-md-12">
+                        <div class="input-box">
+                            <label for="">Alamat sekarang</label>
+                            <textarea name="alamat_sek" id="alamat_sekarang" class="form-input">{{ old('alamat_sek') }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card tab-pane" id="data-karyawan">
+                <div class="head-card border-b pb-5">
+                    <h2 class="font-bold text-lg">Data Karyawan</h2>
+                </div>
+                <div class="grid grid-cols-3 gap-2" id="#kantor_row">
+                    <div class="input-box col-span-full">
+                        <div class="input-box">
+                            <label for="">Nomor Rekening</label>
+                            <input type="number" placeholder="Nomor rekening" class="form-input" name="no_rek" value="{{ old('no_rek') }}" id="no_rek">
+                        </div>
+                    </div>
+                    <div class="col-span-full grid grid-cols-2 gap-2">
+                        <div class="input-box col-md-4">
+                            <div class="input-box">
+                                <label for="-">Jabatan</label>
+                                <select name="jabatan" id="jabatan" class="form-input">
+                                    <option value="-">--- Pilih ---</option>
+                                    @foreach ($jabatan as $item)
+                                        <option value="{{ $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-box col-md-4">
+                            <div class="input-box">
+                                <label for="kantor">Kantor</label>
+                                <select name="kantor" id="kantor" class="form-input">
+                                    <option value="-">--- Pilih Kantor ---</option>
+                                    <option value="1">Kantor Pusat</option>
+                                    <option value="2">Kantor Cabang</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-box col-span-full grid grid-cols-4 gap-2" id="kantor_row1">
+
+                    </div>
+                    <div class="input-box col-span-full grid grid-cols-2 gap-2 col-md-6"  id="kantor_row2">
+
+                    </div>
+                    <div class="input-box col-span-full grid grid-cols-2 gap-2 col-md-6"  id="kantor_row3">
+
+                    </div>
+                    <div class="col-span-full grid grid-cols-2 gap-2">
+                        <div class="input-box col-md-6">
+                            <div class="input-box">
+                                <label for="">Pangkat Dan Golongan</label>
+                                <select name="panggol" id="kd_panggol" class="@error('panggol') is-invalid @enderror form-input" required>
+                                    <option value="-">--- Pilih ---</option>
+                                    @foreach ($panggol as $item)
+                                        <option {{ old('panggol') == $item->golongan ? 'selected' : '--- Pilih ---' }} value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-box col-md-6">
+                            <div class="input-box">
+                                <label for="">Status Jabatan</label>
+                                <select name="status_jabatan" id="status_jabatan" class="@error('status_jabatan') is-invalid @enderror form-input">
+                                    <option {{ old('status_jabatan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
+                                    <option {{ old('status_jabatan') == 'Definitif' ? 'selected' : '' }} value="Definitif">Definitif</option>
+                                    <option {{ old('status_jabatan') == 'Penjabat' ? 'selected' : ''}} value="Penjabat">Penjabat</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-box col-span-full">
+                        <div class="input-box">
+                            <label for="">Keterangan Jabatan</label>
+                            <input type="text" placeholder="Keterangan jabatan" class="form-input" name="ket_jabatan" value="{{ old('ket_jabatan') }}" id="ket_jabatan">
+                        </div>
+                    </div>
+                    <div class="input-box col-span-full">
+                        <div class="input-box">
+                            <label for="">KPJ</label>
+                            <input type="text" placeholder="Masukkan KPJ" class="@error('kpj') is-invalid @enderror form-input" name="kpj" value="{{ old('kpj') }}" id="kpj">
+                        </div>
+                    </div>
+                    <div class="input-box col-span-full">
+                        <div class="input-box">
+                            <label for="">JKN</label>
+                            <input type="number" placeholder="Masukkan JKN" class="@error('jkn') is-invalid @enderror form-input" name="jkn" value="{{ old('jkn') }}" id="jkn">
+                        </div>
+                    </div>
+                    <div class="col-span-full grid grid-cols-2 gap-2">
+                        <div class="input-box col-md-6">
+                            <div class="input-box">
+                                <label for="">Gaji Pokok</label>
+                                <input type="text" placeholder="Masukkan gaji pokok" id="gj_pokok" class="@error('gj_pokok') is-invalid @enderror form-input" name="gj_pokok" value="{{ old('gj_pokok') }}">
+                            </div>
+                        </div>
+                        <div class="input-box col-md-6">
+                            <div class="input-box">
+                                <label for="">Gaji Penyesuaian</label>
+                                <input type="text" placeholder="Masukkan gaji penyesuian" id="gj_penyesuaian" class="form-input" name="gj_penyesuaian" value="{{ old('gj_penyesuaian') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-full grid grid-cols-3 gap-2">
+                        <div class="input-box col-md-12">
+                            <div class="input-box">
+                                <label for="">Status Karyawan</label>
+                                <select name="status_karyawan" id="status_karyawan" class="@error('status_karyawan') is-invalid @enderror form-input">
+                                    <option {{ old('status_karyawan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
+                                    <option {{ old('status_karyawan') == 'Tetap' ? 'selected' : '' }} value="Tetap">Tetap</option>
+                                    <option {{ old('status_karyawan') == 'IKJP' ? 'selected' : '' }} value="IKJP">IKJP</option>
+                                    <option {{ old('status_karyawan') == 'Kontrak Perpanjangan' ? 'selected' : '' }} value="Kontrak Perpanjangan">Kontrak Perpanjangan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-box col-md-6">
+                            <div class="input-box">
+                                <label for="">SK Pengangkatan</label>
+                                <input type="text" placeholder="Masukkan SK pengangkatan" class="@error('skangkat') is-invalid @enderror form-input" name="skangkat" value="{{ old('skangkat') }}" id="skangkat">
+                            </div>
+                        </div>
+                        <div class="input-box col-md-6">
+                            <div class="input-box">
+                                <label for="">Tanggal Pengangkatan</label>
+                                <input type="date" placeholder="Masukkan tanggal pengangkatan" class="@error('tanggal_pengangkat') is-invalid @enderror form-input" name="tanggal_pengangkat" value="{{ old('tanggal_pengangkat') }}" id="tanggal_pengangkat">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card tab-pane" id="data-is">
+                <div class="head-card border-b pb-5">
+                    <h2 class="font-bold text-lg">Data Keluarga</h2>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="input-box col-span-full">
+                        <label for="is_nama">Nama</label>
+                        <input type="text" placeholder="Masukkan nama" name="is_nama" class="form-input" value="{{ old('is_nama') }}" id="is_nama">
+                    </div>
+                    <div class="input-box col-md-4">
+                        <label for="is">Pasangan</label>
+                        <select name="is" id="is" class="form-input">
+                            <option {{ old('is') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
+                            <option {{ old('is') == 'Suami' ? 'selected' : '' }} value="Suami">Suami</option>
+                            <option {{ old('is') == 'Istri' ? 'selected' : '' }} value="Istri">Istri</option>
+                        </select>
+
+                    </div>
+                    <div class="input-box col-md-4">
+                        <label for="sk_tunjangan">SK Tunjangan</label>
+                        <input type="text" placeholder="Masukkan SK Tunjangan" class="form-input" name="sk_tunjangan_is" id="sk_tunjangan_is">
+                    </div>
+                    <div class="input-box col-md-6">
+                        <label for="is_tgl_lahir">Tanggal Lahir</label>
+                        <input type="date" placeholder="Masukkan tanggal lahir" name="is_tgl_lahir" class="form-input" value="{{ old('is_tgl_lahir') }}" id="is_tgl_lahir">
+                    </div>
+                    <div class="input-box col-md-6">
+                        <label for="is_pekerjaan">Pekerjaan</label>
+                        <input type="text" placeholder="Masukkan pekerjaan" class="form-input" name="is_pekerjaan" value="{{ old('is_pekerjaan') }}" id="is_pekerjaan">
+                    </div>
+                    <div class="input-box col-span-full">
+                        <label for="is_alamat">Alamat</label>
+                        <textarea name="is_alamat" placeholder="Masukkan alamat" class="form-input" id="is_alamat">{{ old('is_alamat') }}</textarea>
+                    </div>
+                    <div class="input-box col-md-6">
+                        <label for="is_jumlah_anak">Jumlah Anak</label>
+                        <input type="number" placeholder="Masukkan jumlah anak" class="form-input" id="is_jml_anak" name="is_jml_anak" value="{{ old('is_jumlah_anak') }}">
+                    </div>
+                    <div class="col-md-12 mt-3 col-span-full" id="row_anak">
+                        <hr>
+                    </div>
+                </div>
+            </div>
+            <div class="card tab-pane space-y-5" id="collapseFour" >
+                <div class="head-card border-b pb-5">
+                    <h2 class="font-bold text-lg">Data Tunjangan</h2>
+                </div>
+                <div class="grid grid-cols-3 gap-2 items-end">
+                    <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                    <div class="col-md-5">
+                        <div class="input-box">
+                            <label for="is">Tunjangan</label>
+                            <select name="tunjangan[]" id="tunjangan" class="form-input">
+                                <option value="-">--- Pilih ---</option>
+                                @foreach ($tunjangan as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-box">
+                            <label for="is_nama">Nominal</label>
+                            <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
+                        </div>
+                    </div>
+                    <div class="flex flex-row gap-2">
+                        <div class="col-md-1 mt-3">
+                            <button class="btn btn-success" type="button" id="btn-add">
+                                <i class="ti ti-plus"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-1 mt-3">
+                            <button class="btn btn-danger" type="button" id="btn-delete">
+                                <i class="ti ti-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- <div id="accordion"> --}}
+                {{-- <div class="card p-2 ml-3 mr-3 shadow">
                     <div class="card-header" id="headingOne">
                         <h6 class="ml-3" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                             <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Biodata Diri Karyawan</a>
@@ -22,39 +362,39 @@
                     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                         <div class="row m-0 pb-3 col-md-12">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">NIP:</label>
-                                    <select name="nip" id="nip" class="form-control"></select>
+                                    <select name="nip" id="nip" class="form-input"></select>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">NIK</label>
-                                    <input type="number" class="@error('nik') is-invalid @enderror form-control" name="nik" id="nik" value="{{ old('nik') }}">
+                                    <input type="number" class="@error('nik') is-invalid @enderror form-input" name="nik" id="nik" value="{{ old('nik') }}">
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Nama Karyawan</label>
-                                    <input type="text" class="@error('nama') is-invalid @enderror form-control" name="nama" id="nama" value="{{ old('nama') }}">
+                                    <input type="text" class="@error('nama') is-invalid @enderror form-input" name="nama" id="nama" value="{{ old('nama') }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Tempat Lahir</label>
-                                    <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-control" name="tmp_lahir" id="tmp_lahir" value="{{ old('tmp_lahir') }}">
+                                    <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-input" name="tmp_lahir" id="tmp_lahir" value="{{ old('tmp_lahir') }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Tanggal Lahir</label>
-                                    <input type="date" class="@error('tgl_lahir') is-invalid @enderror form-control" name="tgl_lahir" id="tgl_lahir" value="{{ old('tgl_lahir') }}">
+                                    <input type="date" class="@error('tgl_lahir') is-invalid @enderror form-input" name="tgl_lahir" id="tgl_lahir" value="{{ old('tgl_lahir') }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Agama</label>
-                                    <select name="agama" id="agama" class="@error('agama') is-invalid @enderror form-control">
+                                    <select name="agama" id="agama" class="@error('agama') is-invalid @enderror form-input">
                                         <option value="-">--- Pilih ---</option>
                                         @foreach ($agama as $item)
                                             <option {{ old('agama') == $item->kd_agama ? 'selected' : '' }} value="{{ $item->kd_agama }}">{{ $item->agama }}</option>
@@ -63,9 +403,9 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Jenis Kelamin</label>
-                                    <select name="jk" id="jk" class="@error('jk') is-invalid @enderror form-control">
+                                    <select name="jk" id="jk" class="@error('jk') is-invalid @enderror form-input">
                                         <option {{ old('jk') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                         <option {{ old('jk') == 'Laki-Laki' ? 'selected' : '' }} value="Laki-laki">Laki-laki</option>
                                         <option {{ old('jk') == 'Perempuan' ? 'selected' : '' }} value="Perempuan">Perempuan</option>
@@ -73,9 +413,9 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Status pernikahan</label>
-                                    <select name="status_pernikahan" id="status" class="@error('status_pernikahan') is-invalid @enderror form-control">
+                                    <select name="status_pernikahan" id="status" class="@error('status_pernikahan') is-invalid @enderror form-input">
                                         <option value="-">--- Pilih ---</option>
                                         <option value="Kawin">Kawin</option>
                                         <option value="Belum Kawin">Belum Kawin</option>
@@ -88,9 +428,9 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Kewarganegaraan</label>
-                                    <select name="kewarganegaraan" id="kewarganegaraan" class="@error('kewarganegaraan') is-invalid @enderror form-control">
+                                    <select name="kewarganegaraan" id="kewarganegaraan" class="@error('kewarganegaraan') is-invalid @enderror form-input">
                                         <option {{ old('kewarganegaraan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                         <option {{ old('kewarganegaraan') == 'WNI' ? 'selected' : '' }} value="WNI">WNI</option>
                                         <option {{ old('kewarganegaraan') == 'WNA' ? 'selected' : '' }} value="WNA">WNA</option>
@@ -98,22 +438,22 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Alamat KTP</label>
-                                    <textarea name="alamat_ktp" id="alamat_ktp" class="@error('alamat_ktp') is-invalid @enderror form-control">{{ old('alamat_ktp') }}</textarea>
+                                    <textarea name="alamat_ktp" id="alamat_ktp" class="@error('alamat_ktp') is-invalid @enderror form-input">{{ old('alamat_ktp') }}</textarea>
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Alamat sekarang</label>
-                                    <textarea name="alamat_sek" id="alamat_sekarang" class="form-control">{{ old('alamat_sek') }}</textarea>
+                                    <textarea name="alamat_sek" id="alamat_sekarang" class="form-input">{{ old('alamat_sek') }}</textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="card p-2 ml-3 mr-3 shadow">
+                {{-- <div class="card p-2 ml-3 mr-3 shadow">
                     <div class="card-header" id="headingTwo">
                         <h6 class="ml-3" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                             <a class="text-decoration-none" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Data Karyawan</a>
@@ -123,15 +463,15 @@
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                         <div class="row m-0 pb-3 col-md-12" id="#kantor_row">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Nomor Rekening</label>
-                                    <input type="number" class="form-control" name="no_rek" value="{{ old('no_rek') }}" id="no_rek">
+                                    <input type="number" class="form-input" name="no_rek" value="{{ old('no_rek') }}" id="no_rek">
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="-">Jabatan</label>
-                                    <select name="jabatan" id="jabatan" class="form-control">
+                                    <select name="jabatan" id="jabatan" class="form-input">
                                         <option value="-">--- Pilih ---</option>
                                         @foreach ($jabatan as $item)
                                             <option value="{{ $item->kd_jabatan }}">{{ $item->kd_jabatan }} - {{ $item->nama_jabatan }}</option>
@@ -140,9 +480,9 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="kantor">Kantor</label>
-                                    <select name="kantor" id="kantor" class="form-control">
+                                    <select name="kantor" id="kantor" class="form-input">
                                         <option value="-">--- Pilih Kantor ---</option>
                                         <option value="1">Kantor Pusat</option>
                                         <option value="2">Kantor Cabang</option>
@@ -160,9 +500,9 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Pangkat Dan Golongan</label>
-                                    <select name="panggol" id="kd_panggol" class="@error('panggol') is-invalid @enderror form-control" required>
+                                    <select name="panggol" id="kd_panggol" class="@error('panggol') is-invalid @enderror form-input" required>
                                         <option value="-">--- Pilih ---</option>
                                         @foreach ($panggol as $item)
                                             <option {{ old('panggol') == $item->golongan ? 'selected' : '--- Pilih ---' }} value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
@@ -171,9 +511,9 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Status Jabatan</label>
-                                    <select name="status_jabatan" id="status_jabatan" class="@error('status_jabatan') is-invalid @enderror form-control">
+                                    <select name="status_jabatan" id="status_jabatan" class="@error('status_jabatan') is-invalid @enderror form-input">
                                         <option {{ old('status_jabatan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                         <option {{ old('status_jabatan') == 'Definitif' ? 'selected' : '' }} value="Definitif">Definitif</option>
                                         <option {{ old('status_jabatan') == 'Penjabat' ? 'selected' : ''}} value="Penjabat">Penjabat</option>
@@ -181,39 +521,39 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Keterangan Jabatan</label>
-                                    <input type="text" class="form-control" name="ket_jabatan" value="{{ old('ket_jabatan') }}" id="ket_jabatan">
+                                    <input type="text" class="form-input" name="ket_jabatan" value="{{ old('ket_jabatan') }}" id="ket_jabatan">
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">KPJ</label>
-                                    <input type="text" class="@error('kpj') is-invalid @enderror form-control" name="kpj" value="{{ old('kpj') }}" id="kpj">
+                                    <input type="text" class="@error('kpj') is-invalid @enderror form-input" name="kpj" value="{{ old('kpj') }}" id="kpj">
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">JKN</label>
-                                    <input type="number" class="@error('jkn') is-invalid @enderror form-control" name="jkn" value="{{ old('jkn') }}" id="jkn">
+                                    <input type="number" class="@error('jkn') is-invalid @enderror form-input" name="jkn" value="{{ old('jkn') }}" id="jkn">
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Gaji Pokok</label>
-                                    <input type="text" id="gj_pokok" class="@error('gj_pokok') is-invalid @enderror form-control" name="gj_pokok" value="{{ old('gj_pokok') }}">
+                                    <input type="text" id="gj_pokok" class="@error('gj_pokok') is-invalid @enderror form-input" name="gj_pokok" value="{{ old('gj_pokok') }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Gaji Penyesuaian</label>
-                                    <input type="text" id="gj_penyesuaian" class="form-control" name="gj_penyesuaian" value="{{ old('gj_penyesuaian') }}">
+                                    <input type="text" id="gj_penyesuaian" class="form-input" name="gj_penyesuaian" value="{{ old('gj_penyesuaian') }}">
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Status Karyawan</label>
-                                    <select name="status_karyawan" id="status_karyawan" class="@error('status_karyawan') is-invalid @enderror form-control">
+                                    <select name="status_karyawan" id="status_karyawan" class="@error('status_karyawan') is-invalid @enderror form-input">
                                         <option {{ old('status_karyawan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                         <option {{ old('status_karyawan') == 'Tetap' ? 'selected' : '' }} value="Tetap">Tetap</option>
                                         <option {{ old('status_karyawan') == 'IKJP' ? 'selected' : '' }} value="IKJP">IKJP</option>
@@ -222,22 +562,22 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">SK Pengangkatan</label>
-                                    <input type="text" class="@error('skangkat') is-invalid @enderror form-control" name="skangkat" value="{{ old('skangkat') }}" id="skangkat">
+                                    <input type="text" class="@error('skangkat') is-invalid @enderror form-input" name="skangkat" value="{{ old('skangkat') }}" id="skangkat">
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="">Tanggal Pengangkatan</label>
-                                    <input type="date" class="@error('tanggal_pengangkat') is-invalid @enderror form-control" name="tanggal_pengangkat" value="{{ old('tanggal_pengangkat') }}" id="tanggal_pengangkat">
+                                    <input type="date" class="@error('tanggal_pengangkat') is-invalid @enderror form-input" name="tanggal_pengangkat" value="{{ old('tanggal_pengangkat') }}" id="tanggal_pengangkat">
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="card p-2 ml-3 mr-3 shadow" id="data_is">
+                {{-- <div class="card p-2 ml-3 mr-3 shadow" id="data_is">
                     <div class="card-header" id="headingThree">
                         <h6 class="ml-3" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
                             <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Data Keluarga</a>
@@ -247,9 +587,9 @@
                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                         <div class="row m-0 pb-3 col-md-12">
                             <div class="col-md-4">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="is">Pasangan</label>
-                                    <select name="is" id="is" class="form-control">
+                                    <select name="is" id="is" class="form-input">
                                         <option {{ old('is') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                         <option {{ old('is') == 'Suami' ? 'selected' : '' }} value="Suami">Suami</option>
                                         <option {{ old('is') == 'Istri' ? 'selected' : '' }} value="Istri">Istri</option>
@@ -257,44 +597,44 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="is_nama">Nama</label>
-                                    <input type="text" name="is_nama" class="form-control" value="{{ old('is_nama') }}" id="is_nama">
+                                    <input type="text" name="is_nama" class="form-input" value="{{ old('is_nama') }}" id="is_nama">
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="sk_tunjangan">SK Tunjangan</label>
-                                    <input type="text" class="form-control" name="sk_tunjangan_is" id="sk_tunjangan_is">
+                                    <input type="text" class="form-input" name="sk_tunjangan_is" id="sk_tunjangan_is">
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="is_tgl_lahir">Tanggal Lahir</label>
-                                    <input type="date" name="is_tgl_lahir" class="form-control" value="{{ old('is_tgl_lahir') }}" id="is_tgl_lahir">
+                                    <input type="date" name="is_tgl_lahir" class="form-input" value="{{ old('is_tgl_lahir') }}" id="is_tgl_lahir">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="is_alamat">Alamat</label>
-                                <textarea name="is_alamat" class="form-control" id="is_alamat">{{ old('is_alamat') }}</textarea>
+                                <textarea name="is_alamat" class="form-input" id="is_alamat">{{ old('is_alamat') }}</textarea>
                             </div>
                             <div class="col-md-6">
                                 <label for="is_pekerjaan">Pekerjaan</label>
-                                <input type="text" class="form-control" name="is_pekerjaan" value="{{ old('is_pekerjaan') }}" id="is_pekerjaan">
+                                <input type="text" class="form-input" name="is_pekerjaan" value="{{ old('is_pekerjaan') }}" id="is_pekerjaan">
                             </div>
                             <div class="col-md-6">
                                 <label for="is_jumlah_anak">Jumlah Anak</label>
-                                <input type="number" class="form-control" id="is_jml_anak" name="is_jml_anak" value="{{ old('is_jumlah_anak') }}">
+                                <input type="number" class="form-input" id="is_jml_anak" name="is_jml_anak" value="{{ old('is_jumlah_anak') }}">
                             </div>
                             <hr>
-                            <div class="col-md-12 mt-3" id="row_anak">
+                            <div class="col-span-full col-md-12 mt-3" id="row_anak">
 
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="card p-2 ml-3 mr-3 shadow">
+                {{-- <div class="card p-2 ml-3 mr-3 shadow">
                     <div class="card-header" id="headingFour">
                         <h6 class="ml-3" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
                             <a class="text-decoration-none" href="" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">Data Tunjangan</a>
@@ -305,9 +645,9 @@
                         <div class="row m-0 pb-3 col-md-12">
                             <input type="hidden" name="id_tk[]" id="id_tk" value="">
                             <div class="col-md-5">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="is">Tunjangan</label>
-                                    <select name="tunjangan[]" id="tunjangan" class="form-control">
+                                    <select name="tunjangan[]" id="tunjangan" class="form-input">
                                         <option value="-">--- Pilih ---</option>
                                         @foreach ($tunjangan as $item)
                                             <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
@@ -316,9 +656,9 @@
                                 </div>
                             </div>
                             <div class="col-md-5">
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="is_nama">Nominal</label>
-                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
                                 </div>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -333,18 +673,76 @@
                             </div>
                         </div>
                     </div>
+                </div> --}}
+            {{-- </div> --}}
+
+            <div class="flex justify-between card">
+                <button class="btn btn-primary" type="submit"><i class="ti ti-plus"></i><span class="lg:block hidden">Simpan</span></button>
+                <div class="flex gap-5">
+                    <button class="btn btn-light prev-btn hidden" type="button"><i class="ti ti-arrow-left"></i><span class="lg:block hidden">Form Sebelumnyaa</span></button>
+                    <button class="btn btn-secondary next-btn" type="button"><span class="lg:block hidden">Form Selanjutnya</span><i class="ti ti-arrow-right"></i></button>
                 </div>
             </div>
 
-            <div class="row m-3">
-                <button type="submit" id="submit" class="is-btn is-primary">Simpan</button>
-            </div>
         </form>
     </div>
 @endsection
 
 @section('custom_script')
     <script>
+        // START TAB PANE
+        let layoutPages = document.querySelector('.layout-pages');
+        var $tabPanes = $('.tab-pane');
+        var currentTab = 0;
+        $('.tab-btn').on('click', function() {
+            var tabId = $(this).data('tab');
+            $('.tab-pane').removeClass('active');
+            $('#' + tabId).addClass('active');
+            $('.tab-btn').removeClass('active');
+            $(this).addClass('active');
+            toggleButtons();
+        });
+
+
+        // Move to next tab
+        $('.next-btn').on('click', function() {
+
+            if (currentTab < $tabPanes.length - 1) {
+                $tabPanes.eq(currentTab).removeClass('active');
+                $('.tab-btn').eq(currentTab).removeClass('active');
+                currentTab++;
+                $tabPanes.eq(currentTab).addClass('active');
+                $('.tab-btn').eq(currentTab).addClass('active');
+            toggleButtons()
+            }
+        });
+
+        // Move to previous tab
+        $('.prev-btn').on('click', function() {
+            if (currentTab > 0) {
+                $tabPanes.eq(currentTab).removeClass('active');
+                $('.tab-btn').eq(currentTab).removeClass('active');
+                currentTab--;
+                $tabPanes.eq(currentTab).addClass('active');
+                $('.tab-btn').eq(currentTab).addClass('active');
+            toggleButtons()
+            }
+        });
+        function toggleButtons() {
+            layoutPages.scrollTo({ top: 0, left: 100, behavior: 'smooth' });
+            if (currentTab === 0) {
+                $('.prev-btn').addClass('hidden')
+            } else {
+                $('.prev-btn').removeClass('hidden')
+            }
+            if (currentTab ===  $tabPanes.length - 1) {
+                $('.next-btn').addClass('hidden')
+            } else {
+                $('.next-btn').removeClass('hidden')
+            }
+
+        }
+        // END TAB PANE
         let kantor = $('#kantor_row');
         let status = $('#status');
         $('#kantor').attr("disabled", "disabled");
@@ -364,18 +762,18 @@
                 var ket = (i == 0) ? 'Pertama' : 'Kedua';
                 $("#row_anak").append(`
                 <h6 class="">Data Anak `+ ket +`</h6>
-                <div class="row">
-                    <div class="col-md-6 form-group">
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="col-md-6 input-box">
                         <label for="nama_anak">Nama Anak</label>
-                        <input type="text" class="form-control" name="nama_anak[]">
+                        <input type="text" class="form-input" name="nama_anak[]">
                     </div>
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-6 input-box">
                         <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tgl_lahir_anak[]">
+                        <input type="date" class="form-input" name="tgl_lahir_anak[]">
                     </div>
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-6 input-box">
                         <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                        <input type="text" class="form-control" name="sk_tunjangan_anak[]">
+                        <input type="text" class="form-input" name="sk_tunjangan_anak[]">
                     </div>
                 </div>
             `);
@@ -410,9 +808,9 @@
                     success: function(res){
                         $("#kantor_row1").empty();
                         $("#kantor_row1").append(`
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="divisi">Divisi</label>
-                                    <select name="divisi" id="divisi" class="form-control">
+                                    <select name="divisi" id="divisi" class="form-input">
                                         <option value="">--- Pilih divisi ---</option>
                                     </select>
                                 </div>`
@@ -424,9 +822,9 @@
                         $("#kantor_row2").empty();
 
                         $("#kantor_row2").append(`
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="subdiv">Sub divisi</label>
-                                    <select name="subdiv" id="sub_divisi" class="form-control">
+                                    <select name="subdiv" id="sub_divisi" class="form-input">
                                         <option value="">--- Pilih sub divisi ---</option>
                                     </select>
                                 </div>`
@@ -451,9 +849,9 @@
                                         $("#kantor_row3").addClass("col-md-6");
 
                                         $("#kantor_row3").append(`
-                                                <div class="form-group">
+                                                <div class="input-box">
                                                     <label for="bagian">Bagian</label>
-                                                    <select name="bagian" id="bagian" class="form-control">
+                                                    <select name="bagian" id="bagian" class="form-input">
                                                         <option value="">--- Pilih bagian ---</option>
                                                     </select>
                                                 </div>`
@@ -488,17 +886,17 @@
                         $("#kantor_row1").empty();
                         $("#kantor_row2").empty();
                         $("#kantor_row1").append(`
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="Cabang">Cabang</label>
-                                    <select name="cabang" id="cabang" class="form-control">
+                                    <select name="cabang" id="cabang" class="form-input">
                                         <option value="">--- Pilih Cabang ---</option>
                                     </select>
                                 </div>`
                         );
                         $("#kantor_row2").append(`
-                            <div class="form-group">
+                            <div class="input-box">
                                 <label for="bagian">Bagian</label>
-                                <select name="bagian" id="bagian" class="form-control">
+                                <select name="bagian" id="bagian" class="form-input">
                                     <option value="">--- Pilih bagian ---</option>
                                 </select>
                             </div>
@@ -571,43 +969,47 @@
 
         $('#collapseFour').on('click', "#btn-add", function(){
             $('#collapseFour').append(`
-            <div class="row m-0 pb-3 col-md-12">
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <label for="is">Tunjangan</label>
-                                    <input type="hidden" name="id_tk[]" id="id_tk" value="">
-                                    <select name="tunjangan[]" id="tunjangan" class="form-control">
-                                        <option value="">--- Pilih ---</option>
-                                        @foreach ($tunjangan as $item)
-                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <label for="is_nama">Nominal</label>
-                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-1 mt-3">
-                                <button class="btn btn-info" type="button" id="btn-add">
-                                    <i class="bi-plus-lg"></i>
-                                </button>
-                            </div>
-                            <div class="col-md-1 mt-3">
-                                <button class="btn btn-info" type="button" id="btn-delete">
-                                    <i class="bi-dash-lg"></i>
-                                </button>
-                            </div>
-                        </div>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="col-md-5">
+                    <div class="input-box">
+                        <label for="is">Tunjangan</label>
+                        <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                        <select name="tunjangan[]" id="tunjangan" class="form-input">
+                            <option value="">--- Pilih ---</option>
+                            @foreach ($tunjangan as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-box">
+                        <label for="is_nama">Nominal</label>
+                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
+                    </div>
+                </div>
+                <div class="flex flex-row gap-2">
+                    <div class="col-md-1 mt-3">
+                        <button class="btn btn-success" type="button" id="btn-add">
+                            <i class="ti ti-plus"></i>
+                        </button>
+                    </div>
+                    <div class="col-md-1 mt-3">
+                        <button class="btn btn-danger" type="button" id="btn-delete">
+                            <i class="ti ti-minus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
             `);
             x++
         });
 
         $('#collapseFour').on('click', "#btn-delete", function(){
+            console.log('bismillah');
+            console.log(x);
             if(x > 1){
-                $(this).closest('.row').remove()
+                $(this).closest('.grid').remove()
                 x--;
             }
         })
@@ -681,14 +1083,15 @@
 
                     if(res.data.tunjangan.length > 0){
                         $("#collapseFour").empty()
+                        x = res.data.tunjangan.length
                         $.each(res.data.tunjangan, (i, val) => {
                             $('#collapseFour').append(`
-                                <div class="row m-0 pb-3 col-md-12">
+                            <div class="grid grid-cols-3 gap-2">
                                 <input type="hidden" name="id_tk[]" id="id_tk" value="${val.id}">
                                                 <div class="col-md-5">
-                                                    <div class="form-group">
+                                                    <div class="input-box">
                                                         <label for="is">Tunjangan</label>
-                                                        <select name="tunjangan[]" id="tunjangan" class="form-control">
+                                                        <select name="tunjangan[]" id="tunjangan" class="form-input">
                                                             <option value="">--- Pilih ---</option>
                                                             @foreach ($tunjangan as $item)
                                                                 <option value="{{ $item->id }}" ${(val.id_tunjangan == {{ $item->id }}) ? 'selected' : ''}>{{ $item->nama_tunjangan }}</option>
@@ -697,20 +1100,22 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5">
-                                                    <div class="form-group">
+                                                    <div class="input-box">
                                                         <label for="is_nama">Nominal</label>
-                                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control" value="${formatRupiah(val.nominal.toString())}">
+                                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input" value="${formatRupiah(val.nominal.toString())}">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-1 mt-3">
-                                                    <button class="btn btn-info" type="button" id="btn-add">
-                                                        <i class="bi-plus-lg"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-1 mt-3">
-                                                    <button class="btn btn-info" type="button" id="btn-delete">
-                                                        <i class="bi-dash-lg"></i>
-                                                    </button>
+                                                <div class="flex flex-row gap-2">
+                                                    <div class="col-md-1 mt-3">
+                                                        <button class="btn btn-success" type="button" id="btn-add">
+                                                            <i class="ti ti-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-md-1 mt-3">
+                                                        <button class="btn btn-danger" type="button" id="btn-delete">
+                                                            <i class="ti ti-minus"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                 `);
@@ -718,12 +1123,12 @@
                     } else{
                         $("#collapseFour").empty()
                         $('#collapseFour').append(`
-                            <div class="row m-0 pb-3 col-md-12">
+                            <div class="grid grid-cols-3 gap-2">
                                     <input type="hidden" name="id_tk[]" id="id_tk" value="">
                                             <div class="col-md-5">
-                                                <div class="form-group">
+                                                <div class="input-box">
                                                     <label for="is">Tunjangan</label>
-                                                    <select name="tunjangan[]" id="tunjangan" class="form-control">
+                                                    <select name="tunjangan[]" id="tunjangan" class="form-input">
                                                         <option value="">--- Pilih ---</option>
                                                         @foreach ($tunjangan as $item)
                                                             <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
@@ -732,20 +1137,22 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-5">
-                                                <div class="form-group">
+                                                <div class="input-box">
                                                     <label for="is_nama">Nominal</label>
-                                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-control">
+                                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
                                                 </div>
                                             </div>
-                                            <div class="col-md-1 mt-3">
-                                                <button class="btn btn-info" type="button" id="btn-add">
-                                                    <i class="bi-plus-lg"></i>
-                                                </button>
-                                            </div>
-                                            <div class="col-md-1 mt-3">
-                                                <button class="btn btn-info" type="button" id="btn-delete">
-                                                    <i class="bi-dash-lg"></i>
-                                                </button>
+                                            <div class="flex flex-row gap-2">
+                                                <div class="col-md-1 mt-3">
+                                                    <button class="btn btn-success" type="button" id="btn-add">
+                                                        <i class="ti ti-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-1 mt-3">
+                                                    <button class="btn btn-danger" type="button" id="btn-delete">
+                                                        <i class="ti ti-minus"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                         `);
@@ -792,9 +1199,9 @@
                     success: function(res){
                         $("#kantor_row1").empty();
                         $("#kantor_row1").append(`
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="divisi">Divisi</label>
-                                    <select name="divisi" id="divisi" class="form-control">
+                                    <select name="divisi" id="divisi" class="form-input">
                                         <option value="">--- Pilih divisi ---</option>
                                     </select>
                                 </div>`
@@ -808,9 +1215,9 @@
                         $("#kantor_row2").empty();
 
                         $("#kantor_row2").append(`
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="subdiv">Sub divisi</label>
-                                    <select name="subdiv" id="sub_divisi" class="form-control">
+                                    <select name="subdiv" id="sub_divisi" class="form-input">
                                         <option value="">--- Pilih sub divisi ---</option>
                                     </select>
                                 </div>`
@@ -831,17 +1238,17 @@
                         $("#kantor_row1").empty();
                         $("#kantor_row2").empty();
                         $("#kantor_row1").append(`
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="Cabang">Cabang</label>
-                                    <select name="cabang" id="cabang" class="form-control">
+                                    <select name="cabang" id="cabang" class="form-input">
                                         <option value="">--- Pilih Cabang ---</option>
                                     </select>
                                 </div>`
                         );
                         $("#kantor_row2").append(`
-                            <div class="form-group">
+                            <div class="input-box">
                                 <label for="bagian">Bagian</label>
-                                <select name="bagian" id="bagian" class="form-control">
+                                <select name="bagian" id="bagian" class="form-input">
                                     <option value="">--- Pilih bagian ---</option>
                                 </select>
                             </div>
@@ -878,9 +1285,9 @@
                         $("#kantor_row3").addClass("col-md-6");
 
                         $("#kantor_row3").append(`
-                                <div class="form-group">
+                                <div class="input-box">
                                     <label for="bagian">Bagian</label>
-                                    <select name="bagian" id="bagian" class="form-control">
+                                    <select name="bagian" id="bagian" class="form-input">
                                         <option value="">--- Pilih bagian ---</option>
                                     </select>
                                 </div>`
@@ -968,7 +1375,7 @@
         $('#kantor').change(function(){
             kantorChange();
         });
-        
+
         function cekStatus(){
             if(status.val() == "Kawin"){
                 $('#data_is').show();
@@ -1007,39 +1414,39 @@
                 var ket = (i == 0) ? 'Pertama' : 'Kedua';
                 if(dataJmlAnak.length > 0){
                     $("#row_anak").append(`
-                        <h6 class="">Data Anak `+ ket +`</h6>
-                        <div class="row">
+                        <h6 class="font-bold">Data Anak `+ ket +`</h6>
+                        <div class="grid grid-cols-3 gap-2">
                             <input type="hidden" name="id_anak[]" value="${dataJmlAnak[i].id}">
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-6 input-box">
                                 <label for="nama_anak">Nama Anak</label>
-                                <input type="text" class="form-control" name="nama_anak[]" value="${dataJmlAnak[i].nama}">
+                                <input type="text" class="form-input" name="nama_anak[]" value="${dataJmlAnak[i].nama}">
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-6 input-box">
                                 <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                <input type="date" class="form-control" name="tgl_lahir_anak[]" value="${dataJmlAnak[i].tgl_lahir}">
+                                <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${dataJmlAnak[i].tgl_lahir}">
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-6 input-box">
                                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                <input type="text" class="form-control" name="sk_tunjangan_anak[]" value="${dataJmlAnak[i].sk_tunjangan}">
+                                <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="${dataJmlAnak[i].sk_tunjangan}">
                             </div>
                         </div>
                     `);
                 } else {
                     $("#row_anak").append(`
                         <h6 class="">Data Anak `+ ket +`</h6>
-                        <div class="row">
+                        <div class="grid grid-cols-3 gap-2">
                             <input type="hidden" name="id_anak[]" value="">
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-6 input-box">
                                 <label for="nama_anak">Nama Anak</label>
-                                <input type="text" class="form-control" name="nama_anak[]">
+                                <input type="text" class="form-input" name="nama_anak[]">
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-6 input-box">
                                 <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                <input type="date" class="form-control" name="tgl_lahir_anak[]">
+                                <input type="date" class="form-input" name="tgl_lahir_anak[]">
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-6 input-box">
                                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                <input type="text" class="form-control" name="sk_tunjangan_anak[]">
+                                <input type="text" class="form-input" name="sk_tunjangan_anak[]">
                             </div>
                         </div>
                     `);

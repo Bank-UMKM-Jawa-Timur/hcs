@@ -33,6 +33,7 @@ class ProsesRincianPayroll implements FromView, WithColumnFormatting
             'L' => $this->FORMAT_NUMBER,
             'M' => $this->FORMAT_NUMBER,
             'N' => $this->FORMAT_NUMBER,
+            'O' => $this->FORMAT_NUMBER,
         ];
     }
 

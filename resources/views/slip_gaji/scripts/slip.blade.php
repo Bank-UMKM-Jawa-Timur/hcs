@@ -236,6 +236,15 @@
                     </tr>
                 `
             }
+            // T. Teller
+            if (data.tj_teller > 0) {
+                tableTunjangan += `
+                    <tr style="border:1px solid #e3e3e3">
+                        <td class="px-3">Tj. Teller</td>
+                        <td class="text-end px-3">Rp ${formatRupiahPayroll(data.tj_teller)}</td>
+                    </tr>
+                `
+            }
             var tj_khusus = 0;
             // T. Multilevel
             if (data.tj_ti > 0) {

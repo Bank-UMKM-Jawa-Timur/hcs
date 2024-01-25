@@ -81,7 +81,7 @@
         </div>
     </div>
 
-    <button class="btn-scroll-to-top btn btn-primary hidden absolute bottom-5 right-5 z-20">
+    <button class="btn-scroll-to-top btn btn-primary hidden fixed bottom-5 right-5 z-20">
         To Top <iconify-icon icon="mdi:arrow-top" class="ml-2 mt-1"></iconify-icon>
     </button>
 

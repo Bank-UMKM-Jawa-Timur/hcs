@@ -1,40 +1,45 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
 @include('vendor.select2')
 @section('content')
-    <div class="card-header">
-        <div class="card-header">
-            <div class="card-title">
-                <h5 class="card-title">Penonaktifan Karyawan</h5>
-                <p class="card-title"><a href="">Manajemen Karyawan</a> > <a href="">Pergerakan Karir</a> > <a href="{{ route('penonaktifan.index') }}">Penonaktifan Karyawan</a> > Tambah</p>
+<div class="head mt-5">
+    <div class="flex gap-5 justify-between items-center">
+        <div class="heading">
+            <h2 class="text-2xl font-bold tracking-tighter">Penonaktifan Karyawan</h2>
+            <div class="breadcrumb">
+                <a href="#" class="text-sm text-gray-500">Manajemen Karyawan</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="#" class="text-sm text-gray-500 font-bold">Pergerakan Karir</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('penonaktifan.index') }}" class="text-sm text-gray-500 font-bold">Penonaktifan Karyawan</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <p class="text-sm text-gray-500 font-bold">Tambah</p>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="card-body">
+<div class="body-pages">
+    <div class="table-wrapping">
         <form action="{{ route('penonaktifan.store') }}" method="post" enctype="multipart/form-data">
             @csrf
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
+            <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
+                    <div class="input-box">
                         <label for="">Karyawan:</label>
-                        <select name="nip" id="nip" class="form-control @error('nip') is-invalid @enderror"></select>
+                        <select name="nip" id="nip" class="form-input @error('nip') is-invalid @enderror"></select>
                         @error('nip')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
+                    <div class="input-box">
                         <label for="tanggal_penonaktifan">Tanggal Penonaktifan:</label>
-                        <input type="date" class="form-control @error('tanggal_penonaktifan') is-invalid @enderror" name="tanggal_penonaktifan" id="tanggal_penonaktifan">
+                        <input type="date" class="form-input @error('tanggal_penonaktifan') is-invalid @enderror" name="tanggal_penonaktifan" id="tanggal_penonaktifan">
                         @error('tanggal_penonaktifan')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
+                    <div class="input-box">
                         <label for="tanggal_penonaktifan">Kategori Penonaktifan:</label>
-                        <select name="kategori_penonaktifan" id="kategori_penonaktifan" class="form-control @error('kategori_penonaktifan') is-invalid @enderror">
+                        <select name="kategori_penonaktifan" id="kategori_penonaktifan" class="form-input @error('kategori_penonaktifan') is-invalid @enderror">
                             <option>-- Pilih Kategori --</option>
                             @foreach (\App\Enum\KategoriPenonaktifan::cases() as $cat)
                             <option value="{{ $cat }}">{{ $cat }}</option>
@@ -44,12 +49,11 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <label for="">SK Pemberhentian</label>
+                <div class="input-box">
+                    <label for="">SK Pemberhentian <span class="text-red-500 text-sm">*(Pdf)</span></label>
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input @error('sk_pemberhentian') is-invalid @enderror" name="sk_pemberhentian" id="sk_pemberhentian" accept="application/pdf">
-                        <label for="sk_pemberhentian" class="custom-file-label">Pilih File (PDF)</label>
+                        <input type="file" class="form-input @error('sk_pemberhentian') is-invalid @enderror" name="sk_pemberhentian" id="sk_pemberhentian" accept="application/pdf">
+                        {{-- <label for="sk_pemberhentian" class="custom-file-label">Pilih File (PDF)</label> --}}
                         @error('sk_pemberhentian')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -57,13 +61,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
-                    <button class="btn btn-info" type="submit">Proses</button>
+                <div class="mt-5">
+                    <button class="btn btn-primary" type="submit">Proses</button>
                 </div>
             </div>
         </form>
-        </div>
     </div>
+</div>
 @endsection
 @push('script')
 <script>

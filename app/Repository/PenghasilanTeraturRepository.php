@@ -70,6 +70,7 @@ class PenghasilanTeraturRepository
         $data = DB::table('transaksi_tunjangan')
                 ->select(
                     'transaksi_tunjangan.nip as nip_tunjangan',
+                    'transaksi_tunjangan.id as id_tunjangan',
                     'transaksi_tunjangan.id_tunjangan as id_transaksi_tunjangan',
                     'transaksi_tunjangan.nominal',
                     'transaksi_tunjangan.tanggal',
@@ -93,12 +94,52 @@ class PenghasilanTeraturRepository
 
         return $data;
     }
+    public function getEditTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit){
+        $data = DB::table('transaksi_tunjangan')
+                ->select(
+                    'transaksi_tunjangan.nip as nip_tunjangan',
+                    'transaksi_tunjangan.id as id_tunjangan',
+                    'transaksi_tunjangan.id_tunjangan as id_transaksi_tunjangan',
+                    'transaksi_tunjangan.nominal',
+                    'transaksi_tunjangan.tanggal',
+                    'mst_karyawan.nama_karyawan',
+                    'mst_tunjangan.nama_tunjangan'
+                )
+                    ->join('mst_karyawan', 'mst_karyawan.nip', 'transaksi_tunjangan.nip')
+                    ->join('mst_tunjangan', 'mst_tunjangan.id', 'transaksi_tunjangan.id_tunjangan')
+                    ->where('mst_tunjangan.kategori', 'teratur')
+                    ->where('mst_tunjangan.is_import', 1)
+                    ->where(function ($query) use ($search) {
+                        $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
+                            ->orWhere('mst_karyawan.nip', 'like', "%$search%")
+                            ->orWhere('transaksi_tunjangan.nominal', 'like', "%$search%")
+                            ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%");
+                    })
+                    ->where('transaksi_tunjangan.id_tunjangan', $idTunjangan)
+                    ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $tanggal)
+                    ->where('transaksi_tunjangan.created_at', $createdAt)
+                    // ->paginate($limit);
+                    ->get();
+
+        return $data;
+    }
 
     public function getNamaTunjangan($idTunjangan){
 
         $tunjangan = TunjanganModel::find($idTunjangan);
 
         return $tunjangan;
+    }
+
+    public function getNameCabang($kdEntitas){
+        $data = DB::table('mst_cabang')->select(
+            'kd_cabang',
+            'nama_cabang'
+            )
+        ->where('kd_cabang', $kdEntitas)
+        ->first();
+
+        return $data;
     }
 
     public function excelVitamin($bulan, $tahun){

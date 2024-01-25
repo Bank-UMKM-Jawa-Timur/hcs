@@ -146,6 +146,12 @@
                     <input type="text" disabled class="form-input-disabled" value="{{ npwp($karyawan->npwp) ?? '-' }}">
                 </div>
             </div>
+            <div class="row ">
+                <label class="w-2/4 mt-2">Status PTKP</label>
+                <div class="w-full">
+                    <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->status_ptkp ?? '-' }}">
+                </div>
+            </div>
             <hr>
             <div class="row m-0">
                 <div class="col-lg-12">

@@ -29,6 +29,7 @@
                             <th class="text-center">T. Pelaksana</th>
                             <th class="text-center">T. Kemahalan</th>
                             <th class="text-center">T. Kesejahteraan</th>
+                            <th class="text-center">T. Teller</th>
                             <th class="text-center">Penyesuaian</th>
                             <th class="text-center">Total</th>
                             <th class="text-center">PPH 21</th>

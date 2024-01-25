@@ -1,5 +1,5 @@
 @extends('layouts.app-template')
-@include('vendor.select2')
+{{-- @include('vendor.select2')
 @push('style')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
 <style>
@@ -10,7 +10,7 @@
         padding: 10px 4px 30px 4px;
     }
 </style>
-@endpush
+@endpush --}}
 @push('extraScript')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>

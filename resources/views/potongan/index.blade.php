@@ -71,12 +71,6 @@
                         <table class="table whitespace-nowrap" id="table" style="width: 100%">
                           <thead class="text-primary">
                             <th>No</th>
-                            <th>
-                                Bulan
-                            </th>
-                            <th>
-                                Tahun
-                            </th>
                             {{-- <th>
                               JP
                             </th>
@@ -115,10 +109,7 @@
                             @foreach ($data as $item)
                                 <tr>
                                   <td>{{ $i++ }}</td>
-                                  <td>{{ $bulanNama[$item->bulan] }}</td>
-                                  <td>{{ $item->tahun }}</td>
                                   <td>{{ $item->total_data }}</td>
-                                  {{-- <td> - </td> --}}
                                   <td>Rp {{ number_format($item->kredit_koperasi,0,',','.') }}</td>
                                   <td>Rp {{ number_format($item->iuran_koperasi,0,',','.') }}</td>
                                   <td>Rp {{ number_format($item->kredit_pegawai,0,',','.') }}</td>
@@ -127,11 +118,11 @@
                                     <div class="container">
                                         <div class="row">
                                             @can('penghasilan - import - potongan - detail')
-                                            <a href="{{ route('detail-potongan', ['bulan' => $item->bulan, 'tahun' => $item->tahun]) }}"
+                                            {{--  <a href="{{ route('detail-potongan', ['bulan' => $item->bulan, 'tahun' => $item->tahun]) }}"
                                                 class="btn btn-outline-info p-1"
                                                 style="min-width: 60px">
                                                 Detail
-                                            </a>
+                                            </a>  --}}
                                             @endcan
                                         </div>
                                     </div>

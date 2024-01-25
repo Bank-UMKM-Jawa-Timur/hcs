@@ -92,7 +92,7 @@
         }
 
         .bg-utama {
-            background-color: #DA251D !important;
+            background-color: #0770cd !important;
         }
         .text-white {
             color: #ffffff;
@@ -261,6 +261,13 @@
                                 <tr style="border:1px solid #e3e3e3">
                                     <td>Tj. Kesejahteraan</td>
                                     <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_kesejahteraan, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                            @endif
+                            @if ($data->gaji->tj_teller > 0)
+                                <tr style="border:1px solid #e3e3e3">
+                                    <td>Tj. Kesejahteraan</td>
+                                    <td style="padding-x: 3rem; text-align: right;">Rp {{ number_format($data->gaji->tj_teller, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             @endif
