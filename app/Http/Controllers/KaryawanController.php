@@ -681,8 +681,6 @@ class KaryawanController extends Controller
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
 
-        // return $data;
-
         return view('karyawan.edit', [
         // return view('karyawan.edit-old', [
             'data' => $data,
@@ -848,14 +846,15 @@ class KaryawanController extends Controller
                 }
 
                 // data tunjangan
-                $item_id = $request->tunjangan;
-                $itemLamaIds = DB::table('tunjangan_karyawan')->where('nip', $id)->pluck('id')->toArray();
-                // foreach ($itemLamaIds as $itemLamaId) {
-                //     if (is_null($item_id) || !in_array($itemLamaId, $item_id)) {
-                //         // hapus item yang tidak ada dalam $item_id
-                //         DB::table('tunjangan_karyawan')->where('id', $itemLamaId)->delete();
-                //     }
-                // }
+                $item_id = $request->id_tk;
+                $itemLamaId = DB::table('tunjangan_karyawan')->where('nip', $id)->pluck('id')->toArray();
+
+                for ($i = 0; $i < count($itemLamaId); $i++) {
+                    if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
+                        // hapus item yang tidak ada dalam $item_id
+                        DB::table('tunjangan_karyawan')->where('id', $itemLamaId[$i])->delete();
+                    }
+                }
 
                 if (is_array($item_id))
                 {
@@ -868,8 +867,8 @@ class KaryawanController extends Controller
                                     'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
                                     'created_at' => now()
                                 ]);
-                        } else {
-                            DB::table('tunjangan_karyawan')
+                            } else {
+                                DB::table('tunjangan_karyawan')
                                 ->where('id', $request->get('id_tk')[$i])
                                 ->update([
                                     'nip' => $request->get('nip'),
@@ -877,14 +876,14 @@ class KaryawanController extends Controller
                                     'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
                                     'updated_at' => now()
                                 ]);
+                            }
                         }
                     }
+
                 }
 
-            }
-
-            if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
-                $cekPotongan = DB::table('potongan_gaji')
+                if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
+                    $cekPotongan = DB::table('potongan_gaji')
                     ->where('nip', $id)
                     ->count();
                 if($cekPotongan > 0){
@@ -897,7 +896,7 @@ class KaryawanController extends Controller
                             'iuran_ik' => (int)str_replace('.', '', $request->get('potongan_iuran_ik')),
                             'updated_at' => now()
                         ]);
-                } else {
+                    } else {
                     DB::table('potongan_gaji')
                         ->insert([
                             'nip' => $id,
@@ -907,9 +906,10 @@ class KaryawanController extends Controller
                             'iuran_ik' => (int)str_replace('.', '', $request->get('potongan_iuran_ik')),
                             'created_at' => now()
                         ]);
+                    }
                 }
-            }
 
+            // return  ['item' => $item_id, 'item_lama' => $itemLamaId];
             DB::commit();
             Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
             return redirect()->route('karyawan.index');
@@ -1387,7 +1387,7 @@ class KaryawanController extends Controller
                     ];
                 }
             })->toArray();
-    
+
             return response()->json($response);
         } catch (Exception $e){
             return response()->json([
