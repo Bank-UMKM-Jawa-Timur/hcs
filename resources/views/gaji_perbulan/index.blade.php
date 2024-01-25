@@ -167,14 +167,6 @@
                                     <a class="btn btn-primary" data-modal-id="modalUploadfile" data-modal-toggle="modal" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload Lampiran Gaji</a>
                                 @endif
                             @endcan
-                        @elseif ($item->tanggal_upload != null && $item->tanggal_cetak != null)
-                            @can('penghasilan - proses penghasilan - lampiran gaji')
-                                <a href="#" data-modal-toggle="modal" data-modal-id="lampiran-gaji-modal" class="btn btn-primary  btn-lampiran-gaji" data-id="{{$item->id}}">Lampiran Gaji</a>
-                            @endcan
-                        @else
-                            @can('penghasilan - proses penghasilan - lampiran gaji')
-                                <a href="#" data-modal-toggle="modal" data-modal-id="lampiran-gaji-modal" class="btn btn-primary  btn-lampiran-gaji" data-id="{{$item->id}}">Lampiran Gaji</a>
-                            @endcan
                         @endif
                     </td>
                     @if ($item->bruto == 0)
@@ -327,7 +319,7 @@
                 $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
                 $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
             @endphp
-            <table class="tables-stripped">
+            <table class="tables-stripped" id="table_lampiran_gaji">
                 <thead>
                     <tr>
                         <th rowspan="2">No</th>
@@ -364,7 +356,6 @@
                 $total_pph += $item->total_pph;
                 @endphp
                 <tr>
-                    <td class="text-center">{{ $i++ }}</td>
                     @if (auth()->user()->hasRole('admin'))
                         <td class="text-center">{{ $item->kantor }}</td>
                     @endif

@@ -5,7 +5,7 @@
                 <div class="heading">
                     <h2 class="modal-title">Lampiran Gaji</h2>
                 </div>
-                <button type="button" class="close" data-modal-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-modal-dismiss="lampiran-gaji-modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>
@@ -20,7 +20,7 @@
                     <br>
                     <br>
                 @endcan
-               <div class="table-wrapping">
+            <div class="table-wrapping">
                 <table class="tables-stripped " id="table-lampiran-gaji" style="width: 100%;">
                     <thead class="text-primary" style="border:1px solid #e3e3e3 !important">
                         <tr>
@@ -44,7 +44,7 @@
                     <tbody>
                     </tbody>
                     <tfoot >
-                        <tr class="total">
+                        <tr class="total_lampiran_gaji">
                             <th colspan="2" class="text-center">Total</th>
                             <th class="text-right"></th>
                             <th></th>
