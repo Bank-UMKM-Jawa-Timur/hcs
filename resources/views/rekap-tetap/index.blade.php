@@ -16,7 +16,6 @@
         left: 0;
         z-index: 2;
         background-color: #fff;
-       color:red;
     }
 
     .table-scroll .thead_pertama th:first-child {
@@ -30,7 +29,6 @@
         /* width: 120px; */
         left: 46px;
         z-index: 2;
-       color:red;
        background-color: #fff;
     }
 
@@ -45,7 +43,6 @@
         position: sticky;
         left: 116px;
         z-index: 2;
-       color:red;
        background-color: #fff;
     }
 
@@ -58,7 +55,6 @@
         position: sticky;
         left: 255px;
         z-index: 2;
-       color:red;
        background-color: #fff;
     }
 
