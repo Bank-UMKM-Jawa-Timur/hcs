@@ -5,6 +5,7 @@ use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\PotonganController;
 use App\Http\Controllers\BonusController;
+use App\Http\Controllers\CheckPPHController;
 use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemosiController;
@@ -122,6 +123,7 @@ Route::prefix('graph')->group(function () {
 });
 
 Route::group(['middleware' => 'auth:karyawan,web'], function () {
+    Route::get('/cek-pph', [CheckPPHController::class, 'index']);
     Route::resource('/kantor', KantorController::class);
     Route::resource('role', RoleMasterController::class);
     Route::resource('/divisi', \App\Http\Controllers\DivisiController::class);
