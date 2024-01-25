@@ -125,7 +125,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="body-pages pt-0">
         <div class="table-wrapping">
             @if (\Request::has('tahun'))

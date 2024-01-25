@@ -13,11 +13,14 @@
         $colspanBonus += 1;
     }
 @endphp
+
 <table class="tables table whitespace-nowrap table-bordered" id="table" style="width: 100%;">
     <thead class="text-primary" style="border: 1px solid #e3e3e3 !important; position: sticky; top: 0; background-color: white; z-index: 1;">
         <tr>
-            <th rowspan="3" class="text-center">NO</th>
-            <th rowspan="3" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">NAMA KARYAWAN</th>
+            <th rowspan="3" class="text-center position: -webkit-sticky; position: sticky;" style="position: sticky; left: 0; background-color: white; z-index: 2;">NO</th>
+            <th rowspan="3" class="text-center position: -webkit-sticky; position:sticky;" style="position: sticky; left: 0; background-color: white; z-index: 2;">NIP</th>
+            <th rowspan="3" class="text-center position: -webkit-sticky; position:sticky;" style="position: sticky; left: 0; background-color: white; z-index: 2;">NPWP</th>
+            <th rowspan="3" class="text-center position: -webkit-sticky; position:sticky;" style="position: sticky; left: 0; background-color: white; z-index: 2;">NAMA KARYAWAN</th>
             <th rowspan="3" class="text-center">GAJI</th>
             <th class="text-center" colspan="5">TERATUR</th>
             <th class="text-center" colspan="5">TIDAK<br>TERATUR</th>
@@ -262,7 +265,9 @@
                 $totalBrutoPenghargaanKinerja += $brutoPenghargaanKinerja;
             @endphp
             <tr>
-                <td class="text-center">{{ $loop->iteration }}</td>
+                <td class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">{{ $loop->iteration }}</td>
+                <td style="position: sticky; left: 0; background-color: white; z-index: 2;">{{ $item->nip ? $item->nip : '-' }}</td>
+                <td style="position: sticky; left: 0; background-color: white; z-index: 2;">{{ $item->npwp ? $item->npwp : '-' }}</td>
                 <td style="position: sticky; left: 0; background-color: white; z-index: 2;">{{ $item->nama_karyawan }}</td>
                 <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->total_gaji ?? 0, 0, true) : formatRupiahExcel($item->gj_pokok ?? 0, 0, true) }}</td>
                 <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->uang_makan ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
@@ -307,7 +312,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <th colspan="2" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Total</th>
+            <th colspan="4" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Total</th>
             <th class="text-right">{{ formatRupiahExcel($totalGaji ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($totalUangMakan ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($totalPulsa ?? 0, 0, true) }}</th>
@@ -344,7 +349,7 @@
             <th class="text-right">{{ formatRupiahExcel($totalPPh ?? 0, 0, true) }}</th>
         </tr>
         <tr>
-            <th colspan="2" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Grand Total</th>
+            <th colspan="4" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Grand Total</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalGaji ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalUangMakan ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPulsa ?? 0, 0, true) }}</th>
