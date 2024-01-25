@@ -116,15 +116,16 @@ class LaporanTetapRepository
                             'penghasilan_tidak_teratur.nip',
                             'penghasilan_tidak_teratur.id_tunjangan',
                             'mst_tunjangan.nama_tunjangan',
-                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                            // DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                            'penghasilan_tidak_teratur.nominal',
                             'penghasilan_tidak_teratur.kd_entitas',
                             'penghasilan_tidak_teratur.tahun',
                             'penghasilan_tidak_teratur.bulan',
                         )
                         ->where('mst_tunjangan.kategori', 'tidak teratur')
                         ->where('penghasilan_tidak_teratur.tahun', $year)
-                        ->where('penghasilan_tidak_teratur.bulan', $month)
-                        ->groupBy('penghasilan_tidak_teratur.id_tunjangan');
+                        ->where('penghasilan_tidak_teratur.bulan', $month);
+                        // ->groupBy('penghasilan_tidak_teratur.id_tunjangan');
                 },
                 'bonus' => function($query) use ($year, $month) {
                     $query->select(
@@ -132,15 +133,16 @@ class LaporanTetapRepository
                             'penghasilan_tidak_teratur.nip',
                             'penghasilan_tidak_teratur.id_tunjangan',
                             'mst_tunjangan.nama_tunjangan',
-                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                            // DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                            'penghasilan_tidak_teratur.nominal',
                             'penghasilan_tidak_teratur.kd_entitas',
                             'penghasilan_tidak_teratur.tahun',
                             'penghasilan_tidak_teratur.bulan',
                         )
                         ->where('mst_tunjangan.kategori', 'bonus')
                         ->where('penghasilan_tidak_teratur.tahun', $year)
-                        ->where('penghasilan_tidak_teratur.bulan', $month)
-                        ->groupBy('penghasilan_tidak_teratur.id_tunjangan');
+                        ->where('penghasilan_tidak_teratur.bulan', $month);
+                        // ->groupBy('penghasilan_tidak_teratur.id_tunjangan');
                 },
                 'potonganGaji' => function($query) {
                     $query->select(
