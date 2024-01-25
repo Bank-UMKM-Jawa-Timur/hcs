@@ -14,13 +14,13 @@
     }
 @endphp
 
-<table class="tables table whitespace-nowrap table-bordered" id="table" style="width: 100%;">
+<table class="tables table whitespace-nowrap table-bordered table-scroll " id="table" style="width: 100%;">
     <thead class="text-primary" style="border: 1px solid #e3e3e3 !important; position: sticky; top: 0; background-color: white; z-index: 1;">
-        <tr>
-            <th rowspan="3" class="text-center position: -webkit-sticky; position: sticky;" style="position: sticky; left: 0; background-color: white; z-index: 2;">NO</th>
-            <th rowspan="3" class="text-center position: -webkit-sticky; position:sticky;" style="position: sticky; left: 0; background-color: white; z-index: 2;">NIP</th>
-            <th rowspan="3" class="text-center position: -webkit-sticky; position:sticky;" style="position: sticky; left: 0; background-color: white; z-index: 2;">NPWP</th>
-            <th rowspan="3" class="text-center position: -webkit-sticky; position:sticky;" style="position: sticky; left: 0; background-color: white; z-index: 2;">NAMA KARYAWAN</th>
+        <tr class="thead_pertama">
+            <th rowspan="3" class="text-center ">NO</th>
+            <th rowspan="3" class="text-center">NIP</th>
+            <th rowspan="3" class="text-center">NPWP</th>
+            <th rowspan="3" class="text-center">NAMA KARYAWAN</th>
             <th rowspan="3" class="text-center">GAJI</th>
             <th class="text-center" colspan="5">TERATUR</th>
             <th class="text-center" colspan="5">TIDAK<br>TERATUR</th>
@@ -265,10 +265,10 @@
                 $totalBrutoPenghargaanKinerja += $brutoPenghargaanKinerja;
             @endphp
             <tr>
-                <td class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">{{ $loop->iteration }}</td>
-                <td style="position: sticky; left: 0; background-color: white; z-index: 2;">{{ $item->nip ? $item->nip : '-' }}</td>
-                <td style="position: sticky; left: 0; background-color: white; z-index: 2;">{{ $item->npwp ? $item->npwp : '-' }}</td>
-                <td style="position: sticky; left: 0; background-color: white; z-index: 2;">{{ $item->nama_karyawan }}</td>
+                <td class="text-center">{{ $loop->iteration }}</td>
+                <td>{{ $item->nip ? $item->nip : '-' }}</td>
+                <td>{{ $item->npwp ? $item->npwp : '-' }}</td>
+                <td>{{ $item->nama_karyawan }}</td>
                 <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->total_gaji ?? 0, 0, true) : formatRupiahExcel($item->gj_pokok ?? 0, 0, true) }}</td>
                 <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->uang_makan ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
                 <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->tj_pulsa ?? 0, 0, true) : formatRupiahExcel(0) }}</td>

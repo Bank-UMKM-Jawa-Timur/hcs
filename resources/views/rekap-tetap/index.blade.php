@@ -4,6 +4,67 @@
     table th {
         border: 1px solid #e3e3e3 !important;
     }
+    .table-scroll {
+        margin: 0px;
+        border: none;
+    }
+
+    .table-scroll tr td:first-child,
+    .table-scroll .thead_pertama th:first-child {
+        position: sticky;
+        /* width:400px; */
+        left: 0;
+        z-index: 2;
+        background-color: #fff;
+       color:red;
+    }
+
+    .table-scroll .thead_pertama th:first-child {
+        z-index: 4;
+    }
+
+    .table-scroll tr td:nth-child(2),
+    .table-scroll .thead_pertama th:nth-child(2) {
+        position: -webkit-sticky;
+        position: sticky;
+        /* width: 120px; */
+        left: 46px;
+        z-index: 2;
+       color:red;
+       background-color: #fff;
+    }
+
+    .table-scroll .thead_pertama th:nth-child(2) {
+        z-index: 4;
+    }
+
+
+    .table-scroll tr td:nth-child(3),
+    .table-scroll .thead_pertama th:nth-child(3) {
+        position: -webkit-sticky;
+        position: sticky;
+        left: 116px;
+        z-index: 2;
+       color:red;
+       background-color: #fff;
+    }
+
+    .table-scroll .thead_pertama th:nth-child(3) {
+        z-index: 4;
+    }
+    .table-scroll tr td:nth-child(4),
+    .table-scroll .thead_pertama th:nth-child(4) {
+        position: -webkit-sticky;
+        position: sticky;
+        left: 255px;
+        z-index: 2;
+       color:red;
+       background-color: #fff;
+    }
+
+    .table-scroll .thead_pertama th:nth-child(4) {
+        z-index: 4;
+    }
 </style>
 @endpush
 
