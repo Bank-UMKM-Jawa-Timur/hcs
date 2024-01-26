@@ -69,7 +69,9 @@
             @if(\Request::get('tab') == 'proses') active-tab @endif
             @endif" data-tab="proses">Proses</button>
             <button type="button" class="btn-tab @if(\Request::get('tab') == 'final') active-tab @else  @endif" data-tab="final">Final</button>
-            <button type="button" class="btn-tab @if(\Request::get('tab') == 'sampah') active-tab @else  @endif" data-tab="sampah">Sampah</button>
+            @if (auth()->user()->hasRole('admin'))
+                <button type="button" class="btn-tab @if(\Request::get('tab') == 'sampah') active-tab @else  @endif" data-tab="sampah">Sampah</button>
+            @endif
         </div>
         <div class="tab-content table-wrapping @if(!\Request::has('tab')) block @endif @if (\Request::has('tab'))
             @if(\Request::get('tab') == 'proses') active show @else hidden @endif

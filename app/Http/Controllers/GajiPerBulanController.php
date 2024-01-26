@@ -127,13 +127,21 @@ class GajiPerBulanController extends Controller
         // Final
         $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1);
         // sampah
-        $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1);
+        if(auth()->user()->hasRole('admin')) {
+            $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1);
+            $data = [
+                'proses_list' => $proses_list,
+                'final_list' => $final_list,
+                'sampah' => $sampah,
+            ];
+        }
+        else{
+            $data = [
+                'proses_list' => $proses_list,
+                'final_list' => $final_list,
+            ];
+        }
 
-        $data = [
-            'proses_list' => $proses_list,
-            'final_list' => $final_list,
-            'sampah' => $sampah,
-        ];
 
         return view('gaji_perbulan.index', $data);
     }
