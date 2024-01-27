@@ -356,6 +356,7 @@
                 $total_pph += $item->total_pph;
                 @endphp
                 <tr>
+                    <td class="text-center">{{$i++}}</td>
                     @if (auth()->user()->hasRole('admin'))
                         <td class="text-center">{{ $item->kantor }}</td>
                     @endif
@@ -368,6 +369,7 @@
                         <a href="#" data-modal-id="payroll-modal" data-modal-toggle="modal" class="btn btn-success btn-payroll"
                             data-batch_id="{{$item->id}}">Payroll</a>
                     </td>
+                    {{-- bruto --}}
                     @if ($item->bruto == 0)
                         <td class="text-center">-</td>
                     @else
@@ -375,6 +377,7 @@
                             Rp {{number_format($item->bruto, 0, ',', '.')}}
                         </td>
                     @endif
+                    {{-- potongan --}}
                     @if ($item->grand_total_potongan == 0)
                         <td class="text-center">-</td>
                     @else
@@ -382,6 +385,7 @@
                             Rp {{number_format($item->grand_total_potongan, 0, ',', '.')}}
                         </td>
                     @endif
+                    {{-- netto --}}
                     @if ($item->netto < 0)
                         <td class="text-right">
                             Rp ({{number_format(str_replace('-', '', $item->netto), 0, ',', '.')}})
@@ -393,6 +397,7 @@
                             Rp {{number_format($item->netto, 0, ',', '.')}}
                         </td>
                     @endif
+                    {{-- pph --}}
                     @if ($item->total_pph < 0)
                         <td class="text-right">
                             Rp ({{number_format(str_replace('-', '', $item->total_pph), 0, ',', '.')}})
@@ -404,14 +409,16 @@
                             Rp {{number_format($item->total_pph, 0, ',', '.')}}
                         </td>
                     @endif
+                    {{-- aksi --}}
                     @if (auth()->user()->hasRole('admin'))
                         <td>
                             <a href="#" class="btn btn-danger d-flex justify-center btn-delete"
                                 data-batch_id="{{$item->id}}"
                                 data-kantor="{{$item->kantor}}"
                                 data-bulan="{{$item->bulan}}"
-                                data-tahun="{{$item->tahun}}"
-                                >Hapus</a>
+                                data-tahun="{{$item->tahun}}">
+                                Hapus
+                            </a>
                         </td>
                     @endif
                 </tr>
