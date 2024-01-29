@@ -6,6 +6,8 @@
             <h2 class="text-2xl font-bold tracking-tighter">PPH</h2>
             <div class="breadcrumb">
                 <a href="#" class="text-sm text-gray-500">PPH</a>
+                <i class="ti ti-circle-filled text-theme-primary"></i>
+                <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">{{$nama_cabang}}</a>
             </div>
         </div>
     </div>

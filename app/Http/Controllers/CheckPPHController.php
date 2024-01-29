@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\CheckHitungPPH;
 use App\Models\KaryawanModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CheckPPHController extends Controller
 {
@@ -69,7 +70,19 @@ class CheckPPHController extends Controller
             array_push($result, $data);
         }
         // return $result;
+        if (auth()->user()->hasRole('cabang')) {
+            $dataC = DB::table('mst_cabang')->where('kd_cabang', auth()->user()->kd_cabang)->first();
+            $nama_cabang = $dataC->nama_cabang;
 
-        return view('cek-pph', compact('cabang', 'result'));
+        } else {
+            if ($request->has('kd_entitas')) {
+                $dataC = DB::table('mst_cabang')->where('kd_cabang', $request->get('kd_entitas'))->first();
+                $nama_cabang = $dataC->nama_cabang;
+            } else {
+                $nama_cabang = "Pusat";
+            }
+        }
+
+        return view('cek-pph', compact('cabang', 'result', 'nama_cabang'));
     }
 }
