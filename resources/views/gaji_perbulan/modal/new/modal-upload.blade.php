@@ -11,7 +11,7 @@
             </div>
             <div class="modal-body space-y-5">
                 <div class="flex">
-                    <a class="ml-2 mb-3 btn btn-primary btn-download-pdf " id="download" href="" data-id="">Cetak Lampiran Gaji</a>
+                    <a class="ml-2 mb-3 btn btn-primary btn-download-pdf " id="download" href="" data-id="">Cetak Payroll</a>
                 </div>
                 <form id="form-finalisasi" action="{{ route('upload.penghasilanPerBulan') }}" enctype="multipart/form-data" method="POST">
                     @csrf
@@ -19,7 +19,7 @@
                         <div class="col-lg-12">
                             <input type="hidden" id="id" name="id">
                             <div class="input-box">
-                                <label for="upload_lampiran">Upload File Lampiran Gaji<span style="color: red;">*.pdf</span></label>
+                                <label for="upload_lampiran">Upload Berkas Payroll<span style="color: red;">*.pdf</span></label>
                                 <div class="input-group">
                                     <input type="file" id="upload_lampiran" name="upload_file"
                                         class="custom-file-input form-upload only-pdf"
@@ -30,7 +30,7 @@
                                         </label>
                                     </button>
                                 </div>
-                                <span class="text-red-500 m-0" style="display: none"></span>
+                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
                             </div>
                         </div>
                     </div>
