@@ -2085,6 +2085,8 @@ class GajiPerBulanController extends Controller
         $request->validate([
             'upload_file' => 'required'
         ]);
+
+        DB::beginTransaction();
         try {
             $folderLampiran = public_path() . '/upload/' . $request->id . '/';
             $file = $request->upload_file;
@@ -2094,15 +2096,44 @@ class GajiPerBulanController extends Controller
                 mkdir($folderLampiran, 0755, true);
             }
             $file->move($folderLampiran, $filenameLampiran);
-            DB::table('batch_gaji_per_bulan')->where('id',$request->id)->update([
-                'file' => $filenameLampiran,
-                'tanggal_upload' => Carbon::now(),
-            ]);
-            Alert::success('Sukses','Lampiran gaji berhasil diupload');
+
+            $batch = DB::table('batch_gaji_per_bulan')
+                        ->where('id', $request->id)
+                        ->first();
+            $prev = null;
+            if ($batch) {
+                $prev = DB::table('batch_gaji_per_bulan')
+                            ->where('tanggal_input', '<', $batch->tanggal_input)
+                            ->where('kd_entitas', $batch->kd_entitas)
+                            ->where('status', 'proses')
+                            ->orderByDesc('tanggal_input')
+                            ->first();
+
+                if ($prev) {
+                    Alert::error('Gagal', 'Harap lakukan final proses pada penghasilan yang sebelumnya terlebih dahulu');
+                    return back();
+                }
+                else {
+                    DB::table('batch_gaji_per_bulan')
+                        ->where('id', $request->id)
+                        ->update([
+                            'file' => $filenameLampiran,
+                            'tanggal_upload' => Carbon::now(),
+                            'status' => 'final',
+                            'tanggal_final' => date('Y-m-d'),
+                            'updated_at' => now(),
+                        ]);
+                }
+            }
+
+            DB::commit();
+            Alert::success('Sukses','Berhasil melakukan proses finalisasi');
             return redirect()->route('gaji_perbulan.index');
         } catch (Exception $th) {
+            DB::rollBack();
             return $th;
         } catch (QueryException $e) {
+            DB::rollBack();
             return $e;
         }
     }
