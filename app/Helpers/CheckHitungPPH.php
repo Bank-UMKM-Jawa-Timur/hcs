@@ -105,10 +105,15 @@ class CheckHitungPPH
                         ->first();
 
         $seharusnya = DB::table('pph_yang_dilunasi as pd')
-                ->select(
-                    DB::raw('(CAST(pd.total_pph AS UNSIGNED) - (CAST(pd.insentif_kredit AS UNSIGNED) + CAST(pd.insentif_penagihan AS UNSIGNED))) AS total_selisih')
-                )
-                ->where('nip', $karyawan->nip)->first();
+                        ->select(
+                            DB::raw('(CAST(pd.total_pph AS UNSIGNED) - (CAST(pd.insentif_kredit AS UNSIGNED) + CAST(pd.insentif_penagihan AS UNSIGNED))) AS total_seharusnya'),
+                            DB::raw('(CAST(pd.insentif_kredit AS UNSIGNED) + CAST(pd.insentif_penagihan AS UNSIGNED)) AS total_insentif'),
+                            DB::raw('CAST(pd.terutang AS UNSIGNED) AS terutang'),
+                        )
+                        ->where('nip', $karyawan->nip)
+                        ->where('bulan', $bulan)
+                        ->where('tahun', $tahun)
+                        ->first();
 
         $data = new stdClass;
         $data->nama = $karyawan->nama_karyawan;
@@ -124,7 +129,7 @@ class CheckHitungPPH
         $data->bpjs_tk = $dppJamsostek['bpjs_tk'];
         $data->pengali = ($pengali / 100);
         $data->seharusnya = $seharusnya;
-        $data->pph = $pph;
+        $data->pph = $pph - $seharusnya->total_insentif;
 
         return $data;
     }

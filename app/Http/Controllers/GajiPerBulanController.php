@@ -142,7 +142,6 @@ class GajiPerBulanController extends Controller
             ];
         }
 
-
         return view('gaji_perbulan.index', $data);
     }
 

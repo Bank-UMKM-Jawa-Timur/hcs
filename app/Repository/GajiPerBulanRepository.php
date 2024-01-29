@@ -52,7 +52,7 @@ class GajiPerBulanRepository
                 ->groupBy('batch.kd_entitas')
                 ->groupBy('gaji.bulan')
                 ->groupBy('gaji.tahun')
-                ->paginate($limit);
+                ->paginate($limit,['*'], 'page', $page);
 
         foreach ($data as $key => $item) {
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
@@ -318,6 +318,7 @@ class GajiPerBulanRepository
 
         return $data;
     }
+
     public function getPenghasilanTrash($status, $limit=10, $page = 1) {
         $is_cabang = auth()->user()->hasRole('cabang');
         $is_pusat = auth()->user()->hasRole('kepegawaian');
@@ -363,7 +364,7 @@ class GajiPerBulanRepository
                 ->groupBy('batch.kd_entitas')
                 ->groupBy('gaji.bulan')
                 ->groupBy('gaji.tahun')
-                ->paginate($limit);
+                ->paginate($limit,['*'], 'page', $page);
 
         foreach ($data as $key => $item) {
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
