@@ -50,7 +50,7 @@ class PenghasilanTeraturRepository
                     }
                 })
                 ->groupBy('transaksi_tunjangan.id_tunjangan', 'transaksi_tunjangan.tanggal', 'transaksi_tunjangan.kd_entitas')
-                ->orderBy('transaksi_tunjangan.tanggal')
+                ->orderBy('transaksi_tunjangan.tanggal', 'DESC')
                 ->paginate($limit);
 
         foreach ($data as $key => $value) {
