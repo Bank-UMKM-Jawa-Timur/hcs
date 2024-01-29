@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\CheckHitungPPH;
 use App\Models\KaryawanModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CheckPPHController extends Controller
 {
@@ -40,20 +41,28 @@ class CheckPPHController extends Controller
                         ->select('kd_cabang', 'nama_cabang')
                         ->orderBy('kd_cabang')
                         ->get();
-        if ($kd_entitas == '000') {
+
+        if (auth()->user()->hasRole('cabang')) {
             $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                                    ->where(function($query) use ($kd_cabang) {
-                                        $query->whereNotIn('kd_entitas', $kd_cabang)
-                                            ->orWhereNull('kd_entitas');
-                                    })
-                                    ->orderByRaw($orderRaw)
-                                    ->get();
-        }
-        else {
-            $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                                    ->where('kd_entitas', $kd_entitas)
-                                    ->orderByRaw($orderRaw)
-                                    ->get();
+                ->where('kd_entitas', auth()->user()->kd_cabang)
+                ->orderByRaw($orderRaw)
+                ->get();
+        } else {
+            if ($kd_entitas == '000') {
+                $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
+                                        ->where(function($query) use ($kd_cabang) {
+                                            $query->whereNotIn('kd_entitas', $kd_cabang)
+                                                ->orWhereNull('kd_entitas');
+                                        })
+                                        ->orderByRaw($orderRaw)
+                                        ->get();
+            }
+            else {
+                $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
+                                        ->where('kd_entitas', $kd_entitas)
+                                        ->orderByRaw($orderRaw)
+                                        ->get();
+            }
         }
         $result = [];
         foreach ($karyawan as $key => $value) {
@@ -61,7 +70,19 @@ class CheckPPHController extends Controller
             array_push($result, $data);
         }
         // return $result;
+        if (auth()->user()->hasRole('cabang')) {
+            $dataC = DB::table('mst_cabang')->where('kd_cabang', auth()->user()->kd_cabang)->first();
+            $nama_cabang = $dataC->nama_cabang;
 
-        return view('cek-pph', compact('cabang', 'result'));
+        } else {
+            if ($request->has('kd_entitas')) {
+                $dataC = DB::table('mst_cabang')->where('kd_cabang', $request->get('kd_entitas'))->first();
+                $nama_cabang = $dataC->nama_cabang;
+            } else {
+                $nama_cabang = "Pusat";
+            }
+        }
+
+        return view('cek-pph', compact('cabang', 'result', 'nama_cabang'));
     }
 }
