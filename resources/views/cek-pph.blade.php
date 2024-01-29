@@ -30,28 +30,13 @@
                         $kredit_koprasi += $row->potongan?->kredit_koperasi ? $row->potongan->kredit_koperasi : 0;
                         $iuran_koprasi += $row->potongan?->iuran_koperasi ? $row->potongan->iuran_koperasi : 0;
                         $iuran_ik += $row->potongan?->iuran_ik ? $row->potongan->iuran_ik : 0;
-                        $pph_sekarang += $row->pph;
-                        $pph_seharusnya += $row->selisih->total_selisih;
+                        $pph_sekarang += $row->seharusnya->total_selisih;
+                        $pph_seharusnya += $row->pph;
                         $selisih = $pph_sekarang - $pph_seharusnya;
                     @endphp
                 @endforeach
                 <table class="table table-bordered" id="table" style="width: 100%; border: 1px solid black;">
                     <thead style="margin-bottom: 3rem">
-                        <tr>
-                            <th>No</th>
-                            <th>Nip</th>
-                            <th>Nama</th>
-                            <th>PTKP</th>
-                            <th>Bruto</th>
-                            <th>Kredit Pegawai</th>
-                            <th>Kredit Koperasi</th>
-                            <th>Iuran Koperasi</th>
-                            <th>Iuaran IK</th>
-                            <th>Penggali</th>
-                            <th>PPH Sekarang</th>
-                            <th>PPH Seharusnya</th>
-                            <th>Selisih</th>
-                        </tr>
                         <tr>
                             <th colspan="3" style="font-weight: bold;">GRAND TOTAL</th>
                             <th>-</th>
@@ -64,11 +49,6 @@
                             <th style="font-weight: bold">{{formatRupiahExcel($pph_sekarang,0,true)}}</th>
                             <th style="font-weight: bold">{{formatRupiahExcel($pph_seharusnya,0,true)}}</th>
                             <th style="font-weight: bold">{{formatRupiahExcel($selisih,0,true)}}</th>
-                        </tr>
-                    </thead>
-                    <thead>
-                        <tr>
-                            <th colspan="13"></th>
                         </tr>
                     </thead>
                     <thead>
@@ -107,28 +87,13 @@
                                 <td>{{formatRupiahExcel($row->potongan?->iuran_koperasi ? $row->potongan->iuran_koperasi : 0, 0, true)}}</td>
                                 <td>{{formatRupiahExcel($row->potongan?->iuran_ik ? $row->potongan->iuran_ik : 0, 0, true)}}</td>
                                 <td>{{($row->pengali * 100)}}%</td>
+                                <td>{{formatRupiahExcel($row->seharusnya->total_selisih,0,true)}}</td>
                                 <td>{{formatRupiahExcel($row->pph,0,true)}}</td>
-                                <td>{{formatRupiahExcel($row->selisih->total_selisih,0,true)}}</td>
-                                <td>{{formatRupiahExcel($row->pph - $row->selisih->total_selisih,0,true)}}</td>
+                                <td>{{formatRupiahExcel($row->seharusnya->total_selisih - $row->pph,0,true)}}</td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
-                        <tr>
-                            <th>No</th>
-                            <th>Nip</th>
-                            <th>Nama</th>
-                            <th>PTKP</th>
-                            <th>Bruto</th>
-                            <th>Kredit Pegawai</th>
-                            <th>Kredit Koperasi</th>
-                            <th>Iuran Koperasi</th>
-                            <th>Iuaran IK</th>
-                            <th>Penggali</th>
-                            <th>PPH Sekarang</th>
-                            <th>PPH Seharusnya</th>
-                            <th>Selisih</th>
-                        </tr>
                         <tr>
                             <th colspan="3" style="font-weight: bold;">GRAND TOTAL</th>
                             <th>-</th>
