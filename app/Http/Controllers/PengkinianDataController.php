@@ -396,7 +396,7 @@ class PengkinianDataController extends Controller
             ->join('mst_karyawan as karyawan', 'karyawan.nip', '=', 'demosi_promosi_pangkat.nip')
             ->join('mst_jabatan as newPos', 'newPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_baru')
             ->join('mst_jabatan as oldPos', 'oldPos.kd_jabatan', '=', 'demosi_promosi_pangkat.kd_jabatan_lama')
-            ->orderBy('id', 'desc')
+            ->orderBy('demosi_promosi_pangkat.id', 'desc')
             ->get();
         $pergerakanKarir->map(function($data) {
             if(!$data->kd_entitas_baru) {
