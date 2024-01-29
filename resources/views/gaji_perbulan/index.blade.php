@@ -571,7 +571,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="{{auth()->user()->hasRole('admin') ? 11 : 10}}" class="text-center">Belum ada penghasilan yang telah selesai diproses.</td>
+                        <td colspan="{{auth()->user()->hasRole('admin') ? 11 : 10}}" class="text-center">Belum ada penghasilan yang telah dihapus.</td>
                     </tr>
                     @endforelse
                     </tbody>

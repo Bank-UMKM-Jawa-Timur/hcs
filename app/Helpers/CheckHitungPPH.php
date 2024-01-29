@@ -104,6 +104,12 @@ class CheckHitungPPH
                         ->where('nip', $karyawan->nip)
                         ->first();
 
+        $selisih = DB::table('pph_yang_dilunasi as pd')
+                ->select(
+                    DB::raw('(CAST(pd.total_pph AS UNSIGNED) - CAST(pd.insentif_kredit AS UNSIGNED) + CAST(pd.insentif_penagihan AS UNSIGNED)) AS total_selisih'),
+                )
+                ->where('nip', $karyawan->nip)->first();
+
         $data = new stdClass;
         $data->nama = $karyawan->nama_karyawan;
         $data->nip = $karyawan->nip;
@@ -117,6 +123,7 @@ class CheckHitungPPH
         $data->dpp = $dppJamsostek['dpp'];
         $data->bpjs_tk = $dppJamsostek['bpjs_tk'];
         $data->pengali = ($pengali / 100);
+        $data->selisih = $selisih;
         $data->pph = $pph;
 
         return $data;
@@ -163,7 +170,7 @@ class CheckHitungPPH
 
         // Get PTKP
         $ptkp = CheckHitungPPH::getPTKP($karyawan);
-        
+
         $batch = DB::table('gaji_per_bulan AS gaji')
                     ->select(
                         'gaji.nip',
@@ -422,7 +429,7 @@ class CheckHitungPPH
 
         // Get PTKP
         $ptkp = HitungPPH::getPTKP($karyawan);
-        
+
         $pph_full_month = HitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin, true);
 
         $terutang = $pph_full_month - $pph_final;
@@ -477,7 +484,7 @@ class CheckHitungPPH
         if ($tipe == 'penagihan') {
             $pengali = floatval(config('global.pengali_insentif_penagihan'));
         }
-        
+
         $result = $nominal * $pengali;
 
         return round($result);
