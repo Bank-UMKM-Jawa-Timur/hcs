@@ -38,7 +38,7 @@
                 {{--  <button class="btn btn-primary-light lg:text-base text-xs" data-modal-id="penghasilan-kantor-modal" data-modal-toggle="modal"><i class="ti ti-file-import"></i> Penghasilan Semua Kantor</button>  --}}
             @endif
             @can('penghasilan - proses penghasilan - proses')
-                <button class="btn btn-primary btn-proses lg:text-base text-xs" data-modal-id="proses-modal" data-modal-toggle="modal"><i class="ti ti-plus"></i> Proses Penghasilan</button>
+                <button class="btn btn-primary btn-proses lg:text-base text-xs" data-modal-id="proses-modal" data-modal-toggle="modal"><i class="ti ti-plus"></i> Proses Penggajian</button>
             @endcan
         </div>
     </div>
