@@ -6,6 +6,7 @@ use App\Helpers\CheckHitungPPH;
 use App\Models\KaryawanModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class CheckPPHController extends Controller
 {
@@ -65,11 +66,13 @@ class CheckPPHController extends Controller
             }
         }
         $result = [];
-        foreach ($karyawan as $key => $value) {
-            $data = CheckHitungPPH::checkPPH58($tanggal, $bulan, $tahun, $value);
-            array_push($result, $data);
+        if ($request->has('kd_entitas')) {
+            foreach ($karyawan as $key => $value) {
+                $data = CheckHitungPPH::checkPPH58($tanggal, $bulan, $tahun, $value);
+                array_push($result, $data);
+            }
         }
-        // return $result;
+
         if (auth()->user()->hasRole('cabang')) {
             $dataC = DB::table('mst_cabang')->where('kd_cabang', auth()->user()->kd_cabang)->first();
             $nama_cabang = $dataC->nama_cabang;
@@ -82,7 +85,41 @@ class CheckPPHController extends Controller
                 $nama_cabang = "Pusat";
             }
         }
+        // return $result;
 
-        return view('cek-pph', compact('cabang', 'result', 'nama_cabang'));
+        return view('cek-pph', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
+    }
+
+    public function update(Request $request) {
+        DB::beginTransaction();
+        try {
+            $bulan = (int) $request->get('bulan');
+            $tahun = $request->get('tahun');
+            $nipArr = $request->get('nip');
+            $terutangArr = $request->get('terutang');
+            $now = now();
+            // return count($nipArr);
+            foreach ($nipArr as $key => $value) {
+                $nominal = (int) $terutangArr[$key];
+                if ($nominal != 0) {
+                    DB::table('pph_yang_dilunasi')
+                        ->where('nip', $value)
+                        ->where('bulan', $bulan)
+                        ->where('tahun', $tahun)
+                        ->update([
+                            'terutang' => $nominal,
+                            'updated_at' => $now
+                        ]);
+                }
+            }
+
+            DB::commit();
+            Alert::success('Berhasil memperbarui data terutang');
+            return redirect()->route('cek-pph.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Alert::error($e->getMessage());
+            return back();
+        }
     }
 }

@@ -126,8 +126,8 @@
             $('.btn-download-pdf').data('id', id);
         })
 
-        $('.btn-show').on('click', function() {
-            $('#penghasilan-kantor-modal').modal('show')
+        $('.penghasilan-all-kantor').on('click', function() {
+            $('#penghasilan-kantor-modal').removeClass('hidden')
             loadPenghasilanKantor()
         })
 
@@ -139,7 +139,8 @@
         function loadPenghasilanKantor() {
             var table = $('#penghasilan-kantor-table').DataTable({
                 processing: true,
-                serverSide: true,
+                destroy: true,
+                serverSide: false,
                 ajax: "{{route('gaji_perbulan.penghasilan_kantor')}}",
                 columns: [
                     {

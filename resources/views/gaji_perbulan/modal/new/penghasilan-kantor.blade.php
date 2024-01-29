@@ -14,7 +14,7 @@
                     $months = array(1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember')
                 @endphp
                 <div class="table-wrapping">
-                    <table class="display table-stripped" id="penghasilan-kantor-table">
+                    <table class="tables display table-stripped" id="penghasilan-kantor-table">
                         <thead>
                             <tr>
                                 <th class="text-center" rowspan="2">No</th>
