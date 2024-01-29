@@ -1,8 +1,19 @@
 @extends('layouts.app-template')
 @section('content')
+<div class="head mt-5">
+    <div class="lg:flex gap-5 justify-between items-center">
+        <div class="heading">
+            <h2 class="text-2xl font-bold tracking-tighter">PPH</h2>
+            <div class="breadcrumb">
+                <a href="#" class="text-sm text-gray-500">PPH</a>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="body-pages">
     <form action="" method="GET">
         <div class="table-wrapping text-center space-y-5">
+            @if (!auth()->user()->hasRole('cabang'))
             <div class="input-box">
                 <label for="">Cabang</label>
                 <select name="kd_entitas" id="cabang" class="form-input">
@@ -12,6 +23,7 @@
                 </select>
             </div>
             <input type="submit" class="btn btn-primary btn-icon-text no-print" value="Tampilkan">
+            @endif
             @if ($result)
                 @php
                     $bruto = 0;

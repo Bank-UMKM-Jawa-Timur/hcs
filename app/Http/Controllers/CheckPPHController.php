@@ -40,20 +40,28 @@ class CheckPPHController extends Controller
                         ->select('kd_cabang', 'nama_cabang')
                         ->orderBy('kd_cabang')
                         ->get();
-        if ($kd_entitas == '000') {
+
+        if (auth()->user()->hasRole('cabang')) {
             $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                                    ->where(function($query) use ($kd_cabang) {
-                                        $query->whereNotIn('kd_entitas', $kd_cabang)
-                                            ->orWhereNull('kd_entitas');
-                                    })
-                                    ->orderByRaw($orderRaw)
-                                    ->get();
-        }
-        else {
-            $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                                    ->where('kd_entitas', $kd_entitas)
-                                    ->orderByRaw($orderRaw)
-                                    ->get();
+                ->where('kd_entitas', auth()->user()->kd_cabang)
+                ->orderByRaw($orderRaw)
+                ->get();
+        } else {
+            if ($kd_entitas == '000') {
+                $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
+                                        ->where(function($query) use ($kd_cabang) {
+                                            $query->whereNotIn('kd_entitas', $kd_cabang)
+                                                ->orWhereNull('kd_entitas');
+                                        })
+                                        ->orderByRaw($orderRaw)
+                                        ->get();
+            }
+            else {
+                $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
+                                        ->where('kd_entitas', $kd_entitas)
+                                        ->orderByRaw($orderRaw)
+                                        ->get();
+            }
         }
         $result = [];
         foreach ($karyawan as $key => $value) {
