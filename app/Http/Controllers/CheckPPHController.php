@@ -10,7 +10,7 @@ class CheckPPHController extends Controller
 {
     public function index(Request $request) {
         $orderRaw = "
-            CASE 
+            CASE
             WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
             WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
             WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
@@ -60,6 +60,7 @@ class CheckPPHController extends Controller
             $data = CheckHitungPPH::checkPPH58($tanggal, $bulan, $tahun, $value);
             array_push($result, $data);
         }
+        // return $result;
 
         return view('cek-pph', compact('cabang', 'result'));
     }

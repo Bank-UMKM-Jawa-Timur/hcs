@@ -509,29 +509,36 @@
             const token = generateCsrfToken()
             const batch_id = $(this).data('batch_id')
             $('#form-finalisasi #token').val(token)
-            //$('#form-final #batch_id').val(batch_id)
-
-            Swal.fire({
-                title: 'Konfirmasi',
-                text: 'Anda yakin akan memproses data ini?',
-                icon: 'question',
-                iconColor: '#da271f',
-                confirmButtonText: 'Ya',
-                cancelButtonText: 'Tidak',
-                showCancelButton: true,
-                confirmButtonColor: "#da271f",
-                cancelButtonColor: "#fccf71",
-                inputValidator: (value) => {
-                    if (!value) {
-                        return "You need to write something!";
+            var file = $('#form-finalisasi #upload_lampiran').val()
+            if (file) {
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Anda yakin akan memproses data ini?',
+                    icon: 'question',
+                    iconColor: '#da271f',
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak',
+                    showCancelButton: true,
+                    confirmButtonColor: "#da271f",
+                    cancelButtonColor: "#fccf71",
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return "You need to write something!";
+                        }
                     }
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('.loader-wrapper').removeAttr('style')
-                    $('#form-finalisasi').submit()
-                }
-            })
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('.loader-wrapper').removeAttr('style')
+                        $('#form-finalisasi').submit()
+                    }
+                })
+            }
+            else {
+                $('.error-msg').html('Harap upload berkas payroll terlebih dahulu')
+                $('.error-msg').css({
+                    "display": "block"
+                });
+            }
         })
 
         $('#penyesuaian-modal #btn-update').on('click', function(e) {

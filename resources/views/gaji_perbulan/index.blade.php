@@ -161,13 +161,6 @@
                                 data-modal-toggle="modal" data-modal-id="payroll-modal"
                                     data-batch_id="{{$item->id}}">Payroll</a>
                             @endcan
-                            {{--  @if ($item->tanggal_cetak != null && $item->tanggal_upload == null)
-                                @can('penghasilan - proses penghasilan - lampiran gaji - upload')
-                                    @if ($item->file == null)
-                                        <a class="btn btn-primary" data-modal-id="modalUploadfile" data-modal-toggle="modal" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">Upload Lampiran Gaji</a>
-                                    @endif
-                                @endcan
-                            @endif  --}}
                         </td>
                         @if ($item->bruto == 0)
                             <td class="text-center">-</td>
@@ -222,15 +215,6 @@
                                                     </a>
                                                 @endif
                                             @endcan
-                                        @endif
-                                        @if ($item->tanggal_cetak != null)
-                                            @if ($item->file != null)
-                                                @php
-                                                    $now = date('Y-m-d');
-                                                @endphp
-                                                    <a href="#" class="btn btn-success btn-final"
-                                                        data-batch_id="{{$item->id}}"><i class="ti ti-circle-check"></i>Finalisasi</a>
-                                            @endif
                                         @endif
                                     @endcan
                                 @endif
@@ -580,7 +564,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="{{auth()->user()->hasRole('admin') ? 11 : 10}}" class="text-center">Belum ada penghasilan yang telah selesai diproses.</td>
+                        <td colspan="{{auth()->user()->hasRole('admin') ? 11 : 10}}" class="text-center">Belum ada penghasilan yang telah dihapus.</td>
                     </tr>
                     @endforelse
                     </tbody>
