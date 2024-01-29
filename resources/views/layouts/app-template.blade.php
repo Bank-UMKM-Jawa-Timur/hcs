@@ -161,6 +161,53 @@
             btn_pagination[i].href += `&q=${$('#q').val()}`
         }
     })
+
+    // Only Accept file validation
+    $(".only-image").on('change', function() {
+        if (!this.files[0].type.includes('image')) {
+            $(this).val('')
+            $(this).parent().next().html('Hanya boleh memilih berkas berupa gambar(.jpg, .jpeg, .png, .webp)')
+            $(this).parent().next().css({
+                "display": "block"
+            });
+        }
+        else {
+            $(this).parent().next().css({
+                "display": "none"
+            });
+        }
+    })
+
+    $(".only-pdf").on('change', function() {
+        if (!this.files[0].type.includes('pdf')) {
+            $(this).val('')
+            $(this).parent().next().html('Hanya boleh memilih berkas berupa pdf.')
+            $(this).parent().next().css({
+                "display": "block"
+            });
+        }
+        else {
+            $(this).parent().next().css({
+                "display": "none"
+            });
+        }
+    })
+
+    $(".image-pdf").on('change', function() {
+        if (!this.files[0].type.includes('image') && !this.files[0].type.includes('pdf')) {
+            $(this).val('')
+            $(this).next().html('Hanya boleh memilih berkas berupa pdf dan gambar(.jpg, .jpeg, .png, .webp)')
+            $(this).next().css({
+                "display": "block"
+            });
+        }
+        else {
+            $(this).next().css({
+                "display": "none"
+            });
+        }
+    })
+    // END Only Accept file validation
 </script>
     @stack('extraScript')
     @stack('script')
