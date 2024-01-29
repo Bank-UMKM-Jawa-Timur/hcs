@@ -63,12 +63,10 @@
                         <td class="text-right">{{ $total_gaji }}</td>
                         <td class="text-right">{{ $total_potongan > 0 ? number_format($total_potongan, 0, ',', '.') : '-' }}</td>
                         <td class="text-right">{{ $total_diterima > 0 ? number_format($total_diterima, 0, ',', '.') : '-' }}</td>
-                        <td class="text-center">
+                        <td class="flex justify-center">
                             <button type="button"
-                                data-toggle="modal"
-                                data-modal-target="exampleModal"
+                                data-modal-id="exampleModal"
                                 data-modal-toggle="exampleModal"
-                                {{-- data-target="#exampleModal" --}}
                                 data-target-id="slipGaji-{{ $item->id }}"
                                 data-nip="{{$data->nip}}"
                                 data-nama="{{$data->nama_karyawan}}"
