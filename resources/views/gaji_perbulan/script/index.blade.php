@@ -116,15 +116,14 @@
             $('.loader-wrapper').removeAttr('style')
         })
         $('#uploadFile').on('click',function() {
-            // console.log('masuk');
             let batch_id = $(this).data('batch_id');
             let target = $(this).data('target');
             $(`${target} #id`).val(batch_id);
             $(`${target} #cetak_lampiran_gaji`).data('id', batch_id);
             let url = "{{ url('') }}"
             let downloadUrl = `${url}/cetak-penghasilan/${batch_id}`;
-            $('#download').attr('href', downloadUrl);
-            $('#download').data('id', id);
+            $('.btn-download-pdf').attr('href', downloadUrl);
+            $('.btn-download-pdf').data('id', id);
         })
 
         $('.btn-show').on('click', function() {
@@ -509,8 +508,8 @@
         $('.btn-final').on('click', function() {
             const token = generateCsrfToken()
             const batch_id = $(this).data('batch_id')
-            $('#form-final #token').val(token)
-            $('#form-final #batch_id').val(batch_id)
+            $('#form-finalisasi #token').val(token)
+            //$('#form-final #batch_id').val(batch_id)
 
             Swal.fire({
                 title: 'Konfirmasi',
@@ -530,7 +529,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('.loader-wrapper').removeAttr('style')
-                    $('#form-final').submit()
+                    $('#form-finalisasi').submit()
                 }
             })
         })
@@ -937,8 +936,8 @@
             var batch_id = $(this).data("batch_id")
             let url = "{{ url('') }}"
             let downloadUrl = `${url}/cetak-penghasilan/${batch_id}`;
-            $('#download').attr('href', downloadUrl);
-            $('#download').data('id', id);
+            $('.btn-download-pdf').attr('href', downloadUrl);
+            $('.btn-download-pdf').data('id', id);
             var table_payroll = $("#table-payroll").DataTable({
                 ajax: `{{ route('get-rincian-payroll') }}?batch_id=${batch_id}`,
                 processing: true,
