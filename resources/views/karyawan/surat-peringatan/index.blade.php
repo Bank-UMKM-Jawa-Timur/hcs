@@ -63,7 +63,7 @@
                                             <td>{{ $sp->pelanggaran }}</td>
                                             <td class="d-flex">
                                                 @can('manajemen karyawan - reward & punishment - surat peringatan - detail')
-                                                <a href="{{ route('surat-peringatan.show', $sp) }}" class="btn btn-warning ">Detail</a>
+                                                    <a href="{{ route('surat-peringatan.show', $sp) }}" class="btn btn-primary-light" style="min-width: 60px">Detail</a>
                                                 @else
                                                     -
                                                 @endcan
