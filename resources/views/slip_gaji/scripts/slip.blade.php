@@ -448,6 +448,10 @@
             $("#table-total-diterima thead").append(tableTotalDiterima);
         })
 
+        $('#exampleModal .close').on('click', function() {
+            $('#exampleModal').addClass('hidden')
+        })
+
         $(document).ready(function() {
             $('#print-gaji').printPage();
         })

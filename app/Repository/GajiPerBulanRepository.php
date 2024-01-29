@@ -48,7 +48,7 @@ class GajiPerBulanRepository
                 })
                 ->where('batch.status', $status)
                 ->whereNull('batch.deleted_at')
-                ->orderBy('gaji.created_at', 'desc')
+                ->orderBy('batch.kd_entitas')
                 ->groupBy('batch.kd_entitas')
                 ->groupBy('gaji.bulan')
                 ->groupBy('gaji.tahun')
