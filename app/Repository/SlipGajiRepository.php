@@ -18,7 +18,7 @@ class SlipGajiRepository
     {
         $this->cabang = CabangModel::pluck('kd_cabang');
         $this->orderRaw = "
-            CASE 
+            CASE
             WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
             WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
             WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
@@ -65,15 +65,15 @@ class SlipGajiRepository
                 'Penjabat Sementara' => 'Pjs. ',
                 default => '',
             };
-            
+
             if ($value->jabatan) {
                 $jabatan = $value->jabatan->nama_jabatan;
             } else {
                 $jabatan = 'undifined';
             }
-            
+
             $ket = $value->ket_jabatan ? "({$value->ket_jabatan})" : '';
-            
+
             if (isset($value->entitas->subDiv)) {
                 $entitas = $value->entitas->subDiv->nama_subdivisi;
             } elseif (isset($value->entitas->div)) {
@@ -81,7 +81,7 @@ class SlipGajiRepository
             } else {
                 $entitas = '';
             }
-            
+
             if ($jabatan == 'Pemimpin Sub Divisi') {
                 $jabatan = 'PSD';
             } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
@@ -200,7 +200,7 @@ class SlipGajiRepository
                                         'batch.id AS batch_id',
                                         'batch.status',
                                         'nip',
-                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                         'gj_pokok',
                                         'tj_keluarga',
                                         'tj_kesejahteraan',
@@ -250,8 +250,8 @@ class SlipGajiRepository
                                 'gaji' => function($query) use ($year) {
                                     $query->select(
                                         'nip',
-                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                         'gj_pokok',
                                         'gj_penyesuaian',
                                         'tj_keluarga',
@@ -521,7 +521,7 @@ class SlipGajiRepository
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                                         'gj_pokok',
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
@@ -559,8 +559,8 @@ class SlipGajiRepository
                                                 'pphDilunasi' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                                         DB::raw('SUM(total_pph) AS nominal'),
                                                     )
                                                     ->where('tahun', $year)
@@ -970,8 +970,8 @@ class SlipGajiRepository
                                 'gaji' => function($query) use ($month, $year) {
                                     $query->select(
                                         'nip',
-                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                         'gj_pokok',
                                         'gj_penyesuaian',
                                         'tj_keluarga',
@@ -1251,7 +1251,7 @@ class SlipGajiRepository
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                                         'gj_pokok',
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
@@ -1289,8 +1289,8 @@ class SlipGajiRepository
                                                 'pphDilunasi' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                                         DB::raw('SUM(total_pph) AS nominal'),
                                                     )
                                                     ->where('tahun', $year)

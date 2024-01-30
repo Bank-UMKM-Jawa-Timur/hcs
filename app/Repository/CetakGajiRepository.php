@@ -12,7 +12,7 @@ class CetakGajiRepository
     private $orderRaw;
     public function __construct() {
         $this->orderRaw = "
-            CASE 
+            CASE
             WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
             WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
             WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
@@ -96,8 +96,8 @@ class CetakGajiRepository
                                 'gaji' => function($query) use ($month, $year,$batch_id) {
                                     $query->select(
                                         'nip',
-                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                         'gj_pokok',
                                         'gj_penyesuaian',
                                         'tj_keluarga',
@@ -337,7 +337,7 @@ class CetakGajiRepository
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                                         'gj_pokok',
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
@@ -375,8 +375,8 @@ class CetakGajiRepository
                                                 'pphDilunasi' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                                         DB::raw('SUM(total_pph) AS nominal'),
                                                     )
                                                     ->where('tahun', $year)
