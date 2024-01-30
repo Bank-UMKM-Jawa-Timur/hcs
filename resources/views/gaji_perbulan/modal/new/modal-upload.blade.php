@@ -22,7 +22,7 @@
                                 <label for="upload_lampiran">Upload Berkas Payroll<span style="color: red;">*.pdf</span></label>
                                 <div class="input-group">
                                     <input type="file" id="upload_lampiran" name="upload_file"
-                                        class="custom-file-input form-upload only-pdf"
+                                        class="custom-file-input form-upload only-pdf limit-size-10"
                                         accept="application/pdf" required>
                                     <button class="upload-group-icon">
                                         <label for="upload">
