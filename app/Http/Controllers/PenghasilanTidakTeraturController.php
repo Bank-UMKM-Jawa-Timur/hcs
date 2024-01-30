@@ -595,12 +595,13 @@ class PenghasilanTidakTeraturController extends Controller
             foreach($nip as $key => $item){
                 $bulan = (int) Carbon::parse($request->get('tanggal'))->format('m');
                 $tahun = (int) Carbon::parse($request->get('tanggal'))->format('Y');
+                $nominal_item = (int) str_replace('.', '', $nominal[$key]);
                 array_push($inserted, [
                     'nip' => $item,
                     'id_tunjangan' => $idTunjangan->id,
                     'bulan' => $bulan,
                     'tahun' => $tahun,
-                    'nominal' => (int) str_replace('.', '', $nominal[$key]),
+                    'nominal' => $nominal_item,
                     'kd_entitas' => $kd_entitas,
                     'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
                     'created_at' => $request->get('tanggal')
@@ -608,7 +609,7 @@ class PenghasilanTidakTeraturController extends Controller
 
                 if ($idTunjangan->id == 31) {
                     // Insentif kredit
-                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, (int) str_replace('.', '', $nominal[$key]), 'kredit');
+                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, $nominal_item, 'kredit');
                     $current = PPHModel::where('nip', $item)
                                 ->where('tahun', $tahun)
                                 ->where('bulan', $bulan)
@@ -629,7 +630,7 @@ class PenghasilanTidakTeraturController extends Controller
                 }
                 if ($idTunjangan->id == 32) {
                     // Insentif penagihan
-                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, $nominal, 'penagihan');
+                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, $nominal_item, 'penagihan');
                     $current = PPHModel::where('nip', $item)
                                 ->where('tahun', $tahun)
                                 ->where('bulan', $bulan)
