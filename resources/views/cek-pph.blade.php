@@ -36,6 +36,7 @@
                 $iuran_ik = 0;
                 $pph_sekarang = 0;
                 $pph_seharusnya = 0;
+                $terutang_total = 0;
             @endphp
             @foreach ($result as $item)
                 @php
@@ -47,7 +48,14 @@
                     $iuran_ik += $row->potongan?->iuran_ik ? $row->potongan->iuran_ik : 0;
                     $pph_sekarang += $row->seharusnya->total_seharusnya;
                     $pph_seharusnya += $row->pph;
-                    $selisih_total = $pph_sekarang - $pph_seharusnya;
+                    $selisih_total = $pph_seharusnya - $pph_sekarang;
+                    $selisih_header = $pph_seharusnya - $pph_sekarang;
+                    $new_terutang_header = 0;
+                    $current_terutang_header = $row->seharusnya->terutang;
+                    if ($current_terutang_header == 0 && $selisih_header != 0) {
+                        $new_terutang_header = $selisih_header;
+                    }
+                    $terutang_header += $new_terutang_header;
                 @endphp
             @endforeach
             <table class="tables-stripped" id="table" style="width: 100%; border: 1px solid black;">
@@ -63,6 +71,7 @@
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_sekarang,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_seharusnya,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($selisih_total,0,true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($terutang_header,0,true)}}</th>
                     </tr>
                 </thead>
                 <thead>
@@ -93,7 +102,8 @@
                         @foreach ($result as $item)
                             @php
                                 $row = $item['pph'];
-                                $selisih = $row->seharusnya->total_seharusnya - $row->pph;
+                                $selisih = $row->pph - $row->seharusnya->total_seharusnya;
+                                $terutang_total += $row->seharusnya->terutang;
                             @endphp
                             <tr>
                                 <td>{{$loop->iteration}}</td>
@@ -109,6 +119,7 @@
                                 <td>{{formatRupiahExcel($row->seharusnya->total_seharusnya,0,true)}}</td>
                                 <td>{{formatRupiahExcel($row->pph,0,true)}}</td>
                                 <td>{{formatRupiahExcel($selisih,0,true)}}</td>
+                                <td>{{formatRupiahExcel($row->seharusnya->terutang,0,true)}}</td>
                                 <input type="hidden" name="nip[]" value="{{$row->nip}}">
                                 @php
                                     $new_terutang = 0;
@@ -135,6 +146,7 @@
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_sekarang,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_seharusnya,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($selisih_total,0,true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($terutang_total,0,true)}}</th>
                     </tr>
                 </tfoot>
             </table>
