@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class GajiPerBulanRepository
 {
-    public function getPenghasilanList($status, $limit=10, $page = 1) {
+    public function getPenghasilanList($status, $limit=10, $page = 1, $search) {
         $is_cabang = auth()->user()->hasRole('cabang');
         $is_pusat = auth()->user()->hasRole('kepegawaian');
         $kd_cabang = DB::table('mst_cabang')
@@ -31,10 +31,14 @@ class GajiPerBulanRepository
                     'batch.status',
                     'gaji.bulan',
                     'gaji.tahun',
-                    DB::raw('CAST(SUM(pph.total_pph) AS UNSIGNED) AS total_pph'),
-                    DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS bruto'),
-                    DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan'),
+                    DB::raw('CAST(SUM(pph.total_pph) AS SIGNED) AS total_pph'),
+                    DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS bruto'),
+                    DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS SIGNED) AS total_potongan'),
                 )
+                ->where(function ($query) use ($search) {
+                    $query->where('gaji.tahun', 'like', "%$search%")
+                        ->orWhere('cab.nama_cabang', 'like', "%$search%");
+                    })
                 ->when($is_cabang, function($query) {
                     $kd_cabang = auth()->user()->kd_cabang;
                     $query->where('m.kd_entitas', $kd_cabang);
@@ -112,8 +116,8 @@ class GajiPerBulanRepository
                             'gaji.gj_pokok',
                             'gaji.tj_keluarga',
                             'gaji.tj_kesejahteraan',
-                            DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS UNSIGNED) AS gaji'),
-                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_gaji"),
+                            DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS SIGNED) AS gaji'),
+                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS total_gaji"),
                         )
                         ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
                         ->where('gaji.batch_id', $item->id)
@@ -177,8 +181,8 @@ class GajiPerBulanRepository
                                 ->select(
                                     'gaji.*',
                                     'm.nama_karyawan',
-                                    DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_penghasilan'),
-                                    DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan')
+                                    DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS total_penghasilan'),
+                                    DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS SIGNED) AS total_potongan')
                                 )
                                 ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
                                 ->where('gaji.batch_id', $item->id)
@@ -364,8 +368,7 @@ class GajiPerBulanRepository
 
         return $data;
     }
-
-    public function getPenghasilanTrash($status, $limit=10, $page = 1) {
+    public function getPenghasilanTrash($status, $limit=10, $page = 1, $search) {
         $is_cabang = auth()->user()->hasRole('cabang');
         $is_pusat = auth()->user()->hasRole('kepegawaian');
         $kd_cabang = DB::table('mst_cabang')
@@ -390,10 +393,14 @@ class GajiPerBulanRepository
                     'batch.status',
                     'gaji.bulan',
                     'gaji.tahun',
-                    DB::raw('CAST(SUM(pph.total_pph) AS UNSIGNED) AS total_pph'),
-                    DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS bruto'),
-                    DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan'),
+                    DB::raw('CAST(SUM(pph.total_pph) AS SIGNED) AS total_pph'),
+                    DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS bruto'),
+                    DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS SIGNED) AS total_potongan'),
                 )
+                ->where(function ($query) use ($search) {
+                    $query->where('gaji.tahun', 'like', "%$search%")
+                        ->orWhere('cab.nama_cabang', 'like', "%$search%");
+                })
                 ->when($is_cabang, function($query) {
                     $kd_cabang = auth()->user()->kd_cabang;
                     $query->where('m.kd_entitas', $kd_cabang);
@@ -469,8 +476,8 @@ class GajiPerBulanRepository
                             'gaji.gj_pokok',
                             'gaji.tj_keluarga',
                             'gaji.tj_kesejahteraan',
-                            DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS UNSIGNED) AS gaji'),
-                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_gaji"),
+                            DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS SIGNED) AS gaji'),
+                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS total_gaji"),
                         )
                         ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
                         ->where('gaji.batch_id', $item->id)
@@ -534,8 +541,8 @@ class GajiPerBulanRepository
                                 ->select(
                                     'gaji.*',
                                     'm.nama_karyawan',
-                                    DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_penghasilan'),
-                                    DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan')
+                                    DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS total_penghasilan'),
+                                    DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS SIGNED) AS total_potongan')
                                 )
                                 ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
                                 ->where('gaji.batch_id', $item->id)

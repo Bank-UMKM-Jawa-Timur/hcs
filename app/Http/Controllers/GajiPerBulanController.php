@@ -117,18 +117,18 @@ class GajiPerBulanController extends Controller
 
         $tab = $request->has('tab') ? $request->get('tab') : 'proses';
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
-        $page = $request->has('page') ? $request->get('page') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->get('q');
 
         $gajiRepo = new GajiPerBulanRepository;
 
         // Proses
-        $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1);
+        $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search);
         // Final
-        $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1);
+        $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search);
         // sampah
         if(auth()->user()->hasRole('admin')) {
-            $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1);
+            $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1, $search);
             $data = [
                 'proses_list' => $proses_list,
                 'final_list' => $final_list,
@@ -315,8 +315,8 @@ class GajiPerBulanController extends Controller
                             'gaji.gj_pokok',
                             'gaji.tj_keluarga',
                             'gaji.tj_kesejahteraan',
-                            DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS UNSIGNED) AS gaji'),
-                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_gaji"),
+                            DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS SIGNED) AS gaji'),
+                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS total_gaji"),
                         )
                         ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
                         ->where('m.nip', $value->id)
@@ -421,8 +421,8 @@ class GajiPerBulanController extends Controller
                             ->select(
                                 'gaji.*',
                                 'm.nama_karyawan',
-                                DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total_penghasilan'),
-                                DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan')
+                                DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS SIGNED) AS total_penghasilan'),
+                                DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS SIGNED) AS total_potongan')
                             )
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
                             ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
