@@ -37,6 +37,7 @@
                 $pph_sekarang = 0;
                 $pph_seharusnya = 0;
                 $terutang_total = 0;
+                $terutang_header = 0;
             @endphp
             @foreach ($result as $item)
                 @php
@@ -94,6 +95,11 @@
                         <th>Iuaran IK</th>
                     </tr>
                 </thead>
+                {{--
+                    PPH sekarang = table pph_yang_dilunasi / row->sekarang->total_sekarang
+                    pph seharusnya = perhitungan / $pph
+                    selisih = seharusnya - sekarang
+                 --}}
                 <tbody>
                     <form action="{{route('cek-pph.update-terutang')}}" method="post">
                         <input type="hidden" name="tahun" value="{{$tahun}}">
