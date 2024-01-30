@@ -188,7 +188,6 @@ class GajiPerBulanController extends Controller
             $total_jp = 0;
             $total_bpjs_tk = 0;
 
-
             foreach ($karyawan as $key => $value) {
                 $kd_entitas = null;
                 if (auth()->user()->kd_cabang && auth()->user()->kd_cabang != '000') {
@@ -643,6 +642,88 @@ class GajiPerBulanController extends Controller
                     }
                 }
 
+                // Get Penghasilan Tidak Rutin
+                $penghasilanTidakRutin = DB::table('penghasilan_tidak_teratur AS p')
+                                        ->select(
+                                            'p.id',
+                                            'p.id_tunjangan',
+                                            'm.nama_tunjangan',
+                                            'p.nominal',
+                                        )
+                                        ->join('mst_tunjangan AS m', 'm.id', 'p.id_tunjangan')
+                                        ->where('p.nip', $gaji->nip)
+                                        ->where('p.tahun', (int) $gaji->tahun)
+                                        ->where('p.bulan', (int) $gaji->bulan)
+                                        ->get();
+
+                foreach ($penghasilanTidakRutin as $tidakRutin) {
+                    $nominalLama = 0;
+                    $nominalBaru = 0;
+                    $current = DB::table('batch_penghasilan_tidak_teratur')
+                                    ->where('gaji_per_bulan_id', $gaji->id)
+                                    ->where('penghasilan_tidak_teratur_id', $tidakRutin->id)
+                                    ->first();
+                    if ($current) {
+                        $nominalLama = $current->nominal;
+                        $nominalBaru = $tidakRutin->nominal;
+                        if ($nominalLama != $nominalBaru) {
+                            $item_title = str_replace(' ', '_', strtolower($tidakRutin->nama_tunjangan));
+                            $item_title_new = $item_title.'_baru';
+                            $item = [
+                                $item_title => $nominalLama,
+                                $item_title_new => $nominalBaru,
+                            ];
+                            array_push($new_data, $item);
+                        }
+                    }
+                    else {
+                        $nominalBaru = $tidakRutin->nominal;
+                        $item_title = str_replace(' ', '_', strtolower($tidakRutin->nama_tunjangan));
+                        $item_title_new = $item_title.'_baru';
+                        $item = [
+                            $item_title => $nominalLama,
+                            $item_title_new => $nominalBaru,
+                        ];
+                        array_push($new_data, $item);
+                    }
+
+                    $total_penghasilan_baru -= $nominalLama;
+                    $total_penghasilan_baru += $nominalBaru;
+                }
+
+                // Get Batch Penghasilan Tidak Rutin
+                $batchPenghasilanTidakRutin = DB::table('batch_penghasilan_tidak_teratur AS p')
+                                        ->select(
+                                            'p.id',
+                                            'p.penghasilan_tidak_teratur_id',
+                                            'p.id_tunjangan',
+                                            'm.nama_tunjangan',
+                                            'p.nominal',
+                                        )
+                                        ->join('mst_tunjangan AS m', 'm.id', 'p.id_tunjangan')
+                                        ->where('p.gaji_per_bulan_id', $gaji->id)
+                                        ->get();
+
+                foreach ($batchPenghasilanTidakRutin as $batchTidakRutin) {
+                    $current = DB::table('penghasilan_tidak_teratur')
+                                    ->where('id', $batchTidakRutin->penghasilan_tidak_teratur_id)
+                                    ->first();
+                    if (!$current) {
+                        $nominalLama = $batchTidakRutin->nominal;
+                        $nominalBaru = 0;
+                        $item_title = str_replace(' ', '_', strtolower($batchTidakRutin->nama_tunjangan));
+                        $item_title_new = $item_title.'_baru';
+                        $item = [
+                            $item_title => $nominalLama,
+                            $item_title_new => $nominalBaru,
+                        ];
+                        array_push($new_data, $item);
+
+                        $total_penghasilan_baru -= $nominalLama;
+                        $total_penghasilan_baru += $nominalBaru;
+                    }
+                }
+
                 $totalBrutoBaru += $total_penghasilan_baru;
 
                 // Get Potongan
@@ -1013,6 +1094,14 @@ class GajiPerBulanController extends Controller
                     $dpp = (($item->gj_pokok + $tunjangan[0]) + ($tunjangan[7] * 0.5) * 0.05);
                 }
 
+                // Get Penghasilan Tidak Rutin
+                $penghasilanTidakRutin = DB::table('penghasilan_tidak_teratur')
+                                            ->select('id', 'id_tunjangan', 'nominal')
+                                            ->where('nip', $item->nip)
+                                            ->where('tahun', (int) $tahun)
+                                            ->where('bulan', (int) $bulan)
+                                            ->get();
+
                 if ($request->has('batch_id')) {
                     $employee = [
                         'gj_pokok' => $item->gj_pokok,
@@ -1049,6 +1138,61 @@ class GajiPerBulanController extends Controller
                                                 ->where('bulan', $bulan)
                                                 ->where('tahun', $tahun)
                                                 ->update($employee);
+                    // Update Batch Penghasilan Tidak Rutin
+                    foreach ($penghasilanTidakRutin as $tidakRutin) {
+                        // Check if already stored on batch_penghasilan_tidak_teratur table
+                        $current = DB::table('batch_penghasilan_tidak_teratur')
+                                        ->where('gaji_per_bulan_id', $gaji->id)
+                                        ->where('penghasilan_tidak_teratur_id', $tidakRutin->id)
+                                        ->first();
+                        if ($current) {
+                            // Update
+                            $batch_tidak_rutin = [
+                                'gaji_per_bulan_id' => $gaji?->id,
+                                'penghasilan_tidak_teratur_id' => $tidakRutin->id,
+                                'id_tunjangan' => $tidakRutin->id_tunjangan,
+                                'nominal' => $tidakRutin->nominal,
+                                'updated_at' => $now,
+                            ];
+                            DB::table('batch_penghasilan_tidak_teratur')
+                                ->where('gaji_per_bulan_id', $gaji->id)
+                                ->where('penghasilan_tidak_teratur_id', $tidakRutin->id)
+                                ->update($batch_tidak_rutin);
+                        }
+                        else {
+                            // Insert
+                            $batch_tidak_rutin = [
+                                'gaji_per_bulan_id' => $gaji?->id,
+                                'penghasilan_tidak_teratur_id' => $tidakRutin->id,
+                                'id_tunjangan' => $tidakRutin->id_tunjangan,
+                                'nominal' => $tidakRutin->nominal,
+                                'created_at' => $now,
+                            ];
+                            DB::table('batch_penghasilan_tidak_teratur')
+                                ->insert($batch_tidak_rutin);
+                        }
+                    }
+
+                    // Get Batch Penghasilan Tidak Rutin
+                    $batchPenghasilanTidakRutin = DB::table('batch_penghasilan_tidak_teratur AS p')
+                                                    ->select(
+                                                        'p.id',
+                                                        'p.penghasilan_tidak_teratur_id',
+                                                        'p.id_tunjangan',
+                                                        'p.nominal',
+                                                    )
+                                                    ->where('p.gaji_per_bulan_id', $gaji?->id)
+                                                    ->get();
+                    foreach ($batchPenghasilanTidakRutin as $batchTidakRutin) {
+                        $current = DB::table('penghasilan_tidak_teratur')
+                                        ->where('id', $batchTidakRutin->penghasilan_tidak_teratur_id)
+                                        ->first();
+                        if (!$current) {
+                            DB::table('batch_penghasilan_tidak_teratur')
+                                ->where('id', $batchTidakRutin->id)
+                                ->delete();
+                        }
+                    }
 
                     $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin);
 
@@ -1145,13 +1289,26 @@ class GajiPerBulanController extends Controller
                             'uang_makan' => $tunjangan[13],
                             'dpp' => $dpp,
                             'tj_fungsional' => $tunjangan[15],
-                            'created_at' => now(),
+                            'created_at' => $now,
                             'kredit_koperasi' => $kredit_koperasi,
                             'iuran_koperasi' => $iuran_koperasi,
                             'kredit_pegawai' => $kredit_pegawai,
                             'iuran_ik' => $iuran_ik,
                         ];
                         $gaji_id = GajiPerBulanModel::insertGetId($employee);
+                        // Store Batch Penghasilan Tidak Rutin
+                        foreach ($penghasilanTidakRutin as $tidakRutin) {
+                            $batch_tidak_rutin = [
+                                'gaji_per_bulan_id' => $gaji_id,
+                                'penghasilan_tidak_teratur_id' => $tidakRutin->id,
+                                'id_tunjangan' => $tidakRutin->id_tunjangan,
+                                'nominal' => $tidakRutin->nominal,
+                                'created_at' => $now,
+                            ];
+                            DB::table('batch_penghasilan_tidak_teratur')
+                                ->insert($batch_tidak_rutin);
+                        }
+                        
                         $pph_bulan_ini = DB::table('pph_yang_dilunasi')
                                             ->where('nip', $item->nip)
                                             ->where('bulan', $bulan)

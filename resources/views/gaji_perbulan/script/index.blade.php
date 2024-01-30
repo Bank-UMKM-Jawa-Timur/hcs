@@ -498,11 +498,11 @@
                 }
             });
             $('#penyesuaian-modal #batch_id').val(batch_id);
-            $('#penyesuaian-modal').modal('show');
+            $('#penyesuaian-modal').removeClass('hidden');
         })
 
         $('#penyesuaian-modal .close').on('click', function () {
-            $('#penyesuaian-modal').modal('hide');
+            $('#penyesuaian-modal').addClass('hidden');
             $("#penyesuaian-modal #penyesuaian-table").dataTable().fnDestroy();
         })
 

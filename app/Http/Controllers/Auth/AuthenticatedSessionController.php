@@ -52,20 +52,19 @@ class AuthenticatedSessionController extends Controller
                         return redirect()->back();
                     }
                     if (Auth::guard('karyawan')->attempt(['nip' => $request->input_type, 'password' => $request->password])) {
-                        // $request->authenticate();
                         $request->session()->regenerate();
-    
+
                         return redirect()->intended(RouteServiceProvider::HOME);
                     } else {
                         if ($user->first_login) {
                             $request->authenticate();
                             $request->session()->regenerate();
-    
+
                             return redirect()->route('password.reset');
                         } else {
                             $request->authenticate();
                             $request->session()->regenerate();
-    
+
                             return redirect()->intended(RouteServiceProvider::HOME);
                         }
                     }
