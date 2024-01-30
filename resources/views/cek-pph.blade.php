@@ -100,7 +100,7 @@
                     pph seharusnya = perhitungan / $pph
                     selisih = seharusnya - sekarang
                  --}}
-                <tbody>
+v                 <tbody>
                     <form action="{{route('cek-pph.update-terutang')}}" method="post">
                         <input type="hidden" name="tahun" value="{{$tahun}}">
                         <input type="hidden" name="bulan" value="{{$bulan}}">
