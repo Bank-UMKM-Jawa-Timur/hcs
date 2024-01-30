@@ -106,6 +106,7 @@ class GajiPerBulanRepository
                             'm.kpj',
                             'm.jkn',
                             'm.status_karyawan',
+                            'gaji.id',
                             'gaji.bulan',
                             'gaji.tahun',
                             'gaji.gj_pokok',
@@ -292,10 +293,55 @@ class GajiPerBulanRepository
                         }
                     }
 
+                    // Get Penghasilan Tidak Rutin
+                    $penghasilanTidakRutin = DB::table('penghasilan_tidak_teratur')
+                                                ->select('id', 'id_tunjangan', 'nominal')
+                                                ->where('nip', $gaji->nip)
+                                                ->where('tahun', (int) $gaji->tahun)
+                                                ->where('bulan', (int) $gaji->bulan)
+                                                ->get();
+                    foreach ($penghasilanTidakRutin as $tidakRutin) {
+                        $current = DB::table('batch_penghasilan_tidak_teratur')
+                                    ->where('gaji_per_bulan_id', $gaji->id)
+                                    ->where('penghasilan_tidak_teratur_id', $tidakRutin->id)
+                                    ->first();
+                        if ($current) {
+                            $nominalLama = $current->nominal;
+                            $nominalBaru = $tidakRutin->nominal;
+                            if ($nominalLama != $nominalBaru) {
+                                $total_penyesuaian++;
+                            }
+                        }
+                        else {
+                            $total_penyesuaian++;
+                        }
+                    }
+
+                    // Get Batch Penghasilan Tidak Rutin
+                    $batchPenghasilanTidakRutin = DB::table('batch_penghasilan_tidak_teratur AS p')
+                                                    ->select(
+                                                        'p.id',
+                                                        'p.penghasilan_tidak_teratur_id',
+                                                        'p.id_tunjangan',
+                                                        'm.nama_tunjangan',
+                                                        'p.nominal',
+                                                    )
+                                                    ->join('mst_tunjangan AS m', 'm.id', 'p.id_tunjangan')
+                                                    ->where('p.gaji_per_bulan_id', $gaji->id)
+                                                    ->get();
+                    foreach ($batchPenghasilanTidakRutin as $batchTidakRutin) {
+                        $current = DB::table('penghasilan_tidak_teratur')
+                                        ->where('id', $batchTidakRutin->penghasilan_tidak_teratur_id)
+                                        ->first();
+                        if (!$current) {
+                            $total_penyesuaian++;
+                        }
+                    }
+
                     // Get Potongan
                     $potongan = DB::table('potongan_gaji')
-                                ->where('nip', $gaji->nip)
-                                ->first();
+                                    ->where('nip', $gaji->nip)
+                                    ->first();
 
                     if ($potongan) {
                         if ($potongan->kredit_koperasi != $gaji->kredit_koperasi) {
