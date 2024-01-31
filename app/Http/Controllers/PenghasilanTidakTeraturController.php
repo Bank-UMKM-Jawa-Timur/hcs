@@ -948,19 +948,18 @@ class PenghasilanTidakTeraturController extends Controller
             $tanggal = $request->has('tanggal') ? $request->get('tanggal') : null;
             $kd_entitas = $request->has('kd_entitas') ? $request->get('kd_entitas') : null;
             $temp_nip = $request->has('temp_nip') ? $request->get('temp_nip')[0] : null;
-            $temp_nip_array = explode(',', $temp_nip);
+            $temp_nip_array = json_decode($temp_nip, true);
             // return count($temp_nip_array);
             if (!$item_id) {
                 for ($i=0; $i < count($temp_nip_array) ; $i++) {
-                    return $temp_nip_array[$i];
                     $datts =DB::table('penghasilan_tidak_teratur')
                         ->where('id_tunjangan', $request->get('id_tunjangan'))
                         ->where('bulan', $request->get('bulan'))
                         ->whereDate('created_at', $createdAt)
                         ->where('kd_entitas', $kd_entitas)
                         ->where('nip', $temp_nip_array[$i])
-                        ->first();
-                    // DB::commit();
+                        ->delete();
+                    DB::commit();
                 }
 
                 // Hitung pph
