@@ -407,7 +407,6 @@ class PenghasilanTidakTeraturController extends Controller
 
                 if ($full_month) {
                     $update_obj = [
-                        'insentif_kredit' => $pajak,
                         'terutang_insentif' => $pajak_awal,
                         'updated_at' => $now
                     ];
@@ -448,7 +447,6 @@ class PenghasilanTidakTeraturController extends Controller
 
                 if ($full_month) {
                     $update_obj = [
-                        'insentif_penagihan' => $pajak,
                         'terutang_insentif' => $pajak_awal,
                         'updated_at' => $now
                     ];
@@ -692,7 +690,6 @@ class PenghasilanTidakTeraturController extends Controller
 
                     if ($full_month) {
                         $update_obj = [
-                            'insentif_kredit' => $pajak,
                             'terutang_insentif' => $pajak_awal,
                             'updated_at' => $now
                         ];
@@ -727,7 +724,6 @@ class PenghasilanTidakTeraturController extends Controller
 
                     if ($full_month) {
                         $update_obj = [
-                            'insentif_penagihan' => $pajak,
                             'terutang_insentif' => $pajak_awal,
                             'updated_at' => $now
                         ];
