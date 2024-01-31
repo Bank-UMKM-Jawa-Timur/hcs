@@ -93,6 +93,7 @@
                         <th rowspan="2">PTKP</th>
                         <th>A</th>
                         <th>B</th>
+                        <th rowspan="2">Bruto Tanpa Insentif</th>
                         <th colspan="4">Potongan</th>
                         <th>C</th>
                         <th>D</th>
@@ -146,7 +147,7 @@
                             @php
                                 $row = $item['pph'];
                                 $selisih = $row->pph - $row->seharusnya->total_seharusnya;
-                                $selisih_pph_akhir_bulan = $row->pph_akhir_bulan - ($row->seharusnya->total_seharusnya + $row->seharusnya->terutang);
+                                $selisih_pph_akhir_bulan = (($row->penghasilanBrutoAkhirBulan - $row->total_insentif) * ($row->pengali_akhir)) - ($row->total_insentif * 0.05) - ($row->seharusnya->total_seharusnya + $row->seharusnya->terutang);
                             @endphp
                             <tr>
                                 <td>{{$loop->iteration}}</td>
@@ -155,6 +156,7 @@
                                 <td>{{$row->ptkp->kode}}</td>
                                 <td>{{formatRupiahExcel($row->penghasilanBruto, 0, true)}}</td>
                                 <td>{{formatRupiahExcel($row->penghasilanBrutoAkhirBulan, 0, true)}}</td>
+                                <td>{{formatRupiahExcel($row->penghasilanBrutoAkhirBulan - $row->total_insentif, 0, true)}}</td>
                                 <td>{{formatRupiahExcel($row->potongan?->kredit_pegawai ? $row->potongan->kredit_pegawai : 0, 0, true)}}</td>
                                 <td>{{formatRupiahExcel($row->potongan?->kredit_koperasi ? $row->potongan->kredit_koperasi : 0, 0, true)}}</td>
                                 <td>{{formatRupiahExcel($row->potongan?->iuran_koperasi ? $row->potongan->iuran_koperasi : 0, 0, true)}}</td>
@@ -165,7 +167,7 @@
                                 <td>{{formatRupiahExcel($row->pph,0,true)}}</td>
                                 <td>{{formatRupiahExcel($selisih,0,true)}}</td>
                                 <td>{{formatRupiahExcel($row->seharusnya->terutang,0,true)}}</td>
-                                <td>{{formatRupiahExcel($row->pph_akhir_bulan,0,true)}}</td>
+                                <td>{{formatRupiahExcel((($row->penghasilanBrutoAkhirBulan - $row->total_insentif) * ($row->pengali_akhir)) - ($row->total_insentif * 0.05) ,0,true)}}</td>
                                 <td>{{formatRupiahExcel($selisih_pph_akhir_bulan,0,true)}}</td>
                                 <input type="hidden" name="nip[]" value="{{$row->nip}}">
                                 @php
