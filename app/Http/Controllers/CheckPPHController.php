@@ -87,7 +87,7 @@ class CheckPPHController extends Controller
         }
         // return $result;
 
-        return view('cek-pph', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
+        return view('cek-pph-new', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
     }
 
     public function update(Request $request) {
