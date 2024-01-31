@@ -17,7 +17,7 @@ class CheckHitungPPH
 
         // Get total penghasilan rutin
         $penghasilanRutin = $total_gaji;
-
+        $tanggal_filter = $tahun . '-' . $bulan . '-' . '25';
         // Get total penghasilan tidak rutin
         if ($bulan > 1) {
             if ($full_month) {
@@ -121,9 +121,14 @@ class CheckHitungPPH
             $pengali_akhir = $lapisanPenghasilanBrutoAkhir->pengali;
         }
 
-        $pph = $penghasilanBruto * ($pengali / 100);
+        $insentif25 =  DB::table('penghasilan_tidak_teratur')
+            ->where('nip', $karyawan->nip)
+            ->whereIn('id_tunjangan', [31, 32])->whereDate('created_at', '<=', $tanggal_filter)
+            ->sum('nominal');
+
+        $pph = ($penghasilanBruto - $insentif25) * ($pengali / 100);
         $pph = round($pph);
-        $pphAkhirBulan = $penghasilanBrutoAkhirBulan * ($pengali_akhir / 100);
+        $pphAkhirBulan = $penghasilanBrutoAkhirBulanNonInsetif * ($pengali_akhir / 100);
         $pphAkhirBulan = round($pphAkhirBulan);
 
         if (!$full_month) {
