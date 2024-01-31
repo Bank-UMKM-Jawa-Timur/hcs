@@ -374,7 +374,10 @@ class BonusController extends Controller
             }
             else {
                 $itemLamaId = DB::table('penghasilan_tidak_teratur')
-                ->where('penghasilan_tidak_teratur.created_at', $createdAt)->where('id_tunjangan', $request->id_tunjangan)->pluck('id');
+                            ->where('penghasilan_tidak_teratur.created_at', $createdAt)
+                            ->where('id_tunjangan', $request->id_tunjangan)
+                            ->where('kd_entitas', $request->get('entitas'))
+                            ->pluck('id')->toArray();
                 // return $itemLamaId;
                 for ($i = 0; $i < count($itemLamaId); $i++) {
                     if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
