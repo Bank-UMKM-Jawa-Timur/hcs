@@ -42,10 +42,13 @@
                 $pph_akhir_header = 0;
                 $hitungan_header = 0;
                 $selisihAkhirBulan = 0;
+                $brutoNonInsentif = 0;
+                $total_last_selisih = 0;
             @endphp
             @foreach ($result as $item)
                 @php
                     $row = $item['pph'];
+                    $brutoNonInsentif += $row->penghasilanBrutoAkhirBulan - $row->total_insentif;
                     $bruto += $row->penghasilanBruto;
                     $bruto_akhir_header += $row->penghasilanBrutoAkhirBulan;
                     $pph_akhir_header += $row->pph_akhir_bulan;
@@ -63,6 +66,7 @@
                     if ($current_terutang_header == 0 && $selisih_header != 0) {
                         $new_terutang_header = $selisih_header;
                     }
+                    $total_last_selisih = (($row->penghasilanBrutoAkhirBulan - $row->total_insentif) * ($row->pengali_akhir)) - ($row->total_insentif * 0.05)
                     @endphp
             @endforeach
             <table class="tables-stripped" id="table" style="width: 100%; border: 1px solid black;">
@@ -71,6 +75,7 @@
                         <th colspan="4" style="font-weight: bold;">GRAND TOTAL</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($bruto, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($bruto_akhir_header, 0, true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($brutoNonInsentif, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($kredit_pegawai, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($kredit_koprasi, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($iuran_koprasi, 0, true)}}</th>
@@ -82,7 +87,7 @@
                         <th style="font-weight: bold">{{formatRupiahExcel($selisih_total,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($terutang_total,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header,0,true)}}</th>
-                        <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header - ($pph_sekarang + $terutang_total),0,true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($total_last_selisih,0,true)}}</th>
                     </tr>
                 </thead>
                 <thead>
@@ -189,6 +194,7 @@
                         <th colspan="4" style="font-weight: bold;">GRAND TOTAL</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($bruto, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($bruto_akhir_header, 0, true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($brutoNonInsentif, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($kredit_pegawai, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($kredit_koprasi, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($iuran_koprasi, 0, true)}}</th>
@@ -200,7 +206,7 @@
                         <th style="font-weight: bold">{{formatRupiahExcel($selisih_total,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($terutang_total,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header,0,true)}}</th>
-                        <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header - ($pph_sekarang + $terutang_total),0,true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($total_last_selisih,0,true)}}</th>
                     </tr>
                 </tfoot>
             </table>

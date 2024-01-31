@@ -81,6 +81,7 @@ class CheckHitungPPH
         $penghasilanBruto = $penghasilanRutin + $penghasilanTidakRutin + $jamsostek + $tunjangan_rutin;
         $penghasilanBrutoAkhirBulan = $penghasilanRutin + $penghasilanTidakRutin + $penghasilanTidakRutinFull + $jamsostek + $tunjangan_rutin;
 
+        $penghasilanBrutoAkhirBulanNonInsetif = $penghasilanBrutoAkhirBulan - $total_insentif;
 
         $pph = 0;
         $pphAkhirBulan = 0;
@@ -101,12 +102,12 @@ class CheckHitungPPH
                                     ->first();
         $lapisanPenghasilanBrutoAkhir = DB::table('lapisan_penghasilan_bruto')
                                     ->where('kategori', $ter_kategori)
-                                    ->where(function($query) use ($penghasilanBrutoAkhirBulan) {
-                                        $query->where(function($q2) use ($penghasilanBrutoAkhirBulan) {
-                                            $q2->where('nominal_start', '<=', $penghasilanBrutoAkhirBulan)
-                                                ->where('nominal_end', '>=', $penghasilanBrutoAkhirBulan);
-                                        })->orWhere(function($q2) use ($penghasilanBrutoAkhirBulan) {
-                                            $q2->where('nominal_start', '<=', $penghasilanBrutoAkhirBulan)
+                                    ->where(function($query) use ($penghasilanBrutoAkhirBulanNonInsetif) {
+                                        $query->where(function($q2) use ($penghasilanBrutoAkhirBulanNonInsetif) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBrutoAkhirBulanNonInsetif)
+                                                ->where('nominal_end', '>=', $penghasilanBrutoAkhirBulanNonInsetif);
+                                        })->orWhere(function($q2) use ($penghasilanBrutoAkhirBulanNonInsetif) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBrutoAkhirBulanNonInsetif)
                                                 ->where('nominal_end', 0);
                                         });
                                     })
