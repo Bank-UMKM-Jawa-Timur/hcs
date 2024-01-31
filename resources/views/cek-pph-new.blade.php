@@ -15,7 +15,7 @@
             border-spacing: 0px;
         }
         
-        table th{
+        table thead {
             position: sticky; 
             top: 0px;
             text-align: center;
@@ -108,7 +108,7 @@
                             <th colspan="4"></th>
                             <th colspan="7" style="background-color: red; color: white;">Database</th>
                             {{--  <th colspan="7" style="background-color: yellow;">Seharusnya</th>  --}}
-                            <th colspan="7" style="background-color: #7FFF00">Akhir Bulan</th>
+                            <th colspan="9" style="background-color: #7FFF00">Akhir Bulan</th>
                         </tr>
                         <tr>
                             <th rowspan="2">No</th>
@@ -145,10 +145,28 @@
                             {{--  END Seharusnya  --}}
                             {{--  Seharusnya  --}}
                             <th style="background-color: #7FFF00">Bruto</th>
-                            <th style="background-color: #7FFF00">Insentif</th>
+                            <th style="background-color: #7FFF00">
+                                Insentif
+                                <br>
+                                1-25
+                            </th>
+                            <th style="background-color: #7FFF00">
+                                Insentif
+                                <br>
+                                26-31
+                            </th>
                             <th style="background-color: #7FFF00">Total</th>
                             <th style="background-color: #7FFF00">Pengali</th>
-                            <th style="background-color: #7FFF00">Pajak Insentif</th>
+                            <th style="background-color: #7FFF00">
+                                Pajak Insentif
+                                <br>
+                                1-25
+                            </th>
+                            <th style="background-color: #7FFF00">
+                                Pajak Insentif
+                                <br>
+                                26-31
+                            </th>
                             <th style="background-color: #7FFF00">
                                 PPH
                                 <br>
@@ -191,6 +209,10 @@
                                     // Akhir Bulan
                                     $bruto_akhir = $row->penghasilanBrutoAkhirBulan;
                                     $total_insentif_akhir = $row->total_insentif;
+                                    $total_insentif_25 = $row->total_insentif_25;
+                                    $total_insentif_26 = $row->total_insentif_26;
+                                    $pajak_insentif_25 = $row->pajak_insentif_25;
+                                    $pajak_insentif_26 = $row->pajak_insentif_26;
                                     $total_pajak_insentif_akhir = $row->seharusnya->total_insentif;
                                     $total_akhir = $bruto_akhir + $total_insentif_akhir;
                                     $pengali_persen_akhir = $row->pengali_akhir * 100;
@@ -225,10 +247,12 @@
                                     {{--  END Seharusnya  --}}
                                     {{--  Akhir Bulan  --}}
                                     <td>{{formatRupiahExcel($bruto_akhir, 0, true)}}</td>
-                                    <td>{{formatRupiahExcel($total_insentif_akhir, 0, true)}}</td>
+                                    <td>{{formatRupiahExcel($total_insentif_25, 0, true)}}</td>
+                                    <td>{{formatRupiahExcel($total_insentif_26, 0, true)}}</td>
                                     <td>{{formatRupiahExcel($total_akhir, 0, true)}}</td>
                                     <td>{{$pengali_persen_akhir}}%</td>
-                                    <td>{{formatRupiahExcel($total_pajak_insentif_akhir, 0, true)}}</td>
+                                    <td>{{formatRupiahExcel($pajak_insentif_25, 0, true)}}</td>
+                                    <td>{{formatRupiahExcel($pajak_insentif_26, 0, true)}}</td>
                                     <td>{{formatRupiahExcel($pph_akhir, 0, true)}}</td>
                                     <td>{{formatRupiahExcel($selisih_akhir, 0, true)}}</td>
                                     {{--  END Akhir Bulan  --}}

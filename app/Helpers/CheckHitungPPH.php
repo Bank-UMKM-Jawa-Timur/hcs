@@ -77,8 +77,22 @@ class CheckHitungPPH
                                     ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                     ->sum('nominal');
 
-        $total_insentif = DB::table('penghasilan_tidak_teratur')->whereIn('id_tunjangan', [31, 32])->where('nip', $karyawan->nip)
-                ->sum('nominal');
+        $total_insentif = DB::table('penghasilan_tidak_teratur')
+                            ->whereIn('id_tunjangan', [31, 32])
+                            ->where('nip', $karyawan->nip)
+                            ->sum('nominal');
+        $tgl_awal_1 = $tahun . '-' . $bulan . '-' . '1';
+        $tgl_akhir_25 = $tahun . '-' . $bulan . '-' . '25';
+        $total_insentif_25 = DB::table('penghasilan_tidak_teratur')
+                                ->whereIn('id_tunjangan', [31, 32])
+                                ->where('nip', $karyawan->nip)
+                                ->whereBetween('created_at', [$tgl_awal_1, $tgl_akhir_25])
+                                ->sum('nominal');
+        $total_insentif_26 = DB::table('penghasilan_tidak_teratur')
+                                ->whereIn('id_tunjangan', [31, 32])
+                                ->where('nip', $karyawan->nip)
+                                ->whereBetween('created_at', [$tanggal_filter_full_awal, $tanggal_filter_full_akhir])
+                                ->sum('nominal');
         $dppJamsostek = CheckHitungPPH::getJamsostekDPP($karyawan, $total_gaji);
 
         $jamsostek = $dppJamsostek['jamsostek'];
@@ -182,6 +196,10 @@ class CheckHitungPPH
         $data->nip = $karyawan->nip;
         $data->ptkp = $ptkp;
         $data->total_insentif = (int) $total_insentif;
+        $data->total_insentif_25 = (int) $total_insentif_25;
+        $data->total_insentif_26 = (int) $total_insentif_26;
+        $data->pajak_insentif_25 = (int) round($total_insentif_25 * config('global.pengali_insentif_kredit'));
+        $data->pajak_insentif_26 = (int) round($total_insentif_26 * config('global.pengali_insentif_kredit'));
         $data->penghasilanRutin = $penghasilanRutin;
         $data->penghasilanTidakRutin = $penghasilanTidakRutin;
         $data->jamsostek = $dppJamsostek['jamsostek'];
