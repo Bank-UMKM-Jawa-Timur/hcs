@@ -15,6 +15,8 @@ class HitungPPH
         // Get total penghasilan rutin
         $penghasilanRutin = $total_gaji;
 
+        $idTunjanganInsentifArr = [31, 32];
+
         // Get total penghasilan tidak rutin
         if ($bulan > 1) {
             if ($full_month) {
@@ -23,6 +25,7 @@ class HitungPPH
                                             ->where('nip', $karyawan->nip)
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
+                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
             else {
@@ -43,6 +46,7 @@ class HitungPPH
                                             ->where('nip', $karyawan->nip)
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
+                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
             else {
