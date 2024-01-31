@@ -69,9 +69,9 @@
                 <thead>
                     <tr>
                         <th colspan="4"></th>
-                        <th colspan="7">Database</th>
-                        <th colspan="7">Seharusnya</th>
-                        <th colspan="7">Akhir Bulan</th>
+                        <th colspan="7" style="background-color: red; color: white;">Database</th>
+                        <th colspan="7" style="background-color: yellow;">Seharusnya</th>
+                        <th colspan="7" style="background-color: #7FFF00">Akhir Bulan</th>
                     </tr>
                     <tr>
                         <th rowspan="2">No</th>
@@ -81,43 +81,43 @@
                     </tr>
                     <tr>
                         {{--  Database  --}}
-                        <th>Bruto</th>
-                        <th>Insentif</th>
-                        <th>Total</th>
-                        <th>Pengali</th>
-                        <th>Pajak Insentif</th>
-                        <th>
+                        <th style="background-color: red; color: white;">Bruto</th>
+                        <th style="background-color: red; color: white;">Insentif</th>
+                        <th style="background-color: red; color: white;">Total</th>
+                        <th style="background-color: red; color: white;">Pengali</th>
+                        <th style="background-color: red; color: white;">Pajak Insentif</th>
+                        <th style="background-color: red; color: white;">
                             PPH
                             <br>
                             (PPH - Pajak Insentif)
                         </th>
-                        <th>Terutang</th>
+                        <th style="background-color: red; color: white;">Terutang</th>
                         {{--  END Database  --}}
                         {{--  Seharusnya  --}}
-                        <th>Bruto</th>
-                        <th>Insentif</th>
-                        <th>Total</th>
-                        <th>Pengali</th>
-                        <th>Pajak Insentif</th>
-                        <th>
+                        <th style="background-color: yellow;">Bruto</th>
+                        <th style="background-color: yellow;">Insentif</th>
+                        <th style="background-color: yellow;">Total</th>
+                        <th style="background-color: yellow;">Pengali</th>
+                        <th style="background-color: yellow;">Pajak Insentif</th>
+                        <th style="background-color: yellow;">
                             PPH
                             <br>
                             (PPH - Pajak Insentif)
                         </th>
-                        <th>Selisih</th>
+                        <th style="background-color: yellow;">Selisih</th>
                         {{--  END Seharusnya  --}}
                         {{--  Seharusnya  --}}
-                        <th>Bruto</th>
-                        <th>Insentif</th>
-                        <th>Total</th>
-                        <th>Pengali</th>
-                        <th>Pajak Insentif</th>
-                        <th>
+                        <th style="background-color: #7FFF00">Bruto</th>
+                        <th style="background-color: #7FFF00">Insentif</th>
+                        <th style="background-color: #7FFF00">Total</th>
+                        <th style="background-color: #7FFF00">Pengali</th>
+                        <th style="background-color: #7FFF00">Pajak Insentif</th>
+                        <th style="background-color: #7FFF00">
                             PPH
                             <br>
                             (PPH - Pajak Insentif)
                         </th>
-                        <th>Selisih</th>
+                        <th style="background-color: #7FFF00">Selisih</th>
                         {{--  END Seharusnya  --}}
                     </tr>
                 </thead>
@@ -130,14 +130,14 @@
                             @php
                                 $row = $item['pph'];
                                 $selisih = $row->pph - $row->seharusnya->total_seharusnya;
-                                $selisih_pph_akhir_bulan = (($row->penghasilanBrutoAkhirBulan - $row->total_insentif) * ($row->pengali_akhir)) - ($row->total_insentif * 0.05) - ($row->seharusnya->total_seharusnya + $row->seharusnya->terutang);
+                                $selisih_pph_akhir_bulan = round(($row->penghasilanBrutoAkhirBulan - $row->total_insentif) * ($row->pengali_akhir)) - ($row->total_insentif * 0.05) - ($row->seharusnya->total_seharusnya + $row->seharusnya->terutang);
 
                                 // Database
                                 $bruto_db = $row->penghasilanBruto;
                                 $total_insentif_db = $row->total_insentif;
                                 $total_pajak_insentif_db = $row->seharusnya->total_insentif;
                                 $total_db = $bruto_db + $total_insentif_db;
-                                $pengali_persen_db = $row->pengali * 100;
+                                $pengali_persen_db = $row->pengali_db * 100;
                                 $pph_db = $item['pph_db'];
                                 $terutang_db = $item['terutang_db'];
                                 // END Database
@@ -149,7 +149,7 @@
                                 $pengali_persen_seharusnya = $row->pengali * 100;
                                 $pph_seharusnya = $row->pph;
                                 $terutang_seharusnya = $row->seharusnya->terutang;
-                                $selisih_seharusnya = $pph_db - $pph_seharusnya;
+                                $selisih_seharusnya = $pph_seharusnya - $pph_db;
                                 // END Seharusnya
                                 // Akhir Bulan
                                 $bruto_akhir = $row->penghasilanBrutoAkhirBulan;
@@ -157,7 +157,8 @@
                                 $total_pajak_insentif_akhir = $row->seharusnya->total_insentif;
                                 $total_akhir = $bruto_akhir + $total_insentif_akhir;
                                 $pengali_persen_akhir = $row->pengali_akhir * 100;
-                                $pph_akhir = ($bruto_akhir * ($row->pengali_akhir)) - ($row->total_insentif * 0.05);
+                                $pph_akhir = ($bruto_akhir * ($row->pengali_akhir)) - round(($row->total_insentif * 0.05));
+                                $pph_akhir = round($pph_akhir);
                                 $terutang_akhir = $row->seharusnya->terutang;
                                 $selisih_akhir = ($pph_akhir - ($row->seharusnya->total_seharusnya + $row->seharusnya->terutang));
                                 // END Akhir Bulan

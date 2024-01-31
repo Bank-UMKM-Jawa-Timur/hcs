@@ -69,12 +69,13 @@ class CheckHitungPPH
         $tanggal_filter_full_awal = $tahun . '-' . $bulan . '-' . '26';
         $tanggal_filter_full_akhir = $tahun . '-' . $bulan . '-' . '31';
         $penghasilanTidakRutinFull += DB::table('penghasilan_tidak_teratur')
-        ->select('nominal')
-        ->where('nip', $karyawan->nip)
-            ->where('tahun', (int) $tahun)
-            ->where('bulan', (int) $bulan)
-            ->whereBetween('created_at', [$tanggal_filter_full_awal, $tanggal_filter_full_akhir])
-            ->sum('nominal');
+                                    ->select('nominal')
+                                    ->where('nip', $karyawan->nip)
+                                    ->where('tahun', (int) $tahun)
+                                    ->where('bulan', (int) $bulan)
+                                    ->whereBetween('created_at', [$tanggal_filter_full_awal, $tanggal_filter_full_akhir])
+                                    ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
+                                    ->sum('nominal');
 
         $total_insentif = DB::table('penghasilan_tidak_teratur')->whereIn('id_tunjangan', [31, 32])->where('nip', $karyawan->nip)
                 ->sum('nominal');
@@ -84,13 +85,26 @@ class CheckHitungPPH
         $penghasilanBruto = $penghasilanRutin + $penghasilanTidakRutin + $jamsostek + $tunjangan_rutin;
         $penghasilanBrutoAkhirBulan = $penghasilanRutin + $penghasilanTidakRutin + $penghasilanTidakRutinFull + $jamsostek + $tunjangan_rutin;
 
-        $penghasilanBrutoAkhirBulanNonInsetif = $penghasilanBrutoAkhirBulan - $total_insentif;
+        $penghasilanBrutoDb = $penghasilanBruto + $total_insentif;
 
+        $penghasilanBrutoAkhirBulanNonInsetif = $penghasilanBrutoAkhirBulan;
         $pph = 0;
         $pphAkhirBulan = 0;
 
         $kode_ptkp = $ptkp->kode == 'TK' ? 'TK/0' : $ptkp->kode;
         $ter_kategori = CheckHitungPPH::getTarifEfektifKategori($kode_ptkp);
+        $lapisanPenghasilanBrutoDB = DB::table('lapisan_penghasilan_bruto')
+                                    ->where('kategori', $ter_kategori)
+                                    ->where(function($query) use ($penghasilanBrutoDb) {
+                                        $query->where(function($q2) use ($penghasilanBrutoDb) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBrutoDb)
+                                                ->where('nominal_end', '>=', $penghasilanBrutoDb);
+                                        })->orWhere(function($q2) use ($penghasilanBrutoDb) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBrutoDb)
+                                                ->where('nominal_end', 0);
+                                        });
+                                    })
+                                    ->first();
         $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
                                     ->where('kategori', $ter_kategori)
                                     ->where(function($query) use ($penghasilanBruto) {
@@ -115,8 +129,13 @@ class CheckHitungPPH
                                         });
                                     })
                                     ->first();
+
         $pengali = 0;
+        $pengaliDb = 0;
         $pengali_akhir = 0;
+        if ($lapisanPenghasilanBrutoDB) {
+            $pengaliDb = $lapisanPenghasilanBrutoDB->pengali;
+        }
         if ($lapisanPenghasilanBruto) {
             $pengali = $lapisanPenghasilanBruto->pengali;
         }
@@ -172,9 +191,10 @@ class CheckHitungPPH
         $data->potongan = $potongan;
         $data->dpp = $dppJamsostek['dpp'];
         $data->bpjs_tk = $dppJamsostek['bpjs_tk'];
+        $data->pengali_db = ($pengaliDb / 100);
         $data->pengali = ($pengali / 100);
-        $data->pengali_akhir = ($pengali_akhir / 100);
         $data->seharusnya = $seharusnya;
+        $data->pengali_akhir = ($pengali_akhir / 100);
         $data->pph = $pph - $seharusnya->total_insentif;
         $data->pph_akhir_bulan = $pphAkhirBulan - $seharusnya->total_insentif;
 
@@ -438,6 +458,7 @@ class CheckHitungPPH
                     $bpjs_tk = $total_gaji * 1 / 100;
                 }
             }
+            $bpjs_tk = round($bpjs_tk);
             // Jamsostek
             if(!$karyawan->tanggal_penonaktifan && $karyawan->kpj){
                 $jkk = round(($persen_jkk / 100) * $total_gaji);
