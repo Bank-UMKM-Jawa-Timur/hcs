@@ -37,6 +37,9 @@
                     <form action="{{ route('edit-tunjangan-bonus-post-new') }}"
                         method="POST">
                         @csrf
+                        <input type="hidden" name="id_tunjangan" value="{{ Request()->get('idTunjangan') }}">
+                        <input type="hidden" name="createdAt" value="{{ Request()->get('tanggal') }}">
+                        <input type="hidden" name="entitas" value="{{ Request()->get('entitas') }}">
                         <button type="submit" class="btn btn-primary mb-2">Simpan</button>
                         <table class="tables whitespace-nowrap" id="table_item" style="width: 100%">
                             <thead class="text-primary">
@@ -58,9 +61,6 @@
                                                 onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)"
                                                 class="form-input"
                                                 value="{{ number_format($item->nominal, 0, ',', '.') }}">
-                                            <input type="hidden" name="id_tunjangan"
-                                                value="{{ Request()->get('idTunjangan') }}">
-                                            <input type="hidden" name="createdAt" value="{{ Request()->get('tanggal') }}">
                                             <input type="hidden" name="nip[]" value="{{ $item->nip }}">
                                             <input type="hidden" name="item_id[]" value="{{ $item->id }}">
                                         </td>

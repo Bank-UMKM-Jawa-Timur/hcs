@@ -931,67 +931,88 @@ class PenghasilanTidakTeraturController extends Controller
     return view('penghasilan.edit', compact(['data', 'tunjangan', 'nameCabang']));
     }
 
+    function deleteTunjangan($id_tunjangan, $bulan, $tanggal)
+    {
+        $query = DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $id_tunjangan)
+        ->where('bulan', $bulan)
+        ->whereDate('created_at', $tanggal);
+        return $query;
+        // dd($query->toSql(), $query->getBindings(), $query->delete());
+        // $query->delete();
+    }
+
     public function editTunjanganNewPost(Request $request){
+        // return $request;
         DB::beginTransaction();
         try {
-            $nip = $request->get('nip');
-            $item_id = $request->item_id;
-            $createdAt = $request->createdAt;
-            $tanggal = $request->tanggal;
-            $itemLamaId = DB::table('penghasilan_tidak_teratur')
-                            ->where('penghasilan_tidak_teratur.created_at', $createdAt)
-                            ->where('id_tunjangan', $request->id_tunjangan)
-                            ->pluck('id');
+            $nip = $request->has('nip') ? $request->get('nip') : null;
+            $item_id = $request->has('item_id') ? $request->get('item_id') : 'null';
+            $createdAt = $request->has('createdAt') ? $request->get('createdAt') : null;
+            $tanggal = $request->has('tanggal') ? $request->get('tanggal') : null;
+            // return $item_id;
+            if ($item_id == 'null') {
+                DB::commit();
+                $data = $this->deleteTunjangan($request->get('id_tunjangan'), $request->get('bulan'), $createdAt);
+                $data->delete();
+                Alert::success('Success', 'Berhasil edit data penghasilan');
+            }
+            else {
+                $itemLamaId = DB::table('penghasilan_tidak_teratur')
+                                ->where('penghasilan_tidak_teratur.created_at', $createdAt)
+                                ->where('id_tunjangan', $request->id_tunjangan)
+                                ->pluck('id');
 
-            for ($i = 0; $i < count($itemLamaId); $i++) {
-                if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
-                    // hapus item yang tidak ada dalam $item_id
-                    DB::table('penghasilan_tidak_teratur')->where('id', $itemLamaId[$i])->delete();
+                for ($i = 0; $i < count($itemLamaId); $i++) {
+                    if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
+                        // hapus item yang tidak ada dalam $item_id
+                        DB::table('penghasilan_tidak_teratur')->where('id', $itemLamaId[$i])->delete();
+                    }
                 }
-            }
 
-            if (is_array($item_id)) {
-                for ($i = 0; $i < count($item_id); $i++) {
-                    $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
-                    DB::table('penghasilan_tidak_teratur')->where('id', $item_id[$i])->update([
-                        'nominal' => $nominal
-                    ]);
-                }
-            }
-
-            DB::commit();
-
-            // Hitung pph
-            DB::beginTransaction();
-            foreach ($nip as $key => $item) {
-                $bulan = (int) Carbon::parse($createdAt)->format('m');
-                $tahun = (int) Carbon::parse($createdAt)->format('Y');
-                $karyawan = DB::table('mst_karyawan')
-                            ->where('nip', $item)
-                            ->whereNull('tanggal_penonaktifan')
-                            ->first();
-
-                $pph_baru = HitungPPH::getNewPPH58($createdAt, (int) $bulan, $tahun, $karyawan);
-            }
-            DB::commit();
-
-            DB::beginTransaction();
-            if (Carbon::parse($createdAt)->format('m') == 12 && Carbon::now()->format('d') > 25) {
-                $gajiPerBulanController = new GajiPerBulanController;
-                foreach ($nip as $key => $item) {
-                    $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($createdAt)->format('Y'), Carbon::parse($createdAt)->format('m'));
-                    PPHModel::where('nip', $item)
-                        ->where('tahun', Carbon::parse($createdAt)->format('Y'))
-                        ->where('bulan', 12)
-                        ->update([
-                            'total_pph' => $pphTerutang,
-                            'updated_at' => now()
+                if (is_array($item_id)) {
+                    for ($i = 0; $i < count($item_id); $i++) {
+                        $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
+                        DB::table('penghasilan_tidak_teratur')->where('id', $item_id[$i])->update([
+                            'nominal' => $nominal
                         ]);
                     }
-            }
-            DB::commit();
+                }
 
-            Alert::success('Success', 'Berhasil edit data penghasilan');
+                DB::commit();
+
+                // Hitung pph
+                DB::beginTransaction();
+                foreach ($nip as $key => $item) {
+                    $bulan = (int) Carbon::parse($createdAt)->format('m');
+                    $tahun = (int) Carbon::parse($createdAt)->format('Y');
+                    $karyawan = DB::table('mst_karyawan')
+                                ->where('nip', $item)
+                                ->whereNull('tanggal_penonaktifan')
+                                ->first();
+
+                    $pph_baru = HitungPPH::getNewPPH58($createdAt, (int) $bulan, $tahun, $karyawan);
+                }
+                DB::commit();
+
+                DB::beginTransaction();
+                if (Carbon::parse($createdAt)->format('m') == 12 && Carbon::now()->format('d') > 25) {
+                    $gajiPerBulanController = new GajiPerBulanController;
+                    foreach ($nip as $key => $item) {
+                        $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($createdAt)->format('Y'), Carbon::parse($createdAt)->format('m'));
+                        PPHModel::where('nip', $item)
+                            ->where('tahun', Carbon::parse($createdAt)->format('Y'))
+                            ->where('bulan', 12)
+                            ->update([
+                                'total_pph' => $pphTerutang,
+                                'updated_at' => now()
+                            ]);
+                        }
+                }
+                DB::commit();
+                Alert::success('Success', 'Berhasil edit data penghasilan');
+            }
+
+
             return redirect()->route('penghasilan-tidak-teratur.index');
         } catch (\Exception $e) {
             //  dd($e->getMessage());
