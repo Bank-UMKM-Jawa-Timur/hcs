@@ -60,6 +60,8 @@ class CheckHitungPPH
             }
         }
 
+
+
         // bruto akhir bulan
         $tanggal_filter_full_awal = $tahun . '-' . $bulan . '-' . '26';
         $tanggal_filter_full_akhir = $tahun . '-' . $bulan . '-' . '31';
@@ -71,11 +73,14 @@ class CheckHitungPPH
             ->whereBetween('created_at', [$tanggal_filter_full_awal, $tanggal_filter_full_akhir])
             ->sum('nominal');
 
+        $total_insentif = DB::table('penghasilan_tidak_teratur')->whereIn('id_tunjangan', [31, 32])->where('nip', $karyawan->nip)
+                ->sum('nominal');
         $dppJamsostek = CheckHitungPPH::getJamsostekDPP($karyawan, $total_gaji);
 
         $jamsostek = $dppJamsostek['jamsostek'];
         $penghasilanBruto = $penghasilanRutin + $penghasilanTidakRutin + $jamsostek + $tunjangan_rutin;
         $penghasilanBrutoAkhirBulan = $penghasilanRutin + $penghasilanTidakRutin + $penghasilanTidakRutinFull + $jamsostek + $tunjangan_rutin;
+
 
         $pph = 0;
         $pphAkhirBulan = 0;
@@ -142,7 +147,7 @@ class CheckHitungPPH
                         ->select(
                             DB::raw('(CAST(pd.total_pph AS SIGNED) - (CAST(pd.insentif_kredit AS SIGNED) + CAST(pd.insentif_penagihan AS SIGNED))) AS total_seharusnya'),
                             DB::raw('(CAST(pd.insentif_kredit AS SIGNED) + CAST(pd.insentif_penagihan AS SIGNED)) AS total_insentif'),
-                            DB::raw('CAST(pd.terutang AS SIGNED) AS terutang'),
+                            DB::raw('CAST(pd.terutang AS SIGNED) - CAST(pd.terutang_insentif AS SIGNED) AS terutang'),
                         )
                         ->where('nip', $karyawan->nip)
                         ->where('bulan', $bulan)
@@ -153,6 +158,7 @@ class CheckHitungPPH
         $data->nama = $karyawan->nama_karyawan;
         $data->nip = $karyawan->nip;
         $data->ptkp = $ptkp;
+        $data->total_insentif = $total_insentif;
         $data->penghasilanRutin = $penghasilanRutin;
         $data->penghasilanTidakRutin = $penghasilanTidakRutin;
         $data->jamsostek = $dppJamsostek['jamsostek'];
