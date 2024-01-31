@@ -57,7 +57,9 @@ $(".btn-tab").on("click", function () {
     $(".btn-tab").removeClass("active-tab");
     $(this).addClass("active-tab");
     $(".tab-content").addClass("hidden");
+    $(".tab-content").removeClass("block");
     $("#" + $(this).data("tab")).removeClass("hidden");
+    $("#" + $(this).data("tab")).addClass('block')
 });
 
 let interval = setInterval(function () {
