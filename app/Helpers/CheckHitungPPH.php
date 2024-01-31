@@ -15,6 +15,7 @@ class CheckHitungPPH
         $penghasilanBruto = 0;
         $penghasilanBrutoAkhirBulan = 0;
 
+        $idTunjInsentifArr = [31, 32];
         // Get total penghasilan rutin
         $penghasilanRutin = $total_gaji;
         $tanggal_filter = $tahun . '-' . $bulan . '-' . '25';
@@ -26,6 +27,7 @@ class CheckHitungPPH
                                             ->where('nip', $karyawan->nip)
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
+                                            ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
             }
             else {
@@ -36,6 +38,7 @@ class CheckHitungPPH
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
                                             ->whereDate('created_at', '<=', $tanggal_filter)
+                                            ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
             }
 
@@ -47,6 +50,7 @@ class CheckHitungPPH
                                             ->where('nip', $karyawan->nip)
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
+                                            ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
             }
             else {
@@ -56,11 +60,10 @@ class CheckHitungPPH
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
                                             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                                            ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
             }
         }
-
-
 
         // bruto akhir bulan
         $tanggal_filter_full_awal = $tahun . '-' . $bulan . '-' . '26';
@@ -121,12 +124,7 @@ class CheckHitungPPH
             $pengali_akhir = $lapisanPenghasilanBrutoAkhir->pengali;
         }
 
-        $insentif25 =  DB::table('penghasilan_tidak_teratur')
-            ->where('nip', $karyawan->nip)
-            ->whereIn('id_tunjangan', [31, 32])->whereDate('created_at', '<=', $tanggal_filter)
-            ->sum('nominal');
-
-        $pph = ($penghasilanBruto - $insentif25) * ($pengali / 100);
+        $pph = $penghasilanBruto * ($pengali / 100);
         $pph = round($pph);
         $pphAkhirBulan = $penghasilanBrutoAkhirBulanNonInsetif * ($pengali_akhir / 100);
         $pphAkhirBulan = round($pphAkhirBulan);
@@ -164,7 +162,7 @@ class CheckHitungPPH
         $data->nama = $karyawan->nama_karyawan;
         $data->nip = $karyawan->nip;
         $data->ptkp = $ptkp;
-        $data->total_insentif = $total_insentif;
+        $data->total_insentif = (int) $total_insentif;
         $data->penghasilanRutin = $penghasilanRutin;
         $data->penghasilanTidakRutin = $penghasilanTidakRutin;
         $data->jamsostek = $dppJamsostek['jamsostek'];
@@ -190,8 +188,14 @@ class CheckHitungPPH
                                 'batch.tanggal_input',
                                 DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_teller + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                 DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
+                                DB::raw('CAST(pph.insentif_kredit AS SIGNED) AS insentif_kredit'),
+                                DB::raw('CAST(pph.insentif_penagihan AS SIGNED) AS insentif_penagihan'),
+                                DB::raw('CAST(pph.total_pph AS SIGNED) AS pph'),
+                                DB::raw('CAST(pph.terutang AS SIGNED) AS terutang'),
+                                DB::raw('CAST(pph.terutang_insentif AS SIGNED) AS terutang_insentif'),
                             )
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                            ->join('pph_yang_dilunasi AS pph', 'pph.gaji_per_bulan_id', 'gaji.id')
                             ->where('gaji.nip', $karyawan->nip)
                             ->where('gaji.bulan', (int) $bulan)
                             ->where('gaji.tahun', (int) $tahun)
@@ -200,12 +204,24 @@ class CheckHitungPPH
         $tanggal_input = $tahun.'-'.$bulan.'-'.'25';
         $total_gaji = 0;
         $tunjangan_rutin = 0;
+        $pph_db = 0;
+        $terutang_db = 0;
+        $terutang_insentif_db = 0;
+        $pajak_insentif_kredit_db = 0;
+        $pajak_insentif_penagihan_db = 0;
         if ($gaji) {
             $gaji_id = $gaji->id;
             $tanggal_input = $gaji->tanggal_input;
             $total_gaji = $gaji->total_gaji;
             $tunjangan_rutin = $gaji->tunjangan_rutin;
+            $pph_db = $gaji->pph;
+            $terutang_db = $gaji->terutang;
+            $terutang_insentif_db = $gaji->terutang_insentif;
+            $pajak_insentif_kredit_db = $gaji->insentif_kredit;
+            $pajak_insentif_penagihan_db = $gaji->insentif_penagihan;
         }
+
+        $pph_db -= ($pajak_insentif_kredit_db + $pajak_insentif_penagihan_db);
         // PPH final adalah hasil perhitungan saat melakukan proses final
         $pph_final = 0;
         $pph_final_obj = DB::table('pph_yang_dilunasi')
@@ -247,6 +263,9 @@ class CheckHitungPPH
         $new_pph = CheckHitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin, $full_month);
 
         $data = [
+            'pph_db' => $pph_db,
+            'terutang_db' => $terutang_db,
+            'terutang_insentif_db' => $terutang_insentif_db,
             'pph' => $new_pph,
         ];
         return $data;
