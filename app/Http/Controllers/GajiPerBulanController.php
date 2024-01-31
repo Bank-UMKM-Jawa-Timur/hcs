@@ -116,12 +116,17 @@ class GajiPerBulanController extends Controller
         }
 
         $tab = $request->has('tab') ? $request->get('tab') : 'proses';
-        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $limit = 10;
+        if ($request->has('tab') && $tab == 'proses') {
+            $limit = $request->has('page_length_proses') ? $request->get('page_length_proses') : 10;
+        } else if ($request->has('tab') && $tab == 'final') {
+            $limit = $request->has('page_length_final') ? $request->get('page_length_final') : 10;
+        }
+
         $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->get('q');
 
         $gajiRepo = new GajiPerBulanRepository;
-
         // Proses
         $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search);
         // Final
@@ -1308,7 +1313,7 @@ class GajiPerBulanController extends Controller
                             DB::table('batch_penghasilan_tidak_teratur')
                                 ->insert($batch_tidak_rutin);
                         }
-                        
+
                         $pph_bulan_ini = DB::table('pph_yang_dilunasi')
                                             ->where('nip', $item->nip)
                                             ->where('bulan', $bulan)
