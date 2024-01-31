@@ -31,6 +31,9 @@
             </div>
             <form action="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur-new-post') }}" method="POST">
                 @csrf
+                <input type="hidden" name="id_tunjangan" value="{{Request()->get('idTunjangan')}}">
+                <input type="hidden" name="createdAt" value="{{Request()->get('tanggal')}}">
+                <input type="hidden" name="bulan" value="{{Request()->get('bulan')}}">
                 <button type="submit" class="btn btn-primary mb-2">Simpan</button>
                 <table class="tables" id="table_item">
                     <thead>
@@ -51,9 +54,6 @@
                                     <input type="text" id="nominal_{{ $key }}" name="nominal[]"
                                         onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)"
                                         class="form-input" value="{{ number_format($item->nominal, 0, ',', '.') }}">
-                                        <input type="hidden" name="id_tunjangan" value="{{Request()->get('idTunjangan')}}">
-                                        <input type="hidden" name="createdAt" value="{{Request()->get('tanggal')}}">
-                                        <input type="hidden" name="bulan" value="{{Request()->get('bulan')}}">
                                         <input type="hidden" name="nip[]" value="{{$item->nip}}">
                                         <input type="hidden" name="item_id[]" value="{{$item->id_penghasilan}}">
                                 </td>

@@ -87,10 +87,11 @@ class CheckPPHController extends Controller
         }
         // return $result;
 
-        return view('cek-pph', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
+        return view('cek-pph-new', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
     }
 
     public function update(Request $request) {
+        // return $request;
         DB::beginTransaction();
         try {
             $bulan = (int) $request->get('bulan');
@@ -98,19 +99,43 @@ class CheckPPHController extends Controller
             $nipArr = $request->get('nip');
             $terutangArr = $request->get('terutang');
             $now = now();
-            // return count($nipArr);
             foreach ($nipArr as $key => $value) {
                 $nominal = (int) $terutangArr[$key];
-                if ($nominal != 0) {
-                    DB::table('pph_yang_dilunasi')
-                        ->where('nip', $value)
-                        ->where('bulan', $bulan)
-                        ->where('tahun', $tahun)
-                        ->update([
-                            'terutang' => $nominal,
-                            'updated_at' => $now
-                        ]);
+                $current = DB::table('pph_yang_dilunasi')
+                ->where('nip', $value)
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->first();
+
+                $current_terutang = $current->terutang;
+                $old_selisih = 0;
+                $new_terutang = 0;
+                $new_selisih = 0;
+                $cek_selisih = 0;
+
+
+                $old_terutang = $current_terutang;
+                $new_terutang += $nominal += $current_terutang;
+                $new_selisih += $nominal - $old_terutang;
+                $cek_selisih += $new_selisih + $old_terutang;
+
+                // return ['old_terutang' => $old_terutang, 'new_terutang' => $new_terutang, 'new_selisih' => $new_selisih, 'cek_selisih' => $cek_selisih];
+
+                if ($cek_selisih + $new_terutang != 0) {
+                    if ($nominal != 0 ) {
+                        if ($current) {
+                            DB::table('pph_yang_dilunasi')
+                                ->where('nip', $value)
+                                ->where('bulan', $bulan)
+                                ->where('tahun', $tahun)
+                                ->update([
+                                    'terutang' => $new_terutang,
+                                    'updated_at' => $now
+                                ]);
+                        }
+                    }
                 }
+
             }
 
             DB::commit();

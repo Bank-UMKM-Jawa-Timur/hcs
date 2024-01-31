@@ -147,20 +147,23 @@
             return token;
         }
     }
-    $('.page_length').on('change', function() {
-        $('#form').submit()
-    })
-    // Adjust pagination url
-    var btn_pagination = $('.pagination').find('a')
-    var page_url = window.location.href
-    $('.pagination').find('a').each(function(i, obj) {
-        if (page_url.includes('page_length')) {
-            btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
+
+    // Limit Upload Slik
+    $('.limit-size-10').on('change', function() {
+        var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+        if (size > 10) {
+            $(this).parent().next().html('Maksimal besar berkas adalah 10 MB')
+            $(this).parent().next().css({
+                "display": "block"
+            });
+            this.value = ''
+        } else {
+            $(this).parent().next().css({
+                "display": "none"
+            });
         }
-        if (page_url.includes('q')) {
-            btn_pagination[i].href += `&q=${$('#q').val()}`
-        }
     })
+    // End Limit Upload
 
     // Only Accept file validation
     $(".only-image").on('change', function() {

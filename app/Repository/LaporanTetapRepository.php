@@ -21,7 +21,7 @@ class LaporanTetapRepository
         $this->karyawanRepo = new KaryawanRepository;
         $this->cabang = CabangModel::pluck('kd_cabang');
         $this->orderRaw = "
-            CASE 
+            CASE
             WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
             WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
             WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
@@ -80,8 +80,8 @@ class LaporanTetapRepository
                 'gaji' => function($query) use ($year, $month) {
                     $query->select(
                         'nip',
-                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                         'gj_pokok',
                         'gj_penyesuaian',
                         'tj_keluarga',
@@ -116,7 +116,7 @@ class LaporanTetapRepository
                             'penghasilan_tidak_teratur.nip',
                             'penghasilan_tidak_teratur.id_tunjangan',
                             'mst_tunjangan.nama_tunjangan',
-                            // DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                            // DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
                             'penghasilan_tidak_teratur.nominal',
                             'penghasilan_tidak_teratur.kd_entitas',
                             'penghasilan_tidak_teratur.tahun',
@@ -133,7 +133,7 @@ class LaporanTetapRepository
                             'penghasilan_tidak_teratur.nip',
                             'penghasilan_tidak_teratur.id_tunjangan',
                             'mst_tunjangan.nama_tunjangan',
-                            // DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                            // DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
                             'penghasilan_tidak_teratur.nominal',
                             'penghasilan_tidak_teratur.kd_entitas',
                             'penghasilan_tidak_teratur.tahun',
@@ -458,7 +458,7 @@ class LaporanTetapRepository
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year, $month) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                                         'gj_pokok',
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
@@ -499,10 +499,10 @@ class LaporanTetapRepository
                                                 'pphDilunasi' => function($query) use ($karyawan, $year, $month) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
-                                                        DB::raw('CAST(SUM(total_pph) AS UNSIGNED) AS nominal'),
-                                                        DB::raw('CAST(SUM(terutang) AS UNSIGNED) AS terutang'),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
+                                                        DB::raw('CAST(SUM(total_pph) AS SIGNED) AS nominal'),
+                                                        DB::raw('CAST(SUM(terutang) AS SIGNED) AS terutang'),
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('bulan', $month)
@@ -915,8 +915,8 @@ class LaporanTetapRepository
                 'gaji' => function($query) use ($year, $month) {
                     $query->select(
                         'nip',
-                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                         'gj_pokok',
                         'gj_penyesuaian',
                         'tj_keluarga',
@@ -951,7 +951,7 @@ class LaporanTetapRepository
                             'penghasilan_tidak_teratur.nip',
                             'penghasilan_tidak_teratur.id_tunjangan',
                             'mst_tunjangan.nama_tunjangan',
-                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
                             'penghasilan_tidak_teratur.kd_entitas',
                             'penghasilan_tidak_teratur.tahun',
                             'penghasilan_tidak_teratur.bulan',
@@ -967,7 +967,7 @@ class LaporanTetapRepository
                             'penghasilan_tidak_teratur.nip',
                             'penghasilan_tidak_teratur.id_tunjangan',
                             'mst_tunjangan.nama_tunjangan',
-                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
                             'penghasilan_tidak_teratur.kd_entitas',
                             'penghasilan_tidak_teratur.tahun',
                             'penghasilan_tidak_teratur.bulan',
@@ -1286,7 +1286,7 @@ class LaporanTetapRepository
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year, $month) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                                         'gj_pokok',
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
@@ -1327,10 +1327,10 @@ class LaporanTetapRepository
                                                 'pphDilunasi' => function($query) use ($karyawan, $year, $month) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
-                                                        DB::raw('CAST(SUM(total_pph) AS UNSIGNED) AS nominal'),
-                                                        DB::raw('CAST(SUM(terutang) AS UNSIGNED) AS terutang'),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
+                                                        DB::raw('CAST(SUM(total_pph) AS SIGNED) AS nominal'),
+                                                        DB::raw('CAST(SUM(terutang) AS SIGNED) AS terutang'),
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('bulan', $month)
@@ -1821,7 +1821,7 @@ class LaporanTetapRepository
                 }
                 if ($value->id_tunjangan == 28) {
                     $brutoPenghargaanKinerja += $value->nominal;
-                }    
+                }
             }
             foreach ($item?->pphDilunasi as $value) {
                 if ($value->bulan > 1) {

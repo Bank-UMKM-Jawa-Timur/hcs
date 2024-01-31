@@ -116,19 +116,25 @@ class GajiPerBulanController extends Controller
         }
 
         $tab = $request->has('tab') ? $request->get('tab') : 'proses';
-        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
-        $page = $request->has('page') ? $request->get('page') : 10;
+        $limit = 10;
+        if ($request->has('tab') && $tab == 'proses') {
+            $limit = $request->has('page_length_proses') ? $request->get('page_length_proses') : 10;
+        } else if ($request->has('tab') && $tab == 'final') {
+            $limit = $request->has('page_length_final') ? $request->get('page_length_final') : 10;
+        } else {
+            $limit = $request->has('page_length_sampah') ? $request->get('page_length_sampah') : 10;
+        }
+
+        $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->get('q');
-
         $gajiRepo = new GajiPerBulanRepository;
-
         // Proses
-        $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1);
+        $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search);
         // Final
-        $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1);
+        $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search);
         // sampah
         if(auth()->user()->hasRole('admin')) {
-            $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1);
+            $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1, $search);
             $data = [
                 'proses_list' => $proses_list,
                 'final_list' => $final_list,
@@ -188,7 +194,6 @@ class GajiPerBulanController extends Controller
             $grandtotal_dpp = 0;
             $total_jp = 0;
             $total_bpjs_tk = 0;
-
 
             foreach ($karyawan as $key => $value) {
                 $kd_entitas = null;
@@ -317,8 +322,8 @@ class GajiPerBulanController extends Controller
                             'gaji.gj_pokok',
                             'gaji.tj_keluarga',
                             'gaji.tj_kesejahteraan',
-                            DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS UNSIGNED) AS gaji'),
-                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS UNSIGNED) AS total_gaji"),
+                            DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS SIGNED) AS gaji'),
+                            DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS total_gaji"),
                         )
                         ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
                         ->where('m.nip', $value->id)
@@ -423,8 +428,8 @@ class GajiPerBulanController extends Controller
                             ->select(
                                 'gaji.*',
                                 'm.nama_karyawan',
-                                DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS UNSIGNED) AS total_penghasilan'),
-                                DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS UNSIGNED) AS total_potongan')
+                                DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS SIGNED) AS total_penghasilan'),
+                                DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS SIGNED) AS total_potongan')
                             )
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
                             ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
@@ -641,6 +646,88 @@ class GajiPerBulanController extends Controller
                             ];
                             array_push($new_data, $item);
                         }
+                    }
+                }
+
+                // Get Penghasilan Tidak Rutin
+                $penghasilanTidakRutin = DB::table('penghasilan_tidak_teratur AS p')
+                                        ->select(
+                                            'p.id',
+                                            'p.id_tunjangan',
+                                            'm.nama_tunjangan',
+                                            'p.nominal',
+                                        )
+                                        ->join('mst_tunjangan AS m', 'm.id', 'p.id_tunjangan')
+                                        ->where('p.nip', $gaji->nip)
+                                        ->where('p.tahun', (int) $gaji->tahun)
+                                        ->where('p.bulan', (int) $gaji->bulan)
+                                        ->get();
+
+                foreach ($penghasilanTidakRutin as $tidakRutin) {
+                    $nominalLama = 0;
+                    $nominalBaru = 0;
+                    $current = DB::table('batch_penghasilan_tidak_teratur')
+                                    ->where('gaji_per_bulan_id', $gaji->id)
+                                    ->where('penghasilan_tidak_teratur_id', $tidakRutin->id)
+                                    ->first();
+                    if ($current) {
+                        $nominalLama = $current->nominal;
+                        $nominalBaru = $tidakRutin->nominal;
+                        if ($nominalLama != $nominalBaru) {
+                            $item_title = str_replace(' ', '_', strtolower($tidakRutin->nama_tunjangan));
+                            $item_title_new = $item_title.'_baru';
+                            $item = [
+                                $item_title => $nominalLama,
+                                $item_title_new => $nominalBaru,
+                            ];
+                            array_push($new_data, $item);
+                        }
+                    }
+                    else {
+                        $nominalBaru = $tidakRutin->nominal;
+                        $item_title = str_replace(' ', '_', strtolower($tidakRutin->nama_tunjangan));
+                        $item_title_new = $item_title.'_baru';
+                        $item = [
+                            $item_title => $nominalLama,
+                            $item_title_new => $nominalBaru,
+                        ];
+                        array_push($new_data, $item);
+                    }
+
+                    $total_penghasilan_baru -= $nominalLama;
+                    $total_penghasilan_baru += $nominalBaru;
+                }
+
+                // Get Batch Penghasilan Tidak Rutin
+                $batchPenghasilanTidakRutin = DB::table('batch_penghasilan_tidak_teratur AS p')
+                                        ->select(
+                                            'p.id',
+                                            'p.penghasilan_tidak_teratur_id',
+                                            'p.id_tunjangan',
+                                            'm.nama_tunjangan',
+                                            'p.nominal',
+                                        )
+                                        ->join('mst_tunjangan AS m', 'm.id', 'p.id_tunjangan')
+                                        ->where('p.gaji_per_bulan_id', $gaji->id)
+                                        ->get();
+
+                foreach ($batchPenghasilanTidakRutin as $batchTidakRutin) {
+                    $current = DB::table('penghasilan_tidak_teratur')
+                                    ->where('id', $batchTidakRutin->penghasilan_tidak_teratur_id)
+                                    ->first();
+                    if (!$current) {
+                        $nominalLama = $batchTidakRutin->nominal;
+                        $nominalBaru = 0;
+                        $item_title = str_replace(' ', '_', strtolower($batchTidakRutin->nama_tunjangan));
+                        $item_title_new = $item_title.'_baru';
+                        $item = [
+                            $item_title => $nominalLama,
+                            $item_title_new => $nominalBaru,
+                        ];
+                        array_push($new_data, $item);
+
+                        $total_penghasilan_baru -= $nominalLama;
+                        $total_penghasilan_baru += $nominalBaru;
                     }
                 }
 
@@ -1016,6 +1103,14 @@ class GajiPerBulanController extends Controller
                     $dpp = (($item->gj_pokok + $tunjangan[0]) + ($tunjangan[7] * 0.5) * 0.05);
                 }
 
+                // Get Penghasilan Tidak Rutin
+                $penghasilanTidakRutin = DB::table('penghasilan_tidak_teratur')
+                                            ->select('id', 'id_tunjangan', 'nominal')
+                                            ->where('nip', $item->nip)
+                                            ->where('tahun', (int) $tahun)
+                                            ->where('bulan', (int) $bulan)
+                                            ->get();
+
                 if ($request->has('batch_id')) {
                     $employee = [
                         'gj_pokok' => $item->gj_pokok,
@@ -1052,6 +1147,61 @@ class GajiPerBulanController extends Controller
                                                 ->where('bulan', $bulan)
                                                 ->where('tahun', $tahun)
                                                 ->update($employee);
+                    // Update Batch Penghasilan Tidak Rutin
+                    foreach ($penghasilanTidakRutin as $tidakRutin) {
+                        // Check if already stored on batch_penghasilan_tidak_teratur table
+                        $current = DB::table('batch_penghasilan_tidak_teratur')
+                                        ->where('gaji_per_bulan_id', $gaji->id)
+                                        ->where('penghasilan_tidak_teratur_id', $tidakRutin->id)
+                                        ->first();
+                        if ($current) {
+                            // Update
+                            $batch_tidak_rutin = [
+                                'gaji_per_bulan_id' => $gaji?->id,
+                                'penghasilan_tidak_teratur_id' => $tidakRutin->id,
+                                'id_tunjangan' => $tidakRutin->id_tunjangan,
+                                'nominal' => $tidakRutin->nominal,
+                                'updated_at' => $now,
+                            ];
+                            DB::table('batch_penghasilan_tidak_teratur')
+                                ->where('gaji_per_bulan_id', $gaji->id)
+                                ->where('penghasilan_tidak_teratur_id', $tidakRutin->id)
+                                ->update($batch_tidak_rutin);
+                        }
+                        else {
+                            // Insert
+                            $batch_tidak_rutin = [
+                                'gaji_per_bulan_id' => $gaji?->id,
+                                'penghasilan_tidak_teratur_id' => $tidakRutin->id,
+                                'id_tunjangan' => $tidakRutin->id_tunjangan,
+                                'nominal' => $tidakRutin->nominal,
+                                'created_at' => $now,
+                            ];
+                            DB::table('batch_penghasilan_tidak_teratur')
+                                ->insert($batch_tidak_rutin);
+                        }
+                    }
+
+                    // Get Batch Penghasilan Tidak Rutin
+                    $batchPenghasilanTidakRutin = DB::table('batch_penghasilan_tidak_teratur AS p')
+                                                    ->select(
+                                                        'p.id',
+                                                        'p.penghasilan_tidak_teratur_id',
+                                                        'p.id_tunjangan',
+                                                        'p.nominal',
+                                                    )
+                                                    ->where('p.gaji_per_bulan_id', $gaji?->id)
+                                                    ->get();
+                    foreach ($batchPenghasilanTidakRutin as $batchTidakRutin) {
+                        $current = DB::table('penghasilan_tidak_teratur')
+                                        ->where('id', $batchTidakRutin->penghasilan_tidak_teratur_id)
+                                        ->first();
+                        if (!$current) {
+                            DB::table('batch_penghasilan_tidak_teratur')
+                                ->where('id', $batchTidakRutin->id)
+                                ->delete();
+                        }
+                    }
 
                     $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin);
 
@@ -1148,13 +1298,26 @@ class GajiPerBulanController extends Controller
                             'uang_makan' => $tunjangan[13],
                             'dpp' => $dpp,
                             'tj_fungsional' => $tunjangan[15],
-                            'created_at' => now(),
+                            'created_at' => $now,
                             'kredit_koperasi' => $kredit_koperasi,
                             'iuran_koperasi' => $iuran_koperasi,
                             'kredit_pegawai' => $kredit_pegawai,
                             'iuran_ik' => $iuran_ik,
                         ];
                         $gaji_id = GajiPerBulanModel::insertGetId($employee);
+                        // Store Batch Penghasilan Tidak Rutin
+                        foreach ($penghasilanTidakRutin as $tidakRutin) {
+                            $batch_tidak_rutin = [
+                                'gaji_per_bulan_id' => $gaji_id,
+                                'penghasilan_tidak_teratur_id' => $tidakRutin->id,
+                                'id_tunjangan' => $tidakRutin->id_tunjangan,
+                                'nominal' => $tidakRutin->nominal,
+                                'created_at' => $now,
+                            ];
+                            DB::table('batch_penghasilan_tidak_teratur')
+                                ->insert($batch_tidak_rutin);
+                        }
+
                         $pph_bulan_ini = DB::table('pph_yang_dilunasi')
                                             ->where('nip', $item->nip)
                                             ->where('bulan', $bulan)

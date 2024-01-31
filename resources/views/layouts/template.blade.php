@@ -39,6 +39,7 @@ Coded by www.creative-tim.com
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     {{--  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">  --}}
     {{-- Set Token --}}
+    <link rel="shortcut icon" href="{{asset('favicon.png')}}" type="image/x-icon">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <style>
@@ -138,7 +139,7 @@ Coded by www.creative-tim.com
             const numberParts = Number(Math.abs(number)).toFixed(precision).split('.');
             const integerPart = numberParts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             const decimalPart = numberParts[1] || '0';
-        
+
             if (precision == 0) {
                 return `${number < 0 ? '-' : ''}${integerPart}`;
             }

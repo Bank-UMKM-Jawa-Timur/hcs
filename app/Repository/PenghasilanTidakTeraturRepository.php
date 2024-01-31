@@ -51,7 +51,6 @@ class PenghasilanTidakTeraturRepository
                         }
                     })
                     ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date', 'penghasilan_tidak_teratur.kd_entitas')
-                    ->orderBy('penghasilan_tidak_teratur.kd_entitas')
                     ->orderBy('penghasilan_tidak_teratur.created_at', 'DESC')
                     ->paginate($limit);
 
@@ -252,7 +251,6 @@ class PenghasilanTidakTeraturRepository
                     }
                 })
                 ->groupBy('mst_tunjangan.id', 'penghasilan_tidak_teratur.created_at', 'penghasilan_tidak_teratur.kd_entitas')
-                ->orderBy('penghasilan_tidak_teratur.kd_entitas')
                 ->orderBy('penghasilan_tidak_teratur.created_at', 'DESC')
                 ->paginate($limit);
         return $data;

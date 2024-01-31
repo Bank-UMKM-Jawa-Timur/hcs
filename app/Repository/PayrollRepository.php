@@ -15,7 +15,7 @@ class PayrollRepository
     private $orderRaw;
     public function __construct() {
         $this->orderRaw = "
-            CASE 
+            CASE
             WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
             WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
             WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
@@ -136,8 +136,8 @@ class PayrollRepository
                                 'gaji' => function($query) use ($month, $year) {
                                     $query->select(
                                         'nip',
-                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                         'gj_pokok',
                                         'gj_penyesuaian',
                                         'tj_keluarga',
@@ -179,7 +179,7 @@ class PayrollRepository
                                             'penghasilan_tidak_teratur.nip',
                                             'penghasilan_tidak_teratur.id_tunjangan',
                                             'mst_tunjangan.nama_tunjangan',
-                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
                                             'penghasilan_tidak_teratur.kd_entitas',
                                             'penghasilan_tidak_teratur.tahun',
                                             'penghasilan_tidak_teratur.bulan',
@@ -195,7 +195,7 @@ class PayrollRepository
                                             'penghasilan_tidak_teratur.nip',
                                             'penghasilan_tidak_teratur.id_tunjangan',
                                             'mst_tunjangan.nama_tunjangan',
-                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
                                             'penghasilan_tidak_teratur.kd_entitas',
                                             'penghasilan_tidak_teratur.tahun',
                                             'penghasilan_tidak_teratur.bulan',
@@ -292,7 +292,7 @@ class PayrollRepository
                         ->select(
                             'insentif_kredit',
                             'insentif_penagihan',
-                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS UNSIGNED) AS total_pajak_insentif')
+                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS SIGNED) AS total_pajak_insentif')
                         )
                         ->where('nip', $karyawan->nip)
                         ->where('bulan', (int) $month)
@@ -457,7 +457,7 @@ class PayrollRepository
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                                         'gj_pokok',
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
@@ -495,12 +495,12 @@ class PayrollRepository
                                                 'pphDilunasi' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                                         DB::raw('SUM(total_pph) AS nominal'),
-                                                        DB::raw('CAST(SUM(insentif_kredit) AS UNSIGNED) AS insentif_kredit'),
-                                                        DB::raw('CAST(SUM(insentif_penagihan) AS UNSIGNED) AS insentif_penagihan'),
-                                                        DB::raw('CAST((SUM(insentif_kredit) + SUM(insentif_penagihan)) AS UNSIGNED) AS total_pajak_insentif')
+                                                        DB::raw('CAST(SUM(insentif_kredit) AS SIGNED) AS insentif_kredit'),
+                                                        DB::raw('CAST(SUM(insentif_penagihan) AS SIGNED) AS insentif_penagihan'),
+                                                        DB::raw('CAST((SUM(insentif_kredit) + SUM(insentif_penagihan)) AS SIGNED) AS total_pajak_insentif')
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('nip', $karyawan->nip)
@@ -995,8 +995,8 @@ class PayrollRepository
                                 'gaji' => function($query) use ($month, $year) {
                                     $query->select(
                                         'nip',
-                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                         'gj_pokok',
                                         'gj_penyesuaian',
                                         'tj_keluarga',
@@ -1038,7 +1038,7 @@ class PayrollRepository
                                             'penghasilan_tidak_teratur.nip',
                                             'penghasilan_tidak_teratur.id_tunjangan',
                                             'mst_tunjangan.nama_tunjangan',
-                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
                                             'penghasilan_tidak_teratur.kd_entitas',
                                             'penghasilan_tidak_teratur.tahun',
                                             'penghasilan_tidak_teratur.bulan',
@@ -1054,7 +1054,7 @@ class PayrollRepository
                                             'penghasilan_tidak_teratur.nip',
                                             'penghasilan_tidak_teratur.id_tunjangan',
                                             'mst_tunjangan.nama_tunjangan',
-                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
                                             'penghasilan_tidak_teratur.kd_entitas',
                                             'penghasilan_tidak_teratur.tahun',
                                             'penghasilan_tidak_teratur.bulan',
@@ -1140,7 +1140,7 @@ class PayrollRepository
                         ->select(
                             'insentif_kredit',
                             'insentif_penagihan',
-                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS UNSIGNED) AS total_pajak_insentif')
+                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS SIGNED) AS total_pajak_insentif')
                         )
                         ->where('nip', $karyawan->nip)
                         ->where('bulan', (int) $month)
@@ -1305,7 +1305,7 @@ class PayrollRepository
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                                         'gj_pokok',
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
@@ -1343,12 +1343,12 @@ class PayrollRepository
                                                 'pphDilunasi' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                                         DB::raw('SUM(total_pph) AS nominal'),
-                                                        DB::raw('CAST(SUM(insentif_kredit) AS UNSIGNED) AS insentif_kredit'),
-                                                        DB::raw('CAST(SUM(insentif_penagihan) AS UNSIGNED) AS insentif_penagihan'),
-                                                        DB::raw('CAST((SUM(insentif_kredit) + SUM(insentif_penagihan)) AS UNSIGNED) AS total_pajak_insentif')
+                                                        DB::raw('CAST(SUM(insentif_kredit) AS SIGNED) AS insentif_kredit'),
+                                                        DB::raw('CAST(SUM(insentif_penagihan) AS SIGNED) AS insentif_penagihan'),
+                                                        DB::raw('CAST((SUM(insentif_kredit) + SUM(insentif_penagihan)) AS SIGNED) AS total_pajak_insentif')
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('nip', $karyawan->nip)
@@ -1777,7 +1777,7 @@ class PayrollRepository
                         ->select(
                             'insentif_kredit',
                             'insentif_penagihan',
-                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS UNSIGNED) AS total_pajak_insentif')
+                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS SIGNED) AS total_pajak_insentif')
                         )
                         ->where('nip', $item->nip)
                         ->where('bulan', (int) $month)
@@ -1974,8 +1974,8 @@ class PayrollRepository
                                 'gaji' => function($query) use ($month, $year) {
                                     $query->select(
                                         'nip',
-                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                         'gj_pokok',
                                         'gj_penyesuaian',
                                         'tj_keluarga',
@@ -2017,7 +2017,7 @@ class PayrollRepository
                                             'penghasilan_tidak_teratur.nip',
                                             'penghasilan_tidak_teratur.id_tunjangan',
                                             'mst_tunjangan.nama_tunjangan',
-                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
                                             'penghasilan_tidak_teratur.kd_entitas',
                                             'penghasilan_tidak_teratur.tahun',
                                             'penghasilan_tidak_teratur.bulan',
@@ -2033,7 +2033,7 @@ class PayrollRepository
                                             'penghasilan_tidak_teratur.nip',
                                             'penghasilan_tidak_teratur.id_tunjangan',
                                             'mst_tunjangan.nama_tunjangan',
-                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS UNSIGNED) AS nominal'),
+                                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
                                             'penghasilan_tidak_teratur.kd_entitas',
                                             'penghasilan_tidak_teratur.tahun',
                                             'penghasilan_tidak_teratur.bulan',
@@ -2097,7 +2097,7 @@ class PayrollRepository
                         ->select(
                             'insentif_kredit',
                             'insentif_penagihan',
-                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS UNSIGNED) AS total_pajak_insentif')
+                            DB::raw('CAST((insentif_kredit + insentif_penagihan) AS SIGNED) AS total_pajak_insentif')
                         )
                         ->where('nip', $karyawan->nip)
                         ->where('bulan', (int) $month)
@@ -2262,7 +2262,7 @@ class PayrollRepository
                                                 'allGajiByKaryawan' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                                         'gj_pokok',
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
@@ -2300,12 +2300,12 @@ class PayrollRepository
                                                 'pphDilunasi' => function($query) use ($karyawan, $year) {
                                                     $query->select(
                                                         'nip',
-                                                        DB::raw("CAST(bulan AS UNSIGNED) AS bulan"),
-                                                        DB::raw("CAST(tahun AS UNSIGNED) AS tahun"),
+                                                        DB::raw("CAST(bulan AS SIGNED) AS bulan"),
+                                                        DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                                         DB::raw('SUM(total_pph) AS nominal'),
-                                                        DB::raw('CAST(SUM(insentif_kredit) AS UNSIGNED) AS insentif_kredit'),
-                                                        DB::raw('CAST(SUM(insentif_penagihan) AS UNSIGNED) AS insentif_penagihan'),
-                                                        DB::raw('CAST((SUM(insentif_kredit) + SUM(insentif_penagihan)) AS UNSIGNED) AS total_pajak_insentif')
+                                                        DB::raw('CAST(SUM(insentif_kredit) AS SIGNED) AS insentif_kredit'),
+                                                        DB::raw('CAST(SUM(insentif_penagihan) AS SIGNED) AS insentif_penagihan'),
+                                                        DB::raw('CAST((SUM(insentif_kredit) + SUM(insentif_penagihan)) AS SIGNED) AS total_pajak_insentif')
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('nip', $karyawan->nip)

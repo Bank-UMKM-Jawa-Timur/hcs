@@ -346,28 +346,42 @@ class PenghasilanTeraturController extends Controller
         ]);
     }
     public function editTunjanganNew(Request $request){
+        // return $request;
         try {
-            $item_id = $request->item_id;
-            $createdAt = $request->createdAt;
-            $tanggal = $request->tanggal;
-            $itemLamaId = DB::table('transaksi_tunjangan')->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $tanggal)
-                ->where('transaksi_tunjangan.created_at', $createdAt)->where('id_tunjangan', $request->id_tunjangan)->pluck('id');
+            $item_id = $request->has('item_id') ? $request->get('item_id') : null;
+            $createdAt = $request->has('createdAt') ? $request->get('createdAt') : null;
+            $tanggal = $request->has('tanggal') ? $request->get('tanggal') : null;
 
-            for ($i = 0; $i < count($itemLamaId); $i++) {
-                if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
-                    // hapus item yang tidak ada dalam $item_id
-                    DB::table('transaksi_tunjangan')->where('id', $itemLamaId[$i])->delete();
+            if ($item_id == null) {
+                $data = DB::table('transaksi_tunjangan')
+                            ->where('id_tunjangan', $request->get('id_tunjangan'))
+                            ->where('kd_entitas', $request->get('kd_entitas'))
+                            ->where('bulan', $request->get('bulan'))
+                            ->where('created_at', $createdAt)
+                            ->delete();
+                // return $data;
+            } else {
+                $itemLamaId = DB::table('transaksi_tunjangan')->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $tanggal)
+                                    ->where('transaksi_tunjangan.created_at', $createdAt)
+                                    ->where('id_tunjangan', $request->id_tunjangan)
+                                    ->pluck('id');
+                for ($i = 0; $i < count($itemLamaId); $i++) {
+                    if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
+                        // hapus item yang tidak ada dalam $item_id
+                        DB::table('transaksi_tunjangan')->where('id', $itemLamaId[$i])->delete();
+                    }
+                }
+
+                if (is_array($item_id)) {
+                    for ($i = 0; $i < count($item_id); $i++) {
+                        $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
+                        DB::table('transaksi_tunjangan')->where('id', $item_id[$i])->update([
+                            'nominal' => $nominal
+                        ]);
+                    }
                 }
             }
 
-            if (is_array($item_id)) {
-                for ($i = 0; $i < count($item_id); $i++) {
-                    $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
-                    DB::table('transaksi_tunjangan')->where('id', $item_id[$i])->update([
-                        'nominal' => $nominal
-                    ]);
-                }
-            }
 
             Alert::success('Success', 'Berhasil edit data penghasilan');
             return redirect()->route('penghasilan.import-penghasilan-teratur.index');
