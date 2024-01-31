@@ -166,7 +166,7 @@ class CheckHitungPPH
         $data->pengali_akhir = ($pengali_akhir / 100);
         $data->seharusnya = $seharusnya;
         $data->pph = $pph - $seharusnya->total_insentif;
-        $data->pph_akhir_bulan = $pphAkhirBulan;
+        $data->pph_akhir_bulan = $pphAkhirBulan - $seharusnya->total_insentif;
 
         return $data;
     }

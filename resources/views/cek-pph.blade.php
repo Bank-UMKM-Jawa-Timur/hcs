@@ -82,7 +82,7 @@
                         <th style="font-weight: bold">{{formatRupiahExcel($selisih_total,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($terutang_total,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header,0,true)}}</th>
-                        <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header - ($pph_seharusnya + $terutang_total),0,true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header - ($pph_sekarang + $terutang_total),0,true)}}</th>
                     </tr>
                 </thead>
                 <thead>
@@ -146,7 +146,7 @@
                             @php
                                 $row = $item['pph'];
                                 $selisih = $row->pph - $row->seharusnya->total_seharusnya;
-                                $selisih_pph_akhir_bulan = $row->pph_akhir_bulan - ($row->pph + $row->seharusnya->terutang);
+                                $selisih_pph_akhir_bulan = $row->pph_akhir_bulan - ($row->seharusnya->total_seharusnya + $row->seharusnya->terutang);
                             @endphp
                             <tr>
                                 <td>{{$loop->iteration}}</td>
@@ -198,7 +198,7 @@
                         <th style="font-weight: bold">{{formatRupiahExcel($selisih_total,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($terutang_total,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header,0,true)}}</th>
-                        <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header - ($pph_seharusnya + $terutang_total),0,true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header - ($pph_sekarang + $terutang_total),0,true)}}</th>
                     </tr>
                 </tfoot>
             </table>
