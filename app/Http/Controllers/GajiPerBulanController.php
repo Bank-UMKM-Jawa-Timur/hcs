@@ -121,11 +121,12 @@ class GajiPerBulanController extends Controller
             $limit = $request->has('page_length_proses') ? $request->get('page_length_proses') : 10;
         } else if ($request->has('tab') && $tab == 'final') {
             $limit = $request->has('page_length_final') ? $request->get('page_length_final') : 10;
+        } else {
+            $limit = $request->has('page_length_sampah') ? $request->get('page_length_sampah') : 10;
         }
 
         $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->get('q');
-
         $gajiRepo = new GajiPerBulanRepository;
         // Proses
         $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search);

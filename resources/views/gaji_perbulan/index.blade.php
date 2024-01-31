@@ -98,7 +98,8 @@
                     </div>
                     <div class="input-search">
                         <i class="ti ti-search"></i>
-                        <input type="search" placeholder="Search" name="q" id="q">
+                         <input type="search" placeholder="Search" name="q" id="q"
+                            value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
                     </div>
                 </div>
                 <table class="tables-stripped">
@@ -305,7 +306,7 @@
                     </div>
                     <div class="input-search">
                         <i class="ti ti-search"></i>
-                        <input type="search" placeholder="Search" name="q" id="q">
+                        <input type="search" placeholder="Search" name="q" id="q" value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
                     </div>
                 </div>
                 @php
@@ -435,157 +436,157 @@
                 </div>
                 </div>
             </div>
+            @if (auth()->user()->hasRole('admin'))
+                <div class="tab-content table-wrapping @if(\Request::get('tab') == 'sampah') block @else hidden @endif" id="sampah" id="sampah">
+                    <div class="layout-component">
+                        <div class="shorty-table">
+                            <label for="">Show</label>
+                            <select  name="page_length_sampah" id="page_length_sampah" class="page_length">
+                            <option value="10"
+                            @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
+                            10</option>
+                        <option value="20"
+                            @isset($_GET['page_length_sampah']) {{ $_GET['page_length_sampah'] == 20 ? 'selected' : '' }} @endisset>
+                            20</option>
+                        <option value="50"
+                            @isset($_GET['page_length_sampah']) {{ $_GET['page_length_sampah'] == 50 ? 'selected' : '' }} @endisset>
+                            50</option>
+                        <option value="100"
+                            @isset($_GET['page_length_sampah']) {{ $_GET['page_length_sampah'] == 100 ? 'selected' : '' }} @endisset>
+                            100</option>
+                            </select>
+                            <label for="">entries</label>
+                        </div>
+                        <div class="input-search">
+                            <i class="ti ti-search"></i>
+                            <input type="search" placeholder="Search" name="q" id="q" value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
+                        </div>
+                    </div>
+                    @php
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                        $page_length = isset($_GET['page_length_sampah']) ? $_GET['page_length_sampah'] : 10;
+                        $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
+                        $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
+                    @endphp
+                    <table class="tables-stripped">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">No</th>
+                                @if (auth()->user()->hasRole('admin'))
+                                    <th rowspan="2">Kantor</th>
+                                @endif
+                                <th rowspan="2">Tahun</th>
+                                <th rowspan="2">Bulan</th>
+                                <th rowspan="2">Tanggal</th>
+                                <th rowspan="2">File</th>
+                                <th colspan="4">Total</th>
+                                <th rowspan="2">Aksi</th>
+                            </tr>
+                            <tr>
+                                <th>Bruto</th>
+                                <th>Potongan</th>
+                                <th>Netto</th>
+                                <th>PPH21</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @php
+                            $i = 1;
+                            $total_bruto = 0;
+                            $total_potongan = 0;
+                            $total_netto = 0;
+                            $total_pph = 0;
+                        @endphp
+                        @forelse ($sampah as $item)
+                        @php
+                        $total_bruto += $item->bruto;
+                        $total_potongan += $item->grand_total_potongan;
+                        $total_netto += $item->netto;
+                        $total_pph += $item->total_pph;
+                        @endphp
+                        <tr>
+                            <td class="text-center">{{ $i++ }}</td>
+                            @if (auth()->user()->hasRole('admin'))
+                                <td class="text-center">{{ $item->kantor }}</td>
+                            @endif
+                            <td class="text-center">{{ $item->tahun }}</td>
+                            <td class="text-center">{{ $months[$item->bulan] }}</td>
+                            <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
+                            <td class="text-center flex justify-center gap-5">
+                                <a href="#" data-modal-id="rincian-modal" data-modal-toggle="modal" class="btn btn-warning btn-rincian"
+                                    data-batch_id="{{$item->id}}">Rincian</a>
+                                <a href="#" data-modal-id="payroll-modal" data-modal-toggle="modal" class="btn btn-success btn-payroll"
+                                    data-batch_id="{{$item->id}}">Payroll</a>
+                            </td>
+                            @if ($item->bruto == 0)
+                                <td class="text-center">-</td>
+                            @else
+                                <td class="text-right">
+                                    Rp {{number_format($item->bruto, 0, ',', '.')}}
+                                </td>
+                            @endif
+                            @if ($item->grand_total_potongan == 0)
+                                <td class="text-center">-</td>
+                            @else
+                                <td class="text-right">
+                                    Rp {{number_format($item->grand_total_potongan, 0, ',', '.')}}
+                                </td>
+                            @endif
+                            @if ($item->netto < 0)
+                                <td class="text-right">
+                                    Rp ({{number_format(str_replace('-', '', $item->netto), 0, ',', '.')}})
+                                </td>
+                            @elseif ($item->netto == 0)
+                                <td class="text-center">-</td>
+                            @else
+                                <td class="text-right">
+                                    Rp {{number_format($item->netto, 0, ',', '.')}}
+                                </td>
+                            @endif
+                            @if ($item->total_pph < 0)
+                                <td class="text-right">
+                                    Rp ({{number_format(str_replace('-', '', $item->total_pph), 0, ',', '.')}})
+                                </td>
+                            @elseif ($item->total_pph == 0)
+                                <td class="text-center">-</td>
+                            @else
+                                <td class="text-right">
+                                    Rp {{number_format($item->total_pph, 0, ',', '.')}}
+                                </td>
+                            @endif
+                            @if (auth()->user()->hasRole('admin'))
+                                <td>
+                                    <a href="#" class="btn btn-danger d-flex justify-center btn-restore"
+                                        data-batch_id="{{$item->id}}"
+                                        data-kantor="{{$item->kantor}}"
+                                        data-bulan="{{$item->bulan}}"
+                                        data-tahun="{{$item->tahun}}"
+                                        >Kembalikan</a>
+                                </td>
+                            @endif
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="{{auth()->user()->hasRole('admin') ? 11 : 10}}" class="text-center">Belum ada penghasilan yang telah dihapus.</td>
+                        </tr>
+                        @endforelse
+                        </tbody>
+                    </table>
+                    <div class="table-footer">
+                        <div class="showing">
+                        Showing {{$start}} to {{$end}} of {{$sampah->total()}} entries
+                        </div>
+                        <div>
+                        @if ($sampah instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                        {{ $sampah->links('pagination::tailwind') }}
+                        @endif
+                    </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </form>
 
-        {{-- @if (auth()->user()->hasRole('admin'))
-            <div class="tab-content table-wrapping @if(\Request::get('tab') == 'sampah') block @else hidden @endif" id="sampah" id="sampah">
-                <div class="layout-component">
-                    <div class="shorty-table">
-                        <label for="">Show</label>
-                        <select  name="page_length" id="page_length_final" class="page_length">
-                        <option value="10"
-                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
-                        10</option>
-                    <option value="20"
-                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>
-                        20</option>
-                    <option value="50"
-                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 50 ? 'selected' : '' }} @endisset>
-                        50</option>
-                    <option value="100"
-                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 100 ? 'selected' : '' }} @endisset>
-                        100</option>
-                        </select>
-                        <label for="">entries</label>
-                    </div>
-                    <div class="input-search">
-                        <i class="ti ti-search"></i>
-                        <input type="search" placeholder="Search" name="q" id="q">
-                    </div>
-                </div>
-                @php
-                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                    $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
-                    $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
-                    $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
-                @endphp
-                <table class="tables-stripped">
-                    <thead>
-                        <tr>
-                            <th rowspan="2">No</th>
-                            @if (auth()->user()->hasRole('admin'))
-                                <th rowspan="2">Kantor</th>
-                            @endif
-                            <th rowspan="2">Tahun</th>
-                            <th rowspan="2">Bulan</th>
-                            <th rowspan="2">Tanggal</th>
-                            <th rowspan="2">File</th>
-                            <th colspan="4">Total</th>
-                            <th rowspan="2">Aksi</th>
-                        </tr>
-                        <tr>
-                            <th>Bruto</th>
-                            <th>Potongan</th>
-                            <th>Netto</th>
-                            <th>PPH21</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @php
-                        $i = 1;
-                        $total_bruto = 0;
-                        $total_potongan = 0;
-                        $total_netto = 0;
-                        $total_pph = 0;
-                    @endphp
-                    @forelse ($sampah as $item)
-                    @php
-                    $total_bruto += $item->bruto;
-                    $total_potongan += $item->grand_total_potongan;
-                    $total_netto += $item->netto;
-                    $total_pph += $item->total_pph;
-                    @endphp
-                    <tr>
-                        <td class="text-center">{{ $i++ }}</td>
-                        @if (auth()->user()->hasRole('admin'))
-                            <td class="text-center">{{ $item->kantor }}</td>
-                        @endif
-                        <td class="text-center">{{ $item->tahun }}</td>
-                        <td class="text-center">{{ $months[$item->bulan] }}</td>
-                        <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
-                        <td class="text-center flex justify-center gap-5">
-                            <a href="#" data-modal-id="rincian-modal" data-modal-toggle="modal" class="btn btn-warning btn-rincian"
-                                data-batch_id="{{$item->id}}">Rincian</a>
-                            <a href="#" data-modal-id="payroll-modal" data-modal-toggle="modal" class="btn btn-success btn-payroll"
-                                data-batch_id="{{$item->id}}">Payroll</a>
-                        </td>
-                        @if ($item->bruto == 0)
-                            <td class="text-center">-</td>
-                        @else
-                            <td class="text-right">
-                                Rp {{number_format($item->bruto, 0, ',', '.')}}
-                            </td>
-                        @endif
-                        @if ($item->grand_total_potongan == 0)
-                            <td class="text-center">-</td>
-                        @else
-                            <td class="text-right">
-                                Rp {{number_format($item->grand_total_potongan, 0, ',', '.')}}
-                            </td>
-                        @endif
-                        @if ($item->netto < 0)
-                            <td class="text-right">
-                                Rp ({{number_format(str_replace('-', '', $item->netto), 0, ',', '.')}})
-                            </td>
-                        @elseif ($item->netto == 0)
-                            <td class="text-center">-</td>
-                        @else
-                            <td class="text-right">
-                                Rp {{number_format($item->netto, 0, ',', '.')}}
-                            </td>
-                        @endif
-                        @if ($item->total_pph < 0)
-                            <td class="text-right">
-                                Rp ({{number_format(str_replace('-', '', $item->total_pph), 0, ',', '.')}})
-                            </td>
-                        @elseif ($item->total_pph == 0)
-                            <td class="text-center">-</td>
-                        @else
-                            <td class="text-right">
-                                Rp {{number_format($item->total_pph, 0, ',', '.')}}
-                            </td>
-                        @endif
-                        @if (auth()->user()->hasRole('admin'))
-                            <td>
-                                <a href="#" class="btn btn-danger d-flex justify-center btn-restore"
-                                    data-batch_id="{{$item->id}}"
-                                    data-kantor="{{$item->kantor}}"
-                                    data-bulan="{{$item->bulan}}"
-                                    data-tahun="{{$item->tahun}}"
-                                    >Kembalikan</a>
-                            </td>
-                        @endif
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="{{auth()->user()->hasRole('admin') ? 11 : 10}}" class="text-center">Belum ada penghasilan yang telah dihapus.</td>
-                    </tr>
-                    @endforelse
-                    </tbody>
-                </table>
-                <div class="table-footer">
-                    <div class="showing">
-                    Showing {{$start}} to {{$end}} of {{$final_list->total()}} entries
-                    </div>
-                    <div>
-                    @if ($final_list instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                    {{ $final_list->links('pagination::tailwind') }}
-                    @endif
-                </div>
-                </div>
-            </div>
-        @endif --}}
 
 </div>
 <form id="form-final" action="{{route('gaji_perbulan.proses_final')}}" method="post">
@@ -596,54 +597,85 @@
 
 @push('extraScript')
 <script>
-        $(document).ready(function() {
-            refreshPagination();
-            $('#page_length_proses, #page_length_final').on('change', function(e) {
-                e.preventDefault();
-                // Set the active tab value before submitting the form
-                $('#tab').val($('.btn-tab.active-tab').data('tab'));
-                $('#form-filter').submit();
-            });
-
-            $('#form-filter').on('submit', function() {
-                $('.loader-wrapper').css('display: none;')
-                $('.loader-wrapper').addClass('d-block')
-                $(".loader-wrapper").fadeOut("slow");
-            })
-
-            $(".btn-tab").on("click", function (e) {
-                $('#tab').val($(this).data('tab'))
-                let tab = $(this).data('tab');
-                if (tab == 'final') {
-                    $('.page_length_proses').prop('disabled', 'disabled');
-                    $('#page_length_final').prop('disabled', false);
-                    // $('#form-filter').submit();
-                    refreshPagination();
-                }else if (tab == 'proses') {
-                    $('.page_length_proses').prop('disabled', false);
-                    $('#page_length_final').prop('disabled', 'disabled');
-                    refreshPagination();
-                    // $('#form-filter').submit();
-
-                }else{
-
-                }
-
-
-            })
-            // Adjust pagination url
-            function updateQueryStringParameter(uri, key, value) {
-                var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-                var separator = uri.indexOf('?') !== -1 ? "&" : "?";
-                if (uri.match(re)) {
-                    return uri.replace(re, '$1' + key + "=" + value + '$2');
-                }
-                else {
-                    return uri + separator + key + "=" + value;
-                }
-            }
-
+    $(document).ready(function() {
+        $('#page_length_proses, #page_length_final, #page_length_sampah').on('change', function(e) {
+            e.preventDefault();
+            // Set the active tab value before submitting the form
+            $('#tab').val($('.btn-tab.active-tab').data('tab'));
+            $('#form-filter').submit();
         });
+        let tab = $('.btn-tab.active-tab').data('tab');
+        if (tab == 'final') {
+            $('.page_length_proses').prop('disabled', 'disabled');
+            $('#page_length_final').prop('disabled', false);
+            $("#myTabContent .hidden").find('#q').prop('disabled', 'disabled');
+            $("#myTabContent .block").find('#q').prop('disabled', false);
+        }else if (tab == 'proses') {
+            $('.page_length_proses').prop('disabled', false);
+            $('#page_length_final').prop('disabled', 'disabled');
+            $('#page_length_sampah').prop('disabled', 'disabled');
+            $("#myTabContent .hidden").find('#q').prop('disabled', 'disabled');
+            $("#myTabContent .block").find('#q').prop('disabled', false);
+        }else{
+            $('.page_length_proses').prop('disabled', 'disabled');
+            $('#page_length_final').prop('disabled', 'disabled');
+            $('#page_length_sampah').prop('disabled', false);
+            $("#myTabContent .hidden").find('#q').prop('disabled', 'disabled');
+            $("#myTabContent .block").find('#q').prop('disabled', false);
+
+        }
+        $('#q').on('change',function() {
+            $('#tab').val($('.btn-tab.active-tab').data('tab'));
+            $('#form-filter').submit();
+
+        })
+
+        $('#form-filter').on('submit', function() {
+            $('.loader-wrapper').css('display: none;')
+            $('.loader-wrapper').addClass('d-block')
+            $(".loader-wrapper").fadeOut("slow");
+        })
+
+        $(".btn-tab").on("click", function (e) {
+            $('#tab').val($(this).data('tab'))
+            let tab = $(this).data('tab');
+            if (tab == 'final') {
+                $('.page_length_proses').prop('disabled', 'disabled');
+                $('#page_length_final').prop('disabled', false);
+                $("#myTabContent .hidden").find('#q').prop('disabled', 'disabled');
+                $("#myTabContent .block").find('#q').prop('disabled', false);
+                // $('#form-filter').submit();
+                refreshPagination();
+            }else if (tab == 'proses') {
+                $('.page_length_proses').prop('disabled', false);
+                $('#page_length_final').prop('disabled', 'disabled');
+                $("#myTabContent .hidden").find('#q').prop('disabled', 'disabled');
+                $("#myTabContent .block").find('#q').prop('disabled', false);
+                refreshPagination();
+                // $('#form-filter').submit();
+            }else{
+                $('.page_length_proses').prop('disabled', 'disabled');
+                $('#page_length_final').prop('disabled', 'disabled');
+                $('#page_length_sampah').prop('disabled', false);
+                $("#myTabContent .hidden").find('#q').prop('disabled', 'disabled');
+                $("#myTabContent .block").find('#q').prop('disabled', false);
+                refreshPagination();
+            }
+        })
+        refreshPagination();
+        // Adjust pagination url
+        function updateQueryStringParameter(uri, key, value) {
+            var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+            var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+            if (uri.match(re)) {
+                return uri.replace(re, '$1' + key + "=" + value + '$2');
+            }
+            else {
+                return uri + separator + key + "=" + value;
+            }
+        }
+
+    });
         function refreshPagination() {
             var btn_pagination = $("#myTabContent .block .pagination").find("a");
             var page_url = window.location.href;
