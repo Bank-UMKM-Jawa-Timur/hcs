@@ -85,13 +85,11 @@ class CheckPPHController extends Controller
                 $nama_cabang = "Pusat";
             }
         }
-        // return $result;
 
         return view('cek-pph-new', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
     }
 
     public function update(Request $request) {
-        // return $request;
         DB::beginTransaction();
         try {
             $bulan = (int) $request->get('bulan');
@@ -119,8 +117,6 @@ class CheckPPHController extends Controller
                 $new_selisih += $nominal - $old_terutang;
                 $cek_selisih += $new_selisih + $old_terutang;
 
-                // return ['old_terutang' => $old_terutang, 'new_terutang' => $new_terutang, 'new_selisih' => $new_selisih, 'cek_selisih' => $cek_selisih];
-
                 if ($cek_selisih + $new_terutang != 0) {
                     if ($nominal != 0 ) {
                         if ($current) {
@@ -135,7 +131,6 @@ class CheckPPHController extends Controller
                         }
                     }
                 }
-
             }
 
             DB::commit();

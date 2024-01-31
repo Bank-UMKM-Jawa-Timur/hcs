@@ -67,7 +67,7 @@ class CheckHitungPPH
 
         // bruto akhir bulan
         $tanggal_filter_full_awal = $tahun . '-' . $bulan . '-' . '26';
-        $tanggal_filter_full_akhir = $tahun . '-' . $bulan . '-' . '31';
+        $tanggal_filter_full_akhir = $tahun . '-' . $bulan . '-' . '33';
         $penghasilanTidakRutinFull += DB::table('penghasilan_tidak_teratur')
                                     ->select('nominal')
                                     ->where('nip', $karyawan->nip)
