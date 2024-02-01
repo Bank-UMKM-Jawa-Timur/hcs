@@ -98,8 +98,8 @@
                     </div>
                     <div class="input-search">
                         <i class="ti ti-search"></i>
-                         <input type="search" placeholder="Search" name="q" id="q"
-                            value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
+                         <input type="search" class="q-proses" placeholder="Search" name="q_proses" id="q"
+                            value="{{ isset($_GET['q_proses']) ? $_GET['q_proses'] : '' }}">
                     </div>
                 </div>
                 <table class="tables-stripped">
@@ -306,7 +306,7 @@
                     </div>
                     <div class="input-search">
                         <i class="ti ti-search"></i>
-                        <input type="search" placeholder="Search" name="q" id="q" value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
+                        <input type="search" class="q-final" placeholder="Search" name="q_final" id="q" value="{{ isset($_GET['q_final']) ? $_GET['q_final'] : '' }}">
                     </div>
                 </div>
                 @php
@@ -459,7 +459,7 @@
                         </div>
                         <div class="input-search">
                             <i class="ti ti-search"></i>
-                            <input type="search" placeholder="Search" name="q" id="q" value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}">
+                            <input type="search" class="q-sampah" placeholder="Search" name="q_sampah" id="q" value="{{ isset($_GET['q_sampah']) ? $_GET['q_sampah'] : '' }}">
                         </div>
                     </div>
                     @php
@@ -624,7 +624,17 @@
             $("#myTabContent .block").find('#q').prop('disabled', false);
 
         }
-        $('#q').on('change',function() {
+        $('.q-proses').on('change',function() {
+            $('#tab').val($('.btn-tab.active-tab').data('tab'));
+            $('#form-filter').submit();
+
+        })
+        $('.q-final').on('change',function() {
+            $('#tab').val($('.btn-tab.active-tab').data('tab'));
+            $('#form-filter').submit();
+
+        })
+        $('.q-sampah').on('change',function() {
             $('#tab').val($('.btn-tab.active-tab').data('tab'));
             $('#form-filter').submit();
 
@@ -687,11 +697,15 @@
             customParam += "&tab=" + $('#tab').val();
             if (tab == 'proses') {
                 customParam += "&page_length_proses=" + $('.page_length_proses').val();
-            } else {
+                customParam += "&q_proses=" + $('#q').val();
+            } else if(tab == 'final'){
                 customParam += "&page_length_final=" + $('.page_length_final').val();
+                customParam += "&q_final=" + $('#q').val();
+            } else {
+                customParam += "&page_length_final=" + $('.page_length_sampah').val();
+                customParam += "&q_sampah=" + $('#q').val();
 
             }
-            customParam += "&q=" + $('#q').val();
 
             btn_pagination.each(function (i, obj) {
                 // Clone the original href to avoid modifying the original link
