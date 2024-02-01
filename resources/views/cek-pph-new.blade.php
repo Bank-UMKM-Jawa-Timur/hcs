@@ -14,15 +14,24 @@
             border-collapse: separate;
             border-spacing: 0px;
         }
-        
+
         table thead {
-            position: sticky; 
+            position: sticky;
             top: 0px;
             text-align: center;
             font-weight: normal;
             font-size: 18px;
-        } 
-        
+            z-index: 999;
+        }
+
+        .left{
+            position: -webkit-sticky;
+            position: sticky;
+            left: 0;
+            background-color: #fff;
+            font-size: 18px;
+        }
+
         table th, table td {
             padding: 15px;
             padding-top: 10px;
@@ -33,6 +42,8 @@
             font-size: 15px;
             padding-left: 20px;
         }
+
+
     </style>
 @endpush
 @section('content')
@@ -111,10 +122,10 @@
                             <th colspan="9" style="background-color: #7FFF00">Akhir Bulan</th>
                         </tr>
                         <tr>
-                            <th rowspan="2">No</th>
-                            <th rowspan="2">NIP</th>
-                            <th rowspan="2">Nama</th>
-                            <th rowspan="2">PTKP</th>
+                            <th rowspan="2" style="background-color: #fff">No</th>
+                            <th rowspan="2" style="background-color: #fff" class="left">NIP</th>
+                            <th rowspan="2" style="background-color: #fff">Nama</th>
+                            <th rowspan="2" style="background-color: #fff">PTKP</th>
                         </tr>
                         <tr>
                             {{--  Database  --}}
@@ -224,7 +235,7 @@
                                 @endphp
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td>{{str_contains($row->nip, 'U') ? '-' : $row->nip}}</td>
+                                    <td class="left">{{str_contains($row->nip, 'U') ? '-' : $row->nip}}</td>
                                     <td>{{$row->nama}}</td>
                                     <td>{{$row->ptkp->kode}}</td>
                                     {{--  Database  --}}

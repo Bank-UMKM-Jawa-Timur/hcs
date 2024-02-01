@@ -55,7 +55,7 @@
         position: sticky;
         left: 255px;
         z-index: 2;
-       background-color: #fff;
+        background-color: #fff;
     }
 
     .table-scroll .thead_pertama th:nth-child(4) {

@@ -364,7 +364,9 @@ class PenghasilanTeraturController extends Controller
                 $itemLamaId = DB::table('transaksi_tunjangan')->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $tanggal)
                                     ->where('transaksi_tunjangan.created_at', $createdAt)
                                     ->where('id_tunjangan', $request->id_tunjangan)
-                                    ->pluck('id');
+                                    ->where('kd_entitas', $request->get('kd_entitas'))
+                                    ->pluck('id')
+                                    ->toArray();
                 for ($i = 0; $i < count($itemLamaId); $i++) {
                     if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
                         // hapus item yang tidak ada dalam $item_id
@@ -376,7 +378,8 @@ class PenghasilanTeraturController extends Controller
                     for ($i = 0; $i < count($item_id); $i++) {
                         $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
                         DB::table('transaksi_tunjangan')->where('id', $item_id[$i])->update([
-                            'nominal' => $nominal
+                            'nominal' => $nominal,
+                            'is_lock' => 1
                         ]);
                     }
                 }

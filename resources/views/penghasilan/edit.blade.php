@@ -34,6 +34,8 @@
                 <input type="hidden" name="id_tunjangan" value="{{Request()->get('idTunjangan')}}">
                 <input type="hidden" name="createdAt" value="{{Request()->get('tanggal')}}">
                 <input type="hidden" name="bulan" value="{{Request()->get('bulan')}}">
+                <input type="hidden" name="kd_entitas" value="{{Request()->get('kdEntitas')}}">
+                <input type="hidden" name="temp_nip[]" id="temp_nip">
                 <button type="submit" class="btn btn-primary mb-2">Simpan</button>
                 <table class="tables" id="table_item">
                     <thead>
@@ -58,7 +60,7 @@
                                         <input type="hidden" name="item_id[]" value="{{$item->id_penghasilan}}">
                                 </td>
                                 <td>
-                                    <button id="btn-hapus" type="button" class="btn btn-danger btn-minus">-</button>
+                                    <button id="btn-hapus" type="button" data-nip="{{$item->nip}}" class="btn btn-danger btn-minus">-</button>
                                 </td>
                             </tr>
                         @empty
@@ -74,7 +76,6 @@
 @endsection
 @push('extraScript')
     <script>
-
         function formatRupiahTwo(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
@@ -88,8 +89,21 @@
             });
         }
 
-        $("#table_item").on('click', '.btn-minus', function() {
-            $(this).closest('tr').remove();
-        })
+        var temp_nip_array = [];
+
+        $(document).ready(function() {
+            $("#table_item").on('click', '.btn-minus', function() {
+                const nip = $(this).data("nip");
+                console.log(nip);
+
+                $("#temp_nip").val('');
+                temp_nip_array.push(nip);
+
+                console.log(temp_nip_array);
+                $("#temp_nip").val(JSON.stringify(temp_nip_array));
+
+                $(this).closest('tr').remove();
+            });
+        });
     </script>
 @endpush

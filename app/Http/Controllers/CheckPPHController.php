@@ -38,6 +38,7 @@ class CheckPPHController extends Controller
                         ->select('kd_cabang')
                         ->pluck('kd_cabang')
                         ->toArray();
+        $entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
         $cabang = \DB::table('mst_cabang')
                         ->select('kd_cabang', 'nama_cabang')
                         ->orderBy('kd_cabang')
@@ -49,29 +50,39 @@ class CheckPPHController extends Controller
                 ->orderByRaw($orderRaw)
                 ->get();
         } else {
-            if ($kd_entitas == '000') {
+            if ($request->has('kd_entitas')) {
+                if ($kd_entitas == '000') {
+                    $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
+                                            ->where(function($query) use ($kd_cabang) {
+                                                $query->whereNotIn('kd_entitas', $kd_cabang)
+                                                    ->orWhereNull('kd_entitas');
+                                            })
+                                            ->orderByRaw($orderRaw)
+                                            ->get();
+                }
+                else {
+                    $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
+                                            ->where('kd_entitas', $kd_entitas)
+                                            ->orderByRaw($orderRaw)
+                                            ->get();
+                }
+            } else {
                 $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                                        ->where(function($query) use ($kd_cabang) {
-                                            $query->whereNotIn('kd_entitas', $kd_cabang)
-                                                ->orWhereNull('kd_entitas');
-                                        })
-                                        ->orderByRaw($orderRaw)
-                                        ->get();
-            }
-            else {
-                $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                                        ->where('kd_entitas', $kd_entitas)
-                                        ->orderByRaw($orderRaw)
-                                        ->get();
+                ->where(function ($query) use ($kd_cabang) {
+                    $query->whereNotIn('kd_entitas', $kd_cabang)
+                    ->orWhereNull('kd_entitas');
+                })
+                    ->orderByRaw($orderRaw)
+                    ->get();
             }
         }
         $result = [];
-        if ($request->has('kd_entitas')) {
+        // if ($request->has('kd_entitas')) {
             foreach ($karyawan as $key => $value) {
                 $data = CheckHitungPPH::checkPPH58($tanggal, $bulan, $tahun, $value);
                 array_push($result, $data);
             }
-        }
+        // }
 
         if (auth()->user()->hasRole('cabang')) {
             $dataC = DB::table('mst_cabang')->where('kd_cabang', auth()->user()->kd_cabang)->first();
@@ -85,13 +96,11 @@ class CheckPPHController extends Controller
                 $nama_cabang = "Pusat";
             }
         }
-        // return $result;
 
         return view('cek-pph-new', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
     }
 
     public function update(Request $request) {
-        // return $request;
         DB::beginTransaction();
         try {
             $bulan = (int) $request->get('bulan');
@@ -119,8 +128,6 @@ class CheckPPHController extends Controller
                 $new_selisih += $nominal - $old_terutang;
                 $cek_selisih += $new_selisih + $old_terutang;
 
-                // return ['old_terutang' => $old_terutang, 'new_terutang' => $new_terutang, 'new_selisih' => $new_selisih, 'cek_selisih' => $cek_selisih];
-
                 if ($cek_selisih + $new_terutang != 0) {
                     if ($nominal != 0 ) {
                         if ($current) {
@@ -135,7 +142,6 @@ class CheckPPHController extends Controller
                         }
                     }
                 }
-
             }
 
             DB::commit();

@@ -131,7 +131,7 @@ class PenghasilanTidakTeraturRepository
                     ->orderBy('mst_tunjangan.id', 'ASC')
                     ->where('penghasilan_tidak_teratur.id_tunjangan',$id)
                     ->where(DB::raw('DATE(penghasilan_tidak_teratur.created_at)'),$format_tgl)
-                    ->paginate($limit);
+                    ->get();
 
         return $bonus;
     }
@@ -245,7 +245,7 @@ class PenghasilanTidakTeraturRepository
                         ->orWhere('nominal', 'like', "%$search%")
                         ->orWhere('mst_cabang.nama_cabang', 'like', "%$search%");
                 })
-                ->where(function ($query) use ($kd_cabang, $kode_cabang_arr) {
+                ->when($kd_cabang, function ($query) use ($kd_cabang, $cabangRepo, $kode_cabang_arr) {
                     if ($kd_cabang != 'pusat') {
                         $query->where('mst_karyawan.kd_entitas', $kd_cabang);
                     }

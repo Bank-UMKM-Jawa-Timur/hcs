@@ -74,7 +74,7 @@
         </form>
         @endcan
     </div>
-    
+
     <div class="card mt-5 space-y-5">
         @php
             $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
@@ -82,7 +82,7 @@
             $status = 'TK';
             if ($karyawan->status_ptkp) {
                 $status = $karyawan->status_ptkp;
-            } 
+            }
             else {
                 if ($karyawan->status == 'K' || $karyawan->status == 'Kawin') {
                     $anak = DB::table('mst_karyawan')
