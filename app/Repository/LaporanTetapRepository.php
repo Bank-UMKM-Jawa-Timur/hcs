@@ -976,7 +976,6 @@ class LaporanTetapRepository
                         ->where('mst_tunjangan.kategori', 'bonus')
                         ->where('penghasilan_tidak_teratur.tahun', $year)
                         ->where('penghasilan_tidak_teratur.bulan', $month);
-                        // ->groupBy('penghasilan_tidak_teratur.id_tunjangan');
                 },
                 'potonganGaji' => function($query) {
                     $query->select(
