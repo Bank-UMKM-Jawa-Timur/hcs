@@ -65,12 +65,12 @@
                 <div class="input-box">
                     <label for="">SK Pemberhentian <span class="text-red-500 text-sm">*(Pdf)</span></label>
                     <div class="custom-file">
-                        <input type="file" class="form-input @error('sk_pemberhentian') is-invalid @enderror" name="sk_pemberhentian" id="sk_pemberhentian" accept="application/pdf">
-                        {{-- <label for="sk_pemberhentian" class="custom-file-label">Pilih File (PDF)</label> --}}
+                        <input type="file" class="form-input only-pdf limit-size-10 @error('sk_pemberhentian') is-invalid @enderror" name="sk_pemberhentian" id="sk_pemberhentian" accept="application/pdf">
                         @error('sk_pemberhentian')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+                    <span class="text-red-500 m-0 error-msg" style="display: none"></span>
                 </div>
             </div>
             <div class="row">
