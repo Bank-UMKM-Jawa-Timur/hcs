@@ -288,7 +288,7 @@ class BonusController extends Controller
         $page = $request->has('page') ? $request->get('page') : 1;
 
         $search = $request->get('q');
-        $data = $this->repo->getDetailBonus($search, $limit, $page, $id, $tgl, $kd_entitas);
+        $data = $this->repo->getEditBonus($search, $limit, $page, $id, $tgl, $kd_entitas);
         $tunjangan = $this->repo->getNameTunjangan($id);
         $nameCabang = $this->repo->getNameCabang($kd_entitas);
 
@@ -390,7 +390,8 @@ class BonusController extends Controller
                     for ($i = 0; $i < count($item_id); $i++) {
                         $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
                         DB::table('penghasilan_tidak_teratur')->where('id', $item_id[$i])->update([
-                            'nominal' => $nominal
+                            'nominal' => $nominal,
+                            'is_lock' => 1
                         ]);
                     }
                 }

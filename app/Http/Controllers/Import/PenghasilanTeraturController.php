@@ -378,7 +378,8 @@ class PenghasilanTeraturController extends Controller
                     for ($i = 0; $i < count($item_id); $i++) {
                         $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
                         DB::table('transaksi_tunjangan')->where('id', $item_id[$i])->update([
-                            'nominal' => $nominal
+                            'nominal' => $nominal,
+                            'is_lock' => 1
                         ]);
                     }
                 }

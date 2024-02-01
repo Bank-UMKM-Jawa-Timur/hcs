@@ -604,6 +604,7 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
             return view('roles.forbidden');
         }
@@ -1012,7 +1013,8 @@ class PenghasilanTidakTeraturController extends Controller
                     for ($i = 0; $i < count($item_id); $i++) {
                         $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
                         DB::table('penghasilan_tidak_teratur')->where('id', $item_id[$i])->update([
-                            'nominal' => $nominal
+                            'nominal' => $nominal,
+                            'is_lock' => 1
                         ]);
                     }
                 }
