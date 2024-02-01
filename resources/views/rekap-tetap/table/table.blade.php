@@ -1,16 +1,16 @@
 @php
     $colspanBonus = 3;
     if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0) {
-        $colspanBonus += 1;
+        $colspanBonus += 2;
     }
     if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0) {
-        $colspanBonus += 1;
+        $colspanBonus += 2;
     }
     if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0) {
-        $colspanBonus += 1;
+        $colspanBonus += 2;
     }
     if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0) {
-        $colspanBonus += 1;
+        $colspanBonus += 2;
     }
 @endphp
 
@@ -42,9 +42,7 @@
             <th class="text-center">PINDAH TUGAS</th>
             <th class="text-center">THR</th>
             <th class="text-center">DANA<br>PENDIDIKAN</th>
-            {{-- <th class="text-center">TAMBAHAN<br>PENGHASILAN</th> --}}
             <th class="text-center">PENGHARGAAN<br>KINERJA</th>
-            {{-- <th class="text-center">REKREASI</th> --}}
             @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
                 <th colspan="2" class="text-center">NATARU</th>
             @endif
@@ -107,7 +105,6 @@
             $totalSPDPendidikan = 0;
             $totalSPDPindahTugas = 0;
             $totalTambahanPenghasilan = 0;
-            $totalRekreasi = 0;
             $totalBrutoNataru = 0;
             $totalPPHNataru = 0;
             $totalBrutoJaspro = 0;
@@ -136,6 +133,10 @@
         @endphp
         @forelse ($data as $key => $item)
             @php
+                $nip = $item->nip ? $item->nip : '-';
+                if (str_contains($nip, 'U')) {
+                    $nip = '-';
+                }
                 $gaji = $item->gaji->total_gaji ?? 0;
                 $uangMakan = $item->gaji->uang_makan ?? 0;
                 $pulsa = $item->gaji->tj_pulsa ?? 0;
@@ -187,12 +188,6 @@
                     if ($value->id_tunjangan == 21) {
                         $spdPindahTugas += $value->nominal;
                     }
-                    if ($value->id_tunjangan == 33) {
-                        $tambahanPenghasilan += $value->nominal;
-                    }
-                    if ($value->id_tunjangan == 33) {
-                        $rekreasi += $value->nominal;
-                    }
                 }
 
                 foreach ($item->tunjanganTidakTetap as $value) {
@@ -205,11 +200,20 @@
                     if ($value->id_tunjangan == 22) {
                         $brutoTHR += $value->nominal;
                     }
+                    if ($value->id_tunjangan == 23) {
+                        $brutoJaspro += $value->nominal;
+                    }
                     if ($value->id_tunjangan == 24) {
                         $brutoDanaPendidikan += $value->nominal;
                     }
+                    if ($value->id_tunjangan == 26) {
+                        $tambahanPenghasilan += $value->nominal;
+                    }
                     if ($value->id_tunjangan == 28) {
                         $brutoPenghargaanKinerja += $value->nominal;
+                    }
+                    if ($value->id_tunjangan == 33) {
+                        $rekreasi += $value->nominal;
                     }
                 }
 
@@ -251,8 +255,8 @@
                 $totalBrutoNataru += $brutoNataru;
                 $totalPPHNataru += $pphNataru;
                 $totalBrutoJaspro += $brutoJaspro;
-                $totalTambahanPenghasilan += $tambahanPenghasilan;
-                $totalRekreasi += $rekreasi;
+                $totalBrutoTambahanPenghasilan += $tambahanPenghasilan;
+                $totalBrutoRekreasi += $rekreasi;
                 $totalPPHJaspro += $pphJaspro;
                 $totalPPHTambahanPenghasilan += $pphTambahanPenghasilan;
                 $totalPPHRekreasi += $pphRekreasi;
@@ -266,7 +270,7 @@
             @endphp
             <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
-                <td>{{ $item->nip ? $item->nip : '-' }}</td>
+                <td>{{ $nip }}</td>
                 <td>{{ $item->npwp ? $item->npwp : '-' }}</td>
                 <td>{{ $item->nama_karyawan }}</td>
                 <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->total_gaji ?? 0, 0, true) : formatRupiahExcel($item->gj_pokok ?? 0, 0, true) }}</td>

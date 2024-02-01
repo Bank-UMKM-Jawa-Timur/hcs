@@ -29,7 +29,7 @@
         /* width: 120px; */
         left: 46px;
         z-index: 2;
-       background-color: #fff;
+        background-color: #fff;
     }
 
     .table-scroll .thead_pertama th:nth-child(2) {
@@ -43,7 +43,7 @@
         position: sticky;
         left: 116px;
         z-index: 2;
-       background-color: #fff;
+        background-color: #fff;
     }
 
     .table-scroll .thead_pertama th:nth-child(3) {
@@ -55,7 +55,7 @@
         position: sticky;
         left: 255px;
         z-index: 2;
-       background-color: #fff;
+        background-color: #fff;
     }
 
     .table-scroll .thead_pertama th:nth-child(4) {
@@ -151,13 +151,11 @@
                             @if (auth()->user()->hasRole(['kepegawaian','hrd','admin']))
                             <div class="input-box">
                                 <label for="selectfield">Cabang</label>
-                                <select name="cabang" class="form-input" required>
+                                <select name="cabang" id="cabang" class="form-input pt-2" required>
                                     <option value="">-- Pilih Cabang --</option>
                                     @foreach ($cabang as $item)
-                                    @if ($item->kd_cabang != '000')
-                                    <option value="{{ $item->kd_cabang }}" {{ $item->kd_cabang == Request('cabang') ?
-                                        'selected' : '' }}>{{ $item->nama_cabang }}</option>
-                                    @endif
+                                        <option value="{{ $item->kd_cabang }}" {{ $item->kd_cabang == Request('cabang') ?
+                                            'selected' : '' }}>{{ $item->nama_cabang }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -241,107 +239,108 @@
 
 @push('script')
 <script>
+    $('#cabang').select2()
     var selected_kantor = $('#kantor').val()
-        if (selected_kantor == '0' || selected_kantor == 'pusat') {
-            // Hide cabang
-            $('.cabang-input').addClass('d-none')
-        }
-        else {
-            // Show cabang
-            $('.cabang-input').removeClass('d-none')
-        }
+    if (selected_kantor == '0' || selected_kantor == 'pusat') {
+        // Hide cabang
+        $('.cabang-input').addClass('d-none')
+    }
+    else {
+        // Show cabang
+        $('.cabang-input').removeClass('d-none')
+    }
 
-        $('#kantor').on('change', function() {
-            $('#btn-download').addClass('d-none')
-        })
+    $('#kantor').on('change', function() {
+        $('#btn-download').addClass('d-none')
+    })
 
-        $('#cabang').on('change', function() {
-            $('#btn-download').addClass('d-none')
-        })
+    $('#cabang').on('change', function() {
+        $('#btn-download').addClass('d-none')
+    })
 
-        $('#bulan').on('change', function() {
-            $('#btn-download').addClass('d-none')
-        })
+    $('#bulan').on('change', function() {
+        $('#btn-download').addClass('d-none')
+    })
 
-        $('#tahun').on('change', function() {
-            $('#btn-download').addClass('d-none')
-        })
+    $('#tahun').on('change', function() {
+        $('#btn-download').addClass('d-none')
+    })
 
-        $('#kategori').on('change', function() {
-            $('#btn-download').addClass('d-none')
-        })
+    $('#kategori').on('change', function() {
+        $('#btn-download').addClass('d-none')
+    })
 
-        const formatRupiahPayroll = (angka) => {
-            let reverse = angka.toString().split('').reverse().join('');
-            let ribuan = reverse.match(/\d{1,3}/g);
-            ribuan = ribuan.join('.').split('').reverse().join('');
-            return `${ribuan}`;
-        }
+    const formatRupiahPayroll = (angka) => {
+        let reverse = angka.toString().split('').reverse().join('');
+        let ribuan = reverse.match(/\d{1,3}/g);
+        ribuan = ribuan.join('.').split('').reverse().join('');
+        return `${ribuan}`;
+    }
 
-        $('.show-data').on('click',function(e) {
-            const targetId = $(this).data("target-id");
-            const data = $(this).data('json');
-            $('#table-tunjangan-tidak > tbody').empty();
-            $('#table-tunjangan-total-tidak thead').empty();
+    $('.show-data').on('click',function(e) {
+        const targetId = $(this).data("target-id");
+        const data = $(this).data('json');
+        $('#table-tunjangan-tidak > tbody').empty();
+        $('#table-tunjangan-total-tidak thead').empty();
 
-            $('#table-tunjangan > tbody').empty();
-            $('#table-tunjangan-total thead ').empty();
+        $('#table-tunjangan > tbody').empty();
+        $('#table-tunjangan-total thead ').empty();
 
-            $('#nip').html(`${data.nip}`)
-            $('#nama').html(`${data.nama_karyawan}`)
-            $('#no_rekening').html(`${data.no_rekening != null ? data.no_rekening : '-'}`)
+        $('#nip').html(`${data.nip}`)
+        $('#nama').html(`${data.nama_karyawan}`)
+        $('#no_rekening').html(`${data.no_rekening != null ? data.no_rekening : '-'}`)
 
-            var nominal = 0;
-            var tableTunjangan = `
-                    <tr style="border:1px solid #e3e3e3">
-                        <td>Gaji Pokok</td>
-                        <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gaji['total_gaji'])}</td>
-                    </tr>
-            `;
-            // START TUNJANGAN TERATUR
-            $.each(data.tunjangan, function( key, value ) {
-                nominal += value.pivot.nominal ;
-                tableTunjangan += `
-                    <tr style="border:1px solid #e3e3e3">
-                        <td class="text-left fw-bold">${value.nama_tunjangan}</td>
-                        <td class="text-right">${formatRupiahPayroll(value.pivot.nominal)}</td>
-                    </tr>
-                `
-            });
-            $("#table-tunjangan tbody").append(tableTunjangan);
-
-            var tableTotalTunjanganTeratur = `
-                <tr>
-                    <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
-                    <th class="text-right ">${formatRupiahPayroll(nominal + data.gaji['total_gaji'])}</th>
+        var nominal = 0;
+        var tableTunjangan = `
+                <tr style="border:1px solid #e3e3e3">
+                    <td>Gaji Pokok</td>
+                    <td id="gaji_pokok" class="text-right">${formatRupiahPayroll(data.gaji['total_gaji'])}</td>
+                </tr>
+        `;
+        // START TUNJANGAN TERATUR
+        $.each(data.tunjangan, function( key, value ) {
+            nominal += value.pivot.nominal ;
+            tableTunjangan += `
+                <tr style="border:1px solid #e3e3e3">
+                    <td class="text-left fw-bold">${value.nama_tunjangan}</td>
+                    <td class="text-right">${formatRupiahPayroll(value.pivot.nominal)}</td>
                 </tr>
             `
-            $("#table-tunjangan-total thead").append(tableTotalTunjanganTeratur);
-            // END TUNJANGAN TERATUR
-        })
-        function showModal(identifier) {
+        });
+        $("#table-tunjangan tbody").append(tableTunjangan);
+
+        var tableTotalTunjanganTeratur = `
+            <tr>
+                <th width="60%">GAJI POKOK + PENGHASILAN TERATUR</th>
+                <th class="text-right ">${formatRupiahPayroll(nominal + data.gaji['total_gaji'])}</th>
+            </tr>
+        `
+        $("#table-tunjangan-total thead").append(tableTotalTunjanganTeratur);
+        // END TUNJANGAN TERATUR
+    })
+    function showModal(identifier) {
+    }
+
+    $('#kantor').on('change', function() {
+        const selected = $(this).val()
+
+        if (selected == 'cabang') {
+            $('.cabang-input').removeClass('d-none')
         }
+        else {
+            $('#cabang option[value="0"]').attr("selected", "selected");
+            $('.cabang-input').addClass('d-none')
+        }
+    })
 
-        $('#kantor').on('change', function() {
-            const selected = $(this).val()
+    $('#page_length').on('change', function() {
+        $('#form').submit()
+    })
 
-            if (selected == 'cabang') {
-                $('.cabang-input').removeClass('d-none')
-            }
-            else {
-                $('#cabang option[value="0"]').attr("selected", "selected");
-                $('.cabang-input').addClass('d-none')
-            }
-        })
-
-        $('#page_length').on('change', function() {
-            $('#form').submit()
-        })
-
-        $('#form').on('submit', function() {
-            $('.loader-wrapper').css('display: none;')
-            $('.loader-wrapper').addClass('d-block')
-            $(".loader-wrapper").fadeOut("slow");
-        })
+    $('#form').on('submit', function() {
+        $('.loader-wrapper').css('display: none;')
+        $('.loader-wrapper').addClass('d-block')
+        $(".loader-wrapper").fadeOut("slow");
+    })
 </script>
 @endpush

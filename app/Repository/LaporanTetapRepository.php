@@ -194,9 +194,9 @@ class LaporanTetapRepository
             ->where(function($query) use ($kantor, $kode_cabang_arr, $search) {
                 $query->whereNull('tanggal_penonaktifan')
                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
-                    if ($kantor != 'pusat') {
+                    if ($kantor != '000') {
                         $q->where('mst_karyawan.kd_entitas', $kantor);
-                    } else if($kantor == 'pusat'){
+                    } else if($kantor == '000'){
                         $q->whereRaw("(kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR kd_entitas IS null or kd_entitas = '')");
                     }
                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
@@ -967,15 +967,16 @@ class LaporanTetapRepository
                             'penghasilan_tidak_teratur.nip',
                             'penghasilan_tidak_teratur.id_tunjangan',
                             'mst_tunjangan.nama_tunjangan',
-                            DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
+                            // DB::raw('CAST(SUM(penghasilan_tidak_teratur.nominal) AS SIGNED) AS nominal'),
+                            'penghasilan_tidak_teratur.nominal',
                             'penghasilan_tidak_teratur.kd_entitas',
                             'penghasilan_tidak_teratur.tahun',
                             'penghasilan_tidak_teratur.bulan',
                         )
                         ->where('mst_tunjangan.kategori', 'bonus')
-                        ->where('penghasilan_tidak_teratur.created_at', $year)
-                        ->where('penghasilan_tidak_teratur.created_at', $month)
-                        ->groupBy('penghasilan_tidak_teratur.id_tunjangan');
+                        ->where('penghasilan_tidak_teratur.tahun', $year)
+                        ->where('penghasilan_tidak_teratur.bulan', $month);
+                        // ->groupBy('penghasilan_tidak_teratur.id_tunjangan');
                 },
                 'potonganGaji' => function($query) {
                     $query->select(
@@ -1016,8 +1017,6 @@ class LaporanTetapRepository
                 'gj_pokok',
                 DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
             )
-            // ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
-            // ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
             ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
             ->orderByRaw($this->orderRaw)
             ->orderBy('status_kantor', 'asc')
@@ -1027,9 +1026,9 @@ class LaporanTetapRepository
             ->where(function($query) use ($kantor, $kode_cabang_arr, $search) {
                 $query->whereNull('tanggal_penonaktifan')
                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
-                    if ($kantor != 'pusat' && $kantor != 'keseluruhan') {
+                    if ($kantor != '000' && $kantor != 'keseluruhan') {
                         $q->where('mst_karyawan.kd_entitas', $kantor);
-                    } else if($kantor == 'pusat'){
+                    } else if($kantor == '000'){
                         $q->whereRaw("(kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR kd_entitas IS null or kd_entitas = '')");
                     }
                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
@@ -1801,28 +1800,27 @@ class LaporanTetapRepository
                 }
             }
 
-            foreach ($item->tunjanganTidakTetap as $value) {
+            foreach($item?->bonus as $value){
+                if ($value->id_tunjangan == 22) {
+                    $brutoTHR += $value->nominal;
+                }
                 if ($value->id_tunjangan == 23) {
                     $brutoJaspro += $value->nominal;
                 }
+                if ($value->id_tunjangan == 24) {
+                    $brutoDanaPendidikan += $value->nominal;
+                }
                 if ($value->id_tunjangan == 26) {
                     $brutoTambahanPenghasilan += $value->nominal;
+                }
+                if ($value->id_tunjangan == 28) {
+                    $brutoPenghargaanKinerja += $value->nominal;
                 }
                 if ($value->id_tunjangan == 33) {
                     $brutoRekreasi += $value->nominal;
                 }
             }
-            foreach($item?->bonus as $value){
-                if ($value->id_tunjangan == 22) {
-                    $brutoTHR += $value->nominal;
-                }
-                if ($value->id_tunjangan == 24) {
-                    $brutoDanaPendidikan += $value->nominal;
-                }
-                if ($value->id_tunjangan == 28) {
-                    $brutoPenghargaanKinerja += $value->nominal;
-                }
-            }
+
             foreach ($item?->pphDilunasi as $value) {
                 if ($value->bulan > 1) {
                     $pph21 += $value->total_pph;
