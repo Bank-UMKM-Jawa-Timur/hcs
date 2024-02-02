@@ -184,7 +184,7 @@
                 $totalBrutoDanaPendidikan = 0;
                 $brutoPenghargaanKinerja = 0;
                 $totalBrutoPenghargaanKinerja = 0;
-                $totalpajakInsentif += $item->total_insentif_kredit;
+                $totalpajakInsentif += $item->pajak_insentif;
                 $totalInsentif += $item->total_insentif_kredit;
                 // insentif kredit
                 $insentif_kredit += $item->insentif_kredit;
