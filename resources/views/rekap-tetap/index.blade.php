@@ -154,10 +154,8 @@
                                 <select name="cabang" class="form-input" required>
                                     <option value="">-- Pilih Cabang --</option>
                                     @foreach ($cabang as $item)
-                                    @if ($item->kd_cabang != '000')
                                     <option value="{{ $item->kd_cabang }}" {{ $item->kd_cabang == Request('cabang') ?
                                         'selected' : '' }}>{{ $item->nama_cabang }}</option>
-                                    @endif
                                     @endforeach
                                 </select>
                             </div>
