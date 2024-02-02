@@ -63,11 +63,54 @@
         z-index: 2;
         background-color: #fff;
     }
-
     .table-scroll .thead_pertama th:nth-child(4) {
         z-index: 4;
     }
 </style>
+<style>
+    .table-wrapper {
+        overflow-y: scroll;
+        overflow-x: scroll;
+        height: fit-content;
+        max-height: 66.4vh;
+        padding-bottom: 20px;
+        margin-top: 20px;
+    }
+    table {
+        min-width: max-content;
+        border-collapse: separate;
+        border-spacing: 0px;
+    }
+
+    table thead {
+        position: sticky;
+        top: 0px;
+        text-align: center;
+        font-weight: normal;
+        font-size: 18px;
+        z-index: 999;
+    }
+
+    .left{
+        position: -webkit-sticky;
+        position: sticky;
+        left: 0;
+        background-color: #fff;
+        font-size: 18px;
+    }
+
+    table th, table td {
+        padding: 15px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    table td {
+        text-align: left;
+        font-size: 15px;
+        padding-left: 20px;
+    }
+</style>
+
 @endpush
 
 @section('content')

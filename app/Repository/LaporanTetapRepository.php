@@ -205,13 +205,62 @@ class LaporanTetapRepository
             if ($cetak) {
                 $data = $data->get();
             }else{
-                $data=  $data->paginate($limit);
+                $data = $data->paginate($limit);
             }
 
         $this->karyawanRepo->getEntity($data);
 
         foreach($data as $key => $karyawan){
             // Get Jabatan
+
+            //total
+            $karyawan->insentif_kredit = DB::table('penghasilan_tidak_teratur')
+                                        ->where('nip', $karyawan->nip)
+                                        ->where('bulan', $month)
+                                        ->where('tahun', $year)
+                                        ->whereIn('id_tunjangan', [31, 32])
+                                        ->sum('nominal');
+            // end total
+            $karyawan->insentif_kredit = DB::table('penghasilan_tidak_teratur')
+                                        ->where('nip', $karyawan->nip)
+                                        ->where('bulan', $month)
+                                        ->where('tahun', $year)
+                                        ->where('id_tunjangan', 31)
+                                        ->sum('nominal');
+            $karyawan->insentif_penagihan = DB::table('penghasilan_tidak_teratur')
+                                        ->where('nip', $karyawan->nip)
+                                        ->where('bulan', $month)
+                                        ->where('tahun', $year)
+                                        ->where('id_tunjangan', 32)
+                                        ->sum('nominal');
+
+            $karyawan->insentif_kredit_pajak = DB::table('pph_yang_dilunasi')
+                                ->where('nip', $karyawan->nip)
+                                ->where('bulan', $month)
+                                ->where('tahun', $year)
+                                ->sum('insentif_kredit');
+
+            $karyawan->insentif_penagihan_pajak = DB::table('pph_yang_dilunasi')
+                                ->where('nip', $karyawan->nip)
+                                ->where('bulan', $month)
+                                ->where('tahun', $year)
+                                ->sum('insentif_penagihan');
+
+            $insentif_kredit_pajak = DB::table('pph_yang_dilunasi')
+                                ->where('nip', $karyawan->nip)
+                                ->where('bulan', $month)
+                                ->where('tahun', $year)
+                                ->sum('insentif_kredit');
+
+            $insentif_penagihan_pajak = DB::table('pph_yang_dilunasi')
+                                ->where('nip', $karyawan->nip)
+                                ->where('bulan', $month)
+                                ->where('tahun', $year)
+                                ->sum('insentif_penagihan');
+            // total pajak insentif
+            $karyawan->pajak_insentif = $insentif_kredit_pajak + $insentif_penagihan_pajak;
+            // end total pajak insentif
+
             $prefix = match ($karyawan->status_jabatan) {
                 'Penjabat' => 'Pj. ',
                 'Penjabat Sementara' => 'Pjs. ',
@@ -1050,6 +1099,54 @@ class LaporanTetapRepository
                 $jabatan = 'undifined';
             }
 
+            //total
+            $karyawan->insentif_kredit = DB::table('penghasilan_tidak_teratur')
+                ->where('nip', $karyawan->nip)
+                ->where('bulan', $month)
+                ->where('tahun', $year)
+                ->whereIn('id_tunjangan', [31, 32])
+                ->sum('nominal');
+            // end total
+            $karyawan->insentif_kredit = DB::table('penghasilan_tidak_teratur')
+                ->where('nip', $karyawan->nip)
+                ->where('bulan', $month)
+                ->where('tahun', $year)
+                ->where('id_tunjangan', 31)
+                ->sum('nominal');
+            $karyawan->insentif_penagihan = DB::table('penghasilan_tidak_teratur')
+                ->where('nip', $karyawan->nip)
+                ->where('bulan', $month)
+                ->where('tahun', $year)
+                ->where('id_tunjangan', 32)
+                ->sum('nominal');
+
+            $karyawan->insentif_kredit_pajak = DB::table('pph_yang_dilunasi')
+            ->where('nip', $karyawan->nip)
+            ->where('bulan', $month)
+            ->where('tahun', $year)
+            ->sum('insentif_kredit');
+
+            $karyawan->insentif_penagihan_pajak = DB::table('pph_yang_dilunasi')
+            ->where('nip', $karyawan->nip)
+            ->where('bulan', $month)
+            ->where('tahun', $year)
+            ->sum('insentif_penagihan');
+
+            $insentif_kredit_pajak = DB::table('pph_yang_dilunasi')
+            ->where('nip', $karyawan->nip)
+            ->where('bulan', $month)
+            ->where('tahun', $year)
+            ->sum('insentif_kredit');
+
+            $insentif_penagihan_pajak = DB::table('pph_yang_dilunasi')
+                ->where('nip', $karyawan->nip)
+                ->where('bulan', $month)
+                ->where('tahun', $year)
+                ->sum('insentif_penagihan');
+            // total pajak insentif
+            $karyawan->pajak_insentif = $insentif_kredit_pajak + $insentif_penagihan_pajak;
+            // end total pajak insentif
+
             $ket = $karyawan->ket_jabatan ? "({$karyawan->ket_jabatan})" : '';
 
             if (isset($karyawan->entitas->subDiv)) {
@@ -1744,6 +1841,12 @@ class LaporanTetapRepository
         $totalPPH21 = 0;
         $totalPenambahBruto = 0;
         $totalBruto = 0;
+        $total_insentif_kredit = 0;
+        $total_insentif_penagihan = 0;
+        $total_insentif_kredit_pajak = 0;
+        $total_insentif_penagihan_pajak = 0;
+        $totalPajakInsentif = 0;
+        $totalInsentif = 0;
         $totalPPh = 0;
 
         foreach($data as $key => $item){
@@ -1841,6 +1944,12 @@ class LaporanTetapRepository
 
             $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $brutoNataru + $brutoJaspro + $penambahBruto + $brutoTambahanPenghasilan + $brutoRekreasi + $brutoDanaPendidikan + $brutoTHR + $brutoPenghargaanKinerja;
             $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21;
+            $totalInsentif += $item->insentif_kredit ?? 0;
+            $totalPajakInsentif += $item->pajak_insentif ?? 0;
+            $total_insentif_kredit += $item->insentif_kredit ?? 0;
+            $total_insentif_penagihan += $item->insentif_penagihan ?? 0;
+            $total_insentif_kredit_pajak += $item->insentif_kredit_pajak ?? 0;
+            $total_insentif_penagihan_pajak += $item->insentif_penagihan_pajak ?? 0;
 
             $totalLembur += $lembur;
             $totalPenggantiKesehatan += $penggantiBiayaKesehatan;
@@ -1890,7 +1999,14 @@ class LaporanTetapRepository
         $returnData->totalPPH21 = $totalPPH21;
         $returnData->totalPenambahBruto = $totalPenambahBruto;
         $returnData->totalBruto = $totalBruto;
+        $returnData->totalInsentif = $totalInsentif;
+        $returnData->totalPajakInsentif = $totalPajakInsentif;
         $returnData->totalPPh = $totalPPh;
+
+        $returnData->total_insentif_kredit = $total_insentif_kredit;
+        $returnData->total_insentif_penagihan = $total_insentif_penagihan;
+        $returnData->total_insentif_kredit_pajak = $total_insentif_kredit_pajak;
+        $returnData->total_insentif_penagihan_pajak = $total_insentif_penagihan_pajak;
 
         // dd($returnData);
         return $returnData;
