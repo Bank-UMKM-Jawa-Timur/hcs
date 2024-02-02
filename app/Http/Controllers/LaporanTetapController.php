@@ -54,7 +54,6 @@ class LaporanTetapController extends Controller
         $footer = $request->has('tahun') && $request->has('bulan') ? $this->repo->getTotal($kantor, $search, $limit, false, intval($year), intval($month)) : null;
         $cabang = $this->cabang;
 
-        // return ['data' => $data, 'footer' => $footer];
         return view('rekap-tetap.index', [
             'cabang' => $cabang,
             'data' => $data,
@@ -71,7 +70,7 @@ class LaporanTetapController extends Controller
         $data = $this->repo->get($kantor, $search, $limit, true, intval($year), intval($month));
         $grandtotal = $this->repo->getTotal($kantor, $search, $limit, false, intval($year), intval($month));
         $month_name = getMonth($month);
-// return $data;
+
         $showKantor = '';
         if($kantor == '000')
             $showKantor = 'Kantor Pusat';
