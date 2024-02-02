@@ -49,19 +49,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="input-box">
-                        <label for="ikut_penggajian">Ikut Proses Gaji</label>
-                        <div class="flex">
-                            <div class="">
-                                <input type="radio" name="ikut_penggajian" id="ya" value="1" checked>
-                                <label for="ya">Ya</label>
-                            </div>
-                            <div class="ml-3">
-                                <input type="radio" name="ikut_penggajian" id="tidak" value="0">
-                                <label for="tidak">Tidak</label>
-                            </div>
-                        </div>
-                    </div>
                 <div class="input-box">
                     <label for="">SK Pemberhentian <span class="text-red-500 text-sm">*(Pdf)</span></label>
                     <div class="custom-file">

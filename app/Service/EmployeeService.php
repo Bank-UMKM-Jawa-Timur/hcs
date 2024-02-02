@@ -22,7 +22,6 @@ class EmployeeService
                 'tanggal_penonaktifan' => $data['tanggal_penonaktifan'],
                 'kategori_penonaktifan' => $data['kategori_penonaktifan'],
                 'sk_pemberhentian' => $skName,
-                'is_proses_gaji' => (int) $data['ikut_penggajian']
             ]);
     }
 }

@@ -169,8 +169,7 @@ class GajiPerBulanController extends Controller
 
             // Get Karyawan
             $karyawan = DB::table('mst_karyawan AS m')
-                            // ->whereNull('tanggal_penonaktifan')
-                            ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
+                            ->whereNull('tanggal_penonaktifan')
                             ->when($is_cabang, function($query) {
                                 $kd_cabang = auth()->user()->kd_cabang;
                                 $query->where('m.kd_entitas', $kd_cabang);
@@ -959,9 +958,8 @@ class GajiPerBulanController extends Controller
 
             if (auth()->user()->hasRole('cabang')) {
                 // Cabang
-                        $karyawan = DB::table('mst_karyawan')
-                        // ->whereNull('tanggal_penonaktifan')
-                        ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
+                $karyawan = DB::table('mst_karyawan')
+                            ->whereNull('tanggal_penonaktifan')
                             ->where('kd_entitas', auth()->user()->kd_cabang)
                             ->get();
             }
@@ -972,8 +970,7 @@ class GajiPerBulanController extends Controller
                                 ->pluck('kd_cabang')
                                 ->toArray();
                 $karyawan = DB::table('mst_karyawan')
-                                // ->whereNull('tanggal_penonaktifan')
-                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
+                                ->whereNull('tanggal_penonaktifan')
                                 ->when($is_pusat, function($query) use ($kd_cabang) {
                                     $query->where(function($q2) use ($kd_cabang) {
                                         $q2->whereNotIn('mst_karyawan.kd_entitas', $kd_cabang)

@@ -937,7 +937,6 @@ class KaryawanController extends Controller
             'nip',
             'tanggal_penonaktifan',
             'kategori_penonaktifan',
-            'ikut_penggajian'
         ]), $request->file('sk_pemberhentian'));
 
         Alert::success('Berhasil menonaktifkan karyawan');
