@@ -1,16 +1,16 @@
 @php
     $colspanBonus = 3;
     if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0) {
-        $colspanBonus += 2;
+        $colspanBonus += 1;
     }
     if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0) {
-        $colspanBonus += 2;
+        $colspanBonus += 1;
     }
     if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0) {
-        $colspanBonus += 2;
+        $colspanBonus += 1;
     }
     if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0) {
-        $colspanBonus += 2;
+        $colspanBonus += 1;
     }
 @endphp
 
@@ -44,16 +44,16 @@
             <th class="text-center">DANA<br>PENDIDIKAN</th>
             <th class="text-center">PENGHARGAAN<br>KINERJA</th>
             @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
-                <th colspan="2" class="text-center">NATARU</th>
+                <th class="text-center">NATARU</th>
             @endif
             @if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0)
-                <th colspan="2" class="text-center">JASA PRODUKSI + DANA KESEHATAN</th>
+                <th class="text-center">JASA PRODUKSI + DANA KESEHATAN</th>
             @endif
             @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
-                <th colspan="2" class="text-center">TAMBAHAN<br>PENGHASILAN</th>
+                <th class="text-center">TAMBAHAN<br>PENGHASILAN</th>
             @endif
             @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
-                <th colspan="2" class="text-center">REKREASI</th>
+                <th class="text-center">REKREASI</th>
             @endif
         </tr>
         <tr>
@@ -72,19 +72,19 @@
             <th class="text-center">BRUTO</th>
             @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
                 <th class="text-center">BRUTO</th>
-                <th class="text-center">PPH</th>
+                {{--  <th class="text-center">PPH</th>  --}}
             @endif
             @if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0)
                 <th class="text-center">BRUTO</th>
-                <th class="text-center">PPH</th>
+                {{--  <th class="text-center">PPH</th>  --}}
             @endif
             @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
                 <th class="text-center">BRUTO</th>
-                <th class="text-center">PPH</th>
+                {{--  <th class="text-center">PPH</th>  --}}
             @endif
             @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
                 <th class="text-center">BRUTO</th>
-                <th class="text-center">PPH</th>
+                {{--  <th class="text-center">PPH</th>  --}}
             @endif
             <th class="text-center">BRUTO</th>
             <th class="text-center">PPH</th>
@@ -119,16 +119,16 @@
             $totalPPh = 0;
             $totalColumns = 17;
             if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0) {
-                $totalColumns += 2;
+                $totalColumns += 1;
             }
             if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0) {
-                $totalColumns += 2;
+                $totalColumns += 1;
             }
             if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0) {
-                $totalColumns += 2;
+                $totalColumns += 1;
             }
             if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0) {
-                $totalColumns += 2;
+                $totalColumns += 1;
             }
         @endphp
         @forelse ($data as $key => $item)
@@ -289,19 +289,19 @@
                 <td class="text-right">{{ formatRupiahExcel($brutoPenghargaanKinerja ?? 0, 0, true) }}</td>
                 @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
                     <td class="text-right">{{ formatRupiahExcel($brutoNataru, 0, true) }}</td>
-                    <td class="text-right">{{ formatRupiahExcel($pphNataru, 0, true) }}</td>
+                    {{--  <td class="text-right">{{ formatRupiahExcel($pphNataru, 0, true) }}</td>  --}}
                 @endif
                 @if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0)
                     <td class="text-right">{{ formatRupiahExcel($brutoJaspro, 0, true) }}</td>
-                    <td class="text-right">{{ formatRupiahExcel($pphJaspro, 0, true) }}</td>
+                    {{--  <td class="text-right">{{ formatRupiahExcel($pphJaspro, 0, true) }}</td>  --}}
                 @endif
                 @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
                     <td class="text-right">{{ formatRupiahExcel($tambahanPenghasilan, 0, true) }}</td>
-                    <td class="text-right">{{ formatRupiahExcel($pphTambahanPenghasilan, 0, true) }}</td>
+                    {{--  <td class="text-right">{{ formatRupiahExcel($pphTambahanPenghasilan, 0, true) }}</td>  --}}
                 @endif
                 @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
                     <td class="text-right">{{ formatRupiahExcel($rekreasi, 0, true) }}</td>
-                    <td class="text-right">{{ formatRupiahExcel($pphRekreasi, 0, true) }}</td>
+                    {{--  <td class="text-right">{{ formatRupiahExcel($pphRekreasi, 0, true) }}</td>  --}}
                 @endif
                 <td class="text-right">{{ formatRupiahExcel($pph21, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($penambahBruto, 0, true) }}</td>
@@ -333,19 +333,19 @@
             <th class="text-right">{{ formatRupiahExcel($totalBrutoPenghargaanKinerja ?? 0, 0, true) }}</th>
             @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
                 <th class="text-right">{{ formatRupiahExcel($totalBrutoNataru ?? 0, 0, true) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($totalPPHNataru ?? 0, 0, true) }}</th>
+                {{--  <th class="text-right">{{ formatRupiahExcel($totalPPHNataru ?? 0, 0, true) }}</th>  --}}
             @endif
             @if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0)
                 <th class="text-right">{{ formatRupiahExcel($totalBrutoJaspro ?? 0, 0, true) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($totalPPHJaspro ?? 0, 0, true) }}</th>
+                {{--  <th class="text-right">{{ formatRupiahExcel($totalPPHJaspro ?? 0, 0, true) }}</th>  --}}
             @endif
             @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
                 <th class="text-right">{{ formatRupiahExcel($totalBrutoTambahanPenghasilan ?? 0, 0, true) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($totalPPHTambahanPenghasilan ?? 0, 0, true) }}</th>
+                {{--  <th class="text-right">{{ formatRupiahExcel($totalPPHTambahanPenghasilan ?? 0, 0, true) }}</th>  --}}
             @endif
             @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
                 <th class="text-right">{{ formatRupiahExcel($totalBrutoRekreasi ?? 0, 0, true) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($totalPPHRekreasi ?? 0, 0, true) }}</th>
+                {{--  <th class="text-right">{{ formatRupiahExcel($totalPPHRekreasi ?? 0, 0, true) }}</th>  --}}
             @endif
             <th class="text-right">{{ formatRupiahExcel($totalPPH21 ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($totalPenambahBruto ?? 0, 0, true) }}</th>
@@ -368,19 +368,19 @@
             <th class="text-right">{{ formatRupiahExcel(0 ?? 0, 0, true) }}</th>
             @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
                 <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoNataru ?? 0, 0, true) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHNataru ?? 0, 0, true) }}</th>
+                {{--  <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHNataru ?? 0, 0, true) }}</th>  --}}
             @endif
             @if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0)
                 <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoJaspro ?? 0, 0, true) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHJaspro ?? 0, 0, true) }}</th>
+                {{--  <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHJaspro ?? 0, 0, true) }}</th>  --}}
             @endif
             @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
                 <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoTambahanPenghasilan ?? 0, 0, true) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHTambahanPenghasilan ?? 0, 0, true) }}</th>
+                {{--  <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHTambahanPenghasilan ?? 0, 0, true) }}</th>  --}}
             @endif
             @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
                 <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoRekreasi ?? 0, 0, true) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHRekreasi ?? 0, 0, true) }}</th>
+                {{--  <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPHRekreasi ?? 0, 0, true) }}</th>  --}}
             @endif
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoDanaPendidikan ?? 0, 0, true) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBrutoPenghargaanKinerja ?? 0, 0, true) }}</th>

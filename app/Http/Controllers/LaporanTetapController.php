@@ -43,12 +43,12 @@ class LaporanTetapController extends Controller
         if(auth()->user()->hasRole('cabang')){
             $kantor = auth()->user()->kd_cabang;
         } else {
-            $kantor = 'pusat';
+            $kantor = '000';
         }
-        Session::put('kantor', $kantor);
         if ($request->cabang != null) {
             $kantor = $request->cabang;
         }
+        Session::put('kantor', $kantor);
         $search = $request->get('q');
         $data = $request->has('tahun') && $request->has('bulan') ? $this->repo->get($kantor, $search, $limit, false, intval($year), intval($month)) : null;
         $footer = $request->has('tahun') && $request->has('bulan') ? $this->repo->getTotal($kantor, $search, $limit, false, intval($year), intval($month)) : null;
@@ -71,9 +71,9 @@ class LaporanTetapController extends Controller
         $data = $this->repo->get($kantor, $search, $limit, true, intval($year), intval($month));
         $grandtotal = $this->repo->getTotal($kantor, $search, $limit, false, intval($year), intval($month));
         $month_name = getMonth($month);
-
+// return $data;
         $showKantor = '';
-        if($kantor == 'pusat')
+        if($kantor == '000')
             $showKantor = 'Kantor Pusat';
         else if($kantor == 'keseluruhan')
             $showKantor = 'Keseluruhan';

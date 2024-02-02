@@ -43,6 +43,6 @@ class RekapTetapExport implements FromView, WithColumnFormatting
 
     public function view(): View
     {
-        return view('rekap-tetap.exports.export', ['data' => $this->data, 'grandTotal' => $this->grandtotal]);
+        return view('rekap-tetap.table.table', ['data' => $this->data, 'grandTotal' => $this->grandtotal]);
     }
 }

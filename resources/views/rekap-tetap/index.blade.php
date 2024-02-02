@@ -4,6 +4,12 @@
     table th {
         border: 1px solid #e3e3e3 !important;
     }
+
+    table tbody tr td {
+        border: 1px solid #e3e3e3 !important;
+    }
+
+
     .table-scroll {
         margin: 0px;
         border: none;
@@ -163,12 +169,12 @@
                         </div>
                         <div class="flex justify-end w-fit my-3">
                             @if (\Request::has('tahun') && count($data) > 0)
-                            <div class="mr-2" id="btn-download">
-                                <a href="{{ route('download-rekapitulasi') }}" download
-                                    class="m-0 btn btn-lg is-btn btn-warning">
-                                    <span style="font-size: 14px;">Excel</span>
-                                </a>
-                            </div>
+                                <div class="mr-2" id="btn-download">
+                                    <a href="{{ route('download-rekapitulasi') }}" download
+                                        class="m-0 btn btn-lg is-btn btn-warning">
+                                        <span style="font-size: 14px;">Excel</span>
+                                    </a>
+                                </div>
                             @endif
                             <div>
                                 <input type="submit" value="Tampilkan"
