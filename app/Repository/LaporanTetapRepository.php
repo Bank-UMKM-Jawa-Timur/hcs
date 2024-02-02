@@ -194,9 +194,9 @@ class LaporanTetapRepository
             ->where(function($query) use ($kantor, $kode_cabang_arr, $search) {
                 $query->whereNull('tanggal_penonaktifan')
                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
-                    if ($kantor != 'pusat') {
+                    if ($kantor != '000') {
                         $q->where('mst_karyawan.kd_entitas', $kantor);
-                    } else if($kantor == 'pusat'){
+                    } else if($kantor == '000'){
                         $q->whereRaw("(kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR kd_entitas IS null or kd_entitas = '')");
                     }
                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
@@ -1027,9 +1027,9 @@ class LaporanTetapRepository
             ->where(function($query) use ($kantor, $kode_cabang_arr, $search) {
                 $query->whereNull('tanggal_penonaktifan')
                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
-                    if ($kantor != 'pusat' && $kantor != 'keseluruhan') {
+                    if ($kantor != '000' && $kantor != 'keseluruhan') {
                         $q->where('mst_karyawan.kd_entitas', $kantor);
-                    } else if($kantor == 'pusat'){
+                    } else if($kantor == '000'){
                         $q->whereRaw("(kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR kd_entitas IS null or kd_entitas = '')");
                     }
                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
