@@ -38,11 +38,20 @@
                 $pph_seharusnya = 0;
                 $terutang_total = 0;
                 $terutang_header = 0;
+                $bruto_akhir_header = 0;
+                $pph_akhir_header = 0;
+                $hitungan_header = 0;
+                $selisihAkhirBulan = 0;
+                $brutoNonInsentif = 0;
+                $total_last_selisih = 0;
             @endphp
             @foreach ($result as $item)
                 @php
                     $row = $item['pph'];
+                    $brutoNonInsentif += $row->penghasilanBrutoAkhirBulan - $row->total_insentif;
                     $bruto += $row->penghasilanBruto;
+                    $bruto_akhir_header += $row->penghasilanBrutoAkhirBulan;
+                    $pph_akhir_header += $row->pph_akhir_bulan;
                     $kredit_pegawai += $row->potongan?->kredit_pegawai ? $row->potongan->kredit_pegawai : 0;
                     $kredit_koprasi += $row->potongan?->kredit_koperasi ? $row->potongan->kredit_koperasi : 0;
                     $iuran_koprasi += $row->potongan?->iuran_koperasi ? $row->potongan->iuran_koperasi : 0;
@@ -57,23 +66,28 @@
                     if ($current_terutang_header == 0 && $selisih_header != 0) {
                         $new_terutang_header = $selisih_header;
                     }
-                    $terutang_header += $new_terutang_header;
-                @endphp
+                    $total_last_selisih = (($row->penghasilanBrutoAkhirBulan - $row->total_insentif) * ($row->pengali_akhir)) - ($row->total_insentif * 0.05)
+                    @endphp
             @endforeach
             <table class="tables-stripped" id="table" style="width: 100%; border: 1px solid black;">
                 <thead style="margin-bottom: 3rem">
                     <tr>
                         <th colspan="4" style="font-weight: bold;">GRAND TOTAL</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($bruto, 0, true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($bruto_akhir_header, 0, true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($brutoNonInsentif, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($kredit_pegawai, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($kredit_koprasi, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($iuran_koprasi, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($iuran_ik, 0, true)}}</th>
                         <th style="font-weight: bold">-</th>
+                        <th style="font-weight: bold">-</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_sekarang,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_seharusnya,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($selisih_total,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($terutang_total,0,true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header,0,true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($total_last_selisih,0,true)}}</th>
                     </tr>
                 </thead>
                 <thead>
@@ -82,19 +96,46 @@
                         <th rowspan="2">NIP</th>
                         <th rowspan="2">Nama</th>
                         <th rowspan="2">PTKP</th>
-                        <th rowspan="2">Bruto</th>
+                        <th>A</th>
+                        <th>B</th>
+                        <th rowspan="2">Bruto Tanpa Insentif</th>
                         <th colspan="4">Potongan</th>
-                        <th rowspan="2">Pengali</th>
-                        <th rowspan="2">PPH Sekarang</th>
-                        <th rowspan="2">PPH Seharusnya</th>
-                        <th rowspan="2">Selisih</th>
-                        <th rowspan="2">Terutang</th>
+                        <th>C</th>
+                        <th>D</th>
+                        <th>E</th>
+                        <th>F</th>
+                        <th>G</th>
+                        <th>H</th>
+                        <th>I</th>
+                        <th>J</th>
                     </tr>
                     <tr>
+                        <th>Bruto</th>
+                        <th>Bruto Akhir Bulan</th>
                         <th>Kredit Pegawai</th>
                         <th>Kredit Koperasi</th>
                         <th>Iuran Koperasi</th>
                         <th>Iuaran IK</th>
+                        <th>Pengali</th>
+                        <th>Pengali Akhir Bulan</th>
+                        <th>PPH Sekarang</th>
+                        <th>
+                            PPH Seharusnya <br>
+                            ( A * C )
+                        </th>
+                        <th>
+                            Selisih <br>
+                            ( E - F )
+                        </th>
+                        <th>Terutang</th>
+                        <th>
+                            PPH Akhir Bulan <br>
+                            ( B * D )
+                        </th>
+                        <th>
+                            Selisih <br>
+                            ( I - (E + H) )
+                        </th>
                     </tr>
                 </thead>
                 {{--
@@ -111,6 +152,7 @@
                             @php
                                 $row = $item['pph'];
                                 $selisih = $row->pph - $row->seharusnya->total_seharusnya;
+                                $selisih_pph_akhir_bulan = (($row->penghasilanBrutoAkhirBulan - $row->total_insentif) * ($row->pengali_akhir)) - ($row->total_insentif * 0.05) - ($row->seharusnya->total_seharusnya + $row->seharusnya->terutang);
                             @endphp
                             <tr>
                                 <td>{{$loop->iteration}}</td>
@@ -118,15 +160,20 @@
                                 <td>{{$row->nama}}</td>
                                 <td>{{$row->ptkp->kode}}</td>
                                 <td>{{formatRupiahExcel($row->penghasilanBruto, 0, true)}}</td>
+                                <td>{{formatRupiahExcel($row->penghasilanBrutoAkhirBulan, 0, true)}}</td>
+                                <td>{{formatRupiahExcel($row->penghasilanBrutoAkhirBulan - $row->total_insentif, 0, true)}}</td>
                                 <td>{{formatRupiahExcel($row->potongan?->kredit_pegawai ? $row->potongan->kredit_pegawai : 0, 0, true)}}</td>
                                 <td>{{formatRupiahExcel($row->potongan?->kredit_koperasi ? $row->potongan->kredit_koperasi : 0, 0, true)}}</td>
                                 <td>{{formatRupiahExcel($row->potongan?->iuran_koperasi ? $row->potongan->iuran_koperasi : 0, 0, true)}}</td>
                                 <td>{{formatRupiahExcel($row->potongan?->iuran_ik ? $row->potongan->iuran_ik : 0, 0, true)}}</td>
                                 <td>{{($row->pengali * 100)}}%</td>
+                                <td>{{($row->pengali_akhir * 100)}}%</td>
                                 <td>{{formatRupiahExcel($row->seharusnya->total_seharusnya,0,true)}}</td>
                                 <td>{{formatRupiahExcel($row->pph,0,true)}}</td>
                                 <td>{{formatRupiahExcel($selisih,0,true)}}</td>
                                 <td>{{formatRupiahExcel($row->seharusnya->terutang,0,true)}}</td>
+                                <td>{{formatRupiahExcel((($row->penghasilanBrutoAkhirBulan - $row->total_insentif) * ($row->pengali_akhir)) - ($row->total_insentif * 0.05) ,0,true)}}</td>
+                                <td>{{formatRupiahExcel($selisih_pph_akhir_bulan,0,true)}}</td>
                                 <input type="hidden" name="nip[]" value="{{$row->nip}}">
                                 @php
                                     $new_terutang = 0;
@@ -146,15 +193,20 @@
                     <tr>
                         <th colspan="4" style="font-weight: bold;">GRAND TOTAL</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($bruto, 0, true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($bruto_akhir_header, 0, true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($brutoNonInsentif, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($kredit_pegawai, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($kredit_koprasi, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($iuran_koprasi, 0, true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($iuran_ik, 0, true)}}</th>
                         <th style="font-weight: bold">-</th>
+                        <th style="font-weight: bold">-</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_sekarang,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($pph_seharusnya,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($selisih_total,0,true)}}</th>
                         <th style="font-weight: bold">{{formatRupiahExcel($terutang_total,0,true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($pph_akhir_header,0,true)}}</th>
+                        <th style="font-weight: bold">{{formatRupiahExcel($total_last_selisih,0,true)}}</th>
                     </tr>
                 </tfoot>
             </table>

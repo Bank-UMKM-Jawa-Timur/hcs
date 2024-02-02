@@ -319,7 +319,6 @@
                                                 alertSuccess('Data Valid.');
                                                 $('.nominal-input').val(dataNominal)
                                                 $('.nip').val(nipDataRequest);
-                                                $('.kd-entitas-input').val(dataKdEntitas);
                                                 if(kategori == 'uang duka' || kategori == 'pengganti biaya kesehatan'){
                                                     $('.keterangan-input').val(dataKeterangan)
                                                 }
@@ -504,7 +503,7 @@
                 <input type="text" name="nominal" class="form-control nominal-input" value="" readonly hidden>
                 <input type="text" name="keterangan" class="form-control keterangan-input" value="" readonly hidden>
                 <input type="text" name="nip" class="form-control nip" value="" readonly hidden>
-                <input type="text" name="kd_entitas" class="form-control kd-entitas-input" value="" readonly hidden>
+                <input type="text" name="kd_entitas" class="form-control kd-entitas-input" value="{{auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000'}}" readonly hidden>
             </div>
             <button type="submit" class="btn btn-primary hidden" id="button-simpan">Simpan</button>
         </div>

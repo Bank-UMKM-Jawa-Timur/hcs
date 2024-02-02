@@ -188,7 +188,7 @@
                     @if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator)
                     {{ $data->links('pagination::tailwind') }}
                     @endif
-        
+
                 </div>
             </form>
         </div>

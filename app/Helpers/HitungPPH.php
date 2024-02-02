@@ -36,6 +36,7 @@ class HitungPPH
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
                                             ->whereDate('created_at', '<=', $tanggal_filter)
+                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
         }
@@ -56,6 +57,7 @@ class HitungPPH
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
                                             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
         }
@@ -139,7 +141,7 @@ class HitungPPH
 
         // Get PTKP
         $ptkp = HitungPPH::getPTKP($karyawan);
-        
+
         $pph_full_month = HitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin, true);
 
         $terutang = $pph_full_month - $pph_final;
@@ -198,7 +200,7 @@ class HitungPPH
 
         // Get PTKP
         $ptkp = HitungPPH::getPTKP($karyawan);
-        
+
         $batch = DB::table('gaji_per_bulan AS gaji')
                     ->select(
                         'gaji.nip',
@@ -398,7 +400,7 @@ class HitungPPH
         if ($tipe == 'penagihan') {
             $pengali = floatval(config('global.pengali_insentif_penagihan'));
         }
-        
+
         $result = $nominal * $pengali;
 
         return round($result);

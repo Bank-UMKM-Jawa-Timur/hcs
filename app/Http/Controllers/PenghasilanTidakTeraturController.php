@@ -166,7 +166,6 @@ class PenghasilanTidakTeraturController extends Controller
 
         // Get gaji secara bulanan
         for($i = 1; $i <= 12; $i++){
-            $pphTerutangSebelumnya = 0;
             $pph = PPHModel::where('nip', $nip)
                 ->where('bulan', $i)
                 ->where('tahun', $tahun)
@@ -179,15 +178,21 @@ class PenghasilanTidakTeraturController extends Controller
                     ->where('gaji_per_bulan.tahun', $tahun)
                     ->where('batch.status', 'final')
                     ->first();
+            $pphTerutangSebelumnya = 0;
+            $pphTerutangInsentifSebelumnya = 0;
             if($i > 1){
-                $pphTerutangSebelumnya = PPHModel::where('nip', $nip)
+                $pphTerutangSebelumnyaObj = PPHModel::where('nip', $nip)
                     ->where('bulan', ($i -1))
                     ->where('tahun', $tahun)
-                    ->first()?->terutang;
+                    ->first(['terutang', 'terutang_insentif']);
+                if ($pphTerutangSebelumnyaObj) {
+                    $pphTerutangSebelumnya = $pphTerutangSebelumnyaObj->terutang;
+                    $pphTerutangInsentifSebelumnya = $pphTerutangSebelumnyaObj->terutang_insentif;
+                }
             }
 
             if($data != null)
-                array_push($pph_yang_dilunasi, ($pph != null) ? ($pph->total_pph + $pphTerutangSebelumnya) : 0);
+                array_push($pph_yang_dilunasi, ($pph != null) ? ($pph->total_pph + ($pphTerutangSebelumnya - $pphTerutangInsentifSebelumnya)) : 0);
             else
                 array_push($pph_yang_dilunasi, 0);
             $gj[$i - 1] = [
@@ -604,6 +609,7 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
             return view('roles.forbidden');
         }
@@ -937,30 +943,69 @@ class PenghasilanTidakTeraturController extends Controller
         ->where('bulan', $bulan)
         ->whereDate('created_at', $tanggal);
         return $query;
-        // dd($query->toSql(), $query->getBindings(), $query->delete());
-        // $query->delete();
     }
 
     public function editTunjanganNewPost(Request $request){
-        // return $request;
         DB::beginTransaction();
         try {
             $nip = $request->has('nip') ? $request->get('nip') : null;
-            $item_id = $request->has('item_id') ? $request->get('item_id') : 'null';
+            $item_id = $request->has('item_id') ? $request->get('item_id') : null;
             $createdAt = $request->has('createdAt') ? $request->get('createdAt') : null;
             $tanggal = $request->has('tanggal') ? $request->get('tanggal') : null;
-            // return $item_id;
-            if ($item_id == 'null') {
+            $kd_entitas = $request->has('kd_entitas') ? $request->get('kd_entitas') : null;
+            $temp_nip = $request->has('temp_nip') ? $request->get('temp_nip')[0] : null;
+            $temp_nip_array = json_decode($temp_nip, true);
+            // return count($temp_nip_array);
+            if (!$item_id) {
+                for ($i=0; $i < count($temp_nip_array) ; $i++) {
+                    $datts =DB::table('penghasilan_tidak_teratur')
+                        ->where('id_tunjangan', $request->get('id_tunjangan'))
+                        ->where('bulan', $request->get('bulan'))
+                        ->whereDate('created_at', $createdAt)
+                        ->where('kd_entitas', $kd_entitas)
+                        ->where('nip', $temp_nip_array[$i])
+                        ->delete();
+                    DB::commit();
+                }
+
+                // Hitung pph
+                DB::beginTransaction();
+                foreach ($temp_nip_array as $key => $item) {
+                    $bulan = (int) Carbon::parse($createdAt)->format('m');
+                    $tahun = (int) Carbon::parse($createdAt)->format('Y');
+                    $karyawan = DB::table('mst_karyawan')
+                                    ->where('nip', $item)
+                                    ->whereNull('tanggal_penonaktifan')
+                                    ->first();
+
+                    $pph_baru = HitungPPH::getNewPPH58($createdAt, (int) $bulan, $tahun, $karyawan);
+                }
                 DB::commit();
-                $data = $this->deleteTunjangan($request->get('id_tunjangan'), $request->get('bulan'), $createdAt);
-                $data->delete();
+
+                DB::beginTransaction();
+                if (Carbon::parse($createdAt)->format('m') == 12 && Carbon::now()->format('d') > 25) {
+                    $gajiPerBulanController = new GajiPerBulanController;
+                    foreach ($temp_nip_array as $key => $item) {
+                        $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($createdAt)->format('Y'), Carbon::parse($createdAt)->format('m'));
+                        PPHModel::where('nip', $item)
+                            ->where('tahun', Carbon::parse($createdAt)->format('Y'))
+                            ->where('bulan', 12)
+                            ->update([
+                                'total_pph' => $pphTerutang,
+                                'updated_at' => now()
+                            ]);
+                    }
+                }
+                DB::commit();
                 Alert::success('Success', 'Berhasil edit data penghasilan');
             }
             else {
                 $itemLamaId = DB::table('penghasilan_tidak_teratur')
                                 ->where('penghasilan_tidak_teratur.created_at', $createdAt)
                                 ->where('id_tunjangan', $request->id_tunjangan)
-                                ->pluck('id');
+                                ->where('kd_entitas', $kd_entitas)
+                                ->pluck('id')
+                                ->toArray();
 
                 for ($i = 0; $i < count($itemLamaId); $i++) {
                     if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
@@ -973,11 +1018,11 @@ class PenghasilanTidakTeraturController extends Controller
                     for ($i = 0; $i < count($item_id); $i++) {
                         $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
                         DB::table('penghasilan_tidak_teratur')->where('id', $item_id[$i])->update([
-                            'nominal' => $nominal
+                            'nominal' => $nominal,
+                            'is_lock' => 1
                         ]);
                     }
                 }
-
                 DB::commit();
 
                 // Hitung pph

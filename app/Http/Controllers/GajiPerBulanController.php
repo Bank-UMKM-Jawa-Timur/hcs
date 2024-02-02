@@ -111,6 +111,7 @@ class GajiPerBulanController extends Controller
 
     public function index(Request $request)
     {
+        // return $request;
         if (!auth()->user()->can('penghasilan - proses penghasilan')) {
             return view('roles.forbidden');
         }
@@ -121,19 +122,22 @@ class GajiPerBulanController extends Controller
             $limit = $request->has('page_length_proses') ? $request->get('page_length_proses') : 10;
         } else if ($request->has('tab') && $tab == 'final') {
             $limit = $request->has('page_length_final') ? $request->get('page_length_final') : 10;
+        } else {
+            $limit = $request->has('page_length_sampah') ? $request->get('page_length_sampah') : 10;
         }
 
         $page = $request->has('page') ? $request->get('page') : 1;
-        $search = $request->get('q');
-
+        $search_proses = $request->get('q_proses');
+        $search_final = $request->get('q_final');
+        $search_sampah = $request->get('q_sampah');
         $gajiRepo = new GajiPerBulanRepository;
         // Proses
-        $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search);
+        $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search_proses);
         // Final
-        $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search);
+        $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search_final);
         // sampah
         if(auth()->user()->hasRole('admin')) {
-            $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1, $search);
+            $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1, $search_sampah);
             $data = [
                 'proses_list' => $proses_list,
                 'final_list' => $final_list,
