@@ -297,46 +297,46 @@
                 <td>{{ $nip }}</td>
                 <td>{{ $item->npwp ? $item->npwp : '-' }}</td>
                 <td>{{ $item->nama_karyawan }}</td>
-                <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->total_gaji ?? 0, 0, true) : formatRupiahExcel($item->gj_pokok ?? 0, 0, true) }}</td>
-                <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->uang_makan ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
-                <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->tj_pulsa ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
-                <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->tj_vitamin ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
-                <td class="text-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->tj_transport ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($lembur, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($penggantiBiayaKesehatan, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($uangDuka, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($spd, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($spdPendidikan, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($spdPindahTugas, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($brutoTHR, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($brutoDanaPendidikan ?? 0, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($brutoPenghargaanKinerja ?? 0, 0, true) }}</td>
+                <td class="td-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->total_gaji ?? 0, 0, true) : formatRupiahExcel($item->gj_pokok ?? 0, 0, true) }}</td>
+                <td class="td-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->uang_makan ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
+                <td class="td-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->tj_pulsa ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
+                <td class="td-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->tj_vitamin ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
+                <td class="td-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->tj_transport ?? 0, 0, true) : formatRupiahExcel(0) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($lembur, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($penggantiBiayaKesehatan, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($uangDuka, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($spd, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($spdPendidikan, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($spdPindahTugas, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($brutoTHR, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($brutoDanaPendidikan ?? 0, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($brutoPenghargaanKinerja ?? 0, 0, true) }}</td>
                 @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
-                    <td class="text-right">{{ formatRupiahExcel($brutoNataru, 0, true) }}</td>
-                    {{--  <td class="text-right">{{ formatRupiahExcel($pphNataru, 0, true) }}</td>  --}}
+                    <td class="td-right">{{ formatRupiahExcel($brutoNataru, 0, true) }}</td>
+                    {{--  <td class="td-right">{{ formatRupiahExcel($pphNataru, 0, true) }}</td>  --}}
                 @endif
                 @if ($grandTotal->totalBrutoJaspro > 0 || $grandTotal->totalPPHJaspro > 0)
-                    <td class="text-right">{{ formatRupiahExcel($brutoJaspro, 0, true) }}</td>
-                    {{--  <td class="text-right">{{ formatRupiahExcel($pphJaspro, 0, true) }}</td>  --}}
+                    <td class="td-right">{{ formatRupiahExcel($brutoJaspro, 0, true) }}</td>
+                    {{--  <td class="td-right">{{ formatRupiahExcel($pphJaspro, 0, true) }}</td>  --}}
                 @endif
                 @if ($grandTotal->totalBrutoTambahanPenghasilan > 0 || $grandTotal->totalPPHTambahanPenghasilan > 0)
-                    <td class="text-right">{{ formatRupiahExcel($tambahanPenghasilan, 0, true) }}</td>
-                    {{--  <td class="text-right">{{ formatRupiahExcel($pphTambahanPenghasilan, 0, true) }}</td>  --}}
+                    <td class="td-right">{{ formatRupiahExcel($tambahanPenghasilan, 0, true) }}</td>
+                    {{--  <td class="td-right">{{ formatRupiahExcel($pphTambahanPenghasilan, 0, true) }}</td>  --}}
                 @endif
                 @if ($grandTotal->totalBrutoRekreasi > 0 || $grandTotal->totalPPHRekreasi > 0)
-                    <td class="text-right">{{ formatRupiahExcel($rekreasi, 0, true) }}</td>
-                    {{--  <td class="text-right">{{ formatRupiahExcel($pphRekreasi, 0, true) }}</td>  --}}
+                    <td class="td-right">{{ formatRupiahExcel($rekreasi, 0, true) }}</td>
+                    {{--  <td class="td-right">{{ formatRupiahExcel($pphRekreasi, 0, true) }}</td>  --}}
                 @endif
-                <td class="text-right">{{ formatRupiahExcel($pph21, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($penambahBruto, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($item->insentif_kredit, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($item->insentif_penagihan, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($item->insentif_kredit_pajak, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($item->insentif_penagihan_pajak, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($brutoTotal, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($brutoPPH, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($item->total_insentif_kredit, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($item->pajak_insentif, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($pph21, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($penambahBruto, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($item->insentif_kredit, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($item->insentif_penagihan, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($item->insentif_kredit_pajak, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($item->insentif_penagihan_pajak, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($brutoTotal, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($brutoPPH, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($item->total_insentif_kredit, 0, true) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($item->pajak_insentif, 0, true) }}</td>
             </tr>
         @empty
             <tr>
