@@ -236,7 +236,7 @@
                 }
                 $penambahBruto = $item->jamsostek;
 
-                $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $bonus + $brutoNataru + $brutoJaspro + $penambahBruto;
+                $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $tambahanPenghasilan + $rekreasi + $bonus + $brutoNataru + $brutoJaspro + $penambahBruto + $totalBrutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja;
                 $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21;
 
                 // Hitung total per page
