@@ -214,7 +214,7 @@ class LaporanTetapRepository
             // Get Jabatan
 
             //total
-            $karyawan->insentif_kredit = DB::table('penghasilan_tidak_teratur')
+            $karyawan->total_insentif_kredit = DB::table('penghasilan_tidak_teratur')
                                         ->where('nip', $karyawan->nip)
                                         ->where('bulan', $month)
                                         ->where('tahun', $year)
@@ -258,6 +258,7 @@ class LaporanTetapRepository
                                 ->where('tahun', $year)
                                 ->sum('insentif_penagihan');
             // total pajak insentif
+            $karyawan->pajak_insentif = $insentif_kredit_pajak + $insentif_penagihan_pajak;
             $karyawan->pajak_insentif = $insentif_kredit_pajak + $insentif_penagihan_pajak;
             // end total pajak insentif
 
@@ -1100,7 +1101,7 @@ class LaporanTetapRepository
             }
 
             //total
-            $karyawan->insentif_kredit = DB::table('penghasilan_tidak_teratur')
+            $karyawan->total_insentif_kredit = DB::table('penghasilan_tidak_teratur')
                 ->where('nip', $karyawan->nip)
                 ->where('bulan', $month)
                 ->where('tahun', $year)
@@ -1944,7 +1945,7 @@ class LaporanTetapRepository
 
             $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $brutoNataru + $brutoJaspro + $penambahBruto + $brutoTambahanPenghasilan + $brutoRekreasi + $brutoDanaPendidikan + $brutoTHR + $brutoPenghargaanKinerja;
             $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21;
-            $totalInsentif += $item->insentif_kredit ?? 0;
+            $totalInsentif += $item->total_insentif_kredit ?? 0;
             $totalPajakInsentif += $item->pajak_insentif ?? 0;
             $total_insentif_kredit += $item->insentif_kredit ?? 0;
             $total_insentif_penagihan += $item->insentif_penagihan ?? 0;

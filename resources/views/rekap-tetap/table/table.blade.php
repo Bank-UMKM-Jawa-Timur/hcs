@@ -27,8 +27,8 @@
             <th class="text-center" colspan="{{ $colspanBonus }}">BONUS</th>
             <th rowspan="3" class="text-center">PPh Ps 21</th>
             <th rowspan="3" class="text-center">Penambah Penghasilan Bruto</th>
-            <th rowspan="2" colspan="2" class="text-center">Total Insentif Kredit</th>
-            <th rowspan="2" colspan="2" class="text-center">Total Pajak Insentif</th>
+            <th rowspan="2" colspan="2" class="text-center">Insentif</th>
+            <th rowspan="2" colspan="2" class="text-center">Pajak Insentif</th>
             <th rowspan="2" colspan="4" class="text-center">TOTAL</th>
         </tr>
         <tr>
@@ -184,8 +184,8 @@
                 $totalBrutoDanaPendidikan = 0;
                 $brutoPenghargaanKinerja = 0;
                 $totalBrutoPenghargaanKinerja = 0;
-                $totalpajakInsentif += $item->pajak_insentif;
-                $totalInsentif += $item->insentif_kredit;
+                $totalpajakInsentif += $item->total_insentif_kredit;
+                $totalInsentif += $item->total_insentif_kredit;
                 // insentif kredit
                 $insentif_kredit += $item->insentif_kredit;
                 $insentif_penagihan += $item->insentif_penagihan;
@@ -335,7 +335,7 @@
                 <td class="text-right">{{ formatRupiahExcel($item->insentif_penagihan_pajak, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($brutoTotal, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($brutoPPH, 0, true) }}</td>
-                <td class="text-right">{{ formatRupiahExcel($item->insentif_kredit, 0, true) }}</td>
+                <td class="text-right">{{ formatRupiahExcel($item->total_insentif_kredit, 0, true) }}</td>
                 <td class="text-right">{{ formatRupiahExcel($item->pajak_insentif, 0, true) }}</td>
             </tr>
         @empty
