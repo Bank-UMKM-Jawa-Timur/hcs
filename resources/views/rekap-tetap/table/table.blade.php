@@ -315,7 +315,7 @@
         @endforelse
     </tbody>
     <tfoot>
-        @if (\Request::get('is_cetak'))
+        @if (!\Request::get('is_cetak'))
             <tr>
                 <th colspan="4" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Total</th>
                 <th class="text-right">{{ formatRupiahExcel($totalGaji ?? 0, 0, true) }}</th>
