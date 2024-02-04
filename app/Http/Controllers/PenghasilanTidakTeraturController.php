@@ -926,15 +926,17 @@ class PenghasilanTidakTeraturController extends Controller
         $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->get('q');
         $kd_entitas = $request->get('kdEntitas');
+        $dataTunjangan = TunjanganModel::where('kategori', 'tidak teratur')->get();
 
         $repo = new PenghasilanTidakTeraturRepository();
         $data = $repo->getAllPenghasilanEdit($search, $limit, $page, $bulan, $createdAt, $idTunjangan, $kd_entitas);
         $tunjangan = $repo->getNameTunjangan($idTunjangan);
         $nameCabang = $repo->getNameCabang($kd_entitas);
+        $tanggal = date("Y-m-d", strtotime($request->tanggal));
 
         // dd($data);
 
-    return view('penghasilan.edit', compact(['data', 'tunjangan', 'nameCabang']));
+        return view('penghasilan.edit', compact(['data', 'tunjangan', 'nameCabang', 'dataTunjangan', 'tanggal']));
     }
 
     function deleteTunjangan($id_tunjangan, $bulan, $tanggal)
@@ -946,6 +948,7 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function editTunjanganNewPost(Request $request){
+        // return $request;
         DB::beginTransaction();
         try {
             $nip = $request->has('nip') ? $request->get('nip') : null;
@@ -1019,6 +1022,8 @@ class PenghasilanTidakTeraturController extends Controller
                         $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
                         DB::table('penghasilan_tidak_teratur')->where('id', $item_id[$i])->update([
                             'nominal' => $nominal,
+                            'created_at' => $request->tanggal,
+                            'id_tunjangan' => $request->id_tunjangan,
                             'is_lock' => 1
                         ]);
                     }
