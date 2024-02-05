@@ -31,7 +31,7 @@
             </div>
             <form action="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur-new-post') }}" method="POST">
                 @csrf
-                 <div class="grid lg:grid-cols-2 gap-5 items-center md:grid-cols-2 grid-cols-1 mb-3">
+                <div class="grid lg:grid-cols-2 gap-5 items-center md:grid-cols-2 grid-cols-1 mb-3">
                      <div class="input-box">
                          <label for="selectfield">Penghasilan</label>
                          <select name="id_tunjangan" class="form-input" id="nip">
