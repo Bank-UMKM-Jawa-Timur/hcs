@@ -339,10 +339,13 @@ class PenghasilanTeraturController extends Controller
         $repo = new PenghasilanTeraturRepository;
         $data = $repo->getEditTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit);
         $tunjangan = $repo->getNamaTunjangan($idTunjangan);
+        $dataTunjangan = TunjanganModel::where('kategori', 'teratur')->where('is_import', 1)->get();
         return view('penghasilan-teratur.edit', [
             'data' => $data,
+            'dataTunjangan' => $dataTunjangan,
             'tunjangan' => $tunjangan,
-            'nameCabang' => $repo->getNameCabang($kdEntitas)
+            'nameCabang' => $repo->getNameCabang($kdEntitas),
+            'bulan' => (int) Carbon::parse($tanggal)->format('m')
         ]);
     }
     public function editTunjanganNew(Request $request){
@@ -351,7 +354,9 @@ class PenghasilanTeraturController extends Controller
             $item_id = $request->has('item_id') ? $request->get('item_id') : null;
             $createdAt = $request->has('createdAt') ? $request->get('createdAt') : null;
             $tanggal = $request->has('tanggal') ? $request->get('tanggal') : null;
-
+            $tahun_up = (int) Carbon::parse($tanggal)->format('Y');
+            $tanggal_up = (int) Carbon::parse($tanggal)->format('d');
+            $bulan_up = (int) Carbon::parse($tanggal)->format('m');
             if ($item_id == null) {
                 $data = DB::table('transaksi_tunjangan')
                             ->where('id_tunjangan', $request->get('id_tunjangan'))
@@ -379,6 +384,8 @@ class PenghasilanTeraturController extends Controller
                         $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
                         DB::table('transaksi_tunjangan')->where('id', $item_id[$i])->update([
                             'nominal' => $nominal,
+                            'id_tunjangan' => $request->id_tunjangan_up,
+                            'tanggal' => date('Y-m-d', strtotime($tahun_up . '-' . $request->bulan_up . '-' . $tanggal_up)),
                             'is_lock' => 1
                         ]);
                     }
