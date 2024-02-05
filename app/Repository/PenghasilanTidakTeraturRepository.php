@@ -21,7 +21,7 @@ class PenghasilanTidakTeraturRepository
         $bonus = DB::table('penghasilan_tidak_teratur')
                     ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                     ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
-                    ->leftJoin('mst_cabang', 'mst_cabang.kd_cabang', 'mst_karyawan.kd_entitas')
+                    ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
                     ->join('gaji_per_bulan', function ($join) {
                         $join->on('penghasilan_tidak_teratur.nip', '=', 'gaji_per_bulan.nip');
                     })
@@ -45,6 +45,7 @@ class PenghasilanTidakTeraturRepository
                         'penghasilan_tidak_teratur.tahun',
                         'keterangan',
                         DB::raw("IF(penghasilan_tidak_teratur.kd_entitas != '000', mst_cabang.nama_cabang, 'Pusat' ) as entitas"),
+                        'mst_cabang.nama_cabang',
                     )
                     ->where('mst_tunjangan.kategori','bonus')
                     ->where(function ($query) use ($search) {
@@ -226,7 +227,7 @@ class PenghasilanTidakTeraturRepository
         $data = DB::table('penghasilan_tidak_teratur')
                 ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                 ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
-                ->leftJoin('mst_cabang', 'mst_cabang.kd_cabang', 'mst_karyawan.kd_entitas')
+                ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
                 ->join('gaji_per_bulan', function ($join) {
                     $join->on('penghasilan_tidak_teratur.nip', '=', 'gaji_per_bulan.nip');
                 })
@@ -251,7 +252,8 @@ class PenghasilanTidakTeraturRepository
                     DB::raw('COUNT(penghasilan_tidak_teratur.id) as total'),
                     'penghasilan_tidak_teratur.tahun',
                     'keterangan',
-                    DB::raw("IF(penghasilan_tidak_teratur.kd_entitas != '000', mst_cabang.nama_cabang, 'Pusat' ) as entitas")
+                    DB::raw("IF(penghasilan_tidak_teratur.kd_entitas != '000', mst_cabang.nama_cabang, 'Pusat' ) as entitas"),
+                    'mst_cabang.nama_cabang'
                 )
                 ->where('mst_tunjangan.kategori','tidak teratur')
                 ->where(function ($query) use ($search) {

@@ -93,7 +93,7 @@
                         <td>{{ $item->nama_tunjangan }}</td>
                         @if (auth()->user()->hasRole('cabang') != 'cabang')
                             <td>
-                                {{ $item->entitas ?? 'Pusat' }}
+                                {{ $item->nama_cabang }}
                             </td>
                         @endif
                         <td>{{ $item->total_data }}</td>
@@ -138,7 +138,7 @@
                                     $cant_detail = true;
                                 @endphp
                                 <a href="{{ route('penghasilan.details', $item->id_transaksi_tunjangan)}}?tanggal={{Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&createdAt={{$item->created_at}}&kdEntitas={{ $item->kd_entitas }}"
-                                    class="btn btn-primary-light">
+                                    class="btn btn-primary-light ml-2">
                                     Detail
                                 </a>
                             @endcan

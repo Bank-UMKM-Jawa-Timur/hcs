@@ -118,12 +118,12 @@
     <div class="flex gap-5 justify-between items-center">
         <div class="heading">
             <div class="text-2xl font-bold tracking-tighter">
-                Rekapitulasi
+                Laporan Rekap
             </div>
             <div class="breadcrumb">
                 <a href="#" class="text-sm text-gray-500">Laporan</a>
                 <i class="ti ti-circle-filled text-theme-primary"></i>
-                <a href="/" class="text-sm text-gray-500 font-bold">Rekapitulasi</a>
+                <a href="/" class="text-sm text-gray-500 font-bold">Laporan Rekap</a>
             </div>
         </div>
     </div>
@@ -139,7 +139,7 @@
         <h3 class="text-lg font-medium">Pemberitahuan</h3>
     </div>
         <div class="mt-2 mb-4 text-sm">
-            Pastikan data <b>penghasilan teratur sudah ter-upload semua</b>, karena akan berpengaruh pada Rekapitulasi.
+            Pastikan data <b>penghasilan teratur sudah ter-upload semua</b>, karena akan berpengaruh pada Laporan Rekap.
         </div>
     </div>
 </div>

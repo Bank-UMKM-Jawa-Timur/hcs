@@ -87,7 +87,7 @@
                     <td>{{ $item->nama_tunjangan }}</td>
                     @if (auth()->user()->hasRole('cabang') != 'cabang')
                         <td>
-                            {{ $item->entitas ?? 'Pusat' }}
+                            {{ $item->nama_cabang }}
                         </td>
                     @endif
                     <td>{{ $item->total }}</td>
