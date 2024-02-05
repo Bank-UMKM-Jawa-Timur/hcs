@@ -43,6 +43,7 @@ class BonusController extends Controller
 
         $search = $request->get('q');
         $data = $this->repo->getDataBonus($search, $limit, $page);
+        // return $data;
         return view('bonus.index', compact('data'));
     }
 
