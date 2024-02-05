@@ -115,13 +115,15 @@
                                     class="btn btn-warning-light ml-1">Edit</a>
                             @endcan
                         @else
-                            @can('penghasilan - unlock - penghasilan tidak teratur')
-                                @php
-                                    $cant_unlock = true;
-                                @endphp
-                                <a href="{{route('penghasilan-tidak-teratur.unlock')}}?id_tunjangan={{$item->tunjangan_id}}&tahun={{ $item->tahun }}&bulan={{ $item->bulan }}&createdAt={{$item->created_at}}&kdEntitas={{ $item->kd_entitas }}"
-                                    class="btn btn-success ml-1">Unlock</a>
-                            @endcan
+                            @if ($item->status != 'final')
+                                @can('penghasilan - unlock - penghasilan tidak teratur')
+                                    @php
+                                        $cant_unlock = true;
+                                    @endphp
+                                    <a href="{{route('penghasilan-tidak-teratur.unlock')}}?id_tunjangan={{$item->tunjangan_id}}&tahun={{ $item->tahun }}&bulan={{ $item->bulan }}&createdAt={{$item->created_at}}&kdEntitas={{ $item->kd_entitas }}"
+                                        class="btn btn-success ml-1">Unlock</a>
+                                @endcan
+                            @endif
                         @endif
                         @can('penghasilan - import - penghasilan tidak teratur - detail')
                             @php
