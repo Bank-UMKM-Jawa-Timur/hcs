@@ -1033,24 +1033,24 @@ class PenghasilanTidakTeraturController extends Controller
                 // Hitung pph
                 DB::beginTransaction();
                 foreach ($nip as $key => $item) {
-                    $bulan = (int) Carbon::parse($createdAt)->format('m');
-                    $tahun = (int) Carbon::parse($createdAt)->format('Y');
+                    $bulan = (int) Carbon::parse($request->tanggal)->format('m');
+                    $tahun = (int) Carbon::parse($request->tanggal)->format('Y');
                     $karyawan = DB::table('mst_karyawan')
                                 ->where('nip', $item)
                                 ->whereNull('tanggal_penonaktifan')
                                 ->first();
 
-                    $pph_baru = HitungPPH::getNewPPH58($createdAt, (int) $bulan, $tahun, $karyawan);
+                    $pph_baru = HitungPPH::getNewPPH58($request->tanggal, (int) $bulan, $tahun, $karyawan);
                 }
                 DB::commit();
 
                 DB::beginTransaction();
-                if (Carbon::parse($createdAt)->format('m') == 12 && Carbon::now()->format('d') > 25) {
+                if (Carbon::parse($request->tanggal)->format('m') == 12 && Carbon::now()->format('d') > 25) {
                     $gajiPerBulanController = new GajiPerBulanController;
                     foreach ($nip as $key => $item) {
-                        $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($createdAt)->format('Y'), Carbon::parse($createdAt)->format('m'));
+                        $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($request->tanggal)->format('Y'), Carbon::parse($request->tanggal)->format('m'));
                         PPHModel::where('nip', $item)
-                            ->where('tahun', Carbon::parse($createdAt)->format('Y'))
+                            ->where('tahun', Carbon::parse($request->tanggal)->format('Y'))
                             ->where('bulan', 12)
                             ->update([
                                 'total_pph' => $pphTerutang,
