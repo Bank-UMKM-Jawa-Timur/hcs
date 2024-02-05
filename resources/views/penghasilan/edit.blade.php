@@ -108,7 +108,6 @@
         $(document).ready(function() {
             $("#table_item").on('click', '.btn-minus', function() {
                 const nip = $(this).data("nip");
-                console.log(nip);
 
                 $("#temp_nip").val('');
                 temp_nip_array.push(nip);

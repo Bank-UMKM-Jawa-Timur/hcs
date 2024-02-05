@@ -373,12 +373,55 @@ class BonusController extends Controller
             $data_nip = $request->get('nip');
             $item_id = $request->has('item_id') ? $request->get('item_id') : 'null';
             $createdAt = $request->has('createdAt') ? $request->get('createdAt') : null;
-
+            $temp_nip = $request->has('temp_nip') ? $request->get('temp_nip')[0] : null;
+            $temp_nip_array = json_decode($temp_nip, true);
+            // return count($temp_nip_array);
             if ($item_id == 'null') {
+                // DB::commit();
+                // DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $request->get('id_tunjangan'))
+                // ->where('kd_entitas', $request->get('entitas'))
+                // ->whereDate('created_at', $createdAt)->delete();
+                for ($i = 0; $i < count($temp_nip_array); $i++) {
+                    DB::commit();
+                    $datts = DB::table('penghasilan_tidak_teratur')
+                    ->where('id_tunjangan', $request->get('id_tunjangan'))
+                        ->where('bulan', (int) Carbon::parse($createdAt)->format('m'))
+                        ->where('tahun', (int) Carbon::parse($createdAt)->format('Y'))
+                        ->where('kd_entitas', $request->get('entitas'))
+                        ->where('nip', $temp_nip_array[$i])
+                        ->delete();
+                    // return $datts;
+                }
+
+                // Hitung pph
+                DB::beginTransaction();
+                foreach ($temp_nip_array as $key => $item) {
+                    $bulan = (int) Carbon::parse($createdAt)->format('m');
+                    $tahun = (int) Carbon::parse($createdAt)->format('Y');
+                    $karyawan = DB::table('mst_karyawan')
+                        ->where('nip', $item)
+                        ->whereNull('tanggal_penonaktifan')
+                        ->first();
+
+                    $pph_baru = HitungPPH::getNewPPH58($createdAt, (int) $bulan, $tahun, $karyawan);
+                }
                 DB::commit();
-                DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $request->get('id_tunjangan'))
-                ->where('kd_entitas', $request->get('entitas'))
-                ->whereDate('created_at', $createdAt)->delete();
+
+                DB::beginTransaction();
+                if (Carbon::parse($createdAt)->format('m') == 12 && Carbon::now()->format('d') > 25) {
+                    $gajiPerBulanController = new GajiPerBulanController;
+                    foreach ($temp_nip_array as $key => $item) {
+                        $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($createdAt)->format('Y'), Carbon::parse($createdAt)->format('m'));
+                        PPHModel::where('nip', $item)
+                            ->where('tahun', Carbon::parse($createdAt)->format('Y'))
+                            ->where('bulan', 12)
+                            ->update([
+                                'total_pph' => $pphTerutang,
+                                'updated_at' => now()
+                            ]);
+                    }
+                }
+                DB::commit();
             }
             else {
                 $itemLamaId = DB::table('penghasilan_tidak_teratur')

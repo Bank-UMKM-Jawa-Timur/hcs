@@ -1,5 +1,5 @@
 @extends('layouts.app-template')
-
+@include('bonus.modal.remove-all')
 @section('content')
     <div class="head mt-5">
         <div class="flex gap-5 justify-between items-center">
@@ -55,7 +55,12 @@
                         <input type="hidden" name="id_tunjangan" value="{{ Request()->get('idTunjangan') }}">
                         <input type="hidden" name="createdAt" value="{{ Request()->get('tanggal') }}">
                         <input type="hidden" name="entitas" value="{{ Request()->get('entitas') }}">
-                        <button type="submit" class="btn btn-primary mb-2">Simpan</button>
+                        <input type="hidden" name="temp_nip[]" id="temp_nip">
+                        <div class="flex justify-end gap-5 mb-2">
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button id="btn-hapus" data-tunjangan="{{$tunjangan->nama_tunjangan}}" type="button" class="btn btn-danger btn-minus-all">Hapus Semua</button>
+                            <button type="button" class="btn btn-danger btn-kembalikan hidden">Kembalikan</button>
+                        </div>
                         <table class="tables whitespace-nowrap" id="table_item" style="width: 100%">
                             <thead class="text-primary">
                                 {{-- <th>No</th> --}}
@@ -65,7 +70,7 @@
                                 <th>Nominal</th>
                                 <th>Aksi</th>
                             </thead>
-                            <tbody>
+                            <tbody id="t_body">
                                 @foreach ($data as $key => $item)
                                     <tr>
                                         <td>{{ $item->nip }}</td>
@@ -80,7 +85,7 @@
                                             <input type="hidden" name="item_id[]" value="{{ $item->id }}">
                                         </td>
                                         <td>
-                                            <button id="btn-hapus" type="button"
+                                            <button id="btn-hapus" type="button" data-nip="{{$item->nip}}"
                                                 class="btn btn-danger btn-minus">-</button>
                                         </td>
                                     </tr>
@@ -88,7 +93,6 @@
                             </tbody>
                         </table>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -110,8 +114,45 @@
             });
         }
 
-        $("#table_item").on('click', '.btn-minus', function() {
-            $(this).closest('tr').remove();
-        })
+        var temp_nip_array = [];
+        var temp_nip_array_all = [];
+
+        $(document).ready(function() {
+            $(`.btn-minus-all`).on('click', function(){
+                const target = '#remove-all-bonus';
+                const tunjangan = $(this).data("tunjangan");
+
+                $(`${target} #tunjangan`).html(tunjangan);
+                $(`${target}`).removeClass('hidden');
+            })
+
+            $(`.btn-kembalikan`).on('click', function(){
+                location.reload();
+            })
+
+            $(`#remove-all-bonus`).on('click', '#hapus', function() {
+                var datas = @json($data);
+                $("#temp_nip").val('');
+                $.each(datas, function(i, item){
+                    temp_nip_array_all.push(item.nip);
+                })
+                $("#temp_nip").val(JSON.stringify(temp_nip_array_all));
+                $(`#remove-all-bonus`).addClass('hidden');
+                $(`.btn-minus-all`).addClass('hidden');
+                $(`.btn-kembalikan`).removeClass('hidden');
+                $('#t_body').empty();
+            })
+
+            $("#table_item").on('click', '.btn-minus', function() {
+                const nip = $(this).data("nip");
+
+                $("#temp_nip").val('');
+                temp_nip_array.push(nip);
+
+                $("#temp_nip").val(JSON.stringify(temp_nip_array));
+
+                $(this).closest('tr').remove();
+            });
+        });
     </script>
 @endsection
