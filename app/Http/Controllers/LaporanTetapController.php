@@ -58,7 +58,8 @@ class LaporanTetapController extends Controller
         return view('rekap-tetap.index', [
             'cabang' => $cabang,
             'data' => $data,
-            'grandTotal' => $footer
+            'grandTotal' => $footer,
+            'is_cetak' => false,
         ]);
     }
 
