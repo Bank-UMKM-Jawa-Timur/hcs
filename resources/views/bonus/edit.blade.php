@@ -30,8 +30,7 @@
             <div class="">
                 <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 flex gap-7" role="alert">
                     <h6 class="text-sm text-blue-900 font-semibold"> Cabang : <b>{{ $nameCabang->nama_cabang }}</b></h6> |
-                    <h6 class="text-sm text-blue-900 font-semibold"> Tunjangan : <b>{{ $tunjangan->nama_tunjangan }}</b>
-                    </h6>
+                    <h6 class="text-sm text-blue-900 font-semibold"> Tunjangan : <b>{{ $tunjangan->nama_tunjangan }}</b></h6>
                 </div>
                 <div class="table-responsive overflow-hidden content-center">
                     <form action="{{ route('edit-tunjangan-bonus-post-new') }}"

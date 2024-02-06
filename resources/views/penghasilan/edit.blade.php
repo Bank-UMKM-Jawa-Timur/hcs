@@ -1,5 +1,5 @@
 @extends('layouts.app-template')
-
+@include('penghasilan.modal.remove-all')
 @section('content')
     <div class="head mt-5">
         <div class="flex gap-5 justify-between items-center">
@@ -50,7 +50,11 @@
                 <input type="hidden" name="bulan" value="{{Request()->get('bulan')}}">
                 <input type="hidden" name="kd_entitas" value="{{Request()->get('kdEntitas')}}">
                 <input type="hidden" name="temp_nip[]" id="temp_nip">
-                <button type="submit" class="btn btn-primary mb-2">Simpan</button>
+                <div class="flex justify-end gap-5 mb-2">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button id="btn-hapus" data-tunjangan="{{$tunjangan->nama_tunjangan}}" type="button" class="btn btn-danger btn-minus-all">Hapus Semua</button>
+                    <button type="button" class="btn btn-danger btn-kembalikan hidden">Kembalikan</button>
+                </div>
                 <table class="tables" id="table_item">
                     <thead>
                         <th>NIP</th>
@@ -60,7 +64,7 @@
                         <th>Nominal</th>
                         <th>Aksi</th>
                     </thead>
-                    <tbody>
+                    <tbody id="t_body">
                         @forelse ($data as $key => $item)
                             <tr>
                                 <td>{{ $item->nip }}</td>
@@ -104,8 +108,34 @@
         }
 
         var temp_nip_array = [];
+        var temp_nip_array_all = [];
 
         $(document).ready(function() {
+            $(`.btn-minus-all`).on('click', function(){
+                const target = '#remove-all-tidak-teratur';
+                const tunjangan = $(this).data("tunjangan");
+
+                $(`${target} #tunjangan`).html(tunjangan);
+                $(`${target}`).removeClass('hidden');
+            })
+
+            $(`.btn-kembalikan`).on('click', function(){
+                location.reload();
+            })
+
+            $(`#remove-all-tidak-teratur`).on('click', '#hapus', function() {
+                var datas = @json($data);
+                $("#temp_nip").val('');
+                $.each(datas, function(i, item){
+                    temp_nip_array_all.push(item.nip);
+                })
+                $("#temp_nip").val(JSON.stringify(temp_nip_array_all));
+                $(`#remove-all-tidak-teratur`).addClass('hidden');
+                $(`.btn-minus-all`).addClass('hidden');
+                $(`.btn-kembalikan`).removeClass('hidden');
+                $('#t_body').empty();
+            })
+
             $("#table_item").on('click', '.btn-minus', function() {
                 const nip = $(this).data("nip");
 
