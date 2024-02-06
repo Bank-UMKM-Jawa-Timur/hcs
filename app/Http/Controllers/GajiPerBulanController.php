@@ -2279,15 +2279,30 @@ class GajiPerBulanController extends Controller
                     return back();
                 }
                 else {
+                    DB::table('transaksi_tunjangan')
+                    ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'transaksi_tunjangan.nip')
+                    ->join('batch_gaji_per_bulan', 'gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
+                    ->where('batch_gaji_per_bulan.id', $request->id)
+                    ->update([
+                        'transaksi_tunjangan.is_lock' => 1
+                    ]);
+                    DB::table('penghasilan_tidak_teratur')
+                    ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'penghasilan_tidak_teratur.nip')
+                    ->join('batch_gaji_per_bulan', 'gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
+                    ->where('batch_gaji_per_bulan.id', $request->id)
+                    ->update([
+                        'penghasilan_tidak_teratur.is_lock' => 1
+                    ]);
+
                     DB::table('batch_gaji_per_bulan')
-                        ->where('id', $request->id)
-                        ->update([
-                            'file' => $filenameLampiran,
-                            'tanggal_upload' => Carbon::now(),
-                            'status' => 'final',
-                            'tanggal_final' => date('Y-m-d'),
-                            'updated_at' => now(),
-                        ]);
+                    ->where('id', $request->id)
+                    ->update([
+                        'file' => $filenameLampiran,
+                        'tanggal_upload' => Carbon::now(),
+                        'status' => 'final',
+                        'tanggal_final' => date('Y-m-d'),
+                        'updated_at' => now(),
+                    ]);
                 }
             }
 
