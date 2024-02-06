@@ -81,7 +81,7 @@ class LaporanTetapController extends Controller
         else
             $showKantor = 'Kantor ' . CabangModel::where('kd_cabang', $kantor)->first()?->nama_cabang;
 
-        $filename = 'Laporan Rekap ' . $showKantor . $month_name . ' Tahun ' . $year;
+        $filename = 'Laporan Rekap ' . $showKantor .' '. $month_name . ' Tahun ' . $year;
         return Excel::download(new RekapTetapExport($data, $grandtotal), $filename . '.xlsx');
     }
 

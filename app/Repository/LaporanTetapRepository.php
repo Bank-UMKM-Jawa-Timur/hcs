@@ -1943,7 +1943,6 @@ class LaporanTetapRepository
             }
             $penambahBruto = $item->jamsostek;
 
-            $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $brutoNataru + $brutoJaspro + $penambahBruto + $brutoTambahanPenghasilan + $brutoRekreasi + $brutoDanaPendidikan + $brutoTHR + $brutoPenghargaanKinerja;
             $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21;
             $totalInsentif += $item->total_insentif_kredit ?? 0;
             $totalPajakInsentif += $item->pajak_insentif ?? 0;
@@ -1951,7 +1950,8 @@ class LaporanTetapRepository
             $total_insentif_penagihan += $item->insentif_penagihan ?? 0;
             $total_insentif_kredit_pajak += $item->insentif_kredit_pajak ?? 0;
             $total_insentif_penagihan_pajak += $item->insentif_penagihan_pajak ?? 0;
-
+            $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $brutoNataru + $brutoJaspro + $penambahBruto + $brutoTambahanPenghasilan + $brutoRekreasi + $brutoDanaPendidikan + $brutoTHR + $brutoPenghargaanKinerja + $total_insentif_kredit + $total_insentif_penagihan;
+            
             $totalLembur += $lembur;
             $totalPenggantiKesehatan += $penggantiBiayaKesehatan;
             $totalUangDuka += $uangDuka;
