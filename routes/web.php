@@ -124,6 +124,7 @@ Route::prefix('graph')->group(function () {
 
 Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::get('/cek-pph', [CheckPPHController::class, 'index'])->name('cek-pph.index');
+    Route::get('/cek-pph-25', [CheckPPHController::class, 'index25'])->name('cek-pph25.index');
     Route::post('/cek-pph', [CheckPPHController::class, 'update'])->name('cek-pph.update-terutang');
     Route::resource('/kantor', KantorController::class);
     Route::resource('role', RoleMasterController::class);

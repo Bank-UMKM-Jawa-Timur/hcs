@@ -1269,11 +1269,13 @@ class GajiPerBulanController extends Controller
                             ->update($pph);
                 }
                 else {
-                    $gaji = DB::table('gaji_per_bulan')
-                                ->where('nip', $item->nip)
-                                ->where('bulan', $bulan)
-                                ->where('tahun', $tahun)
-                                ->first();
+                    $gaji = false;
+                    // Validasi gaji di periode yang sama
+                    // $gaji = DB::table('gaji_per_bulan')
+                    //             ->where('nip', $item->nip)
+                    //             ->where('bulan', $bulan)
+                    //             ->where('tahun', $tahun)
+                    //             ->first();
                     if (!$gaji) {
                         $employee = [
                             'batch_id' => $batch_id,
@@ -1318,11 +1320,13 @@ class GajiPerBulanController extends Controller
                                 ->insert($batch_tidak_rutin);
                         }
 
-                        $pph_bulan_ini = DB::table('pph_yang_dilunasi')
-                                            ->where('nip', $item->nip)
-                                            ->where('bulan', $bulan)
-                                            ->where('tahun', $tahun)
-                                            ->first();
+                        // Validasi gaji di periode yang sama
+                        $pph_bulan_ini = false;
+                        // $pph_bulan_ini = DB::table('pph_yang_dilunasi')
+                        //                     ->where('nip', $item->nip)
+                        //                     ->where('bulan', $bulan)
+                        //                     ->where('tahun', $tahun)
+                        //                     ->first();
                         if (!$pph_bulan_ini) {
                             $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin);
 
