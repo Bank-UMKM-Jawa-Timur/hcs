@@ -180,12 +180,13 @@ class LaporanTetapRepository
                 'ket_jabatan',
                 'alamat_ktp',
                 'jk',
-                'gj_pokok',
+                'mst_karyawan.gj_pokok',
                 DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
             )
-            // ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
-            // ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
-            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
+            ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
+            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+            ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
+            ->whereNull('batch.deleted_at')
             ->orderByRaw($this->orderRaw)
             ->orderBy('status_kantor', 'asc')
             ->orderBy('kd_cabang', 'asc')
@@ -197,7 +198,7 @@ class LaporanTetapRepository
                     if ($kantor != '000') {
                         $q->where('mst_karyawan.kd_entitas', $kantor);
                     } else if($kantor == '000'){
-                        $q->whereRaw("(kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR kd_entitas IS null or kd_entitas = '')");
+                        $q->whereRaw("(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR mst_karyawan.kd_entitas IS null or mst_karyawan.kd_entitas = '')");
                     }
                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
                 });
@@ -548,11 +549,12 @@ class LaporanTetapRepository
                                                 },
                                                 'pphDilunasi' => function($query) use ($karyawan, $year, $month) {
                                                     $query->select(
+                                                        'id',
                                                         'nip',
                                                         DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                                         DB::raw("CAST(tahun AS SIGNED) AS tahun"),
-                                                        DB::raw('CAST(SUM(total_pph) AS SIGNED) AS nominal'),
-                                                        DB::raw('CAST(SUM(terutang) AS SIGNED) AS terutang'),
+                                                        DB::raw('CAST(total_pph AS SIGNED) AS nominal'),
+                                                        DB::raw('CAST(terutang AS SIGNED) AS terutang'),
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('bulan', $month)
@@ -1063,10 +1065,13 @@ class LaporanTetapRepository
                 'ket_jabatan',
                 'alamat_ktp',
                 'jk',
-                'gj_pokok',
+                'mst_karyawan.gj_pokok',
                 DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
             )
-            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
+            ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
+            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+            ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
+            ->whereNull('batch.deleted_at')
             ->orderByRaw($this->orderRaw)
             ->orderBy('status_kantor', 'asc')
             ->orderBy('kd_cabang', 'asc')
@@ -1078,7 +1083,7 @@ class LaporanTetapRepository
                     if ($kantor != '000' && $kantor != 'keseluruhan') {
                         $q->where('mst_karyawan.kd_entitas', $kantor);
                     } else if($kantor == '000'){
-                        $q->whereRaw("(kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR kd_entitas IS null or kd_entitas = '')");
+                        $q->whereRaw("(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR mst_karyawan.kd_entitas IS null or mst_karyawan.kd_entitas = '')");
                     }
                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
                 });
@@ -1386,8 +1391,8 @@ class LaporanTetapRepository
                                                         'gj_pokok',
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
-                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_teller + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_teller) AS total_gaji"),
                                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
                                                     )
                                                     ->where('nip', $karyawan->nip)
@@ -1422,11 +1427,12 @@ class LaporanTetapRepository
                                                 },
                                                 'pphDilunasi' => function($query) use ($karyawan, $year, $month) {
                                                     $query->select(
+                                                        'id',
                                                         'nip',
                                                         DB::raw("CAST(bulan AS SIGNED) AS bulan"),
                                                         DB::raw("CAST(tahun AS SIGNED) AS tahun"),
-                                                        DB::raw('CAST(SUM(total_pph) AS SIGNED) AS nominal'),
-                                                        DB::raw('CAST(SUM(terutang) AS SIGNED) AS terutang'),
+                                                        DB::raw('CAST(total_pph AS SIGNED) AS nominal'),
+                                                        DB::raw('CAST(terutang AS SIGNED) AS terutang'),
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('bulan', $month)
@@ -1839,6 +1845,7 @@ class LaporanTetapRepository
         $totalPPHJaspro = 0;
         $totalPPHTambahanPenghasilan = 0;
         $totalPPHRekreasi = 0;
+        $totalPPH21Bentukan = 0;
         $totalPPH21 = 0;
         $totalPenambahBruto = 0;
         $totalBruto = 0;
@@ -1878,6 +1885,7 @@ class LaporanTetapRepository
             $brutoPenghargaanKinerja = 0;
             $pphTambahanPenghasilan = 0;
             $pphRekreasi = 0;
+            $pph21Bentukan = 0;
             $pph21 = 0;
             $penambahBruto = 0;
             $brutoTotal = 0;
@@ -1926,7 +1934,8 @@ class LaporanTetapRepository
 
             foreach ($item?->pphDilunasi as $value) {
                 if ($value->bulan > 1) {
-                    $pph21 += $value->total_pph;
+                    $pph21Bentukan = $value->total_pph;
+                    $pph21 = $value->total_pph;
                     $terutang = DB::table('pph_yang_dilunasi')
                                     ->select('terutang')
                                     ->where('nip', $value->nip)
@@ -1938,12 +1947,14 @@ class LaporanTetapRepository
                     }
                 }
                 else {
-                    $pph21 += $value->total_pph;
+                    $pph21Bentukan = $value->total_pph;
+                    $pph21 = $value->total_pph;
                 }
             }
+            $pph21 -= $item->pajak_insentif;
             $penambahBruto = $item->jamsostek;
 
-            $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21;
+            $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21Bentukan;
             $totalInsentif += $item->total_insentif_kredit ?? 0;
             $totalPajakInsentif += $item->pajak_insentif ?? 0;
             $total_insentif_kredit += $item->insentif_kredit ?? 0;
@@ -1969,6 +1980,7 @@ class LaporanTetapRepository
             $totalPPHJaspro += $pphJaspro;
             $totalPPHTambahanPenghasilan += $pphTambahanPenghasilan;
             $totalPPHRekreasi += $pphRekreasi;
+            $totalPPH21Bentukan += $pph21Bentukan;
             $totalPPH21 += $pph21;
             $totalPenambahBruto += $penambahBruto;
             $totalBruto += $brutoTotal;
@@ -1997,6 +2009,7 @@ class LaporanTetapRepository
         $returnData->totalPPHJaspro = $totalPPHJaspro;
         $returnData->totalPPHTambahanPenghasilan = $totalPPHTambahanPenghasilan;
         $returnData->totalPPHRekreasi = $totalPPHRekreasi;
+        $returnData->totalPPH21Bentukan = $totalPPH21Bentukan;
         $returnData->totalPPH21 = $totalPPH21;
         $returnData->totalPenambahBruto = $totalPenambahBruto;
         $returnData->totalBruto = $totalBruto;
@@ -2009,7 +2022,6 @@ class LaporanTetapRepository
         $returnData->total_insentif_kredit_pajak = $total_insentif_kredit_pajak;
         $returnData->total_insentif_penagihan_pajak = $total_insentif_penagihan_pajak;
 
-        // dd($returnData);
         return $returnData;
     }
 }
