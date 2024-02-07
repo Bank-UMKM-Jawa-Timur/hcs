@@ -220,9 +220,9 @@ class CheckHitungPPH
         $data->seharusnya = $seharusnya;
         $data->pengali_akhir = ($pengali_akhir / 100);
         $data->pph_bentukan = $pph;
-        $data->total_insentif = $seharusnya->total_insentif;
-        $data->pph = $pph - $seharusnya->total_insentif;
-        $data->pph_akhir_bulan = $pphAkhirBulan - $seharusnya->total_insentif;
+        $data->total_insentif = $seharusnya?->total_insentif;
+        $data->pph = $pph - $seharusnya?->total_insentif;
+        $data->pph_akhir_bulan = $pphAkhirBulan - $seharusnya?->total_insentif;
 
         return $data;
     }

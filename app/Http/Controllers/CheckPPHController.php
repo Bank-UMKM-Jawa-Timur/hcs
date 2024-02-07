@@ -139,8 +139,12 @@ class CheckPPHController extends Controller
                 ->where('kd_entitas', auth()->user()->kd_cabang)
                 ->orderByRaw($orderRaw)
                 ->get();
+            $dataC = DB::table('mst_cabang')->where('kd_cabang', auth()->user()->kd_cabang)->first();
+            $nama_cabang = $dataC->nama_cabang;
         } else {
             if ($request->has('kd_entitas')) {
+                $dataC = DB::table('mst_cabang')->where('kd_cabang', $request->get('kd_entitas'))->first();
+                $nama_cabang = $dataC->nama_cabang;
                 if ($kd_entitas == '000') {
                     $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
                                             ->where(function($query) use ($kd_cabang) {
@@ -158,67 +162,58 @@ class CheckPPHController extends Controller
                 }
             } else {
                 $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                ->where(function ($query) use ($kd_cabang) {
-                    $query->whereNotIn('kd_entitas', $kd_cabang)
-                    ->orWhereNull('kd_entitas');
-                })
-                    ->orderByRaw($orderRaw)
-                    ->get();
-            }
-        }
-        $result = [];
-        foreach ($karyawan as $key => $value) {
-            $data = CheckHitungPPH::newCheckPPH58($tanggal, $bulan, $tahun, $value);
-            // Pengali DB lama
-            $kode_ptkp = $data['old']['pph']->ptkp->kode;
-            $penghasilanBrutoDb = $data['old']['pph']->penghasilanBruto;
-            $ter_kategori = CheckHitungPPH::getTarifEfektifKategori($kode_ptkp);
-            $lapisanPenghasilanBrutoDB = DB::table('lapisan_penghasilan_bruto')
-                                            ->where('kategori', $ter_kategori)
-                                            ->where(function($query) use ($penghasilanBrutoDb) {
-                                                $query->where(function($q2) use ($penghasilanBrutoDb) {
-                                                    $q2->where('nominal_start', '<=', $penghasilanBrutoDb)
-                                                        ->where('nominal_end', '>=', $penghasilanBrutoDb);
-                                                })->orWhere(function($q2) use ($penghasilanBrutoDb) {
-                                                    $q2->where('nominal_start', '<=', $penghasilanBrutoDb)
-                                                        ->where('nominal_end', 0);
-                                                });
-                                            })
-                                            ->first();
-            $data['old']['pph']->lapisan = $lapisanPenghasilanBrutoDB;
-            // Pengali DB baru
-            $kode_ptkp = $data['new']['pph']->ptkp->kode;
-            $penghasilanBrutoDb = $data['new']['pph']->penghasilanBruto;
-            $ter_kategori = CheckHitungPPH::getTarifEfektifKategori($kode_ptkp);
-            $lapisanPenghasilanBrutoDB = DB::table('lapisan_penghasilan_bruto')
-                                            ->where('kategori', $ter_kategori)
-                                            ->where(function($query) use ($penghasilanBrutoDb) {
-                                                $query->where(function($q2) use ($penghasilanBrutoDb) {
-                                                    $q2->where('nominal_start', '<=', $penghasilanBrutoDb)
-                                                        ->where('nominal_end', '>=', $penghasilanBrutoDb);
-                                                })->orWhere(function($q2) use ($penghasilanBrutoDb) {
-                                                    $q2->where('nominal_start', '<=', $penghasilanBrutoDb)
-                                                        ->where('nominal_end', 0);
-                                                });
-                                            })
-                                            ->first();
-            $data['new']['pph']->lapisan = $lapisanPenghasilanBrutoDB;
-            array_push($result, $data);
-        }
-
-        if (auth()->user()->hasRole('cabang')) {
-            $dataC = DB::table('mst_cabang')->where('kd_cabang', auth()->user()->kd_cabang)->first();
-            $nama_cabang = $dataC->nama_cabang;
-
-        } else {
-            if ($request->has('kd_entitas')) {
-                $dataC = DB::table('mst_cabang')->where('kd_cabang', $request->get('kd_entitas'))->first();
-                $nama_cabang = $dataC->nama_cabang;
-            } else {
+                                        ->where(function ($query) use ($kd_cabang) {
+                                            $query->whereNotIn('kd_entitas', $kd_cabang)
+                                            ->orWhereNull('kd_entitas');
+                                        })
+                                        ->orderByRaw($orderRaw)
+                                        ->get();
                 $nama_cabang = "Pusat";
             }
         }
 
+        $result = [];
+        if ($request->has('kd_entitas')) {
+            foreach ($karyawan as $key => $value) {
+                $data = CheckHitungPPH::newCheckPPH58($tanggal, $bulan, $tahun, $value);
+                // Pengali DB lama
+                $kode_ptkp = $data['old']['pph']->ptkp->kode;
+                $penghasilanBrutoDb = $data['old']['pph']->penghasilanBruto;
+                $ter_kategori = CheckHitungPPH::getTarifEfektifKategori($kode_ptkp);
+                $lapisanPenghasilanBrutoDB = DB::table('lapisan_penghasilan_bruto')
+                                                ->where('kategori', $ter_kategori)
+                                                ->where(function($query) use ($penghasilanBrutoDb) {
+                                                    $query->where(function($q2) use ($penghasilanBrutoDb) {
+                                                        $q2->where('nominal_start', '<=', $penghasilanBrutoDb)
+                                                            ->where('nominal_end', '>=', $penghasilanBrutoDb);
+                                                    })->orWhere(function($q2) use ($penghasilanBrutoDb) {
+                                                        $q2->where('nominal_start', '<=', $penghasilanBrutoDb)
+                                                            ->where('nominal_end', 0);
+                                                    });
+                                                })
+                                                ->first();
+                $data['old']['pph']->lapisan = $lapisanPenghasilanBrutoDB;
+                // Pengali DB baru
+                $kode_ptkp = $data['new']['pph']->ptkp->kode;
+                $penghasilanBrutoDb = $data['new']['pph']->penghasilanBruto;
+                $ter_kategori = CheckHitungPPH::getTarifEfektifKategori($kode_ptkp);
+                $lapisanPenghasilanBrutoDB = DB::table('lapisan_penghasilan_bruto')
+                                                ->where('kategori', $ter_kategori)
+                                                ->where(function($query) use ($penghasilanBrutoDb) {
+                                                    $query->where(function($q2) use ($penghasilanBrutoDb) {
+                                                        $q2->where('nominal_start', '<=', $penghasilanBrutoDb)
+                                                            ->where('nominal_end', '>=', $penghasilanBrutoDb);
+                                                    })->orWhere(function($q2) use ($penghasilanBrutoDb) {
+                                                        $q2->where('nominal_start', '<=', $penghasilanBrutoDb)
+                                                            ->where('nominal_end', 0);
+                                                    });
+                                                })
+                                                ->first();
+                $data['new']['pph']->lapisan = $lapisanPenghasilanBrutoDB;
+                array_push($result, $data);
+            }
+        }
+        // return $result;
         return view('cek-pph-new-25', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
     }
 

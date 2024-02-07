@@ -65,7 +65,8 @@
             <form action="" method="GET">
                 <div class="input-box">
                     <label for="">Cabang</label>
-                    <select name="kd_entitas" id="cabang" class="form-input">
+                    <select name="kd_entitas" id="cabang" class="form-input" required>
+                        <option value="">--- Pilih Kantor ---</option>
                         @foreach ($cabang as $item)
                             <option value="{{$item->kd_cabang}}" {{old('kd_entitas', \Request::get('kd_entitas') == $item->kd_cabang ? 'selected' : '')}}>{{$item->nama_cabang}}</option>
                         @endforeach
@@ -99,13 +100,13 @@
                     $bruto += $row->penghasilanBruto;
                     $bruto_akhir_header += $row->penghasilanBrutoAkhirBulan;
                     $pph_akhir_header += $row->pph_akhir_bulan;
-                    $pph_sekarang += $row->seharusnya->total_seharusnya;
+                    $pph_sekarang += $row->seharusnya ? $row->seharusnya->total_seharusnya : 0;
                     $pph_seharusnya += $row->pph;
                     $selisih_total = $pph_seharusnya - $pph_sekarang;
                     $selisih_header = $pph_seharusnya - $pph_sekarang;
                     $new_terutang_header = 0;
-                    $current_terutang_header = $row->seharusnya->terutang;
-                    $terutang_total += $row->seharusnya->terutang;
+                    $current_terutang_header = $row->seharusnya ? $row->seharusnya->terutang : 0;
+                    $terutang_total += $row->seharusnya ? $row->seharusnya->terutang : 0;
                     if ($current_terutang_header == 0 && $selisih_header != 0) {
                         $new_terutang_header = $selisih_header;
                     }
@@ -213,15 +214,17 @@
                             @foreach ($result as $item)
                                 @php
                                     $row = $item['old']['pph'];
-                                    $selisih = $row->pph - $row->seharusnya->total_seharusnya;
-                                    $selisih_pph_akhir_bulan = round(($row->penghasilanBrutoAkhirBulan - $row->total_insentif) * ($row->pengali_akhir)) - ($row->total_insentif * 0.05) - ($row->seharusnya->total_seharusnya + $row->seharusnya->terutang);
+                                    $total_seharusnya_akhir_bulan = $row->seharusnya ? $row->seharusnya->total_seharusnya : 0;
+                                    $total_seharusnya_terutang_akhir_bulan = $row->seharusnya ? $row->seharusnya->terutang : 0;
+                                    $selisih = $row->pph - $total_seharusnya_akhir_bulan;
+                                    $selisih_pph_akhir_bulan = round(($row->penghasilanBrutoAkhirBulan - $row->total_insentif) * ($row->pengali_akhir)) - ($row->total_insentif * 0.05) - ($total_seharusnya_akhir_bulan + $total_seharusnya_terutang_akhir_bulan);
 
                                     // Database Lama
                                     $rowOld = $item['old']['pph'];
                                     $bruto_db = $rowOld->penghasilanBruto;
                                     $total_insentif_db = $rowOld->total_insentif_25;
-                                    $pph_bentukan_db = $rowOld->seharusnya->pph_bentukan;
-                                    $total_pajak_insentif_db = $rowOld->seharusnya->total_insentif;
+                                    $pph_bentukan_db = $rowOld->seharusnya ? $rowOld->seharusnya->pph_bentukan : 0;
+                                    $total_pajak_insentif_db = $rowOld->seharusnya ? $rowOld->seharusnya->total_insentif : 0;
                                     $total_db = $bruto_db + $total_insentif_db;
                                     $pengali_persen_db = $rowOld->pengali_db * 100;
                                     $pph_db = $item['old']['pph_db'];
@@ -232,7 +235,7 @@
                                     $bruto_new_db = $rowNew->penghasilanBruto;
                                     $total_insentif_new_db = $rowNew->total_insentif_25;
                                     $pph_bentukan_new_db = $item['new']['pph_final_db'];
-                                    $total_pajak_insentif_new_db = $rowNew->seharusnya->total_insentif;
+                                    $total_pajak_insentif_new_db = $rowNew->seharusnya ? $rowNew->seharusnya->total_insentif : 0;
                                     $total_new_db = $bruto_new_db + $total_insentif_new_db;
                                     $pengali_persen_new_db = $rowNew->pengali * 100;
                                     $pph_new_db = $item['new']['pph_db'];
@@ -242,11 +245,11 @@
                                     // Seharusnya
                                     $bruto_seharusnya = $rowNew->penghasilanBruto;
                                     $total_insentif_seharusnya = $rowNew->total_insentif_25;
-                                    $total_pajak_insentif_seharusnya = $rowNew->seharusnya->total_insentif;
+                                    $total_pajak_insentif_seharusnya = $rowNew->seharusnya ? $rowNew->seharusnya->total_insentif : 0;
                                     $total_seharusnya = $bruto_seharusnya + $total_insentif_seharusnya;
                                     $pengali_persen_seharusnya = $rowNew->pengali * 100;
                                     $pph_seharusnya = $rowNew->pph;
-                                    $terutang_seharusnya = $rowNew->seharusnya->terutang;
+                                    $terutang_seharusnya = $rowNew->seharusnya ? $rowNew->seharusnya->terutang : 0;
                                     $selisih_seharusnya = floor($pph_seharusnya - $pph_new_db);
                                     // END Seharusnya
                                     // Akhir Bulan
@@ -256,18 +259,15 @@
                                     $total_insentif_26 = $row->total_insentif_26;
                                     $pajak_insentif_25 = $row->pajak_insentif_25;
                                     $pajak_insentif_26 = $row->pajak_insentif_26;
-                                    $total_pajak_insentif_akhir = $row->seharusnya->total_insentif;
+                                    $total_pajak_insentif_akhir = $row->seharusnya ? $row->seharusnya->total_insentif : 0;
                                     $total_akhir = $bruto_akhir + $total_insentif_akhir;
                                     $pengali_persen_akhir = $row->pengali_akhir * 100;
                                     $pph_akhir = ($bruto_akhir * ($row->pengali_akhir)) - round(($row->total_insentif * 0.05));
                                     $pph_akhir = round($pph_akhir);
-                                    $terutang_akhir = $row->seharusnya->terutang;
-                                    $selisih_akhir = ($pph_akhir - ($row->seharusnya->total_seharusnya + $row->seharusnya->terutang));
+                                    $terutang_akhir = $row->seharusnya ? $row->seharusnya->terutang : 0;
+                                    $selisih_akhir = ($pph_akhir - (($row->seharusnya ? $row->seharusnya->total_seharusnya : 0) + ($row->seharusnya ? $row->seharusnya->terutang : 0)));
                                     // END Akhir Bulan
                                 @endphp
-                                {{--  @if ($row->nip == '00550')
-                                    @dd($pph_seharusnya, $pph_db, $selisih_seharusnya)
-                                @endif  --}}
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
                                     <td class="left">{{str_contains($row->nip, 'U') ? '-' : $row->nip}}</td>
