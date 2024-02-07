@@ -504,7 +504,7 @@ class GajiPerBulanRepository
                         $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
                     }
                 }
-                $dpp = round($dpp);
+                $dpp = floor($dpp);
                 $total_dpp += $dpp;
                 $jp_1_persen = $jp_1_persen;
 

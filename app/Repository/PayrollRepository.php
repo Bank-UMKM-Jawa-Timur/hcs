@@ -244,7 +244,7 @@ class PayrollRepository
                             )
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
-                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
+                            ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
                             ->orderByRaw("
                                 CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
                                 WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
@@ -261,6 +261,7 @@ class PayrollRepository
                             ->orderBy('kd_cabang', 'asc')
                             ->orderBy('nip', 'asc')
                             ->orderBy('mst_karyawan.kd_entitas')
+                            ->whereNull('batch.deleted_at')
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
@@ -375,7 +376,7 @@ class PayrollRepository
                         $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
                     }
                 }
-                $potongan->dpp = round($dpp);
+                $potongan->dpp = floor($dpp);
                 $potongan->jp_1_persen = $jp_1_persen;
 
                 // Get BPJS TK
@@ -1103,7 +1104,7 @@ class PayrollRepository
                             )
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
-                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
+                            ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
                             ->orderByRaw("
                                 CASE WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 1
                                 WHEN mst_karyawan.kd_jabatan='PSD' THEN 2
@@ -1115,6 +1116,7 @@ class PayrollRepository
                                 WHEN mst_karyawan.kd_jabatan='NST' THEN 8
                                 WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
                             ")
+                            ->whereNull('batch.deleted_at')
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
@@ -1209,7 +1211,7 @@ class PayrollRepository
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                 if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                     $dpp = 0;
-                    $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
+                    $jp_1_persen = (($persen_jp_pengurang / 100) * $gaji);
                 } else{
                     $gj_pokok = $obj_gaji->gj_pokok;
                     $tj_keluarga = $obj_gaji->tj_keluarga;
@@ -1218,12 +1220,12 @@ class PayrollRepository
                     // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
                     $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
                     if($gaji >= $nominal_jp){
-                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                        $jp_1_persen = ($nominal_jp * ($persen_jp_pengurang / 100));
                     } else {
-                        $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
+                        $jp_1_persen = ($gaji * ($persen_jp_pengurang / 100));
                     }
                 }
-                $potongan->dpp = round($dpp);
+                $potongan->dpp = floor($dpp);
                 $potongan->jp_1_persen = $jp_1_persen;
 
                 // Get BPJS TK
@@ -2166,7 +2168,7 @@ class PayrollRepository
                 $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                 if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                     $dpp = 0;
-                    $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
+                    $jp_1_persen = floor(($persen_jp_pengurang / 100) * $gaji);
                 } else{
                     $gj_pokok = $obj_gaji->gj_pokok;
                     $tj_keluarga = $obj_gaji->tj_keluarga;
@@ -2175,12 +2177,12 @@ class PayrollRepository
                     // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
                     $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
                     if($gaji >= $nominal_jp){
-                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                        $jp_1_persen = floor($nominal_jp * ($persen_jp_pengurang / 100));
                     } else {
-                        $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
+                        $jp_1_persen = floor($gaji * ($persen_jp_pengurang / 100));
                     }
                 }
-                $potongan->dpp = round($dpp);
+                $potongan->dpp = floor($dpp);
                 $potongan->jp_1_persen = $jp_1_persen;
 
                 // Get BPJS TK

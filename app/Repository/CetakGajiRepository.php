@@ -254,7 +254,7 @@ class CetakGajiRepository
                         $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
                     }
                 }
-                $dpp = round($dpp);
+                $dpp = floor($dpp);
                 $jp_1_persen = round($jp_1_persen);
                 $potongan->dpp = $dpp;
                 $potongan->jp_1_persen = $jp_1_persen;

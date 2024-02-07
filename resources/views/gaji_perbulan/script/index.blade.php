@@ -952,138 +952,138 @@
                         .column(2)
                         .data()
                         .reduce(function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                         }, 0);
                     // computing column Total gaji pokok
                     var totalGajiPokok = api
                         .column(2, { page: "current" })
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                         }, 0 );
                     // computing column Total gaji pokok
                     var grandTotalDPP = api
                         .column(4)
                         .data()
                         .reduce(function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                         }, 0);
                     var totalGajiDPP = api
                         .column( 4, { page: "current" })
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
 
                     var grandTotalBPJS = api
                         .column( 5 )
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var totalGajiBPJS = api
                         .column(5,{page:"current"} )
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var grandTotalGajiKredit = api
                         .column(6)
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var totalGajiKredit = api
                         .column( 6, {page:"current"})
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var grandTotalGajiKoperasi = api
                         .column( 7 )
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var totalGajiKoperasi = api
                         .column( 7, {page:"current"})
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var grandTotalGajiPegawai = api
                         .column(8)
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var totalGajiPegawai = api
                         .column(8, {page:"current"})
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var grandTotalGajiIuran = api
                         .column(9)
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var totalGajiIuran = api
                         .column(9 ,{page:"current"})
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var grandTotalGajiPotongan = api
                         .column(10 )
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var totalGajiPotongan = api
                         .column(10 ,{page:"current"})
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var grandTotalGajiDiterima = api
                         .column( 11 )
                         .data()
                         .reduce( function (a, b) {
-                            return Math.round(a) + Math.round(b);
+                            return a + b;
                     }, 0 );
                     var totalGajiDiterima = api
                     .column( 11 ,{page:"current"} )
                     .data()
                     .reduce( function (a, b) {
-                        return Math.round(a) + Math.round(b);
+                        return a + b;
                     }, 0 );
 
                     $( api.column( 0 ).footer('.total_payroll') ).html('Total');
-                    $( api.column( 2 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiPokok)));
+                    $( api.column( 2 ).footer('.total_payroll') ).html(formatRupiahExcel(totalGajiPokok));
                     $( api.column( 3 ).footer('.total_payroll') ).html(`-`);
-                    $( api.column( 4 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiDPP)));
-                    $( api.column( 5 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiBPJS)));
-                    $( api.column( 6 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiKredit)));
-                    $( api.column( 7 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiKoperasi)));
-                    $( api.column( 8 ).footer('.total_payroll') ).html(formatRupiahExcel(Math.round(totalGajiPegawai)));
-                    $( api.column( 9 ).footer('.total_payroll') ).html( formatRupiahExcel(Math.round(totalGajiIuran)));
-                    $( api.column( 10 ).footer('.total_payroll') ).html( formatRupiahExcel(Math.round(totalGajiPotongan)));
-                    $( api.column( 11 ).footer('.total_payroll') ).html( formatRupiahExcel(Math.round(totalGajiDiterima)));
+                    $( api.column( 4 ).footer('.total_payroll') ).html(formatRupiahExcel(totalGajiDPP));
+                    $( api.column( 5 ).footer('.total_payroll') ).html(formatRupiahExcel(totalGajiBPJS));
+                    $( api.column( 6 ).footer('.total_payroll') ).html(formatRupiahExcel(totalGajiKredit));
+                    $( api.column( 7 ).footer('.total_payroll') ).html(formatRupiahExcel(totalGajiKoperasi));
+                    $( api.column( 8 ).footer('.total_payroll') ).html(formatRupiahExcel(totalGajiPegawai));
+                    $( api.column( 9 ).footer('.total_payroll') ).html( formatRupiahExcel(totalGajiIuran));
+                    $( api.column( 10 ).footer('.total_payroll') ).html( formatRupiahExcel(totalGajiPotongan));
+                    $( api.column( 11 ).footer('.total_payroll') ).html( formatRupiahExcel(totalGajiDiterima));
 
                     $('tfoot tr.grandtotalPayroll').html(`
                         <th colspan="2" class="text-center">Grand Total</th>
-                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiPokok))}</th>
+                        <th class="text-right">${formatRupiahExcel(grandTotalGajiPokok)}</th>
                         <th class="text-center">-</th>
-                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalDPP))}</th>
-                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalBPJS))}</th>
-                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiKredit))}</th>
-                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiKoperasi))}</th>
-                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiPegawai))}</th>
-                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiIuran))}</th>
-                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiPotongan))}</th>
-                        <th class="text-right">${formatRupiahExcel(Math.round(grandTotalGajiDiterima))}</th>
+                        <th class="text-right">${formatRupiahExcel(grandTotalDPP)}</th>
+                        <th class="text-right">${formatRupiahExcel(grandTotalBPJS)}</th>
+                        <th class="text-right">${formatRupiahExcel(grandTotalGajiKredit)}</th>
+                        <th class="text-right">${formatRupiahExcel(grandTotalGajiKoperasi)}</th>
+                        <th class="text-right">${formatRupiahExcel(grandTotalGajiPegawai)}</th>
+                        <th class="text-right">${formatRupiahExcel(grandTotalGajiIuran)}</th>
+                        <th class="text-right">${formatRupiahExcel(grandTotalGajiPotongan)}</th>
+                        <th class="text-right">${formatRupiahExcel(grandTotalGajiDiterima)}</th>
 
                     `);
                 }
