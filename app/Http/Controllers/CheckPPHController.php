@@ -173,7 +173,7 @@ class CheckPPHController extends Controller
         }
 
         $result = [];
-        if ($request->has('kd_entitas')) {
+        if ($request->has('kd_entitas') || auth()->user()->hasRole('cabang')) {
             foreach ($karyawan as $key => $value) {
                 $data = CheckHitungPPH::newCheckPPH58($tanggal, $bulan, $tahun, $value);
                 // Pengali DB lama
@@ -213,7 +213,7 @@ class CheckPPHController extends Controller
                 array_push($result, $data);
             }
         }
-        // return $result;
+
         return view('cek-pph-new-25', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
     }
 
