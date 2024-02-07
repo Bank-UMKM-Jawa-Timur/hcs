@@ -240,13 +240,13 @@
                                     $selisih_new_db = $pph_new_db - $pph_db;
                                     // END Database Baru
                                     // Seharusnya
-                                    $bruto_seharusnya = $row->penghasilanBruto;
-                                    $total_insentif_seharusnya = $row->total_insentif_25;
-                                    $total_pajak_insentif_seharusnya = $row->seharusnya->total_insentif;
+                                    $bruto_seharusnya = $rowNew->penghasilanBruto;
+                                    $total_insentif_seharusnya = $rowNew->total_insentif_25;
+                                    $total_pajak_insentif_seharusnya = $rowNew->seharusnya->total_insentif;
                                     $total_seharusnya = $bruto_seharusnya + $total_insentif_seharusnya;
-                                    $pengali_persen_seharusnya = $row->pengali * 100;
-                                    $pph_seharusnya = $row->pph;
-                                    $terutang_seharusnya = $row->seharusnya->terutang;
+                                    $pengali_persen_seharusnya = $rowNew->pengali * 100;
+                                    $pph_seharusnya = $rowNew->pph;
+                                    $terutang_seharusnya = $rowNew->seharusnya->terutang;
                                     $selisih_seharusnya = floor($pph_seharusnya - $pph_new_db);
                                     // END Seharusnya
                                     // Akhir Bulan

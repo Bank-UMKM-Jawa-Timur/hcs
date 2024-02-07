@@ -320,7 +320,10 @@ class SlipGajiRepository
                                 "),
                                 'status_karyawan',
                             )
-                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
+                            ->join('gaji_per_bulan AS gaji', 'gaji.nip', 'mst_karyawan.nip')
+                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                            ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
+                            ->whereNull('batch.deleted_at')
                             ->where(function($query) use ($year, $nip) {
                                 $query->whereRelation('gaji', 'tahun', $year)
                                     ->whereNull('tanggal_penonaktifan')

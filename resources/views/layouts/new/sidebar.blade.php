@@ -319,7 +319,7 @@
                                                         <li>
                                                             <a href="{{ route('slipIndex') }}">
                                                                 <button class="btn-link">
-                                                                    <span>Slip jurnal</span>
+                                                                    <span>Slip Jurnal</span>
                                                                 </button>
                                                             </a>
                                                         </li>
@@ -499,7 +499,7 @@
                                                         <li>
                                                             <a href="{{ route('slipIndex') }}">
                                                                 <button class="btn-link">
-                                                                    <span>Slip jurnal</span>
+                                                                    <span>Slip Jurnal</span>
                                                                 </button>
                                                             </a>
                                                         </li>

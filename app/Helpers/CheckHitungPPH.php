@@ -8,7 +8,7 @@ use stdClass;
 
 class CheckHitungPPH
 {
-    public static function getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin = 0, $full_month = false) {
+    public static function getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin = 0, $full_month = false, $is_delete=false) {
         $penghasilanRutin = 0;
         $penghasilanTidakRutin = 0;
         $penghasilanTidakRutinFull = 0;
@@ -158,6 +158,8 @@ class CheckHitungPPH
         }
 
         $pph = $penghasilanBruto * ($pengali / 100);
+        if ($karyawan->nip == '00906')
+            // dd($pph, floor($pph));
         $pph = floor($pph);
         $pphAkhirBulan = $penghasilanBrutoAkhirBulanNonInsetif * ($pengali_akhir / 100);
         $pphAkhirBulan = floor($pphAkhirBulan);
@@ -180,9 +182,19 @@ class CheckHitungPPH
                             DB::raw('(CAST(pd.insentif_kredit AS SIGNED) + CAST(pd.insentif_penagihan AS SIGNED)) AS total_insentif'),
                             DB::raw('CAST(pd.terutang AS SIGNED) - CAST(pd.terutang_insentif AS SIGNED) AS terutang'),
                         )
-                        ->where('nip', $karyawan->nip)
-                        ->where('bulan', $bulan)
-                        ->where('tahun', $tahun)
+                        ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pd.gaji_per_bulan_id')
+                        ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                        ->where(function($query) use ($is_delete) {
+                            if ($is_delete) {
+                                $query->whereNotNull('batch.deleted_at');
+                            }
+                            else {
+                                $query->whereNull('batch.deleted_at');
+                            }
+                        })
+                        ->where('pd.nip', $karyawan->nip)
+                        ->where('pd.bulan', $bulan)
+                        ->where('pd.tahun', $tahun)
                         ->first();
 
         $data = new stdClass;
@@ -192,8 +204,8 @@ class CheckHitungPPH
         $data->total_insentif = (int) $total_insentif;
         $data->total_insentif_25 = (int) $total_insentif_25;
         $data->total_insentif_26 = (int) $total_insentif_26;
-        $data->pajak_insentif_25 = intval(floor($total_insentif_25) * config('global.pengali_insentif_kredit'));
-        $data->pajak_insentif_26 = intval(floor($total_insentif_26) * config('global.pengali_insentif_kredit'));
+        $data->pajak_insentif_25 = floor(($total_insentif_25 * config('global.pengali_insentif_kredit')));
+        $data->pajak_insentif_26 = floor(($total_insentif_26 * config('global.pengali_insentif_kredit')));
         $data->penghasilanRutin = $penghasilanRutin;
         $data->penghasilanTidakRutin = $penghasilanTidakRutin;
         $data->jamsostek = $dppJamsostek['jamsostek'];
@@ -380,7 +392,7 @@ class CheckHitungPPH
 
         $full_month = false;
 
-        $new_pph = CheckHitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin, $full_month);
+        $new_pph = CheckHitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin, $full_month, $is_delete);
 
         $data = [
             'pph_db' => $pph_db,
@@ -501,7 +513,7 @@ class CheckHitungPPH
             $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
             $jp_mar_des = $hitungan_pengurang->jp_mar_des;
         }
-        $total_gaji = round($total_gaji);
+        $total_gaji = floor($total_gaji);
         $jamsostek = 0;
 
         $id_tunjangan_teratur_arr = DB::table('mst_tunjangan')
@@ -528,7 +540,7 @@ class CheckHitungPPH
             $nominal_jp = (date('m') > 2) ? $jp_mar_des : $jp_jan_feb;
             if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
                 $dpp = 0;
-                $jp_1_persen = round(($persen_jp_pengurang / 100) * $bruto_karyawan, 2);
+                $jp_1_persen = floor((($persen_jp_pengurang / 100) * $bruto_karyawan));
             } else{
                 $gj_pokok = $gaji_obj->gj_pokok;
                 $tj_keluarga = $gaji_obj->tj_keluarga;
@@ -537,12 +549,12 @@ class CheckHitungPPH
                 // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
                 $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
                 if($bruto_karyawan >= $nominal_jp){
-                    $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                    $jp_1_persen = floor($nominal_jp * ($persen_jp_pengurang / 100));
                 } else {
-                    $jp_1_persen = round($bruto_karyawan * ($persen_jp_pengurang / 100), 2);
+                    $jp_1_persen = floor($bruto_karyawan * ($persen_jp_pengurang / 100));
                 }
             }
-            $dpp = round($dpp);
+            $dpp = floor($dpp);
             // BPJS TK
             if ($gaji_obj->bulan > 2) {
                 if ($total_gaji > $jp_mar_des) {
@@ -560,22 +572,22 @@ class CheckHitungPPH
                     $bpjs_tk = $total_gaji * 1 / 100;
                 }
             }
-            $bpjs_tk = round($bpjs_tk);
+            $bpjs_tk = floor($bpjs_tk);
             // Jamsostek
             if(!$karyawan->tanggal_penonaktifan && $karyawan->kpj){
-                $jkk = round(($persen_jkk / 100) * $total_gaji);
-                $jht = round(($persen_jht / 100) * $total_gaji);
-                $jkm = round(($persen_jkm / 100) * $total_gaji);
-                $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
+                $jkk = floor(($persen_jkk / 100) * $total_gaji);
+                $jht = floor(($persen_jht / 100) * $total_gaji);
+                $jkm = floor(($persen_jkm / 100) * $total_gaji);
+                $jp_penambah = floor(($persen_jp_penambah / 100) * $total_gaji);
             }
 
             if($karyawan->jkn){
                 if($total_gaji > $batas_atas){
-                    $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                    $bpjs_kesehatan = floor($batas_atas * ($persen_kesehatan / 100));
                 } else if($total_gaji < $batas_bawah){
-                    $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                    $bpjs_kesehatan = floor($batas_bawah * ($persen_kesehatan / 100));
                 } else{
-                    $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
+                    $bpjs_kesehatan = floor($total_gaji * ($persen_kesehatan / 100));
                 }
             }
             $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
@@ -683,6 +695,6 @@ class CheckHitungPPH
 
         $result = $nominal * $pengali;
 
-        return round($result);
+        return floor($result);
     }
 }

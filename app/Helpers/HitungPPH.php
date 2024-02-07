@@ -88,7 +88,7 @@ class HitungPPH
         }
 
         $pph = $penghasilanBruto * ($pengali / 100);
-        $pph = round($pph);
+        $pph = floor($pph);
 
         if (!$full_month) {
             if ($bulan > 1) {
@@ -332,7 +332,7 @@ class HitungPPH
             $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
             $jp_mar_des = $hitungan_pengurang->jp_mar_des;
         }
-        $total_gaji = round($total_gaji);
+        $total_gaji = floor($total_gaji);
         $jamsostek = 0;
 
         if($total_gaji > 0){
@@ -342,19 +342,19 @@ class HitungPPH
             $jkm = 0;
             $jp_penambah = 0;
             if(!$karyawan->tanggal_penonaktifan && $karyawan->kpj){
-                $jkk = round(($persen_jkk / 100) * $total_gaji);
-                $jht = round(($persen_jht / 100) * $total_gaji);
-                $jkm = round(($persen_jkm / 100) * $total_gaji);
-                $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
+                $jkk = floor(($persen_jkk / 100) * $total_gaji);
+                $jht = floor(($persen_jht / 100) * $total_gaji);
+                $jkm = floor(($persen_jkm / 100) * $total_gaji);
+                $jp_penambah = floor(($persen_jp_penambah / 100) * $total_gaji);
             }
 
             if($karyawan->jkn){
                 if($total_gaji > $batas_atas){
-                    $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                    $bpjs_kesehatan = floor(($batas_atas * ($persen_kesehatan / 100)));
                 } else if($total_gaji < $batas_bawah){
-                    $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                    $bpjs_kesehatan = floor(($batas_bawah * ($persen_kesehatan / 100)));
                 } else{
-                    $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
+                    $bpjs_kesehatan = floor(($total_gaji * ($persen_kesehatan / 100)));
                 }
             }
             $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
@@ -403,7 +403,7 @@ class HitungPPH
 
         $result = $nominal * $pengali;
 
-        return round($result);
+        return floor($result);
     }
 
     // function getPPHBulanIni($bulan, $tahun, $karyawan, $ptkp, $tanggal)

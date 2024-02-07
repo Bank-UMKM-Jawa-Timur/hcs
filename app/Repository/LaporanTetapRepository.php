@@ -212,54 +212,73 @@ class LaporanTetapRepository
         $this->karyawanRepo->getEntity($data);
 
         foreach($data as $key => $karyawan){
-            // Get Jabatan
+            $karyawan->total_insentif_kredit = DB::table('penghasilan_tidak_teratur AS pt')
+                                                ->join('batch_penghasilan_tidak_teratur AS batch_pt', 'batch_pt.penghasilan_tidak_teratur_id', 'pt.id')
+                                                ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'batch_pt.gaji_per_bulan_id')
+                                                ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                                ->where('pt.nip', $karyawan->nip)
+                                                ->where('pt.bulan', $month)
+                                                ->where('pt.tahun', $year)
+                                                ->whereIn('pt.id_tunjangan', [31, 32])
+                                                ->whereNull('batch.deleted_at')
+                                                ->sum('pt.nominal');
+            $karyawan->insentif_kredit = DB::table('penghasilan_tidak_teratur AS pt')
+                                        ->join('batch_penghasilan_tidak_teratur AS batch_pt', 'batch_pt.penghasilan_tidak_teratur_id', 'pt.id')
+                                        ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'batch_pt.gaji_per_bulan_id')
+                                        ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                        ->where('pt.nip', $karyawan->nip)
+                                        ->where('pt.bulan', $month)
+                                        ->where('pt.tahun', $year)
+                                        ->where('pt.id_tunjangan', 31)
+                                        ->whereNull('batch.deleted_at')
+                                        ->sum('pt.nominal');
+            $karyawan->insentif_penagihan = DB::table('penghasilan_tidak_teratur AS pt')
+                                            ->join('batch_penghasilan_tidak_teratur AS batch_pt', 'batch_pt.penghasilan_tidak_teratur_id', 'pt.id')
+                                            ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'batch_pt.gaji_per_bulan_id')
+                                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                            ->where('pt.nip', $karyawan->nip)
+                                            ->where('pt.bulan', $month)
+                                            ->where('pt.tahun', $year)
+                                            ->where('pt.id_tunjangan', 32)
+                                            ->whereNull('batch.deleted_at')
+                                            ->sum('pt.nominal');
 
-            //total
-            $karyawan->total_insentif_kredit = DB::table('penghasilan_tidak_teratur')
-                                        ->where('nip', $karyawan->nip)
-                                        ->where('bulan', $month)
-                                        ->where('tahun', $year)
-                                        ->whereIn('id_tunjangan', [31, 32])
-                                        ->sum('nominal');
-            // end total
-            $karyawan->insentif_kredit = DB::table('penghasilan_tidak_teratur')
-                                        ->where('nip', $karyawan->nip)
-                                        ->where('bulan', $month)
-                                        ->where('tahun', $year)
-                                        ->where('id_tunjangan', 31)
-                                        ->sum('nominal');
-            $karyawan->insentif_penagihan = DB::table('penghasilan_tidak_teratur')
-                                        ->where('nip', $karyawan->nip)
-                                        ->where('bulan', $month)
-                                        ->where('tahun', $year)
-                                        ->where('id_tunjangan', 32)
-                                        ->sum('nominal');
+            $karyawan->insentif_kredit_pajak = DB::table('pph_yang_dilunasi AS pph')
+                                                ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'pph.gaji_per_bulan_id')
+                                                ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                                ->where('pph.nip', $karyawan->nip)
+                                                ->where('pph.bulan', $month)
+                                                ->where('pph.tahun', $year)
+                                                ->whereNull('batch.deleted_at')
+                                                ->sum('pph.insentif_kredit');
 
-            $karyawan->insentif_kredit_pajak = DB::table('pph_yang_dilunasi')
-                                ->where('nip', $karyawan->nip)
-                                ->where('bulan', $month)
-                                ->where('tahun', $year)
-                                ->sum('insentif_kredit');
+            $karyawan->insentif_penagihan_pajak = DB::table('pph_yang_dilunasi AS pph')
+                                                ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'pph.gaji_per_bulan_id')
+                                                ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                                ->where('pph.nip', $karyawan->nip)
+                                                ->where('pph.bulan', $month)
+                                                ->where('pph.tahun', $year)
+                                                ->whereNull('batch.deleted_at')
+                                                ->sum('pph.insentif_penagihan');
 
-            $karyawan->insentif_penagihan_pajak = DB::table('pph_yang_dilunasi')
-                                ->where('nip', $karyawan->nip)
-                                ->where('bulan', $month)
-                                ->where('tahun', $year)
-                                ->sum('insentif_penagihan');
+            $insentif_kredit_pajak = DB::table('pph_yang_dilunasi AS pph')
+                                        ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'pph.gaji_per_bulan_id')
+                                        ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                        ->where('pph.nip', $karyawan->nip)
+                                        ->where('pph.bulan', $month)
+                                        ->where('pph.tahun', $year)
+                                        ->whereNull('batch.deleted_at')
+                                        ->sum('pph.insentif_kredit');
 
-            $insentif_kredit_pajak = DB::table('pph_yang_dilunasi')
-                                ->where('nip', $karyawan->nip)
-                                ->where('bulan', $month)
-                                ->where('tahun', $year)
-                                ->sum('insentif_kredit');
-
-            $insentif_penagihan_pajak = DB::table('pph_yang_dilunasi')
-                                ->where('nip', $karyawan->nip)
-                                ->where('bulan', $month)
-                                ->where('tahun', $year)
-                                ->sum('insentif_penagihan');
+            $insentif_penagihan_pajak = DB::table('pph_yang_dilunasi AS pph')
+                                        ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'pph.gaji_per_bulan_id')
+                                        ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                        ->where('pph.nip', $karyawan->nip)
+                                        ->where('pph.bulan', $month)
+                                        ->where('pph.tahun', $year)
+                                        ->whereNull('batch.deleted_at')
+                                        ->sum('pph.insentif_penagihan');
             // total pajak insentif
-            $karyawan->pajak_insentif = $insentif_kredit_pajak + $insentif_penagihan_pajak;
             $karyawan->pajak_insentif = $insentif_kredit_pajak + $insentif_penagihan_pajak;
             // end total pajak insentif
 
@@ -1105,51 +1124,72 @@ class LaporanTetapRepository
                 $jabatan = 'undifined';
             }
 
-            //total
-            $karyawan->total_insentif_kredit = DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $karyawan->nip)
-                ->where('bulan', $month)
-                ->where('tahun', $year)
-                ->whereIn('id_tunjangan', [31, 32])
-                ->sum('nominal');
-            // end total
-            $karyawan->insentif_kredit = DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $karyawan->nip)
-                ->where('bulan', $month)
-                ->where('tahun', $year)
-                ->where('id_tunjangan', 31)
-                ->sum('nominal');
-            $karyawan->insentif_penagihan = DB::table('penghasilan_tidak_teratur')
-                ->where('nip', $karyawan->nip)
-                ->where('bulan', $month)
-                ->where('tahun', $year)
-                ->where('id_tunjangan', 32)
-                ->sum('nominal');
+            $karyawan->total_insentif_kredit = DB::table('penghasilan_tidak_teratur AS pt')
+                                                ->join('batch_penghasilan_tidak_teratur AS batch_pt', 'batch_pt.penghasilan_tidak_teratur_id', 'pt.id')
+                                                ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'batch_pt.gaji_per_bulan_id')
+                                                ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                                ->where('pt.nip', $karyawan->nip)
+                                                ->where('pt.bulan', $month)
+                                                ->where('pt.tahun', $year)
+                                                ->whereIn('pt.id_tunjangan', [31, 32])
+                                                ->whereNull('batch.deleted_at')
+                                                ->sum('pt.nominal');
+            $karyawan->insentif_kredit = DB::table('penghasilan_tidak_teratur AS pt')
+                                        ->join('batch_penghasilan_tidak_teratur AS batch_pt', 'batch_pt.penghasilan_tidak_teratur_id', 'pt.id')
+                                        ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'batch_pt.gaji_per_bulan_id')
+                                        ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                        ->where('pt.nip', $karyawan->nip)
+                                        ->where('pt.bulan', $month)
+                                        ->where('pt.tahun', $year)
+                                        ->where('pt.id_tunjangan', 31)
+                                        ->whereNull('batch.deleted_at')
+                                        ->sum('pt.nominal');
+            $karyawan->insentif_penagihan = DB::table('penghasilan_tidak_teratur AS pt')
+                                            ->join('batch_penghasilan_tidak_teratur AS batch_pt', 'batch_pt.penghasilan_tidak_teratur_id', 'pt.id')
+                                            ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'batch_pt.gaji_per_bulan_id')
+                                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                            ->where('pt.nip', $karyawan->nip)
+                                            ->where('pt.bulan', $month)
+                                            ->where('pt.tahun', $year)
+                                            ->where('pt.id_tunjangan', 32)
+                                            ->whereNull('batch.deleted_at')
+                                            ->sum('pt.nominal');
 
-            $karyawan->insentif_kredit_pajak = DB::table('pph_yang_dilunasi')
-            ->where('nip', $karyawan->nip)
-            ->where('bulan', $month)
-            ->where('tahun', $year)
-            ->sum('insentif_kredit');
+            $karyawan->insentif_kredit_pajak = DB::table('pph_yang_dilunasi AS pph')
+                                                ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'pph.gaji_per_bulan_id')
+                                                ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                                ->where('pph.nip', $karyawan->nip)
+                                                ->where('pph.bulan', $month)
+                                                ->where('pph.tahun', $year)
+                                                ->whereNull('batch.deleted_at')
+                                                ->sum('pph.insentif_kredit');
 
-            $karyawan->insentif_penagihan_pajak = DB::table('pph_yang_dilunasi')
-            ->where('nip', $karyawan->nip)
-            ->where('bulan', $month)
-            ->where('tahun', $year)
-            ->sum('insentif_penagihan');
+            $karyawan->insentif_penagihan_pajak = DB::table('pph_yang_dilunasi AS pph')
+                                                ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'pph.gaji_per_bulan_id')
+                                                ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                                ->where('pph.nip', $karyawan->nip)
+                                                ->where('pph.bulan', $month)
+                                                ->where('pph.tahun', $year)
+                                                ->whereNull('batch.deleted_at')
+                                                ->sum('pph.insentif_penagihan');
 
-            $insentif_kredit_pajak = DB::table('pph_yang_dilunasi')
-            ->where('nip', $karyawan->nip)
-            ->where('bulan', $month)
-            ->where('tahun', $year)
-            ->sum('insentif_kredit');
+            $insentif_kredit_pajak = DB::table('pph_yang_dilunasi AS pph')
+                                        ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'pph.gaji_per_bulan_id')
+                                        ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                        ->where('pph.nip', $karyawan->nip)
+                                        ->where('pph.bulan', $month)
+                                        ->where('pph.tahun', $year)
+                                        ->whereNull('batch.deleted_at')
+                                        ->sum('pph.insentif_kredit');
 
-            $insentif_penagihan_pajak = DB::table('pph_yang_dilunasi')
-                ->where('nip', $karyawan->nip)
-                ->where('bulan', $month)
-                ->where('tahun', $year)
-                ->sum('insentif_penagihan');
-            // total pajak insentif
+            $insentif_penagihan_pajak = DB::table('pph_yang_dilunasi AS pph')
+                                        ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'pph.gaji_per_bulan_id')
+                                        ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
+                                        ->where('pph.nip', $karyawan->nip)
+                                        ->where('pph.bulan', $month)
+                                        ->where('pph.tahun', $year)
+                                        ->whereNull('batch.deleted_at')
+                                        ->sum('pph.insentif_penagihan');
             $karyawan->pajak_insentif = $insentif_kredit_pajak + $insentif_penagihan_pajak;
             // end total pajak insentif
 
