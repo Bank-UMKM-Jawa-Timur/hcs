@@ -122,13 +122,15 @@
                                             class="btn btn-warning-light">Edit</a>
                                     @endcan
                                 @else
-                                    @can('penghasilan - unlock - penghasilan teratur')
-                                        @php
-                                            $cant_unlock = true;
-                                        @endphp
-                                        <a href="{{route('penghasilan.unlock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&created_at={{$item->created_at}}"
-                                            class="btn btn-success-light">Unlock</a>
-                                    @endcan
+                                    @if ($item->status != 'final')
+                                        @can('penghasilan - unlock - penghasilan teratur')
+                                            @php
+                                                $cant_unlock = true;
+                                            @endphp
+                                            <a href="{{route('penghasilan.unlock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&created_at={{$item->created_at}}"
+                                                class="btn btn-success-light">Unlock</a>
+                                        @endcan
+                                    @endif
                                 @endif
                             @endif
                             @can('penghasilan - import - penghasilan teratur - detail')

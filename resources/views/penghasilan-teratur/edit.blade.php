@@ -36,6 +36,28 @@
             <input type="hidden" name="kdEntitas" value="{{ \Request::get('kdEntitas') }}">
             <form action="{{ route('penghasilan.edit-tunjangan-new') }}" method="POST">
                 @csrf
+                <div class="grid lg:grid-cols-2 gap-5 items-center md:grid-cols-2 grid-cols-1 mb-3">
+                     <div class="input-box">
+                         <label for="selectfield">Penghasilan</label>
+                         <select name="id_tunjangan_up" class="form-input" id="nip">
+                             <option value="">--- Pilih Penghasilan ---</option>
+                             @foreach ($dataTunjangan as $item)
+                             <option value="{{ $item->id }}" {{$item->id == Request()->get('idTunjangan') ? 'selected' : ''}}>{{ $item->nama_tunjangan }}</option>
+                         @endforeach
+                         </select>
+                     </div>
+                     <div class="input-box">
+                         <label for="bulan">Bulan</label>
+                         <select name="bulan_up" class="form-input" id="bulan">
+                            <option value="">-- Pilih Bulan --</option>
+                            @for ($i = 1; $i <= 12; $i++)
+                                <option {{ $bulan == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}
+                                    value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}">
+                                    {{ date('F', mktime(0, 0, 0, $i, 1)) }}</option>
+                            @endfor
+                        </select>
+                     </div>
+                </div>
                 <input type="hidden" name="createdAt" value="{{Request()->get('createdAt')}}">
                 <input type="hidden" name="tanggal" value="{{Request()->get('tanggal')}}">
                 <input type="hidden" name="id_tunjangan" value="{{Request()->get('idTunjangan')}}">

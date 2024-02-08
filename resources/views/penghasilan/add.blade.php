@@ -463,7 +463,7 @@
                 <select name="kategori" class="form-input" id="kategori">
                     <option value="">-- Pilih Kategori --</option>
                     @forelse ($data as $item)
-                    <option value="{{ strtolower($item->nama_tunjangan) }}">{{ $item->nama_tunjangan }}</option>
+                        <option value="{{ strtolower($item->nama_tunjangan) }}">{{ $item->nama_tunjangan }}</option>
                     @empty
                     @endforelse
                 </select>

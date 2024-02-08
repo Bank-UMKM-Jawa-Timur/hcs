@@ -22,6 +22,12 @@ class PenghasilanTidakTeraturRepository
                     ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                     ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
                     ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
+                    ->join('gaji_per_bulan', function ($join) {
+                        $join->on('penghasilan_tidak_teratur.nip', '=', 'gaji_per_bulan.nip');
+                    })
+                    ->join('batch_gaji_per_bulan', function ($join) {
+                        $join->on('gaji_per_bulan.batch_id', '=', 'batch_gaji_per_bulan.id');
+                    })
                     ->select(
                         'penghasilan_tidak_teratur.is_lock',
                         'penghasilan_tidak_teratur.id',
@@ -31,11 +37,12 @@ class PenghasilanTidakTeraturRepository
                         'mst_karyawan.nama_karyawan',
                         'mst_tunjangan.nama_tunjangan',
                         'nominal',
-                        'bulan',
+                        'penghasilan_tidak_teratur.bulan',
+                        'batch_gaji_per_bulan.status',
                         'penghasilan_tidak_teratur.created_at as new_date',
                         DB::raw('SUM(nominal) as jumlah_nominal'),
                         DB::raw('COUNT(penghasilan_tidak_teratur.id) as total_data'),
-                        'tahun',
+                        'penghasilan_tidak_teratur.tahun',
                         'keterangan',
                         DB::raw("IF(penghasilan_tidak_teratur.kd_entitas != '000', mst_cabang.nama_cabang, 'Pusat' ) as entitas"),
                         'mst_cabang.nama_cabang',
@@ -221,6 +228,12 @@ class PenghasilanTidakTeraturRepository
                 ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                 ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
                 ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
+                ->join('gaji_per_bulan', function ($join) {
+                    $join->on('penghasilan_tidak_teratur.nip', '=', 'gaji_per_bulan.nip');
+                })
+                ->join('batch_gaji_per_bulan', function ($join) {
+                    $join->on('gaji_per_bulan.batch_id', '=', 'batch_gaji_per_bulan.id');
+                })
                 ->select(
                     'penghasilan_tidak_teratur.is_lock',
                     'penghasilan_tidak_teratur.id',
@@ -232,11 +245,12 @@ class PenghasilanTidakTeraturRepository
                     'penghasilan_tidak_teratur.bulan',
                     'mst_karyawan.nama_karyawan',
                     'mst_tunjangan.nama_tunjangan',
+                    'batch_gaji_per_bulan.status',
                     'nominal',
                     'mst_tunjangan.id as tunjangan_id',
                     DB::raw('SUM(nominal) as grand_total'),
                     DB::raw('COUNT(penghasilan_tidak_teratur.id) as total'),
-                    'tahun',
+                    'penghasilan_tidak_teratur.tahun',
                     'keterangan',
                     DB::raw("IF(penghasilan_tidak_teratur.kd_entitas != '000', mst_cabang.nama_cabang, 'Pusat' ) as entitas"),
                     'mst_cabang.nama_cabang'

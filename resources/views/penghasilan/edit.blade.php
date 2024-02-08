@@ -31,7 +31,21 @@
             </div>
             <form action="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur-new-post') }}" method="POST">
                 @csrf
-                <input type="hidden" name="id_tunjangan" value="{{Request()->get('idTunjangan')}}">
+                <div class="grid lg:grid-cols-2 gap-5 items-center md:grid-cols-2 grid-cols-1 mb-3">
+                     <div class="input-box">
+                         <label for="selectfield">Penghasilan</label>
+                         <select name="id_tunjangan" class="form-input" id="nip">
+                             <option value="">--- Pilih Penghasilan ---</option>
+                             @foreach ($dataTunjangan as $item)
+                             <option value="{{ $item->id }}" {{$item->id == Request()->get('idTunjangan') ? 'selected' : ''}}>{{ $item->nama_tunjangan }}</option>
+                         @endforeach
+                         </select>
+                     </div>
+                     <div class="input-box">
+                         <label for="datefield">Tanggal</label>
+                         <input type="date" name="tanggal" value="{{$tanggal}}" id="datefield" class="form-input" required>
+                     </div>
+                </div>
                 <input type="hidden" name="createdAt" value="{{Request()->get('tanggal')}}">
                 <input type="hidden" name="bulan" value="{{Request()->get('bulan')}}">
                 <input type="hidden" name="kd_entitas" value="{{Request()->get('kdEntitas')}}">
