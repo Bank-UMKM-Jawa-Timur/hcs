@@ -138,7 +138,7 @@ class PayrollController extends Controller
         }
         $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
         if (auth()->user()->hasRole('cabang')) {
-            $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('kd_entitas', $kd_entitas)->first();
+            $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('tanggal_penonaktifan', null)->where('kd_entitas', $kd_entitas)->first();
             $cabang = DB::table('mst_cabang')->select('kd_cabang', 'nama_cabang')->where('kd_cabang', $kd_entitas)->first();
         } else {
             $pincab = null;
