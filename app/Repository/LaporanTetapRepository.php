@@ -215,6 +215,11 @@ class LaporanTetapRepository
                             $data->whereBetween('batch.tanggal_input', [
                                 $year . '-01-01',
                                 $year . '-01-' . $hariTerakhirBulanJanuari]);
+                                if ($cetak) {
+                                    $data = $data->get();
+                                } else {
+                                    $data = $data->paginate($limit);
+                                }
                         } else {
                             if ($cetak) {
                                 $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
@@ -229,6 +234,11 @@ class LaporanTetapRepository
                             $data->whereBetween('batch.tanggal_input', [
                                 $year . '-11-' . ($hariTerakhirBulanNovember + 1),
                                 $year . '-12-31']);
+                                if ($cetak) {
+                                    $data = $data->get();
+                                } else {
+                                    $data = $data->paginate($limit);
+                                }
                         } else {
                             if ($cetak) {
                                 $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
@@ -244,6 +254,11 @@ class LaporanTetapRepository
                                 $year . '-' . ($month - 1) . '-' . $hariTerakhirBulanKemarin,
                                 $year . '-' . $month . '-' . date('d', strtotime($tanggal->tanggal_input))
                             ]);
+                            if ($cetak) {
+                                $data = $data->get();
+                            } else {
+                                $data = $data->paginate($limit);
+                            }
                         } else {
                             if ($cetak) {
                                 $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
@@ -259,9 +274,15 @@ class LaporanTetapRepository
                         $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->paginate($limit);
                     }
                 }
+            } else {
+                if ($cetak) {
+                    $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
+                } else {
+                    $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->paginate($limit);
+                }
             }
 
-        $this->karyawanRepo->getEntity($data);
+        // $this->karyawanRepo->getEntity($data);
 
         foreach($data as $key => $karyawan){
             $karyawan->total_insentif_kredit = DB::table('penghasilan_tidak_teratur AS pt')
@@ -1170,6 +1191,7 @@ class LaporanTetapRepository
                             $year . '-01-01',
                             $year . '-01-' . $hariTerakhirBulanJanuari
                         ]);
+                        $data = $data->get();
                     } else {
                         $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
                     }
@@ -1181,6 +1203,7 @@ class LaporanTetapRepository
                             $year . '-11-' . ($hariTerakhirBulanNovember + 1),
                             $year . '-12-31'
                         ]);
+                        $data = $data->get();
                     } else {
                         $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
                     }
@@ -1192,6 +1215,7 @@ class LaporanTetapRepository
                             $year . '-' . ($month - 1) . '-' . $hariTerakhirBulanKemarin,
                             $year . '-' . $month . '-' . date('d', strtotime($tanggal->tanggal_input))
                         ]);
+                        $data = $data->get();
                     } else {
                         $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
                     }
@@ -1199,9 +1223,11 @@ class LaporanTetapRepository
             } else {
                 $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
             }
+        } else {
+            $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
         }
 
-        $this->karyawanRepo->getEntity($data);
+        // $this->karyawanRepo->getEntity($data);
 
         foreach($data as $key => $karyawan){
             // Get Jabatan
