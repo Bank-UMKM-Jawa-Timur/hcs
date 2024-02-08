@@ -19,14 +19,18 @@ class PenghasilanTidakTeraturRepository
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
         $bonus = DB::table('penghasilan_tidak_teratur')
-                    ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
-                    ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
+                    ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', 'mst_karyawan.nip')
+                    ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', 'mst_tunjangan.id')
                     ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
-                    ->join('gaji_per_bulan', function ($join) {
-                        $join->on('penghasilan_tidak_teratur.nip', '=', 'gaji_per_bulan.nip');
+                    ->leftJoin('gaji_per_bulan', function ($join) {
+                        $join->on('penghasilan_tidak_teratur.nip', 'gaji_per_bulan.nip')
+                            ->where('gaji_per_bulan.tahun', DB::raw('YEAR(penghasilan_tidak_teratur.created_at)'))
+                            ->where('gaji_per_bulan.bulan', DB::raw('MONTH(penghasilan_tidak_teratur.created_at)'));
                     })
-                    ->join('batch_gaji_per_bulan', function ($join) {
-                        $join->on('gaji_per_bulan.batch_id', '=', 'batch_gaji_per_bulan.id');
+                    ->leftJoin('batch_gaji_per_bulan', function ($join) {
+                        $join->on('gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
+                            ->where(DB::raw('MONTH(penghasilan_tidak_teratur.created_at)'), DB::raw('MONTH(penghasilan_tidak_teratur.created_at)'))
+                            ->where(DB::raw('YEAR(penghasilan_tidak_teratur.created_at)'), DB::raw('YEAR(penghasilan_tidak_teratur.created_at)'));
                     })
                     ->select(
                         'penghasilan_tidak_teratur.is_lock',
@@ -59,8 +63,8 @@ class PenghasilanTidakTeraturRepository
                         }
                     })
                     ->whereNull('batch_gaji_per_bulan.deleted_at')
-                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date', 'penghasilan_tidak_teratur.kd_entitas')
-                    ->orderBy('penghasilan_tidak_teratur.created_at', 'DESC')
+                    ->orderByDesc('penghasilan_tidak_teratur.created_at')
+                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date')
                     ->paginate($limit);
 
         return $bonus;
@@ -227,11 +231,15 @@ class PenghasilanTidakTeraturRepository
                 ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
                 ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
                 ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
-                ->join('gaji_per_bulan', function ($join) {
-                    $join->on('penghasilan_tidak_teratur.nip', '=', 'gaji_per_bulan.nip');
+                ->leftJoin('gaji_per_bulan', function ($join) {
+                    $join->on('penghasilan_tidak_teratur.nip', 'gaji_per_bulan.nip')
+                        ->where('gaji_per_bulan.tahun', DB::raw('YEAR(penghasilan_tidak_teratur.created_at)'))
+                        ->where('gaji_per_bulan.bulan', DB::raw('MONTH(penghasilan_tidak_teratur.created_at)'));
                 })
-                ->join('batch_gaji_per_bulan', function ($join) {
-                    $join->on('gaji_per_bulan.batch_id', '=', 'batch_gaji_per_bulan.id');
+                ->leftJoin('batch_gaji_per_bulan', function ($join) {
+                    $join->on('gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
+                        ->where(DB::raw('MONTH(penghasilan_tidak_teratur.created_at)'), DB::raw('MONTH(penghasilan_tidak_teratur.created_at)'))
+                        ->where(DB::raw('YEAR(penghasilan_tidak_teratur.created_at)'), DB::raw('YEAR(penghasilan_tidak_teratur.created_at)'));
                 })
                 ->select(
                     'penghasilan_tidak_teratur.is_lock',

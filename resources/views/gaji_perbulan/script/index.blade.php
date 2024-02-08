@@ -457,6 +457,9 @@
 
         $(".btn-rincian").on("click", function(){
             var batch_id = $(this).data("batch_id")
+            var month_name = $(this).data("month_name")
+            var year = $(this).data("year")
+            $('#rincian-modal .modal-title').html(`Rincian ${month_name} - ${year}`)
             var iteration = 1;
             var table = $("#table-rincian").DataTable({
                 processing: true,
@@ -849,6 +852,9 @@
         }
         $(".btn-payroll").on("click", function(){
             var batch_id = $(this).data("batch_id")
+            var month_name = $(this).data("month_name")
+            var year = $(this).data("year")
+            $('#payroll-modal .modal-title').html(`Payroll ${month_name} - ${year}`)
             let url = "{{ url('') }}"
             let downloadUrl = `${url}/cetak-penghasilan/${batch_id}`;
             $('.btn-download-pdf').attr('href', downloadUrl);

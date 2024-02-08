@@ -37,11 +37,15 @@ class PenghasilanTeraturRepository
                 ->join('mst_karyawan', 'mst_karyawan.nip', 'transaksi_tunjangan.nip')
                 ->join('mst_tunjangan', 'mst_tunjangan.id', 'transaksi_tunjangan.id_tunjangan')
                 ->join('mst_cabang', 'mst_cabang.kd_cabang', 'transaksi_tunjangan.kd_entitas')
-                ->join('gaji_per_bulan', function ($join) {
-                    $join->on('transaksi_tunjangan.nip', '=', 'gaji_per_bulan.nip');
+                ->leftJoin('gaji_per_bulan', function ($join) {
+                    $join->on('transaksi_tunjangan.nip', 'gaji_per_bulan.nip')
+                        ->where('gaji_per_bulan.tahun', DB::raw('YEAR(transaksi_tunjangan.created_at)'))
+                        ->where('gaji_per_bulan.bulan', DB::raw('MONTH(transaksi_tunjangan.created_at)'));
                 })
-                ->join('batch_gaji_per_bulan', function ($join) {
-                    $join->on('gaji_per_bulan.batch_id', '=', 'batch_gaji_per_bulan.id');
+                ->leftJoin('batch_gaji_per_bulan', function ($join) {
+                    $join->on('gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
+                        ->where(DB::raw('MONTH(transaksi_tunjangan.created_at)'), DB::raw('MONTH(transaksi_tunjangan.created_at)'))
+                        ->where(DB::raw('YEAR(transaksi_tunjangan.created_at)'), DB::raw('YEAR(transaksi_tunjangan.created_at)'));
                 })
                 ->where('mst_tunjangan.kategori', 'teratur')
                 ->where('mst_tunjangan.is_import', 1)

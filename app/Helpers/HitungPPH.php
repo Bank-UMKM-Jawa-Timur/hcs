@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 class HitungPPH
 {
     public static function getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin = 0, $full_month = false) {
+        $tanggal = date('Y-m-d', strtotime($tanggal));
         $penghasilanRutin = 0;
         $penghasilanTidakRutin = 0;
         $penghasilanBruto = 0;
@@ -15,7 +16,18 @@ class HitungPPH
         // Get total penghasilan rutin
         $penghasilanRutin = $total_gaji;
 
+        // Tunjangan Insentif ID
         $idTunjanganInsentifArr = [31, 32];
+
+        // Get Kode entitas
+        $kd_entitas = '000';
+        $cabangRepo = new CabangRepository;
+        $kode_cabang_arr = $cabangRepo->listCabang(true);
+        if ($karyawan->kd_entitas) {
+            if (in_array($karyawan->kd_entitas, $kode_cabang_arr)) {
+                $kd_entitas = $karyawan->kd_entitas;
+            }
+        }
 
         // Get total penghasilan tidak rutin
         if ($bulan > 1) {
@@ -29,13 +41,39 @@ class HitungPPH
                                             ->sum('nominal');
             }
             else {
-                $tanggal_filter = $tahun.'-'.$bulan.'-'.'25';
+                // Penggajian bulan sebelumnya
+                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+
+                $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->whereBetween('created_at', [$start_date, $tanggal])
+                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
+                                            ->sum('nominal');
+            }
+        }
+        else if ($bulan == 12) {
+            if ($full_month) {
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
-                                            ->whereDate('created_at', '<=', $tanggal_filter)
+                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
+                                            ->sum('nominal');
+            }
+            else {
+                // Penggajian bulan sebelumnya
+                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                $currentMonth = intval(date('m', strtotime($tanggal)));
+                $currentYear = date('Y', strtotime($tanggal));
+                $last_day = getLastDateOfMonth($currentYear, $currentMonth);
+                $end_date = $currentYear.'-'.$currentMonth.'-'.$last_day;
+
+                $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->whereBetween('created_at', [$start_date, $end_date])
                                             ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
@@ -90,29 +128,41 @@ class HitungPPH
         $pph = $penghasilanBruto * ($pengali / 100);
         $pph = floor($pph);
 
-        if (!$full_month) {
-            if ($bulan > 1) {
-                $last_month = intval($bulan) - 1;
-                $terutang_lastmonth = HitungPPH::getTerutang($last_month, $tahun, $karyawan);
-            }
+        return $pph;
+    }
+
+    public static function getDatePenggajianSebelumnya($tanggal_penggajian, $kd_entitas) {
+        $currentMonth = intval(date('m', strtotime($tanggal_penggajian)));
+        $beforeMonth = $currentMonth - 1;
+        $currentYear = date('Y', strtotime($tanggal_penggajian));
+
+        // Gaji bulan sebelumnya
+        $batch = DB::table('batch_gaji_per_bulan AS batch')
+                    ->where('kd_entitas', $kd_entitas)
+                    ->whereMonth('tanggal_input', $beforeMonth)
+                    ->orderByDesc('id')
+                    ->first();
+        $start_date = $currentYear.'-'.$beforeMonth.'-26';
+        if ($batch) {
+            $start_date = date('Y-m-d', strtotime($batch->tanggal_input. ' + 1 days'));
         }
 
-        return $pph;
+        return $start_date;
     }
 
     public static function getTerutang($bulan, $tahun, $karyawan) {
         $gaji = DB::table('gaji_per_bulan AS gaji')
-                            ->select(
-                                'gaji.id',
-                                'batch.tanggal_input',
-                                DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_teller + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
-                                DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
-                            )
-                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
-                            ->where('gaji.nip', $karyawan->nip)
-                            ->where('gaji.bulan', (int) $bulan)
-                            ->where('gaji.tahun', (int) $tahun)
-                            ->first();
+                    ->select(
+                        'gaji.id',
+                        'batch.tanggal_input',
+                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_teller + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
+                        DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
+                    )
+                    ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                    ->where('gaji.nip', $karyawan->nip)
+                    ->where('gaji.bulan', (int) $bulan)
+                    ->where('gaji.tahun', (int) $tahun)
+                    ->first();
         $gaji_id = 0;
         $tanggal_input = $tahun.'-'.$bulan.'-'.'25';
         $total_gaji = 0;
