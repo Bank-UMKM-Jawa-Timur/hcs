@@ -135,36 +135,80 @@ class CheckPPHController extends Controller
                         ->get();
 
         if (auth()->user()->hasRole('cabang')) {
-            $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                ->where('kd_entitas', auth()->user()->kd_cabang)
-                ->orderByRaw($orderRaw)
-                ->get();
+            $karyawan = KaryawanModel::where('kd_entitas', auth()->user()->kd_cabang)
+                                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan))))")
+                                    ->orderByRaw($orderRaw)
+                                    ->get();
             $dataC = DB::table('mst_cabang')->where('kd_cabang', auth()->user()->kd_cabang)->first();
             $nama_cabang = $dataC->nama_cabang;
         } else {
             if ($request->has('kd_entitas')) {
-                $dataC = DB::table('mst_cabang')->where('kd_cabang', $request->get('kd_entitas'))->first();
+                $batch = DB::table('batch_gaji_per_bulan')
+                            ->where('kd_entitas', $request->get('kd_entitas'))
+                            ->whereMonth('tanggal_input', $bulan)
+                            ->whereYear('tanggal_input', $tahun)
+                            ->orderByDesc('id')
+                            ->first();
+                $tanggal_penggajian = "2024-01-25";
+                if ($batch) {
+                    $tanggal_penggajian = $batch->tanggal_input;
+                }
+                $dataC = DB::table('mst_cabang')
+                            ->where('kd_cabang', $request->get('kd_entitas'))
+                            ->first();
                 $nama_cabang = $dataC->nama_cabang;
                 if ($kd_entitas == '000') {
-                    $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                                            ->where(function($query) use ($kd_cabang) {
+                    $karyawan = KaryawanModel::where(function($query) use ($kd_cabang) {
                                                 $query->whereNotIn('kd_entitas', $kd_cabang)
                                                     ->orWhereNull('kd_entitas');
+                                            })
+                                            ->where(function($query) use ($tanggal_penggajian) {
+                                                $query->whereNull('tanggal_penonaktifan')
+                                                    ->orWhere(function($query2) use ($tanggal_penggajian) {
+                                                        $bulan = date('m', strtotime($tanggal_penggajian));
+                                                        $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
+                                                            ->orWhereMonth('tanggal_penonaktifan', $bulan);
+                                                    });
                                             })
                                             ->orderByRaw($orderRaw)
                                             ->get();
                 }
                 else {
-                    $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                                            ->where('kd_entitas', $kd_entitas)
+                    $karyawan = KaryawanModel::where('kd_entitas', $kd_entitas)
+                                            ->where(function($query) use ($tanggal_penggajian) {
+                                                $query->whereNull('tanggal_penonaktifan')
+                                                    ->orWhere(function($query2) use ($tanggal_penggajian) {
+                                                        $bulan = date('m', strtotime($tanggal_penggajian));
+                                                        $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
+                                                            ->orWhereMonth('tanggal_penonaktifan', $bulan);
+                                                    });
+                                            })
                                             ->orderByRaw($orderRaw)
                                             ->get();
                 }
             } else {
-                $karyawan = KaryawanModel::whereNull('tanggal_penonaktifan')
-                                        ->where(function ($query) use ($kd_cabang) {
+                $batch = DB::table('batch_gaji_per_bulan')
+                            ->where('kd_entitas', $request->get('kd_entitas'))
+                            ->whereMonth('tanggal_input', $bulan)
+                            ->whereYear('tanggal_input', $tahun)
+                            ->orderByDesc('id')
+                            ->first();
+                $tanggal_penggajian = "2024-01-25";
+                if ($batch) {
+                    $tanggal_penggajian = $batch->tanggal_input;
+                }
+
+                $karyawan = KaryawanModel::where(function ($query) use ($kd_cabang) {
                                             $query->whereNotIn('kd_entitas', $kd_cabang)
                                             ->orWhereNull('kd_entitas');
+                                        })
+                                        ->where(function($query) use ($tanggal_penggajian) {
+                                            $query->whereNull('tanggal_penonaktifan')
+                                                ->orWhere(function($query2) use ($tanggal_penggajian) {
+                                                    $bulan = date('m', strtotime($tanggal_penggajian));
+                                                    $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
+                                                        ->orWhereMonth('tanggal_penonaktifan', $bulan);
+                                                });
                                         })
                                         ->orderByRaw($orderRaw)
                                         ->get();
