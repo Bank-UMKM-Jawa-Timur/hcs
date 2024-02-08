@@ -252,6 +252,12 @@ class LaporanTetapRepository
                             }
                         }
                     }
+                } else {
+                    if ($cetak) {
+                        $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
+                    } else {
+                        $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->paginate($limit);
+                    }
                 }
             }
 
