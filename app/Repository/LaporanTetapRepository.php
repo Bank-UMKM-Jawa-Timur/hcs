@@ -6,7 +6,9 @@ use App\Models\CabangModel;
 use App\Models\GajiPerBulanModel;
 use App\Models\KaryawanModel;
 use App\Models\PtkpModel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 use stdClass;
 
 class LaporanTetapRepository
@@ -58,7 +60,7 @@ class LaporanTetapRepository
         ];
     }
 
-    public function get($kantor = 'keseluruhan', $search, $limit=10, $cetak, $year, $month){
+    public function get($kantor = 'keseluruhan', $kategori, $search, $limit=10, $cetak, $year, $month){
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
 
@@ -203,10 +205,54 @@ class LaporanTetapRepository
                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
                 });
             });
-            if ($cetak) {
-                $data = $data->get();
-            }else{
-                $data = $data->paginate($limit);
+
+            if ($kategori) {
+                if ($kategori == 'ebupot') {
+                    if ($month == 1) {
+                        $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 1)->first();
+                        if ($tanggal) {
+                            $hariTerakhirBulanJanuari = Carbon::parse($tanggal->tanggal_input)->lastOfMonth()->day;
+                            $data->whereBetween('batch.tanggal_input', [
+                                $year . '-01-01',
+                                $year . '-01-' . $hariTerakhirBulanJanuari]);
+                        } else {
+                            if ($cetak) {
+                                $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
+                            } else {
+                                $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->paginate($limit);
+                            }
+                        }
+                    } else if ($month == 12) {
+                        $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 11)->first();
+                        if ($tanggal) {
+                            $hariTerakhirBulanNovember = Carbon::parse($tanggal->tanggal_input)->lastOfMonth()->day;
+                            $data->whereBetween('batch.tanggal_input', [
+                                $year . '-11-' . ($hariTerakhirBulanNovember + 1),
+                                $year . '-12-31']);
+                        } else {
+                            if ($cetak) {
+                                $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
+                            }else{
+                                $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->paginate($limit);
+                            }
+                        }
+                    } else {
+                        $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', $month)->first();
+                        if ($tanggal) {
+                            $hariTerakhirBulanKemarin = date('d', strtotime($tanggal->tanggal_input . ' +1 day'));
+                            $data->whereBetween('batch.tanggal_input', [
+                                $year . '-' . ($month - 1) . '-' . $hariTerakhirBulanKemarin,
+                                $year . '-' . $month . '-' . date('d', strtotime($tanggal->tanggal_input))
+                            ]);
+                        } else {
+                            if ($cetak) {
+                                $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
+                            } else {
+                                $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->paginate($limit);
+                            }
+                        }
+                    }
+                }
             }
 
         $this->karyawanRepo->getEntity($data);
@@ -2002,7 +2048,7 @@ class LaporanTetapRepository
             $total_insentif_kredit_pajak += $item->insentif_kredit_pajak ?? 0;
             $total_insentif_penagihan_pajak += $item->insentif_penagihan_pajak ?? 0;
             $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $brutoNataru + $brutoJaspro + $penambahBruto + $brutoTambahanPenghasilan + $brutoRekreasi + $brutoDanaPendidikan + $brutoTHR + $brutoPenghargaanKinerja + $total_insentif_kredit + $total_insentif_penagihan;
-            
+
             $totalLembur += $lembur;
             $totalPenggantiKesehatan += $penggantiBiayaKesehatan;
             $totalUangDuka += $uangDuka;
