@@ -58,6 +58,7 @@ class PenghasilanTidakTeraturRepository
                             $query->where('mst_karyawan.kd_entitas', $kd_cabang);
                         }
                     })
+                    ->whereNull('batch_gaji_per_bulan.deleted_at')
                     ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date', 'penghasilan_tidak_teratur.kd_entitas')
                     ->orderBy('penghasilan_tidak_teratur.created_at', 'DESC')
                     ->paginate($limit);
@@ -174,8 +175,7 @@ class PenghasilanTidakTeraturRepository
     }
 
     public function getTHP($nip):int {
-        $karyawan = KaryawanModel::where('nip', $nip)
-          ->first();
+        $karyawan = KaryawanModel::where('nip', $nip)->first();
         $dateStart = Carbon::parse($karyawan->tgl_mulai);
         $dateNow = Carbon::now();
         $monthDiff = $dateNow->diffInMonths($dateStart);
@@ -188,8 +188,7 @@ class PenghasilanTidakTeraturRepository
     }
 
     public function getTHRId(){
-        $tunjangan = TunjanganModel::where('nama_tunjangan', 'like', '%Tunjangan Hari Raya%')
-          ->first();
+        $tunjangan = TunjanganModel::where('nama_tunjangan', 'like', '%Tunjangan Hari Raya%')->first();
         return $tunjangan->id;
     }
 
@@ -266,6 +265,7 @@ class PenghasilanTidakTeraturRepository
                         $query->where('mst_karyawan.kd_entitas', $kd_cabang);
                     }
                 })
+                ->whereNull('batch_gaji_per_bulan.deleted_at')
                 ->groupBy('mst_tunjangan.id', 'penghasilan_tidak_teratur.created_at', 'penghasilan_tidak_teratur.kd_entitas')
                 ->orderBy('penghasilan_tidak_teratur.created_at', 'DESC')
                 ->paginate($limit);
