@@ -22,8 +22,8 @@
             <th rowspan="3" class="text-center">NPWP</th>
             <th rowspan="3" class="text-center">NAMA KARYAWAN</th>
             <th rowspan="3" class="text-center">GAJI</th>
-            <th class="text-center" colspan="5">TERATUR</th>
-            <th class="text-center" colspan="5">TIDAK<br>TERATUR</th>
+            <th class="text-center" colspan="4">TERATUR</th>
+            <th class="text-center" colspan="6">TIDAK<br>TERATUR</th>
             <th class="text-center" colspan="{{ $colspanBonus }}">BONUS</th>
             <th rowspan="3" class="text-center">Penambah Penghasilan Bruto</th>
             <th rowspan="3" class="text-center">PPh Bentukan</th>
