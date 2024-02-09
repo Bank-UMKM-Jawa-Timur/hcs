@@ -157,6 +157,9 @@ class PayrollRepository
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
+                                        'jp',
+                                        'bpjs_tk',
+                                        'penambah_bruto_jamsostek',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                         DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
@@ -330,73 +333,18 @@ class PayrollRepository
             if ($karyawan->gaji) {
                 // Get BPJS TK * Kesehatan
                 $obj_gaji = $karyawan->gaji;
-                $gaji = round($obj_gaji->gaji);
-                $total_gaji = round($obj_gaji->total_gaji);
-                $tunjangan_rutin = round($obj_gaji->tunjangan_rutin);
+                $gaji = floor($obj_gaji->gaji);
+                $total_gaji = floor($obj_gaji->total_gaji);
+                $tunjangan_rutin = floor($obj_gaji->tunjangan_rutin);
 
-                if($total_gaji > 0){
-                    $jkk = 0;
-                    $jht = 0;
-                    $jkm = 0;
-                    $jp_penambah = 0;
-                    if(!$karyawan->tanggal_penonaktifan && $karyawan->kpj){
-                        $jkk = round(($persen_jkk / 100) * $total_gaji);
-                        $jht = round(($persen_jht / 100) * $total_gaji);
-                        $jkm = round(($persen_jkm / 100) * $total_gaji);
-                        $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
-                    }
-
-                    if($karyawan->jkn){
-                        if($total_gaji > $batas_atas){
-                            $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
-                        } else if($total_gaji < $batas_bawah){
-                            $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
-                        } else{
-                            $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
-                        }
-                    }
-                    $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
-                }
+                $jamsostek = $obj_gaji->penambah_bruto_jamsostek;
 
                 // Get Potongan(JP1%, DPP 5%)
-                $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
-                    $dpp = 0;
-                    $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
-                } else{
-                    $gj_pokok = $obj_gaji->gj_pokok;
-                    $tj_keluarga = $obj_gaji->tj_keluarga;
-                    $tj_kesejahteraan = $obj_gaji->tj_kesejahteraan;
-
-                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
-                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
-                    if($gaji >= $nominal_jp){
-                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
-                    } else {
-                        $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
-                    }
-                }
-                $potongan->dpp = floor($dpp);
-                $potongan->jp_1_persen = $jp_1_persen;
+                $potongan->dpp = $obj_gaji->dpp;
+                $potongan->jp_1_persen = $obj_gaji->jp;
 
                 // Get BPJS TK
-                if ($obj_gaji->bulan > 2) {
-                    if ($total_gaji > $jp_mar_des) {
-                        $bpjs_tk = $jp_mar_des * 1 / 100;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji * 1 / 100;
-                    }
-                }
-                else {
-                    if ($total_gaji >= $jp_jan_feb) {
-                        $bpjs_tk = $jp_jan_feb * 1 / 100;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji * 1 / 100;
-                    }
-                }
-                $bpjs_tk = round($bpjs_tk);
+                $bpjs_tk = floor($obj_gaji->bpjs_tk);
 
                 // Penghasilan rutin
                 $penghasilan_rutin = $gaji + $jamsostek;
@@ -436,7 +384,7 @@ class PayrollRepository
             }
 
             $total_potongan += $bpjs_tk;
-            $total_potongan = round($total_potongan);
+            $total_potongan = floor($total_potongan);
             $karyawan->total_potongan = $total_potongan;
 
             // Get total yg diterima
@@ -463,7 +411,7 @@ class PayrollRepository
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
                                                     )
                                                     ->where('nip', $karyawan->nip)
@@ -559,19 +507,19 @@ class PayrollRepository
                             $jp_penambah = 0;
                             $bpjs_kesehatan = 0;
                             if(!$karyawan_bruto->tanggal_penonaktifan && $karyawan_bruto->kpj){
-                                $jkk = round(($persen_jkk / 100) * $total_gaji);
-                                $jht = round(($persen_jht / 100) * $total_gaji);
-                                $jkm = round(($persen_jkm / 100) * $total_gaji);
-                                $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
+                                $jkk = floor(($persen_jkk / 100) * $total_gaji);
+                                $jht = floor(($persen_jht / 100) * $total_gaji);
+                                $jkm = floor(($persen_jkm / 100) * $total_gaji);
+                                $jp_penambah = floor(($persen_jp_penambah / 100) * $total_gaji);
                             }
 
                             if($karyawan_bruto->jkn){
                                 if($total_gaji > $batas_atas){
-                                    $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($batas_atas * ($persen_kesehatan / 100));
                                 } else if($total_gaji < $batas_bawah){
-                                    $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($batas_bawah * ($persen_kesehatan / 100));
                                 } else{
-                                    $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($total_gaji * ($persen_kesehatan / 100));
                                 }
                             }
                             $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
@@ -583,7 +531,7 @@ class PayrollRepository
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
                             if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
-                                $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
+                                $dppBrutoExtra = floor(($persen_jp_pengurang / 100) * $total_gaji);
                             } else{
                                 $gj_pokok = $value->gj_pokok;
                                 $tj_keluarga = $value->tj_keluarga;
@@ -592,9 +540,9 @@ class PayrollRepository
                                 // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
                                 $dppBruto = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
                                 if($total_gaji >= $nominal_jp){
-                                    $dppBrutoExtra = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                                    $dppBrutoExtra = floor($nominal_jp * ($persen_jp_pengurang / 100));
                                 } else {
-                                    $dppBrutoExtra = round($total_gaji * ($persen_jp_pengurang / 100), 2);
+                                    $dppBrutoExtra = floor($total_gaji * ($persen_jp_pengurang / 100));
                                 }
                             }
 
@@ -1017,6 +965,9 @@ class PayrollRepository
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
+                                        'jp',
+                                        'bpjs_tk',
+                                        'penambah_bruto_jamsostek',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                         DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
@@ -1179,73 +1130,18 @@ class PayrollRepository
             if ($karyawan->gaji) {
                 // Get BPJS TK * Kesehatan
                 $obj_gaji = $karyawan->gaji;
-                $gaji = round($obj_gaji->gaji);
-                $total_gaji = round($obj_gaji->total_gaji);
-                $tunjangan_rutin = round($obj_gaji->tunjangan_rutin);
+                $gaji = floor($obj_gaji->gaji);
+                $total_gaji = floor($obj_gaji->total_gaji);
+                $tunjangan_rutin = floor($obj_gaji->tunjangan_rutin);
 
-                if($total_gaji > 0){
-                    $jkk = 0;
-                    $jht = 0;
-                    $jkm = 0;
-                    $jp_penambah = 0;
-                    if(!$karyawan->tanggal_penonaktifan && $karyawan->kpj){
-                        $jkk = round(($persen_jkk / 100) * $total_gaji);
-                        $jht = round(($persen_jht / 100) * $total_gaji);
-                        $jkm = round(($persen_jkm / 100) * $total_gaji);
-                        $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
-                    }
-
-                    if($karyawan->jkn){
-                        if($total_gaji > $batas_atas){
-                            $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
-                        } else if($total_gaji < $batas_bawah){
-                            $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
-                        } else{
-                            $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
-                        }
-                    }
-                    $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
-                }
+                $jamsostek = $obj_gaji->penambah_bruto_jamsostek;
 
                 // Get Potongan(JP1%, DPP 5%)
-                $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
-                    $dpp = 0;
-                    $jp_1_persen = (($persen_jp_pengurang / 100) * $gaji);
-                } else{
-                    $gj_pokok = $obj_gaji->gj_pokok;
-                    $tj_keluarga = $obj_gaji->tj_keluarga;
-                    $tj_kesejahteraan = $obj_gaji->tj_kesejahteraan;
-
-                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
-                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
-                    if($gaji >= $nominal_jp){
-                        $jp_1_persen = ($nominal_jp * ($persen_jp_pengurang / 100));
-                    } else {
-                        $jp_1_persen = ($gaji * ($persen_jp_pengurang / 100));
-                    }
-                }
-                $potongan->dpp = floor($dpp);
-                $potongan->jp_1_persen = $jp_1_persen;
+                $potongan->dpp = $obj_gaji->dpp;
+                $potongan->jp_1_persen = $obj_gaji->jp;
 
                 // Get BPJS TK
-                if ($obj_gaji->bulan > 2) {
-                    if ($total_gaji > $jp_mar_des) {
-                        $bpjs_tk = $jp_mar_des * 1 / 100;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji * 1 / 100;
-                    }
-                }
-                else {
-                    if ($total_gaji >= $jp_jan_feb) {
-                        $bpjs_tk = $jp_jan_feb * 1 / 100;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji * 1 / 100;
-                    }
-                }
-                $bpjs_tk = round($bpjs_tk);
+                $bpjs_tk = $obj_gaji->bpjs_tk;
 
                 // Penghasilan rutin
                 $penghasilan_rutin = $gaji + $jamsostek;
@@ -1285,7 +1181,7 @@ class PayrollRepository
             }
 
             $total_potongan += $bpjs_tk;
-            $total_potongan = round($total_potongan);
+            $total_potongan = floor($total_potongan);
             $karyawan->total_potongan = $total_potongan;
 
             // Get total yg diterima
@@ -1312,7 +1208,7 @@ class PayrollRepository
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
                                                     )
                                                     ->where('nip', $karyawan->nip)
@@ -1408,19 +1304,19 @@ class PayrollRepository
                             $jp_penambah = 0;
                             $bpjs_kesehatan = 0;
                             if(!$karyawan_bruto->tanggal_penonaktifan && $karyawan_bruto->kpj){
-                                $jkk = round(($persen_jkk / 100) * $total_gaji);
-                                $jht = round(($persen_jht / 100) * $total_gaji);
-                                $jkm = round(($persen_jkm / 100) * $total_gaji);
-                                $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
+                                $jkk = floor(($persen_jkk / 100) * $total_gaji);
+                                $jht = floor(($persen_jht / 100) * $total_gaji);
+                                $jkm = floor(($persen_jkm / 100) * $total_gaji);
+                                $jp_penambah = floor(($persen_jp_penambah / 100) * $total_gaji);
                             }
 
                             if($karyawan_bruto->jkn){
                                 if($total_gaji > $batas_atas){
-                                    $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($batas_atas * ($persen_kesehatan / 100));
                                 } else if($total_gaji < $batas_bawah){
-                                    $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($batas_bawah * ($persen_kesehatan / 100));
                                 } else{
-                                    $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($total_gaji * ($persen_kesehatan / 100));
                                 }
                             }
                             $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
@@ -1432,7 +1328,7 @@ class PayrollRepository
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
                             if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
-                                $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
+                                $dppBrutoExtra = floor(($persen_jp_pengurang / 100) * $total_gaji);
                             } else{
                                 $gj_pokok = $value->gj_pokok;
                                 $tj_keluarga = $value->tj_keluarga;
@@ -1441,9 +1337,9 @@ class PayrollRepository
                                 // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
                                 $dppBruto = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
                                 if($total_gaji >= $nominal_jp){
-                                    $dppBrutoExtra = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                                    $dppBrutoExtra = floor($nominal_jp * ($persen_jp_pengurang / 100));
                                 } else {
-                                    $dppBrutoExtra = round($total_gaji * ($persen_jp_pengurang / 100), 2);
+                                    $dppBrutoExtra = floor($total_gaji * ($persen_jp_pengurang / 100));
                                 }
                             }
 
@@ -1997,6 +1893,9 @@ class PayrollRepository
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
+                                        'jp',
+                                        'bpjs_tk',
+                                        'penambah_bruto_jamsostek',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                         DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
@@ -2136,73 +2035,18 @@ class PayrollRepository
             if ($karyawan->gaji) {
                 // Get BPJS TK * Kesehatan
                 $obj_gaji = $karyawan->gaji;
-                $gaji = round($obj_gaji->gaji);
-                $total_gaji = round($obj_gaji->total_gaji);
-                $tunjangan_rutin = round($obj_gaji->tunjangan_rutin);
+                $gaji = floor($obj_gaji->gaji);
+                $total_gaji = floor($obj_gaji->total_gaji);
+                $tunjangan_rutin = floor($obj_gaji->tunjangan_rutin);
 
-                if($total_gaji > 0){
-                    $jkk = 0;
-                    $jht = 0;
-                    $jkm = 0;
-                    $jp_penambah = 0;
-                    if(!$karyawan->tanggal_penonaktifan && $karyawan->kpj){
-                        $jkk = round(($persen_jkk / 100) * $total_gaji);
-                        $jht = round(($persen_jht / 100) * $total_gaji);
-                        $jkm = round(($persen_jkm / 100) * $total_gaji);
-                        $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
-                    }
-
-                    if($karyawan->jkn){
-                        if($total_gaji > $batas_atas){
-                            $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
-                        } else if($total_gaji < $batas_bawah){
-                            $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
-                        } else{
-                            $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
-                        }
-                    }
-                    $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
-                }
+                $jamsostek = $obj_gaji->penambah_bruto_jamsostek;
 
                 // Get Potongan(JP1%, DPP 5%)
-                $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
-                    $dpp = 0;
-                    $jp_1_persen = floor(($persen_jp_pengurang / 100) * $gaji);
-                } else{
-                    $gj_pokok = $obj_gaji->gj_pokok;
-                    $tj_keluarga = $obj_gaji->tj_keluarga;
-                    $tj_kesejahteraan = $obj_gaji->tj_kesejahteraan;
-
-                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
-                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
-                    if($gaji >= $nominal_jp){
-                        $jp_1_persen = floor($nominal_jp * ($persen_jp_pengurang / 100));
-                    } else {
-                        $jp_1_persen = floor($gaji * ($persen_jp_pengurang / 100));
-                    }
-                }
-                $potongan->dpp = floor($dpp);
-                $potongan->jp_1_persen = $jp_1_persen;
+                $potongan->dpp = $obj_gaji->dpp;
+                $potongan->jp_1_persen = $obj_gaji->jp;
 
                 // Get BPJS TK
-                if ($obj_gaji->bulan > 2) {
-                    if ($total_gaji > $jp_mar_des) {
-                        $bpjs_tk = $jp_mar_des * 1 / 100;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji * 1 / 100;
-                    }
-                }
-                else {
-                    if ($total_gaji >= $jp_jan_feb) {
-                        $bpjs_tk = $jp_jan_feb * 1 / 100;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji * 1 / 100;
-                    }
-                }
-                $bpjs_tk = round($bpjs_tk);
+                $bpjs_tk = $obj_gaji->bpjs_tk;
 
                 // Penghasilan rutin
                 $penghasilan_rutin = $gaji + $jamsostek;
@@ -2242,7 +2086,7 @@ class PayrollRepository
             }
 
             $total_potongan += $bpjs_tk;
-            $total_potongan = round($total_potongan);
+            $total_potongan = floor($total_potongan);
             $karyawan->total_potongan = $total_potongan;
 
             // Get total yg diterima
@@ -2269,7 +2113,7 @@ class PayrollRepository
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
                                                     )
                                                     ->where('nip', $karyawan->nip)
@@ -2354,19 +2198,19 @@ class PayrollRepository
                             $jp_penambah = 0;
                             $bpjs_kesehatan = 0;
                             if(!$karyawan_bruto->tanggal_penonaktifan && $karyawan_bruto->kpj){
-                                $jkk = round(($persen_jkk / 100) * $total_gaji);
-                                $jht = round(($persen_jht / 100) * $total_gaji);
-                                $jkm = round(($persen_jkm / 100) * $total_gaji);
-                                $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
+                                $jkk = floor(($persen_jkk / 100) * $total_gaji);
+                                $jht = floor(($persen_jht / 100) * $total_gaji);
+                                $jkm = floor(($persen_jkm / 100) * $total_gaji);
+                                $jp_penambah = floor(($persen_jp_penambah / 100) * $total_gaji);
                             }
 
                             if($karyawan_bruto->jkn){
                                 if($total_gaji > $batas_atas){
-                                    $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($batas_atas * ($persen_kesehatan / 100));
                                 } else if($total_gaji < $batas_bawah){
-                                    $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($batas_bawah * ($persen_kesehatan / 100));
                                 } else{
-                                    $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($total_gaji * ($persen_kesehatan / 100));
                                 }
                             }
                             $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
@@ -2378,7 +2222,7 @@ class PayrollRepository
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
                             if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
-                                $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
+                                $dppBrutoExtra = floor(($persen_jp_pengurang / 100) * $total_gaji);
                             } else{
                                 $gj_pokok = $value->gj_pokok;
                                 $tj_keluarga = $value->tj_keluarga;
@@ -2387,9 +2231,9 @@ class PayrollRepository
                                 // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
                                 $dppBruto = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
                                 if($total_gaji >= $nominal_jp){
-                                    $dppBrutoExtra = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                                    $dppBrutoExtra = floor($nominal_jp * ($persen_jp_pengurang / 100));
                                 } else {
-                                    $dppBrutoExtra = round($total_gaji * ($persen_jp_pengurang / 100), 2);
+                                    $dppBrutoExtra = floor($total_gaji * ($persen_jp_pengurang / 100));
                                 }
                             }
 

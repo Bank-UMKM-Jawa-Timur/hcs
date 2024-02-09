@@ -116,6 +116,10 @@ class GajiPerBulanRepository
                             'gaji.gj_pokok',
                             'gaji.tj_keluarga',
                             'gaji.tj_kesejahteraan',
+                            'gaji.dpp',
+                            'gaji.jp',
+                            'gaji.bpjs_tk',
+                            'gaji.penambah_bruto_jamsostek',
                             DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS SIGNED) AS gaji'),
                             DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS total_gaji"),
                         )
@@ -126,49 +130,15 @@ class GajiPerBulanRepository
             $total_bpjs_tk = 0;
             foreach ($gaji_obj as $value) {
                 $gaji = $value->gaji;
-                $total_gaji = $value->total_gaji;
-                $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($value->status_karyawan == 'IKJP' || $value->status_karyawan == 'Kontrak Perpanjangan') {
-                    $dpp = 0;
-                    $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
-                } else{
-                    $gj_pokok = $value->gj_pokok;
-                    $tj_keluarga = $value->tj_keluarga;
-                    $tj_kesejahteraan = $value->tj_kesejahteraan;
-
-                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
-                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
-                    if($gaji >= $nominal_jp){
-                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
-                    } else {
-                        $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
-                    }
-                }
-                $dpp = round($dpp);
+                $dpp = $value->dpp;
                 $total_dpp += $dpp;
-                $jp_1_persen = $jp_1_persen;
+                $jp_1_persen = $value->jp;
 
                 // Get BPJS TK
-                if ($value->bulan > 2) {
-                    if ($total_gaji > $jp_mar_des) {
-                        $bpjs_tk = round($jp_mar_des) * (1 / 100);
-                    }
-                    else {
-                        $bpjs_tk = round($total_gaji) * (1 / 100);
-                    }
-                }
-                else {
-                    if ($total_gaji >= $jp_jan_feb) {
-                        $bpjs_tk = round($jp_jan_feb) * (1 / 100);
-                    }
-                    else {
-                        $bpjs_tk = round($total_gaji) * (1 / 100);
-                    }
-                }
-                $bpjs_tk = $bpjs_tk;
+                $bpjs_tk = $value->bpjs_tk;
                 $total_bpjs_tk += $bpjs_tk;
             }
-            $grand_total_potongan = ($item->total_potongan + round($total_bpjs_tk) + round($total_dpp));
+            $grand_total_potongan = ($item->total_potongan + floor($total_bpjs_tk) + floor($total_dpp));
             $item->grand_total_potongan= $grand_total_potongan;
 
             $netto = $item->bruto - $grand_total_potongan;
@@ -476,6 +446,10 @@ class GajiPerBulanRepository
                             'gaji.gj_pokok',
                             'gaji.tj_keluarga',
                             'gaji.tj_kesejahteraan',
+                            'gaji.dpp',
+                            'gaji.jp',
+                            'gaji.bpjs_tk',
+                            'gaji.penambah_bruto_jamsostek',
                             DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional + gaji.tj_transport + gaji.tj_pulsa + gaji.tj_vitamin + gaji.uang_makan) AS SIGNED) AS gaji'),
                             DB::raw("CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS total_gaji"),
                         )
@@ -487,48 +461,15 @@ class GajiPerBulanRepository
             foreach ($gaji_obj as $value) {
                 $gaji = $value->gaji;
                 $total_gaji = $value->total_gaji;
-                $nominal_jp = ($value->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($value->status_karyawan == 'IKJP' || $value->status_karyawan == 'Kontrak Perpanjangan') {
-                    $dpp = 0;
-                    $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
-                } else{
-                    $gj_pokok = $value->gj_pokok;
-                    $tj_keluarga = $value->tj_keluarga;
-                    $tj_kesejahteraan = $value->tj_kesejahteraan;
-
-                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
-                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
-                    if($gaji >= $nominal_jp){
-                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
-                    } else {
-                        $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
-                    }
-                }
-                $dpp = floor($dpp);
+                $dpp = $gaji->dpp;
                 $total_dpp += $dpp;
-                $jp_1_persen = $jp_1_persen;
+                $jp_1_persen = $gaji->jp;
 
                 // Get BPJS TK
-                if ($value->bulan > 2) {
-                    if ($total_gaji > $jp_mar_des) {
-                        $bpjs_tk = round($jp_mar_des) * (1 / 100);
-                    }
-                    else {
-                        $bpjs_tk = round($total_gaji) * (1 / 100);
-                    }
-                }
-                else {
-                    if ($total_gaji >= $jp_jan_feb) {
-                        $bpjs_tk = round($jp_jan_feb) * (1 / 100);
-                    }
-                    else {
-                        $bpjs_tk = round($total_gaji) * (1 / 100);
-                    }
-                }
-                $bpjs_tk = $bpjs_tk;
+                $bpjs_tk = $gaji->bpjs_tk;
                 $total_bpjs_tk += $bpjs_tk;
             }
-            $grand_total_potongan = ($item->total_potongan + round($total_bpjs_tk) + round($total_dpp));
+            $grand_total_potongan = ($item->total_potongan + floor($total_bpjs_tk) + floor($total_dpp));
             $item->grand_total_potongan= $grand_total_potongan;
 
             $netto = $item->bruto - $grand_total_potongan;
