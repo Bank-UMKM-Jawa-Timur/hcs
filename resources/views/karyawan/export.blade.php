@@ -30,7 +30,7 @@
                     <td>{{ $item->display_jabatan }}</td>
                     <td>{{ $item->no_rekening ?? '-' }}</td>
                     <td>{{ $item->npwp ?? '-' }}</td>
-                    <td>{{ $item->status_ptkp ?? '-' }}</td>
+                    <td>{{ $item->status_ptkp ? ($item->status_ptkp == "TK" ? "TK/0" : $item->status_ptkp) :'-' }}</td>
                 </tr>
             @endforeach
         </tbody>

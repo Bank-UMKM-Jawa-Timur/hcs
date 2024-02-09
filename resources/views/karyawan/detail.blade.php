@@ -149,7 +149,7 @@
             <div class="row ">
                 <label class="w-2/4 mt-2">Status PTKP</label>
                 <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->status_ptkp ?? '-' }}">
+                    <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->status_ptkp ? ($karyawan->status_ptkp == "TK" ? "TK/0" : $karyawan->status_ptkp) : '-' }}">
                 </div>
             </div>
             <hr>
