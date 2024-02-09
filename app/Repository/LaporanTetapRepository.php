@@ -216,7 +216,7 @@ class LaporanTetapRepository
                     if ($month == 1) {
                         $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 1)->first();
                         if ($tanggal) {
-                            $hariTerakhirBulanJanuari = Carbon::parse($tanggal->tanggal_input)->lastOfMonth()->day;
+                            $hariTerakhirBulanJanuari = date('d', strtotime($tanggal->tanggal_input));
                             $data->whereBetween('batch.tanggal_input', [
                                 $year . '-01-01',
                                 $year . '-01-' . $hariTerakhirBulanJanuari]);
@@ -233,12 +233,14 @@ class LaporanTetapRepository
                             }
                         }
                     } else if ($month == 12) {
-                        $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 11)->first();
+                        $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 12)->first();
+                        $tanggal_bulan_kemaren = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 11)->first();
                         if ($tanggal) {
-                            $hariTerakhirBulanNovember = Carbon::parse($tanggal->tanggal_input)->lastOfMonth()->day;
+                            $hariTerakhirBulanNovember = date('d', strtotime($tanggal_bulan_kemaren->tanggal_input . ' +1 day'));
+                            $hariTerakhirBulanDesember = Carbon::parse($tanggal->tanggal_input)->lastOfMonth()->day;
                             $data->whereBetween('batch.tanggal_input', [
-                                $year . '-11-' . ($hariTerakhirBulanNovember + 1),
-                                $year . '-12-31']);
+                                $year . '-11-' . $hariTerakhirBulanNovember,
+                                $year . '-12-'. $hariTerakhirBulanDesember]);
                                 if ($cetak) {
                                     $data = $data->get();
                                 } else {
@@ -253,8 +255,9 @@ class LaporanTetapRepository
                         }
                     } else {
                         $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', $month)->first();
+                        $tanggal_bulan_kemaren = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', $month - 1)->first();
                         if ($tanggal) {
-                            $hariTerakhirBulanKemarin = date('d', strtotime($tanggal->tanggal_input . ' +1 day'));
+                            $hariTerakhirBulanKemarin = date('d', strtotime($tanggal_bulan_kemaren->tanggal_input . ' +1 day'));
                             $data->whereBetween('batch.tanggal_input', [
                                 $year . '-' . ($month - 1) . '-' . $hariTerakhirBulanKemarin,
                                 $year . '-' . $month . '-' . date('d', strtotime($tanggal->tanggal_input))
