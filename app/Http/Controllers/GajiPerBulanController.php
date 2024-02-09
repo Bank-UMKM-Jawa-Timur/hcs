@@ -1085,7 +1085,10 @@ class GajiPerBulanController extends Controller
                 $dpp = 0;
                 $jp_1_persen = 0;
                 $nominal_jp = ($bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if ($item->status_karyawan != 'IKJP' || $item->status_karyawan != 'Kontrak Perpanjangan') {
+                if($item->status_karyawan == 'IKJP' || $item->status_karyawan == 'Kontrak Perpanjangan') {
+                    $dpp = ($persen_jp_pengurang / 100) * $total_gaji;
+                }
+                else {
                     // Get DPP
                     $dpp = floor(((($item->gj_pokok + $tunjangan[0]) + ($tunjangan[7] * 0.5)) * 0.05));
                     // Get JP 1%
