@@ -60,6 +60,47 @@ class LaporanTetapRepository
         ];
     }
 
+    function stringMonth($month){
+        $result = null;
+        if ($month == 1) {
+            $result = '01';
+        }
+        else if ($month == 2) {
+            $result = '02';
+        }
+        else if ($month == 3) {
+            $result = '03';
+        }
+        else if ($month == 4) {
+            $result = '04';
+        }
+        else if ($month == 5) {
+            $result = '05';
+        }
+        else if ($month == 6) {
+            $result = '06';
+        }
+        else if ($month == 7) {
+            $result = '07';
+        }
+        else if ($month == 8) {
+            $result = '08';
+        }
+        else if ($month == 9) {
+            $result = '09';
+        }
+        else if ($month == 10) {
+            $result = '10';
+        }
+        else if ($month == 11) {
+            $result = '11';
+        }
+        else if ($month == 12) {
+            $result = '12';
+        }
+        return $result;
+    }
+
     public function get($kantor = 'keseluruhan', $kategori, $search, $limit=10, $cetak, $year, $month){
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
@@ -213,10 +254,11 @@ class LaporanTetapRepository
 
             if ($kategori) {
                 if ($kategori == 'ebupot') {
-                    if ($month == 1) {
+                    if ($month == '1') {
                         $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 1)->first();
                         if ($tanggal) {
                             $hariTerakhirBulanJanuari = date('d', strtotime($tanggal->tanggal_input));
+                            // return ['tanggal awal' => $year . '-01-01', 'tanggal akhir' => $year . '-01-' . $hariTerakhirBulanJanuari];
                             $data->whereBetween('batch.tanggal_input', [
                                 $year . '-01-01',
                                 $year . '-01-' . $hariTerakhirBulanJanuari]);
@@ -232,12 +274,13 @@ class LaporanTetapRepository
                                 $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->paginate($limit);
                             }
                         }
-                    } else if ($month == 12) {
+                    } else if ($month == '12') {
                         $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 12)->first();
                         $tanggal_bulan_kemaren = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 11)->first();
                         if ($tanggal) {
                             $hariTerakhirBulanNovember = date('d', strtotime($tanggal_bulan_kemaren->tanggal_input . ' +1 day'));
                             $hariTerakhirBulanDesember = Carbon::parse($tanggal->tanggal_input)->lastOfMonth()->day;
+                            // return ['tanggal awal' => $year . '-11-' . $hariTerakhirBulanNovember, 'tanggal akhir' => $year . '-12-' . $hariTerakhirBulanDesember];
                             $data->whereBetween('batch.tanggal_input', [
                                 $year . '-11-' . $hariTerakhirBulanNovember,
                                 $year . '-12-'. $hariTerakhirBulanDesember]);
@@ -258,9 +301,10 @@ class LaporanTetapRepository
                         $tanggal_bulan_kemaren = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', $month - 1)->first();
                         if ($tanggal) {
                             $hariTerakhirBulanKemarin = date('d', strtotime($tanggal_bulan_kemaren->tanggal_input . ' +1 day'));
+                            // return ['tanggal awal' => $year . '-' . $this->stringMonth($month - 1) . '-' . $hariTerakhirBulanKemarin, 'tanggal akhir' => $year . '-' . $this->stringMonth($month) . '-' . date('d', strtotime($tanggal->tanggal_input))];
                             $data->whereBetween('batch.tanggal_input', [
-                                $year . '-' . ($month - 1) . '-' . $hariTerakhirBulanKemarin,
-                                $year . '-' . $month . '-' . date('d', strtotime($tanggal->tanggal_input))
+                                $year . '-' . $this->stringMonth($month -1) . '-' . $hariTerakhirBulanKemarin,
+                                $year . '-' . $this->stringMonth($month) . '-' . date('d', strtotime($tanggal->tanggal_input))
                             ]);
                             if ($cetak) {
                                 $data = $data->get();
@@ -298,6 +342,67 @@ class LaporanTetapRepository
                                                 ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'batch_pt.gaji_per_bulan_id')
                                                 ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                                                 ->where('pt.nip', $karyawan->nip)
+                                                ->when($kategori, function ($query) use ($kategori, $kantor, $month, $year) {
+                                                    if ($kategori == 'ebupot') {
+                                                        if ($month == 1) {
+                                                            $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 1)->first();
+                                                            if ($tanggal) {
+                                                                $hariTerakhirBulanJanuari = date('d', strtotime($tanggal->tanggal_input));
+                                                                $query->where(function ($q2) use ($hariTerakhirBulanJanuari, $year) {
+                                                                    $q2->whereBetween('pt.created_at', [
+                                                                        $year . '-01-01',
+                                                                        $year . '-01-' . $hariTerakhirBulanJanuari
+                                                                    ]);
+                                                                });
+                                                            } else {
+                                                                $query->where(function ($q2) use ($month, $year) {
+                                                                    $q2->where('pt.bulan', $month)
+                                                                        ->where('pt.tahun', $year);
+                                                                });
+                                                            }
+                                                        } else if ($month == 12) {
+                                                            $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 12)->first();
+                                                            $tanggal_bulan_kemaren = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 11)->first();
+                                                            if ($tanggal) {
+                                                                $hariTerakhirBulanNovember = date('d', strtotime($tanggal_bulan_kemaren->tanggal_input . ' +1 day'));
+                                                                $hariTerakhirBulanDesember = Carbon::parse($tanggal->tanggal_input)->lastOfMonth()->day;
+                                                                $query->where(function ($q2) use ($hariTerakhirBulanNovember, $hariTerakhirBulanDesember, $year) {
+                                                                    $q2->whereBetween('pt.created_at', [
+                                                                        $year . '-11-' . $hariTerakhirBulanNovember,
+                                                                        $year . '-12-' . $hariTerakhirBulanDesember
+                                                                    ]);
+                                                                });
+                                                            } else {
+                                                                $query->where(function ($q2) use ($month, $year) {
+                                                                    $q2->where('pt.bulan', $month)
+                                                                        ->where('pt.tahun', $year);
+                                                                });
+                                                            }
+                                                        } else {
+                                                            $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', $month)->first();
+                                                            $tanggal_bulan_kemaren = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', $month - 1)->first();
+                                                            if ($tanggal) {
+                                                                $hariTerakhirBulanKemarin = date('d', strtotime($tanggal_bulan_kemaren->tanggal_input . ' +1 day'));
+                                                                $query->where(function ($q2) use ($hariTerakhirBulanKemarin, $tanggal, $month, $year) {
+                                                                    $q2->whereBetween('pt.created_at', [
+                                                                        $year . '-' . ($month - 1) . '-' . $hariTerakhirBulanKemarin,
+                                                                        $year . '-' . $month . '-' . date('d', strtotime($tanggal->tanggal_input))
+                                                                    ]);
+                                                                });
+                                                            } else {
+                                                                $query->where(function ($q2) use ($month, $year) {
+                                                                    $q2->where('pt.bulan', $month)
+                                                                        ->where('pt.tahun', $year);
+                                                                });
+                                                            }
+                                                        }
+                                                    } else {
+                                                        $query->where(function ($q2) use ($month, $year) {
+                                                            $q2->where('pt.bulan', $month)
+                                                                ->where('pt.tahun', $year);
+                                                        });
+                                                    }
+                                                })
                                                 ->where('pt.bulan', $month)
                                                 ->where('pt.tahun', $year)
                                                 ->whereIn('pt.id_tunjangan', [31, 32])
@@ -308,6 +413,67 @@ class LaporanTetapRepository
                                         ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'batch_pt.gaji_per_bulan_id')
                                         ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                                         ->where('pt.nip', $karyawan->nip)
+                                        ->when($kategori, function ($query) use ($kategori, $kantor, $month, $year) {
+                                            if ($kategori == 'ebupot') {
+                                                if ($month == 1) {
+                                                    $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 1)->first();
+                                                    if ($tanggal) {
+                                                        $hariTerakhirBulanJanuari = date('d', strtotime($tanggal->tanggal_input));
+                                                        $query->where(function ($q2) use ($hariTerakhirBulanJanuari, $year) {
+                                                            $q2->whereBetween('pt.created_at', [
+                                                                $year . '-01-01',
+                                                                $year . '-01-' . $hariTerakhirBulanJanuari
+                                                            ]);
+                                                        });
+                                                    } else {
+                                                        $query->where(function ($q2) use ($month, $year) {
+                                                            $q2->where('pt.bulan', $month)
+                                                                ->where('pt.tahun', $year);
+                                                        });
+                                                    }
+                                                } else if ($month == 12) {
+                                                    $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 12)->first();
+                                                    $tanggal_bulan_kemaren = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 11)->first();
+                                                    if ($tanggal) {
+                                                        $hariTerakhirBulanNovember = date('d', strtotime($tanggal_bulan_kemaren->tanggal_input . ' +1 day'));
+                                                        $hariTerakhirBulanDesember = Carbon::parse($tanggal->tanggal_input)->lastOfMonth()->day;
+                                                        $query->where(function ($q2) use ($hariTerakhirBulanNovember, $hariTerakhirBulanDesember, $year) {
+                                                            $q2->whereBetween('pt.created_at', [
+                                                                $year . '-11-' . $hariTerakhirBulanNovember,
+                                                                $year . '-12-' . $hariTerakhirBulanDesember
+                                                            ]);
+                                                        });
+                                                    } else {
+                                                        $query->where(function ($q2) use ($month, $year) {
+                                                            $q2->where('pt.bulan', $month)
+                                                                ->where('pt.tahun', $year);
+                                                        });
+                                                    }
+                                                } else {
+                                                    $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', $month)->first();
+                                                    $tanggal_bulan_kemaren = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', $month - 1)->first();
+                                                    if ($tanggal) {
+                                                        $hariTerakhirBulanKemarin = date('d', strtotime($tanggal_bulan_kemaren->tanggal_input . ' +1 day'));
+                                                        $query->where(function ($q2) use ($hariTerakhirBulanKemarin, $tanggal, $month, $year) {
+                                                            $q2->whereBetween('pt.created_at', [
+                                                                $year . '-' . ($month - 1) . '-' . $hariTerakhirBulanKemarin,
+                                                                $year . '-' . $month . '-' . date('d', strtotime($tanggal->tanggal_input))
+                                                            ]);
+                                                        });
+                                                    } else {
+                                                        $query->where(function ($q2) use ($month, $year) {
+                                                            $q2->where('pt.bulan', $month)
+                                                                ->where('pt.tahun', $year);
+                                                        });
+                                                    }
+                                                }
+                                            } else {
+                                                $query->where(function ($q2) use ($month, $year) {
+                                                    $q2->where('pt.bulan', $month)
+                                                        ->where('pt.tahun', $year);
+                                                });
+                                            }
+                                        })
                                         ->where('pt.bulan', $month)
                                         ->where('pt.tahun', $year)
                                         ->where('pt.id_tunjangan', 31)
@@ -318,6 +484,67 @@ class LaporanTetapRepository
                                             ->join('gaji_per_bulan', 'gaji_per_bulan.id', 'batch_pt.gaji_per_bulan_id')
                                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                                             ->where('pt.nip', $karyawan->nip)
+                                            ->when($kategori, function ($query) use ($kategori, $kantor, $month, $year) {
+                                                if ($kategori == 'ebupot') {
+                                                    if ($month == 1) {
+                                                        $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 1)->first();
+                                                        if ($tanggal) {
+                                                            $hariTerakhirBulanJanuari = date('d', strtotime($tanggal->tanggal_input));
+                                                            $query->where(function ($q2) use ($hariTerakhirBulanJanuari, $year) {
+                                                                $q2->whereBetween('pt.created_at', [
+                                                                    $year . '-01-01',
+                                                                    $year . '-01-' . $hariTerakhirBulanJanuari
+                                                                ]);
+                                                            });
+                                                        } else {
+                                                            $query->where(function ($q2) use ($month, $year) {
+                                                                $q2->where('pt.bulan', $month)
+                                                                    ->where('pt.tahun', $year);
+                                                            });
+                                                        }
+                                                    } else if ($month == 12) {
+                                                        $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 12)->first();
+                                                        $tanggal_bulan_kemaren = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', 11)->first();
+                                                        if ($tanggal) {
+                                                            $hariTerakhirBulanNovember = date('d', strtotime($tanggal_bulan_kemaren->tanggal_input . ' +1 day'));
+                                                            $hariTerakhirBulanDesember = Carbon::parse($tanggal->tanggal_input)->lastOfMonth()->day;
+                                                            $query->where(function ($q2) use ($hariTerakhirBulanNovember, $hariTerakhirBulanDesember, $year) {
+                                                                $q2->whereBetween('pt.created_at', [
+                                                                    $year . '-11-' . $hariTerakhirBulanNovember,
+                                                                    $year . '-12-' . $hariTerakhirBulanDesember
+                                                                ]);
+                                                            });
+                                                        } else {
+                                                            $query->where(function ($q2) use ($month, $year) {
+                                                                $q2->where('pt.bulan', $month)
+                                                                    ->where('pt.tahun', $year);
+                                                            });
+                                                        }
+                                                    } else {
+                                                        $tanggal = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', $month)->first();
+                                                        $tanggal_bulan_kemaren = DB::table('batch_gaji_per_bulan')->select('tanggal_input')->whereYear('tanggal_input', $year)->where('kd_entitas', $kantor)->whereMonth('tanggal_input', $month - 1)->first();
+                                                        if ($tanggal) {
+                                                            $hariTerakhirBulanKemarin = date('d', strtotime($tanggal_bulan_kemaren->tanggal_input . ' +1 day'));
+                                                            $query->where(function ($q2) use ($hariTerakhirBulanKemarin, $tanggal, $month, $year) {
+                                                                $q2->whereBetween('pt.created_at', [
+                                                                    $year . '-' . ($month - 1) . '-' . $hariTerakhirBulanKemarin,
+                                                                    $year . '-' . $month . '-' . date('d', strtotime($tanggal->tanggal_input))
+                                                                ]);
+                                                            });
+                                                        } else {
+                                                            $query->where(function ($q2) use ($month, $year) {
+                                                                $q2->where('pt.bulan', $month)
+                                                                    ->where('pt.tahun', $year);
+                                                            });
+                                                        }
+                                                    }
+                                                } else {
+                                                    $query->where(function ($q2) use ($month, $year) {
+                                                        $q2->where('pt.bulan', $month)
+                                                            ->where('pt.tahun', $year);
+                                                    });
+                                                }
+                                            })
                                             ->where('pt.bulan', $month)
                                             ->where('pt.tahun', $year)
                                             ->where('pt.id_tunjangan', 32)
