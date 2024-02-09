@@ -248,7 +248,7 @@
                     }
                 }
 
-                foreach ($item?->pphDilunasi as $value) {
+                foreach ($item?->karyawan_bruto->pphDilunasi as $value) {
                     if ($value->bulan > 1) {
                         $pph21Bentukan = $value->total_pph;
                         $pph21 = $value->total_pph;
