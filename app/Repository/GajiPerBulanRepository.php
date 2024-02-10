@@ -37,6 +37,8 @@ class GajiPerBulanRepository
                     'gaji.bpjs_tk',
                     'gaji.penambah_bruto_jamsostek',
                     DB::raw('CAST(SUM(pph.total_pph) AS SIGNED) AS total_pph'),
+                    DB::raw('CAST(SUM(pph.insentif_kredit + pph.insentif_penagihan) AS SIGNED) AS total_pajak_insentif'),
+                    DB::raw('CAST(SUM(pph.total_pph) - SUM(pph.insentif_kredit + pph.insentif_penagihan) AS SIGNED) AS hasil_pph'),
                     DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS bruto'),
                     DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik + gaji.dpp + gaji.bpjs_tk) AS SIGNED) AS total_potongan'),
                     DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) - SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik + gaji.dpp + gaji.bpjs_tk) AS SIGNED) AS netto'),
@@ -275,6 +277,7 @@ class GajiPerBulanRepository
                 ->select(
                     'batch.id',
                     'batch.kd_entitas',
+                    'batch.is_pegawai',
                     'cab.nama_cabang AS kantor',
                     'batch.tanggal_input',
                     'batch.tanggal_final',
@@ -285,6 +288,8 @@ class GajiPerBulanRepository
                     'gaji.bulan',
                     'gaji.tahun',
                     DB::raw('CAST(SUM(pph.total_pph) AS SIGNED) AS total_pph'),
+                    DB::raw('CAST(SUM(pph.insentif_kredit + pph.insentif_penagihan) AS SIGNED) AS total_pajak_insentif'),
+                    DB::raw('CAST(SUM(pph.total_pph) - SUM(pph.insentif_kredit + pph.insentif_penagihan) AS SIGNED) AS hasil_pph'),
                     DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS bruto'),
                     DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS SIGNED) AS total_potongan'),
                 )
@@ -382,12 +387,12 @@ class GajiPerBulanRepository
             foreach ($gaji_obj as $value) {
                 $gaji = $value->gaji;
                 $total_gaji = $value->total_gaji;
-                $dpp = $gaji->dpp;
+                $dpp = $value->dpp;
                 $total_dpp += $dpp;
-                $jp_1_persen = $gaji->jp;
+                $jp_1_persen = $value->jp;
 
                 // Get BPJS TK
-                $bpjs_tk = $gaji->bpjs_tk;
+                $bpjs_tk = $value->bpjs_tk;
                 $total_bpjs_tk += $bpjs_tk;
             }
             $grand_total_potongan = ($item->total_potongan + floor($total_bpjs_tk) + floor($total_dpp));

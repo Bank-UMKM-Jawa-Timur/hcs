@@ -41,7 +41,7 @@
             <th rowspan="2">Bulan</th>
             <th rowspan="2">Tanggal</th>
             <th rowspan="2">File</th>
-            <th colspan="4">Total</th>
+            <th colspan="6">Total</th>
             <th rowspan="2">Aksi</th>
         </tr>
         <tr>
@@ -49,6 +49,8 @@
             <th>Potongan</th>
             <th>Netto</th>
             <th>PPH21</th>
+            <th>Pajak Insentif</th>
+            <th>PPh21<br>(PPh Bentukan - Pajak Insentif)</th>
         </tr>
     </thead>
     <tbody>
@@ -58,6 +60,8 @@
             $total_potongan += $item->total_potongan;
             $total_netto += $item->netto;
             $total_pph += $item->total_pph;
+            $total_pajak_insentif += $item->total_pajak_insentif;
+            $total_hasil_pph += $item->hasil_pph;
         @endphp
         <tr>
             <td class="text-center">{{ $i++ }}</td>
@@ -104,6 +108,7 @@
                     Rp {{number_format($item->netto, 0, ',', '.')}}
                 </td>
             @endif
+            {{-- pph bentukan --}}
             @if ($item->total_pph < 0)
                 <td class="text-right">
                     Rp ({{number_format(str_replace('-', '', $item->total_pph), 0, ',', '.')}})
@@ -113,6 +118,30 @@
             @else
                 <td class="text-right">
                     Rp {{number_format($item->total_pph, 0, ',', '.')}}
+                </td>
+            @endif
+            {{-- pajak insentif --}}
+                @if ($item->total_pajak_insentif < 0)
+                <td class="text-right">
+                    Rp ({{number_format(str_replace('-', '', $item->total_pajak_insentif), 0, ',', '.')}})
+                </td>
+            @elseif ($item->total_pajak_insentif == 0)
+                <td class="text-center">-</td>
+            @else
+                <td class="text-right">
+                    Rp {{number_format($item->total_pajak_insentif, 0, ',', '.')}}
+                </td>
+            @endif
+            {{-- pph21 (bentukan - insentif) --}}
+            @if ($item->hasil_pph < 0)
+                <td class="text-right">
+                    Rp ({{number_format(str_replace('-', '', $item->hasil_pph), 0, ',', '.')}})
+                </td>
+            @elseif ($item->hasil_pph == 0)
+                <td class="text-center">-</td>
+            @else
+                <td class="text-right">
+                    Rp {{number_format($item->hasil_pph, 0, ',', '.')}}
                 </td>
             @endif
             <td class="text-center border-none  justify-center flex">
@@ -181,6 +210,20 @@
         @if ($total_pph > 0)
             <th class="text-right">
                 RP {{number_format($total_pph, 0, ',', '.')}}
+            </th>
+        @else
+            <th class="text-center">-</th>
+        @endif
+        @if ($total_pajak_insentif > 0)
+            <th class="text-right">
+                RP {{number_format($total_pajak_insentif, 0, ',', '.')}}
+            </th>
+        @else
+            <th class="text-center">-</th>
+        @endif
+        @if ($total_hasil_pph > 0)
+            <th class="text-right">
+                RP {{number_format($total_hasil_pph, 0, ',', '.')}}
             </th>
         @else
             <th class="text-center">-</th>

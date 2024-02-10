@@ -40,7 +40,7 @@
             <th rowspan="2">Bulan</th>
             <th rowspan="2">Tanggal</th>
             <th rowspan="2">File</th>
-            <th colspan="4">Total</th>
+            <th colspan="6">Total</th>
             <th rowspan="2">Aksi</th>
         </tr>
         <tr>
@@ -48,89 +48,111 @@
             <th>Potongan</th>
             <th>Netto</th>
             <th>PPH21</th>
+            <th>Pajak Insentif</th>
+            <th>PPh21<br>(PPh Bentukan - Pajak Insentif)</th>
         </tr>
     </thead>
     <tbody>
-    @php
-        $i = 1;
-        $total_bruto = 0;
-        $total_potongan = 0;
-        $total_netto = 0;
-        $total_pph = 0;
-    @endphp
     @forelse ($sampah as $item)
-    @php
-    $total_bruto += $item->bruto;
-    $total_potongan += $item->total_potongan;
-    $total_netto += $item->netto;
-    $total_pph += $item->total_pph;
-    @endphp
-    <tr>
-        <td class="text-center">{{ $i++ }}</td>
-        <td class="text-center">{{ $item->is_pegawai ? 'Pegawai' : 'Lainnya' }}</td>
-        @if (auth()->user()->hasRole('admin'))
-            <td class="text-center">{{ $item->kantor }}</td>
-        @endif
-        <td class="text-center">{{ $item->tahun }}</td>
-        <td class="text-center">{{ $months[$item->bulan] }}</td>
-        <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
-        <td class="text-center flex justify-center gap-5">
-            <a href="#" data-modal-id="rincian-modal" data-modal-toggle="modal" class="btn btn-warning btn-rincian"
-                data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Rincian</a>
-            <a href="#" data-modal-id="payroll-modal" data-modal-toggle="modal" class="btn btn-success btn-payroll"
-                data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Payroll</a>
-        </td>
-        @if ($item->bruto == 0)
-            <td class="text-center">-</td>
-        @else
-            <td class="text-right">
-                Rp {{number_format($item->bruto, 0, ',', '.')}}
+        @php
+            $total_bruto += $item->bruto;
+            $total_potongan += $item->total_potongan;
+            $total_netto += $item->netto;
+            $total_pph += $item->total_pph;
+            $total_pajak_insentif += $item->total_pajak_insentif;
+            $total_hasil_pph += $item->hasil_pph;
+        @endphp
+        <tr>
+            <td class="text-center">{{ $i++ }}</td>
+            <td class="text-center">{{ $item->is_pegawai ? 'Pegawai' : 'Lainnya' }}</td>
+            @if (auth()->user()->hasRole('admin'))
+                <td class="text-center">{{ $item->kantor }}</td>
+            @endif
+            <td class="text-center">{{ $item->tahun }}</td>
+            <td class="text-center">{{ $months[$item->bulan] }}</td>
+            <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
+            <td class="text-center flex justify-center gap-5">
+                <a href="#" data-modal-id="rincian-modal" data-modal-toggle="modal" class="btn btn-warning btn-rincian"
+                    data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Rincian</a>
+                <a href="#" data-modal-id="payroll-modal" data-modal-toggle="modal" class="btn btn-success btn-payroll"
+                    data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Payroll</a>
             </td>
-        @endif
-        @if ($item->total_potongan == 0)
-            <td class="text-center">-</td>
-        @else
-            <td class="text-right">
-                Rp {{number_format($item->total_potongan, 0, ',', '.')}}
-            </td>
-        @endif
-        @if ($item->netto < 0)
-            <td class="text-right">
-                Rp ({{number_format(str_replace('-', '', $item->netto), 0, ',', '.')}})
-            </td>
-        @elseif ($item->netto == 0)
-            <td class="text-center">-</td>
-        @else
-            <td class="text-right">
-                Rp {{number_format($item->netto, 0, ',', '.')}}
-            </td>
-        @endif
-        @if ($item->total_pph < 0)
-            <td class="text-right">
-                Rp ({{number_format(str_replace('-', '', $item->total_pph), 0, ',', '.')}})
-            </td>
-        @elseif ($item->total_pph == 0)
-            <td class="text-center">-</td>
-        @else
-            <td class="text-right">
-                Rp {{number_format($item->total_pph, 0, ',', '.')}}
-            </td>
-        @endif
-        @if (auth()->user()->hasRole('admin'))
-            <td>
-                <a href="#" class="btn btn-danger d-flex justify-center btn-restore"
-                    data-batch_id="{{$item->id}}"
-                    data-kantor="{{$item->kantor}}"
-                    data-bulan="{{$item->bulan}}"
-                    data-tahun="{{$item->tahun}}"
-                    >Kembalikan</a>
-            </td>
-        @endif
-    </tr>
+            @if ($item->bruto == 0)
+                <td class="text-center">-</td>
+            @else
+                <td class="text-right">
+                    Rp {{number_format($item->bruto, 0, ',', '.')}}
+                </td>
+            @endif
+            @if ($item->total_potongan == 0)
+                <td class="text-center">-</td>
+            @else
+                <td class="text-right">
+                    Rp {{number_format($item->total_potongan, 0, ',', '.')}}
+                </td>
+            @endif
+            @if ($item->netto < 0)
+                <td class="text-right">
+                    Rp ({{number_format(str_replace('-', '', $item->netto), 0, ',', '.')}})
+                </td>
+            @elseif ($item->netto == 0)
+                <td class="text-center">-</td>
+            @else
+                <td class="text-right">
+                    Rp {{number_format($item->netto, 0, ',', '.')}}
+                </td>
+            @endif
+            {{--  pph bentukan  --}}
+            @if ($item->total_pph < 0)
+                <td class="text-right">
+                    Rp ({{number_format(str_replace('-', '', $item->total_pph), 0, ',', '.')}})
+                </td>
+            @elseif ($item->total_pph == 0)
+                <td class="text-center">-</td>
+            @else
+                <td class="text-right">
+                    Rp {{number_format($item->total_pph, 0, ',', '.')}}
+                </td>
+            @endif
+            {{-- pajak insentif --}}
+            @if ($item->total_pajak_insentif < 0)
+                <td class="text-right">
+                    Rp ({{number_format(str_replace('-', '', $item->total_pajak_insentif), 0, ',', '.')}})
+                </td>
+            @elseif ($item->total_pajak_insentif == 0)
+                <td class="text-center">-</td>
+            @else
+                <td class="text-right">
+                    Rp {{number_format($item->total_pajak_insentif, 0, ',', '.')}}
+                </td>
+            @endif
+            {{-- pph21 (bentukan - insentif) --}}
+            @if ($item->hasil_pph < 0)
+                <td class="text-right">
+                    Rp ({{number_format(str_replace('-', '', $item->hasil_pph), 0, ',', '.')}})
+                </td>
+            @elseif ($item->hasil_pph == 0)
+                <td class="text-center">-</td>
+            @else
+                <td class="text-right">
+                    Rp {{number_format($item->hasil_pph, 0, ',', '.')}}
+                </td>
+            @endif
+            @if (auth()->user()->hasRole('admin'))
+                <td>
+                    <a href="#" class="btn btn-danger d-flex justify-center btn-restore"
+                        data-batch_id="{{$item->id}}"
+                        data-kantor="{{$item->kantor}}"
+                        data-bulan="{{$item->bulan}}"
+                        data-tahun="{{$item->tahun}}"
+                        >Kembalikan</a>
+                </td>
+            @endif
+        </tr>
     @empty
-    <tr>
-        <td colspan="{{auth()->user()->hasRole('admin') ? 11 : 10}}" class="text-center">Belum ada penghasilan yang telah dihapus.</td>
-    </tr>
+        <tr>
+            <td colspan="{{auth()->user()->hasRole('admin') ? 13 : 12}}" class="text-center">Belum ada penghasilan yang telah dihapus.</td>
+        </tr>
     @endforelse
     </tbody>
     <tfoot>
@@ -159,6 +181,20 @@
         @if ($total_pph > 0)
             <th class="text-right">
                 RP {{number_format($total_pph, 0, ',', '.')}}
+            </th>
+        @else
+            <th class="text-center">-</th>
+        @endif
+        @if ($total_pajak_insentif > 0)
+            <th class="text-right">
+                RP {{number_format($total_pajak_insentif, 0, ',', '.')}}
+            </th>
+        @else
+            <th class="text-center">-</th>
+        @endif
+        @if ($total_hasil_pph > 0)
+            <th class="text-right">
+                RP {{number_format($total_hasil_pph, 0, ',', '.')}}
             </th>
         @else
             <th class="text-center">-</th>

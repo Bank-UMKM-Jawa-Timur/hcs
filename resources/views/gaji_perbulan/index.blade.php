@@ -60,7 +60,9 @@
     $total_bruto = 0;
     $total_potongan = 0;
     $total_netto = 0;
-    $total_pph = 0;
+    $total_pph = 0; // bentukan
+    $total_pajak_insentif = 0;
+    $total_hasil_pph = 0; // bentukan - pajak insentif
 @endphp
 <div class="p-5">
     <div id="alert-additional-content-1" class="p-4 mb-4 text-blue-500 border border-blue-300 rounded-lg bg-blue-50  " role="alert">

@@ -111,7 +111,6 @@ class GajiPerBulanController extends Controller
 
     public function index(Request $request)
     {
-        // return $request;
         if (!auth()->user()->can('penghasilan - proses penghasilan')) {
             return view('roles.forbidden');
         }
@@ -135,6 +134,7 @@ class GajiPerBulanController extends Controller
         $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search_proses);
         // Final
         $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search_final);
+        // return $final_list;
         // sampah
         if(auth()->user()->hasRole('admin')) {
             $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1, $search_sampah);
