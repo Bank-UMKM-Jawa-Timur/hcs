@@ -55,7 +55,6 @@ class LaporanTetapController extends Controller
         $data = $request->has('tahun') && $request->has('bulan') ? $this->repo->get($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
         $footer = $request->has('tahun') && $request->has('bulan') ? $this->repo->getTotal($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
         $cabang = $this->cabang;
-        // return $data;
         return view('rekap-tetap.index', [
             'cabang' => $cabang,
             'data' => $data,
@@ -68,10 +67,11 @@ class LaporanTetapController extends Controller
         $year = Session::get('year');
         $month = Session::get('month');
         $kantor = Session::get('kantor');
+        $kategori = Session::get('kategori');
         $limit = null;
         $search = null;
-        $data = $this->repo->get($kantor, $search, $limit, true, intval($year), intval($month));
-        $grandtotal = $this->repo->getTotal($kantor, $search, $limit, false, intval($year), intval($month));
+        $data = $this->repo->get($kantor, $kategori, $search, $limit, true, intval($year), intval($month));
+        $grandtotal = $this->repo->getTotal($kantor, $kategori, $search, $limit, false, intval($year), intval($month));
         $month_name = getMonth($month);
 
         $showKantor = '';

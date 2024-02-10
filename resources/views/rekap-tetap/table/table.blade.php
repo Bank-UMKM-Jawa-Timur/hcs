@@ -132,6 +132,7 @@
             $totalPPh = 0;
             $totalpajakInsentif = 0;
             $totalInsentif = 0;
+            $totalBrutoDanaPendidikan = 0;
             $totalColumns = 19;
             // insentif kredit
             $insentif_kredit = 0;
@@ -188,7 +189,6 @@
                 $brutoTHR = 0;
                 $totalBrutoTHR = 0;
                 $brutoDanaPendidikan = 0;
-                $totalBrutoDanaPendidikan = 0;
                 $brutoPenghargaanKinerja = 0;
                 $totalBrutoPenghargaanKinerja = 0;
                 $totalpajakInsentif += $item->pajak_insentif;
