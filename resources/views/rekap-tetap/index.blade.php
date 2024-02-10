@@ -218,7 +218,7 @@
                         <div class="flex justify-end w-fit my-3">
                             @if (\Request::has('tahun') && count($data) != 0)
                                 <div class="mr-2" id="btn-download">
-                                    <a href="{{ route('download-rekapitulasi') }}" download
+                                    <a href="{{ route('download-rekapitulasi') }}?kategori={{Request()->get('kategori')}}" download
                                         class="m-0 btn btn-lg is-btn btn-warning">
                                         <span style="font-size: 14px;">Excel</span>
                                     </a>

@@ -67,7 +67,7 @@ class LaporanTetapController extends Controller
         $year = Session::get('year');
         $month = Session::get('month');
         $kantor = Session::get('kantor');
-        $kategori = Session::get('kategori');
+        $kategori = Request()->get('kategori');
         $limit = null;
         $search = null;
         $data = $this->repo->get($kantor, $kategori, $search, $limit, true, intval($year), intval($month));
