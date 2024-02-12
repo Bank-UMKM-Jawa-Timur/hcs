@@ -121,8 +121,10 @@ class CheckPPHController extends Controller
             WHEN mst_karyawan.kd_jabatan='IKJP' THEN 17 END ASC
         ";
         $tanggal = date('Y-m-d', strtotime("2024-01-25"));
-        $bulan = (int) date('m', strtotime($tanggal));
-        $tahun = (int) date('Y', strtotime($tanggal));
+        // $bulan = (int) date('m', strtotime($tanggal));
+        // $tahun = (int) date('Y', strtotime($tanggal));
+        $bulan = $request->has('bulan') ? (int) $request->get('bulan') : (int) date('m');
+        $tahun = $request->has('tahun') ? (int) $request->get('tahun') : (int) date('Y');
         $kd_entitas = $request->get('kd_entitas');
         $kd_cabang = \DB::table('mst_cabang')
                         ->select('kd_cabang')
@@ -258,6 +260,7 @@ class CheckPPHController extends Controller
             }
         }
 
+        // return $result;
         return view('cek-pph-new-25', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
     }
 

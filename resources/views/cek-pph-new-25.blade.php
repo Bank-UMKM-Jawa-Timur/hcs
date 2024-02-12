@@ -61,8 +61,8 @@
 </div>
 <div class="body-pages">
     <div class="table-wrapping text-center space-y-5">
-        @if (!auth()->user()->hasRole('cabang'))
-            <form action="" method="GET">
+        <form action="" method="GET">
+                @if (!auth()->user()->hasRole('cabang'))
                 <div class="input-box">
                     <label for="">Cabang</label>
                     <select name="kd_entitas" id="cabang" class="form-input" required>
@@ -72,9 +72,48 @@
                         @endforeach
                     </select>
                 </div>
+                @endif
+                <div class="flex gap-5 lg:flex-row flex-col items-center w-full justify-between">
+                    <div class="input-box w-full text-left">
+                            <label for="">Bulan<span class="text-danger">*</span></label>
+                            <select name="bulan" id="bulan"
+                                class="form-input">
+                                <option value="0">-- Pilih bulan --</option>
+                                <option value="1" @if(\Request::get('bulan') == '1' || date('n') == 1) selected @endif>Januari</option>
+                                <option value="2" @if(\Request::get('bulan') == '2' || date('n') == 2) selected @endif>Februari</option>
+                                <option value="3" @if(\Request::get('bulan') == '3' || date('n') == 3) selected @endif>Maret</option>
+                                <option value="4" @if(\Request::get('bulan') == '4' || date('n') == 4) selected @endif>April</option>
+                                <option value="5" @if(\Request::get('bulan') == '5' || date('n') == 5) selected @endif>Mei</option>
+                                <option value="6" @if(\Request::get('bulan') == '6' || date('n') == 6) selected @endif>Juni</option>
+                                <option value="7" @if(\Request::get('bulan') == '7' || date('n') == 7) selected @endif>Juli</option>
+                                <option value="8" @if(\Request::get('bulan') == '8' || date('n') == 8) selected @endif>Agustus</option>
+                                <option value="9" @if(\Request::get('bulan') == '9' || date('n') == 9) selected @endif>September</option>
+                                <option value="10" @if(\Request::get('bulan') == '10'|| date('n') == 10) selected @endif>Oktober</option>
+                                <option value="11" @if(\Request::get('bulan') == '11'|| date('n') == 11) selected @endif>November</option>
+                                <option value="12" @if(\Request::get('bulan') == '12'|| date('n') == 12) selected @endif>Desember</option>
+                            </select>
+                    </div>
+                    <div class="input-box w-full text-left">
+                        <label for="">Tahun<span class="text-danger">*</span></label>
+                        <select name="tahun" id="tahun"
+                            class="form-input">
+                            <option value="0">Pilih Tahun</option>
+                            @php
+                                $earliest = 2024;
+                                $tahunSaatIni = date('Y');
+                                $awal = $tahunSaatIni - 5;
+                                $akhir = $tahunSaatIni + 5;
+                            @endphp
+
+                            @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
+                                <option {{ Request()->tahun == $tahun || date('Y') == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
+                                    {{ $tahun }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
                 <input type="submit" class="btn btn-primary btn-icon-text no-print mt-4" value="Tampilkan">
             </form>
-        @endif
         @if ($result)
             @php
                 // Database Lama
@@ -103,6 +142,10 @@
                 $sum_pph_seharusnya = 0;
                 $sum_selisih_seharusnya = 0;
                 // End Seharusnya
+                // bruto
+                $sum_bruto_pajak_insentif = 0;
+                $sum_selisih_bruto_isentif = 0;
+                // end bruto
             @endphp
             <div class="table-wrapper">
                 <table class="tables-stripped" id="table" style="width: 100%; border: 1px solid black;">
@@ -111,7 +154,8 @@
                             <th colspan="4"></th>
                             <th colspan="7" style="background-color: red; color: white;">Database (Lama)</th>
                             <th colspan="8" style="background-color: blue; color: white;">Database (Baru)</th>
-                            <th colspan="9" style="background-color: yellow;">Seharusnya 1-25</th>
+                            <th colspan="8" style="background-color: green; color: white;" >Bruto Insentif</th>
+                            <th colspan="8" style="background-color: yellow;">Seharusnya 1-25</th>
                             {{--  <th colspan="9" style="background-color: #7FFF00">Akhir Bulan</th>  --}}
                         </tr>
                         <tr>
@@ -150,6 +194,22 @@
                             {{--  <th style="background-color: blue; color: white;">Terutang</th>  --}}
                             <th style="background-color: blue; color: white;">Selisih</th>
                             {{--  END Database Baru  --}}
+
+                            {{-- bruto insentif --}}
+                            <th style="background-color: green; color: white;">Bruto</th>
+                            <th style="background-color: green; color: white;">Insentif</th>
+                            <th style="background-color: green; color: white;">Total</th>
+                            <th style="background-color: green; color: white;">Pengali</th>
+                            <th style="background-color: green; color: white;">PPh Bentukan</th>
+                            <th style="background-color: green; color: white;">Pajak Insentif</th>
+                            <th style="background-color: green; color: white;">
+                                PPH
+                                <br>
+                                (PPH - Pajak Insentif)
+                            </th>
+                            {{--  <th style="background-color: blue; color: white;">Terutang</th>  --}}
+                            <th style="background-color: green; color: white;">Selisih</th>
+                            {{-- end bruto --}}
                             {{--  Seharusnya  --}}
                             <th style="background-color: yellow;">Bruto</th>
                             <th style="background-color: yellow;">Insentif</th>
@@ -243,6 +303,9 @@
                                     $terutang_seharusnya = $rowNew->seharusnya ? $rowNew->seharusnya->terutang : 0;
                                     $selisih_seharusnya = floor($pph_seharusnya - $pph_new_db);
                                     // END Seharusnya
+                                    // bruto
+                                    $selisih_bruto_insentif = $total_pajak_insentif_new_db - $total_pajak_insentif_seharusnya;
+                                    // end bruto
                                     // Akhir Bulan
                                     $bruto_akhir = $row->penghasilanBrutoAkhirBulan;
                                     $total_insentif_akhir = $row->total_insentif;
@@ -286,6 +349,9 @@
                                     $sum_pph_seharusnya += intval($pph_seharusnya);
                                     $sum_selisih_seharusnya += $selisih_seharusnya;
                                     // End Seharusnya
+                                    // bruto
+                                    $sum_selisih_bruto_isentif += $selisih_bruto_insentif;
+                                    // end bruto
                                     // End Hitung Total
                                 @endphp
                                 <tr>
@@ -303,6 +369,7 @@
                                     <td>{{formatRupiahExcel($pph_db, 0, true)}}</td>
                                     {{--  <td>{{formatRupiahExcel($terutang_db, 0, true)}}</td>  --}}
                                     {{--  END Database Lama  --}}
+
                                     {{--  Database Baru  --}}
                                     <td>{{formatRupiahExcel($bruto_new_db, 0, true)}}</td>
                                     <td>{{formatRupiahExcel($total_insentif_new_db, 0, true)}}</td>
@@ -314,6 +381,19 @@
                                     {{--  <td>{{formatRupiahExcel($terutang_new_db, 0, true)}}</td>  --}}
                                     <td>{{formatRupiahExcel($selisih_new_db, 0, true)}}</td>
                                     {{--  END Database Baru  --}}
+
+                                    {{-- Bruto --}}
+                                    <td>{{formatRupiahExcel($bruto_new_db, 0, true)}}</td>
+                                    <td>{{formatRupiahExcel($total_insentif_new_db, 0, true)}}</td>
+                                    <td>{{formatRupiahExcel($total_new_db, 0, true)}}</td>
+                                    <td>{{$pengali_persen_new_db}}%</td>
+                                    <td>{{formatRupiahExcel($pph_bentukan_new_db, 0, true)}}</td>
+                                    <td>{{formatRupiahExcel($total_pajak_insentif_new_db, 0, true)}}</td>
+                                    <td>{{formatRupiahExcel($pph_new_db, 0, true)}}</td>
+                                    {{--  <td>{{formatRupiahExcel($terutang_new_db, 0, true)}}</td>  --}}
+                                    <td>{{formatRupiahExcel($selisih_new_db, 0, true)}}</td>
+                                    {{-- End Bruto --}}
+
                                     {{--  Seharusnya  --}}
                                     <td>{{formatRupiahExcel($bruto_seharusnya, 0, true)}}</td>
                                     <td>{{formatRupiahExcel($row->total_insentif_25, 0, true)}}</td>
@@ -324,6 +404,7 @@
                                     <td>{{formatRupiahExcel($pph_seharusnya, 0, true)}}</td>
                                     <td>{{formatRupiahExcel($selisih_seharusnya, 0, true)}}</td>
                                     {{--  END Seharusnya  --}}
+
                                     {{--  Akhir Bulan  --}}
                                     {{--  <td>{{formatRupiahExcel($bruto_akhir, 0, true)}}</td>
                                     <td>{{formatRupiahExcel($total_insentif_25, 0, true)}}</td>
@@ -362,6 +443,16 @@
                             <th style="font-weight: bold">{{formatRupiahExcel($sum_pph_new_db, 0, true)}}</th>
                             <th style="font-weight: bold">{{formatRupiahExcel($sum_selisih_new_db, 0, true)}}</th>
                             {{--  End Database Baru  --}}
+                            {{-- Bruto --}}
+                            <th style="font-weight: bold">{{formatRupiahExcel($sum_bruto_new_db, 0, true)}}</th>
+                            <th style="font-weight: bold">{{formatRupiahExcel($sum_insentif_new, 0, true)}}</th>
+                            <th style="font-weight: bold">{{formatRupiahExcel($sum_total_new, 0, true)}}</th>
+                            <th></th>
+                            <th style="font-weight: bold">{{formatRupiahExcel($sum_pph_bentukan_new_db, 0, true)}}</th>
+                            <th style="font-weight: bold">{{formatRupiahExcel($sum_pajak_insentif_new_db, 0, true)}}</th>
+                            <th style="font-weight: bold">{{formatRupiahExcel($sum_pph_new_db, 0, true)}}</th>
+                            <th style="font-weight: bold">{{formatRupiahExcel($sum_selisih_new_db, 0, true)}}</th>
+                            {{-- End Bruto --}}
                             {{--  Seharusnya  --}}
                             <th style="font-weight: bold">{{formatRupiahExcel($sum_bruto_seharusnya, 0, true)}}</th>
                             <th style="font-weight: bold">{{formatRupiahExcel($sum_insentif_seharusnya, 0, true)}}</th>
