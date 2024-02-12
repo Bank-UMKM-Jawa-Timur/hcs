@@ -337,7 +337,7 @@ class PenghasilanTeraturController extends Controller
         $kdEntitas = Request()->get('kdEntitas');
         $search = Request()->get('q');
         $repo = new PenghasilanTeraturRepository;
-        $data = $repo->getEditTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit);
+        $data = $repo->getEditTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit, $kdEntitas);
         $tunjangan = $repo->getNamaTunjangan($idTunjangan);
         $dataTunjangan = TunjanganModel::where('kategori', 'teratur')->where('is_import', 1)->get();
         return view('penghasilan-teratur.edit', [
