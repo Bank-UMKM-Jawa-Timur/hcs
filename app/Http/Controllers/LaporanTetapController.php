@@ -57,6 +57,7 @@ class LaporanTetapController extends Controller
         $data = $request->has('tahun') && $request->has('bulan') ? $this->repo->get($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
         $footer = $request->has('tahun') && $request->has('bulan') ? $this->repo->getTotal($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
         $cabang = $this->cabang;
+
         return view('rekap-tetap.index', [
             'cabang' => $cabang,
             'data' => $data,
@@ -84,7 +85,7 @@ class LaporanTetapController extends Controller
         else
             $showKantor = 'Kantor ' . CabangModel::where('kd_cabang', $kantor)->first()?->nama_cabang;
 
-        $filename = 'Laporan Rekap ' . $showKantor .' '. $month_name . ' Tahun ' . $year;
+        $filename = 'Laporan Rekap ' . $showKantor .' '. $month_name . ' Tahun ' . $year.' ('.$kategori.')';
         return Excel::download(new RekapTetapExport($data, $grandtotal), $filename . '.xlsx');
     }
 

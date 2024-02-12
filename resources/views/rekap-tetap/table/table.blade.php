@@ -200,7 +200,7 @@
                 $brutoPenghargaanKinerja = 0;
                 $totalBrutoPenghargaanKinerja = 0;
                 $totalpajakInsentif += $item->pajak_insentif;
-                $totalInsentif += $item->total_insentif_kredit;
+                $totalInsentif += $item->total_insentif;
                 // insentif kredit
                 $insentif_kredit += $item->insentif_kredit;
                 $insentif_penagihan += $item->insentif_penagihan;
