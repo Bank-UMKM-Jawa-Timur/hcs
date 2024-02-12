@@ -415,6 +415,7 @@ class GajiPerBulanController extends Controller
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
             $penghasilan = DB::table('batch_gaji_per_bulan')
                             ->where('kd_entitas', $kd_entitas)
+                            ->where('is_pegawai', $is_pegawai)
                             ->whereYear('tanggal_input', date('Y'))
                             ->orderBy('tanggal_input', 'DESC')
                             ->first();

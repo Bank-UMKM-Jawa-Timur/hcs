@@ -16,9 +16,6 @@ class HitungPPH
         // Get total penghasilan rutin
         $penghasilanRutin = $total_gaji;
 
-        // Tunjangan Insentif ID
-        $idTunjanganInsentifArr = [31, 32];
-
         // Get Kode entitas
         $kd_entitas = '000';
         $cabangRepo = new CabangRepository;
@@ -37,7 +34,6 @@ class HitungPPH
                                             ->where('nip', $karyawan->nip)
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
-                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
             else {
@@ -48,7 +44,6 @@ class HitungPPH
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
                                             ->whereBetween('created_at', [$start_date, $tanggal])
-                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
         }
@@ -59,7 +54,6 @@ class HitungPPH
                                             ->where('nip', $karyawan->nip)
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
-                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
             else {
@@ -74,7 +68,6 @@ class HitungPPH
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
                                             ->whereBetween('created_at', [$start_date, $end_date])
-                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
         }
@@ -85,7 +78,6 @@ class HitungPPH
                                             ->where('nip', $karyawan->nip)
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
-                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
             else {
@@ -95,7 +87,6 @@ class HitungPPH
                                             ->where('tahun', (int) $tahun)
                                             ->where('bulan', (int) $bulan)
                                             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
-                                            ->whereNotIn('id_tunjangan', $idTunjanganInsentifArr)
                                             ->sum('nominal');
             }
         }

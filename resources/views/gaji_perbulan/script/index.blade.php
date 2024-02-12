@@ -128,7 +128,7 @@
             const currentYear = currentDate.getFullYear();
 
             if (year == currentYear) {
-                /*if (month != currentMonth) {
+                if (month != currentMonth) {
                     Swal.fire({
                         title: 'Peringatan',
                         text: 'Bulan yang dipilih tidak sesuai dengan bulan saat ini',
@@ -170,7 +170,7 @@
                             }
                         }
                     }
-                }*/
+                }
             }
             else {
                 Swal.fire({
