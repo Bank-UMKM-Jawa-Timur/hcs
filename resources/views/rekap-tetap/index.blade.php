@@ -321,7 +321,17 @@
     })
 
     $('#kategori').on('change', function() {
-        $('#btn-download').addClass('d-none')
+        $('#btn-download').addClass('hidden')
+    })
+    $('#form').on('submit', function() {
+        $('.preloader').show()
+    })
+    $('#btn-download').on('click', function () {
+        $('.preloader').show();
+    })
+
+    $('#btn-download').on('focusout', function () {
+        $('.preloader').hide();
     })
 
     const formatRupiahPayroll = (angka) => {
