@@ -239,7 +239,8 @@ class PenghasilanTidakTeraturRepository
                 ->leftJoin('batch_gaji_per_bulan', function ($join) {
                     $join->on('gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
                         ->where(DB::raw('MONTH(penghasilan_tidak_teratur.created_at)'), DB::raw('MONTH(penghasilan_tidak_teratur.created_at)'))
-                        ->where(DB::raw('YEAR(penghasilan_tidak_teratur.created_at)'), DB::raw('YEAR(penghasilan_tidak_teratur.created_at)'));
+                        ->where(DB::raw('YEAR(penghasilan_tidak_teratur.created_at)'), DB::raw('YEAR(penghasilan_tidak_teratur.created_at)'))
+                        ->whereNull('batch_gaji_per_bulan.deleted_at');
                 })
                 ->select(
                     'penghasilan_tidak_teratur.is_lock',
@@ -273,7 +274,6 @@ class PenghasilanTidakTeraturRepository
                         $query->where('mst_karyawan.kd_entitas', $kd_cabang);
                     }
                 })
-                ->whereNull('batch_gaji_per_bulan.deleted_at')
                 ->groupBy('mst_tunjangan.id', 'penghasilan_tidak_teratur.created_at', 'penghasilan_tidak_teratur.kd_entitas')
                 ->orderBy('penghasilan_tidak_teratur.created_at', 'DESC')
                 ->paginate($limit);

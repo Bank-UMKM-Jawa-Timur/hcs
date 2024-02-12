@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Helpers\HitungPPH;
 use Illuminate\Support\Facades\DB;
 
 class GajiPerBulanRepository
@@ -46,7 +47,7 @@ class GajiPerBulanRepository
                 ->where(function ($query) use ($search) {
                     $query->where('gaji.tahun', 'like', "%$search%")
                         ->orWhere('cab.nama_cabang', 'like', "%$search%");
-                    })
+                })
                 ->when($is_cabang, function($query) {
                     $kd_cabang = auth()->user()->kd_cabang;
                     $query->where('m.kd_entitas', $kd_cabang);
@@ -62,11 +63,15 @@ class GajiPerBulanRepository
                 ->whereNull('batch.deleted_at')
                 ->orderBy('batch.kd_entitas')
                 ->groupBy('batch.kd_entitas')
+                ->groupBy('batch.id')
                 ->groupBy('gaji.bulan')
                 ->groupBy('gaji.tahun')
                 ->paginate($limit,['*'], 'page', $page);
-                
-        foreach ($data as $key => $item) {
+        
+        foreach ($data as $item) {
+            $kd_entitas = $item->kd_entitas;
+            $tanggal = $item->tanggal_input;
+            $day = date('d', strtotime($tanggal));
             // Cek apakah ada perubahan data penghasilan
             $total_penyesuaian = 0;
             if ($item->status == 'proses') {
@@ -82,6 +87,8 @@ class GajiPerBulanRepository
                                 ->get();
 
                 foreach ($data_gaji as $gaji) {
+                    $tahun = $gaji->tahun;
+                    $bulan = $gaji->bulan;
                     $karyawan = DB::table('mst_karyawan')
                                 ->where('nip', $gaji->nip)
                                 ->first();
@@ -160,8 +167,23 @@ class GajiPerBulanRepository
 
                     $transaksi_tunjangan = DB::table('transaksi_tunjangan')
                                             ->where('nip', $gaji->nip)
-                                            ->where('bulan', $gaji->bulan)
                                             ->where('tahun', $gaji->tahun)
+                                            ->where(function($query) use ($tahun, $bulan, $tanggal, $day, $kd_entitas) {
+                                                if ($bulan > 1) {
+                                                    // Tanggal penggajian bulan sebelumnya
+                                                    $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                    $query->whereBetween('tanggal', [$start_date, $tanggal]);
+                                                }
+                                                else if ($bulan == 12) {
+                                                    $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                    $last_day = getLastDateOfMonth($tahun, $bulan);
+                                                    $end_date = $tahun.'-'.$bulan.'-'.$last_day;
+                                                    $query->whereBetween('tanggal', [$start_date, $end_date]);
+                                                }
+                                                else {
+                                                    $query->whereDay('tanggal', '<=', $day);
+                                                }
+                                            })
                                             ->get();
                     foreach ($transaksi_tunjangan as $tunj) {
                         // Transport
@@ -195,7 +217,22 @@ class GajiPerBulanRepository
                                                 ->select('id', 'id_tunjangan', 'nominal')
                                                 ->where('nip', $gaji->nip)
                                                 ->where('tahun', (int) $gaji->tahun)
-                                                ->where('bulan', (int) $gaji->bulan)
+                                                ->where(function($query) use ($tahun, $bulan, $tanggal, $day, $kd_entitas) {
+                                                    if ($bulan > 1) {
+                                                        // Tanggal penggajian bulan sebelumnya
+                                                        $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                        $query->whereBetween('created_at', [$start_date, $tanggal]);
+                                                    }
+                                                    else if ($bulan == 12) {
+                                                        $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                        $last_day = getLastDateOfMonth($tahun, $bulan);
+                                                        $end_date = $tahun.'-'.$bulan.'-'.$last_day;
+                                                        $query->whereBetween('created_at', [$start_date, $end_date]);
+                                                    }
+                                                    else {
+                                                        $query->whereDay('created_at', '<=', $day);
+                                                    }
+                                                })
                                                 ->get();
                     foreach ($penghasilanTidakRutin as $tidakRutin) {
                         $current = DB::table('batch_penghasilan_tidak_teratur')
@@ -310,6 +347,7 @@ class GajiPerBulanRepository
                 })
                 ->whereNotNull('batch.deleted_at')
                 ->orderBy('gaji.created_at', 'desc')
+                ->groupBy('batch.id')
                 ->groupBy('batch.kd_entitas')
                 ->groupBy('gaji.bulan')
                 ->groupBy('gaji.tahun')

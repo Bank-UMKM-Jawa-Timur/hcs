@@ -417,6 +417,7 @@ class GajiPerBulanController extends Controller
                             ->where('kd_entitas', $kd_entitas)
                             ->where('is_pegawai', $is_pegawai)
                             ->whereYear('tanggal_input', date('Y'))
+                            ->whereNull('deleted_at')
                             ->orderBy('tanggal_input', 'DESC')
                             ->first();
             $penghasilan_tahun_terakhir = date('Y');
@@ -1255,37 +1256,27 @@ class GajiPerBulanController extends Controller
                         }
                     }
                     else {
-                        if ($bulan > 1) {
-                            // Tanggal penggajian bulan sebelumnya
-                            $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
-                            // GET Transaksi Tunjangan
-                            $tj = DB::table('transaksi_tunjangan')
-                                    ->where('nip', $item->nip)
-                                    ->where('id_tunjangan', $tunj->id)
-                                    ->whereBetween('tanggal', [$start_date, $tanggal])
-                                    ->first();
-                        }
-                        else if ($bulan == 12) {
-                            $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
-                            $last_day = getLastDateOfMonth($tahun, $bulan);
-                            $end_date = $tahun.'-'.$bulan.'-'.$last_day;
-                            // GET Transaksi Tunjangan
-                            $tj = DB::table('transaksi_tunjangan')
-                                    ->where('nip', $item->nip)
-                                    ->where('id_tunjangan', $tunj->id)
-                                    ->whereBetween('tanggal', [$start_date, $end_date])
-                                    ->first();
-                        }
-                        else {
-                            // GET Transaksi Tunjangan
-                            $tj = DB::table('transaksi_tunjangan')
-                                    ->where('nip', $item->nip)
-                                    ->where('id_tunjangan', $tunj->id)
-                                    ->whereYear('tanggal', intval($tahun))
-                                    ->whereMonth('tanggal', $bulan)
-                                    ->whereDay('tanggal', '<=', $day)
-                                    ->first();
-                        }
+                        $tj = DB::table('transaksi_tunjangan')
+                                ->where('nip', $item->nip)
+                                ->where('id_tunjangan', $tunj->id)
+                                ->whereYear('tanggal', $tahun)
+                                ->where(function($query) use ($tahun, $bulan, $tanggal, $day, $kd_entitas) {
+                                    if ($bulan > 1) {
+                                        // Tanggal penggajian bulan sebelumnya
+                                        $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                        $query->whereBetween('tanggal', [$start_date, $tanggal]);
+                                    }
+                                    else if ($bulan == 12) {
+                                        $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                        $last_day = getLastDateOfMonth($tahun, $bulan);
+                                        $end_date = $tahun.'-'.$bulan.'-'.$last_day;
+                                        $query->whereBetween('tanggal', [$start_date, $end_date]);
+                                    }
+                                    else {
+                                        $query->whereDay('tanggal', '<=', $day);
+                                    }
+                                })
+                                ->first();
                         array_push($tunjangan, ($tj != null) ? $tj->nominal : 0);
                         if ($tunj->status) {
                             array_push($tjJamsostek, ($tj != null) ? $tj->nominal : 0);
@@ -1464,7 +1455,25 @@ class GajiPerBulanController extends Controller
                                             ->select('id', 'id_tunjangan', 'nominal')
                                             ->where('nip', $item->nip)
                                             ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->when($bulan, function($query) use ($bulan, $tanggal, $kd_entitas) {
+                                                if ($bulan > 1) {
+                                                    // Penggajian bulan sebelumnya
+                                                    $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                    $query->whereBetween('created_at', [$start_date, $tanggal]);
+                                                }
+                                                else if ($bulan == 12) {
+                                                    // Penggajian bulan sebelumnya
+                                                    $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                    $currentMonth = intval(date('m', strtotime($tanggal)));
+                                                    $currentYear = date('Y', strtotime($tanggal));
+                                                    $last_day = getLastDateOfMonth($currentYear, $currentMonth);
+                                                    $end_date = $currentYear.'-'.$currentMonth.'-'.$last_day;
+                                                    $query->whereBetween('created_at', [$start_date, $end_date]);
+                                                }
+                                                else {
+                                                    $query->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)));
+                                                }
+                                            })
                                             ->get();
 
                 if ($request->has('batch_id')) {
@@ -1496,10 +1505,19 @@ class GajiPerBulanController extends Controller
                         'kredit_pegawai' => $kredit_pegawai,
                         'iuran_ik' => $iuran_ik,
                     ];
-                    $gaji = GajiPerBulanModel::where('batch_id', $request->batch_id)
-                                                ->where('nip', $item->nip)
-                                                ->where('bulan', $bulan)
-                                                ->where('tahun', $tahun)
+                    $gaji = GajiPerBulanModel::select('gaji.*', 'batch_gaji_per_bulan.deleted_at')
+                                                ->join('batch_gaji_per_bulan', function($join) use ($kd_entitas, $bulan, $tahun) {
+                                                    $join->on('batch_gaji_per_bulan.id', 'gaji.batch_id')
+                                                        ->where('batch_gaji_per_bulan.kd_entitas', $kd_entitas)
+                                                        ->whereMonth('batch_gaji_per_bulan.tanggal_input', $bulan)
+                                                        ->whereMonth('batch_gaji_per_bulan.tanggal_input', $tahun)
+                                                        ->whereNull('batch_gaji_per_bulan.deleted_at');
+                                                })
+                                                ->where('gaji.batch_id', $request->batch_id)
+                                                ->whereNull('batch_gaji_per_bulan.deleted_at')
+                                                ->where('gaji.nip', $item->nip)
+                                                ->where('gaji.bulan', $bulan)
+                                                ->where('gaji.tahun', $tahun)
                                                 ->first();
                     GajiPerBulanModel::where('batch_id', $request->batch_id)
                                         ->where('nip', $item->nip)
@@ -1567,23 +1585,40 @@ class GajiPerBulanController extends Controller
                     // Hitung pajak intensif
                     $nominal_kredit = 0;
                     $nominal_penagihan = 0;
+                    $pajak_kredit = 0;
+                    $pajak_penagihan = 0;
 
                     if ($bulan > 1) {
-                        $tanggal_filter = $tahun.'-'.$bulan.'-'.'25';
+                        // Penggajian bulan sebelumnya
+                        $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
                         $nominal_kredit = (int) DB::table('penghasilan_tidak_teratur')
-                                            ->where('nip', $item->nip)
-                                            ->where('id_tunjangan', 31) // kredit
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
-                                            ->whereDate('created_at', '<=', $tanggal_filter)
-                                            ->sum('nominal');
-                        $nominal_penagihan = (int) DB::table('penghasilan_tidak_teratur')
                                                 ->where('nip', $item->nip)
-                                                ->where('id_tunjangan', 32) // penagihan
-                                                ->where('tahun', (int) $tahun)
-                                                ->where('bulan', (int) $bulan)
-                                                ->whereDate('created_at', '<=', $tanggal_filter)
+                                                ->where('id_tunjangan', 31) // kredit
+                                                ->whereBetween('created_at', [$start_date, $tanggal])
                                                 ->sum('nominal');
+                        $nominal_penagihan = (int) DB::table('penghasilan_tidak_teratur')
+                                                    ->where('nip', $item->nip)
+                                                    ->where('id_tunjangan', 32) // penagihan
+                                                    ->whereBetween('created_at', [$start_date, $tanggal])
+                                                    ->sum('nominal');
+                    }
+                    else if ($bulan == 12) {
+                        $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                        $currentMonth = intval(date('m', strtotime($tanggal)));
+                        $currentYear = date('Y', strtotime($tanggal));
+                        $last_day = getLastDateOfMonth($currentYear, $currentMonth);
+                        $end_date = $currentYear.'-'.$currentMonth.'-'.$last_day;
+
+                        $nominal_kredit = (int) DB::table('penghasilan_tidak_teratur')
+                                                    ->where('nip', $item->nip)
+                                                    ->where('id_tunjangan', 31) // kredit
+                                                    ->whereBetween('created_at', [$start_date, $end_date])
+                                                    ->sum('nominal');
+                        $nominal_penagihan = (int) DB::table('penghasilan_tidak_teratur')
+                                                    ->where('nip', $item->nip)
+                                                    ->where('id_tunjangan', 32) // penagihan
+                                                    ->whereBetween('created_at', [$start_date, $end_date])
+                                                    ->sum('nominal');
                     }
                     else {
                         $nominal_kredit = (int) DB::table('penghasilan_tidak_teratur')
@@ -1601,14 +1636,12 @@ class GajiPerBulanController extends Controller
                                                 ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
                                                 ->sum('nominal');
                     }
-                    $pajak_kredit = 0;
-                    $pajak_penagihan = 0;
 
                     if ($nominal_kredit > 0) {
-                        $pajak_kredit = HitungPPH::getPajakInsentif($item->nip, (int) $bulan, (int) $tahun, $nominal_kredit, 'kredit');
+                        $pajak_kredit = HitungPPH::getPajakInsentif($nominal_kredit, 'kredit');
                     }
                     if ($nominal_penagihan > 0) {
-                        $pajak_penagihan = HitungPPH::getPajakInsentif($item->nip, (int) $bulan, (int) $tahun, $nominal_penagihan, 'penagihan');
+                        $pajak_penagihan = HitungPPH::getPajakInsentif($nominal_penagihan, 'penagihan');
                     }
 
                     $pph = [
@@ -1630,11 +1663,21 @@ class GajiPerBulanController extends Controller
                 else {
                     $gaji = false;
                     // Validasi gaji di periode yang sama
-                    // $gaji = DB::table('gaji_per_bulan')
-                    //             ->where('nip', $item->nip)
-                    //             ->where('bulan', $bulan)
-                    //             ->where('tahun', $tahun)
-                    //             ->first();
+                    $gaji = DB::table('gaji_per_bulan AS gaji')
+                                ->select('gaji.*', 'batch_gaji_per_bulan.deleted_at')
+                                ->join('batch_gaji_per_bulan', function($join) use ($kd_entitas, $bulan, $tahun) {
+                                    $join->on('batch_gaji_per_bulan.id', 'gaji.batch_id')
+                                        ->where('batch_gaji_per_bulan.kd_entitas', $kd_entitas)
+                                        ->whereMonth('batch_gaji_per_bulan.tanggal_input', $bulan)
+                                        ->whereMonth('batch_gaji_per_bulan.tanggal_input', $tahun)
+                                        ->whereNull('batch_gaji_per_bulan.deleted_at');
+                                })
+                                ->where('gaji.nip', $item->nip)
+                                ->where('gaji.bulan', $bulan)
+                                ->where('gaji.tahun', $tahun)
+                                ->where('gaji.batch_id', $batch_id)
+                                ->whereNull('batch_gaji_per_bulan.deleted_at')
+                                ->first();
                     if (!$gaji) {
                         $employee = [
                             'batch_id' => $batch_id,
@@ -1683,34 +1726,58 @@ class GajiPerBulanController extends Controller
                         }
 
                         // Validasi gaji di periode yang sama
-                        $pph_bulan_ini = false;
-                        // $pph_bulan_ini = DB::table('pph_yang_dilunasi')
-                        //                     ->where('nip', $item->nip)
-                        //                     ->where('bulan', $bulan)
-                        //                     ->where('tahun', $tahun)
-                        //                     ->first();
+                        $pph_bulan_ini = DB::table('pph_yang_dilunasi AS pph')
+                                            ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
+                                            ->join('batch_gaji_per_bulan', function($join) use ($kd_entitas, $bulan, $tahun) {
+                                                $join->on('batch_gaji_per_bulan.id', 'gaji.batch_id')
+                                                    ->where('batch_gaji_per_bulan.kd_entitas', $kd_entitas)
+                                                    ->whereMonth('batch_gaji_per_bulan.tanggal_input', $bulan)
+                                                    ->whereMonth('batch_gaji_per_bulan.tanggal_input', $tahun)
+                                                    ->whereNull('batch_gaji_per_bulan.deleted_at');
+                                            })
+                                            ->where('pph.nip', $item->nip)
+                                            ->where('pph.bulan', $bulan)
+                                            ->where('pph.tahun', $tahun)
+                                            ->first();
                         if (!$pph_bulan_ini) {
                             $total_pph = $bulan == 12 ? $this->getPPHBulanIni($bulan, $tahun, $item, $ptkp, $tanggal) : HitungPPH::getPPh58($bulan, $tahun, $item, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin);
 
                             // Hitung pajak intensif
                             $nominal_kredit = 0;
                             $nominal_penagihan = 0;
+                            $pajak_kredit = 0;
+                            $pajak_penagihan = 0;
 
                             if ($bulan > 1) {
-                                $tanggal_filter = $tahun.'-'.$bulan.'-'.'25';
+                                // Penggajian bulan sebelumnya
+                                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
                                 $nominal_kredit = (int) DB::table('penghasilan_tidak_teratur')
                                                         ->where('nip', $item->nip)
                                                         ->where('id_tunjangan', 31) // kredit
-                                                        ->where('tahun', (int) $tahun)
-                                                        ->where('bulan', (int) $bulan)
-                                                        ->whereDate('created_at', '<=', $tanggal_filter)
+                                                        ->whereBetween('created_at', [$start_date, $tanggal])
                                                         ->sum('nominal');
                                 $nominal_penagihan = (int) DB::table('penghasilan_tidak_teratur')
                                                             ->where('nip', $item->nip)
                                                             ->where('id_tunjangan', 32) // penagihan
-                                                            ->where('tahun', (int) $tahun)
-                                                            ->where('bulan', (int) $bulan)
-                                                            ->whereDate('created_at', '<=', $tanggal_filter)
+                                                            ->whereBetween('created_at', [$start_date, $tanggal])
+                                                            ->sum('nominal');
+                            }
+                            else if ($bulan == 12) {
+                                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                $currentMonth = intval(date('m', strtotime($tanggal)));
+                                $currentYear = date('Y', strtotime($tanggal));
+                                $last_day = getLastDateOfMonth($currentYear, $currentMonth);
+                                $end_date = $currentYear.'-'.$currentMonth.'-'.$last_day;
+        
+                                $nominal_kredit = (int) DB::table('penghasilan_tidak_teratur')
+                                                            ->where('nip', $item->nip)
+                                                            ->where('id_tunjangan', 31) // kredit
+                                                            ->whereBetween('created_at', [$start_date, $end_date])
+                                                            ->sum('nominal');
+                                $nominal_penagihan = (int) DB::table('penghasilan_tidak_teratur')
+                                                            ->where('nip', $item->nip)
+                                                            ->where('id_tunjangan', 32) // penagihan
+                                                            ->whereBetween('created_at', [$start_date, $end_date])
                                                             ->sum('nominal');
                             }
                             else {
@@ -1729,14 +1796,12 @@ class GajiPerBulanController extends Controller
                                                         ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
                                                         ->sum('nominal');
                             }
-                            $pajak_kredit = 0;
-                            $pajak_penagihan = 0;
 
                             if ($nominal_kredit > 0) {
-                                $pajak_kredit = HitungPPH::getPajakInsentif($item->nip, (int) $bulan, (int) $tahun, $nominal_kredit, 'kredit');
+                                $pajak_kredit = HitungPPH::getPajakInsentif($nominal_kredit, 'kredit');
                             }
                             if ($nominal_penagihan > 0) {
-                                $pajak_penagihan = HitungPPH::getPajakInsentif($item->nip, (int) $bulan, (int) $tahun, $nominal_penagihan, 'penagihan');
+                                $pajak_penagihan = HitungPPH::getPajakInsentif($nominal_penagihan, 'penagihan');
                             }
 
                             $pph = [
@@ -1752,6 +1817,16 @@ class GajiPerBulanController extends Controller
                             ];
                             PPHModel::insert($pph);
                         }
+                        else {
+                            DB::rollBack();
+                            Alert::warning('Peringatan', 'Telah melakukan proses penggajian pada periode ini.');
+                            return redirect()->route('gaji_perbulan.index');
+                        }
+                    }
+                    else {
+                        DB::rollBack();
+                        Alert::warning('Peringatan', 'Telah melakukan proses penggajian pada periode ini.');
+                        return redirect()->route('gaji_perbulan.index');
                     }
                 }
             }
@@ -2681,7 +2756,6 @@ class GajiPerBulanController extends Controller
                 mkdir($folderLampiran, 0755, true);
             }
             $file->move($folderLampiran, $filenameLampiran);
-
             $batch = DB::table('batch_gaji_per_bulan')
                         ->where('id', $request->id)
                         ->first();
@@ -2695,8 +2769,9 @@ class GajiPerBulanController extends Controller
                             ->first();
 
                 if ($prev) {
+                    DB::rollBack();
                     Alert::error('Gagal', 'Harap lakukan final proses pada penghasilan yang sebelumnya terlebih dahulu');
-                    return back();
+                    return redirect()->route('gaji_perbulan.index');
                 }
                 else {
                     DB::table('batch_gaji_per_bulan')
@@ -2714,12 +2789,14 @@ class GajiPerBulanController extends Controller
             DB::commit();
             Alert::success('Sukses','Berhasil melakukan proses finalisasi');
             return redirect()->route('gaji_perbulan.index');
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             DB::rollBack();
-            return $th;
+            Alert::error('Error', $e->getMessage());
+            return redirect()->route('gaji_perbulan.index');
         } catch (QueryException $e) {
             DB::rollBack();
-            return $e;
+            Alert::error('Error', $e->getMessage());
+            return redirect()->route('gaji_perbulan.index');
         }
     }
 

@@ -138,7 +138,8 @@ class CheckPPHController extends Controller
 
         if (auth()->user()->hasRole('cabang')) {
             $karyawan = KaryawanModel::where('kd_entitas', auth()->user()->kd_cabang)
-                                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan))))")
+                                    // ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan))))")
+                                    ->whereNull('tanggal_penonaktifan')
                                     ->orderByRaw($orderRaw)
                                     ->get();
             $dataC = DB::table('mst_cabang')->where('kd_cabang', auth()->user()->kd_cabang)->first();
@@ -164,27 +165,29 @@ class CheckPPHController extends Controller
                                                 $query->whereNotIn('kd_entitas', $kd_cabang)
                                                     ->orWhereNull('kd_entitas');
                                             })
-                                            ->where(function($query) use ($tanggal_penggajian) {
-                                                $query->whereNull('tanggal_penonaktifan')
-                                                    ->orWhere(function($query2) use ($tanggal_penggajian) {
-                                                        $bulan = date('m', strtotime($tanggal_penggajian));
-                                                        $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
-                                                            ->orWhereMonth('tanggal_penonaktifan', $bulan);
-                                                    });
-                                            })
+                                            // ->where(function($query) use ($tanggal_penggajian) {
+                                            //     $query->whereNull('tanggal_penonaktifan')
+                                            //         ->orWhere(function($query2) use ($tanggal_penggajian) {
+                                            //             $bulan = date('m', strtotime($tanggal_penggajian));
+                                            //             $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
+                                            //                 ->orWhereMonth('tanggal_penonaktifan', $bulan);
+                                            //         });
+                                            // })
+                                            ->whereNull('tanggal_penonaktifan')
                                             ->orderByRaw($orderRaw)
                                             ->get();
                 }
                 else {
                     $karyawan = KaryawanModel::where('kd_entitas', $kd_entitas)
-                                            ->where(function($query) use ($tanggal_penggajian) {
-                                                $query->whereNull('tanggal_penonaktifan')
-                                                    ->orWhere(function($query2) use ($tanggal_penggajian) {
-                                                        $bulan = date('m', strtotime($tanggal_penggajian));
-                                                        $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
-                                                            ->orWhereMonth('tanggal_penonaktifan', $bulan);
-                                                    });
-                                            })
+                                            // ->where(function($query) use ($tanggal_penggajian) {
+                                            //     $query->whereNull('tanggal_penonaktifan')
+                                            //         ->orWhere(function($query2) use ($tanggal_penggajian) {
+                                            //             $bulan = date('m', strtotime($tanggal_penggajian));
+                                            //             $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
+                                            //                 ->orWhereMonth('tanggal_penonaktifan', $bulan);
+                                            //         });
+                                            // })
+                                            ->whereNull('tanggal_penonaktifan')
                                             ->orderByRaw($orderRaw)
                                             ->get();
                 }
@@ -204,14 +207,15 @@ class CheckPPHController extends Controller
                                             $query->whereNotIn('kd_entitas', $kd_cabang)
                                             ->orWhereNull('kd_entitas');
                                         })
-                                        ->where(function($query) use ($tanggal_penggajian) {
-                                            $query->whereNull('tanggal_penonaktifan')
-                                                ->orWhere(function($query2) use ($tanggal_penggajian) {
-                                                    $bulan = date('m', strtotime($tanggal_penggajian));
-                                                    $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
-                                                        ->orWhereMonth('tanggal_penonaktifan', $bulan);
-                                                });
-                                        })
+                                        // ->where(function($query) use ($tanggal_penggajian) {
+                                        //     $query->whereNull('tanggal_penonaktifan')
+                                        //         ->orWhere(function($query2) use ($tanggal_penggajian) {
+                                        //             $bulan = date('m', strtotime($tanggal_penggajian));
+                                        //             $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
+                                        //                 ->orWhereMonth('tanggal_penonaktifan', $bulan);
+                                        //         });
+                                        // })
+                                        ->whereNull('tanggal_penonaktifan')
                                         ->orderByRaw($orderRaw)
                                         ->get();
                 $nama_cabang = "Pusat";
@@ -222,6 +226,7 @@ class CheckPPHController extends Controller
         if ($request->has('kd_entitas') || auth()->user()->hasRole('cabang')) {
             foreach ($karyawan as $key => $value) {
                 $data = CheckHitungPPH::newCheckPPH58($tanggal, $bulan, $tahun, $value);
+                $data['tanggal_penonaktifan'] = $value->tanggal_penonaktifan;
                 // Pengali DB lama
                 $kode_ptkp = $data['old']['pph']->ptkp->kode;
                 $penghasilanBrutoDb = $data['old']['pph']->penghasilanBruto;
@@ -259,7 +264,6 @@ class CheckPPHController extends Controller
                 array_push($result, $data);
             }
         }
-
         // return $result;
         return view('cek-pph-new-25', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
     }

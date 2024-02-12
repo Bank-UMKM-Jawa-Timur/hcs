@@ -47,7 +47,7 @@
             <th>Bruto</th>
             <th>Potongan</th>
             <th>Netto</th>
-            <th>PPH21</th>
+            <th>PPh Bentukan</th>
             <th>Pajak Insentif</th>
             <th>PPh21<br>(PPh Bentukan - Pajak Insentif)</th>
         </tr>

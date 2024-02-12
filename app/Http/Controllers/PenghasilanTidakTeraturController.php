@@ -394,7 +394,7 @@ class PenghasilanTidakTeraturController extends Controller
             // save pajak insentif
             if ($request->id_tunjangan == 31) {
                 // Insentif kredit
-                $pajak = HitungPPH::getPajakInsentif($request->nip, $bulan, $tahun, $nominal, 'kredit');
+                $pajak = HitungPPH::getPajakInsentif($nominal, 'kredit');
                 $pajak_awal = $pajak;
                 $current = PPHModel::where('nip', $request->nip)
                             ->where('tahun', $tahun)
@@ -434,7 +434,7 @@ class PenghasilanTidakTeraturController extends Controller
             }
             if ($request->id_tunjangan == 32) {
                 // Insentif penagihan
-                $pajak = HitungPPH::getPajakInsentif($request->nip, $bulan, $tahun, $nominal, 'penagihan');
+                $pajak = HitungPPH::getPajakInsentif($nominal, 'penagihan');
                 $pajak_awal = $pajak;
                 $current = PPHModel::where('nip', $request->nip)
                             ->where('tahun', $tahun)
@@ -678,7 +678,7 @@ class PenghasilanTidakTeraturController extends Controller
 
                 if ($idTunjangan->id == 31) {
                     // Insentif kredit
-                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, $nominal_item, 'kredit');
+                    $pajak = HitungPPH::getPajakInsentif($nominal_item, 'kredit');
                     $pajak_awal = $pajak;
                     $current = PPHModel::where('nip', $item)
                                 ->where('tahun', $tahun)
@@ -717,7 +717,7 @@ class PenghasilanTidakTeraturController extends Controller
                 }
                 if ($idTunjangan->id == 32) {
                     // Insentif penagihan
-                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, $nominal_item, 'penagihan');
+                    $pajak = HitungPPH::getPajakInsentif($nominal_item, 'penagihan');
                     $pajak_awal = $pajak;
                     $current = PPHModel::where('nip', $item)
                                 ->where('tahun', $tahun)

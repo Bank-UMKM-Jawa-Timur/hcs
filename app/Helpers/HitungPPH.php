@@ -433,7 +433,7 @@ class HitungPPH
         }
     }
 
-    public static function getPajakInsentif($nip, $bulan, $tahun, int $nominal, $tipe = 'kredit') {
+    public static function getPajakInsentif(int $nominal, $tipe = 'kredit') {
         $pengali = 0;
         if ($tipe == 'kredit') {
             $pengali = floatval(config('global.pengali_insentif_kredit'));

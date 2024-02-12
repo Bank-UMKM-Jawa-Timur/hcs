@@ -9,9 +9,19 @@ use stdClass;
 class CheckHitungPPH
 {
     public static function getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal, $total_gaji, $tunjangan_rutin = 0, $full_month = false, $is_delete=false) {
+        // Get Kode entitas
+        $kd_entitas = '000';
+        $cabangRepo = new CabangRepository;
+        $kode_cabang_arr = $cabangRepo->listCabang(true);
+        if ($karyawan->kd_entitas) {
+            if (in_array($karyawan->kd_entitas, $kode_cabang_arr)) {
+                $kd_entitas = $karyawan->kd_entitas;
+            }
+        }
         $penghasilanRutin = 0;
         $penghasilanTidakRutin = 0;
         $penghasilanTidakRutinFull = 0;
+        $penghasilanTidakRutinBrutoInsentif = 0;
         $penghasilanBruto = 0;
         $penghasilanBrutoAkhirBulan = 0;
 
@@ -21,6 +31,7 @@ class CheckHitungPPH
         $tanggal_filter = $tahun . '-' . $bulan . '-' . '25';
         // Get total penghasilan tidak rutin
         if ($bulan > 1) {
+            // Feb - Nov
             if ($full_month) {
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
@@ -29,6 +40,13 @@ class CheckHitungPPH
                                             ->where('bulan', (int) $bulan)
                                             ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
+                $penghasilanTidakRutinBrutoInsentif = $penghasilanTidakRutin;
+                $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
+                                    ->whereIn('id_tunjangan', [31, 32])
+                                    ->where('tahun', (int) $tahun)
+                                    ->where('bulan', (int) $bulan)
+                                    ->where('nip', $karyawan->nip)
+                                    ->sum('nominal');
             }
             else {
                 $tanggal_filter = $tahun.'-'.$bulan.'-'.'25';
@@ -40,10 +58,69 @@ class CheckHitungPPH
                                             ->whereDate('created_at', '<=', $tanggal_filter)
                                             ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
+                 // Penggajian bulan sebelumnya
+                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+
+                $penghasilanTidakRutinBrutoInsentif += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->whereBetween('created_at', [$start_date, $tanggal])
+                                            ->sum('nominal');
+                $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
+                                    ->whereIn('id_tunjangan', [31, 32])
+                                    ->where('nip', $karyawan->nip)
+                                    ->whereBetween('created_at', [$start_date, $tanggal])
+                                    ->sum('nominal');
             }
 
         }
+        else if ($bulan == 12) {
+            // Des
+            if ($full_month) {
+                $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->where('tahun', (int) $tahun)
+                                            ->where('bulan', (int) $bulan)
+                                            ->sum('nominal');
+                $penghasilanTidakRutinBrutoInsentif = $penghasilanTidakRutin;
+                $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
+                                    ->whereIn('id_tunjangan', [31, 32])
+                                    ->where('tahun', (int) $tahun)
+                                    ->where('bulan', (int) $bulan)
+                                    ->where('nip', $karyawan->nip)
+                                    ->sum('nominal');
+            }
+            else {
+                // Penggajian bulan sebelumnya
+                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                $currentMonth = intval(date('m', strtotime($tanggal)));
+                $currentYear = date('Y', strtotime($tanggal));
+                $last_day = getLastDateOfMonth($currentYear, $currentMonth);
+                $end_date = $currentYear.'-'.$currentMonth.'-'.$last_day;
+
+                $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->where('tahun', (int) $tahun)
+                                            ->where('bulan', (int) $bulan)
+                                            ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
+                                            ->sum('nominal');
+                $penghasilanTidakRutinBrutoInsentif += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->whereBetween('created_at', [$start_date, $end_date])
+                                            ->sum('nominal');
+                $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
+                                            ->whereIn('id_tunjangan', [31, 32])
+                                            ->where('tahun', (int) $tahun)
+                                            ->whereBetween('created_at', [$start_date, $end_date])
+                                            ->where('nip', $karyawan->nip)
+                                            ->sum('nominal');
+            }
+        }
         else {
+            // Jan
             if ($full_month) {
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
@@ -52,6 +129,13 @@ class CheckHitungPPH
                                             ->where('bulan', (int) $bulan)
                                             ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
+                $penghasilanTidakRutinBrutoInsentif = $penghasilanTidakRutin;
+                $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
+                                    ->whereIn('id_tunjangan', [31, 32])
+                                    ->where('tahun', (int) $tahun)
+                                    ->where('bulan', (int) $bulan)
+                                    ->where('nip', $karyawan->nip)
+                                    ->sum('nominal');
             }
             else {
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
@@ -62,6 +146,18 @@ class CheckHitungPPH
                                             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
                                             ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
+                $penghasilanTidakRutinBrutoInsentif += DB::table('penghasilan_tidak_teratur')
+                                            ->select('nominal')
+                                            ->where('nip', $karyawan->nip)
+                                            ->where('tahun', (int) $tahun)
+                                            ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                                            ->sum('nominal');
+                $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
+                                    ->whereIn('id_tunjangan', [31, 32])
+                                    ->where('tahun', (int) $tahun)
+                                    ->where('nip', $karyawan->nip)
+                                    ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                                    ->sum('nominal');
             }
         }
 
@@ -77,10 +173,6 @@ class CheckHitungPPH
                                     ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                     ->sum('nominal');
 
-        $total_insentif = DB::table('penghasilan_tidak_teratur')
-                            ->whereIn('id_tunjangan', [31, 32])
-                            ->where('nip', $karyawan->nip)
-                            ->sum('nominal');
         $tgl_awal_1 = $tahun . '-' . $bulan . '-' . '1';
         $tgl_akhir_25 = $tahun . '-' . $bulan . '-' . '25';
         $total_insentif_25 = DB::table('penghasilan_tidak_teratur')
@@ -94,15 +186,16 @@ class CheckHitungPPH
                                 ->whereBetween('created_at', [$tanggal_filter_full_awal, $tanggal_filter_full_akhir])
                                 ->sum('nominal');
         $dppJamsostek = CheckHitungPPH::getJamsostekDPP($karyawan, $total_gaji);
-
+        
         $jamsostek = $dppJamsostek['jamsostek'];
         $penghasilanBruto = $penghasilanRutin + $penghasilanTidakRutin + $jamsostek + $tunjangan_rutin;
         $penghasilanBrutoAkhirBulan = $penghasilanRutin + $penghasilanTidakRutin + $penghasilanTidakRutinFull + $jamsostek + $tunjangan_rutin;
-
+        $penghasilanBrutoBaru = $penghasilanRutin + $penghasilanTidakRutinBrutoInsentif + $jamsostek + $tunjangan_rutin; // Bruto yg telah dibebankan pada bulan selanjutnya (include insentif)
         $penghasilanBrutoDb = $penghasilanBruto + $total_insentif;
 
         $penghasilanBrutoAkhirBulanNonInsetif = $penghasilanBrutoAkhirBulan;
         $pph = 0;
+        $pphBentukanBaru = 0;
         $pphAkhirBulan = 0;
 
         $kode_ptkp = $ptkp->kode == 'TK' ? 'TK/0' : $ptkp->kode;
@@ -131,6 +224,18 @@ class CheckHitungPPH
                                         });
                                     })
                                     ->first();
+        $lapisanPenghasilanBrutoBaru = DB::table('lapisan_penghasilan_bruto')
+                                    ->where('kategori', $ter_kategori)
+                                    ->where(function($query) use ($penghasilanBrutoBaru) {
+                                        $query->where(function($q2) use ($penghasilanBrutoBaru) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBrutoBaru)
+                                                ->where('nominal_end', '>=', $penghasilanBrutoBaru);
+                                        })->orWhere(function($q2) use ($penghasilanBrutoBaru) {
+                                            $q2->where('nominal_start', '<=', $penghasilanBrutoBaru)
+                                                ->where('nominal_end', 0);
+                                        });
+                                    })
+                                    ->first();
         $lapisanPenghasilanBrutoAkhir = DB::table('lapisan_penghasilan_bruto')
                                     ->where('kategori', $ter_kategori)
                                     ->where(function($query) use ($penghasilanBrutoAkhirBulanNonInsetif) {
@@ -147,23 +252,29 @@ class CheckHitungPPH
         $pengali = 0;
         $pengaliDb = 0;
         $pengali_akhir = 0;
+        $pengali_baru = 0;
         if ($lapisanPenghasilanBrutoDB) {
             $pengaliDb = $lapisanPenghasilanBrutoDB->pengali;
         }
         if ($lapisanPenghasilanBruto) {
             $pengali = $lapisanPenghasilanBruto->pengali;
         }
+        if ($lapisanPenghasilanBrutoBaru) {
+            $pengali_baru = $lapisanPenghasilanBrutoBaru->pengali;
+        }
         if ($lapisanPenghasilanBrutoAkhir) {
             $pengali_akhir = $lapisanPenghasilanBrutoAkhir->pengali;
         }
 
         $pph = $penghasilanBruto * ($pengali / 100);
-        if ($karyawan->nip == '00906')
-            // dd($pph, floor($pph));
         $pph = floor($pph);
+        $pphBentukanBaru = $penghasilanBrutoBaru * ($pengali_baru / 100);
+        $pphBentukanBaru = floor($pphBentukanBaru);
         $pphAkhirBulan = $penghasilanBrutoAkhirBulanNonInsetif * ($pengali_akhir / 100);
         $pphAkhirBulan = floor($pphAkhirBulan);
-
+        // if ($karyawan->nip == '00906') {
+        //     dd($total_insentif);
+        // }
         $potongan = DB::table('potongan_gaji AS p')
                         ->select(
                             DB::raw('CAST(p.kredit_pegawai AS SIGNED) AS kredit_pegawai'),
@@ -201,15 +312,18 @@ class CheckHitungPPH
         $data->nama = $karyawan->nama_karyawan;
         $data->nip = $karyawan->nip;
         $data->ptkp = $ptkp;
-        $data->total_insentif = (int) $total_insentif;
+        $data->total_insentif_baru = (int) $total_insentif;
         $data->total_insentif_25 = (int) $total_insentif_25;
         $data->total_insentif_26 = (int) $total_insentif_26;
         $data->pajak_insentif_25 = floor(($total_insentif_25 * config('global.pengali_insentif_kredit')));
         $data->pajak_insentif_26 = floor(($total_insentif_26 * config('global.pengali_insentif_kredit')));
+        $data->pajak_insentif_baru = floor(($total_insentif * 0.05));
         $data->penghasilanRutin = $penghasilanRutin;
         $data->penghasilanTidakRutin = $penghasilanTidakRutin;
         $data->jamsostek = $dppJamsostek['jamsostek'];
         $data->penghasilanBruto = $penghasilanBruto;
+        $data->penghasilanBrutoInsentif = $penghasilanBrutoDb;
+        $data->penghasilanBrutoBaru = $penghasilanBrutoBaru;
         $data->penghasilanBrutoAkhirBulan = $penghasilanBrutoAkhirBulan;
         $data->tunjangan = $tunjangan_rutin;
         $data->potongan = $potongan;
@@ -218,8 +332,10 @@ class CheckHitungPPH
         $data->pengali_db = ($pengaliDb / 100);
         $data->pengali = ($pengali / 100);
         $data->seharusnya = $seharusnya;
+        $data->pengali_baru = ($pengali_baru / 100);
         $data->pengali_akhir = ($pengali_akhir / 100);
         $data->pph_bentukan = $pph;
+        $data->pph_bentukan_baru = $pphBentukanBaru;
         $data->total_insentif = $seharusnya?->total_insentif;
         $data->pph = $pph - $seharusnya?->total_insentif;
         $data->pph_akhir_bulan = $pphAkhirBulan - $seharusnya?->total_insentif;
@@ -374,9 +490,9 @@ class CheckHitungPPH
         // PPH final adalah hasil perhitungan saat melakukan proses final
         $pph_final = 0;
         $pph_final_obj = DB::table('pph_yang_dilunasi')
-                        ->select('total_pph')
-                        ->where('gaji_per_bulan_id', $gaji_id)
-                        ->first();
+                            ->select('total_pph')
+                            ->where('gaji_per_bulan_id', $gaji_id)
+                            ->first();
         if ($pph_final_obj) {
             $pph_final = $pph_final_obj->total_pph;
         }
@@ -385,7 +501,6 @@ class CheckHitungPPH
          * pph_full_month adalah hasil perhitungan dilakukan 1 bulan full.
          * jadi mulai tanggal 1 hingga tgl terakhir pada bulan tersebut.
          */
-        $pph_full_month = 0;
 
         // Get PTKP
         $ptkp = CheckHitungPPH::getPTKP($karyawan);
