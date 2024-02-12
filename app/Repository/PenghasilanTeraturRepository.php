@@ -32,15 +32,18 @@ class PenghasilanTeraturRepository
                     'transaksi_tunjangan.created_at',
                     'transaksi_tunjangan.kd_entitas',
                     'mst_cabang.nama_cabang',
-                'batch_gaji_per_bulan.status'
+                    'batch_gaji_per_bulan.status'
                 )
                 ->join('mst_karyawan', 'mst_karyawan.nip', 'transaksi_tunjangan.nip')
                 ->join('mst_tunjangan', 'mst_tunjangan.id', 'transaksi_tunjangan.id_tunjangan')
                 ->join('mst_cabang', 'mst_cabang.kd_cabang', 'transaksi_tunjangan.kd_entitas')
-                ->join('gaji_per_bulan', function ($join) {
-                    $join->on('transaksi_tunjangan.nip', '=', 'gaji_per_bulan.nip');
+                ->leftJoin('gaji_per_bulan', function ($join) {
+                    $join->on('transaksi_tunjangan.nip', '=', 'gaji_per_bulan.nip')
+                        ->on('gaji_per_bulan.bulan', 'transaksi_tunjangan.bulan')
+                        ->on('gaji_per_bulan.tahun', '=', DB::raw('YEAR(transaksi_tunjangan.tanggal)'))
+                        ->orderBy('gaji_per_bulan.created_at', 'ASC');
                 })
-                ->join('batch_gaji_per_bulan', function ($join) {
+                ->leftJoin('batch_gaji_per_bulan', function ($join) {
                     $join->on('gaji_per_bulan.batch_id', '=', 'batch_gaji_per_bulan.id');
                 })
                 ->where('mst_tunjangan.kategori', 'teratur')
@@ -52,7 +55,7 @@ class PenghasilanTeraturRepository
                     ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
                     ->orWhere('mst_cabang.nama_cabang', 'like', "%$search%");
                 })
-                ->when($kd_cabang, function($query) use($kd_cabang, $cabangRepo, $kode_cabang_arr) {
+                ->where(function ($query) use ($kd_cabang, $kode_cabang_arr) {
                     if ($kd_cabang != 'pusat') {
                         $query->where('mst_karyawan.kd_entitas', $kd_cabang);
                     }

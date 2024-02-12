@@ -109,7 +109,7 @@
                                         @endcan
                                     @endif
                                 @else
-                                    @if ($item->status != 'final')
+                                    @if (!isset($item->status) || $item->status != 'final')
                                         @can('penghasilan - unlock - bonus')
                                             <a href="{{route('bonus-unlock')}}?id_tunjangan={{$item->id_tunjangan}}&tanggal={{ \Carbon\Carbon::parse($item->new_date)->translatedFormat('Y-m-d') }}&entitas={{$item->kd_entitas}}"
                                                 class="btn btn-success-light">Unlock</a>

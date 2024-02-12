@@ -122,7 +122,7 @@
                                             class="btn btn-warning-light">Edit</a>
                                     @endcan
                                 @else
-                                    @if ($item->status != 'final')
+                                    @if (!isset($item->status) || $item->status != 'final')
                                         @can('penghasilan - unlock - penghasilan teratur')
                                             @php
                                                 $cant_unlock = true;
