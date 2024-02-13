@@ -311,7 +311,7 @@ class PayrollRepository
             }
             else {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
-                                ->where('kode', 'TK')
+                                ->where('kode', 'TK/0')
                                 ->first();
             }
             $karyawan->ptkp = $ptkp;
@@ -1108,7 +1108,7 @@ class PayrollRepository
             }
             else {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
-                                ->where('kode', 'TK')
+                                ->where('kode', 'TK/0')
                                 ->first();
             }
             $karyawan->ptkp = $ptkp;
@@ -1960,6 +1960,7 @@ class PayrollRepository
                                 'mst_karyawan.kd_entitas',
                                 'mst_karyawan.gj_pokok',
                                 'mst_karyawan.gj_penyesuaian',
+                                'mst_karyawan.status_ptkp',
                                 'nama_karyawan',
                                 'npwp',
                                 'no_rekening',
@@ -2013,7 +2014,7 @@ class PayrollRepository
             }
             else {
                 $ptkp = PtkpModel::select('id', 'kode', 'ptkp_bulan', 'ptkp_tahun', 'keterangan')
-                                ->where('kode', 'TK')
+                                ->where('kode', 'TK/0')
                                 ->first();
             }
             $karyawan->ptkp = $ptkp;
@@ -2370,7 +2371,9 @@ class PayrollRepository
             $bonus_sum = $penghasilanBruto->total_bonus;
             $pengurang = $penguranganPenghasilan->total_pengurangan_bruto;
             $total_ket = $month_on_year_paid;
-
+            if (!$ptkp) {
+                dd($karyawan, $ptkp);
+            }
             // Get PPh21 PP58
             $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji, $tunjangan_rutin);
             $perhitunganPph21->pph21_pp58 = $pph21_pp58;
