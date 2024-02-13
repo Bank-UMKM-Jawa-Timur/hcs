@@ -101,7 +101,7 @@
             {{-- end pajak insentif --}}
             {{-- pph --}}
             <th class="text-center">BENTUKAN</th>
-            <th class="text-center">PS 21<br>(PPH BENTUKAN - TOTAL PAJAK INSENTIF)</th>
+            <th class="text-center">PS 21<br>(PPH BENTUKAN - PAJAK INSENTIF)</th>
             {{-- end pph --}}
             <th class="text-center">BRUTO</th>
             {{-- <th class="text-center">PPH</th> --}}
@@ -134,6 +134,7 @@
             $totalPPHRekreasi = 0;
             $totalPPH21Bentukan = 0;
             $totalPajakInsentifNew = 0;
+            $totalPajakPenagihan = 0;
             $totalPPH21 = 0;
             $totalPenambahBruto = 0;
             $totalBruto = 0;
@@ -143,11 +144,8 @@
             $totalBrutoDanaPendidikan = 0;
             $totalColumns = 19;
             // insentif kredit
-            $insentif_kredit = 0;
-            $insentif_penagihan = 0;
-            // pajak insentif
-            $insentif_kredit_pajak = 0;
-            $insentif_penagihan_pajak = 0;
+            $total_insentif_kredit = 0;
+            $total_insentif_penagihan = 0;
             if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0) {
                 $totalColumns += 1;
             }
@@ -201,12 +199,9 @@
                 $totalBrutoPenghargaanKinerja = 0;
                 $totalpajakInsentif += $item->pajak_insentif;
                 $totalInsentif += $item->total_insentif;
-                // insentif kredit
-                $insentif_kredit += $item->insentif_kredit;
-                $insentif_penagihan += $item->insentif_penagihan;
                 // pajak insentif
-                $insentif_kredit_pajak += $item->insentif_kredit_pajak;
-                $insentif_penagihan_pajak += $item->insentif_penagihan_pajak;
+                $insentif_kredit_pajak = floor($item->insentif_kredit_pajak);
+                $insentif_penagihan_pajak = floor($item->insentif_penagihan_pajak);
 
                 foreach ($item->tunjanganTidakTetap as $value) {
                     if ($value->id_tunjangan == 16) {
@@ -258,8 +253,8 @@
 
                 foreach ($item?->karyawan_bruto->pphDilunasi as $value) {
                     if ($value->bulan > 1) {
-                        $pph21Bentukan = $value->total_pph;
-                        $pph21 = $value->total_pph;
+                        $pph21Bentukan = floor($value->total_pph);
+                        $pph21 = floor($value->total_pph);
                         $terutang = DB::table('pph_yang_dilunasi AS pph')
                                         ->select('pph.terutang')
                                         ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
@@ -268,18 +263,18 @@
                                         ->whereNotNull('batch.deleted_at')
                                         ->first();
                         if ($terutang) {
-                            $pph21 += $terutang->terutang;
+                            $pph21 += floor($terutang->terutang);
                         }
                     }
                     else {
-                        $pph21Bentukan = $value->total_pph;
-                        $pph21 = $value->total_pph;
+                        $pph21Bentukan = floor($value->total_pph);
+                        $pph21 = floor($value->total_pph);
                     }
                 }
-                $pph21 -= $item->pajak_insentif;
+                $pph21 -= floor($item->pajak_insentif);
                 $penambahBruto = $item->jamsostek;
 
-                $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $tambahanPenghasilan + $rekreasi + $bonus + $brutoNataru + $brutoJaspro + $penambahBruto + $totalBrutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja + $insentif_kredit + $insentif_penagihan;
+                $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $item->insentif_kredit + $item->insentif_penagihan + $totalBrutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja + $tambahanPenghasilan + $rekreasi + $brutoNataru + $brutoJaspro + $penambahBruto ;
                 $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21Bentukan;
 
                 // Hitung total per page
@@ -303,15 +298,18 @@
                 $totalPPHJaspro += $pphJaspro;
                 $totalPPHTambahanPenghasilan += $pphTambahanPenghasilan;
                 $totalPPHRekreasi += $pphRekreasi;
-                $totalPPH21Bentukan += $pph21Bentukan;
-                $totalPajakInsentifNew += $item->pajak_insentif;
-                $totalPPH21 += $pph21;
+                $totalPPH21Bentukan += floor($pph21Bentukan);
+                $totalPajakInsentifNew += $insentif_kredit_pajak;
+                $totalPajakPenagihan += $insentif_penagihan_pajak;
+                $totalPPH21 += floor($pph21);
                 $totalPenambahBruto += $penambahBruto;
                 $totalBruto += $brutoTotal;
                 $totalPPh += $brutoPPH;
                 $totalBrutoTHR += $brutoTHR;
                 $totalBrutoDanaPendidikan += $brutoDanaPendidikan;
                 $totalBrutoPenghargaanKinerja += $brutoPenghargaanKinerja;
+                $total_insentif_kredit += $item->insentif_kredit ? $item->insentif_kredit : 0 ;
+                $total_insentif_penagihan += $item->insentif_penagihan ? $item->insentif_penagihan : 0;
             @endphp
             <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
@@ -358,9 +356,9 @@
                 {{-- end bonus --}}
                 <td class="td-right">{{ formatRupiahExcel($penambahBruto ?? 0, 0, $formatrp) }}</td>
                 {{-- pajak insentif --}}
-                <td class="td-right">{{ formatRupiahExcel($item->pajak_insentif ?? 0, 0, $formatrp) }}</td>
-                <td class="td-right">{{ formatRupiahExcel($item->insentif_kredit_pajak ?? 0, 0, $formatrp) }}</td>
-                <td class="td-right">{{ formatRupiahExcel($item->insentif_penagihan_pajak ?? 0, 0, $formatrp) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($insentif_kredit_pajak ?? 0, 0, $formatrp) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($insentif_penagihan_pajak ?? 0, 0, $formatrp) }}</td>
+                <td class="td-right">{{ formatRupiahExcel($insentif_kredit_pajak + $insentif_penagihan_pajak ?? 0, 0, $formatrp) }}</td>
                 {{-- end pajak insentif --}}
                 {{-- pph --}}
                 <td class="td-right">{{ formatRupiahExcel($pph21Bentukan ?? 0, 0, $formatrp) }}</td>
@@ -395,8 +393,8 @@
                 <th class="text-right">{{ formatRupiahExcel($totalSPD ?? 0, 0, $formatrp) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalSPDPendidikan ?? 0, 0, $formatrp) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalSPDPindahTugas ?? 0, 0, $formatrp) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($insentif_kredit ?? 0, 0, $formatrp) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($insentif_penagihan ?? 0, 0, $formatrp) }}</th>
+                <th class="text-right">{{ formatRupiahExcel($total_insentif_kredit ?? 0, 0, $formatrp) }}</th>
+                <th class="text-right">{{ formatRupiahExcel($total_insentif_penagihan ?? 0, 0, $formatrp) }}</th>
                 {{-- end teratur --}}
                 {{-- bonus --}}
                 <th class="text-right">{{ formatRupiahExcel($totalTHR ?? 0, 0, $formatrp) }}</th>
@@ -422,8 +420,8 @@
                 <th class="text-right">{{ formatRupiahExcel($totalPenambahBruto ?? 0, 0, $formatrp) }}</th>
                 {{-- pajak insentif --}}
                 <th class="text-right">{{ formatRupiahExcel($totalPajakInsentifNew ?? 0, 0, $formatrp) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($insentif_kredit_pajak ?? 0, 0, $formatrp) }}</th>
-                <th class="text-right">{{ formatRupiahExcel($insentif_penagihan_pajak ?? 0, 0, $formatrp) }}</th>
+                <th class="text-right">{{ formatRupiahExcel($totalPajakPenagihan ?? 0, 0, $formatrp) }}</th>
+                <th class="text-right">{{ formatRupiahExcel($totalPajakInsentifNew + $totalPajakPenagihan ?? 0, 0, $formatrp) }}</th>
                 {{-- end pajak insentif --}}
                 {{-- pph --}}
                 <th class="text-right">{{ formatRupiahExcel($totalPPH21Bentukan ?? 0, 0, $formatrp) }}</th>
@@ -474,8 +472,8 @@
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPenambahBruto ?? 0, 0, $formatrp) }}</th>
             {{-- pajak insentif --}}
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPajakInsentif ?? 0, 0, $formatrp) }}</th>
-            <th class="text-right">{{ formatRupiahExcel($grandTotal->total_insentif_kredit_pajak ?? 0, 0, $formatrp) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->total_insentif_penagihan_pajak ?? 0, 0, $formatrp) }}</th>
+            <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPajakInsentif + $grandTotal->total_insentif_penagihan_pajak ?? 0, 0, $formatrp) }}</th>
             {{-- end pajak insentif --}}
             {{-- pph --}}
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPH21Bentukan ?? 0, 0, $formatrp) }}</th>

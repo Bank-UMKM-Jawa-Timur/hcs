@@ -294,6 +294,9 @@ class LaporanTetapRepository
                 }
             ])
             ->select(
+                'gaji_per_bulan.id',
+                'gaji_per_bulan.bulan',
+                'gaji_per_bulan.tahun',
                 'mst_karyawan.nip',
                 'nama_karyawan',
                 'npwp',
@@ -324,7 +327,6 @@ class LaporanTetapRepository
             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
             ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
-            ->whereNull('batch.deleted_at')
             ->whereYear('batch.tanggal_input', $year)
             ->orderByRaw($this->orderRaw)
             ->orderBy('status_kantor', 'asc')
@@ -332,6 +334,7 @@ class LaporanTetapRepository
             ->orderBy('nip', 'asc')
             ->orderBy('mst_karyawan.kd_entitas')
             ->whereNull('mst_karyawan.tanggal_penonaktifan')
+            ->where('batch.deleted_at', null)
             ->when($search || $kantor, function ($query) use ($search, $kantor, $cabangRepo, $kode_cabang_arr) {
                 $query->when($kantor != '000', function ($subquery) use ($kantor) {
                     $subquery->where('mst_karyawan.kd_entitas', $kantor);
@@ -345,17 +348,6 @@ class LaporanTetapRepository
                         ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%");
                 });
             });
-            // ->where(function($query) use ($kantor, $kode_cabang_arr, $search) {
-            //     $query
-            //     ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
-            //         if ($kantor != '000') {
-            //             $q->where('mst_karyawan.kd_entitas', $kantor);
-            //         } else if($kantor == '000'){
-            //             $q->whereRaw("(mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM  mst_cabang where kd_cabang != '000') OR mst_karyawan.kd_entitas IS null or mst_karyawan.kd_entitas = '')");
-            //         }
-
-            //     });
-            // })
 
             if ($cetak) {
                 $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
@@ -793,6 +785,7 @@ class LaporanTetapRepository
                                                     ->where('tahun', $year)
                                                     ->where('bulan', $month)
                                                     ->where('nip', $karyawan->nip)
+                                                    ->where('gaji_per_bulan_id', $karyawan->id)
                                                     ->groupBy('bulan');
                                                 }
                                             ])
@@ -1368,6 +1361,9 @@ class LaporanTetapRepository
                 }
             ])
             ->select(
+                'gaji_per_bulan.id',
+                'gaji_per_bulan.bulan',
+                'gaji_per_bulan.tahun',
                 'mst_karyawan.nip',
                 'nama_karyawan',
                 'npwp',
@@ -1864,6 +1860,7 @@ class LaporanTetapRepository
                                                     ->where('tahun', $year)
                                                     ->where('bulan', $month)
                                                     ->where('nip', $karyawan->nip)
+                                                    ->where('gaji_per_bulan_id', $karyawan->id)
                                                     ->groupBy('bulan');
                                                 }
                                             ])
@@ -2361,8 +2358,8 @@ class LaporanTetapRepository
 
             foreach ($item?->karyawan_bruto->pphDilunasi as $value) {
                 if ($value->bulan > 1) {
-                    $pph21Bentukan = $value->total_pph;
-                    $pph21 = $value->total_pph;
+                    $pph21Bentukan = floor($value->total_pph);
+                    $pph21 = floor($value->total_pph);
                     $terutang = DB::table('pph_yang_dilunasi')
                                     ->select('terutang')
                                     ->where('nip', $value->nip)
@@ -2370,25 +2367,25 @@ class LaporanTetapRepository
                                     ->where('bulan', ($value->bulan - 1))
                                     ->first();
                     if ($terutang) {
-                        $pph21 += $terutang->terutang;
+                        $pph21 += floor($terutang->terutang);
                     }
                 }
                 else {
-                    $pph21Bentukan = $value->total_pph;
-                    $pph21 = $value->total_pph;
+                    $pph21Bentukan = floor($value->total_pph);
+                    $pph21 = floor($value->total_pph);
                 }
             }
-            $pph21 -= $item->pajak_insentif;
+            $pph21 -= floor($item->pajak_insentif);
             $penambahBruto = $item->jamsostek;
 
             $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21Bentukan;
             $totalInsentif += $item->total_insentif ?? 0;
-            $totalPajakInsentif += $item->pajak_insentif ?? 0;
+            $totalPajakInsentif += floor($item->insentif_kredit_pajak) ?? 0;
             $total_insentif_kredit += $item->insentif_kredit ?? 0;
             $total_insentif_penagihan += $item->insentif_penagihan ?? 0;
-            $total_insentif_kredit_pajak += $item->insentif_kredit_pajak ?? 0;
-            $total_insentif_penagihan_pajak += $item->insentif_penagihan_pajak ?? 0;
-            $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $brutoNataru + $brutoJaspro + $penambahBruto + $brutoTambahanPenghasilan + $brutoRekreasi + $brutoDanaPendidikan + $brutoTHR + $brutoPenghargaanKinerja + $total_insentif_kredit + $total_insentif_penagihan;
+            $total_insentif_kredit_pajak += floor($item->insentif_kredit_pajak) ?? 0;
+            $total_insentif_penagihan_pajak += floor($item->insentif_penagihan_pajak) ?? 0;
+            // $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $total_insentif_kredit + $total_insentif_penagihan + $brutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja + $brutoTambahanPenghasilan + $brutoRekreasi + $brutoNataru + $brutoJaspro + $penambahBruto;
 
             $totalLembur += $lembur;
             $totalPenggantiKesehatan += $penggantiBiayaKesehatan;
@@ -2410,9 +2407,16 @@ class LaporanTetapRepository
             $totalPPH21Bentukan += $pph21Bentukan;
             $totalPPH21 += $pph21;
             $totalPenambahBruto += $penambahBruto;
-            $totalBruto += $brutoTotal;
             $totalPPh += $brutoPPH;
         }
+        $brutoTotal = $totalGaji + $totalUangMakan + $totalPulsa +
+                    $totalVitamin + $totalTransport + $totalLembur +
+                    $totalPenggantiKesehatan + $totalUangDuka + $totalSPD +
+                    $totalSPDPendidikan + $totalSPDPindahTugas + $total_insentif_kredit +
+                    $total_insentif_penagihan + $totalBrutoTHR + $totalBrutoDanaPendidikan +
+                    $totalBrutoPenghargaanKinerja + $totalBrutoTambahanPenghasilan + $totalBrutoRekreasi +
+                    $totalBrutoNataru + $totalBrutoJaspro + $totalPenambahBruto;
+        $totalBruto += $brutoTotal;
 
         $returnData->totalGaji = $totalGaji;
         $returnData->totalUangMakan = $totalUangMakan;
@@ -2441,11 +2445,12 @@ class LaporanTetapRepository
         $returnData->totalPenambahBruto = $totalPenambahBruto;
         $returnData->totalBruto = $totalBruto;
         $returnData->totalInsentif = $totalInsentif;
-        $returnData->totalPajakInsentif = $totalPajakInsentif;
         $returnData->totalPPh = $totalPPh;
 
         $returnData->total_insentif_kredit = $total_insentif_kredit;
         $returnData->total_insentif_penagihan = $total_insentif_penagihan;
+
+        $returnData->totalPajakInsentif = $totalPajakInsentif;
         $returnData->total_insentif_kredit_pajak = $total_insentif_kredit_pajak;
         $returnData->total_insentif_penagihan_pajak = $total_insentif_penagihan_pajak;
 
