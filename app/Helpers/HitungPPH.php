@@ -97,7 +97,7 @@ class HitungPPH
 
         $pph = 0;
 
-        $kode_ptkp = $ptkp->kode == 'TK' ? 'TK/0' : $ptkp->kode;
+        $kode_ptkp = $ptkp->kode;
         $ter_kategori = HitungPPH::getTarifEfektifKategori($kode_ptkp);
         $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
                                     ->where('kategori', $ter_kategori)
@@ -309,7 +309,7 @@ class HitungPPH
                 }
             }
             else {
-                $status = 'TK';
+                $status = 'TK/0';
             }
         }
         // Get PTKP

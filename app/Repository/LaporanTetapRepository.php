@@ -310,7 +310,7 @@ class LaporanTetapRepository
                         'K',
                         IF(
                             mst_karyawan.status = 'Belum Kawin',
-                            'TK',
+                            'TK/0',
                             mst_karyawan.status
                         )
                     ) AS status
@@ -1027,7 +1027,7 @@ class LaporanTetapRepository
 
             // Get Penghasilan Kena Pajak Setahun/Disetahunkan
             $keluarga = $karyawan->keluarga;
-            $status_kawin = 'TK';
+            $status_kawin = 'TK/0';
             if ($keluarga) {
                 $status_kawin = $keluarga->status_kawin;
             }
@@ -1372,7 +1372,7 @@ class LaporanTetapRepository
                         'K',
                         IF(
                             mst_karyawan.status = 'Belum Kawin',
-                            'TK',
+                            'TK/0',
                             mst_karyawan.status
                         )
                     ) AS status
@@ -2087,7 +2087,7 @@ class LaporanTetapRepository
 
             // Get Penghasilan Kena Pajak Setahun/Disetahunkan
             $keluarga = $karyawan->keluarga;
-            $status_kawin = 'TK';
+            $status_kawin = 'TK/0';
             if ($keluarga) {
                 $status_kawin = $keluarga->status_kawin;
             }
