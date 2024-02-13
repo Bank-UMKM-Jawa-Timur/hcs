@@ -19,8 +19,8 @@ class PenghasilanTidakTeraturRepository
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
         $bonus = DB::table('penghasilan_tidak_teratur')
-                    ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', '=', 'mst_karyawan.nip')
-                    ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', '=', 'mst_tunjangan.id')
+                    ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', 'mst_karyawan.nip')
+                    ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', 'mst_tunjangan.id')
                     ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
                     ->leftJoin('gaji_per_bulan', function ($join) {
                         $join->on('penghasilan_tidak_teratur.nip', 'gaji_per_bulan.nip')
@@ -62,8 +62,8 @@ class PenghasilanTidakTeraturRepository
                         }
                     })
                     ->whereNull('batch_gaji_per_bulan.deleted_at')
-                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date', 'penghasilan_tidak_teratur.kd_entitas')
-                    ->orderBy('penghasilan_tidak_teratur.created_at', 'DESC')
+                    ->orderByDesc('penghasilan_tidak_teratur.created_at')
+                    ->groupBy('mst_tunjangan.id', 'mst_tunjangan.nama_tunjangan', 'new_date')
                     ->paginate($limit);
 
         return $bonus;

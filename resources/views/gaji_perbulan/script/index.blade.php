@@ -100,8 +100,8 @@
         }
 
         $(".btn-proses").on('click', function(e){
-            loadDataPenghasilan()
-            // $('#proses-modal').modal('show');
+            const is_pegawai = $(this).data('is_pegawai')
+            loadDataPenghasilan(is_pegawai)
         })
 
         $('#proses-modal .close').on('click', function () {
@@ -185,16 +185,19 @@
             }
         })
 
-        function loadDataPenghasilan() {
+        function loadDataPenghasilan(is_pegawai) {
             $('.loader-wrapper').removeAttr('style')
 
             $.ajax({
-                url: `{{ route('gaji_perbulan.get_data_penghasilan_json') }}`,
+                url: `{{ route('gaji_perbulan.get_data_penghasilan_json') }}?is_pegawai=${is_pegawai}`,
                 method: 'GET',
                 success: function(response) {
                     if (response.status == 'success') {
                         var data = response.data
-                        console.log(data)
+
+                        var note = is_pegawai ? 'Catatan! Proses penggajian untuk pegawai.' : 'Catatan! Proses penggajian untuk direktur, komisaris dan staf ahli.'
+                        $('#proses-modal #note').html(note)
+                        $('#proses-modal #is_pegawai').val(is_pegawai)
                         $('#proses-modal #tahun_terakhir').val(data.penghasilan_tahun_terakhir)
                         $('#proses-modal #bulan_terakhir').val(data.penghasilan_bulan_terakhir)
                         $('#proses-modal #total_karyawan').html(data.total_karyawan)
@@ -276,6 +279,7 @@
         let table_pembaruan = null
         $('.btn-perbarui').on('click', function() {
             const batch_id = $(this).data('batch_id');
+            const is_pegawai = $(this).data('is_pegawai');
             table_pembaruan = $('#penyesuaian-table').DataTable({
                 processing: true,
                 serverSide: false,
@@ -381,11 +385,11 @@
                     $( api.column( 7 ).footer('.total_pembaruan') ).html( 'Rp ' + totalPotonganSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
                     $('tfoot tr.grandTotalPembaruan').html(`
-                        <th colspan="4" class="text-center">Grand Total</th>
-                        <th class="text-right">Rp ${grandTotalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">Rp ${grandTotalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">Rp ${grandTotalPotonganSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
-                        <th class="text-right">Rp ${grandTotalPotonganSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th colspan="4" style="text-align: center;">Grand Total</th>
+                        <th style="text-align: right;">Rp ${grandTotalPenghasilanSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th style="text-align: right;">Rp ${grandTotalPenghasilanSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th style="text-align: right;">Rp ${grandTotalPotonganSebelum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
+                        <th style="text-align: right;">Rp ${grandTotalPotonganSesudah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</th>
                     `);
                 }
             });
@@ -405,6 +409,7 @@
                 }
             });
             $('#penyesuaian-modal #batch_id').val(batch_id);
+            $('#penyesuaian-modal #is_pegawai').val(is_pegawai);
             $('#penyesuaian-modal').removeClass('hidden');
         })
 
@@ -457,6 +462,9 @@
 
         $(".btn-rincian").on("click", function(){
             var batch_id = $(this).data("batch_id")
+            var month_name = $(this).data("month_name")
+            var year = $(this).data("year")
+            $('#rincian-modal .modal-title').html(`Rincian ${month_name} - ${year}`)
             var iteration = 1;
             var table = $("#table-rincian").DataTable({
                 processing: true,
@@ -849,6 +857,9 @@
         }
         $(".btn-payroll").on("click", function(){
             var batch_id = $(this).data("batch_id")
+            var month_name = $(this).data("month_name")
+            var year = $(this).data("year")
+            $('#payroll-modal .modal-title').html(`Payroll ${month_name} - ${year}`)
             let url = "{{ url('') }}"
             let downloadUrl = `${url}/cetak-penghasilan/${batch_id}`;
             $('.btn-download-pdf').attr('href', downloadUrl);

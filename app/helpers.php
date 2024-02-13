@@ -227,3 +227,13 @@ if (!function_exists('formatRupiahExcel')) {
         }
     }
 }
+
+if (!function_exists('getLastDateOfMonth')) {
+    function getLastDateOfMonth($year, $month) {
+        // Get the last day of the month
+        $lastDay = date('t', strtotime("$year-$month-01"));
+        
+        // Return the last day of the month
+        return intval($lastDay);
+    }
+}

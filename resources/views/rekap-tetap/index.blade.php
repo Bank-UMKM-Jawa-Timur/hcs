@@ -162,10 +162,9 @@
                                     $akhir = $tahunSaatIni + 5;
                                     @endphp
 
-                                    @for ($tahun = $earliest; $tahun <= $akhir; $tahun++) <option {{ Request()->tahun ==
-                                        $tahun ? 'selected' : '' }} value="{{ $tahun }}">
-                                        {{ $tahun }}</option>
-                                        @endfor
+                                    @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
+                                        <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">{{ $tahun }}</option>
+                                    @endfor
                                 </select>
                                 @error('tahun')
                                 <small class="text-red-500 text-xs">{{ucfirst($message)}}</small>
@@ -176,24 +175,30 @@
                                 <select name="bulan" id="bulan" class="form-input">
                                     <option value="0">--- Pilih Bulan ---</option>
                                     <option value='1' @if(\Request::get('bulan')=='1' ) selected @endif>Januari</option>
-                                    <option value='2' @if(\Request::get('bulan')=='2' ) selected @endif>Februari
-                                    </option>
+                                    <option value='2' @if(\Request::get('bulan')=='2' ) selected @endif>Februari</option>
                                     <option value='3' @if(\Request::get('bulan')=='3' ) selected @endif>Maret</option>
                                     <option value='4' @if(\Request::get('bulan')=='4' ) selected @endif>April</option>
                                     <option value='5' @if(\Request::get('bulan')=='5' ) selected @endif>Mei</option>
                                     <option value='6' @if(\Request::get('bulan')=='6' ) selected @endif>Juni</option>
                                     <option value='7' @if(\Request::get('bulan')=='7' ) selected @endif>Juli</option>
                                     <option value='8' @if(\Request::get('bulan')=='8' ) selected @endif>Agustus</option>
-                                    <option value='9' @if(\Request::get('bulan')=='9' ) selected @endif>September
-                                    </option>
-                                    <option value='10' @if(\Request::get('bulan')=='10' ) selected @endif>Oktober
-                                    </option>
-                                    <option value='11' @if(\Request::get('bulan')=='11' ) selected @endif>November
-                                    </option>
-                                    <option value='12' @if(\Request::get('bulan')=='12' ) selected @endif>Desember
-                                    </option>
+                                    <option value='9' @if(\Request::get('bulan')=='9' ) selected @endif>September</option>
+                                    <option value='10' @if(\Request::get('bulan')=='10' ) selected @endif>Oktober</option>
+                                    <option value='11' @if(\Request::get('bulan')=='11' ) selected @endif>November</option>
+                                    <option value='12' @if(\Request::get('bulan')=='12' ) selected @endif>Desember</option>
                                 </select>
                                 @error('bulan')
+                                <span class="text-red-500 text-xs">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="input-box">
+                                <label for="kategori">Kategori</label>
+                                <select name="kategori" id="kategori" class="form-input">
+                                    <option value="0">--- Pilih Kategori ---</option>
+                                    <option value='ebupot' @if(\Request::get('kategori')=='ebupot') selected @endif>Ebupot</option>
+                                    <option value='full' @if(\Request::get('kategori')=='full') selected @endif>Full Bulan</option>
+                                </select>
+                                @error('kategori')
                                 <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -211,9 +216,9 @@
                             @endif
                         </div>
                         <div class="flex justify-end w-fit my-3">
-                            @if (\Request::has('tahun') && count($data) > 0)
+                            @if (\Request::has('tahun') && count($data) != 0)
                                 <div class="mr-2" id="btn-download">
-                                    <a href="{{ route('download-rekapitulasi') }}" download
+                                    <a href="{{ route('download-rekapitulasi') }}?kategori={{Request()->get('kategori')}}" download
                                         class="m-0 btn btn-lg is-btn btn-warning">
                                         <span style="font-size: 14px;">Excel</span>
                                     </a>
@@ -316,7 +321,17 @@
     })
 
     $('#kategori').on('change', function() {
-        $('#btn-download').addClass('d-none')
+        $('#btn-download').addClass('hidden')
+    })
+    $('#form').on('submit', function() {
+        $('.preloader').show()
+    })
+    $('#btn-download').on('click', function () {
+        $('.preloader').show();
+    })
+
+    $('#btn-download').on('focusout', function () {
+        $('.preloader').hide();
     })
 
     const formatRupiahPayroll = (angka) => {

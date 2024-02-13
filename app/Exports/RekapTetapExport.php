@@ -52,6 +52,7 @@ class RekapTetapExport implements FromView, WithColumnFormatting
             'AC' => $this->FORMAT_NUMBER,
             'AD' => $this->FORMAT_NUMBER,
             'AE' => $this->FORMAT_NUMBER,
+            'AF' => $this->FORMAT_NUMBER,
         ];
     }
 
