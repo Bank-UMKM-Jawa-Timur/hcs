@@ -268,16 +268,16 @@ class PayrollRepository
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
-                                ->whereNull('tanggal_penonaktifan')
+                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
                                         $q->where(function($q2) use($kode_cabang_arr) {
-                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
-                                                ->orWhereNull('mst_karyawan.kd_entitas');
+                                            $q2->whereNotIn('batch.kd_entitas', $kode_cabang_arr)
+                                                ->orWhereNull('batch.kd_entitas');
                                         });
                                     }
                                     else {
-                                        $q->where('mst_karyawan.kd_entitas', $kantor);
+                                        $q->where('batch.kd_entitas', $kantor);
                                     }
                                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
                                 })
@@ -1071,16 +1071,16 @@ class PayrollRepository
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
-                                ->whereNull('tanggal_penonaktifan')
+                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
                                         $q->where(function($q2) use($kode_cabang_arr) {
-                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kode_cabang_arr)
-                                                ->orWhereNull('mst_karyawan.kd_entitas');
+                                            $q2->whereNotIn('batch.kd_entitas', $kode_cabang_arr)
+                                                ->orWhereNull('batch.kd_entitas');
                                         });
                                     }
                                     else {
-                                        $q->where('mst_karyawan.kd_entitas', $kantor);
+                                        $q->where('batch.kd_entitas', $kantor);
                                     }
                                     $q->where('mst_karyawan.nama_karyawan', 'like', "%$search%");
                                 })
@@ -1984,7 +1984,7 @@ class PayrollRepository
                             )
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
-                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'mst_karyawan.kd_entitas')
+                            ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
                             ->where(function($query) use ($batch) {
                                 $query->where('batch.id', $batch->id);
                             })
@@ -1992,7 +1992,7 @@ class PayrollRepository
                             ->orderBy('status_kantor', 'asc')
                             ->orderBy('kd_cabang', 'asc')
                             ->orderBy('nip', 'asc')
-                            ->orderBy('mst_karyawan.kd_entitas')
+                            ->orderBy('batch.kd_entitas')
                             ->get();
         foreach ($data as $key => $karyawan) {
             $insentif = DB::table('pph_yang_dilunasi')

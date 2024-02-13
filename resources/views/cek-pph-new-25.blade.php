@@ -306,7 +306,7 @@
                                     // END Database Baru
                                     // Bruto Insentif
                                     $rowNew = $item['new']['pph'];
-                                    $bruto_baru = $rowNew->penghasilanBruto;
+                                    $bruto_baru = $rowNew->penghasilanBrutoBaru;
                                     $total_insentif_baru = $rowNew->total_insentif_baru;
                                     $pph_bentukan_baru = $rowNew->pph_bentukan_baru;
                                     $total_pajak_insentif_baru = $rowNew->pajak_insentif_baru;
@@ -317,7 +317,7 @@
                                     $selisih_baru = $pph_baru - $pph_new_db;
                                     // END Bruto Insentif
                                     // Seharusnya
-                                    $bruto_seharusnya = $rowNew->penghasilanBruto;
+                                    $bruto_seharusnya = $rowNew->penghasilanBrutoBaru;
                                     $total_insentif_seharusnya = $rowNew->total_insentif_baru;
                                     $total_pajak_insentif_seharusnya = floor($total_insentif_seharusnya * 0.05);
                                     $total_seharusnya = $bruto_seharusnya + $total_insentif_seharusnya;

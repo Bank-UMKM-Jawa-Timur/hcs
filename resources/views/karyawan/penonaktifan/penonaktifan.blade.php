@@ -49,16 +49,29 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                <div class="input-box">
-                    <label for="">SK Pemberhentian <span class="text-red-500 text-sm">*(Pdf)</span></label>
-                    <div class="custom-file">
-                        <input type="file" class="form-input only-pdf limit-size-10 @error('sk_pemberhentian') is-invalid @enderror" name="sk_pemberhentian" id="sk_pemberhentian" accept="application/pdf">
-                        @error('sk_pemberhentian')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                    <div class="input-box">
+                        <label for="ikut_penggajian">Ikut Proses Gaji</label>
+                        <div class="flex">
+                            <div class="">
+                                <input type="radio" name="ikut_penggajian" id="ya" value="1" checked>
+                                <label for="ya">Ya</label>
+                            </div>
+                            <div class="ml-3">
+                                <input type="radio" name="ikut_penggajian" id="tidak" value="0">
+                                <label for="tidak">Tidak</label>
+                            </div>
+                        </div>
                     </div>
-                    <span class="text-red-500 m-0 error-msg" style="display: none"></span>
-                </div>
+                    <div class="input-box">
+                        <label for="">SK Pemberhentian <span class="text-red-500 text-sm">*(Pdf)</span></label>
+                        <div class="custom-file">
+                            <input type="file" class="form-input only-pdf limit-size-10 @error('sk_pemberhentian') is-invalid @enderror" name="sk_pemberhentian" id="sk_pemberhentian" accept="application/pdf">
+                            @error('sk_pemberhentian')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <span class="text-red-500 m-0 error-msg" style="display: none"></span>
+                    </div>
             </div>
             <div class="row">
                 <div class="mt-5">

@@ -187,7 +187,7 @@ class GajiPerBulanController extends Controller
 
             // Get Karyawan
             $karyawan = DB::table('mst_karyawan AS m')
-                            ->whereNull('tanggal_penonaktifan')
+                            ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
                             ->where(function($query) use ($is_pegawai, $kd_jabatan) {
                                 if ($is_pegawai) {
                                     $query->whereNotIn('m.kd_jabatan', $kd_jabatan);
@@ -1181,7 +1181,7 @@ class GajiPerBulanController extends Controller
             if (auth()->user()->hasRole('cabang')) {
                 // Cabang
                 $karyawan = DB::table('mst_karyawan')
-                            ->whereNull('tanggal_penonaktifan')
+                            ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
                             ->where('kd_entitas', auth()->user()->kd_cabang)
                             ->get();
             }
@@ -1207,7 +1207,7 @@ class GajiPerBulanController extends Controller
                             ->toArray();
                 $kd_jabatan = array_merge($dirut, $komisaris, $staf_ahli);
                 $karyawan = DB::table('mst_karyawan')
-                                ->whereNull('tanggal_penonaktifan')
+                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
                                 ->when($is_pusat, function($query) use ($kd_cabang, $kd_jabatan, $is_pegawai) {
                                     if ($is_pegawai) {
                                         $query->where(function($q2) use ($kd_cabang) {
@@ -2536,18 +2536,20 @@ class GajiPerBulanController extends Controller
                         ->make(true);
     }
 
-    function cetak($id) {
+    public function cetak($id) {
         $data = DB::table('batch_gaji_per_bulan AS batch')
-        ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
-        ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
-        ->select(
-            'batch.id',
-            'batch.tanggal_input',
-            'batch.tanggal_final',
-            'batch.status',
-            'gaji.bulan',
-            'gaji.tahun',
-        )->where('batch.id',$id)->first();
+            ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+            ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+            ->select(
+                'batch.id',
+                'batch.tanggal_input',
+                'batch.tanggal_final',
+                'batch.status',
+                'gaji.bulan',
+                'gaji.tahun',
+            )
+            ->where('batch.id',$id)
+            ->first();
         $year = date('Y',strtotime($data->tanggal_input));
         $month = str_replace('0','',date('m',strtotime($data->tanggal_input)));
         $kantor = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : 'pusat';
@@ -2574,7 +2576,7 @@ class GajiPerBulanController extends Controller
                     ->with('bagian')
                     ->where('kd_entitas',$kd_entitas)
                     ->whereNotIn('kd_jabatan',['ST','NST'])
-                    ->whereNull('tanggal_penonaktifan')
+                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
                     ->orderByRaw($this->orderRaw)
                     ->orderBy('mst_karyawan.kd_entitas')
                     ->get()
@@ -2631,7 +2633,7 @@ class GajiPerBulanController extends Controller
                             ->with('bagian')
                             ->where('kd_jabatan', 'PIMDIV')
                             ->where('kd_entitas', 'UMUM')
-                            ->whereNull('tanggal_penonaktifan')
+                            ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
                             ->first();
             if ($ttdKaryawan) {
                 $ttdKaryawan->prefix = match($ttdKaryawan->status_jabatan) {

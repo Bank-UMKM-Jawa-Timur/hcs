@@ -50,13 +50,11 @@ class GajiPerBulanRepository
                 })
                 ->when($is_cabang, function($query) {
                     $kd_cabang = auth()->user()->kd_cabang;
-                    $query->where('m.kd_entitas', $kd_cabang);
+                    $query->where('batch.kd_entitas', $kd_cabang);
                 })
                 ->when($is_pusat, function($query) use ($kd_cabang) {
                     $query->where(function($q2) use ($kd_cabang) {
-                        $q2->whereNotIn('m.kd_entitas', $kd_cabang)
-                            ->orWhere('m.kd_entitas', 0)
-                            ->orWhereNull('m.kd_entitas');
+                        $q2->where('batch.kd_entitas', '000');
                     });
                 })
                 ->where('batch.status', $status)
@@ -336,13 +334,11 @@ class GajiPerBulanRepository
                 })
                 ->when($is_cabang, function($query) {
                     $kd_cabang = auth()->user()->kd_cabang;
-                    $query->where('m.kd_entitas', $kd_cabang);
+                    $query->where('batch.kd_entitas', $kd_cabang);
                 })
                 ->when($is_pusat, function($query) use ($kd_cabang) {
                     $query->where(function($q2) use ($kd_cabang) {
-                        $q2->whereNotIn('m.kd_entitas', $kd_cabang)
-                            ->orWhere('m.kd_entitas', 0)
-                            ->orWhereNull('m.kd_entitas');
+                        $q2->where('batch.kd_entitas', '000');
                     });
                 })
                 ->whereNotNull('batch.deleted_at')

@@ -32,7 +32,7 @@ class CetakGajiRepository
         ";
     }
 
-    function cetak($kantor, $month, $year, $batch_id) {
+    public function cetak($kantor, $month, $year, $batch_id) {
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
 
@@ -174,11 +174,11 @@ class CetakGajiRepository
                             )
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
-                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
+                            ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
                             ->where(function($query) use ($month, $year, $batch) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
-                                ->whereNull('tanggal_penonaktifan')
+                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
                                 ->where('batch.id', $batch->id);
                             })
                             ->orderBy('status_kantor', 'asc')
