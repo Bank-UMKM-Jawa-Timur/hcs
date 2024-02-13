@@ -78,7 +78,7 @@ class PenghasilanTeraturRepository
         return $data;
     }
 
-    public function getDetailTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit){
+    public function getDetailTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit, $kdEntitas){
         $data = DB::table('transaksi_tunjangan')
                 ->select(
                     'transaksi_tunjangan.nip as nip_tunjangan',
@@ -99,9 +99,9 @@ class PenghasilanTeraturRepository
                             ->orWhere('transaksi_tunjangan.nominal', 'like', "%$search%")
                             ->orWhere('mst_tunjangan.nama_tunjangan', 'like', "%$search%");
                     })
+                    ->where('transaksi_tunjangan.kd_entitas', $kdEntitas)
                     ->where('transaksi_tunjangan.id_tunjangan', $idTunjangan)
                     ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $tanggal)
-                    ->where('transaksi_tunjangan.created_at', $createdAt)
                     ->paginate($limit);
 
         return $data;
