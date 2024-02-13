@@ -218,6 +218,7 @@ class SlipGajiRepository
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
+                                        'bpjs_tk',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_ti + tj_multilevel + tj_fungsional) AS total_gaji"),
                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
@@ -230,6 +231,7 @@ class SlipGajiRepository
                                     ->where('gaji_per_bulan.nip', $nip)
                                     ->where('gaji_per_bulan.tahun', $year)
                                     ->where('batch.status', 'final')
+                                    ->whereNull('batch.deleted_at')
                                     ->orderBy('bulan')
                                     ->groupBy('gaji_per_bulan.bulan');
                                 },
