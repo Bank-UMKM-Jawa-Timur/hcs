@@ -2371,9 +2371,6 @@ class PayrollRepository
             $bonus_sum = $penghasilanBruto->total_bonus;
             $pengurang = $penguranganPenghasilan->total_pengurangan_bruto;
             $total_ket = $month_on_year_paid;
-            if (!$ptkp) {
-                dd($karyawan, $ptkp);
-            }
             // Get PPh21 PP58
             $pph21_pp58 = HitungPPH::getPPh58($month, $year, $karyawan, $ptkp, $karyawan->tanggal_input, $total_gaji, $tunjangan_rutin);
             $perhitunganPph21->pph21_pp58 = $pph21_pp58;

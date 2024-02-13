@@ -316,7 +316,7 @@ class GajiPerBulanController extends Controller
                 if ($potongan_karyawan_obj) {
                     $potongan_karyawan = (int) $potongan_karyawan_obj->potongan;
                 }
-                
+
                 // Get DPP
                 $dpp = 0;
                 $jp_1_persen = 0;
@@ -395,7 +395,7 @@ class GajiPerBulanController extends Controller
                         ->get();
                 $total_dpp = 0;
                 $total_bpjs_tk = 0;
-                
+
                 foreach ($gaji_obj as $item_gaji) {
                     // Get DPP
                     $dpp = $item_gaji->dpp;
@@ -1768,7 +1768,7 @@ class GajiPerBulanController extends Controller
                                 $currentYear = date('Y', strtotime($tanggal));
                                 $last_day = getLastDateOfMonth($currentYear, $currentMonth);
                                 $end_date = $currentYear.'-'.$currentMonth.'-'.$last_day;
-        
+
                                 $nominal_kredit = (int) DB::table('penghasilan_tidak_teratur')
                                                             ->where('nip', $item->nip)
                                                             ->where('id_tunjangan', 31) // kredit
