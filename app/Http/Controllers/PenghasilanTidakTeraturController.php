@@ -530,8 +530,7 @@ class PenghasilanTidakTeraturController extends Controller
 
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
-        $search = $request->get('q');
-        $search = str_replace("'", "\'", $search);
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
 
         $penghasilanRepo = new PenghasilanTidakTeraturRepository();
         $data = $penghasilanRepo->getPenghasilan($search, $limit, $page);
@@ -817,8 +816,7 @@ class PenghasilanTidakTeraturController extends Controller
             $createdAt = $request->createdAt;
             $limit = $request->has('page_length') ? $request->get('page_length') : 10;
             $page = $request->has('page') ? $request->get('page') : 1;
-            $search = $request->get('q');
-            $search = str_replace("'", "\'", $search);
+            $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
             $kd_entitas = $request->get('kd_entitas');
 
             $repo = new PenghasilanTidakTeraturRepository();
@@ -930,8 +928,8 @@ class PenghasilanTidakTeraturController extends Controller
         $createdAt = $request->tanggal;
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
-        $search = $request->get('q');
-        $search = str_replace("'", "\'", $search);
+         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $kd_entitas = $request->get('kdEntitas');
         $dataTunjangan = TunjanganModel::where('kategori', 'tidak teratur')->get();
 

@@ -41,8 +41,8 @@ class BonusController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
-        $search = $request->get('q');
-        $search = str_replace("'", "\'", $search);
+         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $data = $this->repo->getDataBonus($search, $limit, $page);
         return view('bonus.index', compact('data'));
     }
@@ -186,8 +186,8 @@ class BonusController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
-        $search = $request->get('q');
-        $search = str_replace("'", "\'", $search);
+         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $data = $this->repo->getDetailBonus($search, $limit,$page, $id, $tgl, $kd_entitas);
         $tunjangan = $this->repo->getNameTunjangan($id);
         $nameCabang = $this->repo->getNameCabang($kd_entitas);
@@ -289,8 +289,8 @@ class BonusController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
-        $search = $request->get('q');
-        $search = str_replace("'", "\'", $search);
+         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $data = $this->repo->getEditBonus($search, $limit, $page, $id, $tgl, $kd_entitas);
         $tunjangan = $this->repo->getNameTunjangan($id);
         $nameCabang = $this->repo->getNameCabang($kd_entitas);

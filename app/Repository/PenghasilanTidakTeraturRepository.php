@@ -311,6 +311,7 @@ class PenghasilanTidakTeraturRepository
                 ->where('mst_tunjangan.kategori','tidak teratur')
                 ->where(function ($query) use ($search) {
                     $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
+                        ->orWhere('mst_karyawan.nama_karyawan', 'like', "%$search%")
                         ->orWhere('nominal', 'like', "%$search%")
                         ->orWhere('c.nama_cabang', 'like', "%$search%");
                 })
