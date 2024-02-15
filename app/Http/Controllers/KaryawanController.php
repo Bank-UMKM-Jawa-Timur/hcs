@@ -54,7 +54,6 @@ class KaryawanController extends Controller
         $page = $request->has('page') ? $request->get('page') : 1;
 
         $karyawanRepo = new KaryawanRepository();
-         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
 

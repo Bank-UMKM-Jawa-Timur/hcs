@@ -45,7 +45,6 @@ class KaryawanRepository
 
     public function getDataKaryawan($search, $limit=10, $page=1) {
         $search = strtolower($search);
-        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
 
         if (auth()->user()->hasRole('cabang')) {
             $karyawan = KaryawanModel::select(
