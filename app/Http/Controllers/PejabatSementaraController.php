@@ -32,6 +32,7 @@ class PejabatSementaraController extends Controller
 
         $karyawanRepo = new PejabatSementaraRepository();
         $search = $request->get('q');
+        $search = str_replace("'", "\'", $search);
         $pjs = $karyawanRepo->getAllPejabatSementara($search, $limit, $page);
 
         return view('pejabat-sementara.index', compact('pjs'));

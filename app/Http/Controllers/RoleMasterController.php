@@ -32,6 +32,7 @@ class RoleMasterController extends Controller
             $page = $request->has('page') ? $request->get('page') : 1;
 
             $search = $request->get('q');
+            $search = str_replace("'", "\'", $search);
             $data_role = $this->param->getRoles($search, $limit, $page);
             return view('roles.index', [
                 'data' => $data_role,

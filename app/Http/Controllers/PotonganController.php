@@ -37,6 +37,7 @@ class PotonganController extends Controller
         $page = $request->has('page') ? $request->get('page') : 1;
 
         $search = $request->get('q');
+        $search = str_replace("'", "\'", $search);
         $data = $this->repo->getPotongan($search, $limit, $page);
 
         return view('potongan.index', compact('data'));
@@ -196,7 +197,8 @@ class PotonganController extends Controller
         }
         $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;
         $search = Request()->get('q');
-
+        $search = str_replace("'", "\'", $search);
+        
         $data = $this->repo->detailPotongan($bulan, $tahun, $limit, $search);
         return view('potongan.detail', [
             'data' => $data,

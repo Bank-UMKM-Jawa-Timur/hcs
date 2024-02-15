@@ -55,6 +55,7 @@ class KaryawanController extends Controller
 
         $karyawanRepo = new KaryawanRepository();
         $search = $request->get('q');
+        $search = str_replace("'", "\'", $search);
         $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
 
         return view('karyawan.index', [
@@ -69,6 +70,7 @@ class KaryawanController extends Controller
 
         $karyawanRepo = new KaryawanRepository();
         $search = $request->get('q');
+        $search = str_replace("'", "\'", $search);
         $data = $karyawanRepo->getDataKaryawanExport();
 
         return view('karyawan.export', [
@@ -959,7 +961,7 @@ class KaryawanController extends Controller
         }
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
-        $search = $request->has('q') ? $request->get('q') : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
 
         $karyawanRepo = new KaryawanRepository();
 

@@ -129,6 +129,9 @@ class GajiPerBulanController extends Controller
         $search_proses = $request->get('q_proses');
         $search_final = $request->get('q_final');
         $search_sampah = $request->get('q_sampah');
+        $search_proses = str_replace("'", "\'", $search_proses);
+        $search_final = str_replace("'", "\'", $search_final);
+        $search_sampah = str_replace("'", "\'", $search_sampah);
         $gajiRepo = new GajiPerBulanRepository;
         // Proses
         $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search_proses);

@@ -34,6 +34,7 @@ class SuratPeringatanController extends Controller
 
         $karyawanRepo = new SuratPeringatanRepository();
         $search = $request->get('q');
+        $search = str_replace("'", "\'", $search);
         $data = $karyawanRepo->getAllSuratPeringatan($search, $limit, $page);
 
         return view('karyawan.surat-peringatan.index', [

@@ -37,6 +37,7 @@ class PenghasilanTeraturController extends Controller
         $page = $request->has('page') ? $request->get('page') : 1;
 
         $search = $request->get('q');
+        $search = str_replace("'", "\'", $search);
 
         $repo = new PenghasilanTeraturRepository;
         $data = $repo->getPenghasilanTeraturImport($search, $limit, $page);
@@ -336,6 +337,7 @@ class PenghasilanTeraturController extends Controller
 
         $kdEntitas = Request()->get('kdEntitas');
         $search = Request()->get('q');
+        $search = str_replace("'", "\'", $search);
         $repo = new PenghasilanTeraturRepository;
         $data = $repo->getEditTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit, $kdEntitas);
         $tunjangan = $repo->getNamaTunjangan($idTunjangan);
@@ -516,6 +518,7 @@ class PenghasilanTeraturController extends Controller
 
         $kdEntitas = Request()->get('kdEntitas');
         $search = Request()->get('q');
+        $search = str_replace("'", "\'", $search);
         $repo = new PenghasilanTeraturRepository;
         $data = $repo->getDetailTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit);
 

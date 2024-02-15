@@ -37,6 +37,7 @@ class UserController extends Controller
         $page = $request->has('page') ? $request->get('page') : 1;
 
         $search = $request->get('q');
+        $search = str_replace("'", "\'", $search);
 
         $data = $this->param->getListUser($search, $limit, $page);
 
@@ -123,7 +124,7 @@ class UserController extends Controller
                     $dataRole->model_type = 'App\Models\KaryawanModel';
                     $dataRole->model_id = $request->nip;
                     $dataRole->save();
-        
+
                     DB::commit();
                     Alert::success('Berhasil Menambahkan User.');
                     return redirect()->route('user.index');
@@ -142,13 +143,13 @@ class UserController extends Controller
                 }
                 $dataUser->password = Hash::make('12345678');
                 $dataUser->save();
-    
+
                 $dataRole = new ModelHasRole();
                 $dataRole->role_id = $request->role;
                 $dataRole->model_type = 'App\Models\User';
                 $dataRole->model_id = $dataUser->id;
                 $dataRole->save();
-    
+
                 DB::commit();
                 Alert::success('Berhasil Menambahkan User.');
                 return redirect()->route('user.index');
@@ -333,6 +334,7 @@ class UserController extends Controller
 
         $search = $request->get('q');
         $data = $this->getDataSessions($search, $limit);
+        $search = str_replace("'", "\'", $search);
 
         return view('auth.session.index', compact('data'));
     }

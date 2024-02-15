@@ -69,7 +69,7 @@ class MutasiController extends Controller
 
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
-        $search = $request->has('q') ? $request->get('q') : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
 
         $repo = new MutasiRepository;
         $data = $repo->get($search, $limit);
@@ -122,7 +122,7 @@ class MutasiController extends Controller
                         $tj = DB::table('mst_tunjangan')
                             ->where('id', $request->tunjangan[$key])
                             ->first('nama_tunjangan');
-            
+
                         if($request->id_tk[$key] != 0 || $request->id_tk[$key] != null){
                             DB::table('history_penyesuaian')
                                 ->insert([
@@ -248,7 +248,7 @@ class MutasiController extends Controller
                     'kd_panggol' => $request->panggol,
                     'updated_at' => now(),
                 ]);
-    
+
             if($officer < 1) {
                 Alert::error('Error', 'Gagal mengupdate data karyawan');
                 return back()->withInput();
