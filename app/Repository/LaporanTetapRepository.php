@@ -2337,12 +2337,13 @@ class LaporanTetapRepository
                 if ($value->bulan > 1) {
                     $pph21Bentukan = floor($value->total_pph);
                     $pph21 = floor($value->total_pph);
-                    $terutang = DB::table('pph_yang_dilunasi')
-                                    ->select('terutang')
-                                    ->where('nip', $value->nip)
-                                    ->where('tahun', $value->tahun)
-                                    ->where('bulan', ($value->bulan - 1))
-                                    ->first();
+                    $terutang = DB::table('pph_yang_dilunasi AS pph')
+                                ->select('pph.terutang')
+                                ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
+                                ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                                ->where('pph.id', $value->id)
+                                ->whereNull('batch.deleted_at')
+                                ->first();
                     if ($terutang) {
                         $pph21 += floor($terutang->terutang);
                     }
@@ -2382,7 +2383,7 @@ class LaporanTetapRepository
             $totalPPHTambahanPenghasilan += $pphTambahanPenghasilan;
             $totalPPHRekreasi += $pphRekreasi;
             $totalPPH21Bentukan += $pph21Bentukan;
-            $totalPPH21 += $pph21;
+            $totalPPH21 += floor($pph21);
             $totalPenambahBruto += $penambahBruto;
             $totalPPh += $brutoPPH;
         }

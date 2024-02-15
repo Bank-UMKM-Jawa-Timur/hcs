@@ -260,7 +260,7 @@
                                         ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
                                         ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
                                         ->where('pph.id', $value->id)
-                                        ->whereNotNull('batch.deleted_at')
+                                        ->whereNull('batch.deleted_at')
                                         ->first();
                         if ($terutang) {
                             $pph21 += floor($terutang->terutang);
