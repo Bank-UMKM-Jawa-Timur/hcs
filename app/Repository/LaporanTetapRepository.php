@@ -1390,6 +1390,7 @@ class LaporanTetapRepository
             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
             ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
             ->whereNull('batch.deleted_at')
+            ->whereNull('mst_karyawan.tanggal_penonaktifan')
             ->orderByRaw($this->orderRaw)
             ->orderBy('status_kantor', 'asc')
             ->orderBy('kd_cabang', 'asc')
