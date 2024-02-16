@@ -309,7 +309,7 @@ class HitungPPH
                 }
             }
             else {
-                $status = 'TK';
+                $status = 'TK/0';
             }
         }
         // Get PTKP
