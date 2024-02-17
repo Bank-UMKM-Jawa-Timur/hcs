@@ -65,7 +65,7 @@ class GajiPerBulanRepository
                 ->groupBy('gaji.bulan')
                 ->groupBy('gaji.tahun')
                 ->paginate($limit,['*'], 'page', $page);
-        
+
         foreach ($data as $item) {
             $kd_entitas = $item->kd_entitas;
             $tanggal = $item->tanggal_input;
@@ -583,5 +583,14 @@ class GajiPerBulanRepository
         }
 
         return $data;
+    }
+
+    public static function getLastPenggajianCurrentYear($kd_entitas) {
+        // Gaji bulan sebelumnya
+        $batch = DB::table('batch_gaji_per_bulan AS batch')
+            ->where('kd_entitas', $kd_entitas)
+            ->orderByDesc('id')
+            ->first('tanggal_input');
+        return $batch;
     }
 }
