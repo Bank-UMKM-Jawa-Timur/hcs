@@ -178,7 +178,7 @@ class CetakGajiRepository
                             ->where(function($query) use ($month, $year, $batch) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
-                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ((MONTH(NOW()) = MONTH(tanggal_penonaktifan) OR MONTH(NOW())-1 = MONTH(tanggal_penonaktifan)) AND is_proses_gaji = 1))")
+                                ->whereRaw("tanggal_penonaktifan IS NULL OR (MONTH(NOW()) = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1)")
                                 ->where('batch.id', $batch->id);
                             })
                             ->orderBy('status_kantor', 'asc')
