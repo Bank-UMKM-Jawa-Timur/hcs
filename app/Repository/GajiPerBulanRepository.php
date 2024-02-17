@@ -585,10 +585,11 @@ class GajiPerBulanRepository
         return $data;
     }
 
-    public static function getLastPenggajianCurrentYear($kd_entitas) {
+    public static function getLastPenggajianCurrentYear($kd_entitas, $is_pegawai = true) {
         // Gaji bulan sebelumnya
         $batch = DB::table('batch_gaji_per_bulan AS batch')
             ->where('kd_entitas', $kd_entitas)
+            ->where('is_pegawai', $is_pegawai)
             ->whereNull('deleted_at')
             ->orderByDesc('id')
             ->first('tanggal_input');

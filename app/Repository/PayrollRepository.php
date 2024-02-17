@@ -124,9 +124,8 @@ class PayrollRepository
         $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas);
         $last_month_penggajian = 0;
         if ($last_date_penggajian) {
-            $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+            $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
         }
-        $last_month_penggajian++;
 
         $data = KaryawanModel::with([
                                 'keluarga' => function($query) {
@@ -942,9 +941,8 @@ class PayrollRepository
         $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas);
         $last_month_penggajian = 0;
         if ($last_date_penggajian) {
-            $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+            $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
         }
-        $last_month_penggajian++;
 
         $data = KaryawanModel::with([
                                 'keluarga' => function($query) {

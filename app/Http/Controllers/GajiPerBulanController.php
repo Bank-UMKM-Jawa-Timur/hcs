@@ -195,12 +195,12 @@ class GajiPerBulanController extends Controller
             }
 
             // Get last penggajian
-            $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas);
-            $last_month_penggajian = 0;
+            $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas, $is_pegawai);
+            $last_month_penggajian = 1;
             if ($last_date_penggajian) {
-                $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+                $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
+                $last_month_penggajian++;
             }
-            $last_month_penggajian++;
             // Get Karyawan
             $karyawan = DB::table('mst_karyawan AS m')
                             ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
@@ -1197,12 +1197,11 @@ class GajiPerBulanController extends Controller
             if (auth()->user()->hasRole('cabang')) {
                 // Cabang
                 // Get last penggajian
-                $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear(auth()->user()->kd_cabang);
+                $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear(auth()->user()->kd_cabang, true);
                 $last_month_penggajian = 0;
                 if ($last_date_penggajian) {
-                    $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+                    $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
                 }
-                $last_month_penggajian++;
                 $karyawan = DB::table('mst_karyawan')
                             ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                             ->where('kd_entitas', auth()->user()->kd_cabang)
@@ -1230,12 +1229,11 @@ class GajiPerBulanController extends Controller
                             ->toArray();
                 $kd_jabatan = array_merge($dirut, $komisaris, $staf_ahli);
                 // Get last penggajian
-                $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas);
+                $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas, $is_pegawai);
                 $last_month_penggajian = 0;
                 if ($last_date_penggajian) {
-                    $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+                    $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
                 }
-                $last_month_penggajian++;
 
                 $karyawan = DB::table('mst_karyawan')
                                 ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
@@ -2590,12 +2588,11 @@ class GajiPerBulanController extends Controller
         if (auth()->user()->hasRole('cabang')) {
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
             // Get last penggajian
-            $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas);
+            $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas, true);
             $last_month_penggajian = 0;
             if ($last_date_penggajian) {
-                $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+                $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
             }
-            $last_month_penggajian++;
             $cabang = DB::table('mst_cabang')->select('kd_cabang', 'nama_cabang')->where('kd_cabang', $kd_entitas)->first();
             $ttdKaryawan = KaryawanModel::select(
                         'mst_karyawan.nip',
@@ -2658,9 +2655,8 @@ class GajiPerBulanController extends Controller
             $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas);
             $last_month_penggajian = 0;
             if ($last_date_penggajian) {
-                $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+                $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
             }
-            $last_month_penggajian++;
             $cabang = null;
             $ttdKaryawan = KaryawanModel::select(
                                 'mst_karyawan.nip',
