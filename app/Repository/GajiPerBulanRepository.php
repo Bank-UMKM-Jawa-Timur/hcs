@@ -589,6 +589,7 @@ class GajiPerBulanRepository
         // Gaji bulan sebelumnya
         $batch = DB::table('batch_gaji_per_bulan AS batch')
             ->where('kd_entitas', $kd_entitas)
+            ->whereNull('deleted_at')
             ->orderByDesc('id')
             ->first('tanggal_input');
         return $batch;
