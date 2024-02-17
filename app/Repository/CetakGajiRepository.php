@@ -37,6 +37,7 @@ class CetakGajiRepository
         $kode_cabang_arr = $cabangRepo->listCabang(true);
 
         $batch = DB::table('batch_gaji_per_bulan')->find($batch_id);
+        $kd_entitas = $batch->kd_entitas;
         if ($batch) {
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('mst_profil_kantor.kd_cabang', $batch->kd_entitas)
@@ -77,6 +78,14 @@ class CetakGajiRepository
             $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
             $jp_mar_des = $hitungan_pengurang->jp_mar_des;
         }
+
+        // Get last penggajian
+        $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas);
+        $last_month_penggajian = 0;
+        if ($last_date_penggajian) {
+            $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+        }
+        $last_month_penggajian++;
 
         $data = KaryawanModel::with([
                                 'keluarga' => function($query) {
@@ -175,10 +184,10 @@ class CetakGajiRepository
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
                             ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
-                            ->where(function($query) use ($month, $year, $batch) {
+                            ->where(function($query) use ($month, $year, $batch, $last_month_penggajian) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
-                                ->whereRaw("(tanggal_penonaktifan IS NULL OR (MONTH(NOW()) = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                 ->where('batch.id', $batch->id);
                             })
                             ->orderBy('status_kantor', 'asc')

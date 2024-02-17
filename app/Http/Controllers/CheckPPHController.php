@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\CheckHitungPPH;
 use App\Models\KaryawanModel;
+use App\Repository\GajiPerBulanRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -137,8 +138,14 @@ class CheckPPHController extends Controller
                         ->get();
 
         if (auth()->user()->hasRole('cabang')) {
+            // Get last penggajian
+            $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear(auth()->user()->kd_cabang);
+            $last_month_penggajian = 0;
+            if ($last_date_penggajian) {
+                $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+            }
             $karyawan = KaryawanModel::where('kd_entitas', auth()->user()->kd_cabang)
-                                    ->whereRaw("(tanggal_penonaktifan IS NULL OR (MONTH(NOW()) = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                     ->orderByRaw($orderRaw)
                                     ->get();
             $dataC = DB::table('mst_cabang')->where('kd_cabang', auth()->user()->kd_cabang)->first();
@@ -160,6 +167,12 @@ class CheckPPHController extends Controller
                             ->first();
                 $nama_cabang = $dataC->nama_cabang;
                 if ($kd_entitas == '000') {
+                    // Get last penggajian
+                    $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_cabang);
+                    $last_month_penggajian = 0;
+                    if ($last_date_penggajian) {
+                        $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+                    }
                     $karyawan = DB::table('gaji_per_bulan')
                         ->select('mst_karyawan.*')
                         ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
@@ -170,27 +183,17 @@ class CheckPPHController extends Controller
                         ->where('gaji_per_bulan.tahun', $tahun)
                         ->where('gaji_per_bulan.bulan', $bulan)
                         ->whereNull('batch_gaji_per_bulan.deleted_at')
-                        ->whereRaw("(tanggal_penonaktifan IS NULL OR (MONTH(NOW()) = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                        ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                         ->orderByRaw($orderRaw)
                         ->get();
-                    // $karyawan = KaryawanModel::where(function($query) use ($kd_cabang) {
-                    //                             $query->whereNotIn('kd_entitas', $kd_cabang)
-                    //                                 ->orWhereNull('kd_entitas');
-                    //                         })
-                    //                         ->where(function($query) use ($tanggal_penggajian) {
-                    //                             $query->whereNull('tanggal_penonaktifan')
-                    //                                 ->orWhere(function($query2) use ($tanggal_penggajian) {
-                    //                                     $bulan = date('m', strtotime($tanggal_penggajian));
-                    //                                     $tahun = date('Y', strtotime($tanggal_penggajian));
-                    //                                     $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
-                    //                                         ->orWhereMonth('tanggal_penonaktifan', $bulan)
-                    //                                         ->whereYear('tanggal_penonaktifan', $tahun);
-                    //                                 });
-                    //                         })
-                    //                         ->orderByRaw($orderRaw)
-                    //                         ->get();
                 }
                 else {
+                    // Get last penggajian
+                    $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear(auth()->user()->kd_cabang);
+                    $last_month_penggajian = 0;
+                    if ($last_date_penggajian) {
+                        $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+                    }
                     $karyawan = DB::table('gaji_per_bulan')
                                     ->select('mst_karyawan.*')
                                     ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
@@ -199,7 +202,7 @@ class CheckPPHController extends Controller
                                     ->where('gaji_per_bulan.tahun', $tahun)
                                     ->where('gaji_per_bulan.bulan', $bulan)
                                     ->whereNull('batch_gaji_per_bulan.deleted_at')
-                                    ->whereRaw("(tanggal_penonaktifan IS NULL OR (MONTH(NOW()) = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                     ->orderByRaw($orderRaw)
                                     ->get();
                 }
@@ -214,6 +217,14 @@ class CheckPPHController extends Controller
                 if ($batch) {
                     $tanggal_penggajian = $batch->tanggal_input;
                 }
+                // Get last penggajian
+                $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_cabang);
+                $last_month_penggajian = 0;
+                if ($last_date_penggajian) {
+                    $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+                }
+                $last_month_penggajian++;
+
                 $karyawan = DB::table('gaji_per_bulan')
                     ->select('mst_karyawan.*')
                     ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
@@ -224,25 +235,9 @@ class CheckPPHController extends Controller
                     ->where('gaji_per_bulan.tahun', $tahun)
                     ->where('gaji_per_bulan.bulan', $bulan)
                     ->whereNull('batch_gaji_per_bulan.deleted_at')
-                    ->whereRaw("(tanggal_penonaktifan IS NULL OR (MONTH(NOW()) = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                     ->orderByRaw($orderRaw)
                     ->get();
-                // $karyawan = KaryawanModel::where(function ($query) use ($kd_cabang) {
-                //                             $query->whereNotIn('kd_entitas', $kd_cabang)
-                //                             ->orWhereNull('kd_entitas');
-                //                         })
-                //                         ->where(function($query) use ($tanggal_penggajian) {
-                //                             $query->whereNull('tanggal_penonaktifan')
-                //                                 ->orWhere(function($query2) use ($tanggal_penggajian) {
-                //                                     $bulan = date('m', strtotime($tanggal_penggajian));
-                //                                     $tahun = date('Y', strtotime($tanggal_penggajian));
-                //                                     $query2->where('tanggal_penonaktifan', '>=', $tanggal_penggajian)
-                //                                         ->orWhereMonth('tanggal_penonaktifan', $bulan)
-                //                                         ->whereYear('tanggal_penonaktifan', $tahun);
-                //                                 });
-                //                         })
-                //                         ->orderByRaw($orderRaw)
-                //                         ->get();
                 $nama_cabang = "Pusat";
             }
         }

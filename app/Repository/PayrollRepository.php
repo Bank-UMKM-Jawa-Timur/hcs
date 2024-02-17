@@ -64,6 +64,7 @@ class PayrollRepository
         $kode_cabang_arr = $cabangRepo->listCabang(true);
 
         if($kantor == 'pusat'){
+            $kd_entitas = '000';
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('kd_cabang', '000')
                 ->where('active', 1)
@@ -78,6 +79,7 @@ class PayrollRepository
                 ->first();
         }
         else {
+            $kd_entitas = $kantor;
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('mst_profil_kantor.kd_cabang', $kantor)
                 ->where('active', 1)
@@ -117,6 +119,14 @@ class PayrollRepository
             $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
             $jp_mar_des = $hitungan_pengurang->jp_mar_des;
         }
+
+        // Get last penggajian
+        $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas);
+        $last_month_penggajian = 0;
+        if ($last_date_penggajian) {
+            $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+        }
+        $last_month_penggajian++;
 
         $data = KaryawanModel::with([
                                 'keluarga' => function($query) {
@@ -265,10 +275,10 @@ class PayrollRepository
                             ->orderBy('nip', 'asc')
                             ->orderBy('mst_karyawan.kd_entitas')
                             ->whereNull('batch.deleted_at')
-                            ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
+                            ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search, $last_month_penggajian) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
-                                ->whereRaw("(tanggal_penonaktifan IS NULL OR (MONTH(NOW()) = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
                                         $q->where(function($q2) use($kode_cabang_arr) {
@@ -872,6 +882,7 @@ class PayrollRepository
         $kode_cabang_arr = $cabangRepo->listCabang(true);
 
         if($kantor == 'pusat'){
+            $kd_entitas = '000';
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('kd_cabang', '000')
                 ->where('active', 1)
@@ -886,6 +897,7 @@ class PayrollRepository
                 ->first();
         }
         else {
+            $kd_entitas = $kantor;
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('mst_profil_kantor.kd_cabang', $kantor)
                 ->where('active', 1)
@@ -925,6 +937,14 @@ class PayrollRepository
             $jp_jan_feb = $hitungan_pengurang->jp_jan_feb;
             $jp_mar_des = $hitungan_pengurang->jp_mar_des;
         }
+
+        // Get last penggajian
+        $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas);
+        $last_month_penggajian = 0;
+        if ($last_date_penggajian) {
+            $last_month_penggajian = intval($last_date_penggajian->tanggal_input);
+        }
+        $last_month_penggajian++;
 
         $data = KaryawanModel::with([
                                 'keluarga' => function($query) {
@@ -1068,10 +1088,10 @@ class PayrollRepository
                                 WHEN mst_karyawan.kd_jabatan='IKJP' THEN 9 END ASC
                             ")
                             ->whereNull('batch.deleted_at')
-                            ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search) {
+                            ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search, $last_month_penggajian) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
-                                ->whereRaw("(tanggal_penonaktifan IS NULL OR (MONTH(NOW()) = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
                                         $q->where(function($q2) use($kode_cabang_arr) {
