@@ -135,7 +135,7 @@
                         <input type="submit" value="Tampilkan" class="btn btn-primary cursor-pointer mt-5">
                     </div>
                 </div>
-                @if (\Request::has('kantor'))
+                @if (\Request::has('kantor') && \Request::has('bulan'))
                     <div class="layout-component">
                         <div class="shorty-table">
                             <label for="page_length" class="mr-3 text-sm text-neutral-400">show</label>

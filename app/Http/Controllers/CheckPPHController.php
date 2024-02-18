@@ -145,7 +145,7 @@ class CheckPPHController extends Controller
                 $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
             }
             $karyawan = KaryawanModel::where('kd_entitas', auth()->user()->kd_cabang)
-                                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($bulan = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                     ->orderByRaw($orderRaw)
                                     ->get();
             $dataC = DB::table('mst_cabang')->where('kd_cabang', auth()->user()->kd_cabang)->first();
@@ -183,7 +183,7 @@ class CheckPPHController extends Controller
                         ->where('gaji_per_bulan.tahun', $tahun)
                         ->where('gaji_per_bulan.bulan', $bulan)
                         ->whereNull('batch_gaji_per_bulan.deleted_at')
-                        ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                        ->whereRaw("(tanggal_penonaktifan IS NULL OR ($bulan = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                         ->orderByRaw($orderRaw)
                         ->get();
                 }
@@ -202,7 +202,7 @@ class CheckPPHController extends Controller
                                     ->where('gaji_per_bulan.tahun', $tahun)
                                     ->where('gaji_per_bulan.bulan', $bulan)
                                     ->whereNull('batch_gaji_per_bulan.deleted_at')
-                                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($bulan = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                     ->orderByRaw($orderRaw)
                                     ->get();
                 }
@@ -234,7 +234,7 @@ class CheckPPHController extends Controller
                     ->where('gaji_per_bulan.tahun', $tahun)
                     ->where('gaji_per_bulan.bulan', $bulan)
                     ->whereNull('batch_gaji_per_bulan.deleted_at')
-                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($bulan = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                     ->orderByRaw($orderRaw)
                     ->get();
                 $nama_cabang = "Pusat";

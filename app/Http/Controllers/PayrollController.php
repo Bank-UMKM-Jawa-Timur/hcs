@@ -57,8 +57,13 @@ class PayrollController extends Controller
 
         $this->param = null;
 
-        $data = $this->list($kantor, $month, $year, $search, $page, $limit,null);
-        $total = $this->grandTotal($kantor, $month, $year, $search, $page, $limit,null);
+        if ($month) {
+            $data = $this->list($kantor, $month, $year, $search, $page, $limit,null);
+            $total = $this->grandTotal($kantor, $month, $year, $search, $page, $limit,null);
+        } else {
+            $data = null;
+            $total = null;
+        }
 
         return view('payroll.index', compact('data', 'cabang','total'));
     }

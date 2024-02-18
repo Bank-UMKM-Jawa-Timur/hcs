@@ -277,7 +277,7 @@ class PayrollRepository
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search, $last_month_penggajian) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
-                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ($month = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
                                         $q->where(function($q2) use($kode_cabang_arr) {
@@ -1089,7 +1089,7 @@ class PayrollRepository
                             ->where(function($query) use ($month, $year, $kantor, $kode_cabang_arr, $search, $last_month_penggajian) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
-                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ($month = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                 ->where(function($q) use ($kantor, $kode_cabang_arr, $search) {
                                     if ($kantor == 'pusat') {
                                         $q->where(function($q2) use($kode_cabang_arr) {
