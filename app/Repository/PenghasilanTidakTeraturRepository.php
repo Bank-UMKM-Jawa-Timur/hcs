@@ -60,10 +60,10 @@ class PenghasilanTidakTeraturRepository
                     })
                     ->when($kd_cabang, function ($query) use ($kd_cabang) {
                         if ($kd_cabang != 'pusat') {
-                            $query->where('mst_karyawan.kd_entitas', $kd_cabang);
+                            $query->where('penghasilan_tidak_teratur.kd_entitas', $kd_cabang);
                         }
                     })
-                    ->groupBy('mst_tunjangan.id', 'penghasilan_tidak_teratur.created_at', 'penghasilan_tidak_teratur.kd_entitas',)
+                    ->groupBy('penghasilan_tidak_teratur.kd_entitas', 'penghasilan_tidak_teratur.id_tunjangan', 'penghasilan_tidak_teratur.created_at')
                     ->orderByDesc('penghasilan_tidak_teratur.created_at')
                     ->paginate($limit);
         return $data;
@@ -288,7 +288,7 @@ class PenghasilanTidakTeraturRepository
                 })
                 ->when($kd_cabang, function ($query) use ($kd_cabang) {
                     if ($kd_cabang != 'pusat') {
-                        $query->where('mst_karyawan.kd_entitas', $kd_cabang);
+                        $query->where('penghasilan_tidak_teratur.kd_entitas', $kd_cabang);
                     }
                 })
                 ->groupBy('mst_tunjangan.id', 'penghasilan_tidak_teratur.created_at', 'penghasilan_tidak_teratur.kd_entitas',)
