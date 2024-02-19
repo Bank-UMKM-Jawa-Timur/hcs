@@ -75,7 +75,7 @@
                                         onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)"
                                         class="form-input" value="{{ number_format($item->nominal, 0, ',', '.') }}">
                                         <input type="hidden" name="nip[]" value="{{$item->nip}}">
-                                        <input type="hidden" name="item_id[]" value="{{$item->id_penghasilan}}">
+                                        <input type="hidden" name="item_id[]" value="{{$item->id}}">
                                 </td>
                                 <td>
                                     <button id="btn-hapus" type="button" data-nip="{{$item->nip}}" class="btn btn-danger btn-minus">-</button>

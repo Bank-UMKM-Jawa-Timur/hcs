@@ -919,7 +919,6 @@ class PenghasilanTidakTeraturController extends Controller
     }
     public function editsTunjangan(Request $request)
     {
-        // return $request;
         if (!auth()->user()->can('penghasilan - edit - penghasilan tidak teratur')) {
             return view('roles.forbidden');
         }
@@ -928,7 +927,7 @@ class PenghasilanTidakTeraturController extends Controller
         $createdAt = $request->tanggal;
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
-         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $kd_entitas = $request->get('kdEntitas');
         $dataTunjangan = TunjanganModel::where('kategori', 'tidak teratur')->get();
@@ -938,8 +937,6 @@ class PenghasilanTidakTeraturController extends Controller
         $tunjangan = $repo->getNameTunjangan($idTunjangan);
         $nameCabang = $repo->getNameCabang($kd_entitas);
         $tanggal = date("Y-m-d", strtotime($request->tanggal));
-
-        // dd($data);
 
         return view('penghasilan.edit', compact(['data', 'tunjangan', 'nameCabang', 'dataTunjangan', 'tanggal']));
     }
@@ -953,7 +950,6 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     public function editTunjanganNewPost(Request $request){
-        // return $request;
         DB::beginTransaction();
         try {
             $nip = $request->has('nip') ? $request->get('nip') : null;
@@ -962,10 +958,9 @@ class PenghasilanTidakTeraturController extends Controller
             $kd_entitas = $request->has('kd_entitas') ? $request->get('kd_entitas') : null;
             $temp_nip = $request->has('temp_nip') ? $request->get('temp_nip')[0] : null;
             $temp_nip_array = json_decode($temp_nip, true);
-            // return count($temp_nip_array);
-            if (!$item_id) {
+            if (!$item_id || count($item_id) == 0) {
                 for ($i=0; $i < count($temp_nip_array) ; $i++) {
-                    $datts =DB::table('penghasilan_tidak_teratur')
+                    DB::table('penghasilan_tidak_teratur')
                         ->where('id_tunjangan', $request->get('id_tunjangan'))
                         ->where('bulan', $request->get('bulan'))
                         ->whereDate('created_at', $tanggal)
