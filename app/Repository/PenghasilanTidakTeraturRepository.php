@@ -136,6 +136,7 @@ class PenghasilanTidakTeraturRepository
                 'tahun',
                 'bulan',
                 'keterangan',
+                'penghasilan_tidak_teratur.id',
                 'penghasilan_tidak_teratur.created_at',
                 'mst_karyawan.nip',
                 'mst_karyawan.nik',

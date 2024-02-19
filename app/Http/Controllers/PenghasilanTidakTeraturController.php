@@ -937,7 +937,6 @@ class PenghasilanTidakTeraturController extends Controller
         $tunjangan = $repo->getNameTunjangan($idTunjangan);
         $nameCabang = $repo->getNameCabang($kd_entitas);
         $tanggal = date("Y-m-d", strtotime($request->tanggal));
-
         return view('penghasilan.edit', compact(['data', 'tunjangan', 'nameCabang', 'dataTunjangan', 'tanggal']));
     }
 
