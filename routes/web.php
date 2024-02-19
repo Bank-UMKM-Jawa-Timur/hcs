@@ -396,6 +396,7 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     Route::get('/proses-gaji-download-rincian', [GajiPerBulanController::class, 'downloadRincianPayroll'])->name('proses-gaji-download-rincian');
 
     Route::get('/download-rekapitulasi', [LaporanTetapController::class, 'cetak'])->name('download-rekapitulasi');
+    Route::get('/download-ebupot', [LaporanTetapController::class, 'cetakEbupot'])->name('download-ebupot');
 
     // Route update status ptkp
     Route::get('/import-status-ptkp', function(){

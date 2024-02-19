@@ -217,17 +217,24 @@
                         </div>
                         <div class="flex justify-end w-fit my-3">
                             @if (\Request::has('tahun') && count($data) != 0)
-                                <div class="mr-2" id="btn-download">
+                                <div class="mr-2">
                                     <a href="{{ route('download-rekapitulasi') }}?kategori={{Request()->get('kategori')}}" download
-                                        class="m-0 btn btn-lg is-btn btn-warning">
+                                        class="m-0 btn-download btn btn-lg is-btn btn-warning">
                                         <span style="font-size: 14px;">Excel</span>
                                     </a>
                                 </div>
                             @endif
-                            <div>
+                            <div class="mr-2">
                                 <input type="submit" value="Tampilkan"
-                                    class="btn btn-primary is-btn is-primary cursor-pointer">
+                                    class="btn btn-primary is-btn is-primary tampilkan cursor-pointer">
                             </div>
+                            @if (\Request::has('tahun') && count($data) != 0 && Request::get('kategori') == 'ebupot')
+                                <div class="mr-2">
+                                    <a href="{{ route('download-ebupot') }}?kategori={{Request()->get('kategori')}}&kantor={{Request()->get('cabang')}}&bulan={{Request()->get('bulan')}}&tahun={{Request()->get('tahun')}}" class="m-0 btn-download btn btn-lg is-btn btn-success">
+                                        <span style="font-size: 14px;">Download Ebupot</span>
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -305,32 +312,32 @@
     }
 
     $('#kantor').on('change', function() {
-        $('#btn-download').addClass('d-none')
+        $('.btn-download').addClass('d-none')
     })
 
     $('#cabang').on('change', function() {
-        $('#btn-download').addClass('d-none')
+        $('.btn-download').addClass('d-none')
     })
 
     $('#bulan').on('change', function() {
-        $('#btn-download').addClass('d-none')
+        $('.btn-download').addClass('d-none')
     })
 
     $('#tahun').on('change', function() {
-        $('#btn-download').addClass('d-none')
+        $('.btn-download').addClass('d-none')
     })
 
     $('#kategori').on('change', function() {
-        $('#btn-download').addClass('hidden')
+        $('.btn-download').addClass('hidden')
     })
-    $('#form').on('submit', function() {
+    $('.tampilkan').on('click', function() {
         $('.preloader').show()
     })
-    $('#btn-download').on('click', function () {
+    $('.btn-download').on('click', function () {
         $('.preloader').show();
     })
 
-    $('#btn-download').on('focusout', function () {
+    $('.btn-download').on('focusout', function () {
         $('.preloader').hide();
     })
 

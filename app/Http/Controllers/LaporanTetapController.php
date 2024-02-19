@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportEbupot;
 use App\Exports\RekapTetapExport;
 use App\Models\CabangModel;
 use App\Repository\LaporanTetapRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -53,7 +56,7 @@ class LaporanTetapController extends Controller
 
         $kategori = $request->has('kategori') ? $request->get('kategori') : null;
         Session::put('kategori', $kategori);
-         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $data = $request->has('tahun') && $request->has('bulan') ? $this->repo->get($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
         $footer = $request->has('tahun') && $request->has('bulan') ? $this->repo->getTotal($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
@@ -87,6 +90,33 @@ class LaporanTetapController extends Controller
 
         $filename = 'Laporan Rekap ' . $showKantor .' '. $month_name . ' Tahun ' . $year.' ('.$kategori.')';
         return Excel::download(new RekapTetapExport($data, $grandtotal), $filename . '.xlsx');
+    }
+
+    public function cetakEbupot(Request $request){
+        $year = $request->get('tahun');
+        $month = $request->get('bulan');
+        $kantor = $request->get('kantor');
+        $kategori = $request->get('kategori');
+        $date = Carbon::create($year, $month, 1);
+        $lastDayOfMonth = $date->endOfMonth();
+        $lastdate = date('d-m-Y', strtotime($lastDayOfMonth));
+        $limit = null;
+        $search = null;
+        $data = $this->repo->ebupot($kantor, $kategori, $search, $limit, true, intval($year), intval($month));
+        $month_name = getMonth($month);
+        $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : $kantor;
+        if (auth()->user()->hasRole('cabang')) {
+            $pincab = DB::table('mst_karyawan')->select('npwp')->where('kd_jabatan', 'PC')->where('tanggal_penonaktifan', null)
+                    ->where('kd_entitas', $kd_entitas)
+                    ->first();
+            $penandatangan = $pincab->npwp;
+        } else {
+            $penandatangan = '247504327618000';
+        }
+
+        $filename = 'Laporan Ebupot '. $month_name . ' Tahun ' . $year;
+        // return view('rekap-tetap.exports.ebupot', ['data' => $data, 'lastdate' => $lastdate, 'penandatangan' => $penandatangan]);
+        return Excel::download(new ExportEbupot($data, $lastdate, $penandatangan), $filename . '.xlsx');
     }
 
     /**
