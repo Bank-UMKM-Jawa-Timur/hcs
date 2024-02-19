@@ -237,7 +237,7 @@
                                     <td>{{$loop->iteration}}</td>
                                     <td class="left">{{str_contains($row->nip, 'U') ? '-' : $row->nip}}</td>
                                     <td>{{$row->nama}}</td>
-                                    <td>{{$row->ptkp->kode}}</td>
+                                    <td>{{$row->ptkp->kode == "TK" ? "TK/0" : $row->ptkp->kode}}</td>
                                     {{--  Database  --}}
                                     <td>{{formatRupiahExcel($bruto_db, 0, true)}}</td>
                                     <td>{{formatRupiahExcel($total_insentif_db, 0, true)}}</td>

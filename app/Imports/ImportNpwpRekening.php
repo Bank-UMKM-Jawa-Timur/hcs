@@ -43,7 +43,7 @@ class ImportNpwpRekening implements ToCollection, WithHeadingRow, SkipsOnError, 
                 if($row['status'] != null || $row['status'] != ''){
                     $status = 'Belum Kawin';
                     $jumlahAnak = 0;
-                    if($row['status'] != 'TK'){
+                    if($row['status'] != 'TK/0'){
                         $status = 'Kawin';
                         $jmlAnak = explode('/', $row['status']);
                         $jumlahAnak = $jmlAnak[1];

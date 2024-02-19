@@ -40,7 +40,8 @@ class PayrollController extends Controller
 
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
-        $search = $request->get('q');
+         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
 
         $kantor = $request->get('kantor') == 'pusat' ? 'pusat' : $request->get('cabang');
         FacadesSession::put('kantor',$kantor);
@@ -56,9 +57,14 @@ class PayrollController extends Controller
 
         $this->param = null;
 
-        $data = $this->list($kantor, $month, $year, $search, $page, $limit,null);
-        $total = $this->grandTotal($kantor, $month, $year, $search, $page, $limit,null);
-        // return $total;
+        if ($month) {
+            $data = $this->list($kantor, $month, $year, $search, $page, $limit,null);
+            $total = $this->grandTotal($kantor, $month, $year, $search, $page, $limit,null);
+        } else {
+            $data = null;
+            $total = null;
+        }
+
         return view('payroll.index', compact('data', 'cabang','total'));
     }
 
@@ -138,7 +144,7 @@ class PayrollController extends Controller
         }
         $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
         if (auth()->user()->hasRole('cabang')) {
-            $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('kd_entitas', $kd_entitas)->first();
+            $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('tanggal_penonaktifan', null)->where('kd_entitas', $kd_entitas)->first();
             $cabang = DB::table('mst_cabang')->select('kd_cabang', 'nama_cabang')->where('kd_cabang', $kd_entitas)->first();
         } else {
             $pincab = null;

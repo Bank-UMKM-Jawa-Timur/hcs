@@ -18,7 +18,7 @@ class KaryawanRepository
     {
         $this->cabang = CabangModel::pluck('kd_cabang');
         $this->orderRaw = "
-            CASE 
+            CASE
             WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
             WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
             WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
@@ -91,7 +91,7 @@ class KaryawanRepository
                                 ->orWhereRaw("MATCH(nama_bagian) AGAINST('$search')");
                         });
                     });
-    
+
                 if ($search == 'pusat') {
                     $query->orWhereRaw('mst_karyawan.kd_entitas NOT IN(SELECT kd_cabang FROM mst_cabang)');
                 }
@@ -171,15 +171,15 @@ class KaryawanRepository
                 'Penjabat Sementara' => 'Pjs. ',
                 default => '',
             };
-            
+
             if ($value->jabatan) {
                 $jabatan = $value->jabatan->nama_jabatan;
             } else {
                 $jabatan = 'undifined';
             }
-            
+
             $ket = $value->ket_jabatan ? "({$value->ket_jabatan})" : '';
-            
+
             if (isset($value->entitas->subDiv)) {
                 $entitas = $value->entitas->subDiv->nama_subdivisi;
             } elseif (isset($value->entitas->div)) {
@@ -187,7 +187,7 @@ class KaryawanRepository
             } else {
                 $entitas = '';
             }
-            
+
             if ($jabatan == 'Pemimpin Sub Divisi') {
                 $jabatan = 'PSD';
             } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
@@ -243,15 +243,15 @@ class KaryawanRepository
                 'Penjabat Sementara' => 'Pjs. ',
                 default => '',
             };
-            
+
             if ($value->jabatan) {
                 $jabatan = $value->jabatan->nama_jabatan;
             } else {
                 $jabatan = 'undifined';
             }
-            
+
             $ket = $value->ket_jabatan ? "({$value->ket_jabatan})" : '';
-            
+
             if (isset($value->entitas->subDiv)) {
                 $entitas = $value->entitas->subDiv->nama_subdivisi;
             } elseif (isset($value->entitas->div)) {
@@ -259,7 +259,7 @@ class KaryawanRepository
             } else {
                 $entitas = '';
             }
-            
+
             if ($jabatan == 'Pemimpin Sub Divisi') {
                 $jabatan = 'PSD';
             } elseif ($jabatan == 'Pemimpin Bidang Operasional') {
@@ -347,7 +347,7 @@ class KaryawanRepository
             'page_length' => $limit,
         ]);
 
-        
+
         $this->addEntity($karyawan);
         return $karyawan;
     }

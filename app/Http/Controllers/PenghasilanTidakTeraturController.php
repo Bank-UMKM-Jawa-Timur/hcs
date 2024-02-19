@@ -225,6 +225,10 @@ class PenghasilanTidakTeraturController extends Controller
                 'tj_pelaksana' => ($data != null) ? $data->tj_pelaksana : 0,
                 'tj_kemahalan' => ($data != null) ? $data->tj_kemahalan : 0,
                 'tj_kesejahteraan' => ($data != null) ? $data->tj_kesejahteraan : 0,
+                'tj_teller' => ($data != null) ? $data->tj_teller : 0,
+                'tj_multilevel' => ($data != null) ? $data->tj_multilevel : 0,
+                'tj_ti' => ($data != null) ? $data->tj_ti : 0,
+                'tj_fungsional' => ($data != null) ? $data->tj_fungsional : 0,
             ];
             array_push($gaji, $gj[$i-1]);
             array_push($total_gaji, array_sum($total_gj[$i-1]));
@@ -283,7 +287,7 @@ class PenghasilanTidakTeraturController extends Controller
                 $jkm = 0;
                 $kesehatan = 0;
                 $jp_penambah = 0;
-                if($karyawan->tanggal_penonaktifan == null){
+                if($karyawan->tanggal_penonaktifan == null && $karyawan->kpj){
                     $jkk = ($persen_jkk / 100) * $item;
                     $jht = ($persen_jht / 100) * $item;
                     $jkm = ($persen_jkm / 100) * $item;
@@ -390,7 +394,7 @@ class PenghasilanTidakTeraturController extends Controller
             // save pajak insentif
             if ($request->id_tunjangan == 31) {
                 // Insentif kredit
-                $pajak = HitungPPH::getPajakInsentif($request->nip, $bulan, $tahun, $nominal, 'kredit');
+                $pajak = HitungPPH::getPajakInsentif($nominal, 'kredit');
                 $pajak_awal = $pajak;
                 $current = PPHModel::where('nip', $request->nip)
                             ->where('tahun', $tahun)
@@ -430,7 +434,7 @@ class PenghasilanTidakTeraturController extends Controller
             }
             if ($request->id_tunjangan == 32) {
                 // Insentif penagihan
-                $pajak = HitungPPH::getPajakInsentif($request->nip, $bulan, $tahun, $nominal, 'penagihan');
+                $pajak = HitungPPH::getPajakInsentif($nominal, 'penagihan');
                 $pajak_awal = $pajak;
                 $current = PPHModel::where('nip', $request->nip)
                             ->where('tahun', $tahun)
@@ -526,7 +530,7 @@ class PenghasilanTidakTeraturController extends Controller
 
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
-        $search = $request->get('q');
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
 
         $penghasilanRepo = new PenghasilanTidakTeraturRepository();
         $data = $penghasilanRepo->getPenghasilan($search, $limit, $page);
@@ -674,7 +678,7 @@ class PenghasilanTidakTeraturController extends Controller
 
                 if ($idTunjangan->id == 31) {
                     // Insentif kredit
-                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, $nominal_item, 'kredit');
+                    $pajak = HitungPPH::getPajakInsentif($nominal_item, 'kredit');
                     $pajak_awal = $pajak;
                     $current = PPHModel::where('nip', $item)
                                 ->where('tahun', $tahun)
@@ -713,7 +717,7 @@ class PenghasilanTidakTeraturController extends Controller
                 }
                 if ($idTunjangan->id == 32) {
                     // Insentif penagihan
-                    $pajak = HitungPPH::getPajakInsentif($item, $bulan, $tahun, $nominal_item, 'penagihan');
+                    $pajak = HitungPPH::getPajakInsentif($nominal_item, 'penagihan');
                     $pajak_awal = $pajak;
                     $current = PPHModel::where('nip', $item)
                                 ->where('tahun', $tahun)
@@ -812,7 +816,7 @@ class PenghasilanTidakTeraturController extends Controller
             $createdAt = $request->createdAt;
             $limit = $request->has('page_length') ? $request->get('page_length') : 10;
             $page = $request->has('page') ? $request->get('page') : 1;
-            $search = $request->get('q');
+            $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
             $kd_entitas = $request->get('kd_entitas');
 
             $repo = new PenghasilanTidakTeraturRepository();
@@ -924,7 +928,8 @@ class PenghasilanTidakTeraturController extends Controller
         $createdAt = $request->tanggal;
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
-        $search = $request->get('q');
+         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $kd_entitas = $request->get('kdEntitas');
         $dataTunjangan = TunjanganModel::where('kategori', 'tidak teratur')->get();
 

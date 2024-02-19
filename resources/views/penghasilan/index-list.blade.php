@@ -87,7 +87,7 @@
                     <td>{{ $item->nama_tunjangan }}</td>
                     @if (auth()->user()->hasRole('cabang') != 'cabang')
                         <td>
-                            {{ $item->entitas ?? 'Pusat' }}
+                            {{ $item->nama_cabang }}
                         </td>
                     @endif
                     <td>{{ $item->total }}</td>
@@ -115,7 +115,7 @@
                                     class="btn btn-warning-light ml-1">Edit</a>
                             @endcan
                         @else
-                            @if ($item->status != 'final')
+                            @if (!isset($item->status) || $item->status != 'final')
                                 @can('penghasilan - unlock - penghasilan tidak teratur')
                                     @php
                                         $cant_unlock = true;

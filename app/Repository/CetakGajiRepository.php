@@ -32,11 +32,12 @@ class CetakGajiRepository
         ";
     }
 
-    function cetak($kantor, $month, $year, $batch_id) {
+    public function cetak($kantor, $month, $year, $batch_id) {
         $cabangRepo = new CabangRepository;
         $kode_cabang_arr = $cabangRepo->listCabang(true);
 
         $batch = DB::table('batch_gaji_per_bulan')->find($batch_id);
+        $kd_entitas = $batch->kd_entitas;
         if ($batch) {
             $hitungan_penambah = DB::table('pemotong_pajak_tambahan')
                 ->where('mst_profil_kantor.kd_cabang', $batch->kd_entitas)
@@ -78,6 +79,13 @@ class CetakGajiRepository
             $jp_mar_des = $hitungan_pengurang->jp_mar_des;
         }
 
+        // Get last penggajian
+        $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas);
+        $last_month_penggajian = 0;
+        if ($last_date_penggajian) {
+            $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
+        }
+
         $data = KaryawanModel::with([
                                 'keluarga' => function($query) {
                                     $query->select(
@@ -115,8 +123,11 @@ class CetakGajiRepository
                                         'tj_vitamin',
                                         'uang_makan',
                                         'dpp',
+                                        'jp',
+                                        'bpjs_tk',
+                                        'penambah_bruto_jamsostek',
                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji")
+                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji")
                                     )
                                     ->where('bulan', $month)
                                     ->where('tahun', $year)
@@ -161,7 +172,7 @@ class CetakGajiRepository
                                         'K',
                                         IF(
                                             mst_karyawan.status = 'Belum Kawin',
-                                            'TK',
+                                            'TK/0',
                                             mst_karyawan.status
                                         )
                                     ) AS status
@@ -171,11 +182,11 @@ class CetakGajiRepository
                             )
                             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
-                            ->leftJoin('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
-                            ->where(function($query) use ($month, $year, $batch) {
+                            ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
+                            ->where(function($query) use ($month, $year, $batch, $last_month_penggajian) {
                                 $query->whereRelation('gaji', 'bulan', $month)
                                 ->whereRelation('gaji', 'tahun', $year)
-                                ->whereNull('tanggal_penonaktifan')
+                                ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                 ->where('batch.id', $batch->id);
                             })
                             ->orderBy('status_kantor', 'asc')
@@ -212,71 +223,17 @@ class CetakGajiRepository
                 $gaji = $obj_gaji->gaji;
                 $total_gaji = $obj_gaji->total_gaji;
 
-                if($total_gaji > 0){
-                    $jkk = 0;
-                    $jht = 0;
-                    $jkm = 0;
-                    $jp_penambah = 0;
-                    if(!$karyawan->tanggal_penonaktifan && $karyawan->kpj){
-                        $jkk = round(($persen_jkk / 100) * $total_gaji);
-                        $jht = round(($persen_jht / 100) * $total_gaji);
-                        $jkm = round(($persen_jkm / 100) * $total_gaji);
-                        $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
-                    }
-
-                    if($karyawan->jkn){
-                        if($total_gaji > $batas_atas){
-                            $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
-                        } else if($total_gaji < $batas_bawah){
-                            $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
-                        } else{
-                            $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
-                        }
-                    }
-                    $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
-                }
+                // Get Penambah Bruto Jamsostek
+                $jamsostek = $obj_gaji->penambah_bruto_jamsostek;
 
                 // Get Potongan(JP1%, DPP 5%)
-                $nominal_jp = ($obj_gaji->bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
-                    $dpp = 0;
-                    $jp_1_persen = round(($persen_jp_pengurang / 100) * $gaji, 2);
-                } else{
-                    $gj_pokok = $obj_gaji->gj_pokok;
-                    $tj_keluarga = $obj_gaji->tj_keluarga;
-                    $tj_kesejahteraan = $obj_gaji->tj_kesejahteraan;
-
-                    // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
-                    $dpp = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
-                    if($gaji >= $nominal_jp){
-                        $jp_1_persen = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
-                    } else {
-                        $jp_1_persen = round($gaji * ($persen_jp_pengurang / 100), 2);
-                    }
-                }
-                $dpp = round($dpp);
-                $jp_1_persen = round($jp_1_persen);
+                $dpp = $obj_gaji->dpp;
+                $jp_1_persen = floor($obj_gaji->jp);
                 $potongan->dpp = $dpp;
                 $potongan->jp_1_persen = $jp_1_persen;
 
                 // Get BPJS TK
-                if ($obj_gaji->bulan > 2) {
-                    if ($total_gaji > $jp_mar_des) {
-                        $bpjs_tk = $jp_mar_des * 1 / 100;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji * 1 / 100;
-                    }
-                }
-                else {
-                    if ($total_gaji >= $jp_jan_feb) {
-                        $bpjs_tk = $jp_jan_feb * 1 / 100;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji * 1 / 100;
-                    }
-                }
-                $bpjs_tk = round($bpjs_tk);
+                $bpjs_tk = $obj_gaji->bpjs_tk;
 
                 // Penghasilan rutin
                 $penghasilan_rutin = $gaji + $jamsostek;
@@ -342,7 +299,7 @@ class CetakGajiRepository
                                                         'tj_keluarga',
                                                         'tj_kesejahteraan',
                                                         DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_telepon + tj_jabatan + tj_teller + tj_perumahan  + tj_kemahalan + tj_pelaksana + tj_kesejahteraan + tj_multilevel + tj_ti + tj_transport + tj_pulsa + tj_vitamin + uang_makan) AS gaji"),
-                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan) AS total_gaji"),
+                                                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_teller + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
                                                         DB::raw("(uang_makan + tj_vitamin + tj_pulsa + tj_transport) AS total_tunjangan_lainnya"),
                                                     )
                                                     ->where('nip', $karyawan->nip)
@@ -424,19 +381,19 @@ class CetakGajiRepository
                             $jp_penambah = 0;
                             $bpjs_kesehatan = 0;
                             if(!$karyawan_bruto->tanggal_penonaktifan && $karyawan_bruto->kpj){
-                                $jkk = round(($persen_jkk / 100) * $total_gaji);
-                                $jht = round(($persen_jht / 100) * $total_gaji);
-                                $jkm = round(($persen_jkm / 100) * $total_gaji);
-                                $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
+                                $jkk = floor(($persen_jkk / 100) * $total_gaji);
+                                $jht = floor(($persen_jht / 100) * $total_gaji);
+                                $jkm = floor(($persen_jkm / 100) * $total_gaji);
+                                $jp_penambah = floor(($persen_jp_penambah / 100) * $total_gaji);
                             }
 
                             if($karyawan_bruto->jkn){
                                 if($total_gaji > $batas_atas){
-                                    $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($batas_atas * ($persen_kesehatan / 100));
                                 } else if($total_gaji < $batas_bawah){
-                                    $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($batas_bawah * ($persen_kesehatan / 100));
                                 } else{
-                                    $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
+                                    $bpjs_kesehatan = floor($total_gaji * ($persen_kesehatan / 100));
                                 }
                             }
                             $jamsostek = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
@@ -448,7 +405,7 @@ class CetakGajiRepository
                             $dppBruto = 0;
                             $dppBrutoExtra = 0;
                             if($karyawan->status_karyawan == 'IKJP' || $karyawan->status_karyawan == 'Kontrak Perpanjangan') {
-                                $dppBrutoExtra = round(($persen_jp_pengurang / 100) * $total_gaji, 2);
+                                $dppBrutoExtra = floor(($persen_jp_pengurang / 100) * $total_gaji);
                             } else{
                                 $gj_pokok = $value->gj_pokok;
                                 $tj_keluarga = $value->tj_keluarga;
@@ -457,9 +414,9 @@ class CetakGajiRepository
                                 // DPP (Pokok + Keluarga + Kesejahteraan 50%) * 5%
                                 $dppBruto = (($gj_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * ($persen_dpp / 100);
                                 if($total_gaji >= $nominal_jp){
-                                    $dppBrutoExtra = round($nominal_jp * ($persen_jp_pengurang / 100), 2);
+                                    $dppBrutoExtra = floor($nominal_jp * ($persen_jp_pengurang / 100));
                                 } else {
-                                    $dppBrutoExtra = round($total_gaji * ($persen_jp_pengurang / 100), 2);
+                                    $dppBrutoExtra = floor($total_gaji * ($persen_jp_pengurang / 100));
                                 }
                             }
 
@@ -615,7 +572,7 @@ class CetakGajiRepository
 
             // Get Penghasilan Kena Pajak Setahun/Disetahunkan
             $keluarga = $karyawan->keluarga;
-            $status_kawin = 'TK';
+            $status_kawin = 'TK/0';
             if ($keluarga) {
                 $status_kawin = $keluarga->status_kawin;
             }

@@ -36,7 +36,8 @@ class PenghasilanTeraturController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
-        $search = $request->get('q');
+         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
 
         $repo = new PenghasilanTeraturRepository;
         $data = $repo->getPenghasilanTeraturImport($search, $limit, $page);
@@ -200,7 +201,7 @@ class PenghasilanTeraturController extends Controller
                             'nominal' => $nominal[$i],
                             'id_tunjangan' => $id_tunjangan,
                             'tanggal' => $tanggal,
-                            'bulan' => $bulanReq,
+                            'bulan' => intval($bulanReq) ,
                             'kd_entitas' => $kd_entitas,
                             'is_lock' => 1,
                             'created_at' => now(),
@@ -336,8 +337,9 @@ class PenghasilanTeraturController extends Controller
 
         $kdEntitas = Request()->get('kdEntitas');
         $search = Request()->get('q');
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $repo = new PenghasilanTeraturRepository;
-        $data = $repo->getEditTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit);
+        $data = $repo->getEditTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit, $kdEntitas);
         $tunjangan = $repo->getNamaTunjangan($idTunjangan);
         $dataTunjangan = TunjanganModel::where('kategori', 'teratur')->where('is_import', 1)->get();
         return view('penghasilan-teratur.edit', [
@@ -515,9 +517,9 @@ class PenghasilanTeraturController extends Controller
         $page = Request()->has('page') ? Request()->get('page') : 1;
 
         $kdEntitas = Request()->get('kdEntitas');
-        $search = Request()->get('q');
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $repo = new PenghasilanTeraturRepository;
-        $data = $repo->getDetailTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit);
+        $data = $repo->getDetailTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit, $kdEntitas);
 
         return view('penghasilan-teratur.detail', [
             'data' => $data,

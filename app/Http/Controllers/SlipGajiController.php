@@ -399,7 +399,7 @@ class SlipGajiController extends Controller
             $cabang = $karyawan->kd_entitas;
         }
         $orderRaw = "
-            CASE 
+            CASE
             WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
             WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
             WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
@@ -545,7 +545,7 @@ class SlipGajiController extends Controller
         $tanggal = $tanggalSekarang . ' ' . $bulanSekarang . ' ' . $tahunSekarang;
         $karyawan = KaryawanModel::where('nip', $nip)->first();
         if ($user->hasRole('cabang')) {
-            $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('kd_entitas', $karyawan->kd_entitas)->first();
+            $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('tanggal_penonaktifan', null)->where('kd_entitas', $karyawan->kd_entitas)->first();
             $cabang = DB::table('mst_cabang')->select('kd_cabang', 'nama_cabang')->where('kd_cabang', $karyawan->kd_entitas)->first();
         } else {
             $pincab = null;

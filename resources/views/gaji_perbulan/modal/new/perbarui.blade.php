@@ -14,34 +14,34 @@
                     <table class="display table-stripped" id="penyesuaian-table" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th rowspan="2" class="text-center"></th>
-                                <th rowspan="2" class="text-center">No</th>
-                                <th rowspan="2" class="text-center">NIP</th>
-                                <th rowspan="2" class="text-center">Nama</th>
-                                <th colspan="2" class="text-center">Total Penghasilan</th>
-                                <th colspan="2" class="text-center">Total Potongan</th>
+                                <th rowspan="2" style="text-align: center;"></th>
+                                <th rowspan="2" style="text-align: center;">No</th>
+                                <th rowspan="2" style="text-align: center;">NIP</th>
+                                <th rowspan="2" style="text-align: center;">Nama</th>
+                                <th colspan="2" style="text-align: center;">Total Penghasilan</th>
+                                <th colspan="2" style="text-align: center;">Total Potongan</th>
                             </tr>
                             <tr>
-                                <th class="text-center">Sebelum</th>
-                                <th class="text-center">Sesudah</th>
-                                <th class="text-center">Sebelum</th>
-                                <th class="text-center">Sesudah</th>
+                                <th style="text-align: center;">Sebelum</th>
+                                <th style="text-align: center;">Sesudah</th>
+                                <th style="text-align: center;">Sebelum</th>
+                                <th style="text-align: center;">Sesudah</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr class="total_pembaruan">
-                                <th class="text-center" colspan="4">Total</th>
-                                <th class="text-right"></th>
-                                <th class="text-right"></th>
-                                <th class="text-right"></th>
-                                <th class="text-right"></th>
+                                <th style="text-align: center;" colspan="4">Total</th>
+                                <th style="text-align: right;"></th>
+                                <th style="text-align: right;"></th>
+                                <th style="text-align: right;"></th>
+                                <th style="text-align: right;"></th>
                             </tr>
                             <tr class="grandTotalPembaruan">
-                                <th class="text-center" colspan="4">Grand Total</th>
-                                <th class="text-right"></th>
-                                <th class="text-right"></th>
-                                <th class="text-right"></th>
-                                <th class="text-right"></th>
+                                <th style="text-align: center;" colspan="4">Grand Total</th>
+                                <th style="text-align: right;"></th>
+                                <th style="text-align: right;"></th>
+                                <th style="text-align: right;"></th>
+                                <th style="text-align: right;"></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -51,6 +51,7 @@
                 <form id="form" action="{{route('gaji_perbulan.store')}}" method="POST">
                     @csrf
                     <input type="hidden" name="batch_id" id="batch_id">
+                    <input type="hidden" name="is_pegawai" id="is_pegawai">
                     <button type="submit" class="btn btn-primary" id="btn-update">Perbarui</button>
                 </form>
             </div>

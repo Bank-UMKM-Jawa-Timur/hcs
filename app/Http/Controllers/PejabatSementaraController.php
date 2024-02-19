@@ -31,7 +31,8 @@ class PejabatSementaraController extends Controller
         $page = $request->has('page') ? $request->get('page') : 1;
 
         $karyawanRepo = new PejabatSementaraRepository();
-        $search = $request->get('q');
+         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $pjs = $karyawanRepo->getAllPejabatSementara($search, $limit, $page);
 
         return view('pejabat-sementara.index', compact('pjs'));

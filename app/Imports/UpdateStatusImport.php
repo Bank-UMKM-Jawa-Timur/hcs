@@ -23,8 +23,8 @@ class UpdateStatusImport implements ToCollection, WithHeadingRow, SkipsOnError, 
             $nik = $row['nik'];
             $status = $row['status'];
 
-            if($status == 'TK'){
-                $status = 'TK';
+            if($status == 'TK/0'){
+                $status = 'TK/0';
                 DB::table('mst_karyawan')
                     ->where('nik', $nik)
                     ->update([

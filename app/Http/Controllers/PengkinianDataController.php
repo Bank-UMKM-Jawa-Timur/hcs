@@ -61,7 +61,8 @@ class PengkinianDataController extends Controller
 
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
-        $search = $request->get('q');
+         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
 
         $pengkinianDataRepo = new PengkinianDataRepository();
         $data_pusat = $pengkinianDataRepo->getData($search, $limit, $page);

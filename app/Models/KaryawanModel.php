@@ -50,6 +50,7 @@ class KaryawanModel extends Authenticatable
         'tanggal_penonaktifan',
         'kategori_penonaktifan',
         'sk_pemberhentian',
+        'is_proses_gaji',
     ];
 
     protected $casts = [
@@ -123,7 +124,7 @@ class KaryawanModel extends Authenticatable
             TunjanganModel::class,
             'penghasilan_tidak_teratur',
             'nip',
-            'id_tunjangan',
+            'id_tunjangan'
         )->withPivot('nominal');
     }
 

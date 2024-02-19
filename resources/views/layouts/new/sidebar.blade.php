@@ -319,7 +319,7 @@
                                                         <li>
                                                             <a href="{{ route('slipIndex') }}">
                                                                 <button class="btn-link">
-                                                                    <span>Slip jurnal</span>
+                                                                    <span>Slip Jurnal</span>
                                                                 </button>
                                                             </a>
                                                         </li>
@@ -499,7 +499,7 @@
                                                         <li>
                                                             <a href="{{ route('slipIndex') }}">
                                                                 <button class="btn-link">
-                                                                    <span>Slip jurnal</span>
+                                                                    <span>Slip Jurnal</span>
                                                                 </button>
                                                             </a>
                                                         </li>
@@ -673,7 +673,7 @@
                                                 <a href="{{ route('laporan-rekapitulasi.index') }}?tahun={{ date('Y') }}&bulan={{ (int)date('m') }}">
                                                     <button class="btn-link {{ request()->is('laporan-rekapitulasi.index','laporan-rekapitulasi') ? 'active-link' : '' }}">
                                                         <i class="ti ti-circle"></i>
-                                                        <span>Laporan Rekap Tetap</span>
+                                                        <span>Laporan Rekap</span>
                                                     </button>
                                                 </a>
                                             </li>

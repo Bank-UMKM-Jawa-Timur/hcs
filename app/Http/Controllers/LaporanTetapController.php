@@ -40,25 +40,29 @@ class LaporanTetapController extends Controller
         Session::put('month', $month);
 
         $kantor = null;
-        if(auth()->user()->hasRole('cabang')){
-            $kantor = auth()->user()->kd_cabang;
-        } else {
-            $kantor = '000';
-        }
-        if ($request->cabang != null) {
+        if ($request->has('cabang')) {
             $kantor = $request->cabang;
+        } else {
+            if(auth()->user()->hasRole('cabang')){
+                $kantor = auth()->user()->kd_cabang;
+            } else {
+                $kantor = '000';
+            }
         }
         Session::put('kantor', $kantor);
-        $search = $request->get('q');
-        $data = $request->has('tahun') && $request->has('bulan') ? $this->repo->get($kantor, $search, $limit, false, intval($year), intval($month)) : null;
-        $footer = $request->has('tahun') && $request->has('bulan') ? $this->repo->getTotal($kantor, $search, $limit, false, intval($year), intval($month)) : null;
-        $cabang = $this->cabang;
 
-        // return ['data' => $data, 'total' => $footer];
+        $kategori = $request->has('kategori') ? $request->get('kategori') : null;
+        Session::put('kategori', $kategori);
+         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
+        $data = $request->has('tahun') && $request->has('bulan') ? $this->repo->get($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
+        $footer = $request->has('tahun') && $request->has('bulan') ? $this->repo->getTotal($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
+        $cabang = $this->cabang;
         return view('rekap-tetap.index', [
             'cabang' => $cabang,
             'data' => $data,
-            'grandTotal' => $footer
+            'grandTotal' => $footer,
+            'is_cetak' => false,
         ]);
     }
 
@@ -66,10 +70,11 @@ class LaporanTetapController extends Controller
         $year = Session::get('year');
         $month = Session::get('month');
         $kantor = Session::get('kantor');
+        $kategori = Request()->get('kategori');
         $limit = null;
         $search = null;
-        $data = $this->repo->get($kantor, $search, $limit, true, intval($year), intval($month));
-        $grandtotal = $this->repo->getTotal($kantor, $search, $limit, false, intval($year), intval($month));
+        $data = $this->repo->get($kantor, $kategori, $search, $limit, true, intval($year), intval($month));
+        $grandtotal = $this->repo->getTotal($kantor, $kategori, $search, $limit, false, intval($year), intval($month));
         $month_name = getMonth($month);
 
         $showKantor = '';
@@ -80,7 +85,7 @@ class LaporanTetapController extends Controller
         else
             $showKantor = 'Kantor ' . CabangModel::where('kd_cabang', $kantor)->first()?->nama_cabang;
 
-        $filename = 'Rekap Tetap ' . $showKantor . $month_name . ' Tahun ' . $year;
+        $filename = 'Laporan Rekap ' . $showKantor .' '. $month_name . ' Tahun ' . $year.' ('.$kategori.')';
         return Excel::download(new RekapTetapExport($data, $grandtotal), $filename . '.xlsx');
     }
 
