@@ -57,7 +57,7 @@ class PenghasilanTeraturRepository
                 })
                 ->where(function ($query) use ($kd_cabang, $kode_cabang_arr) {
                     if ($kd_cabang != 'pusat') {
-                        $query->where('mst_karyawan.kd_entitas', $kd_cabang);
+                        $query->where('transaksi_tunjangan.kd_entitas', $kd_cabang);
                     }
                 })
                 ->whereNull('batch_gaji_per_bulan.deleted_at')
