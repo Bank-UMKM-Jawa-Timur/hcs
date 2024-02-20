@@ -300,9 +300,9 @@
                                     $total_pajak_insentif_new_db = $rowNew->seharusnya ? $rowNew->seharusnya->total_insentif : 0;
                                     $total_new_db = $bruto_new_db + $total_insentif_new_db;
                                     $pengali_persen_new_db = $rowNew->pengali_baru * 100;
-                                    $pph_new_db = $rowNew->pph_bentukan_baru;
+                                    $pph_new_db = $rowNew->pph_bentukan_baru - $total_pajak_insentif_new_db;
                                     $terutang_new_db = $item['new']['terutang_db'];
-                                    $selisih_new_db = $pph_bentukan_new_db - $pph_bentukan_db;
+                                    $selisih_new_db = $pph_new_db - $pph_db;
                                     // END Database Baru
                                     // Bruto Insentif
                                     $rowNew = $item['new']['pph'];
@@ -314,7 +314,7 @@
                                     $pengali_persen_baru = $rowNew->pengali_baru * 100;
                                     $pph_baru = $pph_bentukan_baru - $total_pajak_insentif_baru;
                                     $terutang_baru = $item['new']['terutang_db'];
-                                    $selisih_baru = $pph_bentukan_baru - $pph_bentukan_new_db;
+                                    $selisih_baru = $pph_baru - $pph_new_db;
                                     // END Bruto Insentif
                                     // Seharusnya
                                     $bruto_seharusnya = $rowNew->penghasilanBrutoBaru - $rowNew->total_insentif_baru;

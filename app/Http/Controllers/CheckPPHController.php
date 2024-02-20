@@ -283,6 +283,7 @@ class CheckPPHController extends Controller
                 array_push($result, $data);
             }
         }
+
         return view('cek-pph-new-25', compact('cabang', 'result', 'nama_cabang', 'bulan', 'tahun'));
     }
 
