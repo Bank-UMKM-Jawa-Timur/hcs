@@ -437,6 +437,8 @@ class BonusController extends Controller
                         $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
                         DB::table('penghasilan_tidak_teratur')->where('id', $item_id[$i])->update([
                             'nominal' => $nominal,
+                            'tahun' => date('Y', strtotime($request->tanggal)),
+                            'bulan' => date('m', strtotime($request->tanggal)),
                             'created_at' => $request->tanggal,
                             'id_tunjangan' => $request->id_tunjangan_up,
                             'is_lock' => 1

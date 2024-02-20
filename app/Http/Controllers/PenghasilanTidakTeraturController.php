@@ -1020,6 +1020,8 @@ class PenghasilanTidakTeraturController extends Controller
                         $nominal = str_replace(['Rp', ' ', '.', "\u{A0}"], '', $request->nominal[$i]);
                         DB::table('penghasilan_tidak_teratur')->where('id', $item_id[$i])->update([
                             'nominal' => $nominal,
+                            'tahun' => date('Y', strtotime($tanggal)),
+                            'bulan' => date('m', strtotime($tanggal)),
                             'created_at' => $tanggal,
                             'id_tunjangan' => $request->id_tunjangan,
                             'is_lock' => 1

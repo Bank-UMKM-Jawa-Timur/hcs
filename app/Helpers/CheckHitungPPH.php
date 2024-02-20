@@ -36,15 +36,15 @@ class CheckHitungPPH
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
                 $penghasilanTidakRutinBrutoInsentif = $penghasilanTidakRutin;
                 $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
                                     ->whereIn('id_tunjangan', [31, 32])
-                                    ->where('tahun', (int) $tahun)
-                                    ->where('bulan', (int) $bulan)
+                                    ->whereYear('created_at', (int) $tahun)
+                                    ->whereMonth('created_at', (int) $bulan)
                                     ->where('nip', $karyawan->nip)
                                     ->sum('nominal');
             }
@@ -53,8 +53,8 @@ class CheckHitungPPH
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->whereDate('created_at', '<=', $tanggal_filter)
                                             ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
@@ -80,14 +80,14 @@ class CheckHitungPPH
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->sum('nominal');
                 $penghasilanTidakRutinBrutoInsentif = $penghasilanTidakRutin;
                 $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
                                     ->whereIn('id_tunjangan', [31, 32])
-                                    ->where('tahun', (int) $tahun)
-                                    ->where('bulan', (int) $bulan)
+                                    ->whereYear('created_at', (int) $tahun)
+                                    ->whereMonth('created_at', (int) $bulan)
                                     ->where('nip', $karyawan->nip)
                                     ->sum('nominal');
             }
@@ -102,8 +102,8 @@ class CheckHitungPPH
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
                 $penghasilanTidakRutinBrutoInsentif += DB::table('penghasilan_tidak_teratur')
@@ -113,7 +113,8 @@ class CheckHitungPPH
                                             ->sum('nominal');
                 $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
                                             ->whereIn('id_tunjangan', [31, 32])
-                                            ->where('tahun', (int) $tahun)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->whereBetween('created_at', [$start_date, $end_date])
                                             ->where('nip', $karyawan->nip)
                                             ->sum('nominal');
@@ -125,15 +126,15 @@ class CheckHitungPPH
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
                 $penghasilanTidakRutinBrutoInsentif = $penghasilanTidakRutin;
                 $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
                                     ->whereIn('id_tunjangan', [31, 32])
-                                    ->where('tahun', (int) $tahun)
-                                    ->where('bulan', (int) $bulan)
+                                    ->whereYear('created_at', (int) $tahun)
+                                    ->whereMonth('created_at', (int) $bulan)
                                     ->where('nip', $karyawan->nip)
                                     ->sum('nominal');
             }
@@ -141,20 +142,35 @@ class CheckHitungPPH
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
                                             ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
                 $penghasilanTidakRutinBrutoInsentif += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
                                             ->sum('nominal');
+                // if ($karyawan->nip == 'ZZ031' && !$is_delete) {
+                //     dd(DB::table('penghasilan_tidak_teratur')
+                //     ->select('nominal')
+                //     ->where('nip', $karyawan->nip)
+                //     ->whereYear('created_at', (int) $tahun)
+                //     ->whereMonth('created_at', (int) $bulan)
+                //     ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
+                //     ->whereNotIn('id_tunjangan', $idTunjInsentifArr)->toSql(), DB::table('penghasilan_tidak_teratur')
+                //     ->select('nominal')
+                //     ->where('nip', $karyawan->nip)
+                //     ->whereYear('created_at', (int) $tahun)
+                //     ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))->toSql(),
+                //     date('Y-m-d', strtotime($tanggal)));
+                // }
                 $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
                                     ->whereIn('id_tunjangan', [31, 32])
-                                    ->where('tahun', (int) $tahun)
+                                    ->whereYear('created_at', (int) $tahun)
                                     ->where('nip', $karyawan->nip)
                                     ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
                                     ->sum('nominal');
@@ -167,8 +183,8 @@ class CheckHitungPPH
         $penghasilanTidakRutinFull += DB::table('penghasilan_tidak_teratur')
                                     ->select('nominal')
                                     ->where('nip', $karyawan->nip)
-                                    ->where('tahun', (int) $tahun)
-                                    ->where('bulan', (int) $bulan)
+                                    ->whereYear('created_at', (int) $tahun)
+                                    ->whereMonth('created_at', (int) $bulan)
                                     ->whereBetween('created_at', [$tanggal_filter_full_awal, $tanggal_filter_full_akhir])
                                     ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                     ->sum('nominal');

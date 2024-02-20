@@ -195,7 +195,7 @@
                             <th style="background-color: blue; color: white;">Insentif</th>
                             <th style="background-color: blue; color: white;">Total</th>
                             <th style="background-color: blue; color: white;">Pengali</th>
-                            <th style="background-color: blue; color: white;">PPh Bentukan<br>(Bruto * Pengali)</th>
+                            <th style="background-color: blue; color: white;">PPh Bentukan<br>(Total * Pengali)</th>
                             <th style="background-color: blue; color: white;">Pajak Insentif<br>(Insentf * 5%)</th>
                             <th style="background-color: blue; color: white;">
                                 PPH
@@ -296,31 +296,31 @@
                                     $rowNew = $item['new']['pph'];
                                     $bruto_new_db = $rowNew->penghasilanBruto;
                                     $total_insentif_new_db = $rowNew->total_insentif_25;
-                                    $pph_bentukan_new_db = $item['new']['pph_final_db'];
+                                    $pph_bentukan_new_db = $rowNew->pph_bentukan_baru;
                                     $total_pajak_insentif_new_db = $rowNew->seharusnya ? $rowNew->seharusnya->total_insentif : 0;
                                     $total_new_db = $bruto_new_db + $total_insentif_new_db;
-                                    $pengali_persen_new_db = $rowNew->pengali * 100;
-                                    $pph_new_db = $item['new']['pph_db'];
+                                    $pengali_persen_new_db = $rowNew->pengali_baru * 100;
+                                    $pph_new_db = $rowNew->pph_bentukan_baru;
                                     $terutang_new_db = $item['new']['terutang_db'];
-                                    $selisih_new_db = $pph_new_db - $pph_db;
+                                    $selisih_new_db = $pph_bentukan_new_db - $pph_bentukan_db;
                                     // END Database Baru
                                     // Bruto Insentif
                                     $rowNew = $item['new']['pph'];
-                                    $bruto_baru = $rowNew->penghasilanBrutoBaru;
+                                    $bruto_baru = $rowNew->penghasilanBrutoBaru - $rowNew->total_insentif_baru;
                                     $total_insentif_baru = $rowNew->total_insentif_baru;
                                     $pph_bentukan_baru = $rowNew->pph_bentukan_baru;
                                     $total_pajak_insentif_baru = $rowNew->pajak_insentif_baru;
-                                    $total_baru = $bruto_baru + $total_insentif_baru;
+                                    $total_baru = $bruto_baru + $rowNew->total_insentif_baru;
                                     $pengali_persen_baru = $rowNew->pengali_baru * 100;
                                     $pph_baru = $pph_bentukan_baru - $total_pajak_insentif_baru;
                                     $terutang_baru = $item['new']['terutang_db'];
-                                    $selisih_baru = $pph_baru - $pph_new_db;
+                                    $selisih_baru = $pph_bentukan_baru - $pph_bentukan_new_db;
                                     // END Bruto Insentif
                                     // Seharusnya
-                                    $bruto_seharusnya = $rowNew->penghasilanBrutoBaru;
+                                    $bruto_seharusnya = $rowNew->penghasilanBrutoBaru - $rowNew->total_insentif_baru;
                                     $total_insentif_seharusnya = $rowNew->total_insentif_baru;
                                     $total_pajak_insentif_seharusnya = floor($total_insentif_seharusnya * 0.05);
-                                    $total_seharusnya = $bruto_seharusnya + $total_insentif_seharusnya;
+                                    $total_seharusnya = $bruto_seharusnya + $rowNew->total_insentif_baru;
                                     $pengali_persen_seharusnya = $rowNew->pengali_baru * 100;
                                     $pph_bentukan_seharusnya = floor($total_seharusnya * $rowNew->pengali_baru);
                                     $pph_seharusnya = $pph_bentukan_seharusnya - $total_pajak_insentif_seharusnya;

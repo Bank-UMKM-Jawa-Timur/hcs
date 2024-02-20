@@ -32,8 +32,8 @@ class HitungPPH
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->sum('nominal');
             }
             else {
@@ -52,8 +52,8 @@ class HitungPPH
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->sum('nominal');
             }
             else {
@@ -76,16 +76,16 @@ class HitungPPH
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->sum('nominal');
             }
             else {
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->where('tahun', (int) $tahun)
-                                            ->where('bulan', (int) $bulan)
+                                            ->whereYear('created_at', (int) $tahun)
+                                            ->whereMonth('created_at', (int) $bulan)
                                             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
                                             ->sum('nominal');
             }
