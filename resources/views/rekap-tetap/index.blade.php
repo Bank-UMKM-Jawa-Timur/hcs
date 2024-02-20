@@ -230,7 +230,7 @@
                             </div>
                             @if (\Request::has('tahun') && count($data) != 0 && Request::get('kategori') == 'ebupot')
                                 <div class="mr-2">
-                                    <a href="{{ route('download-ebupot') }}?kategori={{Request()->get('kategori')}}&kantor={{Request()->get('cabang')}}&bulan={{Request()->get('bulan')}}&tahun={{Request()->get('tahun')}}" class="m-0 btn-download btn btn-lg is-btn btn-success">
+                                    <a href="{{ route('download-ebupot') }}" class="m-0 btn-download btn btn-lg is-btn btn-success">
                                         <span style="font-size: 14px;">Download Ebupot</span>
                                     </a>
                                 </div>

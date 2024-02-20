@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ebupotScan\ExportScanEbupot;
 use App\Exports\ExportEbupot;
 use App\Exports\RekapTetapExport;
 use App\Models\CabangModel;
@@ -93,30 +94,34 @@ class LaporanTetapController extends Controller
     }
 
     public function cetakEbupot(Request $request){
-        $year = $request->get('tahun');
-        $month = $request->get('bulan');
-        $kantor = $request->get('kantor');
-        $kategori = $request->get('kategori');
+        $year = Session::get('year');
+        $month = Session::get('month');
+        $kantor = Session::get('kantor');
+        $kategori = Session::get('kategori');
         $date = Carbon::create($year, $month, 1);
         $lastDayOfMonth = $date->endOfMonth();
         $lastdate = date('d-m-Y', strtotime($lastDayOfMonth));
         $limit = null;
         $search = null;
         $data = $this->repo->ebupot($kantor, $kategori, $search, $limit, true, intval($year), intval($month));
+        $total_data = count($data);
         $month_name = getMonth($month);
         $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : $kantor;
         if (auth()->user()->hasRole('cabang')) {
-            $pincab = DB::table('mst_karyawan')->select('npwp')->where('kd_jabatan', 'PC')->where('tanggal_penonaktifan', null)
+            $pincab = DB::table('mst_karyawan')->select('npwp', 'kd_entitas')->where('kd_jabatan', 'PC')->where('tanggal_penonaktifan', null)
                     ->where('kd_entitas', $kd_entitas)
                     ->first();
             $penandatangan = $pincab->npwp;
+            $kd = $pincab->kd_entitas;
         } else {
+            $kd = '000';
             $penandatangan = '247504327618000';
         }
 
-        $filename = 'Laporan Ebupot '. $month_name . ' Tahun ' . $year;
+        $filename = 'E-Bupot 21 Masa '. date('m', $month) . ' (' .$kd. ')';
         // return view('rekap-tetap.exports.ebupot', ['data' => $data, 'lastdate' => $lastdate, 'penandatangan' => $penandatangan]);
-        return Excel::download(new ExportEbupot($data, $lastdate, $penandatangan), $filename . '.xlsx');
+        return Excel::download(new ExportScanEbupot($data, $lastdate, $penandatangan, $total_data, $month, $year),
+        $filename . '.xlsx');
     }
 
     /**
