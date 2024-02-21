@@ -377,12 +377,13 @@ class HitungPPH
         $jamsostek = 0;
 
         if($total_gaji > 0){
-            $bpjs_kesehatan = 0;
             $jkk = 0;
             $jht = 0;
             $jkm = 0;
             $jp_penambah = 0;
-            if(!$karyawan->tanggal_penonaktifan && $karyawan->kpj){
+            $bpjs_kesehatan = 0;
+            $jamsostek = 0;
+            if($karyawan->kpj){
                 $jkk = floor(($persen_jkk / 100) * $total_gaji);
                 $jht = floor(($persen_jht / 100) * $total_gaji);
                 $jkm = floor(($persen_jkm / 100) * $total_gaji);

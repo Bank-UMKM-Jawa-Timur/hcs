@@ -40,7 +40,6 @@ class PayrollController extends Controller
 
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
-         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
 
         $kantor = $request->get('kantor') == 'pusat' ? 'pusat' : $request->get('cabang');

@@ -38,7 +38,6 @@ class CheckHitungPPH
                                             ->where('nip', $karyawan->nip)
                                             ->whereYear('created_at', (int) $tahun)
                                             ->whereMonth('created_at', (int) $bulan)
-                                            ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
                 $penghasilanTidakRutinBrutoInsentif = $penghasilanTidakRutin;
                 $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
@@ -49,17 +48,13 @@ class CheckHitungPPH
                                     ->sum('nominal');
             }
             else {
-                $tanggal_filter = $tahun.'-'.$bulan.'-'.'25';
+                // Penggajian bulan sebelumnya
+                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
                 $penghasilanTidakRutin += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
-                                            ->whereYear('created_at', (int) $tahun)
-                                            ->whereMonth('created_at', (int) $bulan)
-                                            ->whereDate('created_at', '<=', $tanggal_filter)
-                                            ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
+                                            ->whereBetween('created_at', [$start_date, $tanggal])
                                             ->sum('nominal');
-                 // Penggajian bulan sebelumnya
-                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
 
                 $penghasilanTidakRutinBrutoInsentif += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
@@ -103,8 +98,7 @@ class CheckHitungPPH
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
                                             ->whereYear('created_at', (int) $tahun)
-                                            ->whereMonth('created_at', (int) $bulan)
-                                            ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
+                                            ->whereBetween('created_at', [$start_date, $end_date])
                                             ->sum('nominal');
                 $penghasilanTidakRutinBrutoInsentif += DB::table('penghasilan_tidak_teratur')
                                             ->select('nominal')
@@ -143,7 +137,6 @@ class CheckHitungPPH
                                             ->select('nominal')
                                             ->where('nip', $karyawan->nip)
                                             ->whereYear('created_at', (int) $tahun)
-                                            ->whereMonth('created_at', (int) $bulan)
                                             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
                                             ->whereNotIn('id_tunjangan', $idTunjInsentifArr)
                                             ->sum('nominal');
@@ -154,20 +147,7 @@ class CheckHitungPPH
                                             ->whereMonth('created_at', (int) $bulan)
                                             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
                                             ->sum('nominal');
-                // if ($karyawan->nip == 'ZZ031' && !$is_delete) {
-                //     dd(DB::table('penghasilan_tidak_teratur')
-                //     ->select('nominal')
-                //     ->where('nip', $karyawan->nip)
-                //     ->whereYear('created_at', (int) $tahun)
-                //     ->whereMonth('created_at', (int) $bulan)
-                //     ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))
-                //     ->whereNotIn('id_tunjangan', $idTunjInsentifArr)->toSql(), DB::table('penghasilan_tidak_teratur')
-                //     ->select('nominal')
-                //     ->where('nip', $karyawan->nip)
-                //     ->whereYear('created_at', (int) $tahun)
-                //     ->whereDate('created_at', '<=', date('Y-m-d', strtotime($tanggal)))->toSql(),
-                //     date('Y-m-d', strtotime($tanggal)));
-                // }
+
                 $total_insentif = (int) DB::table('penghasilan_tidak_teratur')
                                     ->whereIn('id_tunjangan', [31, 32])
                                     ->whereYear('created_at', (int) $tahun)
