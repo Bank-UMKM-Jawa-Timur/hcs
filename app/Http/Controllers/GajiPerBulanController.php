@@ -2868,6 +2868,15 @@ class GajiPerBulanController extends Controller
         $is_cabang = auth()->user()->hasRole('cabang');
         $kantor = $is_cabang ? auth()->user()->kd_cabang : 'pusat';
         $batch_id = $request->batch_id;
+        $batch = DB::table('batch_gaji_per_bulan AS batch')
+                    ->select('batch.*', 'c.nama_cabang')
+                    ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
+                    ->where('id', $batch_id)
+                    ->first();
+        $nama_kantor = 'undifined';
+        if ($batch) {
+            $nama_kantor = $batch->nama_cabang;
+        }
         $cetak = $request->cetak ?? null;
         $data_batch = GajiPerBulanModel::where('batch_id', $batch_id)->select('bulan', 'tahun')->first();
         $bulan = $data_batch->bulan;
@@ -2897,7 +2906,7 @@ class GajiPerBulanController extends Controller
             $returnType = new ProsesRincianPayroll($data);
         }
 
-        $filename = ucwords($tipe) . ' Kantor ' . (!$is_cabang ? 'Pusat' : CabangModel::where('kd_cabang', $kantor)->first()->nama_cabang) . ' Bulan ' . $bulanShow[$bulan] . ' Tahun ' . $tahun . '.xlsx';
+        $filename = ucwords($tipe) . ' Kantor ' . $nama_kantor . ' Bulan ' . $bulanShow[$bulan] . ' Tahun ' . $tahun . '.xlsx';
         return Excel::download($returnType , $filename);
     }
 
