@@ -26,8 +26,8 @@
             <th class="text-center" colspan="4">TERATUR</th>
             <th class="text-center" colspan="8">TIDAK TERATUR</th>
             <th class="text-center" colspan="{{ $colspanBonus }}">BONUS</th>
-            <th rowspan="3" class="text-center">PENAMBAH PENGHASILAN <br> BRUTO</th>
-            <th rowspan="3" class="text-center">TOTAL BRUTO</th>
+            <th rowspan="2" class="text-center">PENAMBAH PENGHASILAN <br> BRUTO</th>
+            <th rowspan="2" class="text-center">TOTAL BRUTO</th>
             <th colspan="3" class="text-center">PAJAK INSENTIF</th>
             <th colspan="2" class="text-center">PPH</th>
         </tr>
