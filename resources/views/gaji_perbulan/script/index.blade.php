@@ -462,8 +462,6 @@
 
         $(".btn-rincian").on("click", function(){
             var batch_id = $(this).data("batch_id")
-            var is_trash = $(this).data("is_trash") == true ? true : false;
-            console.log(is_trash);
             var month_name = $(this).data("month_name")
             var year = $(this).data("year")
             $('#rincian-modal .modal-title').html(`Rincian ${month_name} - ${year}`)
@@ -474,7 +472,7 @@
                 serverSide: false,
                 orderCellsTop: true,
                 paging:true,
-                ajax: `{{ route('get-rincian-payroll') }}?batch_id=${batch_id}&is_trash=${is_trash}`,
+                ajax: `{{ route('get-rincian-payroll') }}?batch_id=${batch_id}`,
                 columns: [
                     {
                         data: 'counter',
@@ -838,8 +836,6 @@
             })
             // $("#rincian-modal").modal("show")
             $("#rincian-modal .btn-download-rincian").data('batch', batch_id)
-            $("#rincian-modal .btn-download-rincian").data('is_trash', is_trash)
-            console.log(is_trash);
         })
 
 
@@ -861,7 +857,6 @@
         }
         $(".btn-payroll").on("click", function(){
             var batch_id = $(this).data("batch_id")
-            var is_trash = $(this).data("is_trash") == true ? true : false;
             var month_name = $(this).data("month_name")
             var year = $(this).data("year")
             $('#payroll-modal .modal-title').html(`Payroll ${month_name} - ${year}`)
@@ -870,7 +865,7 @@
             $('.btn-download-pdf').attr('href', downloadUrl);
             $('.btn-download-pdf').data('id', id);
             var table_payroll = $("#table-payroll").DataTable({
-                ajax: `{{ route('get-rincian-payroll') }}?batch_id=${batch_id}&is_trash=${is_trash}`,
+                ajax: `{{ route('get-rincian-payroll') }}?batch_id=${batch_id}`,
                 processing: true,
                 serverSide: false,
                 destroy: true,
@@ -1109,8 +1104,6 @@
             })
             // $("#payroll-modal").modal("show")
             $("#payroll-modal .btn-download-payroll").data('batch', batch_id)
-            $("#payroll-modal .btn-download-payroll").data('is_trash', is_trash)
-            console.log(is_trash);
         })
 
 
@@ -1133,15 +1126,13 @@
         $("#payroll-modal .btn-download-payroll").on('click', function(){
             var tipe = 'payroll';
             var batch_id = $(this).data('batch');
-            var is_trash = $(this).data('is_trash') == true ? true : false;
-            $(this).attr('href', `{{ route('proses-gaji-download-rincian') }}?batch_id=${batch_id}&tipe=${tipe}&is_trash=${is_trash}`)
+            $(this).attr('href', `{{ route('proses-gaji-download-rincian') }}?batch_id=${batch_id}&tipe=${tipe}`)
         })
 
         $("#rincian-modal .btn-download-rincian").on('click', function(){
             var tipe = 'rincian';
             var batch_id = $(this).data('batch');
-            var is_trash = $(this).data('is_trash') == true ? true : false;
-            $(this).attr('href', `{{ route('proses-gaji-download-rincian') }}?batch_id=${batch_id}&tipe=${tipe}&is_trash=${is_trash}`)
+            $(this).attr('href', `{{ route('proses-gaji-download-rincian') }}?batch_id=${batch_id}&tipe=${tipe}`)
         })
 
         $('.btn-lampiran-gaji').on("click", function () {
