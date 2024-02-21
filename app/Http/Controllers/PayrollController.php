@@ -59,7 +59,6 @@ class PayrollController extends Controller
         if ($month) {
             $data = $this->list($kantor, $month, $year, $search, $page, $limit,null);
             $total = $this->grandTotal($kantor, $month, $year, $search, $page, $limit,null);
-            return $total;
         } else {
             $data = null;
             $total = null;
