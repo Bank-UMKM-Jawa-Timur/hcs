@@ -216,6 +216,10 @@
                             @endif
                         </div>
                         <div class="flex justify-end w-fit my-3">
+                            <div class="mr-2">
+                                <input type="submit" value="Tampilkan"
+                                    class="btn btn-primary is-btn is-primary tampilkan cursor-pointer">
+                            </div>
                             @if (\Request::has('tahun') && count($data) != 0)
                                 <div class="mr-2">
                                     <a href="{{ route('download-rekapitulasi') }}?kategori={{Request()->get('kategori')}}" download
@@ -224,10 +228,6 @@
                                     </a>
                                 </div>
                             @endif
-                            <div class="mr-2">
-                                <input type="submit" value="Tampilkan"
-                                    class="btn btn-primary is-btn is-primary tampilkan cursor-pointer">
-                            </div>
                             @if (\Request::has('tahun') && count($data) != 0 && Request::get('kategori') == 'ebupot')
                                 <div class="mr-2">
                                     <a href="{{ route('download-ebupot') }}" class="m-0 btn-download btn btn-lg is-btn btn-success">

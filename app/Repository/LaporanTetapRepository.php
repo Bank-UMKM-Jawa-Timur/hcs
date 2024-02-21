@@ -763,6 +763,8 @@ class LaporanTetapRepository
                         DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                         DB::raw('CAST(total_pph AS SIGNED) AS nominal'),
                         DB::raw('CAST(terutang AS SIGNED) AS terutang'),
+                        DB::raw('CAST(insentif_penagihan AS SIGNED) AS insentif_penagihan'),
+                        DB::raw('CAST(insentif_kredit AS SIGNED) AS insentif_kredit'),
                     )
                         ->where('tahun', $year)
                         ->where('bulan', $month)
@@ -1826,6 +1828,8 @@ class LaporanTetapRepository
                                                         DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                                         DB::raw('CAST(total_pph AS SIGNED) AS nominal'),
                                                         DB::raw('CAST(terutang AS SIGNED) AS terutang'),
+                                                        DB::raw('CAST(insentif_penagihan AS SIGNED) AS insentif_penagihan'),
+                                                        DB::raw('CAST(insentif_kredit AS SIGNED) AS insentif_kredit'),
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('bulan', $month)
@@ -2649,13 +2653,7 @@ class LaporanTetapRepository
                                                         ->sum('pt.nominal');
             }
 
-            $karyawan->insentif_kredit_pajak = $karyawan->insentif_kredit * $pengali_insentif_kredit;
-            $karyawan->insentif_penagihan_pajak = $karyawan->insentif_penagihan * $pengali_insentif_penagihan;
-
             $insentif_kredit_pajak = $karyawan->insentif_kredit_pajak;
-
-            $insentif_penagihan_pajak = $karyawan->insentif_penagihan_pajak;
-            $karyawan->pajak_insentif = $insentif_kredit_pajak + $insentif_penagihan_pajak;
             // end total pajak insentif
 
             $ket = $karyawan->ket_jabatan ? "({$karyawan->ket_jabatan})" : '';
@@ -2884,6 +2882,8 @@ class LaporanTetapRepository
                                                         DB::raw("CAST(tahun AS SIGNED) AS tahun"),
                                                         DB::raw('CAST(total_pph AS SIGNED) AS nominal'),
                                                         DB::raw('CAST(terutang AS SIGNED) AS terutang'),
+                                                        DB::raw('CAST(insentif_penagihan AS SIGNED) AS insentif_penagihan'),
+                                                        DB::raw('CAST(insentif_kredit AS SIGNED) AS insentif_kredit'),
                                                     )
                                                     ->where('tahun', $year)
                                                     ->where('bulan', $month)
@@ -3385,6 +3385,9 @@ class LaporanTetapRepository
             }
 
             foreach ($item?->karyawan_bruto->pphDilunasi as $value) {
+                $insentif_kredit_pajak = floor($value->insentif_kredit);
+                $insentif_penagihan_pajak = floor($value->insentif_penagihan);
+                $total_pajak_insentif = floor($value->insentif_kredit + $value->insentif_penagihan);
                 if ($value->bulan > 1) {
                     $pph21Bentukan = floor($value->total_pph);
                     $pph21 = floor($value->total_pph);
@@ -3404,16 +3407,16 @@ class LaporanTetapRepository
                     $pph21 = floor($value->total_pph);
                 }
             }
-            $pph21 -= floor($item->pajak_insentif);
+            $pph21 -= floor($total_pajak_insentif);
             $penambahBruto = $item->jamsostek;
 
             $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21Bentukan;
             $totalInsentif += $item->total_insentif ?? 0;
-            $totalPajakInsentif += floor($item->insentif_kredit_pajak) ?? 0;
+            $totalPajakInsentif += floor($insentif_kredit_pajak) ?? 0;
             $total_insentif_kredit += $item->insentif_kredit ?? 0;
             $total_insentif_penagihan += $item->insentif_penagihan ?? 0;
-            $total_insentif_kredit_pajak += floor($item->insentif_kredit_pajak) ?? 0;
-            $total_insentif_penagihan_pajak += floor($item->insentif_penagihan_pajak) ?? 0;
+            $total_insentif_kredit_pajak += floor($insentif_kredit_pajak) ?? 0;
+            $total_insentif_penagihan_pajak += floor($insentif_penagihan_pajak) ?? 0;
             // $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $total_insentif_kredit + $total_insentif_penagihan + $brutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja + $brutoTambahanPenghasilan + $brutoRekreasi + $brutoNataru + $brutoJaspro + $penambahBruto;
 
             $totalLembur += $lembur;
@@ -3438,13 +3441,13 @@ class LaporanTetapRepository
             $totalPenambahBruto += $penambahBruto;
             $totalPPh += $brutoPPH;
         }
-        $brutoTotal = $totalGaji + $totalUangMakan + $totalPulsa +
+        $brutoTotal = floor($totalGaji + $totalUangMakan + $totalPulsa +
                     $totalVitamin + $totalTransport + $totalLembur +
                     $totalPenggantiKesehatan + $totalUangDuka + $totalSPD +
                     $totalSPDPendidikan + $totalSPDPindahTugas + $total_insentif_kredit +
                     $total_insentif_penagihan + $totalBrutoTHR + $totalBrutoDanaPendidikan +
                     $totalBrutoPenghargaanKinerja + $totalBrutoTambahanPenghasilan + $totalBrutoRekreasi +
-                    $totalBrutoNataru + $totalBrutoJaspro + $totalPenambahBruto;
+                    $totalBrutoNataru + $totalBrutoJaspro + $totalPenambahBruto);
         $totalBruto += $brutoTotal;
 
         $returnData->totalGaji = $totalGaji;
