@@ -75,12 +75,12 @@
             <td class="text-center border-none flex gap-2 justify-center">
                 @can('penghasilan - proses penghasilan - rincian')
                     <a href="#" data-modal-toggle="modal" data-modal-id="rincian-modal" class="btn btn-warning btn-rincian"
-                        data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Rincian</a>
+                        data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}" data-is_trash="false">Rincian</a>
                 @endcan
                 @can('penghasilan - proses penghasilan - payroll')
                     <a href="#" class="btn btn-success btn-payroll"
                     data-modal-toggle="modal" data-modal-id="payroll-modal"
-                        data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Payroll</a>
+                        data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}" data-is_trash="false">Payroll</a>
                 @endcan
             </td>
             @if ($item->bruto == 0)

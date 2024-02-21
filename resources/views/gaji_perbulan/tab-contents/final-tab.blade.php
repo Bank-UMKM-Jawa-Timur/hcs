@@ -73,9 +73,9 @@
                 <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
                 <td class="text-center flex justify-center gap-5">
                     <a href="#" data-modal-id="rincian-modal" data-modal-toggle="modal" class="btn btn-warning btn-rincian"
-                        data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Rincian</a>
+                        data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}" data-is_trash="false">Rincian</a>
                     <a href="#" data-modal-id="payroll-modal" data-modal-toggle="modal" class="btn btn-success btn-payroll"
-                        data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Payroll</a>
+                        data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}" data-is_trash="false">Payroll</a>
                 </td>
                 {{-- bruto --}}
                 @if ($item->bruto == 0)

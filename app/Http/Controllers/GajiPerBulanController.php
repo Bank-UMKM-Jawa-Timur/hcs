@@ -2528,9 +2528,10 @@ class GajiPerBulanController extends Controller
         $data_batch = GajiPerBulanModel::where('batch_id', $batch_id)->select('bulan', 'tahun')->first();
         $bulan = $data_batch->bulan;
         $tahun = $data_batch->tahun;
+        $is_trash = $request->get('is_trash') == true ? true : false;
 
         $payrollRepo = new PayrollRepository;
-        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak, $batch_id);
+        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak, $batch_id, $is_trash);
 
         return DataTables::of($data)
                         ->addColumn('counter', function ($row) {
@@ -2887,9 +2888,10 @@ class GajiPerBulanController extends Controller
             11 => 'November',
             12 => 'Desember'
         );
+        $is_trash = $request->get('is_trash') == true ? true : false;
 
         $payrollRepo = new PayrollRepository;
-        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak, $batch_id);
+        $data = $payrollRepo->getJson($kantor, $bulan, $tahun, $cetak, $batch_id, $is_trash);
         $returnType = null;
         if($tipe == 'payroll'){
             $returnType = new ProsesPayroll($data);

@@ -1794,7 +1794,7 @@ class PayrollRepository
     }
 
 
-    public function getJson($kantor, $month, $year, $cetak, $batch_id) {
+    public function getJson($kantor, $month, $year, $cetak, $batch_id, $is_trash) {
         /**
          * PPH 21
          * Gaji - done
@@ -2000,6 +2000,9 @@ class PayrollRepository
                             ->join('mst_cabang AS c', 'c.kd_cabang', 'batch.kd_entitas')
                             ->where(function($query) use ($batch) {
                                 $query->where('batch.id', $batch->id);
+                            })
+                            ->when($is_trash, function($query) {
+                                $query->whereNotNull('batch.deleted_at');
                             })
                             ->orderByRaw($this->orderRaw)
                             ->orderBy('status_kantor', 'asc')
