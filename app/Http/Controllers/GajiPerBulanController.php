@@ -1434,24 +1434,27 @@ class GajiPerBulanController extends Controller
                 }
 
                 // Get BPJS TK
-                $jp_persen = $persen_jp_pengurang / 100;
-                if ($bulan > 2) {
-                    if ($total_gaji > $jp_mar_des) {
-                        $bpjs_tk = $jp_mar_des * $jp_persen;
+                $bpjs_tk = 0;
+                if($item->kpj) {
+                    $jp_persen = $persen_jp_pengurang / 100;
+                    if ($bulan > 2) {
+                        if ($total_gaji > $jp_mar_des) {
+                            $bpjs_tk = $jp_mar_des * $jp_persen;
+                        }
+                        else {
+                            $bpjs_tk = $total_gaji * $jp_persen;
+                        }
                     }
                     else {
-                        $bpjs_tk = $total_gaji * $jp_persen;
+                        if ($total_gaji >= $jp_jan_feb) {
+                            $bpjs_tk = $jp_jan_feb * $jp_persen;
+                        }
+                        else {
+                            $bpjs_tk = $total_gaji * $jp_persen;
+                        }
                     }
+                    $bpjs_tk = floor($bpjs_tk);
                 }
-                else {
-                    if ($total_gaji >= $jp_jan_feb) {
-                        $bpjs_tk = $jp_jan_feb * $jp_persen;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji * $jp_persen;
-                    }
-                }
-                $bpjs_tk = floor($bpjs_tk);
 
                 // Get Penambah Bruto Jamsostek
                 $jamsostek = 0;
