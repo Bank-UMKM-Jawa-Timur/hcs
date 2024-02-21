@@ -182,7 +182,7 @@
                             <th style="background-color: red; color: white;">Total</th>
                             <th style="background-color: red; color: white;">Pengali</th>
                             <th style="background-color: red; color: white;">PPh Bentukan<br>(Total * Pengali)</th>
-                            <th style="background-color: red; color: white;">Pajak Insentif<br>(Insentf * 5%)</th>
+                            <th style="background-color: red; color: white;">Pajak Insentif<br>(Insentif * 5%)</th>
                             <th style="background-color: red; color: white;">
                                 PPH
                                 <br>
@@ -196,7 +196,7 @@
                             <th style="background-color: blue; color: white;">Total</th>
                             <th style="background-color: blue; color: white;">Pengali</th>
                             <th style="background-color: blue; color: white;">PPh Bentukan<br>(Total * Pengali)</th>
-                            <th style="background-color: blue; color: white;">Pajak Insentif<br>(Insentf * 5%)</th>
+                            <th style="background-color: blue; color: white;">Pajak Insentif<br>(Insentif * 5%)</th>
                             <th style="background-color: blue; color: white;">
                                 PPH
                                 <br>
@@ -212,7 +212,7 @@
                             <th style="background-color: green; color: white;">Total</th>
                             <th style="background-color: green; color: white;">Pengali</th>
                             <th style="background-color: green; color: white;">PPh Bentukan<br>(Total * Pengali)</th>
-                            <th style="background-color: green; color: white;">Pajak Insentif<br>(Insentf * 5%)</th>
+                            <th style="background-color: green; color: white;">Pajak Insentif<br>(Insentif * 5%)</th>
                             <th style="background-color: green; color: white;">
                                 PPH
                                 <br>
@@ -227,7 +227,7 @@
                             <th style="background-color: yellow;">Total</th>
                             <th style="background-color: yellow;">Pengali</th>
                             <th style="background-color: yellow;">PPh Bentukan<br>(Total * Pengali)</th>
-                            <th style="background-color: yellow;">Pajak Insentif<br>(Insentf * 5%)</th>
+                            <th style="background-color: yellow;">Pajak Insentif<br>(Insentif * 5%)</th>
                             <th style="background-color: yellow;">
                                 PPH
                                 <br>
@@ -294,7 +294,7 @@
                                     // END Database Lama
                                     // Database Baru
                                     $rowNew = $item['new']['pph'];
-                                    $bruto_new_db = $rowNew->penghasilanBruto;
+                                    $bruto_new_db = $rowNew->penghasilanBruto - $rowNew->total_insentif_25;
                                     $total_insentif_new_db = $rowNew->total_insentif_25;
                                     $pph_bentukan_new_db = $rowNew->pph_bentukan_baru;
                                     $total_pajak_insentif_new_db = $rowNew->seharusnya ? $rowNew->seharusnya->total_insentif : 0;
