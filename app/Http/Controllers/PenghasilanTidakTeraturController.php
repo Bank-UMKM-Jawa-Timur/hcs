@@ -166,10 +166,21 @@ class PenghasilanTidakTeraturController extends Controller
 
         // Get gaji secara bulanan
         for($i = 1; $i <= 12; $i++){
-            $pph = PPHModel::where('nip', $nip)
-                ->where('bulan', $i)
-                ->where('tahun', $tahun)
+            $batch = DB::table('gaji_per_bulan')->select('gaji_per_bulan.id')
+                ->join('batch_gaji_per_bulan', 'gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
+                ->where('gaji_per_bulan.bulan', $i)
+                ->where('gaji_per_bulan.tahun', $tahun)
+                ->whereNull('batch_gaji_per_bulan.deleted_at')
                 ->first();
+            if ($batch) {
+                $pph = PPHModel::where('nip', $nip)
+                    ->where('bulan', $i)
+                    ->where('tahun', $tahun)
+                    ->where('gaji_per_bulan_id', $batch->id)
+                    ->first();
+            } else {
+                $pph = null;
+            }
             $data = DB::table('gaji_per_bulan')
                     ->select('gaji_per_bulan.*')
                     ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
@@ -177,6 +188,7 @@ class PenghasilanTidakTeraturController extends Controller
                     ->where('gaji_per_bulan.bulan', $i)
                     ->where('gaji_per_bulan.tahun', $tahun)
                     ->where('batch.status', 'final')
+                    ->whereNull('batch.deleted_at')
                     ->first();
             $pphTerutangSebelumnya = 0;
             $pphTerutangInsentifSebelumnya = 0;
