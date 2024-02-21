@@ -631,7 +631,7 @@ class PayrollRepository
                 if ($karyawan->insentif) {
                     $total_pajak_insentif = $karyawan->insentif->total_pajak_insentif;
                 }
-                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi - $total_pajak_insentif;
+                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi;
             }
 
             // Get Tunjangan lainnya (T.Makan, T.Pulsa, T.Transport, T.Vitamin, T.Tidak teratur, Bonus)
@@ -1441,7 +1441,7 @@ class PayrollRepository
                 if ($karyawan->insentif) {
                     $total_pajak_insentif = $karyawan->insentif->total_pajak_insentif;
                 }
-                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi - $total_pajak_insentif;
+                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi;
             }
 
             // Get Tunjangan lainnya (T.Makan, T.Pulsa, T.Transport, T.Vitamin, T.Tidak teratur, Bonus)
@@ -2324,7 +2324,7 @@ class PayrollRepository
                 if ($karyawan->insentif) {
                     $total_pajak_insentif = $karyawan->insentif->total_pajak_insentif;
                 }
-                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi - $total_pajak_insentif;
+                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi;
             }
 
             // Get Tunjangan lainnya (T.Makan, T.Pulsa, T.Transport, T.Vitamin, T.Tidak teratur, Bonus)
