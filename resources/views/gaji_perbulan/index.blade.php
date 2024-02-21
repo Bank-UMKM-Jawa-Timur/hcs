@@ -34,6 +34,9 @@
             </div>
         </div>
         <div class="button-wrapper flex gap-3 lg:mt-0 mt-5">
+            @if (auth()->user()->hasRole(['kepegawaian','hrd','admin']))
+                <button class="btn btn-warning-light lg:text-base text-xs filter" data-modal-id="filter-modal" data-modal-toggle="modal"><i class="ti ti-file-search"></i> Filter</button>
+            @endif
             @if (auth()->user()->hasRole('kepegawaian'))
                 <button class="btn btn-primary-light lg:text-base text-xs penghasilan-all-kantor" data-modal-id="penghasilan-kantor-modal" data-modal-toggle="modal"><i class="ti ti-file-import"></i> Penghasilan Semua Kantor</button>
             @endif
@@ -105,9 +108,8 @@
                 </div>
             @endif
         </div>
+        @include('gaji_perbulan.modal.new.filter')
     </form>
-
-
 </div>
 <form id="form-final" action="{{route('gaji_perbulan.proses_final')}}" method="post">
     <input type="hidden" name="_token" id="token">
@@ -121,6 +123,11 @@
         $('#page_length_proses, #page_length_final, #page_length_sampah').on('change', function(e) {
             e.preventDefault();
             // Set the active tab value before submitting the form
+            $('#tab').val($('.btn-tab.active-tab').data('tab'));
+            $('#form-filter').submit();
+        });
+        $('#filter-modal #filter').on('click', function(e) {
+            e.preventDefault();
             $('#tab').val($('.btn-tab.active-tab').data('tab'));
             $('#form-filter').submit();
         });
@@ -166,6 +173,11 @@
             $(".loader-wrapper").fadeOut("slow");
         })
 
+        $('#filter').on('click', function() {
+            $('#filter-modal #cabang_req').select2()
+            $('#filter-modal').removeClass('hidden')
+        })
+
         $(".btn-tab").on("click", function (e) {
             $('#tab').val($(this).data('tab'))
             let tab = $(this).data('tab');
@@ -174,7 +186,7 @@
                 $('#page_length_final').prop('disabled', false);
                 $("#myTabContent .hidden").find('#q').prop('disabled', 'disabled');
                 $("#myTabContent .block").find('#q').prop('disabled', false);
-                // $('#form-filter').submit();
+                $('#form-filter').submit();
                 refreshPagination();
             }else if (tab == 'proses') {
                 $('.page_length_proses').prop('disabled', false);
@@ -182,7 +194,7 @@
                 $("#myTabContent .hidden").find('#q').prop('disabled', 'disabled');
                 $("#myTabContent .block").find('#q').prop('disabled', false);
                 refreshPagination();
-                // $('#form-filter').submit();
+                $('#form-filter').submit();
             }else{
                 $('.page_length_proses').prop('disabled', 'disabled');
                 $('#page_length_final').prop('disabled', 'disabled');
@@ -213,19 +225,24 @@
 
             // Your custom query parameter and its value
             let tab = $('#tab').val();
+            let cabang_req = $('#cabang_req').val();
             var customParam = "";
             customParam += "&tab=" + $('#tab').val();
-            if (tab == 'proses') {
-                customParam += "&page_length_proses=" + $('.page_length_proses').val();
-                customParam += "&q_proses=" + $('#q').val();
-            } else if(tab == 'final'){
-                customParam += "&page_length_final=" + $('.page_length_final').val();
-                customParam += "&q_final=" + $('#q').val();
-            } else {
-                customParam += "&page_length_final=" + $('.page_length_sampah').val();
-                customParam += "&q_sampah=" + $('#q').val();
+                if (tab == 'proses') {
+                    customParam += "&page_length_proses=" + $('.page_length_proses').val();
+                    customParam += "&q_proses=" + $('#q').val();
+                    customParam += "&cabang=" + cabang_req;
+                } else if(tab == 'final'){
+                    customParam += "&page_length_final=" + $('.page_length_final').val();
+                    customParam += "&q_final=" + $('#q').val();
+                    customParam += "&cabang=" + cabang_req;
+                } else {
+                    customParam += "&page_length_final=" + $('.page_length_sampah').val();
+                    customParam += "&q_sampah=" + $('#q').val();
+                    customParam += "&cabang=" + cabang_req;
+                }
 
-            }
+            console.log(customParam);
 
             btn_pagination.each(function (i, obj) {
                 // Clone the original href to avoid modifying the original link

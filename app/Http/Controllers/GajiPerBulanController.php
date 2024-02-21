@@ -30,6 +30,7 @@ class GajiPerBulanController extends Controller
 {
     private $param;
     private $orderRaw;
+    private $cabang;
 
     public function __construct()
     {
@@ -69,6 +70,8 @@ class GajiPerBulanController extends Controller
             'tj_vitamin',
             'uang_makan',
         ];
+
+        $this->cabang = CabangModel::get();
     }
     /**
      * Display a listing of the resource.
@@ -126,6 +129,7 @@ class GajiPerBulanController extends Controller
         }
 
         $page = $request->has('page') ? $request->get('page') : 1;
+        $cabang_req = $request->has('cabang') ? $request->get('cabang') : null;
         $search_proses = $request->get('q_proses');
         $search_final = $request->get('q_final');
         $search_sampah = $request->get('q_sampah');
@@ -133,14 +137,16 @@ class GajiPerBulanController extends Controller
         $search_final = str_replace("'", "\'", $search_final);
         $search_sampah = str_replace("'", "\'", $search_sampah);
         $gajiRepo = new GajiPerBulanRepository;
+        $cabang = $this->cabang;
         // Proses
-        $proses_list = $gajiRepo->getPenghasilanList('proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search_proses);
+        $proses_list = $gajiRepo->getPenghasilanList($cabang_req,'proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search_proses);
         // Final
-        $final_list = $gajiRepo->getPenghasilanList('final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search_final);
+        $final_list = $gajiRepo->getPenghasilanList($cabang_req,'final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search_final);
         // sampah
         if(auth()->user()->hasRole('admin')) {
-            $sampah = $gajiRepo->getPenghasilanTrash(null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1, $search_sampah);
+            $sampah = $gajiRepo->getPenghasilanTrash($cabang_req,null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1, $search_sampah);
             $data = [
+                'cabang' => $cabang,
                 'proses_list' => $proses_list,
                 'final_list' => $final_list,
                 'sampah' => $sampah,
@@ -150,8 +156,10 @@ class GajiPerBulanController extends Controller
             $data = [
                 'proses_list' => $proses_list,
                 'final_list' => $final_list,
+                'cabang' => $cabang,
             ];
         }
+
 
         return view('gaji_perbulan.index', $data);
     }

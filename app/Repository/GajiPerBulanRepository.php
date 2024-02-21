@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class GajiPerBulanRepository
 {
-    public function getPenghasilanList($status, $limit=10, $page = 1, $search) {
+    public function getPenghasilanList($cabang, $status, $limit=10, $page = 1, $search) {
         $is_cabang = auth()->user()->hasRole('cabang');
         $is_pusat = auth()->user()->hasRole('kepegawaian');
         $kd_cabang = DB::table('mst_cabang')
@@ -47,6 +47,11 @@ class GajiPerBulanRepository
                 ->where(function ($query) use ($search) {
                     $query->where('gaji.tahun', 'like', "%$search%")
                         ->orWhere('cab.nama_cabang', 'like', "%$search%");
+                })
+                ->where(function ($query) use ($cabang) {
+                    if ($cabang != null) {
+                        $query->where('batch.kd_entitas', $cabang);
+                    }
                 })
                 ->when($is_cabang, function($query) {
                     $kd_cabang = auth()->user()->kd_cabang;
@@ -296,7 +301,7 @@ class GajiPerBulanRepository
 
         return $data;
     }
-    public function getPenghasilanTrash($status, $limit=10, $page = 1, $search) {
+    public function getPenghasilanTrash($cabang, $status, $limit=10, $page = 1, $search) {
         $is_cabang = auth()->user()->hasRole('cabang');
         $is_pusat = auth()->user()->hasRole('kepegawaian');
         $kd_cabang = DB::table('mst_cabang')
@@ -331,6 +336,11 @@ class GajiPerBulanRepository
                 ->where(function ($query) use ($search) {
                     $query->where('gaji.tahun', 'like', "%$search%")
                         ->orWhere('cab.nama_cabang', 'like', "%$search%");
+                })
+                ->where(function ($query) use ($cabang) {
+                    if ($cabang != null) {
+                        $query->where('batch.kd_entitas', $cabang);
+                    }
                 })
                 ->when($is_cabang, function($query) {
                     $kd_cabang = auth()->user()->kd_cabang;

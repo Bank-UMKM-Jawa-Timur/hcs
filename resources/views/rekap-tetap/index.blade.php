@@ -203,16 +203,16 @@
                                 @enderror
                             </div>
                             @if (auth()->user()->hasRole(['kepegawaian','hrd','admin']))
-                            <div class="input-box">
-                                <label for="selectfield">Cabang</label>
-                                <select name="cabang" id="cabang" class="form-input pt-2" required>
-                                    <option value="">-- Pilih Cabang --</option>
-                                    @foreach ($cabang as $item)
-                                        <option value="{{ $item->kd_cabang }}" {{ $item->kd_cabang == Request('cabang') ?
-                                            'selected' : '' }}>{{ $item->nama_cabang }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                                <div class="input-box">
+                                    <label for="selectfield">Cabang</label>
+                                    <select name="cabang" id="cabang" class="form-input pt-2" required>
+                                        <option value="">-- Pilih Cabang --</option>
+                                        @foreach ($cabang as $item)
+                                            <option value="{{ $item->kd_cabang }}" {{ $item->kd_cabang == Request('cabang') ?
+                                                'selected' : '' }}>{{ $item->nama_cabang }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             @endif
                         </div>
                         <div class="flex justify-end w-fit my-3">
