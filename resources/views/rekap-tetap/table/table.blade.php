@@ -28,8 +28,9 @@
             <th class="text-center" colspan="{{ $colspanBonus }}">BONUS</th>
             <th rowspan="2" class="text-center">PENAMBAH PENGHASILAN <br> BRUTO</th>
             <th rowspan="2" class="text-center">TOTAL BRUTO</th>
+            <th rowspan="2" class="text-center">PPH21 BENTUKAN</th>
             <th colspan="3" class="text-center">PAJAK INSENTIF</th>
-            <th colspan="2" class="text-center">PPH</th>
+            <th rowspan="2" class="text-center">PPH21<br>(PPH BENTUKAN - PAJAK INSENTIF)</th>
         </tr>
         <tr>
             {{-- teratur --}}
@@ -70,10 +71,6 @@
             <th class="text-center">PENAGIHAN</th>
             <th class="text-center">TOTAL</th>
             {{-- end pajak insentif --}}
-            {{-- pph --}}
-            <th class="text-center">BENTUKAN</th>
-            <th class="text-center">PS 21<br>(PPH BENTUKAN - PAJAK INSENTIF)</th>
-            {{-- end pph --}}
             {{-- bruto --}}
             {{-- <th class="text-center">BRUTO</th> --}}
             {{-- <th class="text-center">PPH</th> --}}
@@ -329,13 +326,15 @@
                 {{-- end bonus --}}
                 <td class="td-right">{{ formatRupiahExcel($penambahBruto ?? 0, 0, $formatrp) }}</td>
                 <td class="td-right">{{ formatRupiahExcel($brutoTotal ?? 0, 0, $formatrp) }}</td>
+                {{--  pph bentukan  --}}
+                <td class="td-right">{{ formatRupiahExcel($pph21Bentukan ?? 0, 0, $formatrp) }}</td>
+                {{--  end pph bentukan  --}}
                 {{-- pajak insentif --}}
                 <td class="td-right">{{ formatRupiahExcel($insentif_kredit_pajak ?? 0, 0, $formatrp) }}</td>
                 <td class="td-right">{{ formatRupiahExcel($insentif_penagihan_pajak ?? 0, 0, $formatrp) }}</td>
                 <td class="td-right">{{ formatRupiahExcel($insentif_kredit_pajak + $insentif_penagihan_pajak ?? 0, 0, $formatrp) }}</td>
                 {{-- end pajak insentif --}}
                 {{-- pph --}}
-                <td class="td-right">{{ formatRupiahExcel($pph21Bentukan ?? 0, 0, $formatrp) }}</td>
                 <td class="td-right">{{ formatRupiahExcel($pph21 ?? 0, 0, $formatrp) }}</td>
                 {{-- end pph --}}
                 {{-- <td class="td-right">{{ formatRupiahExcel($brutoPPH ?? 0, 0, $formatrp) }}</td> --}}
@@ -392,13 +391,15 @@
                 {{-- end bonus --}}
                 <th class="text-right">{{ formatRupiahExcel($totalPenambahBruto ?? 0, 0, $formatrp) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalBruto ?? 0, 0, $formatrp) }}</th>
+                {{--  pph bentukan  --}}
+                <th class="text-right">{{ formatRupiahExcel($totalPPH21Bentukan ?? 0, 0, $formatrp) }}</th>
+                {{--  end pph bentukan  --}}
                 {{-- pajak insentif --}}
                 <th class="text-right">{{ formatRupiahExcel($totalPajakInsentifNew ?? 0, 0, $formatrp) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalPajakPenagihan ?? 0, 0, $formatrp) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalPajakInsentifNew + $totalPajakPenagihan ?? 0, 0, $formatrp) }}</th>
                 {{-- end pajak insentif --}}
                 {{-- pph --}}
-                <th class="text-right">{{ formatRupiahExcel($totalPPH21Bentukan ?? 0, 0, $formatrp) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalPPH21 ?? 0, 0, $formatrp) }}</th>
                 {{-- end pph --}}
                 {{-- <th class="text-right">{{ formatRupiahExcel($totalPPh ?? 0, 0, $formatrp) }}</th> --}}
@@ -444,13 +445,15 @@
             @endif
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPenambahBruto ?? 0, 0, $formatrp) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalBruto ?? 0, 0, $formatrp) }}</th>
+            {{--  pph bentukan  --}}
+            <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPH21Bentukan ?? 0, 0, $formatrp) }}</th>
+            {{--  end pph bentukan  --}}
             {{-- pajak insentif --}}
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPajakInsentif ?? 0, 0, $formatrp) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->total_insentif_penagihan_pajak ?? 0, 0, $formatrp) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPajakInsentif + $grandTotal->total_insentif_penagihan_pajak ?? 0, 0, $formatrp) }}</th>
             {{-- end pajak insentif --}}
             {{-- pph --}}
-            <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPH21Bentukan ?? 0, 0, $formatrp) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPH21 ?? 0, 0, $formatrp) }}</th>
             {{-- end pph --}}
             {{-- <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPPh ?? 0, 0, $formatrp) }}</th> --}}

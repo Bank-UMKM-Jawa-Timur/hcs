@@ -119,7 +119,7 @@ class LaporanTetapController extends Controller
         }
 
         $filename = 'E-Bupot 21 Masa '. date('m', $month) . ' (' .$kd. ')';
-        // return view('rekap-tetap.exports.ebupot', ['data' => $data, 'lastdate' => $lastdate, 'penandatangan' => $penandatangan]);
+
         return Excel::download(new ExportScanEbupot($data, $lastdate, $penandatangan, $total_data, $month, $year),
         $filename . '.xlsx');
     }

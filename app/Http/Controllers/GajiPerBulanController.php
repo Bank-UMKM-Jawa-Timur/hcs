@@ -884,7 +884,7 @@ class GajiPerBulanController extends Controller
                         $total_potongan_baru += $potongan->kredit_koperasi;
                         $item = [
                             'potongan_kredit_koperasi' => $gaji->kredit_koperasi,
-                            'potongan_kredit_koperasi_baru' => $potongan->kredit_koperasi,
+                            'potongan_kredit_koperasi_baru' => floatval(number_format($potongan->kredit_koperasi, 2, '.', '')),
                         ];
                         array_push($new_data, $item);
                     }
@@ -893,7 +893,7 @@ class GajiPerBulanController extends Controller
                         $total_potongan_baru += $potongan->iuran_koperasi;
                         $item = [
                             'potongan_iuran_koperasi' => $gaji->iuran_koperasi,
-                            'potongan_iuran_koperasi_baru' => $potongan->iuran_koperasi,
+                            'potongan_iuran_koperasi_baru' => floatval(number_format($potongan->iuran_koperasi, 2, '.', '')),
                         ];
                         array_push($new_data, $item);
                     }
@@ -902,7 +902,7 @@ class GajiPerBulanController extends Controller
                         $total_potongan_baru += $potongan->kredit_pegawai;
                         $item = [
                             'potongan_kredit_pegawai' => $gaji->kredit_pegawai,
-                            'potongan_kredit_pegawai_baru' => $potongan->kredit_pegawai,
+                            'potongan_kredit_pegawai_baru' => floatval(number_format($potongan->kredit_pegawai, 2, '.', '')),
                         ];
                         array_push($new_data, $item);
                     }
@@ -911,7 +911,7 @@ class GajiPerBulanController extends Controller
                         $total_potongan_baru += $potongan->iuran_ik;
                         $item = [
                             'potongan_iuran_ik' => $gaji->iuran_ik,
-                            'potongan_iuran_ik_baru' => $potongan->iuran_ik,
+                            'potongan_iuran_ik_baru' => floatval(number_format($potongan->iuran_ik, 2, '.', '')),
                         ];
                         array_push($new_data, $item);
                     }
@@ -975,6 +975,7 @@ class GajiPerBulanController extends Controller
                         $jp_1_persen = floor($total_gaji_baru * ($persen_jp_pengurang / 100));
                     }
                 }
+                $dpp = floor($dpp);
 
                 if ($dpp != $gaji->dpp) {
                     $total_potongan_baru -= $gaji->dpp;
@@ -988,6 +989,7 @@ class GajiPerBulanController extends Controller
 
                 // Get BPJS TK
                 $jp_persen = $persen_jp_pengurang / 100;
+                $bpjs_tk = 0;
                 if ($bulan > 2) {
                     if ($total_gaji_baru > $jp_mar_des) {
                         $bpjs_tk = $jp_mar_des * $jp_persen;
@@ -1004,6 +1006,7 @@ class GajiPerBulanController extends Controller
                         $bpjs_tk = $total_gaji_baru * $jp_persen;
                     }
                 }
+                $bpjs_tk = floor($bpjs_tk);
                 if ($bpjs_tk != $gaji->bpjs_tk) {
                     $total_potongan_baru -= $gaji->bpjs_tk;
                     $total_potongan_baru += $bpjs_tk;
@@ -1027,12 +1030,12 @@ class GajiPerBulanController extends Controller
                 }
             }
             $grandtotal = [
-                'bruto_lama' => $totalBruto,
-                'bruto_baru' => $totalBrutoBaru,
-                'potongan_lama' => $totalPotongan,
-                'potongan_baru' => $totalPotonganBaru,
-                'netto_lama' => $totalBruto - $totalPotongan,
-                'netto_baru' => $totalBrutoBaru - $totalPotonganBaru,
+                'bruto_lama' => (int) $totalBruto,
+                'bruto_baru' => (int) $totalBrutoBaru,
+                'potongan_lama' => (float) number_format($totalPotongan, 2, '.', ''),
+                'potongan_baru' => (float) number_format($totalPotonganBaru, 2, '.', ''),
+                'netto_lama' => intval($totalBruto - $totalPotongan),
+                'netto_baru' => intval($totalBrutoBaru - $totalPotonganBaru),
             ];
             return DataTables::of($data_gaji)
                             ->addColumn('counter', function ($row) {
@@ -1176,6 +1179,7 @@ class GajiPerBulanController extends Controller
                         ->toArray();
 
             $now = date('Y-m-d H:i:s');
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
             if ($request->has('batch_id')) {
                 $batch = [
                     'updated_at' => $now,
@@ -1183,7 +1187,6 @@ class GajiPerBulanController extends Controller
                 DB::table('batch_gaji_per_bulan')->update($batch);
             }
             else {
-                $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
                 $batch = [
                     'kd_entitas' => $kd_entitas,
                     'is_pegawai' => $is_pegawai,
@@ -1539,25 +1542,26 @@ class GajiPerBulanController extends Controller
                         'kredit_pegawai' => $kredit_pegawai,
                         'iuran_ik' => $iuran_ik,
                     ];
-                    $gaji = GajiPerBulanModel::select('gaji.*', 'batch_gaji_per_bulan.deleted_at')
+                    $gaji = GajiPerBulanModel::select('gaji_per_bulan.*', 'batch_gaji_per_bulan.deleted_at')
                                                 ->join('batch_gaji_per_bulan', function($join) use ($kd_entitas, $bulan, $tahun) {
-                                                    $join->on('batch_gaji_per_bulan.id', 'gaji.batch_id')
+                                                    $join->on('batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
                                                         ->where('batch_gaji_per_bulan.kd_entitas', $kd_entitas)
                                                         ->whereMonth('batch_gaji_per_bulan.tanggal_input', $bulan)
-                                                        ->whereMonth('batch_gaji_per_bulan.tanggal_input', $tahun)
+                                                        ->whereYear('batch_gaji_per_bulan.tanggal_input', $tahun)
                                                         ->whereNull('batch_gaji_per_bulan.deleted_at');
                                                 })
-                                                ->where('gaji.batch_id', $request->batch_id)
+                                                ->where('gaji_per_bulan.batch_id', $request->batch_id)
                                                 ->whereNull('batch_gaji_per_bulan.deleted_at')
-                                                ->where('gaji.nip', $item->nip)
-                                                ->where('gaji.bulan', $bulan)
-                                                ->where('gaji.tahun', $tahun)
+                                                ->where('gaji_per_bulan.nip', $item->nip)
+                                                ->where('gaji_per_bulan.bulan', $bulan)
+                                                ->where('gaji_per_bulan.tahun', $tahun)
                                                 ->first();
                     GajiPerBulanModel::where('batch_id', $request->batch_id)
                                         ->where('nip', $item->nip)
                                         ->where('bulan', $bulan)
                                         ->where('tahun', $tahun)
                                         ->update($employee);
+
                     // Update Batch Penghasilan Tidak Rutin
                     foreach ($penghasilanTidakRutin as $tidakRutin) {
                         // Check if already stored on batch_penghasilan_tidak_teratur table
