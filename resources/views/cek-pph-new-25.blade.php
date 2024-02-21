@@ -296,7 +296,7 @@
                                     $rowNew = $item['new']['pph'];
                                     $bruto_new_db = $rowNew->penghasilanBruto - $rowNew->total_insentif_25;
                                     $total_insentif_new_db = $rowNew->total_insentif_25;
-                                    $pph_bentukan_new_db = $rowNew->pph_bentukan_baru;
+                                    $pph_bentukan_new_db = $rowNew->seharusnya ? $rowNew->seharusnya->pph_bentukan : 0;
                                     $total_pajak_insentif_new_db = $rowNew->seharusnya ? $rowNew->seharusnya->total_insentif : 0;
                                     $total_new_db = $bruto_new_db + $total_insentif_new_db;
                                     $pengali_persen_new_db = $rowNew->pengali_baru * 100;
