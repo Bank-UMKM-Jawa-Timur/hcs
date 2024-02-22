@@ -21,16 +21,6 @@ class PenghasilanTidakTeraturRepository
                 ->join('mst_karyawan', 'penghasilan_tidak_teratur.nip', 'mst_karyawan.nip')
                 ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', 'mst_tunjangan.id')
                 ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
-                ->leftJoin('gaji_per_bulan', function ($join) {
-                    $join->on('penghasilan_tidak_teratur.nip', 'gaji_per_bulan.nip')
-                    ->on('gaji_per_bulan.bulan', 'penghasilan_tidak_teratur.bulan')
-                    ->on('gaji_per_bulan.tahun', 'penghasilan_tidak_teratur.tahun')
-                    ->orderBy('gaji_per_bulan.created_at', 'ASC');
-                })
-                    ->leftJoin('batch_gaji_per_bulan', function ($join) {
-                        $join->on('gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
-                        ->whereNull('batch_gaji_per_bulan.deleted_at');
-                    })
                     ->select(
                         'penghasilan_tidak_teratur.is_lock',
                         'penghasilan_tidak_teratur.id',
@@ -40,8 +30,6 @@ class PenghasilanTidakTeraturRepository
                         'penghasilan_tidak_teratur.created_at',
                         'penghasilan_tidak_teratur.bulan',
                         'mst_tunjangan.nama_tunjangan',
-                        'batch_gaji_per_bulan.id AS batch_id',
-                        'batch_gaji_per_bulan.status',
                         'penghasilan_tidak_teratur.nominal',
                         'penghasilan_tidak_teratur.user_id',
                         'mst_tunjangan.id as tunjangan_id',
@@ -53,7 +41,6 @@ class PenghasilanTidakTeraturRepository
                         'mst_cabang.nama_cabang'
                     )
                     ->where('mst_tunjangan.kategori', 'bonus')
-                    ->whereNull('batch_gaji_per_bulan.id')
                     ->where(function ($query) use ($search) {
                         $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
                         ->orWhere('nominal', 'like', "%$search%")
@@ -68,6 +55,29 @@ class PenghasilanTidakTeraturRepository
                     ->orderByDesc('penghasilan_tidak_teratur.created_at')
                     ->paginate($limit);
         foreach ($data as $value) {
+            $batch = DB::table('batch_gaji_per_bulan')
+                ->select('status', 'tanggal_input', 'tanggal_final')
+                ->where('kd_entitas', $value->kd_entitas)
+                ->whereYear('tanggal_input', date('Y', strtotime($value->new_date)))
+                ->whereMonth('tanggal_input', (int) date('m', strtotime($value->new_date)))
+                ->whereNull('deleted_at')
+                ->first();
+            $status = 'proses';
+            if ($batch) {
+                if ($batch->status == 'final') {
+                    $item_date = date('Y-m-d', strtotime($value->created_at));
+                    if ($item_date > $batch->tanggal_input) {
+                        $status = 'proses';
+                    }
+                    else {
+                        $status = $batch->status;
+                    }
+                }
+                else {
+                    $status = $batch->status;
+                }
+            }
+            $value->status = $status;
             $d = DB::table('penghasilan_tidak_teratur')
             ->select('kd_entitas')
             ->where('user_id', $value->user_id)

@@ -32,21 +32,10 @@ class PenghasilanTeraturRepository
                     'transaksi_tunjangan.created_at',
                     'transaksi_tunjangan.kd_entitas',
                     'mst_cabang.nama_cabang',
-                    'batch_gaji_per_bulan.status'
                 )
                 ->join('mst_karyawan', 'mst_karyawan.nip', 'transaksi_tunjangan.nip')
                 ->join('mst_tunjangan', 'mst_tunjangan.id', 'transaksi_tunjangan.id_tunjangan')
                 ->join('mst_cabang', 'mst_cabang.kd_cabang', 'transaksi_tunjangan.kd_entitas')
-                ->leftJoin('gaji_per_bulan', function ($join) {
-                    $join->on('transaksi_tunjangan.nip', 'gaji_per_bulan.nip')
-                        ->on('gaji_per_bulan.bulan', 'transaksi_tunjangan.bulan')
-                        ->on('gaji_per_bulan.tahun', 'transaksi_tunjangan.tahun')
-                        ->orderBy('gaji_per_bulan.created_at', 'ASC');
-                })
-                ->leftJoin('batch_gaji_per_bulan', function ($join) {
-                    $join->on('gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
-                        ->whereNull('batch_gaji_per_bulan.deleted_at');
-                })
                 ->where('mst_tunjangan.kategori', 'teratur')
                 ->where('mst_tunjangan.is_import', 1)
                 ->where(function ($query) use ($search) {
@@ -69,6 +58,32 @@ class PenghasilanTeraturRepository
             $bulan = date("m", strtotime($value->tanggal));
             $bulanReq = ($bulan < 10) ? ltrim($bulan, '0') : $bulan;
             $tahun = date("Y", strtotime($value->tanggal));
+            $tanggal = $value->tanggal;
+
+            $batch = DB::table('batch_gaji_per_bulan')
+                ->select('status', 'tanggal_input', 'tanggal_final')
+                ->where('kd_entitas', $value->kd_entitas)
+                ->whereYear('tanggal_input', $tahun)
+                ->whereMonth('tanggal_input', (int) $bulan)
+                ->whereNull('deleted_at')
+                ->first();
+            $status = 'proses';
+            if ($batch) {
+                if ($batch->status == 'final') {
+                    $item_date = date('Y-m-d', strtotime($value->tanggal));
+                    if ($item_date > $batch->tanggal_input) {
+                        $status = 'proses';
+                    } else {
+                        $status = $batch->status;
+                    }
+                } else {
+                    $status = $batch->status;
+                }
+            } else {
+                $status = 'proses';
+            }
+
+            $value->status = $status;
 
             $value->gajiPerBulan = GajiPerBulanModel::where('nip', $value->nip_tunjangan)
             ->whereRaw('MONTH(bulan) = ?', [$bulanReq])
