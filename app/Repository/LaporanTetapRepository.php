@@ -304,7 +304,17 @@ class LaporanTetapRepository
                 'tanggal_penonaktifan',
                 'kpj',
                 'jkn',
-                'status_ptkp',
+                DB::raw("
+                    IF(
+                        mst_karyawan.status = 'Kawin',
+                        'K',
+                        IF(
+                            mst_karyawan.status = 'Belum Kawin',
+                            'TK/0',
+                            mst_karyawan.status
+                        )
+                    ) AS status
+                "),
                 'status_karyawan',
                 'mst_karyawan.kd_entitas',
                 'kd_jabatan',

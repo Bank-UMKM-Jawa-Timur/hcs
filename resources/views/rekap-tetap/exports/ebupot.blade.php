@@ -153,9 +153,6 @@
                 $totalBrutoPenghargaanKinerja = 0;
                 $totalpajakInsentif += $item->pajak_insentif;
                 $totalInsentif += $item->total_insentif;
-                // pajak insentif
-                $insentif_kredit_pajak = floor($item->insentif_kredit_pajak);
-                $insentif_penagihan_pajak = floor($item->insentif_penagihan_pajak);
 
                 foreach ($item->tunjanganTidakTetap as $value) {
                     if ($value->id_tunjangan == 16) {
@@ -206,30 +203,68 @@
                 }
 
                 foreach ($item?->karyawan_bruto->pphDilunasi as $value) {
+                    // pajak insentif
+                    $insentif_kredit_pajak = floor($value->insentif_kredit);
+                    $insentif_penagihan_pajak = floor($value->insentif_penagihan);
+                    $total_pajak_insentif = floor($value->insentif_kredit + $value->insentif_penagihan);
                     if ($value->bulan > 1) {
                         $pph21Bentukan = floor($value->total_pph);
                         $pph21 = floor($value->total_pph);
                         $terutang = DB::table('pph_yang_dilunasi AS pph')
-                            ->select('pph.terutang')
-                            ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
-                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
-                            ->where('pph.id', $value->id)
-                            ->whereNull('batch.deleted_at')
-                            ->first();
+                                        ->select('pph.terutang')
+                                        ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
+                                        ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                                        ->where('pph.id', $value->id)
+                                        ->whereNull('batch.deleted_at')
+                                        ->first();
                         if ($terutang) {
                             $pph21 += floor($terutang->terutang);
                         }
-                    } else {
+                    }
+                    else {
                         $pph21Bentukan = floor($value->total_pph);
                         $pph21 = floor($value->total_pph);
                     }
                 }
-                $pph21 -= floor($item->pajak_insentif);
+                $pph21 -= floor($total_pajak_insentif);
                 $penambahBruto = $item->jamsostek;
 
                 $brutoTotal = floor($gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $item->insentif_kredit + $item->insentif_penagihan + $totalBrutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja + $tambahanPenghasilan + $rekreasi + $brutoNataru + $brutoJaspro + $penambahBruto);
                 $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21Bentukan;
 
+                // Hitung total per page
+                $totalGaji += $item->gaji ? $item->gaji->total_gaji : $item->gj_pokok;
+                $totalUangMakan += $item->gaji ? $item->gaji->uang_makan : 0;
+                $totalPulsa += $item->gaji ? $item->gaji->tj_pulsa : 0;
+                $totalVitamin += $item->gaji ? $item->gaji->tj_vitamin : 0;
+                $totalTransport += $item->gaji ? $item->gaji->tj_transport : 0;
+                $totalLembur += $lembur;
+                $totalPenggantiKesehatan += $penggantiBiayaKesehatan;
+                $totalUangDuka += $uangDuka;
+                $totalSPD += $spd;
+                $totalSPDPendidikan += $spdPendidikan;
+                $totalSPDPindahTugas += $spdPindahTugas;
+                $totalBonus += $bonus;
+                $totalBrutoNataru += $brutoNataru;
+                $totalPPHNataru += $pphNataru;
+                $totalBrutoJaspro += $brutoJaspro;
+                $totalBrutoTambahanPenghasilan += $tambahanPenghasilan;
+                $totalBrutoRekreasi += $rekreasi;
+                $totalPPHJaspro += $pphJaspro;
+                $totalPPHTambahanPenghasilan += $pphTambahanPenghasilan;
+                $totalPPHRekreasi += $pphRekreasi;
+                $totalPPH21Bentukan += floor($pph21Bentukan);
+                $totalPajakInsentifNew += $insentif_kredit_pajak;
+                $totalPajakPenagihan += $insentif_penagihan_pajak;
+                $totalPPH21 += floor($pph21);
+                $totalPenambahBruto += $penambahBruto;
+                $totalBruto += $brutoTotal;
+                $totalPPh += $brutoPPH;
+                $totalBrutoTHR += $brutoTHR;
+                $totalBrutoDanaPendidikan += $brutoDanaPendidikan;
+                $totalBrutoPenghargaanKinerja += $brutoPenghargaanKinerja;
+                $total_insentif_kredit += $item->insentif_kredit ? $item->insentif_kredit : 0 ;
+                $total_insentif_penagihan += $item->insentif_penagihan ? $item->insentif_penagihan : 0;
             @endphp
             <tr>
                 <td align="right" style="color:black;">{{ $loop->iteration }}</td>
