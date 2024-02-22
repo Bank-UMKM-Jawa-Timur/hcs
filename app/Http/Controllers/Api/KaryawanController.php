@@ -102,7 +102,6 @@ class KaryawanController extends Controller
                         ->get();
             }
 
-
             // if (auth()->user()->kd_cabang != null) {
             //     $data = KaryawanModel::select('nama_karyawan', 'nip', 'no_rekening','kd_entitas')
             //         ->whereIn('nip', $explode_id)
@@ -122,22 +121,23 @@ class KaryawanController extends Controller
                 $row = $item['row'];
 
                 // Check if the NIP is found in the server-side data
-                $found = $data->where('nip', $nip)->first();
-                $kd_entitas = $found->kd_entitas ?? '000';
-                $cabang = DB::table('mst_cabang')->select('nama_cabang')->where('kd_cabang', $kd_entitas)->first();
                 $finalisasi = DB::table('gaji_per_bulan as gaji')
                 ->join('batch_gaji_per_bulan as batch', 'gaji.batch_id', 'batch.id')
                 ->where('batch.status', 'final')
                 ->where('gaji.nip', $nip)
                 ->orderByDesc('batch.tanggal_input')
+                ->whereNull('batch.deleted_at')
                 ->first();
 
+                $found = $data->where('nip', $nip)->first();
+                $kd_entitas = $found->kd_entitas ?? '000';
+                $cabang = DB::table('mst_cabang')->select('nama_cabang')->where('kd_cabang', $kd_entitas)->first();
+
                 if ($finalisasi) {
-                    if ($tanggal < $finalisasi->tanggal_input) {
+                    if ($tanggal <= $finalisasi->tanggal_input) {
                         return [
                             'status' => 1,
                             'message' => 'success',
-                            'kantor' => $cabang->nama_cabang,
                             'row' => $row,
                             'nip' => $found ? $found->nip : $nip,
                             'cek' => $found ? null : '-',
@@ -149,7 +149,6 @@ class KaryawanController extends Controller
                         return [
                             'status' => 2,
                             'message' => 'success',
-                            'kantor' => $cabang->nama_cabang,
                             'row' => $row,
                             'nip' => $found ? $found->nip : $nip,
                             'cek' => $found ? null : '-',
@@ -163,7 +162,6 @@ class KaryawanController extends Controller
                     return [
                         'status' => 3,
                         'message' => 'success',
-                        'kantor' => $cabang->nama_cabang,
                         'row' => $row,
                         'nip' => $found ? $found->nip : $nip,
                         'cek' => $found ? null : '-',
