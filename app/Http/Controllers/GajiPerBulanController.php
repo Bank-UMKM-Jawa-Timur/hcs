@@ -232,17 +232,13 @@ class GajiPerBulanController extends Controller
                                 $kd_cabang = auth()->user()->kd_cabang;
                                 $query->where('m.kd_entitas', $kd_cabang);
                             })
-                            ->when($is_pusat, function($query) use ($kd_cabang) {
-                                $query->where(function($q2) use ($kd_cabang) {
-                                    $q2->whereNotIn('m.kd_entitas', $kd_cabang)
-                                        ->orWhereNull('m.kd_entitas');
-                                });
-                            })
-                            ->where(function($query) use ($is_pegawai, $kd_cabang, $kd_divisi, $kd_divisi_selected) {
+                            ->when($is_pusat, function($query) use ($is_pegawai, $kd_cabang, $kd_divisi, $kd_divisi_selected) {
                                 if ($is_pegawai) {
-                                    $query->whereNotIn('m.kd_entitas', $kd_divisi)
-                                    ->orWhereNotIn('m.kd_entitas', $kd_cabang)
-                                    ->orWhereNull('m.kd_entitas');
+                                    $query->where(function($query2) use ($kd_divisi, $kd_cabang) {
+                                        $query2->whereNotIn('m.kd_entitas', $kd_divisi)
+                                            ->whereNotIn('m.kd_entitas', $kd_cabang)
+                                            ->orWhereNull('m.kd_entitas');
+                                    });
                                 }
                                 else {
                                     $query->where('m.kd_entitas', $kd_divisi_selected);
@@ -1345,21 +1341,14 @@ class GajiPerBulanController extends Controller
                                 ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                                 ->when($is_pusat, function($query) use ($kd_cabang, $kd_divisi, $selected_divisi, $is_pegawai) {
                                     if ($is_pegawai) {
-                                        $query->where(function($q2) use ($kd_cabang, $kd_divisi) {
-                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kd_cabang)
-                                            ->whereNotIn('mst_karyawan.kd_entitas', $kd_divisi)
-                                                ->orWhere('mst_karyawan.kd_entitas', 0)
-                                                ->orWhereNull('mst_karyawan.kd_entitas');
+                                        $query->where(function($query2) use ($kd_divisi, $kd_cabang) {
+                                            $query2->whereNotIn('kd_entitas', $kd_divisi)
+                                                ->whereNotIn('kd_entitas', $kd_cabang)
+                                                ->orWhereNull('kd_entitas');
                                         });
-                                        // ->whereNotIn('mst_karyawan.kd_entitas', $kd_divisi);
                                     }
                                     else {
-                                        $query->where(function($q2) use ($kd_cabang) {
-                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kd_cabang)
-                                                ->orWhere('mst_karyawan.kd_entitas', 0)
-                                                ->orWhereNull('mst_karyawan.kd_entitas');
-                                        })
-                                        ->where('mst_karyawan.kd_entitas', $selected_divisi);
+                                        $query->where('kd_entitas', $selected_divisi);
                                     }
                                 })
                                 ->get();
