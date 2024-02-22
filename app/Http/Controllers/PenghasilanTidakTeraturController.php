@@ -389,6 +389,17 @@ class PenghasilanTidakTeraturController extends Controller
                             ->first();
 
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+            $karyawan = DB::table('mst_karyawan')
+                            ->select(
+                                'nama_karyawan',
+                                DB::raw("IF((SELECT kd_cabang FROM mst_cabang WHERE kd_cabang = mst_karyawan.kd_entitas), (SELECT kd_cabang FROM mst_cabang WHERE kd_cabang = mst_karyawan.kd_entitas), '000') AS kd_cabang")
+                            )
+                            ->where('nip', $request->nip)
+                            ->first();
+            if ($karyawan) {
+                $kd_entitas = $karyawan->kd_cabang;
+            }
+
             $nominal = (int) str_replace('.', '', $request->nominal);
             $now = now();
 
@@ -1121,6 +1132,16 @@ class PenghasilanTidakTeraturController extends Controller
             $old_tanggal = $request->get('old_tanggal');
 
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+            $karyawan = DB::table('mst_karyawan')
+                            ->select(
+                                'nama_karyawan',
+                                DB::raw("IF((SELECT kd_cabang FROM mst_cabang WHERE kd_cabang = mst_karyawan.kd_entitas), (SELECT kd_cabang FROM mst_cabang WHERE kd_cabang = mst_karyawan.kd_entitas), '000') AS kd_cabang")
+                            )
+                            ->where('nip', $request->nip)
+                            ->first();
+            if ($karyawan) {
+                $kd_entitas = $karyawan->kd_cabang;
+            }
 
             $repo = new PenghasilanTidakTeraturRepository;
             $dataFromCabang = $repo->getCabang($request->get('kdEntitas'));
