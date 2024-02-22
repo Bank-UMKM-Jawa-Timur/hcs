@@ -638,7 +638,6 @@ class PenghasilanTidakTeraturController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
         if (!auth()->user()->can('penghasilan - import - penghasilan tidak teratur - import')) {
             return view('roles.forbidden');
         }
@@ -662,7 +661,7 @@ class PenghasilanTidakTeraturController extends Controller
             }
             $nip = explode(',', $request->get('nip'));
             $nominal = explode(',', $request->get('nominal'));
-            // $kdEntitas = explode(',', $request->get('kd_entitas'));
+
             $keterangan = [];
             if(strlen($request->get('keterangan')) > 0){
                 $keterangan = explode(',', $request->get('keterangan'));
@@ -673,16 +672,15 @@ class PenghasilanTidakTeraturController extends Controller
 
             $idTunjangan = TunjanganModel::where('nama_tunjangan', 'like', "%$tunjangan%")->first();
 
-            // $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
             $now = now();
             foreach($nip as $key => $item){
                 $karyawan = DB::table('mst_karyawan')
-                    ->select(
-                        'nama_karyawan',
-                        DB::raw("IF((SELECT kd_cabang FROM mst_cabang WHERE kd_cabang = mst_karyawan.kd_entitas), (SELECT kd_cabang FROM mst_cabang WHERE kd_cabang = mst_karyawan.kd_entitas), '000') AS kd_cabang")
-                    )
-                    ->where('nip', $item)
-                    ->first();
+                            ->select(
+                                'nama_karyawan',
+                                DB::raw("IF((SELECT kd_cabang FROM mst_cabang WHERE kd_cabang = mst_karyawan.kd_entitas), (SELECT kd_cabang FROM mst_cabang WHERE kd_cabang = mst_karyawan.kd_entitas), '000') AS kd_cabang")
+                            )
+                            ->where('nip', $item)
+                            ->first();
                 if ($karyawan) {
                     $kd_entitas = $karyawan->kd_cabang;
                 }
@@ -768,6 +766,7 @@ class PenghasilanTidakTeraturController extends Controller
                     $pajak += $current_nominal;
                     $pajak_awal += $current_terutang;
 
+                    $full_month = false;
                     if ($full_month) {
                         $update_obj = [
                             'terutang_insentif' => $pajak_awal,

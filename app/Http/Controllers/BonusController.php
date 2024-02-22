@@ -124,6 +124,7 @@ class BonusController extends Controller
                     'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
                     'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
                     'kd_entitas' => $id_cabang,
+                    'user_id' => auth()->user()->id,
                     'created_at' => Carbon::parse($request->get('tanggal'))
                 ]);
 
@@ -350,6 +351,7 @@ class BonusController extends Controller
                         'bulan' => (int) Carbon::parse($request->get('tanggal'))->format('m'),
                         'tahun' => Carbon::parse($request->get('tanggal'))->format('Y'),
                         'created_at' => Carbon::parse($request->get('tanggal')),
+                        'user_id' => auth()->user()->id,
                         'kd_entitas' => $kd_entitas,
                     ]);
                 }
