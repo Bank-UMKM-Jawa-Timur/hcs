@@ -85,7 +85,7 @@
                                 <td>{{ $krywn->nama_karyawan }}</td>
                                 <td>{{ $krywn->entitas->type == 2 ? $krywn->entitas->cab->nama_cabang : 'Pusat' }}
                                 </td>
-                                <td>{{ $krywn->display_jabatan }}</td>
+                                <td>{{ implode(' ', array_unique(explode(' ', $krywn->display_jabatan))) }}</td>
                                 <td style="min-width: 130px">
                                     <div class="container">
                                         <div class="flex gap-1 justify-center">
