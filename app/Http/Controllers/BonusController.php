@@ -41,7 +41,6 @@ class BonusController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
 
-         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $data = $this->repo->getDataBonus($search, $limit, $page);
         return view('bonus.index', compact('data'));

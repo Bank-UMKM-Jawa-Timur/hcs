@@ -480,7 +480,7 @@ class PenghasilanTeraturController extends Controller
                 }
             }else{
                 Alert::error('Terjadi Kesalahan', 'Cabang '.$dataCabangCanEdit->nama_cabang.' Tidak Bisa Edit data Penghasilan '.$dataFromCabang->nama_cabang);
-                return redirect()->route('bonus.index');
+                return redirect()->route('penghasilan.import-penghasilan-teratur.index');
             }
 
             Alert::success('Success', 'Berhasil edit data penghasilan');

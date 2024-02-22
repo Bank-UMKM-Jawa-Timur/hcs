@@ -43,6 +43,7 @@ class PenghasilanTidakTeraturRepository
                         'batch_gaji_per_bulan.id AS batch_id',
                         'batch_gaji_per_bulan.status',
                         'penghasilan_tidak_teratur.nominal',
+                        'penghasilan_tidak_teratur.user_id',
                         'mst_tunjangan.id as tunjangan_id',
                         DB::raw('SUM(penghasilan_tidak_teratur.nominal) as jumlah_nominal'),
                         DB::raw('COUNT(penghasilan_tidak_teratur.id) as total_data'),
@@ -66,6 +67,21 @@ class PenghasilanTidakTeraturRepository
                     ->groupBy('penghasilan_tidak_teratur.kd_entitas', 'penghasilan_tidak_teratur.id_tunjangan', 'penghasilan_tidak_teratur.user_id')
                     ->orderByDesc('penghasilan_tidak_teratur.created_at')
                     ->paginate($limit);
+        foreach ($data as $value) {
+            $d = DB::table('penghasilan_tidak_teratur')
+            ->select('kd_entitas')
+            ->where('user_id', $value->user_id)
+                ->where('id_tunjangan', $value->id_tunjangan)
+                ->where('created_at', $value->new_date)
+                ->pluck('kd_entitas')
+                ->toArray();
+            if (count(array_unique($d)) == 1) {
+                $value->status_data = 'split';
+            } else {
+                $value->status_data = 'gabungan';
+            }
+            $value->detail = $d;
+        }
         return $data;
     }
 
