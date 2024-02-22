@@ -209,9 +209,6 @@
                                                                     <span>${value.nip}</span>
                                                                 </td>
                                                                 <td>
-                                                                    <span>${value.kantor}</span>
-                                                                </td>
-                                                                <td>
                                                                     <span>${value.nama_karyawan}</span>
                                                                 </td>
                                                                 <td>
@@ -247,9 +244,6 @@
                                                                     </td>
                                                                     <td class="table-danger">
                                                                         <span class="text-danger">${value.nama_karyawan}</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span>${value.kantor}</span>
                                                                     </td>
                                                                     <td class="table-danger">
                                                                         <span class="text-danger">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
@@ -292,9 +286,6 @@
                                                                 </td>
                                                                 <td class="">
                                                                     <span class="${value.cek == '-' ? 'text-danger' : ''}">${value.nama_karyawan}</span>
-                                                                </td>
-                                                                <td>
-                                                                    <span>${value.kantor}</span>
                                                                 </td>
                                                                 <td class="">
                                                                     <span class="${value.cek == '-' ? 'text-danger' : ''}">${no_rek[key] == undefined ? '-' : no_rek[key]}</span>
@@ -528,7 +519,6 @@
                     <th>No</th>
                     <th>Nip</th>
                     <th>Nama Karyawan</th>
-                    <th>Kantor</th>
                     <th>No Rekening</th>
                     <th>Nominal</th>
                     <th class="hidden" id="keterangan">
