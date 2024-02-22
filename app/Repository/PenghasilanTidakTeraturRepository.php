@@ -346,8 +346,15 @@ class PenghasilanTidakTeraturRepository
                 ->with('bagian')
                 ->where('penghasilan_tidak_teratur.id_tunjangan', $idTunjangan)
                 ->whereDate('penghasilan_tidak_teratur.created_at', $createdAt)
-                // ->where('penghasilan_tidak_teratur.kd_entitas', $kd_entitas)
-                ->where('penghasilan_tidak_teratur.user_id', $user_id)
+                ->where(function($query) use ($user_id) {
+                    $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+                    if ($kd_entitas == '000') {
+                        $query->where('penghasilan_tidak_teratur.user_id', $user_id);
+                    }
+                    else {
+                        $query->where('penghasilan_tidak_teratur.kd_entitas', $kd_entitas);
+                    }
+                })
                 ->where('penghasilan_tidak_teratur.bulan', $bulan)
                 ->where('mst_tunjangan.kategori','tidak teratur')
                 ->where(function ($query) use ($search) {
