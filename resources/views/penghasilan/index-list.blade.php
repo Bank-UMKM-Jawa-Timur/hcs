@@ -87,7 +87,7 @@
                     <td>{{ $item->nama_tunjangan }}</td>
                     @if (auth()->user()->hasRole('cabang') != 'cabang')
                         <td>
-                            {{ $item->nama_cabang }}
+                            {{ $item->status_data == 'gabungan' ? 'Gabungan' : $item->nama_cabang }}
                         </td>
                     @endif
                     <td>{{ $item->total }}</td>
@@ -129,7 +129,7 @@
                             @php
                                 $cant_detail = true;
                             @endphp
-                            <a href="{{ route('penghasilan-tidak-teratur.detail', $item->tunjangan_id) }}?bulan={{$item->bulan}}&createdAt={{$item->created_at}}&kd_entitas={{$item->kd_entitas}}"
+                            <a href="{{ route('penghasilan-tidak-teratur.detail', $item->tunjangan_id) }}?bulan={{$item->bulan}}&createdAt={{$item->created_at}}&kd_entitas={{$item->kd_entitas}}&user_id={{$item->user_id}}"
                                 class="btn btn-primary-light ml-1">Detail</a>
                         @endcan
                         @if (!$cant_detail && !$cant_lock_edit && !$cant_unlock)

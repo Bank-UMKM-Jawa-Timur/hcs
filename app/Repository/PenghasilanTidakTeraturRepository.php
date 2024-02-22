@@ -227,6 +227,7 @@ class PenghasilanTidakTeraturRepository
             'tahun' => (int) $data['tahun'],
             'nominal' => str_replace('.', '', $data['nominal']),
             'keterangan' => $data['keterangan'] ?? null,
+            'user_id' => auth()->user()->id,
             'created_at' => now()
         ]);
     }
@@ -268,6 +269,7 @@ class PenghasilanTidakTeraturRepository
                     'penghasilan_tidak_teratur.created_at as tanggal',
                     'penghasilan_tidak_teratur.created_at',
                     'penghasilan_tidak_teratur.bulan',
+                    'penghasilan_tidak_teratur.user_id',
                     'mst_tunjangan.nama_tunjangan',
                     'batch_gaji_per_bulan.id AS batch_id',
                     'batch_gaji_per_bulan.status',
@@ -278,6 +280,7 @@ class PenghasilanTidakTeraturRepository
                     'penghasilan_tidak_teratur.tahun',
                     'keterangan',
                     DB::raw("IF(penghasilan_tidak_teratur.kd_entitas != '000', mst_cabang.nama_cabang, 'Pusat' ) as entitas"),
+                    // DB::raw("IF(penghasilan_tidak_teratur.kd_entitas != (select users.kd_cabang from users where id = penghasilan_tidak_teratur.kd_entitas), 'split', 'gabungan' ) as gabungan"),
                     'mst_cabang.nama_cabang'
                 )
                 ->where('mst_tunjangan.kategori','tidak teratur')
@@ -292,13 +295,30 @@ class PenghasilanTidakTeraturRepository
                         $query->where('penghasilan_tidak_teratur.kd_entitas', $kd_cabang);
                     }
                 })
-                ->groupBy('mst_tunjangan.id', 'penghasilan_tidak_teratur.created_at', 'penghasilan_tidak_teratur.kd_entitas',)
+                ->groupBy('mst_tunjangan.id', 'penghasilan_tidak_teratur.created_at', 'penghasilan_tidak_teratur.user_id')
                 ->orderByDesc('penghasilan_tidak_teratur.created_at')
                 ->paginate($limit);
+
+        foreach ($data as $value) {
+            $d = DB::table('penghasilan_tidak_teratur')
+                    ->select('kd_entitas')
+                    ->where('user_id', $value->user_id)
+                    ->where('id_tunjangan', $value->id_tunjangan)
+                    ->where('created_at', $value->tanggal)
+                    ->pluck('kd_entitas')
+                    ->toArray();
+            if (count(array_unique($d)) == 1) {
+                $value->status_data = 'split';
+            }
+            else {
+                $value->status_data = 'gabungan';
+            }
+            $value->detail = $d;
+        }
         return $data;
     }
 
-    public function getAllPenghasilan($search, $limit=10, $page=1, $bulan, $createdAt, $idTunjangan, $kd_entitas){
+    public function getAllPenghasilan($search, $limit=10, $page=1, $bulan, $createdAt, $idTunjangan, $kd_entitas, $user_id){
         $createdAt = date('Y-m-d', strtotime($createdAt));
         $karyawanRepo = new KaryawanRepository();
         $penghasilan = KaryawanModel::select(
@@ -326,7 +346,8 @@ class PenghasilanTidakTeraturRepository
                 ->with('bagian')
                 ->where('penghasilan_tidak_teratur.id_tunjangan', $idTunjangan)
                 ->whereDate('penghasilan_tidak_teratur.created_at', $createdAt)
-                ->where('penghasilan_tidak_teratur.kd_entitas', $kd_entitas)
+                // ->where('penghasilan_tidak_teratur.kd_entitas', $kd_entitas)
+                ->where('penghasilan_tidak_teratur.user_id', $user_id)
                 ->where('penghasilan_tidak_teratur.bulan', $bulan)
                 ->where('mst_tunjangan.kategori','tidak teratur')
                 ->where(function ($query) use ($search) {

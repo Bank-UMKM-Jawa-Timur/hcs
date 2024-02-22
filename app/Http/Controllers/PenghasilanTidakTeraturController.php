@@ -557,6 +557,7 @@ class PenghasilanTidakTeraturController extends Controller
 
         $penghasilanRepo = new PenghasilanTidakTeraturRepository();
         $data = $penghasilanRepo->getPenghasilan($search, $limit, $page);
+
         return view('penghasilan.index-list', compact('data'));
     }
 
@@ -707,6 +708,7 @@ class PenghasilanTidakTeraturController extends Controller
                     'nominal' => $nominal_item,
                     'kd_entitas' => $kd_entitas,
                     'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
+                    'user_id' => auth()->user()->id,
                     'created_at' => $request->get('tanggal')
                 ]);
 
@@ -852,13 +854,12 @@ class PenghasilanTidakTeraturController extends Controller
             $page = $request->has('page') ? $request->get('page') : 1;
             $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
             $kd_entitas = $request->get('kd_entitas');
+            $user_id = $request->get('user_id');
 
             $repo = new PenghasilanTidakTeraturRepository();
-            $data = $repo->getAllPenghasilan($search, $limit, $page, $bulan, $createdAt, $idTunjangan, $kd_entitas);
+            $data = $repo->getAllPenghasilan($search, $limit, $page, $bulan, $createdAt, $idTunjangan, $kd_entitas, $user_id);
             $tunjangan = $repo->getNameTunjangan($idTunjangan);
             $nameCabang = $repo->getNameCabang($kd_entitas);
-
-            // dd($data);
 
             return view('penghasilan.detail', compact(['data','tunjangan','nameCabang']));
         } catch(Exception $e){
