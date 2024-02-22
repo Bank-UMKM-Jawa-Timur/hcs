@@ -104,14 +104,14 @@
                                 @php
                                     $cant_lock_edit = true;
                                 @endphp
-                                <a href="{{route('penghasilan-tidak-teratur.lock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}"
+                                <a href="{{route('penghasilan-tidak-teratur.lock')}}?id_tunjangan={{$item->tunjangan_id}}&tanggal={{ $item->tanggal }}&user_id={{$item->user_id}}"
                                     class="btn btn-success ml-1">Lock</a>
                             @endcan
                             @can('penghasilan - edit - penghasilan tidak teratur')
                                 @php
                                     $cant_lock_edit = true;
                                 @endphp
-                                <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur-new')}}?idTunjangan={{$item->tunjangan_id}}&tanggal={{$item->tanggal}}&kdEntitas={{$item->kd_entitas}}&bulan={{$item->bulan}}"
+                                <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur-new')}}?idTunjangan={{$item->tunjangan_id}}&tanggal={{$item->tanggal}}&kdEntitas={{$item->kd_entitas}}&bulan={{$item->bulan}}&user_id={{$item->user_id}}&status={{$item->status_data == 'gabungan' ? '1' : '0'}}"
                                     class="btn btn-warning-light ml-1">Edit</a>
                             @endcan
                         @else
@@ -120,7 +120,7 @@
                                     @php
                                         $cant_unlock = true;
                                     @endphp
-                                    <a href="{{route('penghasilan-tidak-teratur.unlock')}}?id_tunjangan={{$item->tunjangan_id}}&tahun={{ $item->tahun }}&bulan={{ $item->bulan }}&createdAt={{$item->created_at}}&kdEntitas={{ $item->kd_entitas }}"
+                                    <a href="{{route('penghasilan-tidak-teratur.unlock')}}?id_tunjangan={{$item->tunjangan_id}}&tahun={{ $item->tahun }}&bulan={{ $item->bulan }}&createdAt={{$item->created_at}}&kdEntitas={{ $item->kd_entitas }}&user_id={{$item->user_id}}"
                                         class="btn btn-success ml-1">Unlock</a>
                                 @endcan
                             @endif
@@ -129,7 +129,7 @@
                             @php
                                 $cant_detail = true;
                             @endphp
-                            <a href="{{ route('penghasilan-tidak-teratur.detail', $item->tunjangan_id) }}?bulan={{$item->bulan}}&createdAt={{$item->created_at}}&kd_entitas={{$item->kd_entitas}}&user_id={{$item->user_id}}"
+                            <a href="{{ route('penghasilan-tidak-teratur.detail', $item->tunjangan_id) }}?bulan={{$item->bulan}}&createdAt={{$item->created_at}}&kd_entitas={{$item->kd_entitas}}&user_id={{$item->user_id}}&status={{$item->status_data == 'gabungan' ? '1' : '0'}}"
                                 class="btn btn-primary-light ml-1">Detail</a>
                         @endcan
                         @if (!$cant_detail && !$cant_lock_edit && !$cant_unlock)

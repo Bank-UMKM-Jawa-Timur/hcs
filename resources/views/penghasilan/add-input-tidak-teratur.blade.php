@@ -112,5 +112,31 @@
                 }
             })
         })
+        $(`#nip`).on('change', function (){
+            const nip = $(this).val();
+            const tanggal = $(`#datefield`).val();
+
+            if (tanggal != '') {
+                $.ajax({
+                    type: "GET",
+                    url: `{{ url('penghasilan-tidak-teratur/validasi-insert') }}`,
+                    data: {
+                        nip: nip,
+                        tanggal: tanggal,
+                    },
+                    success: function(res){
+                        console.log(res);
+                        if (res.kode == 1) {
+                            $(`#error-message`).removeClass('d-none').html(res.message)
+                            $(`#datefield`).val('')
+                        }
+                        else {
+                            $(`#error-message`).addClass('d-none')
+                        }
+                    }
+                })
+
+            }
+        })
     </script>
 @endpush

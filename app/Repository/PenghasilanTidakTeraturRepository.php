@@ -338,6 +338,7 @@ class PenghasilanTidakTeraturRepository
                     'mst_karyawan.status_jabatan',
                     'mst_karyawan.ket_jabatan',
                     DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor"),
+                    'c.nama_cabang as status_entitas'
                 )
                 ->join('penghasilan_tidak_teratur', 'mst_karyawan.nip', 'penghasilan_tidak_teratur.nip')
                 ->join('mst_tunjangan', 'penghasilan_tidak_teratur.id_tunjangan', 'mst_tunjangan.id')
@@ -370,6 +371,11 @@ class PenghasilanTidakTeraturRepository
         $karyawanRepo->getEntity($penghasilan);
 
         foreach ($penghasilan as $key => $value) {
+            if ($value->status_entitas == null) {
+                $value->nama_cabang = 'Pusat';
+            } else {
+                $value->nama_cabang = $value->status_entitas;
+            }
             $prefix = match ($value->status_jabatan) {
                 'Penjabat' => 'Pj. ',
                 'Penjabat Sementara' => 'Pjs. ',
@@ -407,7 +413,7 @@ class PenghasilanTidakTeraturRepository
         }
         return $penghasilan;
     }
-    public function getAllPenghasilanEdit($search, $limit=10, $page=1, $bulan, $createdAt, $idTunjangan, $kd_entitas){
+    public function getAllPenghasilanEdit($search, $limit=10, $page=1, $bulan, $createdAt, $idTunjangan, $kd_entitas, $user_id){
         $createdAt = date('Y-m-d', strtotime($createdAt));
         $karyawanRepo = new KaryawanRepository();
                 $penghasilan = KaryawanModel::select(
@@ -419,6 +425,7 @@ class PenghasilanTidakTeraturRepository
                     'keterangan',
                     'penghasilan_tidak_teratur.id',
                     'penghasilan_tidak_teratur.created_at',
+                    'penghasilan_tidak_teratur.user_id',
                     'mst_karyawan.nip',
                     'mst_karyawan.nik',
                     'mst_karyawan.nama_karyawan',
@@ -437,7 +444,7 @@ class PenghasilanTidakTeraturRepository
                     ->with('bagian')
                     ->where('penghasilan_tidak_teratur.id_tunjangan', $idTunjangan)
                     ->whereDate('penghasilan_tidak_teratur.created_at', $createdAt)
-                    ->where('penghasilan_tidak_teratur.kd_entitas', $kd_entitas)
+                    ->where('penghasilan_tidak_teratur.user_id', $user_id)
                     ->where('penghasilan_tidak_teratur.bulan', $bulan)
                     ->where('mst_tunjangan.kategori', 'tidak teratur')
                     ->where(function ($query) use ($search) {
@@ -518,11 +525,13 @@ class PenghasilanTidakTeraturRepository
     {
         $idTunjangan = $data['id_tunjangan'];
         $tanggal = $data['tanggal'];
+        $user_id = $data['user_id'];
         $bulan = (int)date("m", strtotime($tanggal));
         $tahun = date("Y", strtotime($tanggal));
         return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
             ->where('bulan', $bulan)
             ->where('tahun', $tahun)
+            ->where('user_id', $user_id)
             ->update([
                 'is_lock' => 1
             ]);
@@ -537,10 +546,11 @@ class PenghasilanTidakTeraturRepository
         $createdAt = $data['createdAt'];
         $bln = $data['bulan'];
         $entias = $data['kdEntitas'];
+        $user_id = $data['user_id'];
         return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
             ->where('bulan', $bln)
             ->where('tahun', $tahun)
-            ->where('kd_entitas', $entias)
+            ->where('user_id', $user_id)
             ->where('created_at', $createdAt)
             ->update([
                 'is_lock' => 0

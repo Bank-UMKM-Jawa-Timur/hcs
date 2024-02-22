@@ -589,23 +589,23 @@ class PenghasilanTidakTeraturController extends Controller
     public function validasiInsert(Request $request){
         $nip = $request->get('nip');
         $tanggal = $request->get('tanggal');
+        $bulan_req = date('m', strtotime($tanggal));
         $dataReady = DB::table('gaji_per_bulan as gaji')
         ->join('batch_gaji_per_bulan as batch', 'gaji.batch_id', 'batch.id')
         ->where('batch.status', 'final')
         ->where('gaji.nip', $nip)
         ->orderByDesc('batch.tanggal_input')
+        ->whereNull('batch.deleted_at')
         ->first();
-
-        // return ['tangal' => $tanggal, 'data' => $dataReady->tanggal_input];
 
         $res = [];
         if ($dataReady) {
-            if ($tanggal < $dataReady->tanggal_input) {
+            if ($tanggal <= $dataReady->tanggal_input) {
                 $res = [
                     'kode' => 1,
                     'status' => 'succses',
-                    'message' => 'Tidak bisa memilih tanggal ' . $tanggal. ', karena sudah melakukan finalisasi.',
-                    'data' => $dataReady
+                    'message' => 'Tidak bisa memilih tanggal ' . date('d-m-Y', strtotime($tanggal)) . ', karena sudah melakukan finalisasi.',
+                    'data' => $dataReady,
                 ];
             }
             else{
@@ -855,13 +855,13 @@ class PenghasilanTidakTeraturController extends Controller
             $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
             $kd_entitas = $request->get('kd_entitas');
             $user_id = $request->get('user_id');
+            $status = $request->get('status');
 
             $repo = new PenghasilanTidakTeraturRepository();
             $data = $repo->getAllPenghasilan($search, $limit, $page, $bulan, $createdAt, $idTunjangan, $kd_entitas, $user_id);
             $tunjangan = $repo->getNameTunjangan($idTunjangan);
             $nameCabang = $repo->getNameCabang($kd_entitas);
-
-            return view('penghasilan.detail', compact(['data','tunjangan','nameCabang']));
+            return view('penghasilan.detail', compact(['data','tunjangan','nameCabang', 'status']));
         } catch(Exception $e){
             Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());
             return back();
@@ -914,6 +914,7 @@ class PenghasilanTidakTeraturController extends Controller
         $body = [
             'id_tunjangan' => $request->get('id_tunjangan'),
             'tanggal' => $request->get('tanggal'),
+            'user_id' => $request->get('user_id'),
         ];
         $repo->lock($body);
         Alert::success('Berhasil lock tunjangan.');
@@ -931,6 +932,7 @@ class PenghasilanTidakTeraturController extends Controller
             'createdAt' => $request->get('createdAt'),
             'bulan' => $request->get('bulan'),
             'kdEntitas' => $request->get('kdEntitas'),
+            'user_id' => $request->get('user_id'),
         ];
         $repo->unlock($body);
         Alert::success('Berhasil unlock tunjangan.');
@@ -944,6 +946,7 @@ class PenghasilanTidakTeraturController extends Controller
         }
         $id = $request->get('idTunjangan');
         $tanggal = $request->get('tanggal');
+        $user_id = $request->get('user_id');
         $repo = new PenghasilanTidakTeraturRepository;
         $penghasilan = $repo->TunjanganSelected($id);
         return view('penghasilan.edit-import', [
@@ -965,14 +968,16 @@ class PenghasilanTidakTeraturController extends Controller
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $kd_entitas = $request->get('kdEntitas');
+        $user_id = $request->get('user_id');
+        $status = $request->get('status');
         $dataTunjangan = TunjanganModel::where('kategori', 'tidak teratur')->get();
 
         $repo = new PenghasilanTidakTeraturRepository();
-        $data = $repo->getAllPenghasilanEdit($search, $limit, $page, $bulan, $createdAt, $idTunjangan, $kd_entitas);
+        $data = $repo->getAllPenghasilanEdit($search, $limit, $page, $bulan, $createdAt, $idTunjangan, $kd_entitas, $user_id);
         $tunjangan = $repo->getNameTunjangan($idTunjangan);
         $nameCabang = $repo->getNameCabang($kd_entitas);
         $tanggal = date("Y-m-d", strtotime($request->tanggal));
-        return view('penghasilan.edit', compact(['data', 'tunjangan', 'nameCabang', 'dataTunjangan', 'tanggal']));
+        return view('penghasilan.edit', compact(['data', 'tunjangan', 'nameCabang', 'dataTunjangan', 'tanggal', 'status', 'user_id']));
     }
 
     function deleteTunjangan($id_tunjangan, $bulan, $tanggal)
@@ -988,6 +993,7 @@ class PenghasilanTidakTeraturController extends Controller
         try {
             $nip = $request->has('nip') ? $request->get('nip') : null;
             $item_id = $request->has('item_id') ? $request->get('item_id') : null;
+            $user_id = $request->has('user_id') ? $request->get('user_id') : null;
             $tanggal = $request->has('tanggal') ? $request->get('tanggal') : null;
             $kd_entitas = $request->has('kd_entitas') ? $request->get('kd_entitas') : null;
             $temp_nip = $request->has('temp_nip') ? $request->get('temp_nip')[0] : null;
@@ -998,7 +1004,7 @@ class PenghasilanTidakTeraturController extends Controller
                         ->where('id_tunjangan', $request->get('id_tunjangan'))
                         ->where('bulan', $request->get('bulan'))
                         ->whereDate('created_at', $tanggal)
-                        ->where('kd_entitas', $kd_entitas)
+                        ->where('user_id', $user_id)
                         ->where('nip', $temp_nip_array[$i])
                         ->delete();
                     DB::commit();
@@ -1039,7 +1045,7 @@ class PenghasilanTidakTeraturController extends Controller
                 $itemLamaId = DB::table('penghasilan_tidak_teratur')
                                 ->where('penghasilan_tidak_teratur.created_at', $tanggal)
                                 ->where('id_tunjangan', $request->id_tunjangan)
-                                ->where('kd_entitas', $kd_entitas)
+                                ->where('user_id', $user_id)
                                 ->pluck('id')
                                 ->toArray();
 
@@ -1155,14 +1161,17 @@ class PenghasilanTidakTeraturController extends Controller
                 $kd_entitas = $karyawan->kd_cabang;
             }
 
+            $user = DB::table('users')->where('id', $request->user_id)->first();
+
             $repo = new PenghasilanTidakTeraturRepository;
             $dataFromCabang = $repo->getCabang($request->get('kdEntitas'));
             $dataCabangCanEdit = $repo->getCabang($kd_entitas);
 
-            if ($request->get('kdEntitas') == $kd_entitas) {
+            if ($request->get('user_id') == $user->id) {
                 DB::table('penghasilan_tidak_teratur')
                 ->where('id_tunjangan', $old_tunjangan)
-                ->where(DB::raw('DATE(created_at)'), $old_tanggal)
+                ->where('created_at', $old_tanggal)
+                ->where('user_id', $request->user_id)
                 ->delete();
                 foreach ($nip as $key => $item) {
                     array_push($inserted, [
@@ -1172,6 +1181,7 @@ class PenghasilanTidakTeraturController extends Controller
                         'tahun' => (int) Carbon::parse($request->get('tanggal'))->format('Y'),
                         'nominal' => str_replace('.', '', $nominal[$key]),
                         'kd_entitas' => $kd_entitas,
+                        'user_id' => $request->user_id,
                         'keterangan' => count($keterangan) > 0 ? $keterangan[$key] : null,
                         'created_at' => $request->get('tanggal')
                     ]);

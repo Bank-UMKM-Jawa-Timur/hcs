@@ -23,6 +23,9 @@
             <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 flex gap-7" role="alert">
                 <h6 class="text-sm text-blue-900 font-semibold"> Tunjangan : <b>{{$tunjangan->nama_tunjangan}}</b></h6>
                 <h6 class="text-sm text-blue-900 font-semibold"> Cabang : <b>{{$nameCabang->nama_cabang}}</b></h6>
+                @if (auth()->user()->hasRole('kepegawaian'))
+                    <h6 class="text-sm text-blue-900 font-semibold"> Status Data : <b>{{$status == 1 ? 'Gabungan' : 'Split'}}</b></h6>
+                @endif
             </div>
             <input type="hidden" name="bulan" value="{{\Request::get('bulan')}}">
             <input type="hidden" name="createdAt" value="{{\Request::get('createdAt')}}">
@@ -57,7 +60,9 @@
                     <th>No</th>
                     <th>NIP</th>
                     <th>Nama Karyawan</th>
-                    {{-- <th>Kantor</th> --}}
+                    @if (auth()->user()->hasRole('kepegawaian'))
+                        <th>Kantor</th>
+                    @endif
                     <th>Jabatan</th>
                     <th>Nominal</th>
                 </thead>
@@ -77,7 +82,9 @@
                             <td>{{ $i++ }}</td>
                             <td>{{ $item->nip }}</td>
                             <td>{{ $item->nama_karyawan }}</td>
-                            {{-- <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}</td> --}}
+                            @if (auth()->user()->hasRole('kepegawaian'))
+                                <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}</td>
+                            @endif
                             <td>{{$item->display_jabatan}}</td>
                             <td>{{ rupiah($item->nominal) }}</td>
                         </tr>

@@ -15,9 +15,7 @@
                 </div>
             </div>
             <div class="button-wrapper flex gap-3">
-                <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur')}}?idTunjangan={{Request()->get('idTunjangan')}}&
-                                            tanggal={{Request()->get('tanggal')}}&
-                                            kdEntitas={{Request()->get('kdEntitas')}}"
+                <a href="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur')}}?idTunjangan={{Request()->get('idTunjangan')}}&tanggal={{Request()->get('tanggal')}}&kdEntitas={{Request()->get('kdEntitas')}}&user_id={{$user_id}}&status={{$status}}"
                 class="btn btn-warning-light ml-1">Import</a>
             </div>
         </div>
@@ -28,6 +26,9 @@
             <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 flex gap-7" role="alert">
                 <h6 class="text-sm text-blue-900 font-semibold"> Cabang : <b>{{ $nameCabang->nama_cabang }}</b></h6> |
                 <h6 class="text-sm text-blue-900 font-semibold"> Tunjangan : <b>{{ $tunjangan->nama_tunjangan }}</b></h6>
+                @if (auth()->user()->hasRole('kepegawaian'))
+                    | <h6 class="text-sm text-blue-900 font-semibold"> Status Data : <b>{{$status == 1 ? 'Gabungan' : 'Split'}}</b></h6>
+                @endif
             </div>
             <form action="{{ route('penghasilan-tidak-teratur.edit-tunjangan-tidak-teratur-new-post') }}" method="POST">
                 @csrf
@@ -59,7 +60,7 @@
                     <thead>
                         <th>NIP</th>
                         <th>Nama Karyawan</th>
-                        {{-- <th>Kantor</th> --}}
+                        <th>Kantor</th>
                         <th>Jabatan</th>
                         <th>Nominal</th>
                         <th>Aksi</th>
@@ -69,11 +70,15 @@
                             <tr>
                                 <td>{{ $item->nip }}</td>
                                 <td>{{ $item->nama_karyawan }}</td>
+                                @if (auth()->user()->hasRole('kepegawaian'))
+                                    <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}</td>
+                                @endif
                                 <td>{{ $item->display_jabatan }}</td>
                                 <td>
                                     <input type="text" id="nominal_{{ $key }}" name="nominal[]"
                                         onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)"
                                         class="form-input" value="{{ number_format($item->nominal, 0, ',', '.') }}">
+                                        <input type="hidden" name="user_id" value="{{$item->user_id}}">
                                         <input type="hidden" name="nip[]" value="{{$item->nip}}">
                                         <input type="hidden" name="item_id[]" value="{{$item->id}}">
                                 </td>
