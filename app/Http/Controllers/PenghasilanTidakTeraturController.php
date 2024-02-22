@@ -412,6 +412,7 @@ class PenghasilanTidakTeraturController extends Controller
                     'bulan' => $bulan,
                     'tahun' => $tahun,
                     'keterangan' => $request->keterangan,
+                    'user_id' => auth()->user()->id,
                     'created_at' => $request->tanggal
                 ]);
             // save pajak insentif

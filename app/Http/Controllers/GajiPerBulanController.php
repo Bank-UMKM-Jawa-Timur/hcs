@@ -533,6 +533,7 @@ class GajiPerBulanController extends Controller
             $batch_id = $request->batch_id;
             $data_gaji = DB::table('gaji_per_bulan AS gaji')
                             ->select(
+                                'batch.tanggal_input',
                                 'gaji.*',
                                 'm.nama_karyawan',
                                 'm.status_karyawan',
@@ -773,9 +774,29 @@ class GajiPerBulanController extends Controller
 
                 $transaksi_tunjangan = DB::table('transaksi_tunjangan')
                                         ->where('nip', $gaji->nip)
-                                        ->where('bulan', $gaji->bulan)
-                                        ->where('tahun', $gaji->tahun)
+                                        ->whereYear('tanggal', $gaji->tahun)
+                                        ->where(function($query) use ($gaji, $kd_entitas) {
+                                            $bulan = $gaji->bulan;
+                                            $tahun = $gaji->tahun;
+                                            $tanggal = $gaji->tanggal_input;
+                                            $day = date('d', strtotime($tanggal));
+                                            if ($bulan > 1) {
+                                                // Tanggal penggajian bulan sebelumnya
+                                                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                $query->whereBetween('tanggal', [$start_date, $tanggal]);
+                                            }
+                                            else if ($bulan == 12) {
+                                                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                $last_day = getLastDateOfMonth($tahun, $bulan);
+                                                $end_date = $tahun.'-'.$bulan.'-'.$last_day;
+                                                $query->whereBetween('tanggal', [$start_date, $end_date]);
+                                            }
+                                            else {
+                                                $query->whereDay('tanggal', '<=', $day);
+                                            }
+                                        })
                                         ->get();
+
                 foreach ($transaksi_tunjangan as $tunj) {
                     // Transport
                     if ($tunj->id_tunjangan == 11) {
@@ -1048,23 +1069,25 @@ class GajiPerBulanController extends Controller
                 // Get BPJS TK
                 $jp_persen = $persen_jp_pengurang / 100;
                 $bpjs_tk = 0;
-                if ($bulan > 2) {
-                    if ($total_gaji_baru > $jp_mar_des) {
-                        $bpjs_tk = $jp_mar_des * $jp_persen;
+                if ($karyawan->kpj) {
+                    if ($bulan > 2) {
+                        if ($total_gaji_baru > $jp_mar_des) {
+                            $bpjs_tk = $jp_mar_des * $jp_persen;
+                        }
+                        else {
+                            $bpjs_tk = $total_gaji_baru * $jp_persen;
+                        }
                     }
                     else {
-                        $bpjs_tk = $total_gaji_baru * $jp_persen;
+                        if ($total_gaji_baru >= $jp_jan_feb) {
+                            $bpjs_tk = $jp_jan_feb * $jp_persen;
+                        }
+                        else {
+                            $bpjs_tk = $total_gaji_baru * $jp_persen;
+                        }
                     }
+                    $bpjs_tk = round($bpjs_tk);
                 }
-                else {
-                    if ($total_gaji_baru >= $jp_jan_feb) {
-                        $bpjs_tk = $jp_jan_feb * $jp_persen;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji_baru * $jp_persen;
-                    }
-                }
-                $bpjs_tk = round($bpjs_tk);
                 if ($bpjs_tk != $gaji->bpjs_tk) {
                     $total_potongan_baru -= $gaji->bpjs_tk;
                     $total_potongan_baru += $bpjs_tk;

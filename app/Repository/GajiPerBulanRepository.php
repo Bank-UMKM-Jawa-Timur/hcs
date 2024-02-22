@@ -170,7 +170,7 @@ class GajiPerBulanRepository
 
                     $transaksi_tunjangan = DB::table('transaksi_tunjangan')
                                             ->where('nip', $gaji->nip)
-                                            ->where('tahun', $gaji->tahun)
+                                            ->whereYear('tanggal', $gaji->tahun)
                                             ->where(function($query) use ($tahun, $bulan, $tanggal, $day, $kd_entitas) {
                                                 if ($bulan > 1) {
                                                     // Tanggal penggajian bulan sebelumnya
