@@ -36,6 +36,13 @@
         <div class="button-wrapper flex gap-3 lg:mt-0 mt-5">
             @if (auth()->user()->hasRole(['kepegawaian','hrd','admin']))
                 <button class="btn btn-warning-light lg:text-base text-xs filter" data-modal-id="filter-modal" data-modal-toggle="modal"><i class="ti ti-file-search"></i> Filter</button>
+                @if (\Request::has('cabang'))
+                    <button class="btn btn-danger-light lg:text-base text-xs">
+                        <a href="{{route('gaji_perbulan.index')}}">
+                            Reset
+                        </a>
+                    </button>
+                @endif
             @endif
             @if (auth()->user()->hasRole('kepegawaian'))
                 <button class="btn btn-primary-light lg:text-base text-xs penghasilan-all-kantor" data-modal-id="penghasilan-kantor-modal" data-modal-toggle="modal"><i class="ti ti-file-import"></i> Penghasilan Semua Kantor</button>

@@ -38,13 +38,14 @@ class PenghasilanTeraturRepository
                 ->join('mst_tunjangan', 'mst_tunjangan.id', 'transaksi_tunjangan.id_tunjangan')
                 ->join('mst_cabang', 'mst_cabang.kd_cabang', 'transaksi_tunjangan.kd_entitas')
                 ->leftJoin('gaji_per_bulan', function ($join) {
-                    $join->on('transaksi_tunjangan.nip', '=', 'gaji_per_bulan.nip')
+                    $join->on('transaksi_tunjangan.nip', 'gaji_per_bulan.nip')
                         ->on('gaji_per_bulan.bulan', 'transaksi_tunjangan.bulan')
-                        ->on('gaji_per_bulan.tahun', '=', DB::raw('YEAR(transaksi_tunjangan.tanggal)'))
+                        ->on('gaji_per_bulan.tahun', 'transaksi_tunjangan.tahun')
                         ->orderBy('gaji_per_bulan.created_at', 'ASC');
                 })
                 ->leftJoin('batch_gaji_per_bulan', function ($join) {
-                    $join->on('gaji_per_bulan.batch_id', '=', 'batch_gaji_per_bulan.id');
+                    $join->on('gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
+                        ->whereNull('batch_gaji_per_bulan.deleted_at');
                 })
                 ->where('mst_tunjangan.kategori', 'teratur')
                 ->where('mst_tunjangan.is_import', 1)
