@@ -560,8 +560,8 @@ class PenghasilanTidakTeraturController extends Controller
             return view('roles.forbidden');
         }
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
-
-        return view('penghasilan.add', compact('data'));
+        $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
+        return view('penghasilan.add', compact('data', 'kd_entitas'));
     }
 
     public function createTidakTeratur()
@@ -570,6 +570,7 @@ class PenghasilanTidakTeraturController extends Controller
             return view('roles.forbidden');
         }
         $data = TunjanganModel::where('kategori', 'tidak teratur')->get();
+        $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
         return view('penghasilan.add-input-tidak-teratur', compact('data'));
     }
 
