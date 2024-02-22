@@ -303,7 +303,7 @@ class PenghasilanTidakTeraturRepository
 
         foreach ($data as $value) {
             $batch = DB::table('batch_gaji_per_bulan')
-                        ->select('status')
+                        ->select('status', 'tanggal_input', 'tanggal_final')
                         ->where('kd_entitas', $value->kd_entitas)
                         ->whereYear('tanggal_input', date('Y', strtotime($value->created_at)))
                         ->whereMonth('tanggal_input', (int) date('m', strtotime($value->created_at)))
@@ -311,7 +311,18 @@ class PenghasilanTidakTeraturRepository
                         ->first();
             $status = 'proses';
             if ($batch) {
-                $status = $batch->status;
+                if ($batch->status == 'final') {
+                    $item_date = date('Y-m-d', strtotime($value->created_at));
+                    if ($item_date > $batch->tanggal_input) {
+                        $status = 'proses';
+                    }
+                    else {
+                        $status = $batch->status;
+                    }
+                }
+                else {
+                    $status = $batch->status;
+                }
             }
             $value->status = $status;
             $d = DB::table('penghasilan_tidak_teratur')

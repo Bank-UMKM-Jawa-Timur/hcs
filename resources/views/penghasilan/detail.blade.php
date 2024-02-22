@@ -60,7 +60,7 @@
                     <th>No</th>
                     <th>NIP</th>
                     <th>Nama Karyawan</th>
-                    @if (auth()->user()->hasRole('kepegawaian'))
+                    @if (!auth()->user()->hasRole('cabang'))
                         <th>Kantor</th>
                     @endif
                     <th>Jabatan</th>
@@ -82,7 +82,7 @@
                             <td>{{ $i++ }}</td>
                             <td>{{ $item->nip }}</td>
                             <td>{{ $item->nama_karyawan }}</td>
-                            @if (auth()->user()->hasRole('kepegawaian'))
+                            @if (!auth()->user()->hasRole('cabang'))
                                 <td>{{ $item->entitas->type == 2 ? $item->entitas->cab->nama_cabang : 'Pusat' }}</td>
                             @endif
                             <td>{{$item->display_jabatan}}</td>
