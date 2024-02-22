@@ -1064,7 +1064,7 @@ class GajiPerBulanController extends Controller
                         $bpjs_tk = $total_gaji_baru * $jp_persen;
                     }
                 }
-                $bpjs_tk = floor($bpjs_tk);
+                $bpjs_tk = round($bpjs_tk);
                 if ($bpjs_tk != $gaji->bpjs_tk) {
                     $total_potongan_baru -= $gaji->bpjs_tk;
                     $total_potongan_baru += $bpjs_tk;
@@ -1514,7 +1514,7 @@ class GajiPerBulanController extends Controller
                             $bpjs_tk = $total_gaji * $jp_persen;
                         }
                     }
-                    $bpjs_tk = floor($bpjs_tk);
+                    $bpjs_tk = round($bpjs_tk);
                 }
 
                 // Get Penambah Bruto Jamsostek
