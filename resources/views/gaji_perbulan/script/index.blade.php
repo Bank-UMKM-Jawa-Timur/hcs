@@ -20,7 +20,8 @@
             });
         })
         $('#proses-modal #form').on('submit', function() {
-            $('.loader-wrapper').removeAttr('style')
+            $('#proses-modal #btn-proses-penghasilan').prop('disabled', true)
+            $('.preloader').removeAttr('style')
         })
         $('#uploadFile').on('click',function() {
             let batch_id = $(this).data('batch_id');

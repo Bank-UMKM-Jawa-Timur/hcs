@@ -22,7 +22,7 @@
                             <option value="STAD">Staf Ahli</option>
                         </select>
                     </div>
-                    <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 my-2">
+                    <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 my-2.5">
                         <div class="col-md-6">
                             <div class="flex gap-5">
                                 <label>Total Karyawan : </label>
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="my-2">
+                    <div class="my-2.5">
                         <b>Potongan</b>
                         <div class="grid grid-cols-2 gap-4 mt-2">
                             <div class="grid grid-cols-3">
