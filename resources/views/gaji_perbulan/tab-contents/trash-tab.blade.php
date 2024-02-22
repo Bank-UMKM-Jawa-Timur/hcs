@@ -64,7 +64,7 @@
         @endphp
         <tr>
             <td class="text-center">{{ $i++ }}</td>
-            <td class="text-center">{{ $item->is_pegawai ? 'Pegawai' : 'Lainnya' }}</td>
+            <td class="text-center">{{ $item->nama_divisi ? $item->nama_divisi : 'Pegawai' }}</td>
             @if (auth()->user()->hasRole('admin'))
                 <td class="text-center">{{ $item->kantor }}</td>
             @endif

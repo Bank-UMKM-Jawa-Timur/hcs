@@ -34,8 +34,8 @@
             @php
                 $norek = $item->no_rekening ? $item->no_rekening : '-';
                 $total_gaji = $item->gaji ? round($item->gaji->total_gaji) : 0;
-                $dpp = $item->potongan ? round($item->potongan->dpp) : 0;
-                $bpjs_tk = $item->bpjs_tk ? round($item->bpjs_tk) : 0;
+                $dpp = $item->gaji ? round($item->gaji->dpp) : 0;
+                $bpjs_tk = $item->gaji ? round($item->gaji->bpjs_tk) : 0;
                 $kredit_koperasi = $item->potonganGaji ? round($item->potonganGaji->kredit_koperasi) : 0;
                 $iuran_koperasi = $item->gaji ? round($item->gaji->iuran_koperasi) : 0;
                 $kredit_pegawai = $item->gaji ? round($item->gaji->kredit_pegawai) : 0;

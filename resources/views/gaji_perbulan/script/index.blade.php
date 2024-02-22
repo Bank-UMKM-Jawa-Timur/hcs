@@ -23,7 +23,7 @@
             $('#proses-modal #btn-proses-penghasilan').prop('disabled', true)
             $('.preloader').removeAttr('style')
         })
-        $('#uploadFile').on('click',function() {
+        $('.btn-finalisasi').on('click',function() {
             let batch_id = $(this).data('batch_id');
             let target = $(this).data('target');
             $(`${target} #id`).val(batch_id);
@@ -129,7 +129,7 @@
             const currentYear = currentDate.getFullYear();
 
             if (year == currentYear) {
-                /*if (month != currentMonth) {
+                if (month != currentMonth) {
                     Swal.fire({
                         title: 'Peringatan',
                         text: 'Bulan yang dipilih tidak sesuai dengan bulan saat ini',
@@ -171,7 +171,7 @@
                             }
                         }
                     }
-                }*/
+                }
             }
             else {
                 Swal.fire({
@@ -187,12 +187,12 @@
         })
 
         function loadDataPenghasilan() {
-            $('.loader-wrapper').removeAttr('style')
-            var jabatan = $('#jabatan').val()
-            var is_pegawai = jabatan == '';
+            $('.preloader').removeAttr('style')
+            var divisi = $('#divisi').val()
+            var is_pegawai = divisi == '';
             $('#proses-modal #is_pegawai').val(is_pegawai)
             $.ajax({
-                url: `{{ route('gaji_perbulan.get_data_penghasilan_json') }}?is_pegawai=${is_pegawai}&jabatan=${jabatan}`,
+                url: `{{ route('gaji_perbulan.get_data_penghasilan_json') }}?is_pegawai=${is_pegawai}&divisi=${divisi}`,
                 method: 'GET',
                 success: function(response) {
                     if (response.status == 'success') {
@@ -210,7 +210,7 @@
                         $('#proses-modal #total_potongan_bpjs_tk').html(`Rp ${formatRupiah(data.potongan_bpjs_tk.toString())}`)
                         $('#proses-modal #total_potongan').html(`Rp ${formatRupiah(data.potongan.toString())}`)
                         $('#proses-modal #total_netto').html(`Rp ${formatRupiah(data.netto.toString())}`)
-                        $('.loader-wrapper').attr('style', 'display: none;')
+                        $('.preloader').attr('style', 'display: none;')
                     }
                 },
                 error: function(e) {
@@ -226,7 +226,7 @@
             })
         }
 
-        $('#jabatan').change(function(e) {
+        $('#divisi').change(function(e) {
             loadDataPenghasilan(false)
         })
 
@@ -252,7 +252,7 @@
             const tanggal = $('#tanggal').val()
 
             if (bulan != 0 && tahun != 0 && tanggal)
-                $('.loader-wrapper').removeAttr('style')
+                $('.preloader').removeAttr('style')
         })
 
         function showDetail(data) {
@@ -449,7 +449,7 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $('.loader-wrapper').removeAttr('style')
+                        $('.preloader').removeAttr('style')
                         $('#form-finalisasi').submit()
                     }
                 })

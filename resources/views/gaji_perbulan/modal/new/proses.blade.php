@@ -13,15 +13,19 @@
                     <button data-modal-dismiss="proses-modal"  type="button" class="modal-close"><i class="ti ti-x"></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="input-box jabatan-box">
-                        <label>Jabatan</label>
-                        <select name="jabatan" id="jabatan" class="form-input">
-                            <option value="">Pegawai</option>
-                            <option value="DIR">Direksi</option>
-                            <option value="KOM">Komisaris</option>
-                            <option value="STAD">Staf Ahli</option>
-                        </select>
-                    </div>
+                    @if (!auth()->user()->hasRole('cabang'))
+                        <div class="input-box divisi-box">
+                            <label>Jabatan</label>
+                            <select name="divisi" id="divisi" class="form-input">
+                                <option value="">Pegawai</option>
+                                <option value="DIR">Direksi</option>
+                                <option value="KOM">Komisaris</option>
+                                <option value="SAD">Staf Ahli</option>
+                            </select>
+                        </div>
+                    @else
+                        <input type="hidden" name="divisi" id="divisi" value="">
+                    @endif
                     <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 my-2.5">
                         <div class="col-md-6">
                             <div class="flex gap-5">
