@@ -463,7 +463,8 @@
 
         $('#penyesuaian-modal #btn-update').on('click', function(e) {
             e.preventDefault();
-            $('.loader-wrapper').removeAttr('style')
+            $('.preloader').removeAttr('style')
+            $(this).prop('disabled', true)
             $('#penyesuaian-modal #form').submit()
         })
 

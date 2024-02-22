@@ -1650,8 +1650,7 @@ class GajiPerBulanController extends Controller
                                                     $join->on('batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
                                                         ->where('batch_gaji_per_bulan.kd_entitas', $kd_entitas)
                                                         ->whereMonth('batch_gaji_per_bulan.tanggal_input', $bulan)
-                                                        ->whereYear('batch_gaji_per_bulan.tanggal_input', $tahun)
-                                                        ->whereNull('batch_gaji_per_bulan.deleted_at');
+                                                        ->whereYear('batch_gaji_per_bulan.tanggal_input', $tahun);
                                                 })
                                                 ->where('gaji_per_bulan.batch_id', $request->batch_id)
                                                 ->whereNull('batch_gaji_per_bulan.deleted_at')
