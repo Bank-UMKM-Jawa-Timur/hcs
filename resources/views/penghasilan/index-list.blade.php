@@ -90,7 +90,13 @@
                             {{ $item->status_data == 'gabungan' ? 'Gabungan' : $item->nama_cabang }}
                         </td>
                     @endif
-                    <td>{{ $item->total }}</td>
+                    <td>
+                        @if (auth()->user()->hasRole('cabang') != 'cabang')
+                            {{ count($item->detail) }}
+                        @else
+                            {{ $item->total }}
+                        @endif
+                    </td>
                     <td>Rp {{ $item->grand_total ? number_format($item->grand_total, 0, '.', '.') : 0}}</td>
                     <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
                     <td class="text-center flex justify-center">
