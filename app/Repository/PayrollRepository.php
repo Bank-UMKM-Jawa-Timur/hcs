@@ -631,7 +631,20 @@ class PayrollRepository
                 if ($karyawan->insentif) {
                     $total_pajak_insentif = $karyawan->insentif->total_pajak_insentif;
                 }
-                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi;
+                $pph_db = 0;
+                $pphKaryawan = DB::table('pph_yang_dilunasi AS pph')
+                                ->select('pph.total_pph AS nominal')
+                                ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
+                                ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                                ->where('pph.tahun', $year)
+                                ->where('pph.bulan', $month)
+                                ->where('pph.nip', $karyawan->nip)
+                                ->whereNull('batch.deleted_at')
+                                ->first();
+                if ($pphKaryawan) {
+                    $pph_db = $pphKaryawan->nominal;
+                }
+                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_db;
             }
 
             // Get Tunjangan lainnya (T.Makan, T.Pulsa, T.Transport, T.Vitamin, T.Tidak teratur, Bonus)
@@ -1441,7 +1454,20 @@ class PayrollRepository
                 if ($karyawan->insentif) {
                     $total_pajak_insentif = $karyawan->insentif->total_pajak_insentif;
                 }
-                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi;
+                $pph_db = 0;
+                $pphKaryawan = DB::table('pph_yang_dilunasi AS pph')
+                                ->select('pph.total_pph AS nominal')
+                                ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
+                                ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                                ->where('pph.tahun', $year)
+                                ->where('pph.bulan', $month)
+                                ->where('pph.nip', $karyawan->nip)
+                                ->whereNull('batch.deleted_at')
+                                ->first();
+                if ($pphKaryawan) {
+                    $pph_db = $pphKaryawan->nominal;
+                }
+                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_db;
             }
 
             // Get Tunjangan lainnya (T.Makan, T.Pulsa, T.Transport, T.Vitamin, T.Tidak teratur, Bonus)
@@ -2324,7 +2350,20 @@ class PayrollRepository
                 if ($karyawan->insentif) {
                     $total_pajak_insentif = $karyawan->insentif->total_pajak_insentif;
                 }
-                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_dilunasi;
+                $pph_db = 0;
+                $pphKaryawan = DB::table('pph_yang_dilunasi AS pph')
+                                ->select('pph.total_pph AS nominal')
+                                ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
+                                ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                                ->where('pph.tahun', $year)
+                                ->where('pph.bulan', $month)
+                                ->where('pph.nip', $karyawan->nip)
+                                ->whereNull('batch.deleted_at')
+                                ->first();
+                if ($pphKaryawan) {
+                    $pph_db = $pphKaryawan->nominal;
+                }
+                $karyawan->pph_dilunasi_bulan_ini = (int) $pph_db;
             }
 
             // Get Tunjangan lainnya (T.Makan, T.Pulsa, T.Transport, T.Vitamin, T.Tidak teratur, Bonus)

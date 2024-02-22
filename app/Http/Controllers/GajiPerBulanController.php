@@ -1992,6 +1992,7 @@ class GajiPerBulanController extends Controller
                             ->where('tanggal_input', '<', $batch->tanggal_input)
                             ->where('kd_entitas', $batch->kd_entitas)
                             ->where('status', 'proses')
+                            ->whereNull('deleted_at')
                             ->orderByDesc('tanggal_input')
                             ->first();
 
