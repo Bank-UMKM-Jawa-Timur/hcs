@@ -886,8 +886,27 @@ class GajiPerBulanController extends Controller
                                         )
                                         ->join('mst_tunjangan AS m', 'm.id', 'p.id_tunjangan')
                                         ->where('p.nip', $gaji->nip)
-                                        ->where('p.tahun', (int) $gaji->tahun)
-                                        ->where('p.bulan', (int) $gaji->bulan)
+                                        ->whereYear('p.created_at', $gaji->tahun)
+                                        ->where(function($query) use ($gaji, $kd_entitas) {
+                                            $bulan = $gaji->bulan;
+                                            $tahun = $gaji->tahun;
+                                            $tanggal = $gaji->tanggal_input;
+                                            $day = date('d', strtotime($tanggal));
+                                            if ($bulan > 1) {
+                                                // Tanggal penggajian bulan sebelumnya
+                                                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                $query->whereBetween('p.created_at', [$start_date, $tanggal]);
+                                            }
+                                            else if ($bulan == 12) {
+                                                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                $last_day = getLastDateOfMonth($tahun, $bulan);
+                                                $end_date = $tahun.'-'.$bulan.'-'.$last_day;
+                                                $query->whereBetween('p.created_at', [$start_date, $end_date]);
+                                            }
+                                            else {
+                                                $query->whereDay('p.created_at', '<=', $day);
+                                            }
+                                        })
                                         ->get();
 
                 foreach ($penghasilanTidakRutin as $tidakRutin) {
@@ -898,8 +917,8 @@ class GajiPerBulanController extends Controller
                                     ->where('penghasilan_tidak_teratur_id', $tidakRutin->id)
                                     ->first();
                     if ($current) {
-                        $nominalLama = $current->nominal;
-                        $nominalBaru = $tidakRutin->nominal;
+                        $nominalLama = (int) $current->nominal;
+                        $nominalBaru = (int) $tidakRutin->nominal;
                         if ($nominalLama != $nominalBaru) {
                             $item_title = str_replace(' ', '_', strtolower($tidakRutin->nama_tunjangan));
                             $item_title_new = $item_title.'_baru';
@@ -911,7 +930,7 @@ class GajiPerBulanController extends Controller
                         }
                     }
                     else {
-                        $nominalBaru = $tidakRutin->nominal;
+                        $nominalBaru = (int) $tidakRutin->nominal;
                         $item_title = str_replace(' ', '_', strtolower($tidakRutin->nama_tunjangan));
                         $item_title_new = $item_title.'_baru';
                         $item = [
@@ -943,7 +962,7 @@ class GajiPerBulanController extends Controller
                                     ->where('id', $batchTidakRutin->penghasilan_tidak_teratur_id)
                                     ->first();
                     if (!$current) {
-                        $nominalLama = $batchTidakRutin->nominal;
+                        $nominalLama = (int) $batchTidakRutin->nominal;
                         $nominalBaru = 0;
                         $item_title = str_replace(' ', '_', strtolower($batchTidakRutin->nama_tunjangan));
                         $item_title_new = $item_title.'_baru';

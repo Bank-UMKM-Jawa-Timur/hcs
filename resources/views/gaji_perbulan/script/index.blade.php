@@ -335,7 +335,6 @@
                 ],
                 footerCallback: function( row, data, start, end, display ) {
                     var api = this.api(),data;
-                    console.log(data);
                     var intVal = function ( i ) {
                         return typeof i === 'string' ?
                             i.replace(/[\$,]/g, '')*1 :
