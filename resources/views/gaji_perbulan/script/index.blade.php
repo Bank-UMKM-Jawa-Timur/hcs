@@ -128,7 +128,7 @@
             const currentYear = currentDate.getFullYear();
 
             if (year == currentYear) {
-                if (month != currentMonth) {
+                /*if (month != currentMonth) {
                     Swal.fire({
                         title: 'Peringatan',
                         text: 'Bulan yang dipilih tidak sesuai dengan bulan saat ini',
@@ -170,7 +170,7 @@
                             }
                         }
                     }
-                }
+                }*/
             }
             else {
                 Swal.fire({
@@ -185,28 +185,31 @@
             }
         })
 
-        function loadDataPenghasilan(is_pegawai) {
+        function loadDataPenghasilan() {
             $('.loader-wrapper').removeAttr('style')
-
+            var jabatan = $('#jabatan').val()
+            var is_pegawai = jabatan == '';
+            $('#proses-modal #is_pegawai').val(is_pegawai)
             $.ajax({
-                url: `{{ route('gaji_perbulan.get_data_penghasilan_json') }}?is_pegawai=${is_pegawai}`,
+                url: `{{ route('gaji_perbulan.get_data_penghasilan_json') }}?is_pegawai=${is_pegawai}&jabatan=${jabatan}`,
                 method: 'GET',
                 success: function(response) {
                     if (response.status == 'success') {
                         var data = response.data
-
-                        var note = is_pegawai ? 'Catatan! Proses penggajian untuk pegawai.' : 'Catatan! Proses penggajian untuk direktur, komisaris dan staf ahli.'
-                        $('#proses-modal #note').html(note)
                         $('#proses-modal #is_pegawai').val(is_pegawai)
                         $('#proses-modal #tahun_terakhir').val(data.penghasilan_tahun_terakhir)
                         $('#proses-modal #bulan_terakhir').val(data.penghasilan_bulan_terakhir)
                         $('#proses-modal #total_karyawan').html(data.total_karyawan)
                         $('#proses-modal #total_bruto').html(`Rp ${formatRupiah(data.bruto.toString())}`)
+                        $('#proses-modal #total_potongan_kredit_koperasi').html(`Rp ${formatRupiah(data.potongan_kredit_koperasi.toString())}`)
+                        $('#proses-modal #total_potongan_iuran_koperasi').html(`Rp ${formatRupiah(data.potongan_iuran_koperasi.toString())}`)
+                        $('#proses-modal #total_potongan_kredit_pegawai').html(`Rp ${formatRupiah(data.potongan_kredit_pegawai.toString())}`)
+                        $('#proses-modal #total_potongan_iuran_ik').html(`Rp ${formatRupiah(data.potongan_iuran_ik.toString())}`)
+                        $('#proses-modal #total_potongan_dpp').html(`Rp ${formatRupiah(data.potongan_dpp.toString())}`)
+                        $('#proses-modal #total_potongan_bpjs_tk').html(`Rp ${formatRupiah(data.potongan_bpjs_tk.toString())}`)
                         $('#proses-modal #total_potongan').html(`Rp ${formatRupiah(data.potongan.toString())}`)
                         $('#proses-modal #total_netto').html(`Rp ${formatRupiah(data.netto.toString())}`)
                         $('.loader-wrapper').attr('style', 'display: none;')
-                    }
-                    else {
                     }
                 },
                 error: function(e) {
@@ -221,6 +224,10 @@
                 }
             })
         }
+
+        $('#jabatan').change(function(e) {
+            loadDataPenghasilan(false)
+        })
 
         $("#tahun").change(function(e){
             var tahun = $(this).val();

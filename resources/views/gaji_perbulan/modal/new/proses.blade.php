@@ -13,8 +13,16 @@
                     <button data-modal-dismiss="proses-modal"  type="button" class="modal-close"><i class="ti ti-x"></i></button>
                 </div>
                 <div class="modal-body">
-                    <p class="text-red-500" id="note">Catatan! Proses penggajian untuk pegawai.</p>
-                    <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 mt-2">
+                    <div class="input-box jabatan-box">
+                        <label>Jabatan</label>
+                        <select name="jabatan" id="jabatan" class="form-input">
+                            <option value="">Pegawai</option>
+                            <option value="DIR">Direksi</option>
+                            <option value="KOM">Komisaris</option>
+                            <option value="STAD">Staf Ahli</option>
+                        </select>
+                    </div>
+                    <div class="grid lg:grid-cols-2 grid-cols-1 gap-5 my-2">
                         <div class="col-md-6">
                             <div class="flex gap-5">
                                 <label>Total Karyawan : </label>
@@ -27,12 +35,7 @@
                                 <b id="total_bruto"></b>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="flex gap-5">
-                                <label>Total Potongan : </label>
-                                <b id="total_potongan"></b>
-                            </div>
-                        </div>
+                        <div></div>
                         <div class="col-md-6">
                             <div class="flex gap-5">
                                 <label>Total Netto : </label>
@@ -40,6 +43,59 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
+                    <div class="my-2">
+                        <b>Potongan</b>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <div class="grid grid-cols-3">
+                                <div><label>Kredit Koperasi</label></div>
+                                <div style="width: 10px;">:</div>
+                                <div style="width: 200px;"><b id="total_potongan_kredit_koperasi"></b></div>
+                            </div>
+                            <div class="grid grid-cols-3">
+                                <div><label>Iuran Koperasi</label></div>
+                                <div style="width: 10px;">:</div>
+                                <div style="width: 200px;"><b id="total_potongan_iuran_koperasi"></b></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <div class="grid grid-cols-3">
+                                <div><label>Kredit Pegawai</label></div>
+                                <div style="width: 10px;">:</div>
+                                <div style="width: 200px;"><b id="total_potongan_kredit_pegawai"></b></div>
+                            </div>
+                            <div class="grid grid-cols-3">
+                                <div><label>Iuran IK</label></div>
+                                <div style="width: 10px;">:</div>
+                                <div style="width: 200px;"><b id="total_potongan_iuran_ik"></b></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <div class="grid grid-cols-3">
+                                <div><label>DPP</label></div>
+                                <div style="width: 10px;">:</div>
+                                <div style="width: 200px;"><b id="total_potongan_dpp"></b></div>
+                            </div>
+                            <div class="grid grid-cols-3">
+                                <div><label>BPJS TK</label></div>
+                                <div style="width: 10px;">:</div>
+                                <div style="width: 200px;"><b id="total_potongan_bpjs_tk"></b></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <div class="grid grid-cols-3">
+                                <div></div>
+                                <div style="width: 10px;"></div>
+                                <div></div>
+                            </div>
+                            <div class="grid grid-cols-3">
+                                <div><label>Total Potongan</label></div>
+                                <div style="width: 10px;">:</div>
+                                <div style="width: 200px;"><b id="total_potongan"></b></div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
                     <div class="mt-4">
                         <div class="">
                             <div class="input-box">

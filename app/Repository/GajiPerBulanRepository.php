@@ -605,4 +605,34 @@ class GajiPerBulanRepository
             ->first('tanggal_input');
         return $batch;
     }
+
+    public static function getJabatanDirut() {
+        $orderRaw = "
+            CASE
+            WHEN kd_jabatan='DIRUT' THEN 1
+            WHEN kd_jabatan='DIRUMK' THEN 2
+            WHEN kd_jabatan='DIRPEM' THEN 3
+            WHEN kd_jabatan='DIRHAN' THEN 4
+            WHEN kd_jabatan='KOMU' THEN 5
+            WHEN kd_jabatan='KOM' THEN 7
+            WHEN kd_jabatan='STAD' THEN 8
+            WHEN kd_jabatan='PIMDIV' THEN 9
+            WHEN kd_jabatan='PSD' THEN 10
+            WHEN kd_jabatan='PC' THEN 11
+            WHEN kd_jabatan='PBP' THEN 12
+            WHEN kd_jabatan='PBO' THEN 13
+            WHEN kd_jabatan='PEN' THEN 14
+            WHEN kd_jabatan='ST' THEN 15
+            WHEN kd_jabatan='NST' THEN 16
+            WHEN kd_jabatan='IKJP' THEN 17 END ASC
+        ";
+        $kd_jabatan = DB::table('mst_jabatan')
+                    ->select('kd_jabatan', 'nama_jabatan')
+                    ->where('nama_jabatan', 'like', '%Direktur%')
+                    ->orWhere('nama_jabatan', 'like', '%Komisaris%')
+                    ->orWhere('nama_jabatan', 'like', '%Ahli%')
+                    ->orderByRaw($orderRaw)
+                    ->get();
+        return $kd_jabatan;
+    }
 }
