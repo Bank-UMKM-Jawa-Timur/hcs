@@ -1362,6 +1362,7 @@ class LaporanTetapRepository
                 'tanggal_penonaktifan',
                 'kpj',
                 'jkn',
+                'mst_karyawan.status_ptkp',
                 DB::raw("
                     IF(
                         mst_karyawan.status = 'Kawin',
