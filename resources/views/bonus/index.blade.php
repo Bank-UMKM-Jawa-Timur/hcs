@@ -105,7 +105,7 @@
                                                 class="btn btn-success">Lock</a>
                                         @endcan
                                         @can('penghasilan - edit - bonus')
-                                            <a href="{{ route('edit-tunjangan-bonus-new', $item->id_tunjangan) }}?idTunjangan={{$item->id_tunjangan}}&tanggal={{$item->new_date}}&entitas={{$item->kd_entitas}}" class="btn btn-warning-light">Edit</a>
+                                            <a href="{{ route('edit-tunjangan-bonus-new', $item->id_tunjangan) }}?idTunjangan={{$item->id_tunjangan}}&tanggal={{$item->new_date}}&entitas={{$item->kd_entitas}}&user_id={{$item->user_id}}" class="btn btn-warning-light">Edit</a>
                                         @endcan
                                     @endif
                                 @else
