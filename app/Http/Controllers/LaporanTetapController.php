@@ -118,7 +118,7 @@ class LaporanTetapController extends Controller
             $penandatangan = '247504327618000';
         }
 
-        $filename = 'E-Bupot 21 Masa '. date('m', $month) . ' (' .$kd. ')';
+        $filename = 'E-Bupot 21 Masa '. date('m', $month) . ' (' .$kd_entitas. ')';
 
         return Excel::download(new ExportScanEbupot($data, $lastdate, $penandatangan, $total_data, $month, $year),
         $filename . '.xlsx');

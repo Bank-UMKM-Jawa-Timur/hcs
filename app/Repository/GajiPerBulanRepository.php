@@ -10,15 +10,12 @@ class GajiPerBulanRepository
     public function getPenghasilanList($cabang, $status, $limit=10, $page = 1, $search) {
         $is_cabang = auth()->user()->hasRole('cabang');
         $is_pusat = auth()->user()->hasRole('kepegawaian');
-        $kd_cabang = DB::table('mst_cabang')
-                        ->select('kd_cabang')
-                        ->pluck('kd_cabang')
-                        ->toArray();
 
         $data = DB::table('batch_gaji_per_bulan AS batch')
                 ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
                 ->join('pph_yang_dilunasi AS pph', 'pph.gaji_per_bulan_id', 'gaji.id')
                 ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+                ->leftJoin('mst_divisi AS md', 'md.kd_divisi', 'm.kd_entitas')
                 ->join('mst_cabang AS cab', 'cab.kd_cabang', 'batch.kd_entitas')
                 ->select(
                     'batch.id',
@@ -43,6 +40,8 @@ class GajiPerBulanRepository
                     DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS bruto'),
                     DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik + gaji.dpp + gaji.bpjs_tk) AS SIGNED) AS total_potongan'),
                     DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) - SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik + gaji.dpp + gaji.bpjs_tk) AS SIGNED) AS netto'),
+                    'm.kd_entitas AS entitas_karyawan',
+                    'md.nama_divisi',
                 )
                 ->where(function ($query) use ($search) {
                     $query->where('gaji.tahun', 'like', "%$search%")
@@ -57,10 +56,8 @@ class GajiPerBulanRepository
                     $kd_cabang = auth()->user()->kd_cabang;
                     $query->where('batch.kd_entitas', $kd_cabang);
                 })
-                ->when($is_pusat, function($query) use ($kd_cabang) {
-                    $query->where(function($q2) use ($kd_cabang) {
-                        $q2->where('batch.kd_entitas', '000');
-                    });
+                ->when($is_pusat, function($query) {
+                    $query->where('batch.kd_entitas', '000');
                 })
                 ->where('batch.status', $status)
                 ->whereNull('batch.deleted_at')
@@ -170,7 +167,7 @@ class GajiPerBulanRepository
 
                     $transaksi_tunjangan = DB::table('transaksi_tunjangan')
                                             ->where('nip', $gaji->nip)
-                                            ->where('tahun', $gaji->tahun)
+                                            ->whereYear('tanggal', $gaji->tahun)
                                             ->where(function($query) use ($tahun, $bulan, $tanggal, $day, $kd_entitas) {
                                                 if ($bulan > 1) {
                                                     // Tanggal penggajian bulan sebelumnya
@@ -304,15 +301,11 @@ class GajiPerBulanRepository
     public function getPenghasilanTrash($cabang, $status, $limit=10, $page = 1, $search) {
         $is_cabang = auth()->user()->hasRole('cabang');
         $is_pusat = auth()->user()->hasRole('kepegawaian');
-        $kd_cabang = DB::table('mst_cabang')
-                        ->select('kd_cabang')
-                        ->pluck('kd_cabang')
-                        ->toArray();
-
         $data = DB::table('batch_gaji_per_bulan AS batch')
                 ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
                 ->join('pph_yang_dilunasi AS pph', 'pph.gaji_per_bulan_id', 'gaji.id')
                 ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+                ->leftJoin('mst_divisi AS md', 'md.kd_divisi', 'm.kd_entitas')
                 ->join('mst_cabang AS cab', 'cab.kd_cabang', 'batch.kd_entitas')
                 ->select(
                     'batch.id',
@@ -332,6 +325,8 @@ class GajiPerBulanRepository
                     DB::raw('CAST(SUM(pph.total_pph) - SUM(pph.insentif_kredit + pph.insentif_penagihan) AS SIGNED) AS hasil_pph'),
                     DB::raw('CAST(SUM(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS bruto'),
                     DB::raw('CAST(SUM(gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik) AS SIGNED) AS total_potongan'),
+                    'm.kd_entitas AS entitas_karyawan',
+                    'md.nama_divisi',
                 )
                 ->where(function ($query) use ($search) {
                     $query->where('gaji.tahun', 'like', "%$search%")
@@ -346,10 +341,8 @@ class GajiPerBulanRepository
                     $kd_cabang = auth()->user()->kd_cabang;
                     $query->where('batch.kd_entitas', $kd_cabang);
                 })
-                ->when($is_pusat, function($query) use ($kd_cabang) {
-                    $query->where(function($q2) use ($kd_cabang) {
-                        $q2->where('batch.kd_entitas', '000');
-                    });
+                ->when($is_pusat, function($query) {
+                    $query->where('batch.kd_entitas', '000');
                 })
                 ->whereNotNull('batch.deleted_at')
                 ->orderBy('gaji.created_at', 'desc')
@@ -604,5 +597,35 @@ class GajiPerBulanRepository
             ->orderByDesc('id')
             ->first('tanggal_input');
         return $batch;
+    }
+
+    public static function getDivisiNonPegawai() {
+        $orderRaw = "
+            CASE
+            WHEN kd_jabatan='DIRUT' THEN 1
+            WHEN kd_jabatan='DIRUMK' THEN 2
+            WHEN kd_jabatan='DIRPEM' THEN 3
+            WHEN kd_jabatan='DIRHAN' THEN 4
+            WHEN kd_jabatan='KOMU' THEN 5
+            WHEN kd_jabatan='KOM' THEN 7
+            WHEN kd_jabatan='STAD' THEN 8
+            WHEN kd_jabatan='PIMDIV' THEN 9
+            WHEN kd_jabatan='PSD' THEN 10
+            WHEN kd_jabatan='PC' THEN 11
+            WHEN kd_jabatan='PBP' THEN 12
+            WHEN kd_jabatan='PBO' THEN 13
+            WHEN kd_jabatan='PEN' THEN 14
+            WHEN kd_jabatan='ST' THEN 15
+            WHEN kd_jabatan='NST' THEN 16
+            WHEN kd_jabatan='IKJP' THEN 17 END ASC
+        ";
+        $kd_jabatan = DB::table('mst_jabatan')
+                    ->select('kd_jabatan', 'nama_jabatan')
+                    ->where('nama_jabatan', 'like', '%Direktur%')
+                    ->orWhere('nama_jabatan', 'like', '%Komisaris%')
+                    ->orWhere('nama_jabatan', 'like', '%Ahli%')
+                    ->orderByRaw($orderRaw)
+                    ->get();
+        return $kd_jabatan;
     }
 }

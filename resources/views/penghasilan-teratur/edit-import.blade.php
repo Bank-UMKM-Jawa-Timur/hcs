@@ -94,7 +94,7 @@
                     <input type="hidden" name="old_tunjangan" value="{{$old_id}}">
                     <input type="hidden" name="created_at" value="{{\Request::get('createdAt')}}">
                     <input type="hidden" name="bulan" class="form-control bulan-input" value="" readonly>
-                    <input type="hidden" name="kdEntitas" class="form-control" value="{{ Request()->entitas }}" readonly>
+                    <input type="hidden" name="kdEntitas" class="form-control" value="{{ Request()->get('entitas') }}" readonly>
                     <div class="d-flex justify-content-start hidden" id="cover-btn-simpan">
                         <button type="submit" class="btn btn-primary" id="btn-simpan">Simpan</button>
                     </div>
@@ -133,14 +133,21 @@
 
 @push('extraScript')
     <script>
+        // $('.preloader').removeClass('hidden')
+
+        // setTimeout(() => {
+        //     $('.preloader').addClass('hidden')
+        // }, 2000);
         $(document).ready(function() {
             var grandTotalNominal = 0;
+            var penghasilan = '';
             $('#penghasilan-kat').on('change', function(){
                 var value = $("#penghasilan-kat").val()
                 var hari_ini = new Date();
                 var tanggal = hari_ini.getDate();
                 var message = '';
                 var nmbr = 0;
+                penghasilan = value;
 
                 // 11 = tranport, 12 = pulsa, 13 = vitamin, 14 = uang makan
 
@@ -149,15 +156,15 @@
                         var message = "success"
                         $('#error-penghasilan').addClass('hidden')
                     } else {
-                        if (value == 12) {
-                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
-                        } else if (value == 13 && tanggal > 5) {
-                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
-                        }
+                        // if (value == 12) {
+                        //     var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
+                        // } else if (value == 13 && tanggal > 5) {
+                        //     var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
+                        // }
 
                         // alertWarning(message)
-                        $('#error-penghasilan').removeClass('hidden').html(message)
-                        $("#penghasilan-kat").val("")
+                        // $('#error-penghasilan').removeClass('hidden').html(message)
+                        // $("#penghasilan-kat").val("")
                     }
                 } else if(value == 13){
                     if (tanggal >= 1 && tanggal <= 5 ) {
@@ -165,16 +172,15 @@
                         $('#error-penghasilan').addClass('hidden')
                     }
                     else {
-                        if (value == 12) {
-                            var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
-                            nmbr++
-                        } else if (value == 13) {
-                            var message = 'Transaksi vitamin hanya bisa dilakukan pada tanggal 1 sampai 5'
-                            nmbr++
-                        }
-                        // alertWarning(message)
-                        $('#error-penghasilan').removeClass('hidden').html(message)
-                        $("#penghasilan-kat").val("")
+                        // if (value == 12) {
+                        //     var message = 'Transaksi pulsa hanya bisa dilakukan pada tanggal 1 sampai 10'
+                        //     nmbr++
+                        //     $('#error-penghasilan').removeClass('hidden').html(message)
+                        //     $("#penghasilan-kat").val("")
+                        // } else if (value == 13) {
+                        //     // var message = 'kosong'
+                        //     $('#error-penghasilan').addClass('hidden')
+                        // }
                     }
                 } else {
                     $('#error-penghasilan').addClass('hidden')
@@ -183,34 +189,34 @@
 
             $('#filter').on('click', function(e) {
                 $('#card-alert').removeClass('hidden');
-                let kdEntitasUser = `{{ auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000' }}`
-                let kdEntitasData = `{{ Request()->entitas }}`
                 var penghasilan = $('#penghasilan-kat').val();
                 var filePenghasilan = $('#file-penghasilan').val();
+                var bulanInput = $('#bulan').val();
 
-                if (penghasilan && filePenghasilan) {
-                    if (kdEntitasUser === kdEntitasData) {
-                        importExcel();
-                        $('#table_item tbody').empty();
-                        $('#error-penghasilan').addClass('hidden')
-                        $('#error-file').addClass('hidden')
-                    }else{
-                        if (kdEntitasUser === '000') {
-                            alertWarning("Pusat Tidak Bisa Edit Data Cabang");
-                        }else{
-                            alertWarning("Tidak Bisa Edit Data Cabang");
-                        }
-                    }
+                if (penghasilan && filePenghasilan && bulanInput) {
+                    importExcel();
+                    $('#table_item tbody').empty();
+                    $('#error-penghasilan').addClass('hidden')
+                    $('#error-file').addClass('hidden')
+                    $('#error-bulan').addClass('hidden')
                 } else {
-                    if (penghasilan == "" && filePenghasilan) {
+                    if (penghasilan == "" && filePenghasilan && bulanInput) {
                         $('#error-penghasilan').removeClass('hidden').html('Kategori belum di pilih.')
                         $('#error-file').addClass('hidden')
+                        $('#error-bulan').addClass('hidden')
                     }
-                    else if (!filePenghasilan && penghasilan){
+                    else if (filePenghasilan == "" && penghasilan && bulanInput){
                         $('#error-file').removeClass('hidden')
                         $('#error-penghasilan').addClass('hidden')
+                        $('#error-bulan').addClass('hidden')
+                    }
+                    else if (bulanInput = "" && filePenghasilan && penghasilan){
+                        $('#error-file').addClass('hidden')
+                        $('#error-penghasilan').addClass('hidden')
+                        $('#error-bulan').removeClass('hidden')
                     }
                     else {
+                        $('#error-bulan').removeClass('hidden')
                         $('#error-penghasilan').removeClass('hidden').html('Kategori belum di pilih.')
                         $('#error-file').removeClass('hidden')
                     }
@@ -279,7 +285,6 @@
                         alert("Unggah file Excel yang valid!");
                         $('#table_item tbody').empty();
                         $('#hasil-filter').addClass('hidden');
-                        $('#btn-simpan').addClass('hidden');
                         $('#cover-btn-simpan').addClass('hidden');
                     }
             }
@@ -336,7 +341,6 @@
                 var hasSuccess = false;
 
                 $.each(sheet_data,function(key, value) {
-                    console.log(value);
                     if (sheet_data[key].hasOwnProperty('Nominal') && sheet_data[key].hasOwnProperty('NIP')) {
                         // console.log(value['Nominal'].replace(/[ ,.Rprp]/g, ""));
                         dataNip.push({ nip: value['NIP'], row: key + 1 });
@@ -427,7 +431,7 @@
                             }
                             if (value.cek_nip || value.cek_tunjangan) {
                                 let nipDuplicate = duplicateNIP.find((item) => item == value.nip)
-                                if (nipDuplicate) {
+                                if (nipDuplicate = undefined) {
                                     checkNip.push("Duplikasi " + value.nip + " baris " + noEmpty++);
                                     hasError = true;
                                     hasNip = true;
@@ -454,6 +458,10 @@
                                             </td>
                                         </tr>
                                     `;
+                                }
+                                else {
+                                    console.log('gass');
+                                    hasError = false;
                                 }
                             }
                         })
@@ -586,22 +594,64 @@
             }
 
             $('#btn-simpan').on('click', function(){
+                // setTimeout(() => {
+                //     $('.preloader').addClass('hidden')
+                // }, 3000);
+
                 $("#loadingModal").modal({
                     keyboard: false
                 });
                 $("#loadingModal").modal("show");
             })
-            function alertWarning(message) {
-                Swal.fire({
-                    tittle: 'Warning!',
-                    html: message,
-                    icon: 'warning',
-                    iconColor: '#DC3545',
-                    confirmButtonText: 'Ya',
-                    confirmButtonColor: '#DC3545'
-                }).then((result) => {
-                    return result.isConfirmed;
-                })
+
+            function getMonth(bulan) {
+                bulans = parseInt(bulan);
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+                return months[bulans - 1];
+            }
+
+            function alertDanger(message) {
+                // Display an alert with danger style
+                $('#alert-massage').removeClass('hidden');
+
+                $('#alert-massage').html(`
+                    <div id="alert-border-2" class="flex items-center p-4 mb-4 text-red-800 border-t-4 border-red-300 bg-red-50">
+                        <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                        </svg>
+                        <div class="ms-3 text-sm font-medium">
+                            ${message}
+                        </div>
+                        <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-8 w-8"  data-dismiss-target="#alert-border-2" aria-label="Close">
+                        <span class="sr-only">Dismiss</span>
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        </button>
+                    </div>
+                `);
+            }
+            function alertSuccess(message) {
+                // Display an alert with danger style
+                $('#alert-massage').removeClass('hidden');
+
+                $('#alert-massage').html(`
+                    <div id="alert-border-3" class="flex items-center p-4 mb-4 text-green-800 border-t-4 border-green-300 bg-green-50" role="alert">
+                        <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                        </svg>
+                        <div class="ms-3 text-sm font-medium">
+                            ${message}
+                        </div>
+                        <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"  data-dismiss-target="#alert-border-3" aria-label="Close">
+                        <span class="sr-only">Dismiss</span>
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        </button>
+                    </div>
+                `);
             }
 
         });

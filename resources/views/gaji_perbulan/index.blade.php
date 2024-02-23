@@ -48,12 +48,12 @@
                 <button class="btn btn-primary-light lg:text-base text-xs penghasilan-all-kantor" data-modal-id="penghasilan-kantor-modal" data-modal-toggle="modal"><i class="ti ti-file-import"></i> Penghasilan Semua Kantor</button>
             @endif
             @can('penghasilan - proses penghasilan - proses')
-                @if (auth()->user()->hasRole('kepegawaian'))
+                {{--  @if (auth()->user()->hasRole('kepegawaian'))
                     <button class="btn btn-warning btn-proses lg:text-base text-xs" data-modal-id="proses-modal"
                         data-modal-toggle="modal" data-is_pegawai="false">
                         <i class="ti ti-plus"></i> Proses Penggajian Lainnya
                     </button>
-                @endif
+                @endif  --}}
                 <button class="btn btn-primary btn-proses lg:text-base text-xs" data-modal-id="proses-modal"
                     data-modal-toggle="modal" data-is_pegawai="true">
                     <i class="ti ti-plus"></i> Proses Penggajian
@@ -235,21 +235,19 @@
             let cabang_req = $('#cabang_req').val();
             var customParam = "";
             customParam += "&tab=" + $('#tab').val();
-                if (tab == 'proses') {
-                    customParam += "&page_length_proses=" + $('.page_length_proses').val();
-                    customParam += "&q_proses=" + $('#q').val();
-                    customParam += "&cabang=" + cabang_req;
-                } else if(tab == 'final'){
-                    customParam += "&page_length_final=" + $('.page_length_final').val();
-                    customParam += "&q_final=" + $('#q').val();
-                    customParam += "&cabang=" + cabang_req;
-                } else {
-                    customParam += "&page_length_final=" + $('.page_length_sampah').val();
-                    customParam += "&q_sampah=" + $('#q').val();
-                    customParam += "&cabang=" + cabang_req;
-                }
-
-            console.log(customParam);
+            if (tab == 'proses') {
+                customParam += "&page_length_proses=" + $('.page_length_proses').val();
+                customParam += "&q_proses=" + $('#q').val();
+                customParam += "&cabang=" + cabang_req;
+            } else if(tab == 'final'){
+                customParam += "&page_length_final=" + $('.page_length_final').val();
+                customParam += "&q_final=" + $('#q').val();
+                customParam += "&cabang=" + cabang_req;
+            } else {
+                customParam += "&page_length_final=" + $('.page_length_sampah').val();
+                customParam += "&q_sampah=" + $('#q').val();
+                customParam += "&cabang=" + cabang_req;
+            }
 
             btn_pagination.each(function (i, obj) {
                 // Clone the original href to avoid modifying the original link

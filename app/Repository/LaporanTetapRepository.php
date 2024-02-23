@@ -304,7 +304,17 @@ class LaporanTetapRepository
                 'tanggal_penonaktifan',
                 'kpj',
                 'jkn',
-                'status_ptkp',
+                DB::raw("
+                    IF(
+                        mst_karyawan.status = 'Kawin',
+                        'K',
+                        IF(
+                            mst_karyawan.status = 'Belum Kawin',
+                            'TK/0',
+                            mst_karyawan.status
+                        )
+                    ) AS status
+                "),
                 'status_karyawan',
                 'mst_karyawan.kd_entitas',
                 'kd_jabatan',
@@ -312,7 +322,7 @@ class LaporanTetapRepository
                 'alamat_ktp',
                 'jk',
                 'mst_karyawan.gj_pokok',
-                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang) LIMIT 1), 1, 0) AS status_kantor")
             )
             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
@@ -334,11 +344,7 @@ class LaporanTetapRepository
                     });
             });
 
-        if ($cetak) {
-            $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
-        } else {
-            $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->paginate($limit);
-        }
+        $data = $data->where('gaji_per_bulan.bulan', $month)->where('gaji_per_bulan.tahun', $year)->get();
 
         foreach ($data as $key => $karyawan) {
             if ($kategori == 'ebupot') {
@@ -1374,7 +1380,7 @@ class LaporanTetapRepository
                 'alamat_ktp',
                 'jk',
                 'mst_karyawan.gj_pokok',
-                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang) LIMIT 1), 1, 0) AS status_kantor")
             )
             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')
@@ -2438,7 +2444,7 @@ class LaporanTetapRepository
                 'alamat_ktp',
                 'jk',
                 'mst_karyawan.gj_pokok',
-                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang) LIMIT 1), 1, 0) AS status_kantor")
             )
             ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji_per_bulan.batch_id')

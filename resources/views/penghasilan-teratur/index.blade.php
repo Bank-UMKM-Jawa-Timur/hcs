@@ -112,7 +112,7 @@
                                             $cant_lock_edit = true;
                                         @endphp
                                         <a href="{{route('penghasilan.lock')}}?id_tunjangan={{$item->id_transaksi_tunjangan}}&tanggal={{\Carbon\Carbon::parse($item->tanggal)->translatedFormat('Y-m-d')}}&created_at={{$item->created_at}}"
-                                            class="btn btn-success">Lock</a>
+                                            class="btn btn-success mr-2">Lock</a>
                                     @endcan
                                     @can('penghasilan - edit - penghasilan teratur')
                                         @php

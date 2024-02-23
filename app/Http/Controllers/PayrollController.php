@@ -102,7 +102,7 @@ class PayrollController extends Controller
                     'mst_karyawan.status_jabatan',
                     'mst_karyawan.ket_jabatan',
                     'mst_karyawan.kd_entitas',
-                    DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                    DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang) LIMIT 1), 1, 0) AS status_kantor")
                 )
                 ->with('jabatan')
                 ->with('bagian')

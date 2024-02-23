@@ -20,9 +20,10 @@
             });
         })
         $('#proses-modal #form').on('submit', function() {
-            $('.loader-wrapper').removeAttr('style')
+            $('#proses-modal #btn-proses-penghasilan').prop('disabled', true)
+            $('.preloader').removeAttr('style')
         })
-        $('#uploadFile').on('click',function() {
+        $('.btn-finalisasi').on('click',function() {
             let batch_id = $(this).data('batch_id');
             let target = $(this).data('target');
             $(`${target} #id`).val(batch_id);
@@ -185,28 +186,31 @@
             }
         })
 
-        function loadDataPenghasilan(is_pegawai) {
-            $('.loader-wrapper').removeAttr('style')
-
+        function loadDataPenghasilan() {
+            $('.preloader').removeAttr('style')
+            var divisi = $('#divisi').val()
+            var is_pegawai = divisi == '';
+            $('#proses-modal #is_pegawai').val(is_pegawai)
             $.ajax({
-                url: `{{ route('gaji_perbulan.get_data_penghasilan_json') }}?is_pegawai=${is_pegawai}`,
+                url: `{{ route('gaji_perbulan.get_data_penghasilan_json') }}?is_pegawai=${is_pegawai}&divisi=${divisi}`,
                 method: 'GET',
                 success: function(response) {
                     if (response.status == 'success') {
                         var data = response.data
-
-                        var note = is_pegawai ? 'Catatan! Proses penggajian untuk pegawai.' : 'Catatan! Proses penggajian untuk direktur, komisaris dan staf ahli.'
-                        $('#proses-modal #note').html(note)
                         $('#proses-modal #is_pegawai').val(is_pegawai)
                         $('#proses-modal #tahun_terakhir').val(data.penghasilan_tahun_terakhir)
                         $('#proses-modal #bulan_terakhir').val(data.penghasilan_bulan_terakhir)
                         $('#proses-modal #total_karyawan').html(data.total_karyawan)
                         $('#proses-modal #total_bruto').html(`Rp ${formatRupiah(data.bruto.toString())}`)
+                        $('#proses-modal #total_potongan_kredit_koperasi').html(`Rp ${formatRupiah(data.potongan_kredit_koperasi.toString())}`)
+                        $('#proses-modal #total_potongan_iuran_koperasi').html(`Rp ${formatRupiah(data.potongan_iuran_koperasi.toString())}`)
+                        $('#proses-modal #total_potongan_kredit_pegawai').html(`Rp ${formatRupiah(data.potongan_kredit_pegawai.toString())}`)
+                        $('#proses-modal #total_potongan_iuran_ik').html(`Rp ${formatRupiah(data.potongan_iuran_ik.toString())}`)
+                        $('#proses-modal #total_potongan_dpp').html(`Rp ${formatRupiah(data.potongan_dpp.toString())}`)
+                        $('#proses-modal #total_potongan_bpjs_tk').html(`Rp ${formatRupiah(data.potongan_bpjs_tk.toString())}`)
                         $('#proses-modal #total_potongan').html(`Rp ${formatRupiah(data.potongan.toString())}`)
                         $('#proses-modal #total_netto').html(`Rp ${formatRupiah(data.netto.toString())}`)
-                        $('.loader-wrapper').attr('style', 'display: none;')
-                    }
-                    else {
+                        $('.preloader').attr('style', 'display: none;')
                     }
                 },
                 error: function(e) {
@@ -221,6 +225,10 @@
                 }
             })
         }
+
+        $('#divisi').change(function(e) {
+            loadDataPenghasilan(false)
+        })
 
         $("#tahun").change(function(e){
             var tahun = $(this).val();
@@ -244,7 +252,7 @@
             const tanggal = $('#tanggal').val()
 
             if (bulan != 0 && tahun != 0 && tanggal)
-                $('.loader-wrapper').removeAttr('style')
+                $('.preloader').removeAttr('style')
         })
 
         function showDetail(data) {
@@ -327,7 +335,6 @@
                 ],
                 footerCallback: function( row, data, start, end, display ) {
                     var api = this.api(),data;
-                    console.log(data);
                     var intVal = function ( i ) {
                         return typeof i === 'string' ?
                             i.replace(/[\$,]/g, '')*1 :
@@ -441,7 +448,7 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $('.loader-wrapper').removeAttr('style')
+                        $('.preloader').removeAttr('style')
                         $('#form-finalisasi').submit()
                     }
                 })
@@ -456,7 +463,8 @@
 
         $('#penyesuaian-modal #btn-update').on('click', function(e) {
             e.preventDefault();
-            $('.loader-wrapper').removeAttr('style')
+            $('.preloader').removeAttr('style')
+            $(this).prop('disabled', true)
             $('#penyesuaian-modal #form').submit()
         })
 

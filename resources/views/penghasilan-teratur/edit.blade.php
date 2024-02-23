@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="button-wrapper flex gap-3">
-                <a href="{{ route('penghasilan.edit-tunjangan-import') }}?idTunjangan={{ Request()->get('idTunjangan') }}&bulan={{ Request()->get('bulan') }}&tanggal={{ Request()->get('tanggal') }}&createdAt={{ Request()->get('createdAt') }}&entitas={{ Request()->get('entitas') }}"
+                <a href="{{ route('penghasilan.edit-tunjangan-import') }}?idTunjangan={{ Request()->get('idTunjangan') }}&bulan={{ Request()->get('bulan') }}&tanggal={{ Request()->get('tanggal') }}&createdAt={{ Request()->get('createdAt') }}&entitas={{ Request()->get('kdEntitas') }}"
                     class="btn btn-warning-light">Import</a>
             </div>
         </div>

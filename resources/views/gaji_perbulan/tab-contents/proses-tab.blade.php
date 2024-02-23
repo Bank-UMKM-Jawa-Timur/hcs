@@ -65,7 +65,7 @@
         @endphp
         <tr>
             <td class="text-center">{{ $i++ }}</td>
-            <td class="text-center">{{ $item->is_pegawai ? 'Pegawai' : 'Lainnya' }}</td>
+            <td class="text-center">{{ $item->nama_divisi ? $item->nama_divisi : 'Pegawai' }}</td>
             @if (auth()->user()->hasRole('admin'))
                 <td class="text-center">{{ $item->kantor }}</td>
             @endif
@@ -144,38 +144,38 @@
                     Rp {{number_format($item->hasil_pph, 0, ',', '.')}}
                 </td>
             @endif
-            <td class="text-center border-none  justify-center flex">
-                @if($item->status == 'proses')
-                    @if($item->total_penyesuaian > 0)
-                        @can('penghasilan - proses penghasilan - proses')
-                            <a href="#" class="btn btn-warning btn-perbarui"
-                                data-modal-id="penyesuaian-modal" data-modal-toggle="penyesuaian-modal"
-                                data-batch_id="{{$item->id}}">Perbarui</a>
-                        @endcan
-                    @else
-                        @can('penghasilan - proses penghasilan - proses')
-                            @if ($item->tanggal_cetak != null && $item->tanggal_upload == null)
-                                @can('penghasilan - proses penghasilan - lampiran gaji - upload')
-                                    @if ($item->file == null)
-                                        <a class="btn btn-primary" data-modal-id="modalUploadfile" data-modal-toggle="modal" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">
-                                            <i class="ti ti-circle-check"></i>Finalisasi
-                                        </a>
-                                    @endif
-                                @endcan
-                            @endif
-                        @endcan
+            <td class="text-center">
+                <div class="justify-center flex">
+                    @if($item->status == 'proses')
+                        @if($item->total_penyesuaian > 0)
+                            @can('penghasilan - proses penghasilan - proses')
+                                <a href="#" class="btn btn-warning btn-perbarui"
+                                    data-modal-id="penyesuaian-modal" data-modal-toggle="penyesuaian-modal"
+                                    data-batch_id="{{$item->id}}">Perbarui</a>
+                            @endcan
+                        @else
+                            @can('penghasilan - proses penghasilan - proses')
+                                @if ($item->tanggal_cetak != null && $item->tanggal_upload == null)
+                                    @can('penghasilan - proses penghasilan - lampiran gaji - upload')
+                                        @if ($item->file == null)
+                                            <a class="btn btn-primary btn-finalisasi" data-modal-id="modalUploadfile" data-modal-toggle="modal" href="#" id="uploadFile"  data-toggle="modal" data-target="#modalUploadfile" data-batch_id="{{ $item->id }}">
+                                                <i class="ti ti-circle-check"></i>Finalisasi
+                                            </a>
+                                        @endif
+                                    @endcan
+                                @endif
+                            @endcan
+                        @endif
                     @endif
-                @else
-                    -
-                @endif
-                @if (auth()->user()->hasRole('admin'))
-                    <a href="#" class="btn btn-danger d-flex justify-center btn-delete"
-                        data-batch_id="{{$item->id}}"
-                        data-kantor="{{$item->kantor}}"
-                        data-bulan="{{$item->bulan}}"
-                        data-tahun="{{$item->tahun}}"
-                        >Hapus</a>
-                @endif
+                    @if (auth()->user()->hasRole('admin'))
+                        <a href="#" class="btn btn-danger d-flex justify-center btn-delete"
+                            data-batch_id="{{$item->id}}"
+                            data-kantor="{{$item->kantor}}"
+                            data-bulan="{{$item->bulan}}"
+                            data-tahun="{{$item->tahun}}"
+                            >Hapus</a>
+                    @endif
+                </div>
             </td>
         </tr>
     @empty

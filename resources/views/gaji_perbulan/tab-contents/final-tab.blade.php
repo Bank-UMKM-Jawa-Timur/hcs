@@ -64,7 +64,7 @@
             @endphp
             <tr>
                 <td class="text-center">{{$i++}}</td>
-                <td class="text-center">{{ $item->is_pegawai ? 'Pegawai' : 'Lainnya' }}</td>
+                <td class="text-center">{{ $item->nama_divisi ? $item->nama_divisi : 'Pegawai' }}</td>
                 @if (auth()->user()->hasRole('admin'))
                     <td class="text-center">{{ $item->kantor }}</td>
                 @endif
@@ -142,8 +142,8 @@
                     </td>
                 @endif
                 {{-- aksi --}}
-                @if (auth()->user()->hasRole('admin'))
-                    <td>
+                <td>
+                    @if (auth()->user()->hasRole('admin'))
                         <a href="#" class="btn btn-danger d-flex justify-center btn-delete"
                             data-batch_id="{{$item->id}}"
                             data-kantor="{{$item->kantor}}"
@@ -151,12 +151,12 @@
                             data-tahun="{{$item->tahun}}">
                             Hapus
                         </a>
-                    </td>
-                @endif
+                    @endif
+                </td>
             </tr>
         @empty
             <tr>
-            <td colspan="{{auth()->user()->hasRole('admin') ? 11 : 10}}" class="text-center">Belum ada penghasilan yang telah difinal.</td>
+                <td colspan="{{auth()->user()->hasRole('admin') ? 14 : 13}}" class="text-center">Belum ada penghasilan yang telah difinal.</td>
             </tr>
         @endforelse
     </tbody>

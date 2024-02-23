@@ -142,7 +142,11 @@ class GajiPerBulanController extends Controller
         $proses_list = $gajiRepo->getPenghasilanList($cabang_req,'proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search_proses);
         // Final
         $final_list = $gajiRepo->getPenghasilanList($cabang_req,'final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search_final);
-        // sampah
+        // Sampah
+
+        // Kode Jabatan direktur,komisaris & staf ahli
+        $kd_divisi_non_pegawai = GajiPerBulanRepository::getDivisiNonPegawai();
+
         if(auth()->user()->hasRole('admin')) {
             $sampah = $gajiRepo->getPenghasilanTrash($cabang_req,null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1, $search_sampah);
             $data = [
@@ -150,6 +154,7 @@ class GajiPerBulanController extends Controller
                 'proses_list' => $proses_list,
                 'final_list' => $final_list,
                 'sampah' => $sampah,
+                'kd_divisi_non_pegawai' => $kd_divisi_non_pegawai,
             ];
         }
         else{
@@ -157,9 +162,9 @@ class GajiPerBulanController extends Controller
                 'proses_list' => $proses_list,
                 'final_list' => $final_list,
                 'cabang' => $cabang,
+                'kd_divisi_non_pegawai' => $kd_divisi_non_pegawai,
             ];
         }
-
 
         return view('gaji_perbulan.index', $data);
     }
@@ -171,24 +176,16 @@ class GajiPerBulanController extends Controller
 
         try {
             $is_pegawai = true;
+            $kd_divisi_selected = $request->get('divisi'); // Used for divisi direksi, komisaris & staf ahli
             if ($request->has('is_pegawai')) {
                 $is_pegawai = $request->get('is_pegawai') == 'true';
             }
 
-            $kd_jabatan = [];
-            $dirut = DB::table('mst_jabatan')
-                        ->where('nama_jabatan', 'like', '%Direktur%')
-                        ->pluck('kd_jabatan')
+            $arr_kd_divisi = ['DIR', 'KOM', 'SAD'];
+            $kd_divisi = DB::table('mst_divisi')
+                        ->whereIn('kd_divisi', $arr_kd_divisi)
+                        ->pluck('kd_divisi')
                         ->toArray();
-            $komisaris = DB::table('mst_jabatan')
-                        ->where('nama_jabatan', 'like', '%Komisaris%')
-                        ->pluck('kd_jabatan')
-                        ->toArray();
-            $staf_ahli = DB::table('mst_jabatan')
-                        ->where('nama_jabatan', 'like', '%Ahli%')
-                        ->pluck('kd_jabatan')
-                        ->toArray();
-            $kd_jabatan = array_merge($dirut, $komisaris, $staf_ahli);
             $is_cabang = auth()->user()->hasRole('cabang');
             $is_pusat = auth()->user()->hasRole('kepegawaian');
             $kd_cabang = DB::table('mst_cabang')
@@ -203,7 +200,26 @@ class GajiPerBulanController extends Controller
             }
 
             // Get last penggajian
-            $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas, $is_pegawai);
+            $last_date_penggajian = DB::table('batch_gaji_per_bulan AS batch')
+                                        ->select(
+                                            'batch.*',
+                                            'm.kd_entitas AS entitas_karyawan',
+                                        )
+                                        ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+                                        ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+                                        ->where('batch.kd_entitas', $kd_entitas)
+                                        ->where(function($query) use ($is_pegawai, $kd_divisi_selected) {
+                                            if ($is_pegawai) {
+                                                $query->where('batch.is_pegawai', $is_pegawai);
+                                            }
+                                            else {
+                                                // Divisi direktur, komisaris & staf ahli
+                                                $query->where('m.kd_entitas', $kd_divisi_selected);
+                                            }
+                                        })
+                                        ->whereNull('batch.deleted_at')
+                                        ->orderByDesc('batch.id')
+                                        ->first('batch.tanggal_input');
             $last_month_penggajian = 1;
             if ($last_date_penggajian) {
                 $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
@@ -212,23 +228,21 @@ class GajiPerBulanController extends Controller
             // Get Karyawan
             $karyawan = DB::table('mst_karyawan AS m')
                             ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
-                            ->where(function($query) use ($is_pegawai, $kd_jabatan) {
-                                if ($is_pegawai) {
-                                    $query->whereNotIn('m.kd_jabatan', $kd_jabatan);
-                                }
-                                else {
-                                    $query->whereIn('m.kd_jabatan', $kd_jabatan);
-                                }
-                            })
                             ->when($is_cabang, function($query) {
                                 $kd_cabang = auth()->user()->kd_cabang;
                                 $query->where('m.kd_entitas', $kd_cabang);
                             })
-                            ->when($is_pusat, function($query) use ($kd_cabang) {
-                                $query->where(function($q2) use ($kd_cabang) {
-                                    $q2->whereNotIn('m.kd_entitas', $kd_cabang)
-                                        ->orWhereNull('m.kd_entitas');
-                                });
+                            ->when($is_pusat, function($query) use ($is_pegawai, $kd_cabang, $kd_divisi, $kd_divisi_selected) {
+                                if ($is_pegawai) {
+                                    $query->where(function($query2) use ($kd_divisi, $kd_cabang) {
+                                        $query2->whereNotIn('m.kd_entitas', $kd_divisi)
+                                            ->whereNotIn('m.kd_entitas', $kd_cabang)
+                                            ->orWhereNull('m.kd_entitas');
+                                    });
+                                }
+                                else {
+                                    $query->where('m.kd_entitas', $kd_divisi_selected);
+                                }
                             })
                             ->get();
             $total_karyawan = count($karyawan);
@@ -247,10 +261,14 @@ class GajiPerBulanController extends Controller
 
             $bruto = 0;
             $potongan = 0;
-            $total_dpp = 0;
+            $total_potongan_kredit_koperasi = 0;
+            $total_potongan_iuran_koperasi = 0;
+            $total_potongan_kredit_pegawai = 0;
+            $total_potongan_iuran_ik = 0;
+            $sub_total_dpp = 0;
             $grandtotal_dpp = 0;
             $total_jp = 0;
-            $total_bpjs_tk = 0;
+            $sub_total_bpjs_tk = 0;
 
             foreach ($karyawan as $key => $value) {
                 $kd_entitas = null;
@@ -333,12 +351,27 @@ class GajiPerBulanController extends Controller
 
                 // Get potongan per karyawan
                 $potongan_karyawan_obj = DB::table('potongan_gaji')
-                                            ->selectRaw('(kredit_koperasi + iuran_koperasi + kredit_pegawai + iuran_ik) AS potongan')
+                                            ->select(
+                                                'kredit_koperasi',
+                                                'iuran_koperasi',
+                                                'kredit_pegawai',
+                                                'iuran_ik',
+                                                DB::raw('(kredit_koperasi + iuran_koperasi + kredit_pegawai + iuran_ik) AS potongan')
+                                            )
                                             ->where('nip', $value->nip)
                                             ->first();
+
                 $potongan_karyawan = 0;
+                $potongan_kredit_koperasi = 0;
+                $potongan_iuran_koperasi = 0;
+                $potongan_kredit_pegawai = 0;
+                $potongan_iuran_ik = 0;
                 if ($potongan_karyawan_obj) {
                     $potongan_karyawan = (int) $potongan_karyawan_obj->potongan;
+                    $potongan_kredit_koperasi = (int) $potongan_karyawan_obj->kredit_koperasi;
+                    $potongan_iuran_koperasi = (int) $potongan_karyawan_obj->iuran_koperasi;
+                    $potongan_kredit_pegawai = (int) $potongan_karyawan_obj->kredit_pegawai;
+                    $potongan_iuran_ik = (int) $potongan_karyawan_obj->iuran_ik;
                 }
 
                 // Get DPP
@@ -347,7 +380,7 @@ class GajiPerBulanController extends Controller
                 $bulan = date('m');
                 $nominal_jp = ($bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                 if($value->status_karyawan == 'IKJP' || $value->status_karyawan == 'Kontrak Perpanjangan') {
-                    $dpp = ($persen_jp_pengurang / 100) * $total_gaji;
+                    // $dpp = ($persen_jp_pengurang / 100) * $total_gaji;
                 }
                 else {
                     // Get DPP
@@ -362,24 +395,33 @@ class GajiPerBulanController extends Controller
                 }
 
                 // Get BPJS TK
-                $jp_persen = $persen_jp_pengurang / 100;
-                if ($bulan > 2) {
-                    if ($total_gaji > $jp_mar_des) {
-                        $bpjs_tk = $jp_mar_des * $jp_persen;
+                $bpjs_tk = 0;
+                if ($value->kpj) {
+                    $jp_persen = $persen_jp_pengurang / 100;
+                    if ($bulan > 2) {
+                        if ($total_gaji > $jp_mar_des) {
+                            $bpjs_tk = $jp_mar_des * $jp_persen;
+                        }
+                        else {
+                            $bpjs_tk = $total_gaji * $jp_persen;
+                        }
                     }
                     else {
-                        $bpjs_tk = $total_gaji * $jp_persen;
-                    }
-                }
-                else {
-                    if ($total_gaji >= $jp_jan_feb) {
-                        $bpjs_tk = $jp_jan_feb * $jp_persen;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji * $jp_persen;
+                        if ($total_gaji >= $jp_jan_feb) {
+                            $bpjs_tk = $jp_jan_feb * $jp_persen;
+                        }
+                        else {
+                            $bpjs_tk = $total_gaji * $jp_persen;
+                        }
                     }
                 }
                 $potongan += $potongan_karyawan + $dpp + $bpjs_tk;
+                $sub_total_dpp += $dpp;
+                $sub_total_bpjs_tk += $bpjs_tk;
+                $total_potongan_kredit_koperasi += $potongan_kredit_koperasi;
+                $total_potongan_iuran_koperasi += $potongan_iuran_koperasi;
+                $total_potongan_kredit_pegawai += $potongan_kredit_pegawai;
+                $total_potongan_iuran_ik += $potongan_iuran_ik;
 
                 // Get DPP
                 $tunjanganKesejahteraan = (int) DB::table('tunjangan_karyawan')
@@ -420,16 +462,16 @@ class GajiPerBulanController extends Controller
                 $total_dpp = 0;
                 $total_bpjs_tk = 0;
 
-                foreach ($gaji_obj as $item_gaji) {
-                    // Get DPP
-                    $dpp = $item_gaji->dpp;
-                    $total_dpp += $dpp;
+                // foreach ($gaji_obj as $item_gaji) {
+                //     // Get DPP
+                //     $dpp = $item_gaji->dpp;
+                //     $total_dpp += $dpp;
 
-                    // Get BPJS TK
-                    $bpjs_tk = $item_gaji->bpjs_tk;
-                    $total_bpjs_tk += $bpjs_tk;
-                }
-                $potongan += $total_dpp + $total_bpjs_tk;
+                //     // Get BPJS TK
+                //     $bpjs_tk = $item_gaji->bpjs_tk;
+                //     $total_bpjs_tk += $bpjs_tk;
+                // }
+                // $potongan += $total_dpp + $total_bpjs_tk;
             }
 
             // Get Netto
@@ -437,13 +479,23 @@ class GajiPerBulanController extends Controller
 
             // Get Penghasilan terakhir
             $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
-            $penghasilan = DB::table('batch_gaji_per_bulan')
-                            ->where('kd_entitas', $kd_entitas)
-                            ->where('is_pegawai', $is_pegawai)
-                            ->whereYear('tanggal_input', date('Y'))
-                            ->whereNull('deleted_at')
-                            ->orderBy('tanggal_input', 'DESC')
+            $penghasilan = DB::table('batch_gaji_per_bulan AS batch')
+                            ->when($is_pegawai, function($query) use ($is_pegawai, $kd_divisi_selected) {
+                                $query->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+                                ->join('mst_karyawan AS karyawan', 'karyawan.nip', 'gaji.nip')
+                                ->where(function($query) use ($is_pegawai, $kd_divisi_selected) {
+                                    if (!$is_pegawai) {
+                                        $query->where('karyawan.kd_entitas', $kd_divisi_selected);
+                                    }
+                                });
+                            })
+                            ->where('batch.kd_entitas', $kd_entitas)
+                            ->where('batch.is_pegawai', $is_pegawai)
+                            ->whereYear('batch.tanggal_input', date('Y'))
+                            ->whereNull('batch.deleted_at')
+                            ->orderBy('batch.tanggal_input', 'DESC')
                             ->first();
+
             $penghasilan_tahun_terakhir = date('Y');
             $penghasilan_bulan_terakhir = 0;
             if ($penghasilan) {
@@ -455,6 +507,12 @@ class GajiPerBulanController extends Controller
                 'total_karyawan' => $total_karyawan,
                 'bruto' => $bruto,
                 'potongan' => floor($potongan),
+                'potongan_kredit_koperasi' => floor($total_potongan_kredit_koperasi),
+                'potongan_iuran_koperasi' => floor($total_potongan_iuran_koperasi),
+                'potongan_kredit_pegawai' => floor($total_potongan_kredit_pegawai),
+                'potongan_iuran_ik' => floor($total_potongan_iuran_ik),
+                'potongan_dpp' => floor($sub_total_dpp),
+                'potongan_bpjs_tk' => floor($sub_total_bpjs_tk),
                 'netto' => $netto,
                 'penghasilan_tahun_terakhir' => $penghasilan_tahun_terakhir,
                 'penghasilan_bulan_terakhir' => $penghasilan_bulan_terakhir,
@@ -483,6 +541,7 @@ class GajiPerBulanController extends Controller
             $batch_id = $request->batch_id;
             $data_gaji = DB::table('gaji_per_bulan AS gaji')
                             ->select(
+                                'batch.tanggal_input',
                                 'gaji.*',
                                 'm.nama_karyawan',
                                 'm.status_karyawan',
@@ -723,9 +782,29 @@ class GajiPerBulanController extends Controller
 
                 $transaksi_tunjangan = DB::table('transaksi_tunjangan')
                                         ->where('nip', $gaji->nip)
-                                        ->where('bulan', $gaji->bulan)
-                                        ->where('tahun', $gaji->tahun)
+                                        ->whereYear('tanggal', $gaji->tahun)
+                                        ->where(function($query) use ($gaji, $kd_entitas) {
+                                            $bulan = $gaji->bulan;
+                                            $tahun = $gaji->tahun;
+                                            $tanggal = $gaji->tanggal_input;
+                                            $day = date('d', strtotime($tanggal));
+                                            if ($bulan > 1) {
+                                                // Tanggal penggajian bulan sebelumnya
+                                                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                $query->whereBetween('tanggal', [$start_date, $tanggal]);
+                                            }
+                                            else if ($bulan == 12) {
+                                                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                $last_day = getLastDateOfMonth($tahun, $bulan);
+                                                $end_date = $tahun.'-'.$bulan.'-'.$last_day;
+                                                $query->whereBetween('tanggal', [$start_date, $end_date]);
+                                            }
+                                            else {
+                                                $query->whereDay('tanggal', '<=', $day);
+                                            }
+                                        })
                                         ->get();
+
                 foreach ($transaksi_tunjangan as $tunj) {
                     // Transport
                     if ($tunj->id_tunjangan == 11) {
@@ -803,8 +882,27 @@ class GajiPerBulanController extends Controller
                                         )
                                         ->join('mst_tunjangan AS m', 'm.id', 'p.id_tunjangan')
                                         ->where('p.nip', $gaji->nip)
-                                        ->where('p.tahun', (int) $gaji->tahun)
-                                        ->where('p.bulan', (int) $gaji->bulan)
+                                        ->whereYear('p.created_at', $gaji->tahun)
+                                        ->where(function($query) use ($gaji, $kd_entitas) {
+                                            $bulan = $gaji->bulan;
+                                            $tahun = $gaji->tahun;
+                                            $tanggal = $gaji->tanggal_input;
+                                            $day = date('d', strtotime($tanggal));
+                                            if ($bulan > 1) {
+                                                // Tanggal penggajian bulan sebelumnya
+                                                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                $query->whereBetween('p.created_at', [$start_date, $tanggal]);
+                                            }
+                                            else if ($bulan == 12) {
+                                                $start_date = HitungPPH::getDatePenggajianSebelumnya($tanggal, $kd_entitas);
+                                                $last_day = getLastDateOfMonth($tahun, $bulan);
+                                                $end_date = $tahun.'-'.$bulan.'-'.$last_day;
+                                                $query->whereBetween('p.created_at', [$start_date, $end_date]);
+                                            }
+                                            else {
+                                                $query->whereDay('p.created_at', '<=', $day);
+                                            }
+                                        })
                                         ->get();
 
                 foreach ($penghasilanTidakRutin as $tidakRutin) {
@@ -815,8 +913,8 @@ class GajiPerBulanController extends Controller
                                     ->where('penghasilan_tidak_teratur_id', $tidakRutin->id)
                                     ->first();
                     if ($current) {
-                        $nominalLama = $current->nominal;
-                        $nominalBaru = $tidakRutin->nominal;
+                        $nominalLama = (int) $current->nominal;
+                        $nominalBaru = (int) $tidakRutin->nominal;
                         if ($nominalLama != $nominalBaru) {
                             $item_title = str_replace(' ', '_', strtolower($tidakRutin->nama_tunjangan));
                             $item_title_new = $item_title.'_baru';
@@ -828,7 +926,7 @@ class GajiPerBulanController extends Controller
                         }
                     }
                     else {
-                        $nominalBaru = $tidakRutin->nominal;
+                        $nominalBaru = (int) $tidakRutin->nominal;
                         $item_title = str_replace(' ', '_', strtolower($tidakRutin->nama_tunjangan));
                         $item_title_new = $item_title.'_baru';
                         $item = [
@@ -860,7 +958,7 @@ class GajiPerBulanController extends Controller
                                     ->where('id', $batchTidakRutin->penghasilan_tidak_teratur_id)
                                     ->first();
                     if (!$current) {
-                        $nominalLama = $batchTidakRutin->nominal;
+                        $nominalLama = (int) $batchTidakRutin->nominal;
                         $nominalBaru = 0;
                         $item_title = str_replace(' ', '_', strtolower($batchTidakRutin->nama_tunjangan));
                         $item_title_new = $item_title.'_baru';
@@ -998,23 +1096,25 @@ class GajiPerBulanController extends Controller
                 // Get BPJS TK
                 $jp_persen = $persen_jp_pengurang / 100;
                 $bpjs_tk = 0;
-                if ($bulan > 2) {
-                    if ($total_gaji_baru > $jp_mar_des) {
-                        $bpjs_tk = $jp_mar_des * $jp_persen;
+                if ($karyawan->kpj) {
+                    if ($bulan > 2) {
+                        if ($total_gaji_baru > $jp_mar_des) {
+                            $bpjs_tk = $jp_mar_des * $jp_persen;
+                        }
+                        else {
+                            $bpjs_tk = $total_gaji_baru * $jp_persen;
+                        }
                     }
                     else {
-                        $bpjs_tk = $total_gaji_baru * $jp_persen;
+                        if ($total_gaji_baru >= $jp_jan_feb) {
+                            $bpjs_tk = $jp_jan_feb * $jp_persen;
+                        }
+                        else {
+                            $bpjs_tk = $total_gaji_baru * $jp_persen;
+                        }
                     }
+                    $bpjs_tk = round($bpjs_tk);
                 }
-                else {
-                    if ($total_gaji_baru >= $jp_jan_feb) {
-                        $bpjs_tk = $jp_jan_feb * $jp_persen;
-                    }
-                    else {
-                        $bpjs_tk = $total_gaji_baru * $jp_persen;
-                    }
-                }
-                $bpjs_tk = floor($bpjs_tk);
                 if ($bpjs_tk != $gaji->bpjs_tk) {
                     $total_potongan_baru -= $gaji->bpjs_tk;
                     $total_potongan_baru += $bpjs_tk;
@@ -1178,6 +1278,7 @@ class GajiPerBulanController extends Controller
                 $tahun = (int) date('Y', strtotime($tanggal));
             }
 
+            $selected_divisi = $request->get('divisi');
             $day = date('d', strtotime($tanggal));
             $tunjangan = array();
             $tjJamsostek = array();
@@ -1225,20 +1326,10 @@ class GajiPerBulanController extends Controller
                                 ->pluck('kd_cabang')
                                 ->toArray();
 
-                $kd_jabatan = [];
-                $dirut = DB::table('mst_jabatan')
-                            ->where('nama_jabatan', 'like', '%Direktur%')
-                            ->pluck('kd_jabatan')
-                            ->toArray();
-                $komisaris = DB::table('mst_jabatan')
-                            ->where('nama_jabatan', 'like', '%Komisaris%')
-                            ->pluck('kd_jabatan')
-                            ->toArray();
-                $staf_ahli = DB::table('mst_jabatan')
-                            ->where('nama_jabatan', 'like', '%Ahli%')
-                            ->pluck('kd_jabatan')
-                            ->toArray();
-                $kd_jabatan = array_merge($dirut, $komisaris, $staf_ahli);
+                $kd_divisi = DB::table('mst_divisi')
+                                ->whereIn('kd_divisi', ['DIR', 'KOM', 'SAD'])
+                                ->pluck('kd_divisi')
+                                ->toArray();
                 // Get last penggajian
                 $last_date_penggajian = GajiPerBulanRepository::getLastPenggajianCurrentYear($kd_entitas, $is_pegawai);
                 $last_month_penggajian = 0;
@@ -1248,22 +1339,16 @@ class GajiPerBulanController extends Controller
 
                 $karyawan = DB::table('mst_karyawan')
                                 ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
-                                ->when($is_pusat, function($query) use ($kd_cabang, $kd_jabatan, $is_pegawai) {
+                                ->when($is_pusat, function($query) use ($kd_cabang, $kd_divisi, $selected_divisi, $is_pegawai) {
                                     if ($is_pegawai) {
-                                        $query->where(function($q2) use ($kd_cabang) {
-                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kd_cabang)
-                                                ->orWhere('mst_karyawan.kd_entitas', 0)
-                                                ->orWhereNull('mst_karyawan.kd_entitas');
-                                        })
-                                        ->whereNotIn('mst_karyawan.kd_jabatan', $kd_jabatan);
+                                        $query->where(function($query2) use ($kd_divisi, $kd_cabang) {
+                                            $query2->whereNotIn('kd_entitas', $kd_divisi)
+                                                ->whereNotIn('kd_entitas', $kd_cabang)
+                                                ->orWhereNull('kd_entitas');
+                                        });
                                     }
                                     else {
-                                        $query->where(function($q2) use ($kd_cabang) {
-                                            $q2->whereNotIn('mst_karyawan.kd_entitas', $kd_cabang)
-                                                ->orWhere('mst_karyawan.kd_entitas', 0)
-                                                ->orWhereNull('mst_karyawan.kd_entitas');
-                                        })
-                                        ->whereIn('mst_karyawan.kd_jabatan', $kd_jabatan);
+                                        $query->where('kd_entitas', $selected_divisi);
                                     }
                                 })
                                 ->get();
@@ -1275,7 +1360,6 @@ class GajiPerBulanController extends Controller
                                                     ->orWhereNull('kategori')
                                                     ->orderBy('id')
                                                     ->get();
-
             foreach ($karyawan as $item) {
                 unset($tunjangan);
                 unset($tjJamsostek);
@@ -1430,7 +1514,7 @@ class GajiPerBulanController extends Controller
                 $jp_1_persen = 0;
                 $nominal_jp = ($bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                 if($item->status_karyawan == 'IKJP' || $item->status_karyawan == 'Kontrak Perpanjangan') {
-                    $dpp = ($persen_jp_pengurang / 100) * $total_gaji;
+                    // $dpp = ($persen_jp_pengurang / 100) * $total_gaji;
                 }
                 else {
                     // Get DPP
@@ -1464,7 +1548,7 @@ class GajiPerBulanController extends Controller
                             $bpjs_tk = $total_gaji * $jp_persen;
                         }
                     }
-                    $bpjs_tk = floor($bpjs_tk);
+                    $bpjs_tk = round($bpjs_tk);
                 }
 
                 // Get Penambah Bruto Jamsostek
@@ -1555,8 +1639,7 @@ class GajiPerBulanController extends Controller
                                                     $join->on('batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
                                                         ->where('batch_gaji_per_bulan.kd_entitas', $kd_entitas)
                                                         ->whereMonth('batch_gaji_per_bulan.tanggal_input', $bulan)
-                                                        ->whereYear('batch_gaji_per_bulan.tanggal_input', $tahun)
-                                                        ->whereNull('batch_gaji_per_bulan.deleted_at');
+                                                        ->whereYear('batch_gaji_per_bulan.tanggal_input', $tahun);
                                                 })
                                                 ->where('gaji_per_bulan.batch_id', $request->batch_id)
                                                 ->whereNull('batch_gaji_per_bulan.deleted_at')
@@ -1909,6 +1992,7 @@ class GajiPerBulanController extends Controller
                             ->where('tanggal_input', '<', $batch->tanggal_input)
                             ->where('kd_entitas', $batch->kd_entitas)
                             ->where('status', 'proses')
+                            ->whereNull('deleted_at')
                             ->orderByDesc('tanggal_input')
                             ->first();
 
@@ -2622,7 +2706,7 @@ class GajiPerBulanController extends Controller
                         'mst_karyawan.status_jabatan',
                         'mst_karyawan.ket_jabatan',
                         'mst_karyawan.kd_entitas',
-                        DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                        DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang) LIMIT 1), 1, 0) AS status_kantor")
                     )
                     ->with('jabatan')
                     ->with('bagian')
@@ -2686,7 +2770,7 @@ class GajiPerBulanController extends Controller
                                 'mst_karyawan.status_jabatan',
                                 'mst_karyawan.ket_jabatan',
                                 'mst_karyawan.kd_entitas',
-                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor")
+                                DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = `mst_karyawan`.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang) LIMIT 1), 1, 0) AS status_kantor")
                             )
                             ->with('jabatan')
                             ->with('bagian')
@@ -2836,29 +2920,29 @@ class GajiPerBulanController extends Controller
                 }
                 else {
                     DB::table('transaksi_tunjangan')
-                    ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'transaksi_tunjangan.nip')
-                    ->join('batch_gaji_per_bulan', 'gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
-                    ->where('batch_gaji_per_bulan.id', $request->id)
-                    ->update([
-                        'transaksi_tunjangan.is_lock' => 1
-                    ]);
+                        ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'transaksi_tunjangan.nip')
+                        ->join('batch_gaji_per_bulan', 'gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
+                        ->where('batch_gaji_per_bulan.id', $request->id)
+                        ->update([
+                            'transaksi_tunjangan.is_lock' => 1
+                        ]);
                     DB::table('penghasilan_tidak_teratur')
-                    ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'penghasilan_tidak_teratur.nip')
-                    ->join('batch_gaji_per_bulan', 'gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
-                    ->where('batch_gaji_per_bulan.id', $request->id)
-                    ->update([
-                        'penghasilan_tidak_teratur.is_lock' => 1
-                    ]);
+                        ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'penghasilan_tidak_teratur.nip')
+                        ->join('batch_gaji_per_bulan', 'gaji_per_bulan.batch_id', 'batch_gaji_per_bulan.id')
+                        ->where('batch_gaji_per_bulan.id', $request->id)
+                        ->update([
+                            'penghasilan_tidak_teratur.is_lock' => 1
+                        ]);
 
                     DB::table('batch_gaji_per_bulan')
-                    ->where('id', $request->id)
-                    ->update([
-                        'file' => $filenameLampiran,
-                        'tanggal_upload' => Carbon::now(),
-                        'status' => 'final',
-                        'tanggal_final' => date('Y-m-d'),
-                        'updated_at' => now(),
-                    ]);
+                        ->where('id', $request->id)
+                        ->update([
+                            'file' => $filenameLampiran,
+                            'tanggal_upload' => Carbon::now(),
+                            'status' => 'final',
+                            'tanggal_final' => date('Y-m-d'),
+                            'updated_at' => now(),
+                        ]);
                 }
             }
 
@@ -2917,7 +3001,7 @@ class GajiPerBulanController extends Controller
         } else {
             $returnType = new ProsesRincianPayroll($data);
         }
-
+// return $data;
         $filename = ucwords($tipe) . ' Kantor ' . $nama_kantor . ' Bulan ' . $bulanShow[$bulan] . ' Tahun ' . $tahun . '.xlsx';
         return Excel::download($returnType , $filename);
     }
