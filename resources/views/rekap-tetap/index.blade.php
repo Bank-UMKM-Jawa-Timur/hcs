@@ -70,7 +70,7 @@
     .table-scroll .thead_pertama th:nth-child(5) {
         position: -webkit-sticky;
         position: sticky;
-        left: 375px;
+        left: 315px;
         z-index: 2;
         background-color: #fff;
     }
