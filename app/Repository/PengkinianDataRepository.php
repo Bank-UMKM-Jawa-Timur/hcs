@@ -33,7 +33,7 @@ class PengkinianDataRepository
                     'h.status_karyawan',
                     'j.nama_jabatan',
                     'h.status_jabatan',
-                    DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = h.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang)), 1, 0) AS status_kantor"),
+                    DB::raw("IF((SELECT m.kd_entitas FROM mst_karyawan AS m WHERE m.nip = h.`nip` AND m.kd_entitas IN(SELECT mst_cabang.kd_cabang FROM mst_cabang) LIMIT 1), 1, 0) AS status_kantor"),
                     'c.nama_cabang',
                 )
                 ->join('mst_jabatan AS j', 'j.kd_jabatan', 'h.kd_jabatan')
