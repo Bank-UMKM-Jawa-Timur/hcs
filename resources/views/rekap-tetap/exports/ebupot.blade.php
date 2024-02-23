@@ -130,6 +130,8 @@
                 $spd = 0;
                 $spdPendidikan = 0;
                 $spdPindahTugas = 0;
+                $insentifPenagihan = 0;
+                $insentifKredit = 0;
                 $tambahanPenghasilan = 0;
                 $pphTambahanPenghasilan = 0;
                 $rekreasi = 0;
@@ -173,6 +175,14 @@
                     if ($value->id_tunjangan == 21) {
                         $spdPindahTugas += $value->nominal;
                     }
+                    // insentif penagihan
+                    if ($value->id_tunjangan == 32) {
+                        $insentifPenagihan += $value->nominal;
+                    }
+                    // insentif kredit
+                    if ($value->id_tunjangan == 31) {
+                        $insentifKredit += $value->nominal;
+                    }
                 }
 
                 foreach ($item->tunjanganTidakTetap as $value) {
@@ -211,17 +221,16 @@
                         $pph21Bentukan = floor($value->total_pph);
                         $pph21 = floor($value->total_pph);
                         $terutang = DB::table('pph_yang_dilunasi AS pph')
-                                        ->select('pph.terutang')
-                                        ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
-                                        ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
-                                        ->where('pph.id', $value->id)
-                                        ->whereNull('batch.deleted_at')
-                                        ->first();
+                            ->select('pph.terutang')
+                            ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
+                            ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                            ->where('pph.id', $value->id)
+                            ->whereNull('batch.deleted_at')
+                            ->first();
                         if ($terutang) {
                             $pph21 += floor($terutang->terutang);
                         }
-                    }
-                    else {
+                    } else {
                         $pph21Bentukan = floor($value->total_pph);
                         $pph21 = floor($value->total_pph);
                     }
@@ -229,7 +238,7 @@
                 $pph21 -= floor($total_pajak_insentif);
                 $penambahBruto = $item->jamsostek;
 
-                $brutoTotal = floor($gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $item->insentif_kredit + $item->insentif_penagihan + $totalBrutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja + $tambahanPenghasilan + $rekreasi + $brutoNataru + $brutoJaspro + $penambahBruto);
+                $brutoTotal = floor($gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $insentifKredit + $insentifPenagihan + $totalBrutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja + $tambahanPenghasilan + $rekreasi + $brutoNataru + $brutoJaspro + $penambahBruto);
                 $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21Bentukan;
 
                 // Hitung total per page
@@ -263,20 +272,20 @@
                 $totalBrutoTHR += $brutoTHR;
                 $totalBrutoDanaPendidikan += $brutoDanaPendidikan;
                 $totalBrutoPenghargaanKinerja += $brutoPenghargaanKinerja;
-                $total_insentif_kredit += $item->insentif_kredit ? $item->insentif_kredit : 0 ;
-                $total_insentif_penagihan += $item->insentif_penagihan ? $item->insentif_penagihan : 0;
+                $total_insentif_kredit += $insentifKredit ? $insentifKredit : 0;
+                $total_insentif_penagihan += $insentifPenagihan ? $insentifPenagihan : 0;
             @endphp
             <tr>
                 <td align="right" style="color:black;">{{ $loop->iteration }}</td>
                 <td align="left" style="color:black;">{{ $lastdate }}</td>
                 <td align="left" style="color:black;">NPWP</td>
-                <td align="left" style="color:black;">{{ "'".$item->npwp }}</td>
+                <td align="left" style="color:black;">{{ "'" . $item->npwp }}</td>
                 <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;">21-100-01</td>
                 <td align="left" style="color:black;">NPWP</td>
-                <td align="left" style="color:black;">{{ "'".$penandatangan }}</td>
+                <td align="left" style="color:black;">{{ "'" . $penandatangan }}</td>
                 <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;">{{ $item->status_ptkp }}</td>
                 <td align="left" style="color:black;">Tidak</td>
