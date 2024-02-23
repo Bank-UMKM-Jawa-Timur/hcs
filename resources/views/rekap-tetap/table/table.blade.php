@@ -21,6 +21,7 @@
             <th rowspan="2" class="text-center">NO</th>
             <th rowspan="2" class="text-center">NIP</th>
             <th rowspan="2" class="text-center">NPWP</th>
+            <th rowspan="2" class="text-center">PTKP</th>
             <th rowspan="2" class="text-center">NAMA KARYAWAN</th>
             <th rowspan="2" class="text-center">GAJI</th>
             <th class="text-center" colspan="4">TERATUR</th>
@@ -285,6 +286,7 @@
                 <td class="text-center">{{ $loop->iteration }}</td>
                 <td>{{ $nip }}</td>
                 <td>{{ $item->npwp ? $item->npwp : '-' }}</td>
+                <td>{{ $item->status ? $item->status : '-' }}</td>
                 <td>{{ $item->nama_karyawan }}</td>
                 {{-- teratur --}}
                 <td class="td-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->total_gaji ?? 0, 0, $formatrp) : formatRupiahExcel($item->gj_pokok ?? 0, 0, $formatrp) }}</td>
@@ -350,7 +352,7 @@
     <tfoot>
         @if (!$is_cetak)
             <tr>
-                <th colspan="4" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Total</th>
+                <th colspan="5" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Total</th>
                 {{-- teratur --}}
                 <th class="text-right">{{ formatRupiahExcel($totalGaji ?? 0, 0, $formatrp) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalUangMakan ?? 0, 0, $formatrp) }}</th>
@@ -408,7 +410,7 @@
             </tr>
         @endif
         <tr>
-            <th colspan="4" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Grand Total</th>
+            <th colspan="5" class="text-center" style="position: sticky; left: 0; background-color: white; z-index: 2;">Grand Total</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalGaji ?? 0, 0, $formatrp) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalUangMakan ?? 0, 0, $formatrp) }}</th>
             <th class="text-right">{{ formatRupiahExcel($grandTotal->totalPulsa ?? 0, 0, $formatrp) }}</th>
