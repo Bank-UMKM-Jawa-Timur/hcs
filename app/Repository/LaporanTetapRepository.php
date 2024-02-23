@@ -298,6 +298,7 @@ class LaporanTetapRepository
                 'gaji_per_bulan.bulan',
                 'gaji_per_bulan.tahun',
                 'mst_karyawan.nip',
+                'mst_karyawan.status_ptkp',
                 'nama_karyawan',
                 'npwp',
                 'no_rekening',

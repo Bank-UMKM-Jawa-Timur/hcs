@@ -296,7 +296,7 @@
                 <td class="text-center">{{ $loop->iteration }}</td>
                 <td>{{ $nip }}</td>
                 <td>{{ $item->npwp ? $item->npwp : '-' }}</td>
-                <td>{{ $item->status ? $item->status_ptkp : '-' }}</td>
+                <td>{{ $item->status_ptkp ? $item->status_ptkp : '-' }}</td>
                 <td>{{ $item->nama_karyawan }}</td>
                 {{-- teratur --}}
                 <td class="td-right">{{ $item->gaji ? formatRupiahExcel($item->gaji->total_gaji ?? 0, 0, $formatrp) : formatRupiahExcel($item->gj_pokok ?? 0, 0, $formatrp) }}</td>
