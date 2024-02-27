@@ -119,19 +119,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- <tr>
-                                            <td>-</td>
-                                            <td>Kantor Pusat</td>
-                                            <td>{{ number_format($dpp_pusat, 0, ".", ",") }}</td>
-                                        </tr> --}}
                                         @php
                                             $total_tunjangan_keluarga = [];
                                             $total_tunjangan_kesejahteraan = [];
                                             $total_gj_cabang = [];
                                             $total_jamsostek = [];
 
-                                            // $total_dpp = [];
-                                            // array_push($total_dpp, $dpp_pusat);
                                             $grand_dpp = 0;
                                         @endphp
 
@@ -145,61 +138,6 @@
                                             <tr>
                                                 <td>{{ $item->kd_entitas == '000' ? '-' : $item->kd_entitas }}</td>
                                                 <td>{{ $item->kd_entitas == '000' ? 'Pusat' : $nama_cabang->nama_cabang }}</td>
-                                                {{-- @php
-                                                    $total_tunjangan_keluarga = [];
-                                                    $total_tunjangan_kesejahteraan = [];
-                                                    $total_gj_cabang = [];
-                                                    $gj_cabang = null;
-
-                                                    $karyawan = DB::table('mst_karyawan')
-                                                        ->where('kd_entitas', $item->kd_entitas)
-                                                        ->whereNotIn('status_karyawan', ['Kontrak Perpanjangan', 'IKJP'])
-                                                        ->get();
-                                                    // Cek Data Di Table Gaji Perbulan
-
-                                                    // Jika Data Tidak Tersedia Di Gaji Perbulan
-                                                    if ($cek_data == 0) {
-                                                        foreach ($karyawan as $i) {
-                                                            if ($i->status_karyawan == 'Tetap') {
-                                                                $data_gaji = DB::table('mst_karyawan')
-                                                                    ->where('nip', $i->nip)
-                                                                    ->select('gj_pokok', 'gj_penyesuaian')
-                                                                    ->first();
-                                                                $data_tj_keluarga = DB::table('tunjangan_karyawan')
-                                                                    ->where('nip', $i->nip)
-                                                                    ->where('id_tunjangan', 1)
-                                                                    ->first();
-                                                                $data_tj_kesejahteraan = DB::table('tunjangan_karyawan')
-                                                                    ->where('nip', $i->nip)
-                                                                    ->where('id_tunjangan', 8)
-                                                                    ->first();
-
-                                                                array_push($total_gj_cabang, $data_gaji != null ? $data_gaji->gj_pokok : 0);
-                                                                array_push($total_tunjangan_keluarga, $data_tj_keluarga != null ? $data_tj_keluarga->nominal : 0);
-                                                                array_push($total_tunjangan_kesejahteraan, $data_tj_kesejahteraan != null ? $data_tj_kesejahteraan->nominal : 0);
-                                                            }
-                                                        }
-                                                    } else {
-                                                        foreach ($karyawan as $i) {
-                                                            if ($i->status_karyawan == 'Tetap') {
-                                                                $data_gaji = DB::table('gaji_per_bulan')
-                                                                    ->where('nip', $i->nip)
-                                                                    ->where('bulan', $bulan)
-                                                                    ->where('tahun', $tahun)
-                                                                    ->first();
-
-                                                                array_push($total_tunjangan_keluarga, $data_gaji != null ? $data_gaji->tj_keluarga : 0);
-                                                                array_push($total_tunjangan_kesejahteraan, $data_gaji != null ? $data_gaji->tj_kesejahteraan : 0);
-                                                                array_push($total_gj_cabang, $data_gaji != null ? $data_gaji->gj_pokok : 0);
-                                                            }
-                                                        }
-                                                    }
-
-                                                    $gj_cabang = round((array_sum($total_gj_cabang) + array_sum($total_tunjangan_keluarga) + array_sum($total_tunjangan_kesejahteraan) * 0.5) * 0.13);
-
-                                                    array_push($total_dpp, $gj_cabang);
-                                                @endphp --}}
-                                                {{-- <td>{{ number_format($gj_cabang, 0, ".", ",") }}</td> --}}
                                                 <td>{{ number_format($item->dpp, 0, ',', '.') }}</td>
                                             </tr>
                                         @empty
@@ -236,31 +174,22 @@
                                         <th style="text-align: center">DPP</th>
                                     </thead>
                                     <tbody>
-                                        {{-- @for ($i = 0; $i < count($karyawan); $i++)
-                                            @if ($karyawan[$i]->status_karyawan == 'Tetap') --}}
-                                            {{-- <tr>
-                                                <td>{{ $karyawan[$i]->nip }}</td>
-                                                <td>{{ $karyawan[$i]->nama_karyawan }}</td>
-                                                <td>{{ isset($dpp[$i]) ? number_format($dpp[$i], 0, ',', '.') : '0' }}</td>
-                                            </tr> --}}
-                                            @forelse ($data_gaji as $item)
-                                            @php
-                                                $total_dpp += $item->dpp;
-                                            @endphp
-                                                <tr>
-                                                    <td>{{ $item->nip }}</td>
-                                                    <td>{{ $item->nama_karyawan }}</td>
-                                                    <td>{{ isset($item->dpp) ? number_format($item->dpp, 0, ',', '.') : '0' }}</td>
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td></td>
-                                                    <td class="text-center">Data kosong.</td>
-                                                    <td></td>
-                                                </tr>
-                                            @endforelse
-                                            {{-- @endif
-                                        @endfor --}}
+                                        @forelse ($data_gaji as $item)
+                                        @php
+                                            $total_dpp += $item->dpp;
+                                        @endphp
+                                            <tr>
+                                                <td>{{ $item->nip }}</td>
+                                                <td>{{ $item->nama_karyawan }}</td>
+                                                <td>{{ isset($item->dpp) ? number_format($item->dpp, 0, ',', '.') : '0' }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td></td>
+                                                <td class="text-center">Data kosong.</td>
+                                                <td></td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                     <tfoot style="font-weight: bold">
                                         <tr>
@@ -344,7 +273,17 @@
                     footer: true,
                     customize: function(xlsx, row) {
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
+                        console.log($('row[r="4"] c[r="C4"]', sheet))
+                        var rows = $('row', sheet)
+                        rows.each(function(i) {
+                            var parent_item = $(this).find('c').attr('s', '63')
+                            var item = $(this).find('c').find('v')
+                            if (item.length > 0) {
+                                var value = item[0].textContent
+                                var newValue = parseInt(value.replaceAll('.', ''))
+                                item.html(newValue)
+                            }
+                        })
                     }
                 },
                 {
