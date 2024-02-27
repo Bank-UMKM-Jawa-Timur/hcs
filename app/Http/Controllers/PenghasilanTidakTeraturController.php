@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ExportBiayaDuka;
 use App\Exports\ExportBiayaKesehatan;
 use App\Exports\ExportBiayaTidakTeratur;
+use App\Helpers\GajiComponent;
 use App\Helpers\HitungPPH;
 use App\Imports\PenghasilanImport;
 use App\Models\GajiPerBulanModel;
@@ -501,7 +502,13 @@ class PenghasilanTidakTeraturController extends Controller
             if($bulan == 12  && Carbon::now()->format('d') > 25){
                 DB::beginTransaction();
                 $gajiPerBulanController = new GajiPerBulanController;
-                $pphTerutang = $gajiPerBulanController->storePPHDesember($request->nip, $tahun, $bulan);
+                $karyawan = DB::table('mst_karyawan')
+                                ->select('kd_entitas')
+                                ->where('nip', $request->nip)
+                                ->first();
+                $kd_entitas_karyawan = $karyawan->kd_entitas;
+                $gaji_component = new GajiComponent($kd_entitas_karyawan);
+                $pphTerutang = $gajiPerBulanController->storePPHDesember($request->nip, $tahun, $bulan, $gaji_component);
                 PPHModel::where('nip', $request->nip)
                     ->where('tahun', $tahun)
                     ->where('bulan', 12)
@@ -811,7 +818,14 @@ class PenghasilanTidakTeraturController extends Controller
                 $gajiPerBulanController = new GajiPerBulanController;
                 foreach($nip as $key => $item){
                     DB::beginTransaction();
-                    $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($request->get('tanggal'))->format('Y'), Carbon::parse($request->get('tanggal'))->format('m'));
+                    $gajiPerBulanController = new GajiPerBulanController;
+                    $karyawan = DB::table('mst_karyawan')
+                                    ->select('kd_entitas')
+                                    ->where('nip', $item)
+                                    ->first();
+                    $kd_entitas_karyawan = $karyawan->kd_entitas;
+                    $gaji_component = new GajiComponent($kd_entitas_karyawan);
+                    $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($request->get('tanggal'))->format('Y'), Carbon::parse($request->get('tanggal'))->format('m'), $gaji_component);
                     PPHModel::where('nip', $item)
                         ->where('tahun', Carbon::parse($request->get('tanggal'))->format('Y'))
                         ->where('bulan', 12)
@@ -1028,7 +1042,14 @@ class PenghasilanTidakTeraturController extends Controller
                 if (Carbon::parse($tanggal)->format('m') == 12 && Carbon::now()->format('d') > 25) {
                     $gajiPerBulanController = new GajiPerBulanController;
                     foreach ($temp_nip_array as $key => $item) {
-                        $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($tanggal)->format('Y'), Carbon::parse($tanggal)->format('m'));
+                        $gajiPerBulanController = new GajiPerBulanController;
+                        $karyawan = DB::table('mst_karyawan')
+                                        ->select('kd_entitas')
+                                        ->where('nip', $item)
+                                        ->first();
+                        $kd_entitas_karyawan = $karyawan->kd_entitas;
+                        $gaji_component = new GajiComponent($kd_entitas_karyawan);
+                        $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($tanggal)->format('Y'), Carbon::parse($tanggal)->format('m'), $gaji_component);
                         PPHModel::where('nip', $item)
                             ->where('tahun', Carbon::parse($tanggal)->format('Y'))
                             ->where('bulan', 12)
@@ -1089,7 +1110,14 @@ class PenghasilanTidakTeraturController extends Controller
                 if (Carbon::parse($tanggal)->format('m') == 12 && Carbon::now()->format('d') > 25) {
                     $gajiPerBulanController = new GajiPerBulanController;
                     foreach ($nip as $key => $item) {
-                        $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($tanggal)->format('Y'), Carbon::parse($tanggal)->format('m'));
+                        $gajiPerBulanController = new GajiPerBulanController;
+                        $karyawan = DB::table('mst_karyawan')
+                                        ->select('kd_entitas')
+                                        ->where('nip', $item)
+                                        ->first();
+                        $kd_entitas_karyawan = $karyawan->kd_entitas;
+                        $gaji_component = new GajiComponent($kd_entitas_karyawan);
+                        $pphTerutang = $gajiPerBulanController->storePPHDesember($item, Carbon::parse($tanggal)->format('Y'), Carbon::parse($tanggal)->format('m'), $gaji_component);
                         PPHModel::where('nip', $item)
                             ->where('tahun', Carbon::parse($tanggal)->format('Y'))
                             ->where('bulan', 12)
