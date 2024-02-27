@@ -46,12 +46,15 @@ class UpdatePemotongPenambahOnGajiPerbulanSeeder extends Seeder
                 $jkm = $gaji_component->getJKM($kpj, $total_gaji, true);
                 $kesehatan = $gaji_component->getKesehatan($jkn, $total_gaji, true);
                 $jp = $gaji_component->getJPPenambah($kpj, $total_gaji, true);
+                // Pengurang
+                $bpjstk2 = $gaji_component->getBPJSTK($kpj, $total_gaji, $value->bulan, true, true);
                 $data = [
                     'jkk' => $jkk,
                     'jht' => $jht,
                     'jkm' => $jkm,
                     'kesehatan' => $kesehatan,
                     'jp' => $jp,
+                    'bpjs_tk_two' => $bpjstk2,
                 ];
                 DB::table('gaji_per_bulan')
                     ->where('id', $value->id)

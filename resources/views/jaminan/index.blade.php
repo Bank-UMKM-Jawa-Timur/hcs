@@ -71,7 +71,7 @@ $request = isset($request) ? $request : null;
                                 $awal = $tahunSaatIni - 5;
                                 $akhir = $tahunSaatIni + 5;
                             @endphp
-    
+
                             @for ($tahun = $earliest; $tahun <= $akhir; $tahun++)
                                 <option {{ Request()->tahun == $tahun ? 'selected' : '' }} value="{{ $tahun }}">
                                     {{ $tahun }}</option>
@@ -100,216 +100,166 @@ $request = isset($request) ? $request : null;
         <div class="table-wrapping mt-10">
             <div class="col-md-12">
                 @if ($cek_data == 0)
-                <h5 class="text-center align-item-center"><b>Data Ini Masih Belum Diproses ({{ getMonth($bulan) }} {{ $tahun
-                        }})</b></h5>
+                <h5 class="text-center align-item-center"><b>Data Ini Masih Belum Diproses ({{ getMonth($bulan) }} {{ $tahun }})</b></h5>
                 @endif
                 @if ($status == 1)
-                    <div class="table-wrapping">
-                        <table class="tables-stripped" id="table_export" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2" class="bg-theme-primary" style="text-align: center;">Kode Kantor</th>
-                                    <th rowspan="2" class="bg-theme-primary" style="text-align: center;">Nama Kantor</th>
-                                    <th rowspan="2" class="bg-theme-primary" style="text-align: center;">Jumlah Pegawai</th>
-                                    <th colspan="4" class="bg-theme-primary" style="text-align: center;">JAMSOSTEK</th>
-                                    <th rowspan="2" class="bg-theme-primary" style="text-align: center;">JP(1%)</th>
-                                    <th rowspan="2" class="bg-theme-primary" style="text-align: center;">JP(2%)</th>
-                                    <th rowspan="2" class="bg-theme-primary" style="text-align: center;">Total JP</th>
-                                </tr>
-                                <tr style="background-color: #DAE2B6">
-                                    <th style="text-align: center;">JKK</th>
-                                    <th style="text-align: center;">JHT</th>
-                                    <th style="text-align: center;">JKM</th>
-                                    <th style="text-align: center;">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $total_karyawan = $count_pusat;
-                                @endphp
-                                <tr>
-                                    <td>-</td>
-                                    <td>Kantor Pusat</td>
-                                    <td>{{ $count_pusat }}</td>
-                                    <td style="text-align: right;">{{ number_format(((0.0024 * $total_gaji_pusat)), 0, ",", ".") }}</td>
-                                    <td style="text-align: right;">{{ number_format(((0.057 * $total_gaji_pusat)), 0, ",", ".") }}</td>
-                                    <td style="text-align: right;">{{ number_format(((0.003 * $total_gaji_pusat)), 0, ",", ".") }}</td>
-                                    <td style="text-align: right;">{{ number_format((((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) + ((0.003 *
-                                        $total_gaji_pusat)), 0, ",", ".") }}</td>
-                                    <td style="text-align: right;">{{ number_format(array_sum($jp1_pusat), 0, ",", ".") }}</td>
-                                    <td style="text-align: right;">{{ number_format(array_sum($jp2_pusat), 0, ",", ".") }}</td>
-                                    <td style="text-align: right;">{{ number_format((array_sum($jp1_pusat) + array_sum($jp2_pusat)), 0, ",", ".") }}</td>
-                                </tr>
-        
-                                @php
-                                    $total_jkk = array();
-                                    $total_jht = array();
-                                    $total_jkm = array();
-                                    $total_jamsostek = array();
-        
-                                    $total_jp1 = array();
-                                    $total_jp2 = array();
-                                    $total_jp = array();
-        
-                                    array_push($total_jamsostek, (((0.0024 * $total_gaji_pusat)) + ((0.057 * $total_gaji_pusat))) +
-                                    ((0.003 * $total_gaji_pusat)));
-                                    array_push($total_jkk, ((0.0024 * $total_gaji_pusat)));
-                                    array_push($total_jht, ((0.057 * $total_gaji_pusat)));
-                                    array_push($total_jkm, ((0.003 * $total_gaji_pusat)));
-        
-                                    array_push($total_jp, (array_sum($jp1_pusat) + array_sum($jp2_pusat)));
-                                    array_push($total_jp1, array_sum($jp1_pusat));
-                                    array_push($total_jp2, array_sum($jp2_pusat));
-                                @endphp
-        
-                                @foreach ($data_cabang as $item)
-                                    @php
-                                        $total_karyawan += count($item->karyawan);
-                                    @endphp
+                    @if (count($data) > 0)
+                        <div class="table-wrapping">
+                            <table class="tables-stripped" id="table_export" style="width: 100%">
+                                <thead>
                                     <tr>
-                                        <td>{{ $item->kd_entitas }}</td>
-                                        <td>{{ $item->nama_cabang->nama_cabang }}</td>
-                                        <td>{{ count($item->karyawan) }}</td>
-                                        <td style="text-align: right;">{{ number_format(((0.0024 * array_sum($item->total_gaji_cabang))), 0, ",", ".") }}</td>
-                                        <td style="text-align: right;">{{ number_format(((0.057 * array_sum($item->total_gaji_cabang))), 0, ",", ".") }}</td>
-                                        <td style="text-align: right;">{{ number_format(((0.003 * array_sum($item->total_gaji_cabang))), 0, ",", ".") }}</td>
-                                        <td style="text-align: right;">{{ number_format((((0.0024 * array_sum($item->total_gaji_cabang))) + ((0.057 *
-                                            array_sum($item->total_gaji_cabang)))) + ((0.003 * array_sum($item->total_gaji_cabang))), 0, ",", ".") }}</td>
-                                        <td style="text-align: right;">{{ number_format(array_sum($item->jp1_cabang), 0, ",", ".") }}</td>
-                                        <td style="text-align: right;">{{ number_format(array_sum($item->jp2_cabang), 0, ",", ".") }}</td>
-                                        <td style="text-align: right;">{{ number_format((array_sum($item->jp1_cabang) + array_sum($item->jp2_cabang)), 0, ",", ".") }}</td>
+                                        <th rowspan="2" class="bg-theme-primary" style="text-align: center;">Kode Kantor</th>
+                                        <th rowspan="2" class="bg-theme-primary" style="text-align: center;">Nama Kantor</th>
+                                        <th rowspan="2" class="bg-theme-primary" style="text-align: center;">Jumlah Pegawai</th>
+                                        <th colspan="4" class="bg-theme-primary" style="text-align: center;">JAMSOSTEK</th>
+                                        <th rowspan="2" class="bg-theme-primary" style="text-align: center;">JP(1%)</th>
+                                        <th rowspan="2" class="bg-theme-primary" style="text-align: center;">JP(2%)</th>
+                                        <th rowspan="2" class="bg-theme-primary" style="text-align: center;">Total JP</th>
+                                    </tr>
+                                    <tr style="background-color: #DAE2B6">
+                                        <th style="text-align: center;">JKK</th>
+                                        <th style="text-align: center;">JHT</th>
+                                        <th style="text-align: center;">JKM</th>
+                                        <th style="text-align: center;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                         @php
-                                            array_push($total_jamsostek, (((0.0024 * array_sum($item->total_gaji_cabang))) + ((0.057 *
-                                            array_sum($item->total_gaji_cabang)))) + ((0.003 * array_sum($item->total_gaji_cabang))));
-                                            array_push($total_jkk, ((0.0024 * array_sum($item->total_gaji_cabang))));
-                                            array_push($total_jht, ((0.057 * array_sum($item->total_gaji_cabang))));
-                                            array_push($total_jkm, ((0.003 * array_sum($item->total_gaji_cabang))));
-        
-                                            array_push($total_jp, (array_sum($item->jp1_cabang) + array_sum($item->jp2_cabang)));
-                                            array_push($total_jp1, array_sum($item->jp1_cabang));
-                                            array_push($total_jp2, array_sum($item->jp2_cabang));
+                                            $grand_karyawan = 0;
+                                            $total_jkk = 0;
+                                            $total_jht = 0;
+                                            $total_jkm = 0;
+                                            $total_jp1 = 0;
+                                            $total_jp2 = 0;
                                         @endphp
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                            <tfoot style="font-weight: bold">
-                                <tr>
-                                    <td colspan="2" style="text-align: center;">
-                                        Jumlah
-                                    </td>
-                                    <td style="text-align: center;">{{ $total_karyawan }}</td>
-                                    <td style="text-align: center;">{{ number_format(array_sum($total_jkk), 0, ",", ".") }}</td>
-                                    <td style="text-align: center;">{{ number_format(array_sum($total_jht), 0, ",", ".") }}</td>
-                                    <td style="text-align: center;">{{ number_format(array_sum($total_jkm), 0, ",", ".") }}</td>
-                                    <td style="background-color: #FED049; text-align: center;">{{
-                                        number_format(array_sum($total_jamsostek), 0, ",", ".") }}</td>
-                                    <td style="text-align: center;">{{ number_format(array_sum($total_jp1), 0, ",", ".") }}</td>
-                                    <td style="text-align: center;">{{ number_format(array_sum($total_jp2), 0, ",", ".") }}</td>
-                                    <td style="background-color: #FED049; text-align: center;">{{ number_format(array_sum($total_jp), 0, ",", ".") }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="9" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)
-                                    </td>
-                                    <td style="background-color: #54B435; text-align: center;">{{
-                                        number_format((array_sum($total_jamsostek) + array_sum($total_jp)), 0, ".", ",") }}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                @elseif($status == 2)
-                    <div class="table-responsive overflow-hidden pt-2">
-                        <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">NIP</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">Nama Karyawan</th>
-                                    <th colspan="4" style="background-color: #CCD6A6; text-align:center;">JAMSOSTEK</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">JP(1%)</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">JP(2%)</th>
-                                    <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">Total JP</th>
-                                </tr>
-                                <tr style="background-color: #DAE2B6">
-                                    <th style="text-align: center;">JKK</th>
-                                    <th style="text-align: center;">JHT</th>
-                                    <th style="text-align: center;">JKM</th>
-                                    <th style="text-align: center;">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for ($i = 0; $i < count($karyawan); $i++)
+                                    @foreach ($data as $item)
+                                        @php
+                                            $nama_cabang = DB::table('mst_cabang')
+                                                        ->where('kd_cabang', $item->kd_entitas)
+                                                        ->first();
+                                            $total_jkk += $item->perhitungan_jkk;
+                                            $total_jht += $item->perhitungan_jht;
+                                            $total_jkm += $item->perhitungan_jkm;
+                                            $total_jp1 += $item->jp1;
+                                            $total_jp2 += $item->jp2;
+                                            $grand_karyawan += $item->total_karyawan;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $item->kd_entitas == '000' ? '-' : $item->kd_entitas }}</td>
+                                            <td>{{ $item->kd_entitas == '000' ? 'Kantor Pusat' : $nama_cabang->nama_cabang }}</td>
+                                            <td>{{ $item->total_karyawan }}</td>
+                                            {{-- jamsostek --}}
+                                            <td>{{number_format($item->perhitungan_jkk, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->perhitungan_jht, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->perhitungan_jkm, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->perhitungan_jkk + $item->perhitungan_jht + $item->perhitungan_jkm, 0, ".", ",")}}</td>
+                                            {{-- end jamsostek --}}
+                                            <td>{{number_format($item->jp1, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->jp2, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->jp1 + $item->jp2, 0, ".", ",")}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot style="font-weight: bold">
                                     <tr>
-                                        <td>
-                                            {{ $karyawan[$i]->nip }}
+                                        <td colspan="2" style="text-align: center;">
+                                            Jumlah
                                         </td>
-                                        <td>
-                                            {{ $karyawan[$i]->nama_karyawan }}
+                                        <td style="text-align: center;">{{ $grand_karyawan }}</td>
+                                    <td style="text-align: center;">{{ number_format($total_jkk, 0, ".", ",") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jht, 0, ".", ",") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jkm, 0, ".", ",") }}</td>
+                                        <td style="background-color: #FED049; text-align: center;">{{ number_format($total_jkk + $total_jht + $total_jkm, 0, ".", ",") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jp1, 0, ".", ",") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jp2, 0, ".", ",") }}</td>
+                                        <td style="background-color: #FED049; text-align: center;">{{ number_format($total_jp1 +
+                                            $total_jp2, 0, ".", ",") }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="9" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)
                                         </td>
-                                        <td>
-                                            {{ $i >= 261 ? 0 : number_format(isset($jkk[$i]) ? $jkk[$i] : 0 , 4, ".", ",") }}
-                                        </td>
-                                        <td>
-                                            {{  $i >= 261 ? 0 : number_format(isset($jht[$i]) ? $jht[$i] : 0, 2, ".", ",") }}
-                                        </td>
-                                        <td>
-                                            {{  $i >= 261 ? 0 : number_format(isset($jkm[$i]) ? $jkm[$i] : 0, 2, ".", ",") }}
-                                        </td>
-                                        <td>
-                                            @php
-                                                if (!isset($jkk[$i])) {
-                                                    $jkk[$i] = 0;
-                                                }
-                                                if (!isset($jht[$i])) {
-                                                    $jht[$i] = 0;
-                                                }
-                                                if (!isset($jkm[$i])) {
-                                                    $jkm[$i] = 0;
-                                                }
-                                            @endphp
-                                            {{  $i >= 261 ? 0 : number_format(($jkk[$i] + $jht[$i] + $jkm[$i]), 2, ".", ",") }}
-                                        </td>
-                                        <td>
-                                            {{  $i >= 261 ? 0 : number_format(isset($jp1[$i]) ? $jp1[$i] : 0, 0, ".", ",") }}
-                                        </td>
-                                        <td>
-                                            {{  $i >= 261 ? 0 : number_format(isset($jp2[$i]) ? $jp2[$i] : 0, 0, ".", ",") }}
-                                        </td>
-                                        <td>
-                                            @php
-                                                if (!isset($jp1[$i])) {
-                                                    $jp1[$i] = 0;
-                                                }
-                                                if (!isset($jp2[$i])) {
-                                                    $jp2[$i] = 0;
-                                                }
-                                            @endphp
-                                            {{  $i >= 261 ? 0 : number_format(($jp1[$i] + $jp2[$i]), 0, ".", ",") }}
+                                        <td style="background-color: #54B435; text-align: center;">
+                                            {{ number_format($total_jkk + $total_jht + $total_jkm + $total_jp1 + $total_jp2, 0, ".", ",") }}
                                         </td>
                                     </tr>
-                                @endfor
-                            </tbody>
-                            <tfoot style="font-weight: bold; text-align: center;">
-                                <tr>
-                                    <td colspan="2" style="text-align: center;">Jumlah</td>
-                                    <td style="text-align: center;">{{ number_format(array_sum($jkk), 2, ".", ",") }}</td>
-                                    <td style="text-align: center;">{{ number_format(array_sum($jht), 0, ".", ",") }}</td>
-                                    <td style="text-align: center;">{{ number_format(array_sum($jkm), 0, ".", ",") }}</td>
-                                    <td style="background-color: #FED049; text-align: center;">{{ number_format((array_sum($jkk) +
-                                        array_sum($jht) + array_sum($jkm)), 0, ".", ",") }}</td>
-                                    <td style="text-align: center;">{{ number_format((array_sum($jp1)), 0, ".", ",") }}</td>
-                                    <td style="text-align: center;">{{ number_format((array_sum($jp2)), 0, ".", ",") }}</td>
-                                    <td style="background-color: #FED049; text-align: center;">{{ number_format((array_sum($jp1) +
-                                        array_sum($jp2)), 0, ".", ",") }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="8" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)
-                                    </td>
-                                    <td style="background-color: #54B435; text-align: center;">{{ number_format((array_sum($jkk) +
-                                        array_sum($jht) + array_sum($jkm)) + (array_sum($jp1) + array_sum($jp2)), 0, ".", ",") }}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                                </tfoot>
+                            </table>
+                        </div>
+                    @endif
+                @elseif($status == 2)
+                    @if (count($karyawan) > 0)
+                        <div class="table-responsive overflow-hidden pt-2">
+                            <table class="table text-center cell-border stripe" id="table_export" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">NIP</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">Nama Karyawan</th>
+                                        <th colspan="4" style="background-color: #CCD6A6; text-align:center;">JAMSOSTEK</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">JP(1%)</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">JP(2%)</th>
+                                        <th rowspan="2" style="background-color: #CCD6A6; text-align:center;">Total JP</th>
+                                    </tr>
+                                    <tr style="background-color: #DAE2B6">
+                                        <th style="text-align: center;">JKK</th>
+                                        <th style="text-align: center;">JHT</th>
+                                        <th style="text-align: center;">JKM</th>
+                                        <th style="text-align: center;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $total_jkk = 0;
+                                        $total_jht = 0;
+                                        $total_jkm = 0;
+                                        $total_jp1 = 0;
+                                        $total_jp2 = 0;
+                                    @endphp
+                                    @foreach ($karyawan as $item)
+                                        @php
+                                            $total_jkk += $item->perhitungan_jkk;
+                                            $total_jht += $item->perhitungan_jht;
+                                            $total_jkm += $item->perhitungan_jkm;
+                                            $total_jp1 += $item->jp1;
+                                            $total_jp2 += $item->jp2;
+                                        @endphp
+                                        <tr>
+                                            <td>{{$item->nip}}</td>
+                                            <td>{{$item->nama_karyawan}}</td>
+                                            {{-- jamsostek --}}
+                                            <td>{{number_format($item->perhitungan_jkk, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->perhitungan_jht, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->perhitungan_jkm, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->perhitungan_jkk + $item->perhitungan_jht + $item->perhitungan_jkm, 0, ".", ",")}}</td>
+                                            {{-- end jamsostek --}}
+                                            <td>{{number_format($item->jp1, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->jp2, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->jp1 + $item->jp2, 0, ".", ",")}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot style="font-weight: bold; text-align: center;">
+                                    <tr>
+                                        <td colspan="2" style="text-align: center;">Jumlah</td>
+                                        <td style="text-align: center;">{{ number_format($total_jkk, 0, ".", ",") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jht, 0, ".", ",") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jkm, 0, ".", ",") }}</td>
+                                        <td style="background-color: #FED049; text-align: center;">{{ number_format($total_jkk + $total_jht + $total_jkm, 0, ".", ",") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jp1, 0, ".", ",") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jp2, 0, ".", ",") }}</td>
+                                        <td style="background-color: #FED049; text-align: center;">{{ number_format($total_jp1 +
+                                            $total_jp2, 0, ".", ",") }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)
+                                        </td>
+                                        <td style="background-color: #54B435; text-align: center;">
+                                            {{ number_format($total_jkk + $total_jht + $total_jkm + $total_jp1 + $total_jp2, 0, ".", ",") }}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    @endif
                 @endif
             </div>
         </div>
@@ -337,7 +287,7 @@ $request = isset($request) ? $request : null;
         var bulan = a.options[a.selectedIndex].text;
         var tahun = b.options[b.selectedIndex].text;
         var category = kat.options[kat.selectedIndex].text;
-        
+
         $("#table_export").DataTable({
             dom : "Bfrtip",
             iDisplayLength: -1,
@@ -408,12 +358,12 @@ $request = isset($request) ? $request : null;
                         } else {
                             doc.content[0].text = ' Bank UMKM Jawa Timur Laporan Jamsostek kategori - ' + category + ' - '+selectedValueKantor+' '+selectedValueCabang+' - ' + bulan + ' ' + tahun;
                         }
-                        
-                        doc.styles.tableHeader.fontSize = 10; 
+
+                        doc.styles.tableHeader.fontSize = 10;
                         doc.defaultStyle.fontSize = 9;
                         doc.defaultStyle.alignment = 'center';
                         doc.styles.tableHeader.alignment = 'center';
-                        
+
                         doc.content[1].margin = [0, 0, 0, 0];
                         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
 
@@ -463,16 +413,16 @@ $request = isset($request) ? $request : null;
                         var css = '@page { size: landscape; }',
                             head = win.document.head || win.document.getElementsByTagName('head')[0],
                             style = win.document.createElement('style');
-        
+
                         style.type = 'text/css';
                         style.media = 'print';
-        
+
                         if (style.styleSheet) {
                             style.styleSheet.cssText = css;
                         } else {
                             style.appendChild(win.document.createTextNode(css));
                         }
-        
+
                         head.appendChild(style);
 
                         $(win.document.body).find('h1')
@@ -491,7 +441,7 @@ $request = isset($request) ? $request : null;
                 }
             ]
         });
-        
+
         $(".buttons-excel").attr("class","btn btn-success mb-2");
         $(".buttons-pdf").attr("class","btn btn-success mb-2");
         $(".buttons-print").attr("class","btn btn-success mb-2");
