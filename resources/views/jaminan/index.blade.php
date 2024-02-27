@@ -149,14 +149,14 @@ $request = isset($request) ? $request : null;
                                             <td>{{ $item->kd_entitas == '000' ? 'Kantor Pusat' : $nama_cabang->nama_cabang }}</td>
                                             <td>{{ $item->total_karyawan }}</td>
                                             {{-- jamsostek --}}
-                                            <td>{{number_format($item->perhitungan_jkk, 0, ".", ",")}}</td>
-                                            <td>{{number_format($item->perhitungan_jht, 0, ".", ",")}}</td>
-                                            <td>{{number_format($item->perhitungan_jkm, 0, ".", ",")}}</td>
-                                            <td>{{number_format($item->perhitungan_jkk + $item->perhitungan_jht + $item->perhitungan_jkm, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->perhitungan_jkk, 0, ",", ".")}}</td>
+                                            <td>{{number_format($item->perhitungan_jht, 0, ",", ".")}}</td>
+                                            <td>{{number_format($item->perhitungan_jkm, 0, ",", ".")}}</td>
+                                            <td>{{number_format($item->perhitungan_jkk + $item->perhitungan_jht + $item->perhitungan_jkm, 0, ",", ".")}}</td>
                                             {{-- end jamsostek --}}
-                                            <td>{{number_format($item->jp1, 0, ".", ",")}}</td>
-                                            <td>{{number_format($item->jp2, 0, ".", ",")}}</td>
-                                            <td>{{number_format($item->jp1 + $item->jp2, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->jp1, 0, ",", ".")}}</td>
+                                            <td>{{number_format($item->jp2, 0, ",", ".")}}</td>
+                                            <td>{{number_format($item->jp1 + $item->jp2, 0, ",", ".")}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -166,20 +166,20 @@ $request = isset($request) ? $request : null;
                                             Jumlah
                                         </td>
                                         <td style="text-align: center;">{{ $grand_karyawan }}</td>
-                                    <td style="text-align: center;">{{ number_format($total_jkk, 0, ".", ",") }}</td>
-                                        <td style="text-align: center;">{{ number_format($total_jht, 0, ".", ",") }}</td>
-                                        <td style="text-align: center;">{{ number_format($total_jkm, 0, ".", ",") }}</td>
-                                        <td style="background-color: #FED049; text-align: center;">{{ number_format($total_jkk + $total_jht + $total_jkm, 0, ".", ",") }}</td>
-                                        <td style="text-align: center;">{{ number_format($total_jp1, 0, ".", ",") }}</td>
-                                        <td style="text-align: center;">{{ number_format($total_jp2, 0, ".", ",") }}</td>
+                                    <td style="text-align: center;">{{ number_format($total_jkk, 0, ",", ".") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jht, 0, ",", ".") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jkm, 0, ",", ".") }}</td>
+                                        <td style="background-color: #FED049; text-align: center;">{{ number_format($total_jkk + $total_jht + $total_jkm, 0, ",", ".") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jp1, 0, ",", ".") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jp2, 0, ",", ".") }}</td>
                                         <td style="background-color: #FED049; text-align: center;">{{ number_format($total_jp1 +
-                                            $total_jp2, 0, ".", ",") }}</td>
+                                            $total_jp2, 0, ",", ".") }}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="9" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)
                                         </td>
                                         <td style="background-color: #54B435; text-align: center;">
-                                            {{ number_format($total_jkk + $total_jht + $total_jkm + $total_jp1 + $total_jp2, 0, ".", ",") }}
+                                            {{ number_format($total_jkk + $total_jht + $total_jkm + $total_jp1 + $total_jp2, 0, ",", ".") }}
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -226,34 +226,34 @@ $request = isset($request) ? $request : null;
                                             <td>{{$item->nip}}</td>
                                             <td>{{$item->nama_karyawan}}</td>
                                             {{-- jamsostek --}}
-                                            <td>{{number_format($item->perhitungan_jkk, 0, ".", ",")}}</td>
-                                            <td>{{number_format($item->perhitungan_jht, 0, ".", ",")}}</td>
-                                            <td>{{number_format($item->perhitungan_jkm, 0, ".", ",")}}</td>
-                                            <td>{{number_format($item->perhitungan_jkk + $item->perhitungan_jht + $item->perhitungan_jkm, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->perhitungan_jkk, 0, ",", ".")}}</td>
+                                            <td>{{number_format($item->perhitungan_jht, 0, ",", ".")}}</td>
+                                            <td>{{number_format($item->perhitungan_jkm, 0, ",", ".")}}</td>
+                                            <td>{{number_format($item->perhitungan_jkk + $item->perhitungan_jht + $item->perhitungan_jkm, 0, ",", ".")}}</td>
                                             {{-- end jamsostek --}}
-                                            <td>{{number_format($item->jp1, 0, ".", ",")}}</td>
-                                            <td>{{number_format($item->jp2, 0, ".", ",")}}</td>
-                                            <td>{{number_format($item->jp1 + $item->jp2, 0, ".", ",")}}</td>
+                                            <td>{{number_format($item->jp1, 0, ",", ".")}}</td>
+                                            <td>{{number_format($item->jp2, 0, ",", ".")}}</td>
+                                            <td>{{number_format($item->jp1 + $item->jp2, 0, ",", ".")}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot style="font-weight: bold; text-align: center;">
                                     <tr>
                                         <td colspan="2" style="text-align: center;">Jumlah</td>
-                                        <td style="text-align: center;">{{ number_format($total_jkk, 0, ".", ",") }}</td>
-                                        <td style="text-align: center;">{{ number_format($total_jht, 0, ".", ",") }}</td>
-                                        <td style="text-align: center;">{{ number_format($total_jkm, 0, ".", ",") }}</td>
-                                        <td style="background-color: #FED049; text-align: center;">{{ number_format($total_jkk + $total_jht + $total_jkm, 0, ".", ",") }}</td>
-                                        <td style="text-align: center;">{{ number_format($total_jp1, 0, ".", ",") }}</td>
-                                        <td style="text-align: center;">{{ number_format($total_jp2, 0, ".", ",") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jkk, 0, ",", ".") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jht, 0, ",", ".") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jkm, 0, ",", ".") }}</td>
+                                        <td style="background-color: #FED049; text-align: center;">{{ number_format($total_jkk + $total_jht + $total_jkm, 0, ",", ".") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jp1, 0, ",", ".") }}</td>
+                                        <td style="text-align: center;">{{ number_format($total_jp2, 0, ",", ".") }}</td>
                                         <td style="background-color: #FED049; text-align: center;">{{ number_format($total_jp1 +
-                                            $total_jp2, 0, ".", ",") }}</td>
+                                            $total_jp2, 0, ",", ".") }}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="8" style="text-align: center;">(Total Jamsostek) + (Total JP 1%) + (Total JP 2%)
                                         </td>
                                         <td style="background-color: #54B435; text-align: center;">
-                                            {{ number_format($total_jkk + $total_jht + $total_jkm + $total_jp1 + $total_jp2, 0, ".", ",") }}
+                                            {{ number_format($total_jkk + $total_jht + $total_jkm + $total_jp1 + $total_jp2, 0, ",", ".") }}
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -322,9 +322,8 @@ $request = isset($request) ? $request : null;
                     text:'Excel',
                     header: true,
                     footer: true,
-                    customize: function( xlsx, row ) {
+                    customize: function(xlsx, row) {
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
                     }
                 },
                 {

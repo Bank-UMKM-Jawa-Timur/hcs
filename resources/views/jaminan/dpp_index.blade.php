@@ -273,7 +273,6 @@
                     footer: true,
                     customize: function(xlsx, row) {
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                        console.log($('row[r="4"] c[r="C4"]', sheet))
                         var rows = $('row', sheet)
                         rows.each(function(i) {
                             var parent_item = $(this).find('c').attr('s', '63')
