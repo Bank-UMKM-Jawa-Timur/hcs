@@ -13,6 +13,29 @@ class JaminanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private String $orderRaw;
+    public function __construct()
+    {
+        $this->orderRaw = "
+            CASE
+            WHEN mst_karyawan.kd_jabatan='DIRUT' THEN 1
+            WHEN mst_karyawan.kd_jabatan='DIRUMK' THEN 2
+            WHEN mst_karyawan.kd_jabatan='DIRPEM' THEN 3
+            WHEN mst_karyawan.kd_jabatan='DIRHAN' THEN 4
+            WHEN mst_karyawan.kd_jabatan='KOMU' THEN 5
+            WHEN mst_karyawan.kd_jabatan='KOM' THEN 7
+            WHEN mst_karyawan.kd_jabatan='STAD' THEN 8
+            WHEN mst_karyawan.kd_jabatan='PIMDIV' THEN 9
+            WHEN mst_karyawan.kd_jabatan='PSD' THEN 10
+            WHEN mst_karyawan.kd_jabatan='PC' THEN 11
+            WHEN mst_karyawan.kd_jabatan='PBP' THEN 12
+            WHEN mst_karyawan.kd_jabatan='PBO' THEN 13
+            WHEN mst_karyawan.kd_jabatan='PEN' THEN 14
+            WHEN mst_karyawan.kd_jabatan='ST' THEN 15
+            WHEN mst_karyawan.kd_jabatan='NST' THEN 16
+            WHEN mst_karyawan.kd_jabatan='IKJP' THEN 17 END ASC
+        ";
+    }
 
     public function getJamsostek(Request $request)
     {
@@ -443,8 +466,10 @@ class JaminanController extends Controller
         if ($kategori == 1) {
             // Cek Data Di Table Gaji Perbulan
             $cek_data = DB::table('gaji_per_bulan')
-                ->where('bulan', $bulan)
-                ->where('tahun', $tahun)
+                ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
+                ->where('gaji_per_bulan.tahun', $tahun)
+                ->where('gaji_per_bulan.bulan', $bulan)
+                ->whereNull('batch_gaji_per_bulan.deleted_at')
                 ->count('*');
             $cabang = DB::table('mst_cabang')->select('kd_cabang')->get();
             $cbg = array();
@@ -464,51 +489,64 @@ class JaminanController extends Controller
             $s = array();
             // Jika Data Belum Tersedia Di Table Gaji Perbulan
             if ($cek_data == 0) {
-                foreach ($karyawan_pusat as $i) {
-                    if ($i->status_karyawan == 'Tetap') {
-                        $data_gaji = DB::table('mst_karyawan')
-                            ->where('nip', $i->nip)
-                            ->select('gj_pokok', 'gj_penyesuaian')
-                            ->first();
-                        $data_tj_keluarga = DB::table('tunjangan_karyawan')
-                            ->where('nip', $i->nip)
-                            ->where('id_tunjangan', 1)
-                            ->first();
-                        $data_tj_kesejahteraan = DB::table('tunjangan_karyawan')
-                            ->where('nip', $i->nip)
-                            ->where('id_tunjangan', 8)
-                            ->first();
+                // foreach ($karyawan_pusat as $i) {
+                //     if ($i->status_karyawan == 'Tetap') {
 
-                        array_push($total_gj_pusat, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
-                        array_push($total_tunjangan_keluarga, ($data_tj_keluarga != null) ? $data_tj_keluarga->nominal : 0);
-                        array_push($total_tunjangan_kesejahteraan, ($data_tj_kesejahteraan != null) ? $data_tj_kesejahteraan->nominal : 0);
-                    }
-                }
-                $dpp_pusat = round((array_sum($total_gj_pusat) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13);
+                //         $data_gaji = DB::table('mst_karyawan')
+                //             ->where('nip', $i->nip)
+                //             ->select('gj_pokok', 'gj_penyesuaian')
+                //             ->first();
+                //         $data_tj_keluarga = DB::table('tunjangan_karyawan')
+                //             ->where('nip', $i->nip)
+                //             ->where('id_tunjangan', 1)
+                //             ->first();
+                //         $data_tj_kesejahteraan = DB::table('tunjangan_karyawan')
+                //             ->where('nip', $i->nip)
+                //             ->where('id_tunjangan', 8)
+                //             ->first();
 
-                $data_pusat = DB::table('tunjangan_karyawan')
-                    ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
-                    ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-                    ->where('mst_tunjangan.status', 1)
-                    ->whereNotIn('kd_entitas', $cbg)
-                    ->get();
+                //         array_push($total_gj_pusat, ($data_gaji != null) ? $data_gaji->gj_pokok : 0);
+                //         array_push($total_tunjangan_keluarga, ($data_tj_keluarga != null) ? $data_tj_keluarga->nominal : 0);
+                //         array_push($total_tunjangan_kesejahteraan, ($data_tj_kesejahteraan != null) ? $data_tj_kesejahteraan->nominal : 0);
+                //     }
+                // }
+                // $dpp_pusat = round((array_sum($total_gj_pusat) + array_sum($total_tunjangan_keluarga) + (array_sum($total_tunjangan_kesejahteraan) * 0.5)) * 0.13);
+
+                // $data_pusat = DB::table('tunjangan_karyawan')
+                //     ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
+                //     ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+                //     ->where('mst_tunjangan.status', 1)
+                //     ->whereNotIn('kd_entitas', $cbg)
+                //     ->get();
 
                 // Get Data keseluruhan cabang
-                $data_cabang = DB::table('tunjangan_karyawan')
-                    ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
-                    ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-                    ->where('mst_tunjangan.status', 1)
-                    ->whereIn('kd_entitas', $cbg)
-                    ->selectRaw('kd_entitas, sum(nominal) as nominal')
-                    ->groupBy('mst_karyawan.kd_entitas')
+                $data_cabang = DB::table('gaji_per_bulan')
+                    ->select(
+                        DB::raw('SUM(gaji_per_bulan.dpp) as dpp'),
+                        'batch_gaji_per_bulan.kd_entitas'
+                    )
+                    ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', '=', 'gaji_per_bulan.batch_id')
+                    ->where('gaji_per_bulan.tahun', $tahun)
+                    ->where('gaji_per_bulan.bulan', $bulan)
+                    ->whereIn('batch_gaji_per_bulan.kd_entitas', $cbg)
+                    ->whereNull('batch_gaji_per_bulan.deleted_at')
+                    ->orderBy('batch_gaji_per_bulan.kd_entitas')
+                    ->groupBy('batch_gaji_per_bulan.kd_entitas')
                     ->get();
-
+                // $data_cabang = DB::table('tunjangan_karyawan')
+                //     ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
+                //     ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+                //     ->where('mst_tunjangan.status', 1)
+                //     ->whereIn('kd_entitas', $cbg)
+                //     ->selectRaw('kd_entitas, sum(nominal) as nominal')
+                //     ->groupBy('mst_karyawan.kd_entitas')
+                //     ->get();
                 return view('jaminan.dpp_index', [
                     'status' => 1,
-                    'dpp_pusat' => $dpp_pusat,
-                    'data_pusat' => $data_pusat,
+                    // 'dpp_pusat' => $dpp_pusat,
+                    // 'data_pusat' => $data_pusat,
                     'data_cabang' => $data_cabang,
-                    'tahun' => $tahun,
+                    'tahun' => $request->tahun,
                     'bulan' => $bulan,
                     'request' => $request,
                 ]);
@@ -517,9 +555,10 @@ class JaminanController extends Controller
             foreach ($karyawan_pusat as $i) {
                 if ($i->status_karyawan == 'Tetap') {
                     $data_gaji = DB::table('gaji_per_bulan')
-                        ->where('nip', $i->nip)
-                        ->where('bulan', $bulan)
-                        ->where('tahun', $tahun)
+                        ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
+                        ->where('gaji_per_bulan.tahun', $tahun)
+                        ->where('gaji_per_bulan.bulan', $bulan)
+                        ->whereNull('batch_gaji_per_bulan.deleted_at')
                         ->first();
 
                     array_push($total_tunjangan_keluarga, ($data_gaji != null) ? $data_gaji->tj_keluarga : 0);
@@ -539,21 +578,34 @@ class JaminanController extends Controller
                 ->get();
 
             // Get Data keseluruhan cabang
-            $data_cabang = DB::table('tunjangan_karyawan')
-                ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
-                ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
-                ->where('mst_tunjangan.status', 1)
-                ->whereIn('kd_entitas', $cbg)
-                ->selectRaw('kd_entitas, sum(nominal) as nominal')
-                ->groupBy('mst_karyawan.kd_entitas')
+            $data_cabang = DB::table('gaji_per_bulan')
+                ->select(
+                    DB::raw('SUM(gaji_per_bulan.dpp) as dpp'),
+                    'batch_gaji_per_bulan.kd_entitas'
+                )
+                ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', '=', 'gaji_per_bulan.batch_id')
+                ->where('gaji_per_bulan.tahun', $tahun)
+                ->where('gaji_per_bulan.bulan', $bulan)
+                ->whereIn('batch_gaji_per_bulan.kd_entitas', $cbg)
+                ->whereNull('batch_gaji_per_bulan.deleted_at')
+                ->orderBy('batch_gaji_per_bulan.kd_entitas')
+                ->groupBy('batch_gaji_per_bulan.kd_entitas')
                 ->get();
+            // $data_cabang = DB::table('tunjangan_karyawan')
+            //     ->join('mst_karyawan', 'mst_karyawan.nip', '=', 'tunjangan_karyawan.nip')
+            //     ->join('mst_tunjangan', 'mst_tunjangan.id', '=', 'tunjangan_karyawan.id_tunjangan')
+            //     ->where('mst_tunjangan.status', 1)
+            //     ->whereIn('kd_entitas', $cbg)
+            //     ->selectRaw('kd_entitas, sum(nominal) as nominal')
+            //     ->groupBy('mst_karyawan.kd_entitas')
+            //     ->get();
 
             return view('jaminan.dpp_index', [
                 'status' => 1,
                 'dpp_pusat' => $dpp_pusat,
                 'data_pusat' => $data_pusat,
                 'data_cabang' => $data_cabang,
-                'tahun' => $tahun,
+                'tahun' => $request->tahun,
                 'bulan' => $bulan,
                 'request' => $request,
             ]);
@@ -576,36 +628,56 @@ class JaminanController extends Controller
         if ($kantor == 'Pusat') {
             $karyawan = DB::table('mst_karyawan')
                 ->whereNotIn('kd_entitas', $cbg)
-                ->orWhere('kd_entitas', null)
+                ->orWhereNull('kd_entitas')
+                // ->whereRaw("(tanggal_penonaktifan IS NULL OR ($bulan = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                 ->where('status_karyawan', 'Tetap')
                 ->get();
 
             $cek_data = DB::table('gaji_per_bulan')
-                ->where('tahun', $tahun)
-                ->where('bulan', $bulan)
+                ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
+                ->where('gaji_per_bulan.tahun', $tahun)
+                ->where('gaji_per_bulan.bulan', $bulan)
+                ->whereNull('batch_gaji_per_bulan.deleted_at')
                 ->count('*');
-            if ($cek_data == 0) {
-                foreach ($karyawan as $i) {
-                    if ($i->status_karyawan == 'Tetap') {
-                        $data_gaji = DB::table('tunjangan_karyawan')
-                            ->where('id_tunjangan', 15)
-                            ->where('nip', $i->nip)
-                            ->first();
-                        array_push($dpp, ($data_gaji != null) ? $data_gaji->nominal : 0);
-                    }
-                }
-            } else {
-                foreach ($karyawan as $i) {
-                    if ($i->status_karyawan == 'Tetap') {
-                        $data_gaji = DB::table('gaji_per_bulan')
-                            ->where('nip', $i->nip)
-                            ->where('bulan', $bulan)
-                            ->where('tahun', $tahun)
-                            ->first();
-                        array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
-                    }
-                }
-            }
+            // if ($cek_data == 0) {
+            //     foreach ($karyawan as $i) {
+            //         if ($i->status_karyawan == 'Tetap') {
+            //             $data_gaji = DB::table('tunjangan_karyawan')
+            //                 ->where('id_tunjangan', 15)
+            //                 ->where('nip', $i->nip)
+            //                 ->first();
+            //             array_push($dpp, ($data_gaji != null) ? $data_gaji->nominal : 0);
+            //         }
+            //     }
+            // } else {
+                $data_gaji = DB::table('gaji_per_bulan')
+                ->select(
+                    'gaji_per_bulan.nip',
+                    'mst_karyawan.nama_karyawan',
+                    'gaji_per_bulan.dpp'
+                )
+                ->join('mst_karyawan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
+                ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
+                ->where('gaji_per_bulan.tahun', $tahun)
+                ->whereRaw("(tanggal_penonaktifan IS NULL OR ($bulan = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                ->where('gaji_per_bulan.bulan', $bulan)
+                ->where('batch_gaji_per_bulan.kd_entitas', '000')
+                ->whereNull('batch_gaji_per_bulan.deleted_at')
+                ->orderBy('gaji_per_bulan.nip')
+                ->get();
+                // foreach ($karyawan as $i) {
+                //     if ($i->status_karyawan == 'Tetap') {
+                //         $data_gaji = DB::table('gaji_per_bulan')
+                //             ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
+                //             ->where('gaji_per_bulan.tahun', $tahun)
+                //             ->where('gaji_per_bulan.bulan', $bulan)
+                //             ->whereNull('batch_gaji_per_bulan.deleted_at')
+                //             ->where('batch_gaji_per_bulan.kd_entitas', '000')
+                //             ->first();
+                //         array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
+                //     }
+                // }
+            // }
         } else {
             $cabang = $request->get('cabang');
             $karyawan = DB::table('mst_karyawan')
@@ -617,37 +689,57 @@ class JaminanController extends Controller
                 ->first();
 
             $cek_data = DB::table('gaji_per_bulan')
-                ->where('tahun', $tahun)
-                ->where('bulan', $bulan)
+                ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
+                ->where('gaji_per_bulan.bulan', $bulan)
+                ->where('gaji_per_bulan.tahun', $tahun)
+                ->whereNull('batch_gaji_per_bulan.deleted_at')
                 ->count('*');
-            if ($cek_data == 0) {
-                foreach ($karyawan as $i) {
-                    if ($i->status_karyawan == 'Tetap') {
-                        $data_gaji = DB::table('tunjangan_karyawan')
-                            ->where('id_tunjangan', 15)
-                            ->where('nip', $i->nip)
-                            ->first();
-                        array_push($dpp, ($data_gaji != null) ? $data_gaji->nominal : 0);
-                    }
-                }
-            } else {
-                foreach ($karyawan as $i) {
-                    if ($i->status_karyawan == 'Tetap') {
-                        $data_gaji = DB::table('gaji_per_bulan')
-                            ->where('nip', $i->nip)
-                            ->where('bulan', $bulan)
-                            ->where('tahun', $tahun)
-                            ->first();
-                        array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
-                    }
-                }
-            }
+            // if ($cek_data == 0) {
+            //     foreach ($karyawan as $i) {
+            //         if ($i->status_karyawan == 'Tetap') {
+            //             $data_gaji = DB::table('tunjangan_karyawan')
+            //                 ->where('id_tunjangan', 15)
+            //                 ->where('nip', $i->nip)
+            //                 ->first();
+            //             array_push($dpp, ($data_gaji != null) ? $data_gaji->nominal : 0);
+            //         }
+            //     }
+            // } else {
+                // foreach ($karyawan as $i) {
+                //     if ($i->status_karyawan == 'Tetap') {
+                //         $data_gaji = DB::table('gaji_per_bulan')
+                //             ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
+                //             ->where('gaji_per_bulan.tahun', $tahun)
+                //             ->where('gaji_per_bulan.bulan', $bulan)
+                //             ->where('gaji_per_bulan.nip', $i->nip)
+                //             ->whereNull('batch_gaji_per_bulan.deleted_at')
+                //             ->first();
+                //         array_push($dpp, ($data_gaji != null) ? $data_gaji->dpp : 0);
+                //     }
+                // }
+                $data_gaji = DB::table('gaji_per_bulan')
+                    ->select(
+                        'gaji_per_bulan.nip',
+                        'mst_karyawan.nama_karyawan',
+                        'gaji_per_bulan.dpp'
+                    )
+                    ->join('mst_karyawan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
+                    ->join('batch_gaji_per_bulan', 'batch_gaji_per_bulan.id', 'gaji_per_bulan.batch_id')
+                    ->where('gaji_per_bulan.tahun', $tahun)
+                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($bulan = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
+                    ->where('gaji_per_bulan.bulan', $bulan)
+                    ->where('batch_gaji_per_bulan.kd_entitas', $cab->kd_cabang)
+                    ->whereNull('batch_gaji_per_bulan.deleted_at')
+                    ->orderBy('gaji_per_bulan.nip')
+                    ->get();
+            // }
         }
 
         return view('jaminan.dpp_index', [
             'status' => 2,
             'kantor' => $kantor,
             'cab' => $cab,
+            'data_gaji' => $data_gaji,
             'karyawan' => $karyawan,
             'dpp' => $dpp,
             'bulan' => $bulan,

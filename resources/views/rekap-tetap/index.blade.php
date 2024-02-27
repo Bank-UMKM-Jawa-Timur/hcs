@@ -66,6 +66,17 @@
     .table-scroll .thead_pertama th:nth-child(4) {
         z-index: 4;
     }
+    .table-scroll tr td:nth-child(5),
+    .table-scroll .thead_pertama th:nth-child(5) {
+        position: -webkit-sticky;
+        position: sticky;
+        left: 315px;
+        z-index: 2;
+        background-color: #fff;
+    }
+    .table-scroll .thead_pertama th:nth-child(5) {
+        z-index: 4;
+    }
 </style>
 <style>
     .table-wrapper {

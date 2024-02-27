@@ -298,6 +298,7 @@ class LaporanTetapRepository
                 'gaji_per_bulan.bulan',
                 'gaji_per_bulan.tahun',
                 'mst_karyawan.nip',
+                'mst_karyawan.status_ptkp',
                 'nama_karyawan',
                 'npwp',
                 'no_rekening',
@@ -1362,6 +1363,7 @@ class LaporanTetapRepository
                 'tanggal_penonaktifan',
                 'kpj',
                 'jkn',
+                'mst_karyawan.status_ptkp',
                 DB::raw("
                     IF(
                         mst_karyawan.status = 'Kawin',
@@ -3331,6 +3333,8 @@ class LaporanTetapRepository
             $uangDuka = 0;
             $spd = 0;
             $spdPendidikan = 0;
+            $insentifPenagihan = 0;
+            $insentifKredit = 0;
             $spdPindahTugas = 0;
             $brutoNataru = 0;
             $pphNataru = 0;
@@ -3366,6 +3370,14 @@ class LaporanTetapRepository
                 }
                 if ($value->id_tunjangan == 21) {
                     $spdPindahTugas += $value->nominal;
+                }
+                // insentif penagihan
+                if ($value->id_tunjangan == 32) {
+                    $insentifPenagihan += $value->nominal;
+                }
+                // insentif kredit
+                if ($value->id_tunjangan == 31) {
+                    $insentifKredit += $value->nominal;
                 }
             }
 
@@ -3419,8 +3431,8 @@ class LaporanTetapRepository
             $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21Bentukan;
             $totalInsentif += $item->total_insentif ?? 0;
             $totalPajakInsentif += floor($insentif_kredit_pajak) ?? 0;
-            $total_insentif_kredit += $item->insentif_kredit ?? 0;
-            $total_insentif_penagihan += $item->insentif_penagihan ?? 0;
+            $total_insentif_kredit += $insentifKredit ?? 0;
+            $total_insentif_penagihan += $insentifPenagihan ?? 0;
             $total_insentif_kredit_pajak += floor($insentif_kredit_pajak) ?? 0;
             $total_insentif_penagihan_pajak += floor($insentif_penagihan_pajak) ?? 0;
             // $brutoTotal = $gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $total_insentif_kredit + $total_insentif_penagihan + $brutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja + $brutoTambahanPenghasilan + $brutoRekreasi + $brutoNataru + $brutoJaspro + $penambahBruto;

@@ -294,8 +294,8 @@
                                     // END Database Lama
                                     // Database Baru
                                     $rowNew = $item['new']['pph'];
-                                    $bruto_new_db = $rowNew->penghasilanBruto - $rowNew->total_insentif_25;
-                                    $total_insentif_new_db = $rowNew->total_insentif_25;
+                                    $bruto_new_db = $rowNew->penghasilanBruto - $rowNew->total_insentif_baru;
+                                    $total_insentif_new_db = $rowNew->total_insentif_baru;
                                     $pph_bentukan_new_db = $rowNew->seharusnya ? $rowNew->seharusnya->pph_bentukan : 0;
                                     $total_pajak_insentif_new_db = $rowNew->seharusnya ? $rowNew->seharusnya->total_insentif : 0;
                                     $total_new_db = $bruto_new_db + $total_insentif_new_db;
