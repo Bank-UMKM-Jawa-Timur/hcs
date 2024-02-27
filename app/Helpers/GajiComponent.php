@@ -249,7 +249,7 @@ class GajiComponent
         return $result;
     }
 
-    public function getBPJSTK($kpj, int $total_gaji, int $bulan, $is_floor=false) : int {
+    public function getBPJSTK($kpj, int $total_gaji, int $bulan, $is_floor=false, $two_percent=false) : int {
         $result = 0;
         // Get Master Hitungan Bruto
         $jp_pengurang = 0;
@@ -265,7 +265,7 @@ class GajiComponent
         // END Get Master Hitungan Bruto
 
         if($kpj) {
-            $jp_persen = $jp_pengurang / 100;
+            $jp_persen = $two_percent ? 2 / 100 : $jp_pengurang / 100;
             $bpjs_tk = 0;
             if ($bulan > 2) {
                 if ($total_gaji > $jp_mar_des) {
