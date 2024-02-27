@@ -1362,6 +1362,7 @@ class GajiPerBulanController extends Controller
 
                 // Get BPJS TK
                 $bpjs_tk = $gaji_component->getBPJSTK($item->kpj, $total_gaji, $bulan);
+                $bpjs_tk_two = $gaji_component->getBPJSTK($item->kpj, $total_gaji, $bulan, false, true);
 
                 // Get Penambah Bruto Jamsostek
                 $jkk = $gaji_component->getJKK($item->kpj, $total_gaji);
@@ -1417,6 +1418,7 @@ class GajiPerBulanController extends Controller
                         'uang_makan' => $tunjangan[13],
                         'dpp' => $dpp,
                         'bpjs_tk' => $bpjs_tk,
+                        'bpjs_tk_two' => $bpjs_tk_two,
                         'jkk' => $jkk,
                         'jht' => $jht,
                         'jkm' => $jkm,
@@ -1628,6 +1630,7 @@ class GajiPerBulanController extends Controller
                             'uang_makan' => $tunjangan[13],
                             'dpp' => $dpp,
                             'bpjs_tk' => $bpjs_tk,
+                            'bpjs_tk_two' => $bpjs_tk_two,
                             'jkk' => $jkk,
                             'jht' => $jht,
                             'jkm' => $jkm,
