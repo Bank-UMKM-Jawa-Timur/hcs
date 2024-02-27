@@ -1,56 +1,58 @@
-@extends('layouts.template')
+@extends('layouts.app-template')
+@include('database.modal')
+
 
 @section('content')
-<div class="card-header">
-    <h5 class="card-title">Database</h5>
-    <p class="card-title"><a href="/">Setting </a> > <a href="{{ route('database.index') }}">Database</a>
-</div>
-
-<div class="card-body">
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="mb-4">Daftar Backup Database</h6>
-                    @if (count($database->rollbacks) > 0)
-                        <button class="btn btn-primary rounded" data-toggle="modal" data-target="#rollback-modal">Rollback Database</button>
-                    @endif
-                    <div class="table-responsive overflow-hidden pt-4">
-                        <table class="table whitespace-nowrap" id="backup-table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Backup</th>
-                                    <th>Waktu</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($database->backups as $backup)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $backup['name'] }}</td>
-                                    <td>{{ $backup['time']->format('d M Y - H:i') }}</td>
-                                    <td>
-                                        @if ($database->position['name'] != substr($backup['name'], '0', '-4'))
-                                        <a href="{{ route('database.restore', $backup['id']) }}" class="btn btn-sm btn-primary btn-restore">
-                                            Restore
-                                        </a>
-                                        @else
-                                        -
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+    <div class="head mt-5">
+        <div class="flex gap-5 justify-between items-center">
+            <div class="heading">
+                <h2 class="text-2xl font-bold tracking-tighter">Database</h2>
+                <div class="breadcrumb">
+                    <a href="#" class="text-sm text-gray-500">Setting</a>
+                    <i class="ti ti-circle-filled text-theme-primary"></i>
+                    <a href="#" class="text-sm text-gray-500 font-bold">Database</a>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="body-pages">
+        <div class="table-wrapping">
+            @if (count($database->rollbacks) > 0)
+                <button class="btn btn-primary mb-3" id="modal_rollback">Rollback Database</button>
+            @endif
+            <table class="table whitespace-nowrap" id="backup-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Backup</th>
+                        <th>Waktu</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($database->backups as $backup)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $backup['name'] }}</td>
+                            <td>{{ $backup['time']->format('d M Y - H:i') }}</td>
+                            <td>
+                                @if ($database->position['name'] != substr($backup['name'], '0', '-4'))
+                                    <a href="{{ route('database.restore', $backup['id']) }}"
+                                        class="btn btn-sm btn-primary btn-restore">
+                                        Restore
+                                    </a>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
         @isset($database->position['type'])
-        <div class="col-md-3">
-            <div class="card">
+            <div class="table-wrapping">
                 <div class="card-body">
                     <h6 class="mb-4">Informasi Database</h6>
                     <ul class="list-group">
@@ -75,45 +77,48 @@
                     </ul>
                 </div>
             </div>
-        </div>
         @endisset
     </div>
-</div>
 
-@include('database.modal')
 @endsection
 
-@push('script')
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    $('#backup-table').DataTable();
+@push('extraScript')
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $('#backup-table').DataTable();
 
-    $('#backup-table').on('click', '.btn-restore', function(e) {
-        e.preventDefault();
-        const url = $(this).attr('href');
+        $('#backup-table').on('click', '.btn-restore', function(e) {
+            e.preventDefault();
+            const url = $(this).attr('href');
 
-        Swal.fire({
-            icon: 'question',
-            title: 'Apakah anda yakin?',
-            text: 'Aksi akan mereset semua data aplikasi berdasarkan backup terpilih',
-        })
-        .then((result) => {
-            if(result.isConfirmed) window.location.href = url;
+            Swal.fire({
+                    icon: 'question',
+                    title: 'Apakah anda yakin?',
+                    text: 'Aksi akan mereset semua data aplikasi berdasarkan backup terpilih',
+                })
+                .then((result) => {
+                    if (result.isConfirmed) window.location.href = url;
+                });
         });
-    });
 
-    $('#checkout-btn').click(function(e) {
-        e.preventDefault();
-        const form = $(this).parent();
+        $('#checkout-btn').click(function(e) {
+            e.preventDefault();
+            const form = $(this).parent();
 
-        Swal.fire({
-            icon: 'question',
-            title: 'Apakah anda yakin?',
-            text: 'Aksi akan melakukan checkout permanen pada database',
-        })
-        .then((result) => {
-            if(result.isConfirmed) form.submit();
+            Swal.fire({
+                    icon: 'question',
+                    title: 'Apakah anda yakin?',
+                    text: 'Aksi akan melakukan checkout permanen pada database',
+                })
+                .then((result) => {
+                    if (result.isConfirmed) form.submit();
+                });
         });
-    });
-</script>
+    </script>
+    <script>
+        $('#modal_rollback').on('click', function(e) {
+        console.log("masuk");
+            $(`#rollback-modal`).removeClass('hidden')
+        })
+    </script>
 @endpush

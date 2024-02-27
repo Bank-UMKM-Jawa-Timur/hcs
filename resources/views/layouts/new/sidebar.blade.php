@@ -914,7 +914,7 @@
                                             @endcan
                                             @can('setting - database')
                                                 <li class="item-link">
-                                                    <a href="#">
+                                                    <a href="{{ route('database.index') }}">
                                                         <button class="btn-link">
                                                             <i class="ti ti-circle"></i>
                                                             <span>Database</span>
