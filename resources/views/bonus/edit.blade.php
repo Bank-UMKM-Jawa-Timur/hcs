@@ -17,9 +17,7 @@
                     <a href="#" class="text-sm text-gray-500 font-bold">Edit Bonus</a>
                 </div>
                 <div class="button-wrapper flex gap-3">
-                    <a href="{{ route('edit-tunjangan-bonus') }}?idTunjangan={{ Request()->get('idTunjangan') }}&
-                                            tanggal={{ Request()->get('tanggal') }}&
-                                            kdEntitas={{ Request()->get('kdEntitas') }}"
+                    <a href="{{ route('edit-tunjangan-bonus') }}?idTunjangan={{ Request()->get('idTunjangan') }}&tanggal={{ Request()->get('tanggal') }}&kdEntitas={{ Request()->get('entitas') }}&user_id={{ Request()->get('user_id') }}"
                         class="btn btn-warning-light ml-1">Import</a>
                 </div>
             </div>
