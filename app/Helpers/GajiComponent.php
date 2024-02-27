@@ -81,7 +81,7 @@ class GajiComponent
     }
 
     // Penambah Bruto
-    public function getJKK($kpj, $total_gaji) : int {
+    public function getJKK($kpj, $total_gaji, $is_floor=false) : int {
         $result = 0;
         
         if($total_gaji > 0){
@@ -93,14 +93,14 @@ class GajiComponent
             }
 
             if($kpj){
-                $result = round(($persen_jkk / 100) * $total_gaji);
+                $result = $is_floor ? floor(($persen_jkk / 100) * $total_gaji) : round(($persen_jkk / 100) * $total_gaji);
             }
         }
         
         return $result;
     }
 
-    public function getJHT($kpj, $total_gaji) : int {
+    public function getJHT($kpj, $total_gaji, $is_floor=false) : int {
         $result = 0;
         
         if($total_gaji > 0){
@@ -112,14 +112,14 @@ class GajiComponent
             }
 
             if($kpj){
-                $result = round(($persen_jht / 100) * $total_gaji);
+                $result = $is_floor ? floor(($persen_jht / 100) * $total_gaji) : round(($persen_jht / 100) * $total_gaji);
             }
         }
         
         return $result;
     }
 
-    public function getJKM($kpj, $total_gaji) : int {
+    public function getJKM($kpj, $total_gaji, $is_floor=false) : int {
         $result = 0;
         
         if($total_gaji > 0){
@@ -131,14 +131,14 @@ class GajiComponent
             }
 
             if($kpj){
-                $result = round(($persen_jkm / 100) * $total_gaji);
+                $result = $is_floor ? floor(($persen_jkm / 100) * $total_gaji) : round(($persen_jkm / 100) * $total_gaji);
             }
         }
         
         return $result;
     }
 
-    public function getKesehatan($jkn, $total_gaji) : int {
+    public function getKesehatan($jkn, $total_gaji, $is_floor=false) : int {
         $result = 0;
 
         if($total_gaji > 0){
@@ -154,11 +154,11 @@ class GajiComponent
             }
             if($jkn){
                 if($total_gaji > $batas_atas){
-                    $result = round($batas_atas * ($persen_kesehatan / 100));
+                    $result = $is_floor ? floor($batas_atas * ($persen_kesehatan / 100)) : round($batas_atas * ($persen_kesehatan / 100));
                 } else if($total_gaji < $batas_bawah){
-                    $result = round($batas_bawah * ($persen_kesehatan / 100));
+                    $result = $is_floor ? floor($batas_bawah * ($persen_kesehatan / 100)) : round($batas_bawah * ($persen_kesehatan / 100));
                 } else{
-                    $result = round($total_gaji * ($persen_kesehatan / 100));
+                    $result = $is_floor ? floor($total_gaji * ($persen_kesehatan / 100)) : round($total_gaji * ($persen_kesehatan / 100));
                 }
             }
         }
@@ -166,7 +166,7 @@ class GajiComponent
         return $result;
     }
 
-    public function getJPPenambah($kpj, $total_gaji) : int {
+    public function getJPPenambah($kpj, $total_gaji, $is_floor=false) : int {
         $result = 0;
         
         if($total_gaji > 0){
@@ -177,14 +177,14 @@ class GajiComponent
                 $persen_jp_penambah = $penambah->jp;
             }
             if($kpj){
-                $result = round(($persen_jp_penambah / 100) * $total_gaji);
+                $result = $is_floor ? floor(($persen_jp_penambah / 100) * $total_gaji) : round(($persen_jp_penambah / 100) * $total_gaji);
             }
         }
         
         return $result;
     }
 
-    public function getPenambahBrutoJamsostek($kpj, $jkn, $total_gaji) : int {
+    public function getPenambahBrutoJamsostek($kpj, $jkn, $total_gaji, $is_floor=false) : int {
         $result = 0;
         
         if($total_gaji > 0){
@@ -213,19 +213,19 @@ class GajiComponent
             $bpjs_kesehatan = 0;
 
             if($kpj){
-                $jkk = round(($persen_jkk / 100) * $total_gaji);
-                $jht = round(($persen_jht / 100) * $total_gaji);
-                $jkm = round(($persen_jkm / 100) * $total_gaji);
-                $jp_penambah = round(($persen_jp_penambah / 100) * $total_gaji);
+                $jkk = $is_floor ? floor(($persen_jkk / 100) * $total_gaji) : round(($persen_jkk / 100) * $total_gaji);
+                $jht = $is_floor ? floor(($persen_jht / 100) * $total_gaji) : round(($persen_jht / 100) * $total_gaji);
+                $jkm = $is_floor ? floor(($persen_jkm / 100) * $total_gaji) : round(($persen_jkm / 100) * $total_gaji);
+                $jp_penambah = $is_floor ? floor(($persen_jp_penambah / 100) * $total_gaji) : round(($persen_jp_penambah / 100) * $total_gaji);
             }
 
             if($jkn){
                 if($total_gaji > $batas_atas){
-                    $bpjs_kesehatan = round($batas_atas * ($persen_kesehatan / 100));
+                    $bpjs_kesehatan = $is_floor ? floor($batas_atas * ($persen_kesehatan / 100)) : round($batas_atas * ($persen_kesehatan / 100));
                 } else if($total_gaji < $batas_bawah){
-                    $bpjs_kesehatan = round($batas_bawah * ($persen_kesehatan / 100));
+                    $bpjs_kesehatan = $is_floor ? floor($batas_bawah * ($persen_kesehatan / 100)) : round($batas_bawah * ($persen_kesehatan / 100));
                 } else{
-                    $bpjs_kesehatan = round($total_gaji * ($persen_kesehatan / 100));
+                    $bpjs_kesehatan = $is_floor ? floor($total_gaji * ($persen_kesehatan / 100)) : round($total_gaji * ($persen_kesehatan / 100));
                 }
             }
             $result = $jkk + $jht + $jkm + $bpjs_kesehatan + $jp_penambah;
@@ -236,20 +236,20 @@ class GajiComponent
     // END Penambah Bruto
 
     // Pengurang Bruto
-    public function getDPP($status_karyawan, $gaji_pokok, $tj_keluarga, $tj_kesejahteraan) : int {
+    public function getDPP($status_karyawan, $gaji_pokok, $tj_keluarga, $tj_kesejahteraan, $is_floor=false) : int {
         $result = 0;
 
         if($status_karyawan == 'IKJP' || $status_karyawan == 'Kontrak Perpanjangan') {
             // $result = ($persen_jp_pengurang / 100) * $total_gaji;
         }
         else {
-            $result = round(((($gaji_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * 0.05));
+            $result = $is_floor ? floor(((($gaji_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * 0.05)) : round(((($gaji_pokok + $tj_keluarga) + ($tj_kesejahteraan * 0.5)) * 0.05));
         }
 
         return $result;
     }
 
-    public function getBPJSTK($kpj, int $total_gaji, int $bulan) : int {
+    public function getBPJSTK($kpj, int $total_gaji, int $bulan, $is_floor=false) : int {
         $result = 0;
         // Get Master Hitungan Bruto
         $jp_pengurang = 0;
@@ -283,7 +283,7 @@ class GajiComponent
                     $bpjs_tk = $total_gaji * $jp_persen;
                 }
             }
-            $result = round($bpjs_tk);
+            $result = $is_floor ? floor($bpjs_tk) : round($bpjs_tk);
         }
 
         return $result;
