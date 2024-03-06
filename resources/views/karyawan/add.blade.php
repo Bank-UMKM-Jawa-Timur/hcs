@@ -96,7 +96,6 @@
         </div>
     </div>
     <div  class="body-pages  space-y-5">
-
         <form action="{{ route('karyawan.store') }}" method="POST" enctype="multipart/form-data" name="karyawan" class="space-y-5">
             @csrf
             <div class="">
@@ -216,8 +215,6 @@
                             </div>
                         </div>
                     </div>
-                    </div>
-
                 </div>
                 <div class="card tab-pane" id="data-karyawan">
                     <div class="head-card border-b pb-5">
