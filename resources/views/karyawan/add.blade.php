@@ -119,13 +119,13 @@
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">Nama Karyawan</label>
-                                <input type="text" class="@error('nama') is-invalid @enderror form-input textOnly" name="nama" id="" value="{{ old('nama') }}">
+                                <input type="text" class="@error('nama') is-invalid @enderror form-input" name="nama" id="" value="{{ old('nama') }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
                                 <label for="">Tempat Lahir</label>
-                                <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-input textOnly" name="tmp_lahir" id="" value="{{ old('tmp_lahir') }}">
+                                <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-input" name="tmp_lahir" id="" value="{{ old('tmp_lahir') }}">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -183,7 +183,7 @@
                                     <option {{ old('status_ptkp') == 'K/I/1' ? 'selected' : '' }} value="K/3">K/I/1</option>
                                     <option {{ old('status_ptkp') == 'K/I/2' ? 'selected' : '' }} value="K/3">K/I/2</option>
                                     <option {{ old('status_ptkp') == 'K/I/3' ? 'selected' : '' }} value="K/3">K/I/3</option>
-                                    <option {{ old('status_ptkp') == 'TK' ? 'selected' : '' }} value="K/3">TK</option>
+                                    <option {{ old('status_ptkp') == 'TK/0' ? 'selected' : '' }} value="TK/0">TK/0</option>
                                     <option {{ old('status_ptkp') == 'TK/1' ? 'selected' : '' }} value="K/3">TK/1</option>
                                     <option {{ old('status_ptkp') == 'TK/2' ? 'selected' : '' }} value="K/3">TK/2</option>
                                     <option {{ old('status_ptkp') == 'TK/3' ? 'selected' : '' }} value="K/3">TK/3</option>
