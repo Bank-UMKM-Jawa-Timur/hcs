@@ -141,65 +141,6 @@ class HitungPPH
         return $start_date;
     }
 
-    public static function getTerutang($bulan, $tahun, $karyawan) {
-        $gaji = DB::table('gaji_per_bulan AS gaji')
-                    ->select(
-                        'gaji.id',
-                        'batch.tanggal_input',
-                        DB::raw("(gj_pokok + gj_penyesuaian + tj_keluarga + tj_jabatan + tj_perumahan + tj_telepon + tj_pelaksana + tj_kemahalan + tj_kesejahteraan + tj_teller + tj_multilevel + tj_ti + tj_fungsional) AS total_gaji"),
-                        DB::raw("(uang_makan + tj_transport + tj_pulsa + tj_vitamin) AS tunjangan_rutin"),
-                    )
-                    ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
-                    ->where('gaji.nip', $karyawan->nip)
-                    ->where('gaji.bulan', (int) $bulan)
-                    ->where('gaji.tahun', (int) $tahun)
-                    ->first();
-        $gaji_id = 0;
-        $tanggal_input = $tahun.'-'.$bulan.'-'.'25';
-        $total_gaji = 0;
-        $tunjangan_rutin = 0;
-        if ($gaji) {
-            $gaji_id = $gaji->id;
-            $tanggal_input = $gaji->tanggal_input;
-            $total_gaji = $gaji->total_gaji;
-            $tunjangan_rutin = $gaji->tunjangan_rutin;
-        }
-        // PPH final adalah hasil perhitungan saat melakukan proses final
-        $pph_final = 0;
-        $pph_final_obj = DB::table('pph_yang_dilunasi')
-                        ->select('total_pph')
-                        ->where('gaji_per_bulan_id', $gaji_id)
-                        ->first();
-        if ($pph_final_obj) {
-            $pph_final = $pph_final_obj->total_pph;
-        }
-
-        /**
-         * pph_full_month adalah hasil perhitungan dilakukan 1 bulan full.
-         * jadi mulai tanggal 1 hingga tgl terakhir pada bulan tersebut.
-         */
-        $pph_full_month = 0;
-
-        // Get PTKP
-        $ptkp = HitungPPH::getPTKP($karyawan);
-
-        $pph_full_month = HitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin, true);
-
-        $terutang = $pph_full_month - $pph_final;
-
-        if ($terutang > 0) {
-            // Update terutang on table
-            DB::table('pph_yang_dilunasi')
-                ->where('gaji_per_bulan_id', $gaji_id)
-                ->update([
-                    'terutang' => $terutang,
-                    'updated_at' => now()
-                ]);
-        }
-
-        return $terutang;
-    }
-
     public static function getNewPPH58($tanggal, $bulan, $tahun, $karyawan) {
         $gaji = DB::table('gaji_per_bulan AS gaji')
                             ->select(
@@ -259,28 +200,14 @@ class HitungPPH
 
         $new_pph = HitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin, $full_month);
 
-        if ($full_month) {
-            $terutang = $new_pph - $pph_final;
-            if ($terutang > 0) {
-                // Update terutang on table
-                DB::table('pph_yang_dilunasi')
-                    ->where('gaji_per_bulan_id', $gaji_id)
-                    ->update([
-                        'terutang' => $terutang,
-                        'updated_at' => now()
-                    ]);
-            }
-        }
-        else {
-            DB::table('pph_yang_dilunasi')
-                ->where('nip', $karyawan->nip)
-                ->where('bulan', $bulan)
-                ->where('tahun', $tahun)
-                ->update([
-                    'total_pph' => $new_pph,
-                    'updated_at' => now(),
-                ]);
-        }
+        DB::table('pph_yang_dilunasi')
+            ->where('nip', $karyawan->nip)
+            ->where('bulan', $bulan)
+            ->where('tahun', $tahun)
+            ->update([
+                'total_pph' => $new_pph,
+                'updated_at' => now(),
+            ]);
 
 
         return $new_pph;
