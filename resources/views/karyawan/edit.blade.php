@@ -1,5 +1,5 @@
 @php
-    $arrayPendidikan = ['SD', 'SMP', 'SLTP', 'SLTA', 'SMK', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3'];
+    $arrayPendidikan = ['SD', 'SMP/SLTP', 'SLTA', 'SMA/SLTA', 'SMK', 'D1', 'D2', 'D3', 'D4', 'D4/S1', 'S1', 'S2', 'S3'];
 @endphp
 @extends('layouts.app-template')
 @push('script')
@@ -241,7 +241,7 @@
                                     <option {{ $data?->status_ptkp == 'K/I/1' ? 'selected' : '' }} value="K/I/1">K/I/1</option>
                                     <option {{ $data?->status_ptkp == 'K/I/2' ? 'selected' : '' }} value="K/I/2">K/I/2</option>
                                     <option {{ $data?->status_ptkp == 'K/I/3' ? 'selected' : '' }} value="K/I/3">K/I/3</option>
-                                    <option {{ $data?->status_ptkp == 'TK' ? 'selected' : '' }} value="TK">TK</option>
+                                    <option {{ $data?->status_ptkp == 'TK/0' ? 'selected' : '' }} value="TK/0">TK/0</option>
                                     <option {{ $data?->status_ptkp == 'TK/1' ? 'selected' : '' }} value="TK/1">TK/1</option>
                                     <option {{ $data?->status_ptkp == 'TK/2' ? 'selected' : '' }} value="TK/2">TK/2</option>
                                     <option {{ $data?->status_ptkp == 'TK/3' ? 'selected' : '' }} value="TK/3">TK/3</option>

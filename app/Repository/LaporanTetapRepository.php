@@ -1142,7 +1142,7 @@ class LaporanTetapRepository
             $pph_harus_dibayar = 0;
             if ($karyawan_bruto?->pphDilunasi) {
                 if (count($karyawan_bruto?->pphDilunasi) == 12) {
-                    $pph_harus_dibayar = $pph_21_terutang - $total_pph_dilunasi;
+                    $pph_harus_dibayar = $total_pph_dilunasi;
                 } else {
                     $pph_harus_dibayar = DB::table('pph_yang_dilunasi')
                     ->where('nip', $karyawan->nip)
@@ -2198,7 +2198,7 @@ class LaporanTetapRepository
                     if (array_key_exists(($key - 1), $pphDilunasiArr)) {
                         $terutang = $pphDilunasiArr[($key - 1)]['terutang'];
                     }
-                    $nominal_pph = intval($value->nominal) + $terutang;
+                    $nominal_pph = intval($value->nominal);
                     $value->total_pph = $nominal_pph;
                     $total_pph_dilunasi += $nominal_pph;
                 }
@@ -2209,7 +2209,7 @@ class LaporanTetapRepository
             $pph_harus_dibayar = 0;
             if($karyawan_bruto?->pphDilunasi ){
                 if(count($karyawan_bruto?->pphDilunasi) == 12){
-                    $pph_harus_dibayar = $pph_21_terutang - $total_pph_dilunasi;
+                    $pph_harus_dibayar = $total_pph_dilunasi;
                 } else{
                     $pph_harus_dibayar = DB::table('pph_yang_dilunasi')
                         ->where('nip', $karyawan->nip)
@@ -3255,7 +3255,7 @@ class LaporanTetapRepository
                     if (array_key_exists(($key - 1), $pphDilunasiArr)) {
                         $terutang = $pphDilunasiArr[($key - 1)]['terutang'];
                     }
-                    $nominal_pph = intval($value->nominal) + $terutang;
+                    $nominal_pph = intval($value->nominal);
                     $value->total_pph = $nominal_pph;
                     $total_pph_dilunasi += $nominal_pph;
                 }
@@ -3266,7 +3266,7 @@ class LaporanTetapRepository
             $pph_harus_dibayar = 0;
             if($karyawan_bruto?->pphDilunasi){
                 if(count($karyawan_bruto?->pphDilunasi) == 12){
-                    $pph_harus_dibayar = $pph_21_terutang - $total_pph_dilunasi;
+                    $pph_harus_dibayar = $total_pph_dilunasi;
                 } else{
                     $pph_harus_dibayar = DB::table('pph_yang_dilunasi')
                         ->where('nip', $karyawan->nip)
@@ -3416,9 +3416,9 @@ class LaporanTetapRepository
                                 ->where('pph.id', $value->id)
                                 ->whereNull('batch.deleted_at')
                                 ->first();
-                    if ($terutang) {
-                        $pph21 += floor($terutang->terutang);
-                    }
+                    // if ($terutang) {
+                    //     $pph21 += floor($terutang->terutang);
+                    // }
                 }
                 else {
                     $pph21Bentukan = floor($value->total_pph);
