@@ -703,7 +703,6 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $request;
         if (!auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan') &&
             !auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
             return view('roles.forbidden');
@@ -815,6 +814,8 @@ class KaryawanController extends Controller
                         'no_rekening' => $request->get('no_rek'),
                         'npwp' => $request->get('npwp'),
                         'tgl_mulai' => $request->get('tgl_mulai'),
+                        'pendidikan' => $request->get('pendidikan'),
+                        'pendidikan_major' => $request->get('pendidikan_major'),
                         'created_at' => now(),
                     ]);
 

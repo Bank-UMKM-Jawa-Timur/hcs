@@ -1,5 +1,5 @@
 @php
-    $arrayPendidikan = ['SD', 'SMP', 'SLTP', 'SLTA', 'SMK', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3'];
+    $arrayPendidikan = ['SD', 'SMP/SLTP', 'SLTA', 'SMA/SLTA', 'SMK', 'D1', 'D2', 'D3', 'D4', 'D4/S1', 'S1', 'S2', 'S3'];
 @endphp
 @extends('layouts.app-template')
 @push('script')
