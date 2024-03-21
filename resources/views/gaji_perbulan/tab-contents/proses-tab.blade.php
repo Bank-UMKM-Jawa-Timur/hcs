@@ -34,7 +34,7 @@
         <tr>
             <th rowspan="2">No</th>
             <th rowspan="2">Kategori</th>
-            @if (auth()->user()->hasRole('admin'))
+            @if (!auth()->user()->hasRole('cabang'))
                 <th rowspan="2">Kantor</th>
             @endif
             <th rowspan="2">Tahun</th>
@@ -66,7 +66,7 @@
         <tr>
             <td class="text-center">{{ $i++ }}</td>
             <td class="text-center">{{ $item->nama_divisi ? $item->nama_divisi : 'Pegawai' }}</td>
-            @if (auth()->user()->hasRole('admin'))
+            @if (!auth()->user()->hasRole('cabang'))
                 <td class="text-center">{{ $item->kantor }}</td>
             @endif
             <td class="text-center">{{ $item->tahun }}</td>
@@ -180,12 +180,12 @@
         </tr>
     @empty
         <tr>
-            <td colspan="{{ auth()->user()->hasRole('admin') ? 12 : 11 }}" class="text-center">Belum ada penghasilan yang diproses.</td>
+            <td colspan="{{ !auth()->user()->hasRole('cabang') ? 14 : 13 }}" class="text-center">Belum ada penghasilan yang diproses.</td>
         </tr>
     @endforelse
     </tbody>
     <tfoot>
-        <th class="text-center" colspan="{{ auth()->user()->hasRole('admin') ? 7 : 6 }}">Total</th>
+        <th class="text-center" colspan="{{ !auth()->user()->hasRole('cabang') ? 7 : 6 }}">Total</th>
         @if ($total_bruto > 0)
             <th class="text-right">
                 RP {{number_format($total_bruto, 0, ',', '.')}}

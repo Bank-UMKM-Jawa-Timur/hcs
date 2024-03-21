@@ -130,6 +130,8 @@ class GajiPerBulanController extends Controller
         }
 
         $page = $request->has('page') ? $request->get('page') : 1;
+        $tahun_req = $request->has('tahun') ? $request->get('tahun') : null;
+        $bulan_req = $request->has('bulan') ? $request->get('bulan') : null;
         $cabang_req = $request->has('cabang') ? $request->get('cabang') : null;
         $search_proses = $request->get('q_proses');
         $search_final = $request->get('q_final');
@@ -139,17 +141,18 @@ class GajiPerBulanController extends Controller
         $search_sampah = str_replace("'", "\'", $search_sampah);
         $gajiRepo = new GajiPerBulanRepository;
         $cabang = $this->cabang;
+
         // Proses
-        $proses_list = $gajiRepo->getPenghasilanList($cabang_req,'proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search_proses);
+        $proses_list = $gajiRepo->getPenghasilanList($tahun_req, $bulan_req, $cabang_req,'proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search_proses);
         // Final
-        $final_list = $gajiRepo->getPenghasilanList($cabang_req,'final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search_final);
+        $final_list = $gajiRepo->getPenghasilanList($tahun_req, $bulan_req, $cabang_req,'final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search_final);
         // Sampah
 
         // Kode Jabatan direktur,komisaris & staf ahli
         $kd_divisi_non_pegawai = GajiPerBulanRepository::getDivisiNonPegawai();
 
         if(auth()->user()->hasRole('admin')) {
-            $sampah = $gajiRepo->getPenghasilanTrash($cabang_req,null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1, $search_sampah);
+            $sampah = $gajiRepo->getPenghasilanTrash($tahun_req, $bulan_req, $cabang_req,null, $limit, ($request->has('tab') && $tab == 'sampah') ? $page : 1, $search_sampah);
             $data = [
                 'cabang' => $cabang,
                 'proses_list' => $proses_list,

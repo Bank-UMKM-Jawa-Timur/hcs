@@ -52,12 +52,12 @@
                 </label>
                 <select class="form-input"  name="tahun">
                     @php
-                    $earliest = 2024;
-                    $tahunSaatIni = date('Y');
-                    $awal = $tahunSaatIni - 5;
-                    $akhir = $tahunSaatIni + 5;
-                    $tahunInput = $tahun;
-                @endphp
+                        $earliest = 2024;
+                        $tahunSaatIni = date('Y');
+                        $awal = $tahunSaatIni - 5;
+                        $akhir = $tahunSaatIni + 5;
+                        $tahunInput = $tahun;
+                    @endphp
                     <option selected>-- Pilih Tahun--</option>
                     @for ($tahunInput = $earliest; $tahunInput <= $akhir; $tahunInput++)
                         <option {{ Request()->tahun == $tahunInput ? 'selected' : '' }} value="{{ $tahunInput }}">

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class GajiPerBulanRepository
 {
-    public function getPenghasilanList($cabang, $status, $limit=10, $page = 1, $search) {
+    public function getPenghasilanList($tahun, $bulan, $cabang, $status, $limit=10, $page = 1, $search) {
         $is_cabang = auth()->user()->hasRole('cabang');
         $is_pusat = auth()->user()->hasRole('kepegawaian');
 
@@ -47,6 +47,16 @@ class GajiPerBulanRepository
                     $query->where('gaji.tahun', 'like', "%$search%")
                         ->orWhere('cab.nama_cabang', 'like', "%$search%");
                 })
+                ->where(function ($query) use ($tahun) {
+                    if ($tahun) {
+                        $query->whereYear('batch.tanggal_input', $tahun);
+                    }
+                })
+                ->where(function ($query) use ($bulan) {
+                    if ($bulan) {
+                        $query->whereMonth('batch.tanggal_input', $bulan);
+                    }
+                })
                 ->where(function ($query) use ($cabang) {
                     if ($cabang != null) {
                         $query->where('batch.kd_entitas', $cabang);
@@ -55,9 +65,6 @@ class GajiPerBulanRepository
                 ->when($is_cabang, function($query) {
                     $kd_cabang = auth()->user()->kd_cabang;
                     $query->where('batch.kd_entitas', $kd_cabang);
-                })
-                ->when($is_pusat, function($query) {
-                    $query->where('batch.kd_entitas', '000');
                 })
                 ->where('batch.status', $status)
                 ->whereNull('batch.deleted_at')
@@ -298,7 +305,7 @@ class GajiPerBulanRepository
 
         return $data;
     }
-    public function getPenghasilanTrash($cabang, $status, $limit=10, $page = 1, $search) {
+    public function getPenghasilanTrash($tahun, $bulan, $cabang, $status, $limit=10, $page = 1, $search) {
         $is_cabang = auth()->user()->hasRole('cabang');
         $is_pusat = auth()->user()->hasRole('kepegawaian');
         $data = DB::table('batch_gaji_per_bulan AS batch')
@@ -335,6 +342,16 @@ class GajiPerBulanRepository
                 ->where(function ($query) use ($cabang) {
                     if ($cabang != null) {
                         $query->where('batch.kd_entitas', $cabang);
+                    }
+                })
+                ->where(function ($query) use ($tahun) {
+                    if ($tahun) {
+                        $query->whereYear('batch.tanggal_input', $tahun);
+                    }
+                })
+                ->where(function ($query) use ($bulan) {
+                    if ($bulan) {
+                        $query->whereMonth('batch.tanggal_input', $bulan);
                     }
                 })
                 ->when($is_cabang, function($query) {
