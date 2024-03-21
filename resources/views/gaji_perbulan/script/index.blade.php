@@ -195,6 +195,13 @@
                 url: `{{ route('gaji_perbulan.get_data_penghasilan_json') }}?is_pegawai=${is_pegawai}&divisi=${divisi}`,
                 method: 'GET',
                 success: function(response) {
+                    if (divisi == 'DIR' || divisi == 'KOM') {
+                        // Jabatan Direksi dan Komisaris tidak mempunyai DPP
+                        $('.dpp-content').addClass('hidden')
+                    }
+                    else {
+                        $('.dpp-content').removeClass('hidden')
+                    }
                     if (response.status == 'success') {
                         var data = response.data
                         $('#proses-modal #is_pegawai').val(is_pegawai)

@@ -372,7 +372,9 @@ class GajiPerBulanController extends Controller
 
                 // Get DPP
                 $dpp = 0;
-                $dpp = $gaji_component->getDPP($value->status_karyawan, $value->gj_pokok, $tj_keluarga, $tj_kesejahteraan);
+                if ($kd_divisi_selected != 'DIR' && $kd_divisi_selected != 'KOM') {
+                    $dpp = $gaji_component->getDPP($value->status_karyawan, $value->gj_pokok, $tj_keluarga, $tj_kesejahteraan);
+                }
                 $bulan = date('m');
 
                 // Get BPJS TK
@@ -1361,7 +1363,10 @@ class GajiPerBulanController extends Controller
                 $tunjangan_rutin = $tunjangan[10] + $tunjangan[11] + $tunjangan[12] + $tunjangan[13];
 
                 // Get DPP
-                $dpp = $gaji_component->getDPP($item->status_karyawan, $item->gj_pokok, $tunjangan[0], $tunjangan[7]);
+                $dpp = 0;
+                if ($selected_divisi != 'DIR' && $selected_divisi != 'KOM') {
+                    $dpp = $gaji_component->getDPP($item->status_karyawan, $item->gj_pokok, $tunjangan[0], $tunjangan[7]);
+                }
 
                 // Get BPJS TK
                 $bpjs_tk = $gaji_component->getBPJSTK($item->kpj, $total_gaji, $bulan);

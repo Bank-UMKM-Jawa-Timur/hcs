@@ -75,7 +75,7 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4 mt-2">
-                            <div class="grid grid-cols-3">
+                            <div class="grid grid-cols-3 dpp-content">
                                 <div><label>DPP</label></div>
                                 <div style="width: 10px;">:</div>
                                 <div style="width: 200px;"><b id="total_potongan_dpp"></b></div>
@@ -84,13 +84,6 @@
                                 <div><label>BPJS TK</label></div>
                                 <div style="width: 10px;">:</div>
                                 <div style="width: 200px;"><b id="total_potongan_bpjs_tk"></b></div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 mt-2">
-                            <div class="grid grid-cols-3">
-                                <div></div>
-                                <div style="width: 10px;"></div>
-                                <div></div>
                             </div>
                             <div class="grid grid-cols-3">
                                 <div><label>Total Potongan</label></div>
