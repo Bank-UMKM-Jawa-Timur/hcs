@@ -221,9 +221,11 @@ class GajiPerBulanController extends Controller
                                                 $query->where('m.kd_entitas', $kd_divisi_selected);
                                             }
                                         })
+                                        ->where('batch.kd_jabatan', $kd_divisi_selected)
                                         ->whereNull('batch.deleted_at')
                                         ->orderByDesc('batch.id')
                                         ->first('batch.tanggal_input');
+
             $last_month_penggajian = 1;
             if ($last_date_penggajian) {
                 $last_month_penggajian = intval(date('m', strtotime($last_date_penggajian->tanggal_input)));
@@ -404,6 +406,7 @@ class GajiPerBulanController extends Controller
                                     }
                                 });
                             })
+                            ->where('batch.kd_jabatan', $kd_divisi_selected)
                             ->where('batch.kd_entitas', $kd_entitas)
                             ->where('batch.is_pegawai', $is_pegawai)
                             ->whereYear('batch.tanggal_input', date('Y'))
@@ -1213,6 +1216,7 @@ class GajiPerBulanController extends Controller
             else {
                 $batch = [
                     'kd_entitas' => $kd_entitas,
+                    'kd_jabatan' => $selected_divisi,
                     'is_pegawai' => $is_pegawai,
                     'tanggal_input' => $tanggal,
                     'created_at' => $now,
