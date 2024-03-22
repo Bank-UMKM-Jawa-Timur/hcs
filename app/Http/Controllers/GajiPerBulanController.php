@@ -374,7 +374,7 @@ class GajiPerBulanController extends Controller
 
                 // Get DPP
                 $dpp = 0;
-                if ($kd_divisi_selected != 'DIR' && $kd_divisi_selected != 'KOM') {
+                if ($kd_divisi_selected != 'DIR' && $kd_divisi_selected != 'KOM' && $kd_divisi_selected != 'SAD') {
                     $dpp = $gaji_component->getDPP($value->status_karyawan, $value->gj_pokok, $tj_keluarga, $tj_kesejahteraan);
                 }
                 $bulan = date('m');
@@ -986,7 +986,7 @@ class GajiPerBulanController extends Controller
                 $jp_1_persen = 0;
                 $bulan = intval($gaji->bulan);
                 $nominal_jp = ($bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if ($gaji->kd_jabatan != 'DIR' && $gaji->kd_jabatan != 'KOM')
+                if ($gaji->kd_jabatan != 'DIR' && $gaji->kd_jabatan != 'KOM' && $gaji->kd_jabatan != 'SAD')
                 {
                     if($gaji->status_karyawan == 'IKJP' || $gaji->status_karyawan == 'Kontrak Perpanjangan') {
                         $dpp = ($persen_jp_pengurang / 100) * $total_gaji_baru;
@@ -1373,7 +1373,7 @@ class GajiPerBulanController extends Controller
 
                 // Get DPP
                 $dpp = 0;
-                if ($selected_divisi != 'DIR' && $selected_divisi != 'KOM') {
+                if ($selected_divisi != 'DIR' && $selected_divisi != 'KOM' && $selected_divisi != 'SAD') {
                     $dpp = $gaji_component->getDPP($item->status_karyawan, $item->gj_pokok, $tunjangan[0], $tunjangan[7]);
                 }
 
