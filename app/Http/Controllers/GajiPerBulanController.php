@@ -460,6 +460,7 @@ class GajiPerBulanController extends Controller
             $data_gaji = DB::table('gaji_per_bulan AS gaji')
                             ->select(
                                 'batch.tanggal_input',
+                                'batch.kd_jabatan',
                                 'gaji.*',
                                 'm.nama_karyawan',
                                 'm.status_karyawan',
@@ -985,30 +986,33 @@ class GajiPerBulanController extends Controller
                 $jp_1_persen = 0;
                 $bulan = intval($gaji->bulan);
                 $nominal_jp = ($bulan > 2) ? $jp_mar_des : $jp_jan_feb;
-                if($gaji->status_karyawan == 'IKJP' || $gaji->status_karyawan == 'Kontrak Perpanjangan') {
-                    $dpp = ($persen_jp_pengurang / 100) * $total_gaji_baru;
-                }
-                else {
-                    // Get DPP
-                    $dpp = round(((($karyawan->gj_pokok + $tj_keluarga_baru) + ($tj_kesejahteraan_baru * 0.5)) * 0.05));
-                    // Get JP 1%
-                    $jp_1_persen = floor($total_gaji_baru * ($persen_jp_pengurang / 100));
-                    if($total_gaji_baru >= $nominal_jp){
-                        $jp_1_persen = floor($nominal_jp * ($persen_jp_pengurang / 100));
-                    } else {
-                        $jp_1_persen = floor($total_gaji_baru * ($persen_jp_pengurang / 100));
+                if ($gaji->kd_jabatan != 'DIR' && $gaji->kd_jabatan != 'KOM')
+                {
+                    if($gaji->status_karyawan == 'IKJP' || $gaji->status_karyawan == 'Kontrak Perpanjangan') {
+                        $dpp = ($persen_jp_pengurang / 100) * $total_gaji_baru;
                     }
-                }
-                $dpp = round($dpp);
+                    else {
+                        // Get DPP
+                        $dpp = round(((($karyawan->gj_pokok + $tj_keluarga_baru) + ($tj_kesejahteraan_baru * 0.5)) * 0.05));
+                        // Get JP 1%
+                        $jp_1_persen = floor($total_gaji_baru * ($persen_jp_pengurang / 100));
+                        if($total_gaji_baru >= $nominal_jp){
+                            $jp_1_persen = floor($nominal_jp * ($persen_jp_pengurang / 100));
+                        } else {
+                            $jp_1_persen = floor($total_gaji_baru * ($persen_jp_pengurang / 100));
+                        }
+                    }
+                    $dpp = round($dpp);
 
-                if ($dpp != $gaji->dpp) {
-                    $total_potongan_baru -= $gaji->dpp;
-                    $total_potongan_baru += $dpp;
-                    $item = [
-                        'potongan_dpp' => $gaji->dpp,
-                        'potongan_dpp_baru' => $dpp,
-                    ];
-                    array_push($new_data, $item);
+                    if ($dpp != $gaji->dpp) {
+                        $total_potongan_baru -= $gaji->dpp;
+                        $total_potongan_baru += $dpp;
+                        $item = [
+                            'potongan_dpp' => $gaji->dpp,
+                            'potongan_dpp_baru' => $dpp,
+                        ];
+                        array_push($new_data, $item);
+                    }
                 }
 
                 // Get BPJS TK
@@ -1175,9 +1179,11 @@ class GajiPerBulanController extends Controller
             if ($request->has('is_pegawai')) {
                 $is_pegawai = $request->get('is_pegawai') == 'true';
             }
+            $selected_divisi = $request->get('divisi');
 
             if ($request->has('batch_id')) {
                 $batch = DB::table('batch_gaji_per_bulan')->find($request->batch_id);
+                $selected_divisi = $batch->kd_jabatan;
                 $bulan = (int) date('m', strtotime($batch->tanggal_input));
                 $tahun = date('Y', strtotime($batch->tanggal_input));
                 $tanggal = $batch->tanggal_input;
@@ -1196,7 +1202,6 @@ class GajiPerBulanController extends Controller
                 $tahun = (int) date('Y', strtotime($tanggal));
             }
 
-            $selected_divisi = $request->get('divisi');
             $day = date('d', strtotime($tanggal));
             $tunjangan = array();
             $tjJamsostek = array();
@@ -1808,6 +1813,7 @@ class GajiPerBulanController extends Controller
                             ->where('tanggal_input', '<', $batch->tanggal_input)
                             ->where('kd_entitas', $batch->kd_entitas)
                             ->where('status', 'proses')
+                            ->where('kd_jabatan', $batch->kd_jabatan)
                             ->whereNull('deleted_at')
                             ->orderByDesc('tanggal_input')
                             ->first();
@@ -2685,6 +2691,7 @@ class GajiPerBulanController extends Controller
                 $prev = DB::table('batch_gaji_per_bulan')
                             ->where('tanggal_input', '<', $batch->tanggal_input)
                             ->where('kd_entitas', $batch->kd_entitas)
+                            ->where('kd_jabatan', $batch->kd_jabatan)
                             ->where('status', 'proses')
                             ->orderByDesc('tanggal_input')
                             ->first();
