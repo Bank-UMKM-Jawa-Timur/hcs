@@ -105,13 +105,6 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">NIP</label>
-                                <input type="text" class="@error('nip') is-invalid @enderror  form-input" name="nip"
-                                    id="nip" value="{{ old('nip', $data->nip) }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-box">
                                 <label for="">NIK</label>
                                 <input type="text" class="@error('nik') is-invalid @enderror form-input" name="nik"
                                     id="" value="{{ old('nik', $data->nik) }}">
@@ -216,6 +209,13 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
+                                <label for="">NIP</label>
+                                <input type="text" class="@error('nip') is-invalid @enderror  form-input" name="nip"
+                                    id="nip" value="{{ old('nip', $data->nip) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
                                 <label for="">Nomor Rekening</label>
                                 <input type="number" class="form-input" name="no_rek"
                                     value="{{ old('no_rek', $data->no_rekening) }}">
@@ -248,6 +248,11 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    <div class="head-card border-b pb-5">
+                        <h2 class="font-bold text-lg">Data Jabatan</h2>
+                    </div>
+                    <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-4">
                             <div class="input-box">
                                 <label for="">Jabatan</label>
@@ -315,6 +320,8 @@
                                     value="{{ old('ket_jabatan', $data->ket_jabatan) }}">
                             </div>
                         </div>
+                    </div>
+                    <div class="grid pb-10 gap-8 md:grid-cols-2   grid-cols-1">
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">KPJ</label>
@@ -329,6 +336,11 @@
                                     value="{{ old('jkn', $data->jkn) }}">
                             </div>
                         </div>
+                    </div>
+                    <div class="head-card border-b pb-5">
+                        <h2 class="font-bold text-lg">Honor</h2>
+                    </div>
+                    <div class="grid pb-10 gap-8 mt-5  md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Honorarium</label>
@@ -344,6 +356,11 @@
                                     value="{{ old('gj_penyesuaian', $data->gj_penyesuaian) }}">
                             </div>
                         </div>
+                    </div>
+                    <div class="head-card border-b pb-5">
+                        <h2 class="font-bold text-lg">Pengangkatan</h2>
+                    </div>
+                    <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3  md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Status Karyawan</label>
@@ -382,6 +399,11 @@
                                     value="{{ old('tanggal_pengangkat', $data->tanggal_pengangkat) }}">
                             </div>
                         </div>
+                    </div>
+                    <div class="head-card border-b pb-5">
+                        <h2 class="font-bold text-lg">Pendidikan</h2>
+                    </div>
+                    <div class="grid pb-10 gap-8 mt-5 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="pendidikan">Pendidikan</label>
@@ -502,7 +524,7 @@
                             <div class="grid items-center lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10" id="collapseFour">
                                 <div class="col-md-5">
                                     <div class="input-box">
-                                        <label for="is">Tunjangan </label>
+                                        <label for="is">Tunjangan {{$key + 1}}</label>
                                         <select name="tunjangan[]" id="tunjangan" class="form-input">
                                             <option value="">--- Pilih ---</option>
                                             @foreach ($tunjangan as $item)
@@ -592,7 +614,7 @@
                 @can('manajemen karyawan - data karyawan - edit karyawan')
                     <div class="flex gap-5">
                         <button class="btn btn-light prev-btn hidden" type="button"><i class="ti ti-arrow-left"></i><span
-                                class="lg:block hidden">Form Sebelumnyaa</span></button>
+                                class="lg:block hidden">Form Sebelumnya</span></button>
                         <button class="btn btn-secondary next-btn" type="button"><span class="lg:block hidden">Form
                                 Selanjutnya</span><i class="ti ti-arrow-right"></i></button>
                     </div>
@@ -1047,7 +1069,7 @@
                 <div id="parent_tunjangan${x}" class="grid items-center lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10">
                     <div class="col-md-5">
                         <div class="input-box">
-                            <label for="is">Tunjangan </label>
+                            <label for="is">Tunjangan ${x}</label>
                             <select name="tunjangan[]" id="tunjangan" class="form-input">
                                 <option value="">--- Pilih ---</option>
                                 @foreach ($tunjangan as $item)

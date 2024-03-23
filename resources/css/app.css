@@ -106,9 +106,27 @@
         }
     }
     .row {
-        @apply flex gap-5 mb-4 w-full;
+        @apply flex flex-col gap-5 mb-4 w-full;
+        label {
+            @apply font-normal;
+        }
+        input.form-input-disabled {
+            @apply font-semibold;
+        }
         .row-title {
             @apply font-bold text-lg;
+        }
+    }
+    .row-tunjangan {
+        @apply border p-5 rounded-md;
+        label {
+            @apply font-semibold text-theme-primary;
+        }
+    }
+    .row-total-tunjangan {
+        @apply border p-5 rounded-md;
+        label {
+            @apply font-semibold;
         }
     }
     .body-pages {

@@ -39,7 +39,7 @@
                     <i class="ti ti-circle-filled text-theme-primary"></i>
                     <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500">Karyawan</a>
                     <i class="ti ti-circle-filled text-theme-primary"></i>
-                    <a href="#" class="text-sm text-gray-500 font-bold">Edit</a>
+                    <a href="#" class="text-sm text-gray-500 font-bold">Tambah</a>
                 </div>
             </div>
         </div>
@@ -104,12 +104,6 @@
                         <h2 class="font-bold text-lg">Biodata Karyawan</h2>
                     </div>
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
-                        <div class="col-md-6">
-                            <div class="input-box">
-                                <label for="">NIP</label>
-                                <input type="text" class="@error('nip') is-invalid @enderror  form-input" name="nip" id="nip" value="{{ old('nip') }}">
-                            </div>
-                        </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">NIK</label>
@@ -223,6 +217,12 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
+                                <label for="">NIP</label>
+                                <input type="text" class="@error('nip') is-invalid @enderror  form-input" name="nip" id="nip" value="{{ old('nip') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
                                 <label for="">Nomor Rekening</label>
                                 <input type="number" class="form-input" name="no_rek" value="{{ old('no_rek') }}">
                             </div>
@@ -233,6 +233,11 @@
                                 <input type="number" class="form-input" name="npwp" value="{{ old('npwp') }}">
                             </div>
                         </div>
+                    </div>
+                        <div class="head-card border-b pb-5">
+                            <h2 class="font-bold text-lg">Data Jabatan</h2>
+                        </div>
+                        <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-4">
                             <div class="input-box">
                                 <label for="">Jabatan</label>
@@ -291,6 +296,8 @@
                                 <input type="text" class="form-input" name="ket_jabatan" value="{{ old('ket_jabatan') }}">
                             </div>
                         </div>
+                        </div>
+                        <div class="grid pb-10 gap-8  md:grid-cols-2 grid-cols-1">
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">KPJ</label>
@@ -303,6 +310,11 @@
                                 <input type="text" class="@error('jkn') is-invalid @enderror form-input" name="jkn" value="{{ old('jkn') }}">
                             </div>
                         </div>
+                        </div>
+                        <div class="head-card border-b pb-5">
+                            <h2 class="font-bold text-lg">Honor</h2>
+                        </div>
+                        <div class="grid pb-10 gap-8 mt-5  md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Honorarium</label>
@@ -315,6 +327,11 @@
                                 <input type="text" class="form-input" id="gj_penyesuaian" name="gj_penyesuaian" value="{{ old('gj_penyesuaian') }}">
                             </div>
                         </div>
+                        </div>
+                        <div class="head-card border-b pb-5">
+                            <h2 class="font-bold text-lg">Pengangkatan</h2>
+                        </div>
+                        <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Status Karyawan</label>
@@ -344,6 +361,11 @@
                                 <input type="date" class="@error('tanggal_pengangkat') is-invalid @enderror form-input" name="tanggal_pengangkat" value="{{ old('tanggal_pengangkat') }}">
                             </div>
                         </div>
+                        </div>
+                        <div class="head-card border-b pb-5">
+                            <h2 class="font-bold text-lg">Pendidikan</h2>
+                        </div>
+                        <div class="grid pb-10 gap-8 mt-5 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="pendidikan">Pendidikan</label>
@@ -361,7 +383,7 @@
                                 <input type="text" class="@error('pendidikan_major') is-invalid @enderror form-input" name="pendidikan_major" value="{{ old('pendidikan_major') }}">
                             </div>
                         </div>
-                    </div>
+                        </div>
                 </div>
                     {{-- <div class="card tab-pane" id="data-keluarga">
                         <div class="head-card border-b pb-5">
@@ -802,7 +824,7 @@
         <div class="row grid items-center lg:grid-cols-3 mb-4 md:grid-cols-2 grid-cols-1 gap-10">
                         <div class="col-md-5">
                             <div class="input-box">
-                                <label for="is">Tunjangan</label>
+                                <label for="is">Tunjangan ${x}</label>
                                 <select name="tunjangan[]" id="tunjangan" class="form-input">
                                     <option value="">--- Pilih ---</option>
                                     @foreach ($tunjangan as $item)

@@ -28,14 +28,15 @@
                 $status = 'K/0';
             }
         @endphp
-        <form action="{{ route('karyawan.show', $karyawan->nip) }}" method="POST" enctype="multipart/form-data" name="karyawan" class="space-y-5">
-            @csrf
-            @method('PUT')
+        <div  class="space-y-5">
+            
+            
             <div class="row m-0">
                 <div class="col-lg-12">
                     <h6 class="row-title">Biodata Diri Karyawan</h6>
                 </div>
             </div>
+            <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-5 grid-cols-1">
             @php
                 $no = 1;
                 $totalGaji = $karyawan->gj_pokok + $karyawan->gj_penyesuaian;
@@ -46,12 +47,7 @@
                     ->groupBy('mst_tunjangan.nama_tunjangan')
                     ->get();
             @endphp
-            <div class="row ">
-                <label class="w-2/4 mt-2">NIP</label>
-                <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->nip }}">
-                </div>
-            </div>
+
             <div class="row ">
                 <label class="w-2/4 mt-2">NIK</label>
                 <div class="w-full">
@@ -128,12 +124,14 @@
                     <input type="text" disabled class="form-input-disabled" value="{{ $alamatSek }}">
                 </div>
             </div>
+        </div>
             <hr>
             <div class="row m-0">
                 <div class="col-lg-12">
                     <h6 class="row-title">No Rekening & NPWP</h6>
                 </div>
             </div>
+            <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-5 grid-cols-1">
             <div class="row ">
                 <label class="w-2/4 mt-2">Nomor Rekening</label>
                 <div class="w-full">
@@ -152,12 +150,20 @@
                     <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->status_ptkp ? ($karyawan->status_ptkp == "TK" ? "TK/0" : $karyawan->status_ptkp) : '-' }}">
                 </div>
             </div>
+            </div>
             <hr>
             <div class="row m-0">
                 <div class="col-lg-12">
                     <h6 class="row-title">Data Karyawan</h6>
                 </div>
             </div>
+            <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-5 grid-cols-1">
+                <div class="row ">
+                    <label class="w-2/4 mt-2">NIP</label>
+                    <div class="w-full">
+                        <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->nip }}">
+                    </div>
+                </div>
             <div class="row ">
                 <label class="w-2/4 mt-2">Kantor</label>
                 <div class="w-full">
@@ -296,12 +302,14 @@
                     @endif
                 </div>
             </div>
+            </div>
             <hr>
             <div class="row m-0">
                 <div class="col-lg-12">
                     <h6 class="row-title">Data Tunjangan Karyawan</h6>
                 </div>
             </div>
+            <div class="grid lg:grid-cols-2 gap-5 grid-cols-1">
             <div class="row ">
                 <label class="w-2/4 mt-0">Kartu Peserta Jamsostek (KPJ)</label>
                 <div class="w-full">
@@ -315,7 +323,7 @@
                 </div>
             </div>
             <div class="row ">
-                <label class="w-2/4 mt-2">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium' : 'Gaji Pokok' }}</label>
+                <label class="w-2/4 mt-2 ">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium' : 'Gaji Pokok' }}</label>
                 <div class="w-full">
                     @if (isset($karyawan->gj_pokok) != null)
                         <input type="text" disabled class="form-input-disabled" value="{{'Rp. '. number_format($karyawan->gj_pokok, 0, ",", ".") }}">
@@ -325,7 +333,7 @@
                 </div>
             </div>
             <div class="row ">
-                <label class="w-2/4 mt-2">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium Penyesuaian' : 'Gaji Penyesuaian' }}</label>
+                <label class="w-2/4 mt-2 ">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium Penyesuaian' : 'Gaji Penyesuaian' }}</label>
                 <div class="w-full">
                     @if (isset($karyawan->gj_penyesuaian) != null)
                         <input type="text" disabled class="form-input-disabled" value="{{ 'Rp. '. number_format($karyawan->gj_penyesuaian, 0, ",", ".") }}">
@@ -334,13 +342,17 @@
                     @endif
                 </div>
             </div>
+            </div>
             <br>
             {{-- {{$totalGaji}} --}}
             {{-- {{$karyawan->gj_pokok + $karyawan->gj_penyesuaian}} --}}
             @if (isset($tj))
+               <div class="grid lg:grid-cols-2 gap-5 grid-cols-1">
+
+            
                 @foreach ($tj as $item)
-                    <div class="row ">
-                        <label class="w-2/4 mt-2"> {{ ($item->nama_tunjangan != 'DPP') ? 'Tunjangan ' . $no++ : 'Iuran'  }}</label>
+                    <div class="row row-tunjangan ">
+                         <label class="w-2/4 font-bold"> <iconify-icon icon="uil:info-circle"></iconify-icon> {{ ($item->nama_tunjangan != 'DPP') ? 'Tunjangan ' . $no++ : 'Iuran'  }}</label>
                         <div class="w-full">
                             <input type="text" disabled class="form-input-disabled" value="{{ $item->nama_tunjangan }}">
                         </div>
@@ -354,10 +366,10 @@
                         }
                     @endphp
                 @endforeach
+            </div>
             @endif
-            <br>
-            <div class="row ">
-                <label for="" class="w-2/4 mt-2">Total Gaji</label>
+            <div class="row row-total-tunjangan">
+                <label for="" class="w-2/4 font-semibold">Total Gaji</label>
                 <div class="w-full">
                     <input type="text" disabled class="form-input-disabled" value="Rp. {{ number_format($totalGaji, 0, ",", ".") }}" />
                 </div>
@@ -596,22 +608,22 @@
             @endif
             <hr>
 
-            <div class="{{auth()->user()->hasRole('cabang') ? 'hidden' : ''}}">
+            <div class="{{auth()->user()->hasRole('cabang') ? 'hidden' : ''}} space-y-8">
                 <div class="col-lg-12">
                     <h6 class="text-2xl font-bold pb-5 pt-5">Histori</h6>
                 </div>
-                <div class="col-lg-12">
+                <div class="col-lg-12 p-5 border rounded-md">
                     <p class="text-lg font-bold pb-5 pt-5">Histori Jabatan</p>
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="tables-even-or-odd border-none" id="pjs-table" style="width: 100%; word-break: break-all;">
                             <thead>
                                 <tr>
-                                    <th style="background-color: #CCD6A6; text-align: center;">#</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">No SK</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Jabatan</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Mulai</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Berakhir</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Status</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">#</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">No SK</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">Jabatan</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">Mulai</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">Berakhir</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -629,17 +641,17 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-lg-12">
+                <div class="col-lg-12 p-5 border rounded-md">
                     <p class="text-lg font-bold pb-5 pt-5">Histori Surat Peringatan</p>
                     <div class="table-responsive overflow-hidden pt-2">
                         <table class="table-even-or-odd border-none" id="sp-table" style="width: 100%; word-break: break-all;">
                             <thead>
                                 <tr>
-                                    <th style="background-color: #CCD6A6; text-align: center;">#</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; min-width: 75px;">No SP</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; min-width: 100px;">Tanggal</th>
-                                    <th style="background-color: #CCD6A6; text-align: center;">Pelanggaran</th>
-                                    <th style="background-color: #CCD6A6; text-align: center; min-width: 125px;">Sanksi</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">#</th>
+                                    <th style="background-color: #F9F9F9; text-align: center; min-width: 75px;">No SP</th>
+                                    <th style="background-color: #F9F9F9; text-align: center; min-width: 100px;">Tanggal</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">Pelanggaran</th>
+                                    <th style="background-color: #F9F9F9; text-align: center; min-width: 125px;">Sanksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -664,7 +676,7 @@
                 </a>
             </div>
 
-        </form>
+        </div>
     </div>
 </div>
 @endsection
