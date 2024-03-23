@@ -185,7 +185,8 @@ class KaryawanController extends Controller
             ->first();
         $data['anak'] = DB::table('keluarga')
             ->where('nip', $request->nip)
-            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->whereIn('enum', ['Anak'])
+            ->where('anak_ke', '<=', 2)
             ->orderBy('id', 'desc')
             ->get();
         if (!isset($data)) {
@@ -442,7 +443,8 @@ class KaryawanController extends Controller
                     foreach ($request->get('nama_anak') as $key => $item) {
                         DB::table('keluarga')
                             ->insert([
-                                'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+                                'enum' => 'Anak',
+                                'anak_ke' => $key + 1,
                                 'nama' => $item,
                                 'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
                                 'nip' => $request->get('nip'),
@@ -503,7 +505,8 @@ class KaryawanController extends Controller
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $karyawan->nip)
-            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->whereIn('enum', ['Anak'])
+            ->where('anak_ke', '<=', 2)
             ->get();
         $karyawan->tunjangan = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
@@ -671,7 +674,8 @@ class KaryawanController extends Controller
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $id)
-            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->whereIn('enum', ['Anak'])
+            ->where('anak_ke', '<=', 2)
             ->get();
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
@@ -827,6 +831,7 @@ class KaryawanController extends Controller
                                     ->where('id', $request->get('id_anak')[$key])
                                     ->update([
                                         'nama' => $item,
+                                        'anak_ke' => $key + 1,
                                         'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
                                         'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
                                         'nip' => $request->get('nip'),
@@ -835,7 +840,8 @@ class KaryawanController extends Controller
                             } else {
                                 DB::table('keluarga')
                                     ->insert([
-                                        'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+                                        'enum' => 'Anak',
+                                        'anak_ke' => $key + 1,
                                         'nama' => $item,
                                         'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
                                         'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
@@ -1147,7 +1153,8 @@ class KaryawanController extends Controller
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $karyawan->nip)
-            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->whereIn('enum', ['Anak'])
+            ->where('anak_ke', '<=', 2)
             ->get();
         $karyawan->tunjangan = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
