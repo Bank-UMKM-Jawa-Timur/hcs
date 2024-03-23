@@ -2,6 +2,7 @@
     $arrayPendidikan = ['SD', 'SMP/SLTP', 'SLTA', 'SMA/SLTA', 'SMK', 'D1', 'D2', 'D3', 'D4', 'D4/S1', 'S1', 'S2', 'S3'];
 @endphp
 @extends('layouts.app-template')
+@include('karyawan.modal.dokument')
 @push('script')
     <script>
         $(document).ready(function() {
@@ -103,6 +104,42 @@
                         <h2 class="font-bold text-lg">Biodata Karyawan</h2>
                     </div>
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <div class="d-flex">
+                                    <label for="">Foto Diri</label>
+                                    @if ($dokumen)
+                                        @if ($dokumen->foto_diri)
+                                            <a href="javascript:void(0)" class="ms-3 dokument"
+                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                                    data-tittle="Foto Karyawan"
+                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_diri) }}"
+                                            >Preview</a>
+                                        @endif
+                                    @endif
+                                </div>
+                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
+                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <div class="d-flex">
+                                    <label for="">Foto KTP</label>
+                                    @if ($dokumen)
+                                        @if ($dokumen->foto_ktp)
+                                            <a href="javascript:void(0)" class="ms-3 dokument"
+                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                                    data-tittle="Foto KTP"
+                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_ktp) }}"
+                                            >Preview</a>
+                                        @endif
+                                    @endif
+                                </div>
+                                <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
+                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">NIP</label>
@@ -410,6 +447,24 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-4">
                             <div class="input-box">
+                                <div class="d-flex">
+                                    <label for="foto_kk">Foto KK</label>
+                                    @if ($dokumen)
+                                        @if ($dokumen->foto_kk)
+                                            <a href="javascript:void(0)" class="ms-3 dokument"
+                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                                    data-tittle="Foto KK"
+                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_kk) }}"
+                                            >Preview</a>
+                                        @endif
+                                    @endif
+                                </div>
+                                <input type="file" name="foto_kk" class="form-input only-image" id="foto_kk" accept="image/png, image/gif, image/jpeg">
+                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-box">
                                 <label for="is">Pasangan</label>
                                 <select name="is" id="is" class="form-input">
                                     <option value="">--- Pilih ---</option>
@@ -604,6 +659,17 @@
 
 @section('custom_script')
     <script>
+
+        $(`.dokument`).on('click', function(){
+            const tittle = $(this).data('tittle')
+            const filepath = $(this).data('filepath')
+            console.log(filepath);
+            var target = '#modalDokument';
+            $(`${target} #tittle`).html(tittle)
+            $(`${target} #image-content`).removeClass('hidden')
+            $(`${target} #image-content`).attr('src', filepath)
+        })
+
         let status = $("#status");
         var nip = $("#nip").val()
         var x = {{ $data->count_tj }};
