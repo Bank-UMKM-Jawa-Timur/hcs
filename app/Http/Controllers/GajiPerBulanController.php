@@ -483,6 +483,7 @@ class GajiPerBulanController extends Controller
                 else {
                     $kd_entitas = '000';
                 }
+                $gaji_component = new GajiComponent($kd_entitas);
                 $new_data = [];
                 $total_penghasilan_baru = $gaji->total_penghasilan;
                 $total_potongan_baru = $gaji->total_potongan;
@@ -987,21 +988,7 @@ class GajiPerBulanController extends Controller
                 $nominal_jp = ($bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                 if ($gaji->kd_jabatan != 'DIR' && $gaji->kd_jabatan != 'KOM' && $gaji->kd_jabatan != 'SAD')
                 {
-                    if($gaji->status_karyawan == 'IKJP' || $gaji->status_karyawan == 'Kontrak Perpanjangan') {
-                        $dpp = ($persen_jp_pengurang / 100) * $total_gaji_baru;
-                    }
-                    else {
-                        // Get DPP
-                        $dpp = round(((($karyawan->gj_pokok + $tj_keluarga_baru) + ($tj_kesejahteraan_baru * 0.5)) * 0.05));
-                        // Get JP 1%
-                        $jp_1_persen = floor($total_gaji_baru * ($persen_jp_pengurang / 100));
-                        if($total_gaji_baru >= $nominal_jp){
-                            $jp_1_persen = floor($nominal_jp * ($persen_jp_pengurang / 100));
-                        } else {
-                            $jp_1_persen = floor($total_gaji_baru * ($persen_jp_pengurang / 100));
-                        }
-                    }
-                    $dpp = round($dpp);
+                    $dpp = $gaji_component->getDPP($gaji->status_karyawan, $karyawan->gj_pokok, $tj_keluarga_baru, $tj_kesejahteraan_baru);
 
                     if ($dpp != $gaji->dpp) {
                         $total_potongan_baru -= $gaji->dpp;
@@ -1017,25 +1004,8 @@ class GajiPerBulanController extends Controller
                 // Get BPJS TK
                 $jp_persen = $persen_jp_pengurang / 100;
                 $bpjs_tk = 0;
-                if ($karyawan->kpj) {
-                    if ($bulan > 2) {
-                        if ($total_gaji_baru > $jp_mar_des) {
-                            $bpjs_tk = $jp_mar_des * $jp_persen;
-                        }
-                        else {
-                            $bpjs_tk = $total_gaji_baru * $jp_persen;
-                        }
-                    }
-                    else {
-                        if ($total_gaji_baru >= $jp_jan_feb) {
-                            $bpjs_tk = $jp_jan_feb * $jp_persen;
-                        }
-                        else {
-                            $bpjs_tk = $total_gaji_baru * $jp_persen;
-                        }
-                    }
-                    $bpjs_tk = round($bpjs_tk);
-                }
+                $bpjs_tk = $gaji_component->getBPJSTK($karyawan->kpj, $total_penghasilan_baru, $bulan);
+
                 if ($bpjs_tk != $gaji->bpjs_tk) {
                     $total_potongan_baru -= $gaji->bpjs_tk;
                     $total_potongan_baru += $bpjs_tk;
