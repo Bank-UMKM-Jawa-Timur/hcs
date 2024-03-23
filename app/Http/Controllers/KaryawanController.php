@@ -185,8 +185,8 @@ class KaryawanController extends Controller
             ->first();
         $data['anak'] = DB::table('keluarga')
             ->where('nip', $request->nip)
-            ->whereIn('enum', ['ANAK1', 'ANAK2'])
-            ->orderBy('id', 'desc')
+            ->whereIn('enum', ['ANAK1', 'ANAK2', 'Anak'])
+            // ->orderBy('id', 'desc')
             ->get();
         if (!isset($data)) {
             $data = null;
@@ -671,7 +671,7 @@ class KaryawanController extends Controller
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $id)
-            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->whereIn('enum', ['ANAK1', 'ANAK2', 'Anak'])
             ->get();
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
@@ -681,7 +681,7 @@ class KaryawanController extends Controller
             ->get();
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
-
+        // return $data_anak;
         return view('karyawan.edit', [
         // return view('karyawan.edit-old', [
             'data' => $data,
@@ -835,7 +835,7 @@ class KaryawanController extends Controller
                             } else {
                                 DB::table('keluarga')
                                     ->insert([
-                                        'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+                                        'enum' => 'Anak',
                                         'nama' => $item,
                                         'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
                                         'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
@@ -845,6 +845,13 @@ class KaryawanController extends Controller
                             }
                         }
                     }
+                }
+
+                if($request->idAnakDeleted != null) {
+                    $idAnakDeleted = explode(',', $request->idAnakDeleted);
+                    DB::table('keluarga')
+                        ->whereIn('id', $idAnakDeleted)
+                        ->delete();
                 }
 
                 // data tunjangan
