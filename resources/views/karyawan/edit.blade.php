@@ -1035,9 +1035,23 @@
             kantorChange();
         });
 
-        function cekSkAnak(){
+        function cekSkAnak(input) {
+            console.log(input.value);
             var sk_tunjangan_anak = $("input[name='sk_tunjangan_anak[]']");
-            console.log(sk_tunjangan_anak.length);
+            input.setAttribute('readonly', true)
+            var count = 0;
+
+            sk_tunjangan_anak.each(function() {
+                if ($(this).val() !== "") {
+                    count++;
+                }
+            });
+
+            if (count >= 2) {
+                $(this).attr('readonly', true);
+            } else {
+                $("input[name='sk_tunjangan_anak[]']").removeAttr('readonly');
+            }
         }
 
         function cekStatus() {
@@ -1399,7 +1413,7 @@
                             <div class="input-box">
                                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
                                 <div class="flex gap-3">
-                                    <input type="text" onchange="cekSkAnak()" class="form-input" name="sk_tunjangan_anak[]" value="">
+                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]" value="">
                                     <div>
                                         <button class="btn btn-success btn-add-anak" type="button">
                                             <i class="ti ti-plus"></i>
@@ -1462,7 +1476,7 @@
                             <div class="input-box">
                                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
                                 <div class="flex gap-3">
-                                    <input type="text" onchange="cekSkAnak()" class="form-input" name="sk_tunjangan_anak[]" value="">
+                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]" value="">
                                     <div>
                                         <button class="btn btn-success btn-add-anak" type="button">
                                             <i class="ti ti-plus"></i>
