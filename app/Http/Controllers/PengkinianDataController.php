@@ -135,6 +135,7 @@ class PengkinianDataController extends Controller
             'tanggal_pengangkat' => 'required|not_in:-'
         ]);
 
+        DB::beginTransaction();
         try {
             $id_is = $request->get('id_pasangan');
             if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
@@ -294,7 +295,7 @@ class PengkinianDataController extends Controller
                     } else {
                         DB::table('keluarga')
                             ->insert([
-                                'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+                                'enum' => 'Anak',
                                 'nama' => $item,
                                 'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
                                 'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
@@ -334,17 +335,25 @@ class PengkinianDataController extends Controller
                 }
             }
 
+            if($request->idAnakDeleted != null) {
+                $idAnakDeleted = explode(',', $request->idAnakDeleted);
+                DB::table('keluarga')
+                    ->whereIn('id', $idAnakDeleted)
+                    ->delete();
+            }
+            
+            DB::commit();
             Alert::success('Berhasil', 'Berhasil melakukan pengkinian data karyawan.');
             return redirect()->route('pengkinian_data.index');
         } catch (Exception $e) {
             DB::rollBack();
             dd($e);
-            Alert::error('Tejadi kesalahan', '' . $e);
+            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
             return redirect()->route('pengkinian_data.index');
         } catch (QueryException $e) {
             DB::rollBack();
             dd($e);
-            Alert::error('Tejadi kesalahan', '' . $e);
+            Alert::error('Tejadi kesalahan', '' . $e->getMessage());
             return redirect()->route('pengkinian_data.index');
         }
     }
