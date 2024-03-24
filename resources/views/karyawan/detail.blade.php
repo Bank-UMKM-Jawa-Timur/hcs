@@ -128,6 +128,26 @@
                     <input type="text" disabled class="form-input-disabled" value="{{ $alamatSek }}">
                 </div>
             </div>
+            <div class="row ">
+                <label class="w-2/4 mt-2">Foto Diri</label>
+                <div class="w-full">
+                    @if($doks)
+                        <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}" />
+                    @else
+                        <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                    @endif
+                </div>
+            </div>
+            <div class="row ">
+                <label class="w-2/4 mt-2">Foto KTP</label>
+                <div class="w-full">
+                    @if($doks)
+                        <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_ktp) }}" />
+                    @else
+                        Berkas belum diunggah.
+                    @endif
+                </div>
+            </div>
             <hr>
             <div class="row m-0">
                 <div class="col-lg-12">
@@ -589,6 +609,16 @@
                                         <input type="text" class="form-input-disabled" disabled value="{{ $item->sk_tunjangan }}">
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <label class="w-2/4 mt-2">Foto Kartu Keluarga</label>
+                            <div class="w-full">
+                                @if($doks)
+                                    <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}" />
+                                @else
+                                    Berkas belum diunggah.
+                                @endif
                             </div>
                         </div>
                     @endforeach

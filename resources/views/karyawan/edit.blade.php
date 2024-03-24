@@ -78,12 +78,16 @@
 
                                 <span class="hidden sm:block"> Data Keluarga</span>
                             </li>
-                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="tunjangan">
+                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="{{ auth()->user()->hasRole('cabang') ? 'potongan' : 'tunjangan' }}">
                                 <span class="count-circle h-6 w-6 rounded-full  text-white text-center text-[10px]/6 font-bold">
                                     4
                                 </span>
 
-                                <span class="hidden sm:block"> Data Tunjangan</span>
+                                @if(auth()->user()->hasRole('cabang'))
+                                    <span class="hidden sm:block"> Data Potongan</span>
+                                @else
+                                    <span class="hidden sm:block"> Data Tunjangan</span>
+                                @endif
                             </li>
                         </ol>
                     </div>
@@ -105,42 +109,6 @@
                         <h2 class="font-bold text-lg">Biodata Karyawan</h2>
                     </div>
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
-                        <div class="col-md-6">
-                            <div class="input-box">
-                                <div class="d-flex">
-                                    <label for="">Foto Diri</label>
-                                    @if ($dokumen)
-                                        @if ($dokumen->foto_diri)
-                                            <a href="javascript:void(0)" class="ms-3 dokument"
-                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                                    data-tittle="Foto Karyawan"
-                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_diri) }}"
-                                            >Preview</a>
-                                        @endif
-                                    @endif
-                                </div>
-                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
-                            </div>
-                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-box">
-                                <div class="d-flex">
-                                    <label for="">Foto KTP</label>
-                                    @if ($dokumen)
-                                        @if ($dokumen->foto_ktp)
-                                            <a href="javascript:void(0)" class="ms-3 dokument"
-                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                                    data-tittle="Foto KTP"
-                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_ktp) }}"
-                                            >Preview</a>
-                                        @endif
-                                    @endif
-                                </div>
-                                <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
-                            </div>
-                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
-                        </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">NIP</label>
@@ -230,6 +198,42 @@
                                     </option>
                                 </select>
                             </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <div class="d-flex">
+                                    <label for="">Foto Diri</label>
+                                    @if ($dokumen)
+                                        @if ($dokumen->foto_diri)
+                                            <a href="javascript:void(0)" class="ms-3 dokument"
+                                               data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                               data-tittle="Foto Karyawan"
+                                               data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_diri) }}"
+                                            >Preview</a>
+                                        @endif
+                                    @endif
+                                </div>
+                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
+                            </div>
+                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <div class="d-flex">
+                                    <label for="">Foto KTP</label>
+                                    @if ($dokumen)
+                                        @if ($dokumen->foto_ktp)
+                                            <a href="javascript:void(0)" class="ms-3 dokument"
+                                               data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                               data-tittle="Foto KTP"
+                                               data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_ktp) }}"
+                                            >Preview</a>
+                                        @endif
+                                    @endif
+                                </div>
+                                <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
+                            </div>
+                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 gap-5">
@@ -508,34 +512,52 @@
                                 <div class="input-box">
                                     <label for="is_jumlah_anak">Jumlah Anak</label>
                                     <div class="flex gap-3">
-                                        <input type="number" class="form-input" name="is_jml_anak" id="is_jml_anak"
+                                        <input type="number" class="form-input form-input-disabled" name="is_jml_anak" id="is_jml_anak"
                                             value="{{ $is?->jml_anak ?? 0 }}" readonly>
-                                            @if ($is?->jml_anak == null || $is?->jml_anak == 0)
                                             <button type="button" class="btn btn-success" id="add-row-anak"><i class="ti ti-plus"></i></button>
-                                            @endif
                                     </div>
                                 </div>
                             </div>
                             <div class="col-span-3 space-y-5 " id="row_anak">
                                 @if (count($data_anak) > 0)
                                     @foreach ($data_anak as $key => $item)
-                                        <h6 class="">Data Anak {{ $key + 1 }}</h6>
-                                        <div class="grid col-span-3 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
-                                            <input type="hidden" name="id_anak[]" value="{{ $item->id }}">
-                                            <div class="col-md-6 input-box">
-                                                <label for="nama_anak">Nama Anak</label>
-                                                <input type="text" class="form-input" value="{{ $item->nama }}"
-                                                    name="nama_anak[]">
-                                            </div>
-                                            <div class="col-md-6 input-box">
-                                                <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                                <input type="date" class="form-input" name="tgl_lahir_anak[]"
-                                                    value="{{ $item->tgl_lahir }}">
-                                            </div>
-                                            <div class="col-md-6 input-box">
-                                                <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                <input type="text" class="form-input" name="sk_tunjangan_anak[]"
-                                                    value="{{ $item->sk_tunjangan }}">
+                                        <div id="anak-{{ $key }}" class="child-div">
+                                            <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak {{ $key + 1 }}</h6>
+                                            <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="{{ $key }}">
+                                                <input type="hidden" name="id_anak[]" value="{{ $item->id }}">
+                                                <div class="col-md-6">
+                                                    <div class="input-box">
+                                                        <label for="nama_anak">Nama Anak</label>
+                                                        <input type="text" class="form-input" value="{{ $item->nama }}"
+                                                               name="nama_anak[]">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="input-box">
+                                                        <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                        <input type="date" class="form-input" name="tgl_lahir_anak[]"
+                                                               value="{{ $item->tgl_lahir }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="input-box">
+                                                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                        <div class="flex gap-3">
+                                                            <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak @if(count($data_anak) > 2 && !$item->sk_tunjangan) form-input-disabled @endif" name="sk_tunjangan_anak[]"
+                                                                   value="{{ $item->sk_tunjangan }}" @if(count($data_anak) > 2 && !$item->sk_tunjangan) readonly @endif">
+                                                            <div>
+                                                                <button class="btn btn-success btn-add-anak" type="button">
+                                                                    <i class="ti ti-plus"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div>
+                                                                <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="{{ $key }}" data-id-anak="{{ $item->id }}">
+                                                                    <i class="ti ti-minus"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -550,63 +572,106 @@
                         @endif
                     </div>
                 </div>
-                <div class="card tab-pane space-y-5" id="tunjangan">
-                    <div class="head-card border-b pb-5">
-                        <h2 class="font-bold text-lg">Data Tunjangan</h2>
-                    </div>
-                    @php
-                        $no = 1;
-                    @endphp
-                        @foreach ($data->tunjangan as $key => $tj)
-                        @php
-                            $no++;
-                        @endphp
-                        <div id="parent_tunjangan{{$key}}">
-                            <div class="grid items-center lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10" id="collapseFour">
-                                <div class="col-md-5">
-                                    <div class="input-box">
-                                        <label for="is">Tunjangan </label>
-                                        <select name="tunjangan[]" id="tunjangan" class="form-input">
-                                            <option value="">--- Pilih ---</option>
-                                            @foreach ($tunjangan as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ $item->id == $tj->id_tunjangan ? 'selected' : '' }}>
-                                                    {{ $item->nama_tunjangan }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                @if(auth()->user()->hasRole('cabang'))
+                    <div class="card tab-pane space-y-5" id="potongan">
+                        <div class="head-card border-b pb-5">
+                            <h2 class="font-bold text-lg">Data Potongan</h2>
+                        </div>
+                        <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-5 mt-5 "
+                             id="row_potongan">
+                            <div class="col col-md-6 col-sm-6">
+                                <div class="input-box">
+                                    <label for="is_nama">Kredit Koperasi</label>
+                                    <input type="text" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi"
+                                           class="form-input rupiah-potongan"
+                                           value="{{ old('potongan_kredit_koperasi', $data->potongan?->kredit_koperasi ? $data->potongan->kredit_koperasi : '0') }}">
                                 </div>
-                                <input type="hidden" name="id_tk[]" id="id_tk" value="{{ $tj->id }}">
-                                <div class="col-md-5">
-                                    <div class="input-box">
-                                        <label for="is_nama">Nominal</label>
-                                        <input type="text" id="nominal{{ $key }}" name="nominal_tunjangan[]"
-                                            value="{{ number_format($tj->nominal, 0, ',', '.') }}" class="form-input"
-                                            onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)">
-                                        <input type="hidden" name="id_tunjangan[]" value="{{$tj->id}}">
-                                    </div>
+                            </div>
+                            <div class="col col-md-6 col-sm-6">
+                                <div class="input-box">
+                                    <label for="is_nama">Iuran Koperasi</label>
+                                    <input type="text" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi"
+                                           class="form-input rupiah-potongan"
+                                           value="{{ old('potongan_iuran_koperasi', $data->potongan?->iuran_koperasi ? $data->potongan->iuran_koperasi : '0') }}">
                                 </div>
-                                <div class="flex gap-5 mt-6">
-                                    @if ($key == 0)
-                                        <div class="col-md-1">
-                                            <button class="btn btn-success" type="button" id="btn-add">
-                                                <i class="ti ti-plus"></i>
-                                            </button>
-                                        </div>
-                                    @endif
-                                    @if ($key > 0)
-                                        <div class="col-md-1">
-                                            <button class="btn btn-danger" type="button" data-id_parent="{{$key}}" id="btn-delete-tunjangan">
-                                                <i class="ti ti-minus"></i>
-                                            </button>
-                                        </div>
-                                    @endif
+                            </div>
+                            <div class="col col-md-6 col-sm-6">
+                                <div class="input-box">
+                                    <label for="is_nama">Kredit Pegawai</label>
+                                    <input type="text" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai"
+                                           class="form-input rupiah-potongan"
+                                           value="{{ old('potongan_kredit_pegawai', $data->potongan?->kredit_pegawai ? $data->potongan->kredit_pegawai : '0') }}">
+                                </div>
+                            </div>
+                            <div class="col col-md-6 col-sm-6">
+                                <div class="input-box">
+                                    <label for="is_nama">Iuran IK</label>
+                                    <input type="text" id="potongan_iuran_ik" name="potongan_iuran_ik"
+                                           class="form-input rupiah-potongan"
+                                           value="{{ old('potongan_iuran_ik', $data->potongan?->iuran_ik ? $data->potongan->iuran_ik : '0') }}">
                                 </div>
                             </div>
                         </div>
+                    </div>
+                @else
+                    <div class="card tab-pane space-y-5" id="tunjangan">
+                        <div class="head-card border-b pb-5">
+                            <h2 class="font-bold text-lg">Data Tunjangan</h2>
+                        </div>
+                        @php
+                            $no = 1;
+                        @endphp
+                        @foreach ($data->tunjangan as $key => $tj)
+                            @php
+                                $no++;
+                            @endphp
+                            <div id="parent_tunjangan{{$key}}">
+                                <div class="grid items-center lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10" id="collapseFour">
+                                    <div class="col-md-5">
+                                        <div class="input-box">
+                                            <label for="is">Tunjangan </label>
+                                            <select name="tunjangan[]" id="tunjangan" class="form-input">
+                                                <option value="">--- Pilih ---</option>
+                                                @foreach ($tunjangan as $item)
+                                                    <option value="{{ $item->id }}"
+                                                        {{ $item->id == $tj->id_tunjangan ? 'selected' : '' }}>
+                                                        {{ $item->nama_tunjangan }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="id_tk[]" id="id_tk" value="{{ $tj->id }}">
+                                    <div class="col-md-5">
+                                        <div class="input-box">
+                                            <label for="is_nama">Nominal</label>
+                                            <input type="text" id="nominal{{ $key }}" name="nominal_tunjangan[]"
+                                                   value="{{ number_format($tj->nominal, 0, ',', '.') }}" class="form-input"
+                                                   onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)">
+                                            <input type="hidden" name="id_tunjangan[]" value="{{$tj->id}}">
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-5 mt-6">
+                                        @if ($key == 0)
+                                            <div class="col-md-1">
+                                                <button class="btn btn-success" type="button" id="btn-add">
+                                                    <i class="ti ti-plus"></i>
+                                                </button>
+                                            </div>
+                                        @endif
+                                        @if ($key > 0)
+                                            <div class="col-md-1">
+                                                <button class="btn btn-danger" type="button" data-id_parent="{{$key}}" id="btn-delete-tunjangan">
+                                                    <i class="ti ti-minus"></i>
+                                                </button>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
-                    <div id="new_item"></div>
-                </div>
+                        <div id="new_item"></div>
+                    </div>
+                @endif
             @elsecan('manajemen karyawan - data karyawan - edit karyawan - edit potongan')
                 <div class="card tab-pane active" id="potongan">
                     <div class="head-card border-b pb-5">
@@ -667,6 +732,31 @@
 
 @section('custom_script')
     <script>
+        function cekSkAnak(input) {
+            var sk_tunjangan_anak = $("input[name='sk_tunjangan_anak[]']");
+            var count = 0;
+            sk_tunjangan_anak.each(function() {
+                if ($(this).val() !== "") {
+                    count++;
+                }
+            });
+
+            sk_tunjangan_anak.each(function() {
+                var inp = $(this).val()
+                if (inp === "") {
+                    if (count >= 2) {
+                        $(this).prop('readonly', true)
+                        $(this).addClass('form-input-disabled')
+                    }
+                    else {
+                        $(this).prop('readonly', false)
+                        $(this).removeClass('form-input-disabled')
+                    }
+                } else {
+                    $(this).prop('readonly', false)
+                }
+            });
+        }
 
         $(`.dokument`).on('click', function(){
             const tittle = $(this).data('tittle')
@@ -688,6 +778,8 @@
         var idPotonganDeleted = []
         var idAnakDeleted = []
         var countAnak = $("#is_jml_anak").val()
+        toggleButtonAnak()
+
         kantorChange();
         getKantor();
         cekStatus();
@@ -711,6 +803,8 @@
             var angka = $(this).val()
 
             cekStatus()
+            // Toggle Button
+            toggleButtonAnak()
         })
         let layoutPages = document.querySelector('.layout-pages');
         var $tabPanes = $('.tab-pane');
@@ -1035,25 +1129,6 @@
             kantorChange();
         });
 
-        function cekSkAnak(input) {
-            console.log(input.value);
-            var sk_tunjangan_anak = $("input[name='sk_tunjangan_anak[]']");
-            input.setAttribute('readonly', true)
-            var count = 0;
-
-            sk_tunjangan_anak.each(function() {
-                if ($(this).val() !== "") {
-                    count++;
-                }
-            });
-
-            if (count >= 2) {
-                $(this).attr('readonly', true);
-            } else {
-                $("input[name='sk_tunjangan_anak[]']").removeAttr('readonly');
-            }
-        }
-
         function cekStatus() {
             if (status.val() == "Kawin") {
                 $('#data_is').show();
@@ -1064,49 +1139,8 @@
                     datatype: "json",
                     success: function(res) {
                         if (res.anak.length == 0 && countAnak > 0) {
-                            /*for(var i = 0; i < countAnak; i++){
-                                var ket = i+1;
-                                $("#row_anak").append(`
-                                    <div id="anak-${i}">
-                                        <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
-                                        <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
-                                            <input type="hidden" name="id_anak[]" value="">
-                                            <div class="col-md-6">
-                                                <div class="input-box">
-                                                    <label for="nama_anak">Nama Anak</label>
-                                                    <input type="text" class="form-input" name="nama_anak[]" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="input-box">
-                                                    <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                                    <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="input-box">
-                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                    <div class="flex gap-3">
-                                                        <input type="text" onchange="cekSkAnak()" class="form-input" name="sk_tunjangan_anak[]" value="">
-                                                        <div>
-                                                            <button class="btn btn-success btn-add-anak" type="button">
-                                                                <i class="ti ti-plus"></i>
-                                                            </button>
-                                                        </div>
-                                                        <div>
-                                                            <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="${i}" data-id-anak="">
-                                                                <i class="ti ti-minus"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `);
-                            }*/
                         } else {
-                            if (res.is) {
+                            /*if (res.is) {
                                 $('#is').val(res.is.enum);
                                 $('#is_nama').val(res.is.nama);
                                 $('#is_tgl_lahir').val(res.is.tgl_lahir);
@@ -1124,41 +1158,83 @@
                                     var isDisabled = i > 1 ? 'readonly' : '';
 
                                     if(res.anak[i]) {
-                                        $("#row_anak").append(`
-                                            <div id="anak-${res.anak[i].id}">
-                                                <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
-                                                <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
-                                                    <input type="hidden" name="id_anak[]" value="${res.anak[i].id}">
-                                                    <div class="col-md-6 input-box">
-                                                        <label for="nama_anak">Nama Anak</label>
-                                                        <input type="text" class="form-input" name="nama_anak[]" value="${res.anak[i].nama ?? ''}">
-                                                    </div>
-                                                    <div class="col-md-6 input-box">
-                                                        <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                                        <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${res.anak[i].tgl_lahir}">
-                                                    </div>
-                                                    <div class="col-md-6 input-box">
-                                                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                        <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-' }" ${isDisabled}>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <button class="btn btn-success btn-add-anak" type="button">
-                                                            <i class="ti ti-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="${i}" data-id-anak="${res.anak[i].id}">
-                                                            <i class="ti ti-minus"></i>
-                                                        </button>
+                                        console.log(typeof(idAnakDeleted))
+                                        console.log(idAnakDeleted)
+                                        console.log('id anak : '+res.anak[i].id)
+                                        if (idAnakDeleted.length > 0) {
+                                            for (var j = 0; j < idAnakDeleted.length; j++) {
+                                                console.log(idAnakDeleted[j])
+                                                if (res.anak[i].id != idAnakDeleted[j]) {
+                                                    $("#row_anak").append(`
+                                                        <div id="anak-${res.anak[i].id}" class="child-div">
+                                                            <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + ket + `</h6>
+                                                            <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${i}">
+                                                                <input type="hidden" name="id_anak[]" value="${res.anak[i].id}">
+                                                                <div class="col-md-6 input-box">
+                                                                    <label for="nama_anak">Nama Anak</label>
+                                                                    <input type="text" class="form-input" name="nama_anak[]" value="${res.anak[i].nama ?? ''}">
+                                                                </div>
+                                                                <div class="col-md-6 input-box">
+                                                                    <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                                    <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${res.anak[i].tgl_lahir}">
+                                                                </div>
+                                                                <div class="col-md-6 input-box">
+                                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                                    <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-' }" ${isDisabled}>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <button class="btn btn-success btn-add-anak" type="button">
+                                                                        <i class="ti ti-plus"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="${i}" data-id-anak="${res.anak[i].id}">
+                                                                        <i class="ti ti-minus"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    `);
+                                                }
+                                            }
+                                        }
+                                        else {
+                                            $("#row_anak").append(`
+                                                <div id="anak-${res.anak[i].id}" class="child-div">
+                                                    <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + ket + `</h6>
+                                                    <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${i}">
+                                                        <input type="hidden" name="id_anak[]" value="${res.anak[i].id}">
+                                                        <div class="col-md-6 input-box">
+                                                            <label for="nama_anak">Nama Anak</label>
+                                                            <input type="text" class="form-input" name="nama_anak[]" value="${res.anak[i].nama ?? ''}">
+                                                        </div>
+                                                        <div class="col-md-6 input-box">
+                                                            <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                            <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${res.anak[i].tgl_lahir}">
+                                                        </div>
+                                                        <div class="col-md-6 input-box">
+                                                            <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                            <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-' }" ${isDisabled}>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <button class="btn btn-success btn-add-anak" type="button">
+                                                                <i class="ti ti-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="${i}" data-id-anak="${res.anak[i].id}">
+                                                                <i class="ti ti-minus"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        `);
+                                            `);
+                                        }
                                     } else {
                                         $("#row_anak").append(`
-                                            <div id="anak-${i}">
-                                                <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
-                                                <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
+                                            <div id="anak-${i}" class="child-div">
+                                                <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + ket + `</h6>
+                                                <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${i}">
                                                     <input type="hidden" name="id_anak[]" value="">
                                                     <div class="col-md-6 input-box">
                                                         <label for="nama_anak">Nama Anak</label>
@@ -1187,7 +1263,7 @@
                                         `);
                                     }
                                 }
-                            }
+                            }*/
                         }
                     }
                 })
@@ -1387,15 +1463,24 @@
             }
         })
 
+        function toggleButtonAnak() {
+            if (countAnak == 0) {
+                $('#add-row-anak').removeClass('hidden')
+            }
+            else {
+                $('#add-row-anak').addClass('hidden')
+            }
+        }
+
         $("#row_anak").on("click", '.btn-add-anak', function(){
             $(".preloader").removeAttr('style');
             var angka = countAnak;
             var isDisabled = countAnak > 2 ? 'disabled' : '';
             var iteration = parseInt(countAnak) + 1
             $("#row_anak").append(`
-                <div id="anak-${countAnak}">
-                    <h6 class="font-bold text-lg mb-5">Data Anak ` + iteration + `</h6>
-                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${countAnak}">
+                <div id="anak-${countAnak}" class="child-div">
+                    <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + iteration + `</h6>
+                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
                         <input type="hidden" name="id_anak[]" value="">
                         <div class="col-md-6">
                             <div class="input-box">
@@ -1413,7 +1498,7 @@
                             <div class="input-box">
                                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
                                 <div class="flex gap-3">
-                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]" value="">
+                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]">
                                     <div>
                                         <button class="btn btn-success btn-add-anak" type="button">
                                             <i class="ti ti-plus"></i>
@@ -1431,15 +1516,28 @@
                 </div>
             `);
 
+            // Reset readonly
+            var input = $(`#anak-${countAnak}`).find('.sk-anak')
+            cekSkAnak(input)
+
             countAnak++;
             $("#is_jml_anak").val(countAnak);
             $("#is_jml_anak").trigger('change');
             $(".preloader").hide()
         })
 
+        function resetKetAnak() {
+            var div_anak = $('#row_anak').find('.child-div')
+            div_anak.each(function(i) {
+                $(this).prop('id', `anak-${i}`)
+                $(this).find('.form-anak').attr('data-anak', i)
+                $(this).find('.btn-remove-anak').attr('data-parent-anak', i)
+                $(this).find('.ket-anak').html(`Data Anak ${i + 1}`)
+            })
+        }
+
         $("#row_anak").on("click", '.btn-remove-anak', function(){
             var parent = $(this).data('parent-anak');
-            console.log(parent)
             var parents = `anak-${parent}`
             var idDeleted = $(this).data('id-anak');
             if (idDeleted.length == 0 || idDeleted != null) {
@@ -1451,14 +1549,21 @@
             countAnak--;
             $("#is_jml_anak").val(countAnak);
             $("#is_jml_anak").trigger('change');
+
+            // Reset ket anak
+            resetKetAnak()
+
+            // Reset readonly
+            var input = $(this).parent().parent().find('.sk-anak')
+            cekSkAnak(input)
         })
 
         $("#add-row-anak").on("click", function() {
             var iteration = parseInt(countAnak) + 1
             $("#row_anak").append(`
-                <div id="anak-${countAnak}">
-                    <h6 class="font-bold text-lg mb-5">Data Anak ` + iteration + `</h6>
-                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${countAnak}">
+                <div id="anak-${countAnak}" class="child-div">
+                    <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + iteration + `</h6>
+                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
                         <input type="hidden" name="id_anak[]" value="">
                         <div class="col-md-6">
                             <div class="input-box">
@@ -1493,6 +1598,10 @@
                     </div>
                 </div>
             `);
+
+            // Reset readonly
+            var input = $(`#anak-${countAnak}`).find('.sk-anak')
+            cekSkAnak(input)
 
             countAnak++
             $("#is_jml_anak").val(countAnak)

@@ -188,7 +188,7 @@ class KaryawanController extends Controller
             ->where('nip', $request->nip)
             ->whereIn('enum', ['Anak'])
             ->where('anak_ke', '<=', 2)
-            ->orderBy('id', 'desc')
+            ->orderBy('anak_ke')
             ->get();
         if (!isset($data)) {
             $data = null;
@@ -573,9 +573,12 @@ class KaryawanController extends Controller
             ->count('*');
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
-
         $pjs = PjsModel::where('nip', $id)
             ->get();
+        $doks = DB::table('dokumen_karyawan')
+                ->where('karyawan_id', $id)
+                ->first();
+
 
         // Get Pergerakan Karir Detail
         $pergerakanKarir = DB::table('demosi_promosi_pangkat')
@@ -692,6 +695,7 @@ class KaryawanController extends Controller
             'sp' => $sp,
             'dpp_perhitungan' => $totalDppPerhitungan,
             'potongan' => $potongan,
+            'doks' => $doks,
         ]);
     }
 
@@ -730,7 +734,6 @@ class KaryawanController extends Controller
         $data_anak = DB::table('keluarga')
             ->where('nip', $id)
             ->whereIn('enum', ['Anak'])
-            ->where('anak_ke', '<=', 2)
             ->get();
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
@@ -743,6 +746,7 @@ class KaryawanController extends Controller
 
         $id_karyawan = KaryawanModel::find($id)->id;
         $dokumen = DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->first();
+
         return view('karyawan.edit', [
         // return view('karyawan.edit-old', [
             'data' => $data,
@@ -793,56 +797,53 @@ class KaryawanController extends Controller
                 ]);
             }
             if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
-
                 // dokumen karyawan
-                try {
-                    $id_karyawan = KaryawanModel::find($id)->id;
+                $id_karyawan = KaryawanModel::find($id)->id;
 
-                    if ($request->has('foto_diri')) {
-                        $foto_diri = $request->file('foto_diri');
-                        $fileNameNasabah = $foto_diri->getClientOriginalName();
-                        $filePath = public_path() . '/upload/' . '/dokumen/'  . $id_karyawan ;
-                        if (!File::isDirectory($filePath)) {
-                            File::makeDirectory($filePath, 493, true);
-                        }
-                        $foto_diri->move($filePath, $fileNameNasabah);
+                if ($request->has('foto_diri')) {
+                    $foto_diri = $request->file('foto_diri');
+                    $fileNameNasabah = $foto_diri->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . '/dokumen/'  . $id_karyawan ;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
                     }
-                    if ($request->has('foto_ktp')) {
-                        $foto_ktp = $request->file('foto_ktp');
-                        $fileNameNasabah = $foto_ktp->getClientOriginalName();
-                        $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan ;
-                        if (!File::isDirectory($filePath)) {
-                            File::makeDirectory($filePath, 493, true);
-                        }
-                        $foto_ktp->move($filePath, $fileNameNasabah);
+                    $foto_diri->move($filePath, $fileNameNasabah);
+                }
+                if ($request->has('foto_ktp')) {
+                    $foto_ktp = $request->file('foto_ktp');
+                    $fileNameNasabah = $foto_ktp->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan ;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
                     }
-                    if ($request->has('foto_kk')) {
-                        $foto_kk = $request->file('foto_kk');
-                        $fileNameNasabah = $foto_kk->getClientOriginalName();
-                        $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan ;
-                        if (!File::isDirectory($filePath)) {
-                            File::makeDirectory($filePath, 493, true);
-                        }
-                        $foto_kk->move($filePath, $fileNameNasabah);
+                    $foto_ktp->move($filePath, $fileNameNasabah);
+                }
+                if ($request->has('foto_kk')) {
+                    $foto_kk = $request->file('foto_kk');
+                    $fileNameNasabah = $foto_kk->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan ;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
                     }
+                    $foto_kk->move($filePath, $fileNameNasabah);
+                }
 
+                // update dokumen
+                $doks = DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->first();
 
+                $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : ($doks->foto_diri ?? null);
+                $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : ($doks->foto_ktp ?? null);
+                $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : ($doks->foto_kk ?? null);
 
-                    // update dokumen
-                    $doks = DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->first();
-
-                    $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : $doks->foto_diri;
-                    $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : $doks->foto_ktp;
-                    $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : $doks->foto_kk;
-
-                    if ($doks) {
-                        DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->update([
-                            'foto_diri' => $ft_diri,
-                            'foto_ktp' => $ft_ktp,
-                            'foto_kk' => $ft_kk,
-                            'updated_at' => now()
-                        ]);
-                    } else {
+                if ($doks) {
+                    DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->update([
+                        'foto_diri' => $ft_diri,
+                        'foto_ktp' => $ft_ktp,
+                        'foto_kk' => $ft_kk,
+                        'updated_at' => now()
+                    ]);
+                } else {
+                    if ($ft_diri) {
                         DB::table('dokumen_karyawan')->insert([
                             'karyawan_id' =>  $id_karyawan,
                             'foto_diri' => $ft_diri,
@@ -851,15 +852,6 @@ class KaryawanController extends Controller
                             'created_at' => now()
                         ]);
                     }
-                    DB::commit();
-                } catch (Exception $e) {
-                    DB::rollBack();
-                    Alert::error('Tejadi kesalahan', $e->getMessage());
-                    return redirect()->back();
-                } catch (QueryException $e) {
-                    DB::rollBack();
-                    Alert::error('Tejadi kesalahan', $e->getMessage());
-                    return redirect()->back();
                 }
 
                 $idTkDeleted = explode(',', $request->get('idTkDeleted'));
@@ -982,6 +974,8 @@ class KaryawanController extends Controller
 
                 if($request->idAnakDeleted != null) {
                     $idAnakDeleted = explode(',', $request->idAnakDeleted);
+                    $idAnakDeleted = array_filter($idAnakDeleted);
+
                     DB::table('keluarga')
                         ->whereIn('id', $idAnakDeleted)
                         ->delete();
