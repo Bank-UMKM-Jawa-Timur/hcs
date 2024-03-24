@@ -120,8 +120,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Foto Karyawan</label>
-                                <input tor('nip') is-invalid @enderror  form-input" name="nip" id="nip" value="{{ old('nip') }}">
+                                <label for="">NIP</label>
+                                <input type="text" class="@error('nip') is-invalid @enderror form-input" name="nip" id="" value="{{ old('nip') }}">
                             </div>
                         </div>
                         <div class="col-md-6">
