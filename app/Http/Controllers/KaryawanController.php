@@ -852,6 +852,11 @@ class KaryawanController extends Controller
                             'created_at' => now()
                         ]);
                     }
+                    else {
+                        DB::rollBack();
+                        Alert::error('Terjadi Kesalahan', 'Harap unggah foto diri terlebih dahulu');
+                        return redirect()->back();
+                    }
                 }
 
                 $idTkDeleted = explode(',', $request->get('idTkDeleted'));

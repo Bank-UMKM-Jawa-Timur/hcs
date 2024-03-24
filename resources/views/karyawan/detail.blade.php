@@ -619,21 +619,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row ">
-                            <label class="w-2/4 mt-2">Foto Kartu Keluarga</label>
-                            <div class="w-full">
-                                @if($doks)
-                                    @if ($doks->foto_kk)
-                                        <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}" />
-                                    @else
-                                        <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
-                                    @endif
+                    @endforeach
+                    <div class="row ">
+                        <label class="w-2/4 mt-2">Foto Kartu Keluarga</label>
+                        <div class="w-full">
+                            @if($doks)
+                                @if ($doks->foto_kk)
+                                    <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}" />
                                 @else
                                     <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
                                 @endif
-                            </div>
+                            @else
+                                <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                            @endif
                         </div>
-                    @endforeach
+                    </div>
                 @endif
             @endif
             <hr>
