@@ -362,6 +362,7 @@ class KaryawanController extends Controller
             $request->validate([
                 'nip' => 'required',
                 'nik' => 'required',
+                'foto_diri ' => 'required|mimes:jpg,jpeg,png',
                 'nama' => 'required',
                 'tmp_lahir' => 'required',
                 'tgl_lahir' => 'required',
@@ -774,7 +775,6 @@ class KaryawanController extends Controller
             if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
                 $request->validate([
                     'nip' => 'required',
-                    'foto_diri ' => 'required|mimes:jpg,jpeg,png',
                     'nik' => 'required',
                     'nama' => 'required',
                     'tmp_lahir' => 'required',
@@ -826,13 +826,15 @@ class KaryawanController extends Controller
                         $foto_kk->move($filePath, $fileNameNasabah);
                     }
 
+
+
                     // update dokumen
-
-                    $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : null;
-                    $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : null;
-                    $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : null;
-
                     $doks = DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->first();
+
+                    $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : $doks->foto_diri;
+                    $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : $doks->foto_ktp;
+                    $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : $doks->foto_kk;
+
                     if ($doks) {
                         DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->update([
                             'foto_diri' => $ft_diri,
@@ -1048,8 +1050,6 @@ class KaryawanController extends Controller
                         ]);
                     }
                 }
-
-            return  ['item' => $item_id, 'item_lama' => $itemLamaId];
             DB::commit();
             Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
             return redirect()->route('karyawan.index');
