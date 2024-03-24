@@ -170,6 +170,7 @@
     $(".only-image").on('change', function() {
         if (!this.files[0].type.includes('image')) {
             $(this).val('')
+            $('.message-image').html('Hanya boleh memilih berkas berupa gambar(.jpg, .jpeg, .png, .webp)')
             $(this).parent().next().html('Hanya boleh memilih berkas berupa gambar(.jpg, .jpeg, .png, .webp)')
             $(this).parent().next().css({
                 "display": "block"

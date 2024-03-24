@@ -106,8 +106,22 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
+                                <label for="">Foto Karyawan</label>
+                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
+                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <label for="">Foto KTP</label>
+                                <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
+                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
                                 <label for="">NIP</label>
-                                <input type="text" class="@error('nip') is-invalid @enderror  form-input" name="nip" id="nip" value="{{ old('nip') }}">
+                                <input type="text" class="@error('nip') is-invalid @enderror form-input" name="nip" id="" value="{{ old('nip') }}">
                             </div>
                         </div>
                         <div class="col-md-6">

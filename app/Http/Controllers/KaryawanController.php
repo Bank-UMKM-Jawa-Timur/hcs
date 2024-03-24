@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\File;
 
 class KaryawanController extends Controller
 {
@@ -390,8 +391,9 @@ class KaryawanController extends Controller
             } else {
                 $entitas = $request->get('divisi');
             }
-            DB::table('mst_karyawan')
-                ->insert([
+
+            $id_karyawan = DB::table('mst_karyawan')
+                ->insertGetId([
                     'nip' => $request->get('nip'),
                     'nama_karyawan' => $request->get('nama'),
                     'nik' => $request->get('nik'),
@@ -424,6 +426,59 @@ class KaryawanController extends Controller
                     'npwp' => $request->get('npwp'),
                     'tgl_mulai' => $request->get('tgl_mulai')
                 ]);
+
+            try {
+                if ($request->has('foto_diri')) {
+                    $foto_diri = $request->file('foto_diri');
+                    $fileNameNasabah = $foto_diri->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . '/dokumen/'  . $id_karyawan;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+                    $foto_diri->move($filePath, $fileNameNasabah);
+                }
+                if ($request->has('foto_ktp')) {
+                    $foto_ktp = $request->file('foto_ktp');
+                    $fileNameNasabah = $foto_ktp->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+                    $foto_ktp->move($filePath, $fileNameNasabah);
+                }
+                if ($request->has('foto_kk')) {
+                    $foto_kk = $request->file('foto_kk');
+                    $fileNameNasabah = $foto_kk->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+                    $foto_kk->move($filePath, $fileNameNasabah);
+                }
+
+                // insert dokumen
+                $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : null;
+                $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : null;
+                $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : null;
+
+                DB::table('dokumen_karyawan')->insert([
+                    'karyawan_id' =>  $id_karyawan,
+                    'foto_diri' => $ft_diri,
+                    'foto_ktp' => $ft_ktp,
+                    'foto_kk' => $ft_kk,
+                    'created_at' => now()
+                ]);
+
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollBack();
+                Alert::error('Tejadi kesalahan saat upload file', $e->getMessage());
+                return redirect()->back();
+            } catch (QueryException $e) {
+                DB::rollBack();
+                Alert::error('Tejadi kesalahan saat upload file', $e->getMessage());
+                return redirect()->back();
+            }
 
             if ($request->get('status_pernikahan') == 'Kawin') {
                 DB::table('keluarga')
@@ -472,16 +527,15 @@ class KaryawanController extends Controller
                     'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')) ?? 0,
                     'created_at' => now()
                 ]);
-
             Alert::success('Berhasil', 'Berhasil menambah karyawan.');
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', $e);
+            Alert::error('Terjadi kesalahan', $e->getMessage());
             return redirect()->back();
         } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', $e);
+            Alert::error('Terjadi kesalahan', $e->getMessage());
             return redirect()->back();
         }
     }
@@ -686,9 +740,12 @@ class KaryawanController extends Controller
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
 
+        $id_karyawan = KaryawanModel::find($id)->id;
+        $dokumen = DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->first();
         return view('karyawan.edit', [
         // return view('karyawan.edit-old', [
             'data' => $data,
+            'dokumen' => $dokumen,
             'panggol' => $data_panggol,
             'is' => $data_is,
             'jabatan' => $data_jabatan,
@@ -717,6 +774,7 @@ class KaryawanController extends Controller
             if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
                 $request->validate([
                     'nip' => 'required',
+                    'foto_diri ' => 'required|mimes:jpg,jpeg,png',
                     'nik' => 'required',
                     'nama' => 'required',
                     'tmp_lahir' => 'required',
@@ -735,6 +793,73 @@ class KaryawanController extends Controller
                 ]);
             }
             if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan')) {
+
+                // dokumen karyawan
+                try {
+                    $id_karyawan = KaryawanModel::find($id)->id;
+
+                    if ($request->has('foto_diri')) {
+                        $foto_diri = $request->file('foto_diri');
+                        $fileNameNasabah = $foto_diri->getClientOriginalName();
+                        $filePath = public_path() . '/upload/' . '/dokumen/'  . $id_karyawan ;
+                        if (!File::isDirectory($filePath)) {
+                            File::makeDirectory($filePath, 493, true);
+                        }
+                        $foto_diri->move($filePath, $fileNameNasabah);
+                    }
+                    if ($request->has('foto_ktp')) {
+                        $foto_ktp = $request->file('foto_ktp');
+                        $fileNameNasabah = $foto_ktp->getClientOriginalName();
+                        $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan ;
+                        if (!File::isDirectory($filePath)) {
+                            File::makeDirectory($filePath, 493, true);
+                        }
+                        $foto_ktp->move($filePath, $fileNameNasabah);
+                    }
+                    if ($request->has('foto_kk')) {
+                        $foto_kk = $request->file('foto_kk');
+                        $fileNameNasabah = $foto_kk->getClientOriginalName();
+                        $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan ;
+                        if (!File::isDirectory($filePath)) {
+                            File::makeDirectory($filePath, 493, true);
+                        }
+                        $foto_kk->move($filePath, $fileNameNasabah);
+                    }
+
+                    // update dokumen
+
+                    $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : null;
+                    $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : null;
+                    $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : null;
+
+                    $doks = DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->first();
+                    if ($doks) {
+                        DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->update([
+                            'foto_diri' => $ft_diri,
+                            'foto_ktp' => $ft_ktp,
+                            'foto_kk' => $ft_kk,
+                            'updated_at' => now()
+                        ]);
+                    } else {
+                        DB::table('dokumen_karyawan')->insert([
+                            'karyawan_id' =>  $id_karyawan,
+                            'foto_diri' => $ft_diri,
+                            'foto_ktp' => $ft_ktp,
+                            'foto_kk' => $ft_kk,
+                            'created_at' => now()
+                        ]);
+                    }
+                    DB::commit();
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    Alert::error('Tejadi kesalahan', $e->getMessage());
+                    return redirect()->back();
+                } catch (QueryException $e) {
+                    DB::rollBack();
+                    Alert::error('Tejadi kesalahan', $e->getMessage());
+                    return redirect()->back();
+                }
+
                 $idTkDeleted = explode(',', $request->get('idTkDeleted'));
                 $idPotDeleted = explode(',', $request->get('idPotDeleted'));
                 if(count($idTkDeleted) > 0){
@@ -853,6 +978,13 @@ class KaryawanController extends Controller
                     }
                 }
 
+                if($request->idAnakDeleted != null) {
+                    $idAnakDeleted = explode(',', $request->idAnakDeleted);
+                    DB::table('keluarga')
+                        ->whereIn('id', $idAnakDeleted)
+                        ->delete();
+                }
+
                 // data tunjangan
                 $item_id = $request->id_tk;
                 $itemLamaId = DB::table('tunjangan_karyawan')->where('nip', $id)->pluck('id')->toArray();
@@ -917,7 +1049,7 @@ class KaryawanController extends Controller
                     }
                 }
 
-            // return  ['item' => $item_id, 'item_lama' => $itemLamaId];
+            return  ['item' => $item_id, 'item_lama' => $itemLamaId];
             DB::commit();
             Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
             return redirect()->route('karyawan.index');
