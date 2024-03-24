@@ -576,7 +576,7 @@ class KaryawanController extends Controller
         $pjs = PjsModel::where('nip', $id)
             ->get();
         $doks = DB::table('dokumen_karyawan')
-                ->where('karyawan_id', $id)
+                ->where('karyawan_id', $karyawan->id)
                 ->first();
 
 

@@ -132,7 +132,11 @@
                 <label class="w-2/4 mt-2">Foto Diri</label>
                 <div class="w-full">
                     @if($doks)
-                        <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}" />
+                        @if ($doks->foto_diri)
+                            <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}" />
+                        @else
+                            <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                        @endif
                     @else
                         <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
                     @endif
@@ -142,9 +146,13 @@
                 <label class="w-2/4 mt-2">Foto KTP</label>
                 <div class="w-full">
                     @if($doks)
-                        <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_ktp) }}" />
+                        @if ($doks->foto_ktp)
+                            <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_ktp) }}" />
+                        @else
+                            <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                        @endif
                     @else
-                        Berkas belum diunggah.
+                        <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
                     @endif
                 </div>
             </div>
@@ -615,9 +623,13 @@
                             <label class="w-2/4 mt-2">Foto Kartu Keluarga</label>
                             <div class="w-full">
                                 @if($doks)
-                                    <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}" />
+                                    @if ($doks->foto_kk)
+                                        <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}" />
+                                    @else
+                                        <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                                    @endif
                                 @else
-                                    Berkas belum diunggah.
+                                    <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
                                 @endif
                             </div>
                         </div>
