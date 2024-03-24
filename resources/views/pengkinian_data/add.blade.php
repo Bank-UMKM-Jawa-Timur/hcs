@@ -63,6 +63,8 @@
     <div class="body-pages">
         <form action="{{ route('pengkinian_data.store') }}" method="POST" enctype="multipart/form-data" name="karyawan" class="input-box">
             @csrf
+            <input type="hidden" name="idAnakDeleted" id="idAnakDeleted">
+            <input type="hidden" name="id_pasangan" id="id_pasangan">
             <div class="card tab-pane active" id="data-biodata">
                 <div class="head-card border-b pb-5">
                     <h2 class="font-bold text-lg">Biodata Diri</h2>
@@ -305,7 +307,10 @@
                     </div>
                     <div class="input-box col-md-6">
                         <label for="is_jumlah_anak">Jumlah Anak</label>
-                        <input type="number" placeholder="Masukkan jumlah anak" class="form-input" id="is_jml_anak" name="is_jml_anak" value="{{ old('is_jumlah_anak') }}">
+                        <input type="number" placeholder="Masukkan jumlah anak" class="form-input" id="is_jml_anak" name="is_jml_anak" value="{{ old('is_jumlah_anak') }}" readonly>
+                    </div>
+                    <div class="input-box">
+                        <button type="button" class="btn btn-success" id="add-row-anak"><i class="ti ti-plus"></i></button>
                     </div>
                     <div class="col-md-12 mt-3 col-span-full" id="row_anak">
                         <hr>
@@ -752,33 +757,37 @@
         var subdiv;
         var bag;
         var bagian;
+        var countAnak = 0;
+        var idAnakDeleted = []
 
-        $("#is_jml_anak").keyup(function(){
-            $("#row_anak").empty();
-            var angka = $(this).val()
-            if(angka > 2) angka = 2;
+        $("#add-row-anak").hide();
 
-            for(var i = 0; i < angka; i++){
-                var ket = (i == 0) ? 'Pertama' : 'Kedua';
-                $("#row_anak").append(`
-                <h6 class="">Data Anak `+ ket +`</h6>
-                <div class="grid grid-cols-3 gap-2">
-                    <div class="col-md-6 input-box">
-                        <label for="nama_anak">Nama Anak</label>
-                        <input type="text" class="form-input" name="nama_anak[]">
-                    </div>
-                    <div class="col-md-6 input-box">
-                        <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                        <input type="date" class="form-input" name="tgl_lahir_anak[]">
-                    </div>
-                    <div class="col-md-6 input-box">
-                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                        <input type="text" class="form-input" name="sk_tunjangan_anak[]">
-                    </div>
-                </div>
-            `);
-            }
-        })
+        // $("#is_jml_anak").keyup(function(){
+        //     $("#row_anak").empty();
+        //     var angka = $(this).val()
+        //     if(angka > 2) angka = 2;
+
+        //     for(var i = 0; i < angka; i++){
+        //         var ket = (i == 0) ? 'Pertama' : 'Kedua';
+        //         $("#row_anak").append(`
+        //         <h6 class="">Data Anak `+ ket +`</h6>
+        //         <div class="grid grid-cols-3 gap-2">
+        //             <div class="col-md-6 input-box">
+        //                 <label for="nama_anak">Nama Anak</label>
+        //                 <input type="text" class="form-input" name="nama_anak[]">
+        //             </div>
+        //             <div class="col-md-6 input-box">
+        //                 <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+        //                 <input type="date" class="form-input" name="tgl_lahir_anak[]">
+        //             </div>
+        //             <div class="col-md-6 input-box">
+        //                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
+        //                 <input type="text" class="form-input" name="sk_tunjangan_anak[]">
+        //             </div>
+        //         </div>
+        //     `);
+        //     }
+        // })
 
         $('#gj_pokok').keyup(function(){
             var angka = $(this).val();
@@ -1066,8 +1075,18 @@
                     $("#tgl_lahir").val(res.data.tgl_lahir)
                     $("#tgl_mulai").val(res.data.tgl_mulai)
                     $("#jabatan").val(res.data.kd_jabatan)
-                    getKantor()
+                    $('#id_pasangan').val('');
+                    $("#row_anak").empty()
+                    $('#is').val('');
+                    $('#is_nama').val('');
+                    $('#is_tgl_lahir').val('');
+                    $('#is_alamat').val('');
+                    $('#is_pekerjaan').val('');
+                    $('#sk_tunjangan_is').val('');
+                    $('#is_jml_anak').val('');
+                    countAnak = 0;
                     cekStatus()
+                    getKantor()
 
                     if(res.data_anak.length > 0){
                         dataJmlAnak = res.data_anak
@@ -1376,83 +1395,402 @@
             kantorChange();
         });
 
-        function cekStatus(){
-            if(status.val() == "Kawin"){
+        function cekStatus() {
+            if (status.val() == "Kawin") {
                 $('#data_is').show();
 
                 $.ajax({
                     type: "GET",
-                    url: "{{ route('getIs') }}?nip="+nip,
+                    url: "{{ route('getIs') }}?nip=" + nip,
                     datatype: "json",
-                    success: function(res){
-                        if(res == null){
-                        } else{
-                            if(res.is){
-                                $('#is').val(res.is.enum);
-                                $('#is_nama').val(res.is.nama);
-                                $('#is_tgl_lahir').val(res.is.tgl_lahir);
-                                $('#is_alamat').val(res.is.alamat);
-                                $('#is_pekerjaan').val(res.is.pekerjaan);
-                                $('#is_jml_anak').val(res.is.jml_anak);
-                                $('#sk_tunjangan_is').val(res.is.sk_tunjangan);
-                                $("#is_jml_anak").trigger('keyup')
+                    success: function(res) {
+                        if (res.anak.length == 0 && countAnak == 0) {
+                            $("#add-row-anak").show()
+                        }
+                        else if (res.anak.length == 0 && countAnak > 0) {
+                            for(var i = 0; i < countAnak; i++){
+                                var ket = i+1;
+                                $("#row_anak").append(`
+                                    <div id="anak-${i}">
+                                        <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                                        <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
+                                            <input type="hidden" name="id_anak[]" value="">
+                                            <div class="col-md-6 input-box">
+                                                <label for="nama_anak">Nama Anak</label>
+                                                <input type="text" class="form-input" name="nama_anak[]" value="">
+                                            </div>
+                                            <div class="col-md-6 input-box">
+                                                <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
+                                            </div>
+                                            <div class="col-md-6 input-box">
+                                                <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button class="btn btn-success btn-add-anak" type="button">
+                                                    <i class="ti ti-plus"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="">
+                                                    <i class="ti ti-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>    
+                                    </div>
+                                `);
+                            }
+                        } else {
+                            $('#id_pasangan').val(res.is.id);
+                            $('#is').val(res.is.enum);
+                            $('#is_nama').val(res.is.nama);
+                            $('#is_tgl_lahir').val(res.is.tgl_lahir);
+                            $('#is_alamat').val(res.is.alamat);
+                            $('#is_pekerjaan').val(res.is.pekerjaan);
+                            $('#sk_tunjangan_is').val(res.is.sk_tunjangan);
+                            $('#is_jml_anak').val(res.is.jml_anak);
+
+                            $("#row_anak").empty();
+                            var angka = res.is.jml_anak
+                            var jmlAnak = $("#is_jml_anak").val()
+                            var selisihAnak = jmlAnak - angka
+                            angka = angka + selisihAnak
+                            countAnak = angka
+
+                            for (var i = 0; i < angka; i++) {
+                                var ket = i+1;
+                                var isDisabled = i > 1 ? 'readonly' : '';
+
+                                if(res.anak[i]) {
+                                    $("#row_anak").append(`
+                                        <div id="anak-${res.anak[i].id}">
+                                            <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                                            <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
+                                                <input type="hidden" name="id_anak[]" value="${res.anak[i].id}">
+                                                <div class="col-md-6 input-box">
+                                                    <label for="nama_anak">Nama Anak</label>
+                                                    <input type="text" class="form-input" name="nama_anak[]" value="${res.anak[i].nama ?? ''}">
+                                                </div>
+                                                <div class="col-md-6 input-box">
+                                                    <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                    <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${res.anak[i].tgl_lahir}">
+                                                </div>
+                                                <div class="col-md-6 input-box">
+                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                    <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-' }" ${isDisabled}>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-success btn-add-anak" type="button">
+                                                        <i class="ti ti-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="${res.anak[i].id}">
+                                                        <i class="ti ti-minus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>    
+                                        </div>
+                                    `);
+                                } else {
+                                    $("#row_anak").append(`
+                                        <div id="anak-${i}">
+                                            <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                                            <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
+                                                <input type="hidden" name="id_anak[]" value="">
+                                                <div class="col-md-6 input-box">
+                                                    <label for="nama_anak">Nama Anak</label>
+                                                    <input type="text" class="form-input" name="nama_anak[]" value="">
+                                                </div>
+                                                <div class="col-md-6 input-box">
+                                                    <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                    <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
+                                                </div>
+                                                <div class="col-md-6 input-box">
+                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                    <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="" ${isDisabled}>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-success btn-add-anak" type="button">
+                                                        <i class="ti ti-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="">
+                                                        <i class="ti ti-minus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>    
+                                        </div>
+                                    `);
+                                }
                             }
                         }
                     }
                 })
-            }else{
+            } else {
                 $('#data_is').hide();
             }
         }
 
-        $("#is_jml_anak").keyup(function(){
+        function cekStatusChange() {
+            if (status.val() == "Kawin") {
+                $('#data_is').show();
+
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('getIs') }}?nip=" + nip,
+                    datatype: "json",
+                    success: function(res) {
+                        if (res.anak.length == 0 && countAnak > 0) {
+                            for(var i = 0; i < countAnak; i++){
+                                var ket = i+1;
+                                $("#row_anak").append(`
+                                    <div id="anak-${i}">
+                                        <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                                        <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
+                                            <input type="hidden" name="id_anak[]" value="">
+                                            <div class="col-md-6 input-box">
+                                                <label for="nama_anak">Nama Anak</label>
+                                                <input type="text" class="form-input" name="nama_anak[]" value="">
+                                            </div>
+                                            <div class="col-md-6 input-box">
+                                                <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
+                                            </div>
+                                            <div class="col-md-6 input-box">
+                                                <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button class="btn btn-success btn-add-anak" type="button">
+                                                    <i class="ti ti-plus"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="">
+                                                    <i class="ti ti-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>    
+                                    </div>
+                                `);
+                            }
+                        } else {
+                            $('#id_pasangan').val(res.is.id);
+                            $('#is').val(res.is.enum);
+                            $('#is_nama').val(res.is.nama);
+                            $('#is_tgl_lahir').val(res.is.tgl_lahir);
+                            $('#is_alamat').val(res.is.alamat);
+                            $('#is_pekerjaan').val(res.is.pekerjaan);
+                            $('#sk_tunjangan_is').val(res.is.sk_tunjangan);
+
+                            $("#row_anak").empty();
+                            var angka = res.is.jml_anak
+                            var jmlAnak = countAnak
+                            var selisihAnak = jmlAnak - angka
+                            angka = angka + selisihAnak
+
+                            for (var i = 0; i < angka; i++) {
+                                var ket = i+1;
+                                var isDisabled = i > 1 ? 'readonly' : '';
+
+                                if(res.anak[i]) {
+                                    $("#row_anak").append(`
+                                        <div id="anak-${res.anak[i].id}">
+                                            <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                                            <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
+                                                <input type="hidden" name="id_anak[]" value="${res.anak[i].id}">
+                                                <div class="col-md-6 input-box">
+                                                    <label for="nama_anak">Nama Anak</label>
+                                                    <input type="text" class="form-input" name="nama_anak[]" value="${res.anak[i].nama ?? ''}">
+                                                </div>
+                                                <div class="col-md-6 input-box">
+                                                    <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                    <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${res.anak[i].tgl_lahir}">
+                                                </div>
+                                                <div class="col-md-6 input-box">
+                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                    <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-' }" ${isDisabled}>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-success btn-add-anak" type="button">
+                                                        <i class="ti ti-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="${res.anak[i].id}">
+                                                        <i class="ti ti-minus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>    
+                                        </div>
+                                    `);
+                                } else {
+                                    $("#row_anak").append(`
+                                        <div id="anak-${i}">
+                                            <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                                            <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
+                                                <input type="hidden" name="id_anak[]" value="">
+                                                <div class="col-md-6 input-box">
+                                                    <label for="nama_anak">Nama Anak</label>
+                                                    <input type="text" class="form-input" name="nama_anak[]" value="">
+                                                </div>
+                                                <div class="col-md-6 input-box">
+                                                    <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                    <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
+                                                </div>
+                                                <div class="col-md-6 input-box">
+                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                    <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="" ${isDisabled}>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-success btn-add-anak" type="button">
+                                                        <i class="ti ti-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="">
+                                                        <i class="ti ti-minus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>    
+                                        </div>
+                                    `);
+                                }
+                            }
+                        }
+                    }
+                })
+            } else {
+                $('#data_is').hide();
+            }
+        }
+
+        $("#is_jml_anak").change(function() {
             $("#row_anak").empty();
             var angka = $(this).val()
-            if(angka > 2) angka = 2;
 
-            for(var i = 0; i < angka; i++){
-                var ket = (i == 0) ? 'Pertama' : 'Kedua';
-                if(dataJmlAnak.length > 0){
-                    $("#row_anak").append(`
-                        <h6 class="font-bold">Data Anak `+ ket +`</h6>
-                        <div class="grid grid-cols-3 gap-2">
-                            <input type="hidden" name="id_anak[]" value="${dataJmlAnak[i].id}">
-                            <div class="col-md-6 input-box">
-                                <label for="nama_anak">Nama Anak</label>
-                                <input type="text" class="form-input" name="nama_anak[]" value="${dataJmlAnak[i].nama}">
-                            </div>
-                            <div class="col-md-6 input-box">
-                                <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${dataJmlAnak[i].tgl_lahir}">
-                            </div>
-                            <div class="col-md-6 input-box">
-                                <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="${dataJmlAnak[i].sk_tunjangan}">
-                            </div>
-                        </div>
-                    `);
-                } else {
-                    $("#row_anak").append(`
-                        <h6 class="">Data Anak `+ ket +`</h6>
-                        <div class="grid grid-cols-3 gap-2">
-                            <input type="hidden" name="id_anak[]" value="">
-                            <div class="col-md-6 input-box">
-                                <label for="nama_anak">Nama Anak</label>
-                                <input type="text" class="form-input" name="nama_anak[]">
-                            </div>
-                            <div class="col-md-6 input-box">
-                                <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                <input type="date" class="form-input" name="tgl_lahir_anak[]">
-                            </div>
-                            <div class="col-md-6 input-box">
-                                <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                <input type="text" class="form-input" name="sk_tunjangan_anak[]">
-                            </div>
-                        </div>
-                    `);
-                }
-            }
+            cekStatusChange()
+            // for (var i = 0; i < angka; i++) {
+            //     var isDisabled = i > 1 ? 'readonly' : '';
+            //     $("#row_anak").append(`
+            //     <h6 class="font-bold text-lg mb-5">Data Anak ` + (i+1) + `</h6>
+            //     <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+            //         <input type="hidden" name="id_anak[]" value="">
+            //         <div class="col-md-6 input-box">
+            //             <label for="nama_anak">Nama Anak</label>
+            //             <input type="text" class="form-input" name="nama_anak[]">
+            //         </div>
+            //         <div class="col-md-6 input-box">
+            //             <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+            //             <input type="date" class="form-input" name="tgl_lahir_anak[]">
+            //         </div>
+            //         <div class="col-md-6 input-box">
+            //             <label for="sk_tunjangan_anak">SK Tunjangan</label>
+            //             <input type="text" class="form-input" name="sk_tunjangan_anak[]" ${isDisabled}>
+            //         </div>
+            //     </div>
+            // `);
+            // }
         })
+
+        
+
+        $("#row_anak").on("click", '.btn-add-anak', function(){
+            $(".preloader").removeAttr('style');
+            countAnak++;
+            var angka = countAnak;
+            var isDisabled = countAnak > 2 ? 'disabled' : '';
+            $("#row_anak").append(`
+                <div id="anak-${angka}">
+                    <h6 class="font-bold text-lg mb-5">Data Anak ` + angka + `</h6>
+                    <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${angka}">
+                        <input type="hidden" name="id_anak[]" value="">
+                        <div class="col-md-6 input-box">
+                            <label for="nama_anak">Nama Anak</label>
+                            <input type="text" class="form-input" name="nama_anak[]" value="">
+                        </div>
+                        <div class="col-md-6 input-box">
+                            <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                            <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
+                        </div>
+                        <div class="col-md-6 input-box">
+                            <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                            <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="" ${isDisabled}>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-success btn-add-anak" type="button" id="btn-add">
+                                <i class="ti ti-plus"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${angka}" data-id-anak="" id="btn-delete-tunjangan">
+                                <i class="ti ti-minus"></i>
+                            </button>
+                        </div>
+                    </div>    
+                </div>
+            `);
+
+            $("#is_jml_anak").val(countAnak);
+            $("#is_jml_anak").trigger('change');
+            $(".preloader").hide()
+        })
+
+        $("#row_anak").on("click", '.btn-remove-anak', function(){
+            var parent = $(this).data('parent-anak');
+            var parents = `anak-${parent}`
+            var idDeleted = $(this).data('id-anak');
+            if (idDeleted != '' || idDeleted != null) {
+                idAnakDeleted.push(idDeleted)
+                $("#idAnakDeleted").val(idAnakDeleted)
+            }
+
+            $(`${parents}`).remove()
+            countAnak--;
+            $("#is_jml_anak").val(countAnak);
+            $("#is_jml_anak").trigger('change');
+        })
+
+        $("#add-row-anak").on("click", function() {
+            $("#row_anak").append(`
+                <div id="anak-1">
+                    <h6 class="font-bold text-lg mb-5">Data Anak 1</h6>
+                    <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="1">
+                        <input type="hidden" name="id_anak[]" value="">
+                        <div class="col-md-6 input-box">
+                            <label for="nama_anak">Nama Anak</label>
+                            <input type="text" class="form-input" name="nama_anak[]" value="">
+                        </div>
+                        <div class="col-md-6 input-box">
+                            <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                            <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
+                        </div>
+                        <div class="col-md-6 input-box">
+                            <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                            <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="">
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-success btn-add-anak" type="button">
+                                <i class="ti ti-plus"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="1" data-id-anak="">
+                                <i class="ti ti-minus"></i>
+                            </button>
+                        </div>
+                    </div>    
+                </div>
+            `);
+
+            countAnak++
+            $("#is_jml_anak").val(countAnak)
+            $("#is_jml_anak").trigger("change")
+        })
+
         function updateBagianDirectly(divisi) {
             let kd_bagian = bagian;
 
