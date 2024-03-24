@@ -186,8 +186,9 @@ class KaryawanController extends Controller
             ->first();
         $data['anak'] = DB::table('keluarga')
             ->where('nip', $request->nip)
-            ->whereIn('enum', ['ANAK1', 'ANAK2', 'Anak'])
-            // ->orderBy('id', 'desc')
+            ->whereIn('enum', ['Anak'])
+            ->where('anak_ke', '<=', 2)
+            ->orderBy('id', 'desc')
             ->get();
         if (!isset($data)) {
             $data = null;
@@ -390,8 +391,9 @@ class KaryawanController extends Controller
             } else {
                 $entitas = $request->get('divisi');
             }
-            DB::table('mst_karyawan')
-                ->insert([
+
+            $id_karyawan = DB::table('mst_karyawan')
+                ->insertGetId([
                     'nip' => $request->get('nip'),
                     'nama_karyawan' => $request->get('nama'),
                     'nik' => $request->get('nik'),
@@ -425,6 +427,58 @@ class KaryawanController extends Controller
                     'tgl_mulai' => $request->get('tgl_mulai')
                 ]);
 
+            try {
+                if ($request->has('foto_diri')) {
+                    $foto_diri = $request->file('foto_diri');
+                    $fileNameNasabah = $foto_diri->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . '/dokumen/'  . $id_karyawan;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+                    $foto_diri->move($filePath, $fileNameNasabah);
+                }
+                if ($request->has('foto_ktp')) {
+                    $foto_ktp = $request->file('foto_ktp');
+                    $fileNameNasabah = $foto_ktp->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+                    $foto_ktp->move($filePath, $fileNameNasabah);
+                }
+                if ($request->has('foto_kk')) {
+                    $foto_kk = $request->file('foto_kk');
+                    $fileNameNasabah = $foto_kk->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+                    $foto_kk->move($filePath, $fileNameNasabah);
+                }
+
+                // insert dokumen
+                $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : null;
+                $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : null;
+                $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : null;
+
+                DB::table('dokumen_karyawan')->insert([
+                    'karyawan_id' =>  $id_karyawan,
+                    'foto_diri' => $ft_diri,
+                    'foto_ktp' => $ft_ktp,
+                    'foto_kk' => $ft_kk,
+                    'created_at' => now()
+                ]);
+
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollBack();
+                Alert::error('Tejadi kesalahan saat upload file', $e->getMessage());
+                return redirect()->back();
+            } catch (QueryException $e) {
+                DB::rollBack();
+                Alert::error('Tejadi kesalahan saat upload file', $e->getMessage());
+                return redirect()->back();
+            }
 
             if ($request->get('status_pernikahan') == 'Kawin') {
                 DB::table('keluarga')
@@ -444,7 +498,8 @@ class KaryawanController extends Controller
                     foreach ($request->get('nama_anak') as $key => $item) {
                         DB::table('keluarga')
                             ->insert([
-                                'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+                                'enum' => 'Anak',
+                                'anak_ke' => $key + 1,
                                 'nama' => $item,
                                 'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
                                 'nip' => $request->get('nip'),
@@ -472,16 +527,15 @@ class KaryawanController extends Controller
                     'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')) ?? 0,
                     'created_at' => now()
                 ]);
-
             Alert::success('Berhasil', 'Berhasil menambah karyawan.');
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', $e);
+            Alert::error('Terjadi kesalahan', $e->getMessage());
             return redirect()->back();
         } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', $e);
+            Alert::error('Terjadi kesalahan', $e->getMessage());
             return redirect()->back();
         }
     }
@@ -505,7 +559,8 @@ class KaryawanController extends Controller
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $karyawan->nip)
-            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->whereIn('enum', ['Anak'])
+            ->where('anak_ke', '<=', 2)
             ->get();
         $karyawan->tunjangan = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
@@ -673,7 +728,8 @@ class KaryawanController extends Controller
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $id)
-            ->whereIn('enum', ['ANAK1', 'ANAK2', 'Anak'])
+            ->whereIn('enum', ['Anak'])
+            ->where('anak_ke', '<=', 2)
             ->get();
         $data_panggol = DB::table('mst_pangkat_golongan')
             ->get();
@@ -900,6 +956,7 @@ class KaryawanController extends Controller
                                     ->where('id', $request->get('id_anak')[$key])
                                     ->update([
                                         'nama' => $item,
+                                        'anak_ke' => $key + 1,
                                         'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
                                         'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
                                         'nip' => $request->get('nip'),
@@ -909,6 +966,7 @@ class KaryawanController extends Controller
                                 DB::table('keluarga')
                                     ->insert([
                                         'enum' => 'Anak',
+                                        'anak_ke' => $key + 1,
                                         'nama' => $item,
                                         'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
                                         'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key],
@@ -991,7 +1049,7 @@ class KaryawanController extends Controller
                     }
                 }
 
-            // return  ['item' => $item_id, 'item_lama' => $itemLamaId];
+            return  ['item' => $item_id, 'item_lama' => $itemLamaId];
             DB::commit();
             Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
             return redirect()->route('karyawan.index');
@@ -1227,7 +1285,8 @@ class KaryawanController extends Controller
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $karyawan->nip)
-            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->whereIn('enum', ['Anak'])
+            ->where('anak_ke', '<=', 2)
             ->get();
         $karyawan->tunjangan = DB::table('tunjangan_karyawan')
             ->where('nip', $id)

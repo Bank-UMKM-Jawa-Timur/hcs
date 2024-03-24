@@ -120,8 +120,8 @@
                                     @endif
                                 </div>
                                 <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
-                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
                             </div>
+                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
@@ -138,8 +138,8 @@
                                     @endif
                                 </div>
                                 <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
-                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
                             </div>
+                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
@@ -461,8 +461,8 @@
                                     @endif
                                 </div>
                                 <input type="file" name="foto_kk" class="form-input only-image" id="foto_kk" accept="image/png, image/gif, image/jpeg">
-                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
                             </div>
+                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">

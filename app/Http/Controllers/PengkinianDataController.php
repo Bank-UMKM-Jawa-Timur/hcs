@@ -378,7 +378,8 @@ class PengkinianDataController extends Controller
             ->first();
         $data_anak = DB::table('history_pengkinian_data_keluarga')
             ->where('nip', $karyawan->nip)
-            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->whereIn('enum', ['Anak'])
+            ->where('anak_ke', '<=', 2)
             ->get();
         $karyawan->tunjangan = DB::table('history_pengkinian_tunjangan_karyawan')
             ->where('nip', $id)
@@ -546,7 +547,8 @@ class PengkinianDataController extends Controller
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $nip)
-            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->whereIn('enum', ['Anak'])
+            ->where('anak_ke', '<=', 2)
             ->get();
 
         return response()->json([
