@@ -112,28 +112,26 @@
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">NIP</label>
-                                <input type="text" class="@error('nip') is-invalid @enderror  form-input" name="nip"
-                                       id="nip" value="{{ old('nip', $data->nip) }}">
+                                <input type="text" class="@error('nip') is-invalid @enderror  form-input {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}" name="nip" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}} id="nip" value="{{ old('nip', $data->nip) }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">NIK</label>
-                                <input type="text" class="@error('nik') is-invalid @enderror form-input" name="nik"
-                                       id="" value="{{ old('nik', $data->nik) }}">
+                                <input type="text" class="@error('nik') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}" name="nik" id="" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}} value="{{ old('nik', $data->nik) }}">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">Nama Karyawan</label>
-                                <input type="text" class="@error('nama') is-invalid @enderror form-input textOnly"
+                                <input type="text" class="@error('nama') is-invalid @enderror form-input"
                                        name="nama" id="" value="{{ old('nama', $data->nama_karyawan) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
                                 <label for="">Tempat Lahir</label>
-                                <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-input textOnly"
+                                <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-input"
                                        name="tmp_lahir" id="" value="{{ old('tmp_lahir', $data->tmp_lahir) }}">
                             </div>
                         </div>
@@ -468,9 +466,25 @@
                             </div>
                             <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
+                        <div class="col-md-4">
+                            <div class="input-box">
+                                <div class="d-flex">
+                                    <label for="foto_buku_nikah">Foto Buku Nikah <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
+                                    @if ($dokumen)
+                                        @if ($dokumen->foto_buku_nikah)
+                                            <a href="javascript:void(0)" class="ms-3 dokument"
+                                               data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                               data-tittle="Foto Buku Nikah"
+                                               data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_buku_nikah) }}"
+                                            >Preview</a>
+                                        @endif
+                                    @endif
+                                </div>
+                                <input type="file" name="foto_buku_nikah" class="form-input only-image" id="foto_buku_nikah" accept="image/png, image/jpeg, image/jpg, image/webp">
+                            </div>
+                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
+                        </div>
                     </div>
-                    {{-- @if ($data->status)
-                        @if ($data->status != "Belum Kawin" && $data->status != "Tidak Diketahui") --}}
                             <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 {{$data->status != "Belum Kawin" && $data->status != "Tidak Diketahui" && $data->status != "" ? '' : 'hidden'}}" id="parent-family">
                                 {{-- data pasangan --}}
                                 <div class="col-md-4 pasangan">
@@ -577,8 +591,6 @@
                                     </div>
                                 </div>
                             </div>
-                        {{-- @endif
-                    @endif --}}
                 </div>
                 @if(auth()->user()->hasRole('cabang'))
                     <div class="card tab-pane space-y-5" id="potongan">
@@ -1489,7 +1501,7 @@
             }
         })
 
-        $(".textOnly").keydown(function(event) {
+        $("").keydown(function(event) {
             var inputValue = event.which;
             // allow letters and whitespaces only.
             if (!(inputValue >= 65 && inputValue <= 120) && (inputValue != 32 && inputValue != 0)) {
