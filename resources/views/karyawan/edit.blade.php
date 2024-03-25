@@ -543,23 +543,26 @@
                                                                 value="{{ $item->tgl_lahir }}">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <div class="input-box">
-                                                            <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                            <div class="flex gap-3">
-                                                                <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak @if(count($data_anak) > 2 && !$item->sk_tunjangan) form-input-disabled @endif" name="sk_tunjangan_anak[]"
-                                                                    value="{{ $item->sk_tunjangan }}" @if(count($data_anak) > 2 && !$item->sk_tunjangan) readonly @endif">
-                                                                <div>
-                                                                    <button class="btn btn-success btn-add-anak" type="button">
-                                                                        <i class="ti ti-plus"></i>
-                                                                    </button>
-                                                                </div>
-                                                                <div>
-                                                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="{{ $key }}" data-id-anak="{{ $item->id }}">
-                                                                        <i class="ti ti-minus"></i>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="input-box">
+                                                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                        <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak @if(count($data_anak) > 2 && !$item->sk_tunjangan) form-input-disabled @endif" name="sk_tunjangan_anak[]"
+                                                               value="{{ $item->sk_tunjangan }}" @if(count($data_anak) > 2 && !$item->sk_tunjangan) readonly @endif">
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="flex items-center mt-7 gap-3">
+                                                        <div>
+                                                            <button class="btn btn-success btn-add-anak" type="button">
+                                                                <i class="ti ti-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div>
+                                                            <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="{{ $key }}" data-id-anak="{{ $item->id }}">
+                                                                <i class="ti ti-minus"></i>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
