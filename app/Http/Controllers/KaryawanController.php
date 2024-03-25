@@ -914,9 +914,9 @@ class KaryawanController extends Controller
                     }
                 }
                 elseif ($status_pernikahan == 'Cerai' || $status_pernikahan == 'Cerai Mati' ) {
-                    $dataKeluarga = DB::table('keluarga')->where('nip', $request->get('nip'))->where('enum', 'Istri')->first();
+                    $dataKeluarga = DB::table('keluarga')->where('nip', $request->get('nip'))->where('enum', '!=', 'Anak')->first();
                     if ($dataKeluarga) {
-                        DB::table('keluarga')->where('nip', $request->get('nip'))->where('enum', 'Istri')->delete();
+                        DB::table('keluarga')->where('nip', $request->get('nip'))->where('enum', '!=','Anak')->delete();
                     }
                 } else {
                     if ($request->get('id_pasangan') == null) {
