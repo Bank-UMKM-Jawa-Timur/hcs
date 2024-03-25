@@ -55,7 +55,7 @@
                     <div
                         class="tab-menu relative after:absolute after:inset-x-0 after:top-1/2 after:block after:h-0.5 after:-translate-y-1/2 after:rounded-lg after:bg-gray-100">
                         <ol class="relative z-10 flex justify-between text-sm font-medium text-gray-500">
-                            <li class="flex items-center gap-2 bg-white p-2 tab-btn active cursor-pointer" data-tab="biodata">
+                            <li class="flex items-center gap-2 bg-white p-2 tab-btn active cursor-pointer" data-tab="biodata" data-current="0">
                                 <span class="count-circle h-6 w-6 rounded-full text-white text-center text-[10px]/6 font-bold">
                                     1
                                 </span>
@@ -63,7 +63,7 @@
                                 <span class="hidden sm:block"> Biodata Karyawan </span>
                             </li>
 
-                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="data-karyawan">
+                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="data-karyawan" data-current="1">
                                 <span class="count-circle h-6 w-6 rounded-full text-center text-[10px]/6 font-bold text-white">
                                     2
                                 </span>
@@ -71,14 +71,14 @@
                                 <span class="hidden sm:block"> Data Karyawan </span>
                             </li>
 
-                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="keluarga">
+                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="keluarga" data-current="2">
                                 <span class="count-circle h-6 w-6 rounded-full  text-white text-center text-[10px]/6 font-bold">
                                     3
                                 </span>
 
                                 <span class="hidden sm:block"> Data Keluarga</span>
                             </li>
-                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="{{ auth()->user()->hasRole('cabang') ? 'potongan' : 'tunjangan' }}">
+                            <li class="flex items-center gap-2 bg-white p-2 tab-btn cursor-pointer" data-tab="{{ auth()->user()->hasRole('cabang') ? 'potongan' : 'tunjangan' }}" data-current="3">
                                 <span class="count-circle h-6 w-6 rounded-full  text-white text-center text-[10px]/6 font-bold">
                                     4
                                 </span>
@@ -728,7 +728,7 @@
                 @can('manajemen karyawan - data karyawan - edit karyawan')
                     <div class="flex gap-5">
                         <button class="btn btn-light prev-btn hidden" type="button"><i class="ti ti-arrow-left"></i><span
-                                class="lg:block hidden">Form Sebelumnyaa</span></button>
+                                class="lg:block hidden">Form Sebelumnya</span></button>
                         <button class="btn btn-secondary next-btn" type="button"><span class="lg:block hidden">Form
                                 Selanjutnya</span><i class="ti ti-arrow-right"></i></button>
                     </div>
@@ -820,10 +820,12 @@
 
         $('.tab-btn').on('click', function() {
             var tabId = $(this).data('tab');
+            var current = $(this).data("current");
             $('.tab-pane').removeClass('active');
             $('#' + tabId).addClass('active');
             $('.tab-btn').removeClass('active');
             $(this).addClass('active');
+            currentTab = current;
             toggleButtons();
         });
 
