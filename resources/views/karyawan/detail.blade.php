@@ -121,12 +121,15 @@
                         <input type="text" disabled class="form-input-disabled" value="{{ $alamatSek }}">
                     </div>
                 </div>
+
+            </div>
+            <div class="grid lg:grid-cols-2 md:grid-cols-2 gap-5 grid-cols-1">
                 <div class="row ">
                     <label class="w-2/4 mt-2">Foto Diri</label>
                     <div class="w-full">
                         @if($doks)
                             @if ($doks->foto_diri)
-                                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}" />
+                                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}"  class="max-h-60 max-w-60" />
                             @else
                                 <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
                             @endif
@@ -140,7 +143,7 @@
                 <div class="w-full">
                     @if($doks)
                         @if ($doks->foto_ktp)
-                            <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_ktp) }}" />
+                            <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_ktp) }}"  class="max-h-60 max-w-60" />
                         @else
                             <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
                         @endif
@@ -409,6 +412,7 @@
                         </div>
                     </div>
                 @endif
+                <div class="grid lg:grid-cols-2 md:grid-cols-2 gap-5 grid-cols-1">
                 @if ($potongan->kredit_koperasi)
                     @if ($potongan->kredit_koperasi > 0)
                         <div class="row ">
@@ -458,7 +462,6 @@
                         $iuran_ik = $potongan->iuran_ik;
                         $total_potongan = $kredit_koperasi + $iuran_koperasi + $kredit_pegawai + $iuran_ik;
                     @endphp
-                    <br>
                     <div class="row ">
                         <label class="w-2/4 mt-0">Total Potongan</label>
                         <div class="w-full">
@@ -466,6 +469,7 @@
                         </div>
                     </div>
                 @endif
+                </div>
             @endif
 
             @if ($karyawan->status == 'Kawin' && $suis != null)
@@ -475,7 +479,7 @@
                         <h6 class="row-title">Data Keluarga</h6>
                     </div>
                 </div>
-                <div class="">
+                <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-5 grid-cols-1">
                     <div class="col-lg-12 mt-2">
                         <div class="row">
                             <div class="w-2/4">
@@ -635,7 +639,7 @@
                     <div class="w-full">
                         @if($doks)
                             @if ($doks->foto_kk)
-                                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}" />
+                                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}"   class="w-full max-w-3xl border"/>
                             @else
                                 <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
                             @endif

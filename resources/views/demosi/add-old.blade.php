@@ -212,7 +212,7 @@
                     <div class="custom-file col-md-12">
                         <input type="file" name="file_sk" class="custom-file-input" id="validatedCustomFile" accept=".pdf">
                         <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file(.pdf) ...</label>
-                    </div>  
+                    </div>  `
                     @error('file_sk')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -243,7 +243,7 @@
             })
         }
     })
-    
+
     document.querySelector('.custom-file-input').addEventListener('change', function (e) {
             var name = document.getElementById("validatedCustomFile").files[0].name;
             var ext = name.match(/\.([^\.]+)$/)[1];
@@ -414,7 +414,7 @@ $('#nip').select2({
                         $('#kantor_lama').val("Pusat");
                         if(data.karyawan.entitas.subDiv != null){
                             jabatan = " " + data.karyawan.entitas.subDiv.nama_subdivisi
-                        }  
+                        }
                         if(data.karyawan.entitas.div != null && data.karyawan.entitas.subDiv == null){
                             jabatan = " " + data.karyawan.entitas.div.nama_divisi
                         }
