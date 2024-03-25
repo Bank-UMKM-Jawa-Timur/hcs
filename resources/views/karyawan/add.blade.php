@@ -194,6 +194,20 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <label for="">Foto Karyawan</label>
+                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
+                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <label for="">Foto KTP</label>
+                                <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
+                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="grid grid-cols-1 gap-5">
                         <div class="col-md-12">

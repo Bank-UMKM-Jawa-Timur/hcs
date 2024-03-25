@@ -29,8 +29,8 @@
             }
         @endphp
         <div  class="space-y-5">
-            
-            
+
+
             <div class="row m-0">
                 <div class="col-lg-12">
                     <h6 class="row-title">Biodata Diri Karyawan</h6>
@@ -124,7 +124,34 @@
                     <input type="text" disabled class="form-input-disabled" value="{{ $alamatSek }}">
                 </div>
             </div>
-        </div>
+            <div class="row ">
+                <label class="w-2/4 mt-2">Foto Diri</label>
+                <div class="w-full">
+                    @if($doks)
+                        @if ($doks->foto_diri)
+                            <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}" />
+                        @else
+                            <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                        @endif
+                    @else
+                        <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                    @endif
+                </div>
+            </div>
+            <div class="row ">
+                <label class="w-2/4 mt-2">Foto KTP</label>
+                <div class="w-full">
+                    @if($doks)
+                        @if ($doks->foto_ktp)
+                            <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_ktp) }}" />
+                        @else
+                            <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                        @endif
+                    @else
+                        <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                    @endif
+                </div>
+            </div>
             <hr>
             <div class="row m-0">
                 <div class="col-lg-12">
@@ -349,7 +376,7 @@
             @if (isset($tj))
                <div class="grid lg:grid-cols-2 gap-5 grid-cols-1">
 
-            
+
                 @foreach ($tj as $item)
                     <div class="row row-tunjangan ">
                          <label class="w-2/4 font-bold"> <iconify-icon icon="uil:info-circle"></iconify-icon> {{ ($item->nama_tunjangan != 'DPP') ? 'Tunjangan ' . $no++ : 'Iuran'  }}</label>
@@ -604,6 +631,20 @@
                             </div>
                         </div>
                     @endforeach
+                    <div class="row ">
+                        <label class="w-2/4 mt-2">Foto Kartu Keluarga</label>
+                        <div class="w-full">
+                            @if($doks)
+                                @if ($doks->foto_kk)
+                                    <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}" />
+                                @else
+                                    <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                                @endif
+                            @else
+                                <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                            @endif
+                        </div>
+                    </div>
                 @endif
             @endif
             <hr>
