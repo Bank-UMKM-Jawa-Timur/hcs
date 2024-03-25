@@ -111,6 +111,42 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
+                                <div class="d-flex">
+                                    <label for="">Foto Diri <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
+                                    @if ($dokumen)
+                                        @if ($dokumen->foto_diri)
+                                            <a href="javascript:void(0)" class="ms-3 dokument"
+                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                                    data-tittle="Foto Karyawan"
+                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_diri) }}"
+                                            >Preview</a>
+                                        @endif
+                                    @endif
+                                </div>
+                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg, image/jpg, image/webp">
+                            </div>
+                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <div class="d-flex">
+                                    <label for="">Foto KTP <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
+                                    @if ($dokumen)
+                                        @if ($dokumen->foto_ktp)
+                                            <a href="javascript:void(0)" class="ms-3 dokument"
+                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                                    data-tittle="Foto KTP"
+                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_ktp) }}"
+                                            >Preview</a>
+                                        @endif
+                                    @endif
+                                </div>
+                                <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg, image/jpg, image/webp">
+                            </div>
+                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
                                 <label for="">NIP</label>
                                 <input type="text" class="@error('nip') is-invalid @enderror  form-input" name="nip"
                                     id="nip" value="{{ old('nip', $data->nip) }}">
@@ -453,7 +489,7 @@
                         <div class="col-md-4">
                             <div class="input-box">
                                 <div class="d-flex">
-                                    <label for="foto_kk">Foto KK</label>
+                                    <label for="foto_kk">Foto KK <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
                                     @if ($dokumen)
                                         @if ($dokumen->foto_kk)
                                             <a href="javascript:void(0)" class="ms-3 dokument"
@@ -464,7 +500,7 @@
                                         @endif
                                     @endif
                                 </div>
-                                <input type="file" name="foto_kk" class="form-input only-image" id="foto_kk" accept="image/png, image/gif, image/jpeg">
+                                <input type="file" name="foto_kk" class="form-input only-image" id="foto_kk" accept="image/png, image/jpeg, image/jpg, image/webp">
                             </div>
                             <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
