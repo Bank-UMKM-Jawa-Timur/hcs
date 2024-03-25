@@ -206,44 +206,8 @@
                                     @if ($dokumen)
                                         @if ($dokumen->foto_diri)
                                             <a href="javascript:void(0)" class="ms-3 dokument"
-                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                                    data-tittle="Foto Karyawan"
-                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_diri) }}"
-                                            >Preview</a>
-                                        @endif
-                                    @endif
-                                </div>
-                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg, image/jpg, image/webp">
-                            </div>
-                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-box">
-                                <div class="d-flex">
-                                    <label for="">Foto KTP <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
-                                    @if ($dokumen)
-                                        @if ($dokumen->foto_ktp)
-                                            <a href="javascript:void(0)" class="ms-3 dokument"
-                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                                    data-tittle="Foto KTP"
-                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_ktp) }}"
-                                            >Preview</a>
-                                        @endif
-                                    @endif
-                                </div>
-                                <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg, image/jpg, image/webp">
-                            </div>
-                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-box">
-                                <div class="d-flex">
-                                    <label for="">Foto Diri</label>
-                                    @if ($dokumen)
-                                        @if ($dokumen->foto_diri)
-                                            <a href="javascript:void(0)" class="ms-3 dokument"
                                                data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                               data-tittle="Foto Karyawan"
+                                               data-tittle="Foto Diri"
                                                data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_diri) }}"
                                             >Preview</a>
                                         @endif
@@ -256,7 +220,7 @@
                         <div class="col-md-6">
                             <div class="input-box">
                                 <div class="d-flex">
-                                    <label for="">Foto KTP</label>
+                                    <label for="">Foto KTP <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
                                     @if ($dokumen)
                                         @if ($dokumen->foto_ktp)
                                             <a href="javascript:void(0)" class="ms-3 dokument"
@@ -578,7 +542,7 @@
                                     <label for="is_jumlah_anak">Jumlah Anak</label>
                                     <div class="flex gap-3">
                                         <input type="number" class="form-input form-input-disabled" name="is_jml_anak" id="is_jml_anak"
-                                            value="{{ $is?->jml_anak ?? 0 }}" readonly>
+                                            value="{{ count($data_anak) }}" readonly>
                                             <button type="button" class="btn btn-success" id="add-row-anak"><i class="ti ti-plus"></i></button>
                                     </div>
                                 </div>
@@ -1676,7 +1640,7 @@
                                             <i class="ti ti-minus"></i>
                                         </button>
                                     </div>
-                                </div>    
+                                </div>
                         </div>
                     </div>
                 </div>
