@@ -513,7 +513,7 @@
                                     <label for="is_jumlah_anak">Jumlah Anak</label>
                                     <div class="flex gap-3">
                                         <input type="number" class="form-input form-input-disabled" name="is_jml_anak" id="is_jml_anak"
-                                            value="{{ $is?->jml_anak ?? 0 }}" readonly>
+                                            value="{{ count($data_anak) }}" readonly>
                                             <button type="button" class="btn btn-success" id="add-row-anak"><i class="ti ti-plus"></i></button>
                                     </div>
                                 </div>
