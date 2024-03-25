@@ -735,6 +735,7 @@
             toggleButtons()
             }
         });
+        
         function toggleButtons() {
             layoutPages.scrollTo({ top: 0, left: 100, behavior: 'smooth' });
             if (currentTab === 0) {
@@ -1088,6 +1089,7 @@
                     $('#is_jml_anak').val('');
                     countAnak = 0;
                     cekStatus()
+                    toggleButtonAnak()
                     getKantor()
 
                     if(res.data_anak.length > 0){
@@ -1397,6 +1399,16 @@
             kantorChange();
         });
 
+        function resetKetAnak() {
+            var div_anak = $('#row_anak').find('.child-div')
+            div_anak.each(function(i) {
+                $(this).prop('id', `anak-${i}`)
+                $(this).find('.form-anak').attr('data-anak', i)
+                $(this).find('.btn-remove-anak').attr('data-parent-anak', i)
+                $(this).find('.ket-anak').html(`Data Anak ${i + 1}`)
+            })
+        }
+
         function cekStatus() {
             if (status.val() == "Kawin") {
                 $('#data_is').show();
@@ -1410,41 +1422,8 @@
                             $("#add-row-anak").show()
                         }
                         else if (res.anak.length == 0 && countAnak > 0) {
-                            /*for(var i = 0; i < countAnak; i++){
-                                var ket = i+1;
-                                $("#row_anak").append(`
-                                    <div id="anak-${i}">
-                                        <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
-                                        <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
-                                            <input type="hidden" name="id_anak[]" value="">
-                                            <div class="col-md-6 input-box">
-                                                <label for="nama_anak">Nama Anak</label>
-                                                <input type="text" class="form-input" name="nama_anak[]" value="">
-                                            </div>
-                                            <div class="col-md-6 input-box">
-                                                <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                                <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
-                                            </div>
-                                            <div class="col-md-6 input-box">
-                                                <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="">
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button class="btn btn-success btn-add-anak" type="button">
-                                                    <i class="ti ti-plus"></i>
-                                                </button>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="">
-                                                    <i class="ti ti-minus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `);
-                            }*/
                         } else {
-                            $('#id_pasangan').val(res.is.id);
+                            /*$('#id_pasangan').val(res.is.id);
                             $('#is').val(res.is.enum);
                             $('#is_nama').val(res.is.nama);
                             $('#is_tgl_lahir').val(res.is.tgl_lahir);
@@ -1527,12 +1506,46 @@
                                         </div>
                                     `);
                                 }
-                            }
+                            }*/
                         }
                     }
                 })
             } else {
                 $('#data_is').hide();
+            }
+        }
+        function cekSkAnak(input) {
+            var sk_tunjangan_anak = $("input[name='sk_tunjangan_anak[]']");
+            var count = 0;
+            sk_tunjangan_anak.each(function() {
+                if ($(this).val() !== "") {
+                    count++;
+                }
+            });
+
+            sk_tunjangan_anak.each(function() {
+                var inp = $(this).val()
+                if (inp === "") {
+                    if (count >= 2) {
+                        $(this).prop('readonly', true)
+                        $(this).addClass('form-input-disabled')
+                    }
+                    else {
+                        $(this).prop('readonly', false)
+                        $(this).removeClass('form-input-disabled')
+                    }
+                } else {
+                    $(this).prop('readonly', false)
+                }
+            });
+        }
+
+        function toggleButtonAnak() {
+            if (countAnak == 0) {
+                $('#add-row-anak').removeClass('hidden')
+            }
+            else {
+                $('#add-row-anak').addClass('hidden')
             }
         }
 
@@ -1546,39 +1559,6 @@
                     datatype: "json",
                     success: function(res) {
                         if (res.anak.length == 0 && countAnak > 0) {
-                            /*for(var i = 0; i < countAnak; i++){
-                                var ket = i+1;
-                                $("#row_anak").append(`
-                                    <div id="anak-${i}">
-                                        <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
-                                        <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
-                                            <input type="hidden" name="id_anak[]" value="">
-                                            <div class="col-md-6 input-box">
-                                                <label for="nama_anak">Nama Anak</label>
-                                                <input type="text" class="form-input" name="nama_anak[]" value="">
-                                            </div>
-                                            <div class="col-md-6 input-box">
-                                                <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                                <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
-                                            </div>
-                                            <div class="col-md-6 input-box">
-                                                <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="">
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button class="btn btn-success btn-add-anak" type="button">
-                                                    <i class="ti ti-plus"></i>
-                                                </button>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="">
-                                                    <i class="ti ti-minus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `);
-                            }*/
                         } else {
                             $('#id_pasangan').val(res.is.id);
                             $('#is').val(res.is.enum);
@@ -1674,6 +1654,7 @@
             /*$("#row_anak").empty();*/
             var angka = $(this).val()
 
+            toggleButtonAnak()
             cekStatusChange()
             // for (var i = 0; i < angka; i++) {
             //     var isDisabled = i > 1 ? 'readonly' : '';
@@ -1706,9 +1687,9 @@
             var isDisabled = countAnak > 2 ? 'disabled' : '';
             var iteration = parseInt(countAnak) + 1
             $("#row_anak").append(`
-                <div id="anak-${countAnak}">
-                    <h6 class="font-bold text-lg mb-5">Data Anak ` + iteration + `</h6>
-                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${countAnak}">
+                <div id="anak-${countAnak}" class="child-div">
+                    <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + iteration + `</h6>
+                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
                         <input type="hidden" name="id_anak[]" value="">
                         <div class="col-md-6">
                             <div class="input-box">
@@ -1726,7 +1707,7 @@
                             <div class="input-box">
                                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
                                 <div class="flex gap-3">
-                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]" value="">
+                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]">
                                     <div>
                                         <button class="btn btn-success btn-add-anak" type="button">
                                             <i class="ti ti-plus"></i>
@@ -1743,6 +1724,10 @@
                     </div>
                 </div>
             `);
+
+            // Reset readonly
+            var input = $(`#anak-${countAnak}`).find('.sk-anak')
+            cekSkAnak(input)
 
             countAnak++;
             $("#is_jml_anak").val(countAnak);
@@ -1768,9 +1753,9 @@
         $("#add-row-anak").on("click", function() {
             var iteration = parseInt(countAnak) + 1
             $("#row_anak").append(`
-                <div id="anak-${countAnak}">
-                    <h6 class="font-bold text-lg mb-5">Data Anak ` + iteration + `</h6>
-                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${countAnak}">
+                <div id="anak-${countAnak}" class="child-div">
+                    <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + iteration + `</h6>
+                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
                         <input type="hidden" name="id_anak[]" value="">
                         <div class="col-md-6">
                             <div class="input-box">
@@ -1805,6 +1790,10 @@
                     </div>
                 </div>
             `);
+
+            // Reset readonly
+            var input = $(`#anak-${countAnak}`).find('.sk-anak')
+            cekSkAnak(input)
 
             countAnak++
             $("#is_jml_anak").val(countAnak)
