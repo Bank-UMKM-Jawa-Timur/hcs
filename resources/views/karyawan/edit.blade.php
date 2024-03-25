@@ -466,24 +466,6 @@
                             </div>
                             <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
-                        <div class="col-md-4">
-                            <div class="input-box">
-                                <div class="d-flex">
-                                    <label for="foto_buku_nikah">Foto Buku Nikah <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
-                                    @if ($dokumen)
-                                        @if ($dokumen->foto_buku_nikah)
-                                            <a href="javascript:void(0)" class="ms-3 dokument"
-                                               data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                               data-tittle="Foto Buku Nikah"
-                                               data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_buku_nikah) }}"
-                                            >Preview</a>
-                                        @endif
-                                    @endif
-                                </div>
-                                <input type="file" name="foto_buku_nikah" class="form-input only-image" id="foto_buku_nikah" accept="image/png, image/jpeg, image/jpg, image/webp">
-                            </div>
-                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
-                        </div>
                     </div>
                             <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 {{$data->status != "Belum Kawin" && $data->status != "Tidak Diketahui" && $data->status != "" ? '' : 'hidden'}}" id="parent-family">
                                 {{-- data pasangan --}}
@@ -524,6 +506,24 @@
                                         <input type="text" class="form-input" name="is_pekerjaan" id="is_pekerjaan"
                                             value="{{ $is?->pekerjaan }}">
                                     </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-box">
+                                        <div class="d-flex">
+                                            <label for="foto_buku_nikah">Foto Buku Nikah <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
+                                            @if ($dokumen)
+                                                @if ($dokumen->foto_buku_nikah)
+                                                    <a href="javascript:void(0)" class="ms-3 dokument"
+                                                       data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                                       data-tittle="Foto Buku Nikah"
+                                                       data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_buku_nikah) }}"
+                                                    >Preview</a>
+                                                @endif
+                                            @endif
+                                        </div>
+                                        <input type="file" name="foto_buku_nikah" class="form-input only-image" id="foto_buku_nikah" accept="image/png, image/jpeg, image/jpg, image/webp">
+                                    </div>
+                                    <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                                 </div>
                                 {{-- data anak --}}
                                 <div class="col-md-6">
