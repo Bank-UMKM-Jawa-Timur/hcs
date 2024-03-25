@@ -193,7 +193,7 @@
                         <div class="input-box col-md-6">
                             <div class="input-box">
                                 <label for="">Pangkat Dan Golongan</label>
-                                <select name="panggol" id="kd_panggol" class="@error('panggol') is-invalid @enderror form-input" required>
+                                <select name="panggol" id="kd_panggol" class="@error('panggol') is-invalid @enderror form-input">
                                     <option value="-">--- Pilih ---</option>
                                     @foreach ($panggol as $item)
                                         <option {{ old('panggol') == $item->golongan ? 'selected' : '--- Pilih ---' }} value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
@@ -319,6 +319,9 @@
                     </div>
                 </div>
             </div>
+
+
+            {{-- data tunjangan --}}
             <div class="card tab-pane space-y-5" id="collapseFour" >
                 <div class="head-card border-b pb-5">
                     <h2 class="font-bold text-lg">Data Tunjangan</h2>
@@ -684,7 +687,7 @@
             {{-- </div> --}}
 
             <div class="flex justify-between card">
-                <button class="btn btn-primary" type="submit"><i class="ti ti-plus"></i><span class="lg:block hidden">Simpan</span></button>
+                <button type="submit" class="btn btn-primary" ><i class="ti ti-plus"></i><span class="lg:block hidden">Simpan</span></button>
                 <div class="flex gap-5">
                     <button class="btn btn-light prev-btn hidden" type="button"><i class="ti ti-arrow-left"></i><span class="lg:block hidden">Form Sebelumnyaa</span></button>
                     <button class="btn btn-secondary next-btn" type="button"><span class="lg:block hidden">Form Selanjutnya</span><i class="ti ti-arrow-right"></i></button>
@@ -735,7 +738,7 @@
             toggleButtons()
             }
         });
-        
+
         function toggleButtons() {
             layoutPages.scrollTo({ top: 0, left: 100, behavior: 'smooth' });
             if (currentTab === 0) {

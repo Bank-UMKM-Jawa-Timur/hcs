@@ -468,83 +468,91 @@
                             </div>
                             <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
-                        @if ($data->status == 'Kawin')
-                            <div class="col-md-4">
-                                <div class="input-box">
-                                    <label for="is">Pasangan</label>
-                                    <select name="is" id="is" class="form-input">
-                                        <option value="">--- Pilih ---</option>
-                                        <option {{ $is?->enum == 'Suami' ? 'selected' : '' }} value="Suami">Suami</option>
-                                        <option {{ $is?->enum == 'Istri' ? 'selected' : '' }} value="Istri">Istri</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="input-box">
-                                    <label for="is_nama">Nama</label>
-                                    <input type="text" name="is_nama" id="is_nama" value="{{ $is?->nama }}"
-                                           class="form-input">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="input-box">
-                                    <label for="sk_tunjangan_is">SK Tunjangan</label>
-                                    <input type="text" name="sk_tunjangan_is" id="sk_tunjangan_is"
-                                           value="{{ $is?->sk_tunjangan }}" class="form-input">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-box">
-                                    <label for="is_tgl_lahir">Tanggal Lahir</label>
-                                    <input type="date" name="is_tgl_lahir" class="form-input" value="{{ $is?->tgl_lahir }}"
-                                           id="is_tgl_lahir">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="input-box">
-                                    <label for="is_pekerjaan">Pekerjaan</label>
-                                    <input type="text" class="form-input" name="is_pekerjaan" id="is_pekerjaan"
-                                           value="{{ $is?->pekerjaan }}">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-box">
-                                    <label for="is_jumlah_anak">Jumlah Anak</label>
-                                    <div class="flex gap-3">
-                                        <input type="number" class="form-input form-input-disabled" name="is_jml_anak" id="is_jml_anak"
-                                               value="{{ count($data_anak) }}" readonly>
-                                        <button type="button" class="btn btn-success" id="add-row-anak"><i class="ti ti-plus"></i></button>
+                    </div>
+                    {{-- @if ($data->status)
+                        @if ($data->status != "Belum Kawin" && $data->status != "Tidak Diketahui") --}}
+                            <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 {{$data->status != "Belum Kawin" && $data->status != "Tidak Diketahui" && $data->status != "" ? '' : 'hidden'}}" id="parent-family">
+                                {{-- data pasangan --}}
+                                <div class="col-md-4 pasangan">
+                                    <div class="input-box">
+                                        <label for="is">Pasangan</label>
+                                        <select name="is" id="is" class="form-input">
+                                            <option value="">--- Pilih ---</option>
+                                            <option {{ $is?->enum == 'Suami' ? 'selected' : '' }} value="Suami">Suami</option>
+                                            <option {{ $is?->enum == 'Istri' ? 'selected' : '' }} value="Istri">Istri</option>
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-span-3 space-y-5 " id="row_anak">
-                                @if (count($data_anak) > 0)
-                                    @foreach ($data_anak as $key => $item)
-                                        <div id="anak-{{ $key }}" class="child-div">
-                                            <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak {{ $key + 1 }}</h6>
-                                            <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="{{ $key }}">
-                                                <input type="hidden" name="id_anak[]" value="{{ $item->id }}">
-                                                <div class="col-md-6">
-                                                    <div class="input-box">
-                                                        <label for="nama_anak">Nama Anak</label>
-                                                        <input type="text" class="form-input" value="{{ $item->nama }}"
-                                                               name="nama_anak[]">
+                                <div class="col-md-4 pasangan">
+                                    <div class="input-box">
+                                        <label for="is_nama">Nama</label>
+                                        <input type="text" name="is_nama" id="is_nama" value="{{ $is?->nama }}"
+                                            class="form-input">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pasangan">
+                                    <div class="input-box">
+                                        <label for="sk_tunjangan_is">SK Tunjangan</label>
+                                        <input type="text" name="sk_tunjangan_is" id="sk_tunjangan_is"
+                                            value="{{ $is?->sk_tunjangan }}" class="form-input">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pasangan">
+                                    <div class="input-box">
+                                        <label for="is_tgl_lahir">Tanggal Lahir</label>
+                                        <input type="date" name="is_tgl_lahir" class="form-input" value="{{ $is?->tgl_lahir }}"
+                                            id="is_tgl_lahir">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pasangan">
+                                    <div class="input-box">
+                                        <label for="is_pekerjaan">Pekerjaan</label>
+                                        <input type="text" class="form-input" name="is_pekerjaan" id="is_pekerjaan"
+                                            value="{{ $is?->pekerjaan }}">
+                                    </div>
+                                </div>
+                                {{-- data anak --}}
+                                <div class="col-md-6">
+                                    <div class="input-box">
+                                        <label for="is_jumlah_anak">Jumlah Anak</label>
+                                        <div class="flex gap-3">
+                                            <input type="number" class="form-input form-input-disabled" name="is_jml_anak" id="is_jml_anak"
+                                                value="{{ count($data_anak) }}" readonly>
+                                                <button type="button" class="btn btn-success" id="add-row-anak"><i class="ti ti-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-span-3 space-y-5 " id="row_anak">
+                                    @if (count($data_anak) > 0)
+                                        @foreach ($data_anak as $key => $item)
+                                            <div id="anak-{{ $key }}" class="child-div">
+                                                <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak {{ $key + 1 }}</h6>
+                                                <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="{{ $key }}">
+                                                    <input type="hidden" name="id_anak[]" value="{{ $item->id }}">
+                                                    <div class="col-md-6">
+                                                        <div class="input-box">
+                                                            <label for="nama_anak">Nama Anak</label>
+                                                            <input type="text" class="form-input" value="{{ $item->nama }}"
+                                                                name="nama_anak[]">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="input-box">
-                                                        <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                                        <input type="date" class="form-input" name="tgl_lahir_anak[]"
-                                                               value="{{ $item->tgl_lahir }}">
+                                                    <div class="col-md-6">
+                                                        <div class="input-box">
+                                                            <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                            <input type="date" class="form-input" name="tgl_lahir_anak[]"
+                                                                value="{{ $item->tgl_lahir }}">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="input-box">
-                                                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                        <div class="flex gap-3">
+                                                    <div class="col-md-6">
+                                                        <div class="input-box">
+                                                            <label for="sk_tunjangan_anak">SK Tunjangan</label>
                                                             <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak @if(count($data_anak) > 2 && !$item->sk_tunjangan) form-input-disabled @endif" name="sk_tunjangan_anak[]"
                                                                    value="{{ $item->sk_tunjangan }}" @if(count($data_anak) > 2 && !$item->sk_tunjangan) readonly @endif">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="flex items-center mt-7 gap-3">
                                                             <div>
                                                                 <button class="btn btn-success btn-add-anak" type="button">
                                                                     <i class="ti ti-plus"></i>
@@ -559,18 +567,18 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                            <div class="col-md-6 col-span-3">
-                                <div class="input-box">
-                                    <label for="is_alamat">Alamat</label>
-                                    <textarea name="is_alamat" class="form-input" id="is_alamat">{{ $is?->alamat }}</textarea>
+                                        @endforeach
+                                    @endif
+                                </div>
+                                <div class="col-md-6 col-span-3">
+                                    <div class="input-box">
+                                        <label for="is_alamat">Alamat</label>
+                                        <textarea name="is_alamat" class="form-input" id="is_alamat">{{ $is?->alamat }}</textarea>
+                                    </div>
                                 </div>
                             </div>
-                        @endif
-                    </div>
+                        {{-- @endif
+                    @endif --}}
                 </div>
                 @if(auth()->user()->hasRole('cabang'))
                     <div class="card tab-pane space-y-5" id="potongan">
@@ -1275,10 +1283,36 @@
         $('#status').change(function() {
             var stat = $(this).val();
 
-            if (stat == 'Kawin') {
-                $('#data_is').show();
-            } else {
+            if (stat == '') {
                 $('#data_is').hide();
+                $('#parent-family').addClass('hidden');
+                $('.pasangan').addClass('hidden');
+            } else {
+                if (stat == 'Belum Kawin') {
+                    $('#data_is').hide();
+                    $('#parent-family').addClass('hidden');
+                    $('.pasangan').removeClass('hidden');
+                }
+                else if (stat == 'Tidak Diketahui') {
+                    $('#data_is').hide();
+                    $('#parent-family').addClass('hidden');
+                    $('.pasangan').removeClass('hidden');
+                }
+                else if (stat == 'Cerai') {
+                    $('#data_is').show();
+                    $('#parent-family').removeClass('hidden');
+                    $('.pasangan').addClass('hidden');
+                }
+                else if (stat == 'Cerai Mati') {
+                    $('#data_is').show();
+                    $('#parent-family').removeClass('hidden');
+                    $('.pasangan').addClass('hidden');
+                }
+                else {
+                    $('#data_is').show();
+                    $('#parent-family').removeClass('hidden');
+                    $('.pasangan').removeClass('hidden');
+                }
             }
         })
 
