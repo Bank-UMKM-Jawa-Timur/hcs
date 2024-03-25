@@ -113,30 +113,30 @@ class PengkinianDataController extends Controller
         if (!auth()->user()->can('manajemen karyawan - pengkinian data - update pengkinian data')) {
             return view('roles.forbidden');
         }
-        $nip = $request->nip;
-        $request->validate([
-            'nip' => 'required',
-            'nik' => 'required',
-            'nama' => 'required',
-            'tmp_lahir' => 'required',
-            'tgl_lahir' => 'required',
-            'agama' => 'required|not_in:-',
-            'jk' => 'required|not_in:-',
-            'status_pernikahan' => 'required|not_in:-',
-            'kewarganegaraan' => 'required|not_in:-',
-            'alamat_ktp' => 'required',
-            'panggol' => 'required|not_in:-',
-            'status_jabatan' => 'required|not_in:-',
-            'kpj' => 'required',
-            'jkn' => 'required',
-            'gj_pokok' => 'required',
-            'status_karyawan' => 'required|not_in:-',
-            'skangkat' => 'required|not_in:-',
-            'tanggal_pengangkat' => 'required|not_in:-'
-        ]);
-
         DB::beginTransaction();
         try {
+            $nip = $request->nip;
+            $request->validate([
+                'nip' => 'required',
+                'nik' => 'required',
+                'nama' => 'required',
+                'tmp_lahir' => 'required',
+                'tgl_lahir' => 'required',
+                'agama' => 'required|not_in:-',
+                'jk' => 'required|not_in:-',
+                'status_pernikahan' => 'required|not_in:-',
+                'kewarganegaraan' => 'required|not_in:-',
+                'alamat_ktp' => 'required',
+                'panggol' => 'required|not_in:-',
+                'status_jabatan' => 'required|not_in:-',
+                'kpj' => 'required',
+                'jkn' => 'required',
+                'gj_pokok' => 'required',
+                'Pangkat Dan Golongan' => 'required',
+                'status_karyawan' => 'required|not_in:-',
+                'skangkat' => 'required|not_in:-',
+                'tanggal_pengangkat' => 'required|not_in:-'
+            ]);
             $id_is = $request->get('id_pasangan');
             if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
                 if ($request->get('id_pasangan') == null) {
@@ -341,18 +341,16 @@ class PengkinianDataController extends Controller
                     ->whereIn('id', $idAnakDeleted)
                     ->delete();
             }
-            
+
             DB::commit();
             Alert::success('Berhasil', 'Berhasil melakukan pengkinian data karyawan.');
             return redirect()->route('pengkinian_data.index');
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
             Alert::error('Tejadi kesalahan', '' . $e->getMessage());
             return redirect()->route('pengkinian_data.index');
         } catch (QueryException $e) {
             DB::rollBack();
-            dd($e);
             Alert::error('Tejadi kesalahan', '' . $e->getMessage());
             return redirect()->route('pengkinian_data.index');
         }
