@@ -20,6 +20,8 @@
 <div class="body-pages">
     <div class="table-wrapping">
         <form id="form" action="">
+            <input type="hidden" name="user_id" value="{{ \Request::get('user_id') }}">
+            <input type="hidden" name="status" value="{{ \Request::get('status') }}">
             <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 flex gap-7" role="alert">
                 <h6 class="text-sm text-blue-900 font-semibold"> Tunjangan : <b>{{$tunjangan->nama_tunjangan}}</b></h6>
                 <h6 class="text-sm text-blue-900 font-semibold"> Cabang : <b>{{$nameCabang->nama_cabang}}</b></h6>
@@ -138,6 +140,14 @@
             if (page_url.includes('kd_entitas')) {
                 var kd_entitas = "{{\Request::get('kd_entitas')}}"
                 btn_pagination[i].href += `&kd_entitas=${kd_entitas}`
+            }
+            if (page_url.includes('user_id')) {
+                var user_id = "{{\Request::get('user_id')}}"
+                btn_pagination[i].href += `&user_id=${user_id}`
+            }
+            if (page_url.includes('status')) {
+                var status = "{{\Request::get('status')}}"
+                btn_pagination[i].href += `&status=${status}`
             }
         })
     </script>

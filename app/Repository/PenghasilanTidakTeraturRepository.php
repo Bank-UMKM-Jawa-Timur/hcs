@@ -354,8 +354,7 @@ class PenghasilanTidakTeraturRepository
             else {
                 $value->status_data = 'gabungan';
             }
-            if ($kd_cabang == 'pusat')
-                $value->grand_total = $grandtotal;
+            $value->grand_total = $grandtotal;
             $value->detail = $d;
         }
         return $data;
@@ -591,7 +590,7 @@ class PenghasilanTidakTeraturRepository
         $entias = $data['kdEntitas'];
         $user_id = $data['user_id'];
         return DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $idTunjangan)
-            ->where('bulan', $bln)
+            ->where('bulan', 'like' , "%$bln%")
             ->where('tahun', $tahun)
             ->where('user_id', $user_id)
             ->where('created_at', $createdAt)

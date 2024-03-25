@@ -94,7 +94,7 @@
                         @if (auth()->user()->hasRole('cabang') != 'cabang')
                             {{ count($item->detail) }}
                         @else
-                            {{ $item->total }}
+                            {{ count($item->detail) }}
                         @endif
                     </td>
                     <td>Rp {{ $item->grand_total ? number_format($item->grand_total, 0, '.', '.') : 0}}</td>
