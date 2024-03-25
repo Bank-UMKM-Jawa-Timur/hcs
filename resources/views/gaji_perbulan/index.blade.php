@@ -181,6 +181,7 @@
         })
 
         $('#filter').on('click', function() {
+            e.preventDefault();
             $('#filter-modal #cabang_req').select2()
             $('#filter-modal').removeClass('hidden')
         })
