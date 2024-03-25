@@ -29,15 +29,13 @@
             }
         @endphp
         <div  class="space-y-5">
-
-
             <div class="row m-0">
                 <div class="col-lg-12">
                     <h6 class="row-title">Biodata Diri Karyawan</h6>
                 </div>
             </div>
             <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-5 grid-cols-1">
-            @php
+                @php
                 $no = 1;
                 $totalGaji = $karyawan->gj_pokok + $karyawan->gj_penyesuaian;
                 $tj = DB::table('tunjangan_karyawan')
@@ -47,98 +45,97 @@
                     ->groupBy('mst_tunjangan.nama_tunjangan')
                     ->get();
             @endphp
+                <div class="row ">
+                    <label class="w-2/4 mt-2">NIK</label>
+                    <div class="w-full">
+                        <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->nik }}">
+                    </div>
+                </div>
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Nama Karyawan</label>
+                    <div class="w-full">
+                        <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->nama_karyawan }}">
+                    </div>
+                </div>
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Tempat, Tanggal Lahir</label>
+                    <div class="w-full">
+                        <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->tmp_lahir }}, {{ ($karyawan->tgl_lahir != null) ? $karyawan->tgl_lahir->format('d F Y') : '-' }}">
+                    </div>
+                </div>
+                @php
+                    use Carbon\Carbon;
+                    $tanggalLahir = Carbon::create($karyawan->tgl_lahir);
+                    $waktuSekarang = Carbon::now();
 
-            <div class="row ">
-                <label class="w-2/4 mt-2">NIK</label>
-                <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->nik }}">
-                </div>
-            </div>
-            <div class="row ">
-                <label class="w-2/4 mt-2">Nama Karyawan</label>
-                <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->nama_karyawan }}">
-                </div>
-            </div>
-            <div class="row ">
-                <label class="w-2/4 mt-2">Tempat, Tanggal Lahir</label>
-                <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->tmp_lahir }}, {{ ($karyawan->tgl_lahir != null) ? $karyawan->tgl_lahir->format('d F Y') : '-' }}">
-                </div>
-            </div>
-            @php
-                use Carbon\Carbon;
-                $tanggalLahir = Carbon::create($karyawan->tgl_lahir);
-                $waktuSekarang = Carbon::now();
+                    $hitung = $waktuSekarang->diff($tanggalLahir);
+                    $umur = $hitung->format('%y Tahun | %m Bulan | %d Hari');
 
-                $hitung = $waktuSekarang->diff($tanggalLahir);
-                $umur = $hitung->format('%y Tahun | %m Bulan | %d Hari');
-
-            @endphp
-            <div class="row ">
-                <label class="w-2/4 mt-2">Umur</label>
-                <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled" value="{{ $umur }}">
+                @endphp
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Umur</label>
+                    <div class="w-full">
+                        <input type="text" disabled class="form-input-disabled" value="{{ $umur }}">
+                    </div>
                 </div>
-            </div>
-            <div class="row ">
-                <label class="w-2/4 mt-2">Agama</label>
-                <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled" value="{{ $karyawan?->agama?->agama ?? '-' }}">
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Agama</label>
+                    <div class="w-full">
+                        <input type="text" disabled class="form-input-disabled" value="{{ $karyawan?->agama?->agama ?? '-' }}">
+                    </div>
                 </div>
-            </div>
-            <div class="row ">
-                <label class="w-2/4 mt-2">Jenis Kelamin</label>
-                <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->jk }}">
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Jenis Kelamin</label>
+                    <div class="w-full">
+                        <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->jk }}">
+                    </div>
                 </div>
-            </div>
-            <div class="row ">
-                <label class="w-2/4 mt-2">Status Pernikahan</label>
-                <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled"  value="{{ $karyawan->status ?? '-' }}">
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Status Pernikahan</label>
+                    <div class="w-full">
+                        <input type="text" disabled class="form-input-disabled"  value="{{ $karyawan->status ?? '-' }}">
+                    </div>
                 </div>
-            </div>
-            <div class="row ">
-                <label class="w-2/4 mt-2">Kewarganegaraan</label>
-                <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled"  value="{{ $karyawan->kewarganegaraan }}">
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Kewarganegaraan</label>
+                    <div class="w-full">
+                        <input type="text" disabled class="form-input-disabled"  value="{{ $karyawan->kewarganegaraan }}">
+                    </div>
                 </div>
-            </div>
-            <div class="row ">
-                <label class="w-2/4 mt-2">Alamat KTP</label>
-                <div class="w-full">
-                    <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->alamat_ktp }}">
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Alamat KTP</label>
+                    <div class="w-full">
+                        <input type="text" disabled class="form-input-disabled" value="{{ $karyawan->alamat_ktp }}">
+                    </div>
                 </div>
-            </div>
-            <div class="row ">
-                <label class="w-2/4 mt-2">Alamat Sekarang</label>
-                <div class="w-full">
-                    @php
-                        if (!$karyawan->alamat_sek || $karyawan->alamat_sek == '') {
-                            $alamatSek = '-';
-                        } else {
-                            $alamatSek = $karyawan->alamat_sek;
-                        }
-                    @endphp
-                    <input type="text" disabled class="form-input-disabled" value="{{ $alamatSek }}">
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Alamat Sekarang</label>
+                    <div class="w-full">
+                        @php
+                            if (!$karyawan->alamat_sek || $karyawan->alamat_sek == '') {
+                                $alamatSek = '-';
+                            } else {
+                                $alamatSek = $karyawan->alamat_sek;
+                            }
+                        @endphp
+                        <input type="text" disabled class="form-input-disabled" value="{{ $alamatSek }}">
+                    </div>
                 </div>
-            </div>
-            <div class="row ">
-                <label class="w-2/4 mt-2">Foto Diri</label>
-                <div class="w-full">
-                    @if($doks)
-                        @if ($doks->foto_diri)
-                            <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}" />
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Foto Diri</label>
+                    <div class="w-full">
+                        @if($doks)
+                            @if ($doks->foto_diri)
+                                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}" />
+                            @else
+                                <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                            @endif
                         @else
                             <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
                         @endif
-                    @else
-                        <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
-                    @endif
+                    </div>
                 </div>
-            </div>
-            <div class="row ">
+                <div class="row ">
                 <label class="w-2/4 mt-2">Foto KTP</label>
                 <div class="w-full">
                     @if($doks)
@@ -151,6 +148,7 @@
                         <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
                     @endif
                 </div>
+            </div>
             </div>
             <hr>
             <div class="row m-0">
@@ -407,7 +405,7 @@
                     <hr>
                     <div class="row m-0 ">
                         <div class="col-lg-12">
-                            <h6>Data Potongan</h6>
+                            <h6 class="row-title">Data Potongan</h6>
                         </div>
                     </div>
                 @endif
@@ -631,21 +629,21 @@
                             </div>
                         </div>
                     @endforeach
-                    <div class="row ">
-                        <label class="w-2/4 mt-2">Foto Kartu Keluarga</label>
-                        <div class="w-full">
-                            @if($doks)
-                                @if ($doks->foto_kk)
-                                    <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}" />
-                                @else
-                                    <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
-                                @endif
+                @endif
+                <div class="row ">
+                    <label class="w-2/4 mt-2">Foto Kartu Keluarga</label>
+                    <div class="w-full">
+                        @if($doks)
+                            @if ($doks->foto_kk)
+                                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}" />
                             @else
                                 <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
                             @endif
-                        </div>
+                        @else
+                            <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                        @endif
                     </div>
-                @endif
+                </div>
             @endif
             <hr>
 

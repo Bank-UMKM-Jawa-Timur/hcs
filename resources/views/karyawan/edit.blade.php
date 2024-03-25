@@ -96,7 +96,7 @@
         @elsecan('manajemen karyawan - data karyawan - edit karyawan - edit potongan')
         @endcan
         <form action="{{ route('karyawan.update', $data->nip) }}" method="POST" enctype="multipart/form-data"
-            name="karyawan" class="input-box">
+              name="karyawan" class="input-box">
             @csrf
             @method('PUT')
             <input type="hidden" name="idTkDeleted" id="idTkDeleted">
@@ -113,35 +113,35 @@
                             <div class="input-box">
                                 <label for="">NIP</label>
                                 <input type="text" class="@error('nip') is-invalid @enderror  form-input" name="nip"
-                                    id="nip" value="{{ old('nip', $data->nip) }}">
+                                       id="nip" value="{{ old('nip', $data->nip) }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">NIK</label>
                                 <input type="text" class="@error('nik') is-invalid @enderror form-input" name="nik"
-                                    id="" value="{{ old('nik', $data->nik) }}">
+                                       id="" value="{{ old('nik', $data->nik) }}">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">Nama Karyawan</label>
                                 <input type="text" class="@error('nama') is-invalid @enderror form-input textOnly"
-                                    name="nama" id="" value="{{ old('nama', $data->nama_karyawan) }}">
+                                       name="nama" id="" value="{{ old('nama', $data->nama_karyawan) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
                                 <label for="">Tempat Lahir</label>
                                 <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-input textOnly"
-                                    name="tmp_lahir" id="" value="{{ old('tmp_lahir', $data->tmp_lahir) }}">
+                                       name="tmp_lahir" id="" value="{{ old('tmp_lahir', $data->tmp_lahir) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
                                 <label for="">Tanggal Lahir</label>
                                 <input type="date" class="@error('tgl_lahir') is-invalid @enderror form-input"
-                                    name="tgl_lahir" id="" value="{{ old('tgl_lahir', $data->tgl_lahir) }}">
+                                       name="tgl_lahir" id="" value="{{ old('tgl_lahir', $data->tgl_lahir) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -173,7 +173,7 @@
                             <div class="input-box">
                                 <label for="">Status pernikahan</label>
                                 <select name="status_pernikahan" id="status"
-                                    class="@error('status_pernikahan') is-invalid @enderror form-input">
+                                        class="@error('status_pernikahan') is-invalid @enderror form-input">
                                     <option value="">--- Pilih ---</option>>
                                     <option value="Kawin" @selected($data->status == 'Kawin')>Kawin</option>
                                     <option value="Belum Kawin" @selected($data->status == 'Belum Kawin')>Belum Kawin</option>
@@ -190,7 +190,7 @@
                             <div class="input-box">
                                 <label for="">Kewarganegaraan</label>
                                 <select name="kewarganegaraan" id=""
-                                    class="@error('kewarganegaraan') is-invalid @enderror form-input">
+                                        class="@error('kewarganegaraan') is-invalid @enderror form-input">
                                     <option value="-">--- Pilih ---</option>
                                     <option value="WNI" {{ $data->kewarganegaraan == 'WNI' ? 'selected' : '' }}>WNI
                                     </option>
@@ -258,23 +258,16 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">NIP</label>
-                                <input type="text" class="@error('nip') is-invalid @enderror  form-input" name="nip"
-                                    id="nip" value="{{ old('nip', $data->nip) }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-box">
                                 <label for="">Nomor Rekening</label>
                                 <input type="number" class="form-input" name="no_rek"
-                                    value="{{ old('no_rek', $data->no_rekening) }}">
+                                       value="{{ old('no_rek', $data->no_rekening) }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">NPWP</label>
                                 <input type="number" class="form-input" name="npwp"
-                                    value="{{ old('npwp', $data->npwp) }}">
+                                       value="{{ old('npwp', $data->npwp) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -297,11 +290,6 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="head-card border-b pb-5">
-                        <h2 class="font-bold text-lg">Data Jabatan</h2>
-                    </div>
-                    <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-4">
                             <div class="input-box">
                                 <label for="">Jabatan</label>
@@ -339,7 +327,7 @@
                             <div class="input-box">
                                 <label for="">Pangkat Dan Golongan</label>
                                 <select name="panggol" id=""
-                                    class="@error('panggol') is-invalid @enderror form-input">
+                                        class="@error('panggol') is-invalid @enderror form-input">
                                     <option value="">--- Pilih ---</option>
                                     @foreach ($panggol as $item)
                                         <option value="{{ $item->golongan }}"
@@ -353,7 +341,7 @@
                             <div class="input-box">
                                 <label for="">Status Jabatan</label>
                                 <select name="status_jabatan" id=""
-                                    class="@error('status_jabatan') is-invalid @enderror form-input">
+                                        class="@error('status_jabatan') is-invalid @enderror form-input">
                                     <option value="">--- Pilih ---</option>
                                     <option value="Definitif" {{ $data->status_jabatan == 'Definitif' ? 'selected' : '' }}>
                                         Definitif</option>
@@ -366,55 +354,43 @@
                             <div class="input-box">
                                 <label for="">Keterangan Jabatan</label>
                                 <input type="text" class="form-input" name="ket_jabatan"
-                                    value="{{ old('ket_jabatan', $data->ket_jabatan) }}">
+                                       value="{{ old('ket_jabatan', $data->ket_jabatan) }}">
                             </div>
                         </div>
-                    </div>
-                    <div class="grid pb-10 gap-8 md:grid-cols-2   grid-cols-1">
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">KPJ</label>
                                 <input type="text" class="@error('kpj') is-invalid @enderror form-input" name="kpj"
-                                    value="{{ old('kpj', $data->kpj) }}">
+                                       value="{{ old('kpj', $data->kpj) }}">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">JKN</label>
                                 <input type="text" class="@error('jkn') is-invalid @enderror form-input" name="jkn"
-                                    value="{{ old('jkn', $data->jkn) }}">
+                                       value="{{ old('jkn', $data->jkn) }}">
                             </div>
                         </div>
-                    </div>
-                    <div class="head-card border-b pb-5">
-                        <h2 class="font-bold text-lg">Honor</h2>
-                    </div>
-                    <div class="grid pb-10 gap-8 mt-5  md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Honorarium</label>
                                 <input type="text" id="gj_pokok"
-                                    class="@error('gj_pokok') is-invalid @enderror form-input" name="gj_pokok"
-                                    value="{{ old('gj_pokok', $data->gj_pokok) }}">
+                                       class="@error('gj_pokok') is-invalid @enderror form-input" name="gj_pokok"
+                                       value="{{ old('gj_pokok', $data->gj_pokok) }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Honorarium Penyesuaian</label>
                                 <input type="text" class="form-input" id="gj_penyesuaian" name="gj_penyesuaian"
-                                    value="{{ old('gj_penyesuaian', $data->gj_penyesuaian) }}">
+                                       value="{{ old('gj_penyesuaian', $data->gj_penyesuaian) }}">
                             </div>
                         </div>
-                    </div>
-                    <div class="head-card border-b pb-5">
-                        <h2 class="font-bold text-lg">Pengangkatan</h2>
-                    </div>
-                    <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3  md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Status Karyawan</label>
                                 <select name="status_karyawan" id=""
-                                    class="@error('status_karyawan') is-invalid @enderror form-input">
+                                        class="@error('status_karyawan') is-invalid @enderror form-input">
                                     <option value="">--- Pilih ---</option>
                                     <option value="Tetap" {{ $data->status_karyawan == 'Tetap' ? 'selected' : '' }}>Tetap
                                     </option>
@@ -430,29 +406,24 @@
                             <div class="input-box">
                                 <label for="">Tanggal Mulai</label>
                                 <input type="date" class="@error('tgl_mulai') is-invalid @enderror form-input"
-                                    name="tgl_mulai" value="{{ old('tgl_mulai', $data->tgl_mulai ?? null) }}">
+                                       name="tgl_mulai" value="{{ old('tgl_mulai', $data->tgl_mulai ?? null) }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">SK Pengangkatan</label>
                                 <input type="text" class="@error('skangkat') is-invalid @enderror form-input"
-                                    name="skangkat" value="{{ old('skangkat', $data->skangkat) }}">
+                                       name="skangkat" value="{{ old('skangkat', $data->skangkat) }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Tanggal Pengangkatan</label>
                                 <input type="date" class="@error('tanggal_pengangkat') is-invalid @enderror form-input"
-                                    name="tanggal_pengangkat"
-                                    value="{{ old('tanggal_pengangkat', $data->tanggal_pengangkat) }}">
+                                       name="tanggal_pengangkat"
+                                       value="{{ old('tanggal_pengangkat', $data->tanggal_pengangkat) }}">
                             </div>
                         </div>
-                    </div>
-                    <div class="head-card border-b pb-5">
-                        <h2 class="font-bold text-lg">Pendidikan</h2>
-                    </div>
-                    <div class="grid pb-10 gap-8 mt-5 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="pendidikan">Pendidikan</label>
@@ -460,7 +431,7 @@
                                     <option value="">--- Pilih ---</option>
                                     @foreach ($arrayPendidikan as $item)
                                         <option value="{{ $item }}"
-                                            @if ($data?->pendidikan == $item) selected @endif>{{ $item }}</option>
+                                                @if ($data?->pendidikan == $item) selected @endif>{{ $item }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -469,7 +440,7 @@
                             <div class="input-box">
                                 <label for="pendidikan_major">Pendidikan Major</label>
                                 <input type="text" class="@error('pendidikan_major') is-invalid @enderror form-input"
-                                    name="pendidikan_major" value="{{ old('pendidikan_major', $data?->pendidikan_major) }}">
+                                       name="pendidikan_major" value="{{ old('pendidikan_major', $data?->pendidikan_major) }}">
                             </div>
                         </div>
                     </div>
@@ -486,9 +457,9 @@
                                     @if ($dokumen)
                                         @if ($dokumen->foto_kk)
                                             <a href="javascript:void(0)" class="ms-3 dokument"
-                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                                    data-tittle="Foto KK"
-                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_kk) }}"
+                                               data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                               data-tittle="Foto KK"
+                                               data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_kk) }}"
                                             >Preview</a>
                                         @endif
                                     @endif
@@ -512,21 +483,21 @@
                                 <div class="input-box">
                                     <label for="is_nama">Nama</label>
                                     <input type="text" name="is_nama" id="is_nama" value="{{ $is?->nama }}"
-                                        class="form-input">
+                                           class="form-input">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="input-box">
                                     <label for="sk_tunjangan_is">SK Tunjangan</label>
                                     <input type="text" name="sk_tunjangan_is" id="sk_tunjangan_is"
-                                        value="{{ $is?->sk_tunjangan }}" class="form-input">
+                                           value="{{ $is?->sk_tunjangan }}" class="form-input">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-box">
                                     <label for="is_tgl_lahir">Tanggal Lahir</label>
                                     <input type="date" name="is_tgl_lahir" class="form-input" value="{{ $is?->tgl_lahir }}"
-                                        id="is_tgl_lahir">
+                                           id="is_tgl_lahir">
                                 </div>
                             </div>
 
@@ -534,7 +505,7 @@
                                 <div class="input-box">
                                     <label for="is_pekerjaan">Pekerjaan</label>
                                     <input type="text" class="form-input" name="is_pekerjaan" id="is_pekerjaan"
-                                        value="{{ $is?->pekerjaan }}">
+                                           value="{{ $is?->pekerjaan }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -542,8 +513,8 @@
                                     <label for="is_jumlah_anak">Jumlah Anak</label>
                                     <div class="flex gap-3">
                                         <input type="number" class="form-input form-input-disabled" name="is_jml_anak" id="is_jml_anak"
-                                            value="{{ count($data_anak) }}" readonly>
-                                            <button type="button" class="btn btn-success" id="add-row-anak"><i class="ti ti-plus"></i></button>
+                                               value="{{ count($data_anak) }}" readonly>
+                                        <button type="button" class="btn btn-success" id="add-row-anak"><i class="ti ti-plus"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -650,37 +621,23 @@
                         @php
                             $no = 1;
                         @endphp
-                        <div id="parent_tunjangan{{$key}}">
-                            <div class="grid items-center lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10" id="collapseFour">
-                                <div class="col-md-5">
-                                    <div class="input-box">
-                                        <label for="is">Tunjangan {{$key + 1}}</label>
-                                        <select name="tunjangan[]" id="tunjangan" class="form-input">
-                                            <option value="">--- Pilih ---</option>
-                                            @foreach ($tunjangan as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ $item->id == $tj->id_tunjangan ? 'selected' : '' }}>
-                                                    {{ $item->nama_tunjangan }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="id_tk[]" id="id_tk" value="{{ $tj->id }}">
-                                <div class="col-md-5">
-                                    <div class="input-box">
-                                        <label for="is_nama">Nominal</label>
-                                        <input type="text" id="nominal{{ $key }}" name="nominal_tunjangan[]"
-                                            value="{{ number_format($tj->nominal, 0, ',', '.') }}" class="form-input"
-                                            onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)">
-                                        <input type="hidden" name="id_tunjangan[]" value="{{$tj->id}}">
-                                    </div>
-                                </div>
-                                <div class="flex gap-5 mt-6">
-                                    @if ($key == 0)
-                                        <div class="col-md-1">
-                                            <button class="btn btn-success" type="button" id="btn-add">
-                                                <i class="ti ti-plus"></i>
-                                            </button>
+                        @foreach ($data->tunjangan as $key => $tj)
+                            @php
+                                $no++;
+                            @endphp
+                            <div id="parent_tunjangan{{$key}}">
+                                <div class="grid items-center lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10" id="collapseFour">
+                                    <div class="col-md-5">
+                                        <div class="input-box">
+                                            <label for="is">Tunjangan </label>
+                                            <select name="tunjangan[]" id="tunjangan" class="form-input">
+                                                <option value="">--- Pilih ---</option>
+                                                @foreach ($tunjangan as $item)
+                                                    <option value="{{ $item->id }}"
+                                                        {{ $item->id == $tj->id_tunjangan ? 'selected' : '' }}>
+                                                        {{ $item->nama_tunjangan }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <input type="hidden" name="id_tk[]" id="id_tk" value="{{ $tj->id }}">
@@ -721,37 +678,37 @@
                         <h2 class="font-bold text-lg">Data Potongan</h2>
                     </div>
                     <div id="collapseFive" class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-5 mt-5 "
-                        id="row_potongan">
+                         id="row_potongan">
                         <div class="col col-md-6 col-sm-6">
                             <div class="input-box">
                                 <label for="is_nama">Kredit Koperasi</label>
                                 <input type="text" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi"
-                                    class="form-input rupiah-potongan"
-                                    value="{{ old('potongan_kredit_koperasi', $data->potongan?->kredit_koperasi ? $data->potongan->kredit_koperasi : '0') }}">
+                                       class="form-input rupiah-potongan"
+                                       value="{{ old('potongan_kredit_koperasi', $data->potongan?->kredit_koperasi ? $data->potongan->kredit_koperasi : '0') }}">
                             </div>
                         </div>
                         <div class="col col-md-6 col-sm-6">
                             <div class="input-box">
                                 <label for="is_nama">Iuran Koperasi</label>
                                 <input type="text" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi"
-                                    class="form-input rupiah-potongan"
-                                    value="{{ old('potongan_iuran_koperasi', $data->potongan?->iuran_koperasi ? $data->potongan->iuran_koperasi : '0') }}">
+                                       class="form-input rupiah-potongan"
+                                       value="{{ old('potongan_iuran_koperasi', $data->potongan?->iuran_koperasi ? $data->potongan->iuran_koperasi : '0') }}">
                             </div>
                         </div>
                         <div class="col col-md-6 col-sm-6">
                             <div class="input-box">
                                 <label for="is_nama">Kredit Pegawai</label>
                                 <input type="text" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai"
-                                    class="form-input rupiah-potongan"
-                                    value="{{ old('potongan_kredit_pegawai', $data->potongan?->kredit_pegawai ? $data->potongan->kredit_pegawai : '0') }}">
+                                       class="form-input rupiah-potongan"
+                                       value="{{ old('potongan_kredit_pegawai', $data->potongan?->kredit_pegawai ? $data->potongan->kredit_pegawai : '0') }}">
                             </div>
                         </div>
                         <div class="col col-md-6 col-sm-6">
                             <div class="input-box">
                                 <label for="is_nama">Iuran IK</label>
                                 <input type="text" id="potongan_iuran_ik" name="potongan_iuran_ik"
-                                    class="form-input rupiah-potongan"
-                                    value="{{ old('potongan_iuran_ik', $data->potongan?->iuran_ik ? $data->potongan->iuran_ik : '0') }}">
+                                       class="form-input rupiah-potongan"
+                                       value="{{ old('potongan_iuran_ik', $data->potongan?->iuran_ik ? $data->potongan->iuran_ik : '0') }}">
                             </div>
                         </div>
                     </div>
@@ -763,7 +720,7 @@
                 @can('manajemen karyawan - data karyawan - edit karyawan')
                     <div class="flex gap-5">
                         <button class="btn btn-light prev-btn hidden" type="button"><i class="ti ti-arrow-left"></i><span
-                                class="lg:block hidden">Form Sebelumnya</span></button>
+                                class="lg:block hidden">Form Sebelumnyaa</span></button>
                         <button class="btn btn-secondary next-btn" type="button"><span class="lg:block hidden">Form
                                 Selanjutnya</span><i class="ti ti-arrow-right"></i></button>
                     </div>
@@ -980,13 +937,13 @@
                                 </div>`);
                         $.each(res, function(i, item) {
                             $('#divisi').append('<option value="' + item.kd_divisi + '" ' + (kd_div ===
-                                    item.kd_divisi ? 'selected' : '') + '>' + item.nama_divisi +
+                                item.kd_divisi ? 'selected' : '') + '>' + item.nama_divisi +
                                 '</option>')
                         });
                         var value = $('#divisi').val();
                         if ($("#jabatan").val() != 'PIMDIV' || $("#jabatan") != "DIRHAN" || $("#jabatan") !=
                             "DIRPEM" || $("#jabatan") != "DIRUMK" || $("#jabatan") != "DIRUT" || $(
-                            "#jabatan") != "KOMU" || $("#jabatan") != "KOM") {
+                                "#jabatan") != "KOMU" || $("#jabatan") != "KOM") {
                             divisiChange(value);
 
                             $("#kantor_row2").empty();
@@ -1034,12 +991,12 @@
                         $("#kantor_row3").removeClass("col-md-6")
                         $.each(res[0], function(i, item) {
                             $('#cabang').append('<option value="' + item.kd_cabang + '" ' + (kd_div ===
-                                    item.kd_cabang ? 'selected' : '') + '>' + item.nama_cabang +
+                                item.kd_cabang ? 'selected' : '') + '>' + item.nama_cabang +
                                 '</option>')
                         })
                         $.each(res[1], function(i, item) {
                             $('#bagian').append('<option value="' + item.kd_bagian + '" ' + (bag ===
-                                    item.kd_bagian ? 'selected' : '') + '>' + item.nama_bagian +
+                                item.kd_bagian ? 'selected' : '') + '>' + item.nama_bagian +
                                 '</option>')
                         })
                     }
@@ -1081,7 +1038,7 @@
                         $('#sub_divisi').append('<option value="">--- Pilih sub divisi ---</option>')
                         $.each(res1, function(i, item) {
                             $('#sub_divisi').append('<option value="' + item.kd_subdiv + '" ' + (
-                                    subdiv === item.kd_subdiv ? 'selected' : '') + '>' + item
+                                subdiv === item.kd_subdiv ? 'selected' : '') + '>' + item
                                 .nama_subdivisi + '</option>')
                         });
                         var val = $('#sub_divisi').val();
@@ -1332,21 +1289,21 @@
                 <div id="parent_tunjangan${x}" class="grid items-center lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10">
                     <div class="col-md-5">
                         <div class="input-box">
-                            <label for="is">Tunjangan ${x}</label>
+                            <label for="is">Tunjangan </label>
                             <select name="tunjangan[]" id="tunjangan" class="form-input">
                                 <option value="">--- Pilih ---</option>
                                 @foreach ($tunjangan as $item)
-                                    <option value="{{ $item->id }}">
+            <option value="{{ $item->id }}">
                                         {{ $item->nama_tunjangan }}</option>
                                 @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <input type="hidden" name="id_tk[]" id="id_tk" value="">
-                    <div class="col-md-5">
-                        <div class="input-box">
-                            <label for="is_nama">Nominal</label>
-                            <input type="text" id="nominal${x}" name="nominal_tunjangan[]"
+            </select>
+        </div>
+    </div>
+    <input type="hidden" name="id_tk[]" id="id_tk" value="">
+    <div class="col-md-5">
+        <div class="input-box">
+            <label for="is_nama">Nominal</label>
+            <input type="text" id="nominal${x}" name="nominal_tunjangan[]"
                                 value="" class="form-input"
                                 onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)">
                         </div>
@@ -1381,73 +1338,73 @@
                                 class="form-input">
                                 <option value="0">-- Pilih tahun --</option>
                                 @php
-                                    $sekarang = date('Y');
-                                    $awal = $sekarang - 5;
-                                    $akhir = $sekarang + 5;
-                                @endphp
-                                @for ($i = $awal; $i <= $akhir; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
+                $sekarang = date('Y');
+                $awal = $sekarang - 5;
+                $akhir = $sekarang + 5;
+            @endphp
+            @for ($i = $awal; $i <= $akhir; $i++)
+            <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col col-md-4 col-sm-6">
-                        <div class="input-box">
-                            <label for="is">Bulan</label>
-                            <select name="potongan_bulan[]" id="potongan_bulan"
-                                class="form-input">
-                                <option value="0">-- Pilih bulan --</option>
-                                <option value="1">Januari</option>
-                                <option value="2">Februari</option>
-                                <option value="3">Maret</option>
-                                <option value="4">April</option>
-                                <option value="5">Mei</option>
-                                <option value="6">Juni</option>
-                                <option value="7">Juli</option>
-                                <option value="8">Agustus</option>
-                                <option value="9">September</option>
-                                <option value="10">Oktober</option>
-                                <option value="11">November</option>
-                                <option value="12">Desember</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col col-md-4 col-sm-6">
-                        <div class="input-box">
-                            <label for="is_nama">Kredit Koperasi</label>
-                            <input type="number" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi[]" class="form-input" value="">
-                        </div>
-                    </div>
-                    <div class="col col-md-3 col-sm-6">
-                        <div class="input-box">
-                            <label for="is_nama">Iuran Koperasi</label>
-                            <input type="number" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi[]" class="form-input" value="">
-                        </div>
-                    </div>
-                    <div class="col col-md-3 col-sm-6">
-                        <div class="input-box">
-                            <label for="is_nama">Kredit Pegawai</label>
-                            <input type="number" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai[]" class="form-input" value="">
-                        </div>
-                    </div>
-                    <div class="col col-md-3 col-sm-6">
-                        <div class="input-box">
-                            <label for="is_nama">Iuran IK</label>
-                            <input type="number" id="potongan_iuran_ik" name="potongan_iuran_ik[]" class="form-input" value="">
-                        </div>
-                    </div>
-                    <div class="col col-md-1">
-                        <button class="btn btn-info mt-3" type="button" id="btn-add-potongan">
-                            <i class="bi-plus-lg"></i>
-                        </button>
-                    </div>
-                    <div class="col col-md-1">
-                        <button class="btn btn-info mt-3" type="button" id="btn-delete-potongan">
-                            <i class="bi-dash-lg"></i>
-                        </button>
-                    </div>
-                </div>
-            `);
+            </select>
+        </div>
+    </div>
+    <div class="col col-md-4 col-sm-6">
+        <div class="input-box">
+            <label for="is">Bulan</label>
+            <select name="potongan_bulan[]" id="potongan_bulan"
+                class="form-input">
+                <option value="0">-- Pilih bulan --</option>
+                <option value="1">Januari</option>
+                <option value="2">Februari</option>
+                <option value="3">Maret</option>
+                <option value="4">April</option>
+                <option value="5">Mei</option>
+                <option value="6">Juni</option>
+                <option value="7">Juli</option>
+                <option value="8">Agustus</option>
+                <option value="9">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+        </div>
+    </div>
+    <div class="col col-md-4 col-sm-6">
+        <div class="input-box">
+            <label for="is_nama">Kredit Koperasi</label>
+            <input type="number" id="potongan_kredit_koperasi" name="potongan_kredit_koperasi[]" class="form-input" value="">
+        </div>
+    </div>
+    <div class="col col-md-3 col-sm-6">
+        <div class="input-box">
+            <label for="is_nama">Iuran Koperasi</label>
+            <input type="number" id="potongan_iuran_koperasi" name="potongan_iuran_koperasi[]" class="form-input" value="">
+        </div>
+    </div>
+    <div class="col col-md-3 col-sm-6">
+        <div class="input-box">
+            <label for="is_nama">Kredit Pegawai</label>
+            <input type="number" id="potongan_kredit_pegawai" name="potongan_kredit_pegawai[]" class="form-input" value="">
+        </div>
+    </div>
+    <div class="col col-md-3 col-sm-6">
+        <div class="input-box">
+            <label for="is_nama">Iuran IK</label>
+            <input type="number" id="potongan_iuran_ik" name="potongan_iuran_ik[]" class="form-input" value="">
+        </div>
+    </div>
+    <div class="col col-md-1">
+        <button class="btn btn-info mt-3" type="button" id="btn-add-potongan">
+            <i class="bi-plus-lg"></i>
+        </button>
+    </div>
+    <div class="col col-md-1">
+        <button class="btn btn-info mt-3" type="button" id="btn-delete-potongan">
+            <i class="bi-dash-lg"></i>
+        </button>
+    </div>
+</div>
+`);
             countIdPotongan++
         });
 
@@ -1483,7 +1440,7 @@
                     $.each(res2, function(i, item) {
                         $('#bagian').append(
                             `<option ${item.kd_bagian == kd_bagian ? 'selected' : ''} value="${item.kd_bagian}">${item.nama_bagian}</option>`
-                            );
+                        );
                     });
                 }
             })
