@@ -1516,7 +1516,7 @@
             $("#row_anak").append(`
                 <div id="anak-${countAnak}" class="child-div">
                     <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + iteration + `</h6>
-                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
+                    <div class="grid col-span-5 w-full lg:grid-cols-4 items-center md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
                         <input type="hidden" name="id_anak[]" value="">
                         <div class="col-md-6">
                             <div class="input-box">
@@ -1533,18 +1533,20 @@
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                <div class="flex gap-3">
-                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]">
-                                    <div>
-                                        <button class="btn btn-success btn-add-anak" type="button">
-                                            <i class="ti ti-plus"></i>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="${countAnak}" data-id-anak="">
-                                            <i class="ti ti-minus"></i>
-                                        </button>
-                                    </div>
+                                <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]">
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            <div class="flex items-center mt-7 gap-3">
+                                <div>
+                                    <button class="btn btn-success btn-add-anak" type="button">
+                                        <i class="ti ti-plus"></i>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="${countAnak}" data-id-anak="">
+                                        <i class="ti ti-minus"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1599,7 +1601,7 @@
             $("#row_anak").append(`
                 <div id="anak-${countAnak}" class="child-div">
                     <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + iteration + `</h6>
-                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
+                    <div class="grid col-span-5 w-full lg:grid-cols-4 items-center md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
                         <input type="hidden" name="id_anak[]" value="">
                         <div class="col-md-6">
                             <div class="input-box">
@@ -1616,8 +1618,11 @@
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                <div class="flex gap-3">
-                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]" value="">
+                                <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]" value="">
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            <div class="flex items-center mt-7 gap-3">
                                     <div>
                                         <button class="btn btn-success btn-add-anak" type="button">
                                             <i class="ti ti-plus"></i>
@@ -1628,8 +1633,7 @@
                                             <i class="ti ti-minus"></i>
                                         </button>
                                     </div>
-                                </div>
-                            </div>
+                                </div>    
                         </div>
                     </div>
                 </div>
