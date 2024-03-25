@@ -38,6 +38,7 @@ class PenghasilanTeraturRepository
                 ->join('mst_cabang', 'mst_cabang.kd_cabang', 'transaksi_tunjangan.kd_entitas')
                 ->where('mst_tunjangan.kategori', 'teratur')
                 ->where('mst_tunjangan.is_import', 1)
+                ->whereNull('tanggal_penonaktifan')
                 ->where(function ($query) use ($search) {
                     $query->where('mst_karyawan.nama_karyawan', 'like', "%$search%")
                     ->orWhere('mst_karyawan.nip', 'like', "%$search%")
@@ -94,6 +95,7 @@ class PenghasilanTeraturRepository
     }
 
     public function getDetailTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit, $kdEntitas){
+        $month = date('m', strtotime($tanggal));
         $data = DB::table('transaksi_tunjangan')
                 ->select(
                     'transaksi_tunjangan.nip as nip_tunjangan',
@@ -106,6 +108,7 @@ class PenghasilanTeraturRepository
                 )
                     ->join('mst_karyawan', 'mst_karyawan.nip', 'transaksi_tunjangan.nip')
                     ->join('mst_tunjangan', 'mst_tunjangan.id', 'transaksi_tunjangan.id_tunjangan')
+                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($month = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                     ->where('mst_tunjangan.kategori', 'teratur')
                     ->where('mst_tunjangan.is_import', 1)
                     ->where(function ($query) use ($search) {
