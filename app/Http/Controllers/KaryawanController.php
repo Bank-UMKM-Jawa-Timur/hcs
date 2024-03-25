@@ -746,7 +746,6 @@ class KaryawanController extends Controller
 
         $id_karyawan = KaryawanModel::find($id)->id;
         $dokumen = DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->first();
-
         return view('karyawan.edit', [
         // return view('karyawan.edit-old', [
             'data' => $data,
@@ -876,6 +875,8 @@ class KaryawanController extends Controller
                     }
                 }
                 $id_is = $request->get('id_pasangan');
+                $status_pernikahan = $request->get('status_pernikahan');
+
                 if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
                     if ($request->get('id_pasangan') == null) {
                         DB::table('keluarga')
@@ -906,6 +907,48 @@ class KaryawanController extends Controller
                             ]);
                     }
                 }
+                elseif ($status_pernikahan == 'Belum Kawin' || $status_pernikahan == 'Tidak Diketahui' ) {
+                    $dataKeluarga = DB::table('keluarga')->where('nip', $request->get('nip'))->first();
+                    if ($dataKeluarga) {
+                        DB::table('keluarga')->where('nip', $request->get('nip'))->delete();
+                    }
+                }
+                elseif ($status_pernikahan == 'Cerai' || $status_pernikahan == 'Cerai Mati' ) {
+                    $dataKeluarga = DB::table('keluarga')->where('nip', $request->get('nip'))->where('enum', 'Istri')->first();
+                    if ($dataKeluarga) {
+                        DB::table('keluarga')->where('nip', $request->get('nip'))->where('enum', 'Istri')->delete();
+                    }
+                } else {
+                    if ($request->get('id_pasangan') == null) {
+                        DB::table('keluarga')
+                            ->insert([
+                                'enum' => $request->get('is'),
+                                'nama' => $request->get('is_nama'),
+                                'tgl_lahir' => $request->get('is_tgl_lahir'),
+                                'alamat' => $request->get('is_alamat'),
+                                'pekerjaan' => $request->get('is_pekerjaan'),
+                                'jml_anak' => $request->get('is_jml_anak'),
+                                'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                                'nip' => $request->get('nip'),
+                                'created_at' => now()
+                            ]);
+                    } else {
+                        DB::table('keluarga')
+                            ->where('id', $id_is)
+                            ->update([
+                                'enum' => $request->get('is'),
+                                'nama' => $request->get('is_nama'),
+                                'tgl_lahir' => $request->get('is_tgl_lahir'),
+                                'alamat' => $request->get('is_alamat'),
+                                'pekerjaan' => $request->get('is_pekerjaan'),
+                                'jml_anak' => $request->get('is_jml_anak'),
+                                'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                                'nip' => $request->get('nip'),
+                                'updated_at' => now()
+                            ]);
+                    }
+                }
+
                 $entitas = EntityService::getEntityFromRequestEdit($request);
                 $karyawan = DB::table('mst_karyawan')
                     ->where('nip', $id)
