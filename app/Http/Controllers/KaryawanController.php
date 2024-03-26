@@ -56,7 +56,7 @@ class KaryawanController extends Controller
 
         $karyawanRepo = new KaryawanRepository();
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
-        $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
+    $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
 
         return view('karyawan.index', [
             'karyawan' => $data,
@@ -556,12 +556,15 @@ class KaryawanController extends Controller
         $karyawan = KaryawanModel::findOrFail($id);
         $data_suis = DB::table('keluarga')
             ->where('nip', $karyawan->nip)
+            ->where(function($query) {
+                $query->where('enum', 'Suami')
+                    ->orWhere('enum', 'Istri');
+            })
             ->orderByDesc('id')
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $karyawan->nip)
-            ->whereIn('enum', ['Anak'])
-            ->where('anak_ke', '<=', 2)
+            ->where('enum', 'Anak')
             ->get();
         $karyawan->tunjangan = DB::table('tunjangan_karyawan')
             ->where('nip', $id)
@@ -826,6 +829,15 @@ class KaryawanController extends Controller
                     }
                     $foto_kk->move($filePath, $fileNameNasabah);
                 }
+                if ($request->has('foto_buku_nikah')) {
+                    $foto_buku_nikah = $request->file('foto_buku_nikah');
+                    $fileNameNasabah = $foto_buku_nikah->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan ;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+                    $foto_buku_nikah->move($filePath, $fileNameNasabah);
+                }
 
                 // update dokumen
                 $doks = DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->first();
@@ -833,12 +845,14 @@ class KaryawanController extends Controller
                 $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : ($doks->foto_diri ?? null);
                 $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : ($doks->foto_ktp ?? null);
                 $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : ($doks->foto_kk ?? null);
+                $ft_buku_nikah = $request->has('foto_buku_nikah') ? $request->file('foto_buku_nikah')->getClientOriginalName() : ($doks->foto_buku_nikah ?? null);
 
                 if ($doks) {
                     DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->update([
                         'foto_diri' => $ft_diri,
                         'foto_ktp' => $ft_ktp,
                         'foto_kk' => $ft_kk,
+                        'foto_buku_nikah' => $ft_buku_nikah,
                         'updated_at' => now()
                     ]);
                 } else {
@@ -848,6 +862,7 @@ class KaryawanController extends Controller
                             'foto_diri' => $ft_diri,
                             'foto_ktp' => $ft_ktp,
                             'foto_kk' => $ft_kk,
+                            'foto_buku_nikah' => $ft_buku_nikah,
                             'created_at' => now()
                         ]);
                     }

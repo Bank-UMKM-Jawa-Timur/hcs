@@ -588,6 +588,20 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-6">
+                        <label class="w-2/4 mt-2">Foto Buku Nikah</label>
+                        <div class="w-full">
+                            @if($doks)
+                                @if ($doks->foto_buku_nikah)
+                                    <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_buku_nikah) }}"   class="w-full max-w-3xl border"/>
+                                @else
+                                    <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                                @endif
+                            @else
+                                <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+                            @endif
+                        </div>
+                    </div>
                 </div>
 
                 @if (count($data_anak) > 0)
