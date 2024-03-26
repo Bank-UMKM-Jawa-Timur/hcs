@@ -146,28 +146,33 @@
             @endif
             <td class="text-center">
                 <div class="justify-center flex">
-                    @if($item->status == 'proses')
-                        @if($item->total_penyesuaian > 0)
-                            @can('penghasilan - proses penghasilan - proses')
-                                <a href="#" class="btn btn-warning btn-perbarui"
-                                    data-modal-target="penyesuaian-modal"
-                                    data-modal-toggle="penyesuaian-modal"
-                                    data-batch_id="{{$item->id}}">Perbarui</a>
-                            @endcan
-                        @else
-                            @can('penghasilan - proses penghasilan - proses')
-                                @if ($item->tanggal_cetak != null && $item->tanggal_upload == null)
-                                    @can('penghasilan - proses penghasilan - lampiran gaji - upload')
-                                        @if ($item->file == null)
-                                            <a class="btn btn-primary btn-finalisasi" data-modal-target="modalUploadfile" data-modal-toggle="modalUploadfile" href="#" id="uploadFile" data-batch_id="{{ $item->id }}">
-                                                <i class="ti ti-circle-check"></i>Finalisasi
-                                            </a>
-                                        @endif
-                                    @endcan
-                                @endif
-                            @endcan
+                    @if (auth()->user()->kd_cabang == $item->kd_entitas)
+                        @if($item->status == 'proses')
+                            @if($item->total_penyesuaian > 0)
+                                @can('penghasilan - proses penghasilan - proses')
+                                    <a href="#" class="btn btn-warning btn-perbarui"
+                                        data-modal-target="penyesuaian-modal"
+                                        data-modal-toggle="penyesuaian-modal"
+                                        data-batch_id="{{$item->id}}">Perbarui</a>
+                                @endcan
+                            @else
+                                @can('penghasilan - proses penghasilan - proses')
+                                    @if ($item->tanggal_cetak != null && $item->tanggal_upload == null)
+                                        @can('penghasilan - proses penghasilan - lampiran gaji - upload')
+                                            @if ($item->file == null)
+                                                @if($item->kd_entitas == auth()->user()->kd_cabang)
+                                                    <a class="btn btn-primary btn-finalisasi" data-modal-target="modalUploadfile" data-modal-toggle="modalUploadfile" href="#" id="uploadFile" data-batch_id="{{ $item->id }}">
+                                                        <i class="ti ti-circle-check"></i>Finalisasi
+                                                    </a>
+                                                @endif
+                                            @endif
+                                        @endcan
+                                    @endif
+                                @endcan
+                            @endif
                         @endif
                     @endif
+
                     @if (auth()->user()->hasRole('admin'))
                         <a href="#" class="btn btn-danger d-flex justify-center btn-delete"
                            data-modal-toggle="delete-modal"
