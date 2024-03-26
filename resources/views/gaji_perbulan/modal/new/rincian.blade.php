@@ -5,7 +5,7 @@
                 <div class="heading">
                     <h2 class="modal-title">Rincian</h2>
                 </div>
-                <button data-modal-hide="rincian-modal"  class="modal-close"><i class="ti ti-x"></i></button>
+                <button data-modal-dismiss="rincian-modal"  class="modal-close"><i class="ti ti-x"></i></button>
             </div>
             <div class="modal-body">
                 <div class="pb-4 flex justify-start">

@@ -25,7 +25,7 @@
             <div class="heading">
                 <h2>Filter</h2>
             </div>
-            <button type="button" data-modal-hide="filter-modal"  class="modal-close"><i class="ti ti-x"></i></button>
+            <button type="button" data-modal-dismiss="modal" data-modal-hide="filter-modal"  class="modal-close"><i class="ti ti-x"></i></button>
         </div>
         <form action="" method="GET">
             <div class="modal-body">

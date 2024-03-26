@@ -10,7 +10,7 @@
                     <div class="heading">
                         <h2 class="modal-title">Proses Penggajian Bulanan</h2>
                     </div>
-                    <button data-modal-hide="proses-modal" type="button" class="modal-close"><i class="ti ti-x"></i></button>
+                    <button data-modal-hide="proses-modal" data-modal-dismiss="modal"    type="button" class="modal-close"><i class="ti ti-x"></i></button>
                 </div>
                 <div class="modal-body">
                     @if (!auth()->user()->hasRole('cabang'))

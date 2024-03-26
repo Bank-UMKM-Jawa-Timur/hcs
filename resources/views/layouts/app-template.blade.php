@@ -50,7 +50,7 @@
 {{-- javascript plugins --}}
 <script src="{{ asset('style/assets/js/core/jquery.min.js') }}"></script>
 <script src="{{ asset('style/plugins/js/select2.min.js') }}"></script>
-<script src="{{ asset('resources/js/app.js') }}"></script>
+{{-- <script src="{{ asset('resources/js/app.js') }}"></script> --}}
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -212,6 +212,7 @@
             });
         }
     })
+    
     // END Only Accept file validation
 </script>
     @stack('extraScript')

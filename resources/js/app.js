@@ -59,7 +59,7 @@ $(".btn-tab").on("click", function () {
     $(".tab-content").addClass("hidden");
     $(".tab-content").removeClass("block");
     $("#" + $(this).data("tab")).removeClass("hidden");
-    $("#" + $(this).data("tab")).addClass('block')
+    $("#" + $(this).data("tab")).addClass("block");
 });
 
 let interval = setInterval(function () {
@@ -78,14 +78,17 @@ $(document).click(function (e) {
     $(".dropdown-account-menu").addClass("hidden");
 });
 
-$('.btn-scroll-to-top').on('click', function () {
-    $('#scroll-body').animate({
-        scrollTop: $("#scroll-body").offset().top
-    }, 400);
+$(".btn-scroll-to-top").on("click", function () {
+    $("#scroll-body").animate(
+        {
+            scrollTop: $("#scroll-body").offset().top,
+        },
+        400
+    );
 });
 
-$('#scroll-body').scroll(function () {
-    if ($('#scroll-body').scrollTop() > 400) {
+$("#scroll-body").scroll(function () {
+    if ($("#scroll-body").scrollTop() > 400) {
         $(".btn-scroll-to-top").removeClass("hidden");
     } else {
         $(".btn-scroll-to-top").addClass("hidden");

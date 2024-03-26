@@ -4,7 +4,7 @@
             <div class="heading">
                 <h2>Konfirmasi</h2>
             </div>
-            <button data-modal-hide="delete-modal" class="modal-close"><i class="ti ti-x"></i></button>
+            <button data-modal-hide="delete-modal" data-modal-dismiss="modal" class="modal-close"><i class="ti ti-x"></i></button>
         </div>
         <form action="{{route('delete-proses-gaji', 1)}}" method="POST">
             @csrf

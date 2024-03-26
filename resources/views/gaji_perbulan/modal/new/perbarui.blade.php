@@ -5,7 +5,7 @@
                 <div class="heading">
                     <h2 class="modal-title">Perbarui</h2>
                 </div>
-                <button data-modal-hide="penyesuaian-modal" type="button" class="close" aria-label="Close">
+                <button data-modal-hide="penyesuaian-modal" data-modal-dismiss="modal" type="button" class="close" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>

@@ -5,7 +5,7 @@
                 <div class="heading">
                     <h2 class="modal-title" id="confirmModalLabel">Finalisasi Proses Penggajian</h2>
                 </div>
-                <button type="button" class="close" data-modal-hide="modalUploadfile" aria-label="Close">
+                <button type="button" class="close" data-modal-dismiss="modal" data-modal-hide="modalUploadfile" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>

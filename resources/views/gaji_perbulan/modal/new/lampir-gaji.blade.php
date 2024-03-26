@@ -4,8 +4,8 @@
             <div class="modal-head">
                 <div class="heading">
                     <h2 class="modal-title">Lampiran Gaji</h2>
-                </div>
-                <button type="button" class="close" data-modal-hide="lampiran-gaji-modal" aria-label="Close">
+                </div> 
+                <button type="button" class="close" data-modal-dismiss="modal" data-modal-hide="lampiran-gaji-modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>

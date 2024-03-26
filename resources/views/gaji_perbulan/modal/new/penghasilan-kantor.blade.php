@@ -5,7 +5,7 @@
                <div class="heading">
                 <h2 class="modal-title">Penghasilan Semua Kantor</h2>
                </div>
-                <button type="button" class="close" data-modal-hide="penghasilan-kantor-modal" aria-label="Close">
+                <button type="button" class="close" data-modal-dismiss="modal" data-modal-hide="penghasilan-kantor-modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>
