@@ -476,7 +476,8 @@ class GajiPerBulanController extends Controller
                                 'm.status_karyawan',
                                 DB::raw('CAST(gaji.tj_ti AS SIGNED) tj_ti'),
                                 DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS SIGNED) AS total_penghasilan'),
-                                DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik + gaji.dpp + gaji.bpjs_tk) AS SIGNED) AS total_potongan')
+                                DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik + gaji.dpp + gaji.bpjs_tk) AS SIGNED) AS total_potongan'),
+                                DB::raw('CAST(gaji.penambah_bruto_jamsostek AS SIGNED) penambah_bruto_jamsostek'),
                             )
                             ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
                             ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
@@ -488,6 +489,7 @@ class GajiPerBulanController extends Controller
             $totalPotongan = 0;
             $totalPotonganBaru = 0;
             foreach ($data_gaji as $key => $gaji) {
+                $bruto_lama = $gaji->total_penghasilan + $gaji->penambah_bruto_jamsostek;
                 $kd_entitas = null;
                 if (auth()->user()->kd_cabang && auth()->user()->kd_cabang != '000') {
                     $kd_entitas = auth()->user()->kd_cabang;
@@ -497,17 +499,18 @@ class GajiPerBulanController extends Controller
                 }
                 $gaji_component = new GajiComponent($kd_entitas);
                 $new_data = [];
-                $total_penghasilan_baru = $gaji->total_penghasilan;
+                $total_penghasilan_baru = 0;
                 $total_potongan_baru = $gaji->total_potongan;
 
                 $karyawan = DB::table('mst_karyawan')
                             ->where('nip', $gaji->nip)
                             ->first();
+
                 $total_gaji_baru = $karyawan->gj_pokok + $karyawan->gj_penyesuaian;
                 $tj_keluarga_baru = 0;
                 $tj_kesejahteraan_baru = 0;
                 if ($gaji->gj_pokok != $karyawan->gj_pokok) {
-                    $total_penghasilan_baru -= $gaji->gj_pokok;
+//                    $total_penghasilan_baru -= $gaji->gj_pokok;
                     $total_penghasilan_baru += $karyawan->gj_pokok;
                     $item = [
                         'gj_pokok' => $gaji->gj_pokok,
@@ -516,7 +519,7 @@ class GajiPerBulanController extends Controller
                     array_push($new_data, $item);
                 }
                 if ($gaji->gj_penyesuaian != $karyawan->gj_penyesuaian) {
-                    $total_penghasilan_baru -= $gaji->gj_penyesuaian;
+//                    $total_penghasilan_baru -= $gaji->gj_penyesuaian;
                     $total_penghasilan_baru += $karyawan->gj_penyesuaian;
                     $item = [
                         'gj_penyesuaian' => $gaji->gj_penyesuaian,
@@ -532,7 +535,7 @@ class GajiPerBulanController extends Controller
                     // Keluarga
                     if ($tunj->id_tunjangan == 1) {
                         if ($gaji->tj_keluarga != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_keluarga;
+//                            $total_penghasilan_baru -= $gaji->tj_keluarga;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_keluarga' => $gaji->tj_keluarga,
@@ -550,7 +553,7 @@ class GajiPerBulanController extends Controller
                     // Telepon
                     if ($tunj->id_tunjangan == 2) {
                         if ($gaji->tj_telepon != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_telepon;
+//                            $total_penghasilan_baru -= $gaji->tj_telepon;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_telepon' => $gaji->tj_telepon,
@@ -566,7 +569,7 @@ class GajiPerBulanController extends Controller
                     // Jabatan
                     if ($tunj->id_tunjangan == 3) {
                         if ($gaji->tj_jabatan != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_jabatan;
+//                            $total_penghasilan_baru -= $gaji->tj_jabatan;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_jabatan' => $gaji->tj_jabatan,
@@ -582,7 +585,7 @@ class GajiPerBulanController extends Controller
                     // Teller
                     if ($tunj->id_tunjangan == 4) {
                         if ($gaji->tj_teller != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_teller;
+//                            $total_penghasilan_baru -= $gaji->tj_teller;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_teller' => $gaji->tj_teller,
@@ -598,7 +601,7 @@ class GajiPerBulanController extends Controller
                     // Perumahan
                     if ($tunj->id_tunjangan == 5) {
                         if ($gaji->tj_perumahan != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_perumahan;
+//                            $total_penghasilan_baru -= $gaji->tj_perumahan;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_perumahan' => $gaji->tj_perumahan,
@@ -614,7 +617,7 @@ class GajiPerBulanController extends Controller
                     // Kemahalan
                     if ($tunj->id_tunjangan == 6) {
                         if ($gaji->tj_kemahalan != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_kemahalan;
+//                            $total_penghasilan_baru -= $gaji->tj_kemahalan;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_kemahalan' => $gaji->tj_kemahalan,
@@ -630,7 +633,7 @@ class GajiPerBulanController extends Controller
                     // Pelaksana
                     if ($tunj->id_tunjangan == 7) {
                         if ($gaji->tj_pelaksana != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_pelaksana;
+//                            $total_penghasilan_baru -= $gaji->tj_pelaksana;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_pelaksana' => $gaji->tj_pelaksana,
@@ -646,7 +649,7 @@ class GajiPerBulanController extends Controller
                     // Kesejahteraan
                     if ($tunj->id_tunjangan == 8) {
                         if ($gaji->tj_kesejahteraan != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_kesejahteraan;
+//                            $total_penghasilan_baru -= $gaji->tj_kesejahteraan;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_kesejahteraan' => $gaji->tj_kesejahteraan,
@@ -664,7 +667,7 @@ class GajiPerBulanController extends Controller
                     // Multilevel
                     if ($tunj->id_tunjangan == 9) {
                         if ($gaji->tj_multilevel != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_multilevel;
+//                            $total_penghasilan_baru -= $gaji->tj_multilevel;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_multilevel' => $gaji->tj_multilevel,
@@ -680,7 +683,7 @@ class GajiPerBulanController extends Controller
                     // TI
                     if ($tunj->id_tunjangan == 10) {
                         if ($gaji->tj_ti != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_ti;
+//                            $total_penghasilan_baru -= $gaji->tj_ti;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_ti' => $gaji->tj_ti,
@@ -696,7 +699,7 @@ class GajiPerBulanController extends Controller
                     // Fungsional
                     if ($tunj->id_tunjangan == 30) {
                         if ($gaji->tj_fungsional != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_fungsional;
+//                            $total_penghasilan_baru -= $gaji->tj_fungsional;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_fungsional' => $gaji->tj_fungsional,
@@ -739,8 +742,9 @@ class GajiPerBulanController extends Controller
                 foreach ($transaksi_tunjangan as $tunj) {
                     // Transport
                     if ($tunj->id_tunjangan == 11) {
+                        $bruto_lama += $gaji->tj_transport;
                         if ($gaji->tj_transport != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_transport;
+//                            $total_penghasilan_baru -= $gaji->tj_transport;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_transport' => $gaji->tj_transport,
@@ -755,8 +759,9 @@ class GajiPerBulanController extends Controller
                     }
                     // Pulsa
                     if ($tunj->id_tunjangan == 12) {
+                        $bruto_lama += $gaji->tj_pulsa;
                         if ($gaji->tj_pulsa != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_pulsa;
+//                            $total_penghasilan_baru -= $gaji->tj_pulsa;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_pulsa' => $gaji->tj_pulsa,
@@ -771,8 +776,9 @@ class GajiPerBulanController extends Controller
                     }
                     // Vitamin
                     if ($tunj->id_tunjangan == 13) {
+                        $bruto_lama += $gaji->tj_vitamin;
                         if ($gaji->tj_vitamin != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->tj_vitamin;
+//                            $total_penghasilan_baru -= $gaji->tj_vitamin;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'tj_vitamin' => $gaji->tj_vitamin,
@@ -787,8 +793,9 @@ class GajiPerBulanController extends Controller
                     }
                     // Uang Makan
                     if ($tunj->id_tunjangan == 14) {
+                        $bruto_lama += $gaji->uang_makan;
                         if ($gaji->uang_makan != $tunj->nominal) {
-                            $total_penghasilan_baru -= $gaji->uang_makan;
+//                            $total_penghasilan_baru -= $gaji->uang_makan;
                             $total_penghasilan_baru += $tunj->nominal;
                             $item = [
                                 'uang_makan' => $gaji->uang_makan,
@@ -846,6 +853,7 @@ class GajiPerBulanController extends Controller
                     if ($current) {
                         $nominalLama = (int) $current->nominal;
                         $nominalBaru = (int) $tidakRutin->nominal;
+                        $bruto_lama += $nominalLama;
                         if ($nominalLama != $nominalBaru) {
                             $item_title = str_replace(' ', '_', strtolower($tidakRutin->nama_tunjangan));
                             $item_title_new = $item_title.'_baru';
@@ -867,7 +875,7 @@ class GajiPerBulanController extends Controller
                         array_push($new_data, $item);
                     }
 
-                    $total_penghasilan_baru -= $nominalLama;
+//                    $total_penghasilan_baru -= $nominalLama;
                     $total_penghasilan_baru += $nominalBaru;
                 }
 
@@ -890,6 +898,7 @@ class GajiPerBulanController extends Controller
                                     ->first();
                     if (!$current) {
                         $nominalLama = (int) $batchTidakRutin->nominal;
+                        $bruto_lama += $nominalLama;
                         $nominalBaru = 0;
                         $item_title = str_replace(' ', '_', strtolower($batchTidakRutin->nama_tunjangan));
                         $item_title_new = $item_title.'_baru';
@@ -899,12 +908,10 @@ class GajiPerBulanController extends Controller
                         ];
                         array_push($new_data, $item);
 
-                        $total_penghasilan_baru -= $nominalLama;
+//                        $total_penghasilan_baru -= $nominalLama;
                         $total_penghasilan_baru += $nominalBaru;
                     }
                 }
-
-                $totalBrutoBaru += $total_penghasilan_baru;
 
                 // Get Potongan
                 $potongan = DB::table('potongan_gaji')
@@ -1031,17 +1038,18 @@ class GajiPerBulanController extends Controller
                     array_push($new_data, $item);
                 }
 
-                $totalPotonganBaru += $total_potongan_baru;
-                $totalPotongan += $gaji->total_potongan;
-                $totalBruto += $gaji->total_penghasilan;
-
                 if (count($new_data) == 0) {
                     unset($data_gaji[$key]);
                 } else {
+                    $totalPotonganBaru += $total_potongan_baru;
+                    $totalPotongan += $gaji->total_potongan;
+                    $totalBruto += $bruto_lama;
+                    $totalBrutoBaru += $total_penghasilan_baru + $bruto_lama;
                     $gaji->penyesuaian = $new_data;
-                    $gaji->total_penghasilan_baru = $total_penghasilan_baru;
+                    $gaji->total_penghasilan_baru = $total_penghasilan_baru + $bruto_lama;
                     $gaji->total_potongan_baru = $total_potongan_baru;
                 }
+                $gaji->bruto_lama = $bruto_lama;
             }
             $grandtotal = [
                 'bruto_lama' => (int) $totalBruto,
