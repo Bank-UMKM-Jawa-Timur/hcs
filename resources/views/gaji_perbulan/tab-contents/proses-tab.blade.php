@@ -160,9 +160,11 @@
                                     @if ($item->tanggal_cetak != null && $item->tanggal_upload == null)
                                         @can('penghasilan - proses penghasilan - lampiran gaji - upload')
                                             @if ($item->file == null)
-                                                <a class="btn btn-primary btn-finalisasi" data-modal-target="modalUploadfile" data-modal-toggle="modalUploadfile" href="#" id="uploadFile" data-batch_id="{{ $item->id }}">
-                                                    <i class="ti ti-circle-check"></i>Finalisasi
-                                                </a>
+                                                @if($item->kd_entitas == auth()->user()->kd_cabang)
+                                                    <a class="btn btn-primary btn-finalisasi" data-modal-target="modalUploadfile" data-modal-toggle="modalUploadfile" href="#" id="uploadFile" data-batch_id="{{ $item->id }}">
+                                                        <i class="ti ti-circle-check"></i>Finalisasi
+                                                    </a>
+                                                @endif
                                             @endif
                                         @endcan
                                     @endif

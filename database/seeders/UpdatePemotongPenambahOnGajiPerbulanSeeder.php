@@ -28,6 +28,7 @@ class UpdatePemotongPenambahOnGajiPerbulanSeeder extends Seeder
                         'gaji.gj_pokok',
                         'gaji.tj_keluarga',
                         'gaji.tj_kesejahteraan',
+                        'gaji.tj_ti',
                         DB::raw("(gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_telepon + gaji.tj_pelaksana + gaji.tj_kemahalan + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti + gaji.tj_fungsional) AS total_gaji"),
                     )
                     ->join('mst_karyawan AS karyawan', 'karyawan.nip', 'gaji.nip')
@@ -46,8 +47,11 @@ class UpdatePemotongPenambahOnGajiPerbulanSeeder extends Seeder
                 $jkm = $gaji_component->getJKM($kpj, $total_gaji, true);
                 $kesehatan = $gaji_component->getKesehatan($jkn, $total_gaji, true);
                 $jp = $gaji_component->getJPPenambah($kpj, $total_gaji, true);
-                // Pengurang
-                $bpjstk2 = $gaji_component->getBPJSTK($kpj, $total_gaji, $value->bulan, true, true);
+                /*
+                 * Get BPJS TK
+                 * Tunjangan TI tidak ikut dihitung
+                 * */
+                $bpjstk2 = $gaji_component->getBPJSTK($kpj, ($total_gaji - $value->tj_ti), $value->bulan, true, true);
                 $data = [
                     'jkk' => $jkk,
                     'jht' => $jht,
