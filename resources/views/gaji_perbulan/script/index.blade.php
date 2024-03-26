@@ -291,11 +291,12 @@
             `;
             return row_element;
         }
-        let table_pembaruan = null
+
         $('.btn-perbarui').on('click', function() {
             const batch_id = $(this).data('batch_id');
             const is_pegawai = $(this).data('is_pegawai');
-            table_pembaruan = $('#penyesuaian-table').DataTable({
+            let table_pembaruan = $('#penyesuaian-modal #penyesuaian-table').DataTable({
+                destroy: true,
                 processing: true,
                 serverSide: false,
                 ajax: `{{ route('gaji_perbulan.penyesuian_json') }}?batch_id=${batch_id}`,
@@ -410,16 +411,19 @@
 
             // Add event listener for opening and closing details
             table_pembaruan.on('click', 'td.dt-control', function (e) {
-                let tr = e.target.closest('tr');
-                let row = table_pembaruan.row(tr);
+                var tr = e.target.closest('tr');
+                var row = table_pembaruan.row(tr);
+                var data = row.data();
 
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                }
-                else {
-                    // Open this row
-                    row.child(showDetail(row.data().penyesuaian)).show();
+                if (data) { 
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('dt-hasChild');
+                    } else {
+                        // Open this row
+                        row.child(showDetail(data.penyesuaian)).show();
+                    }
                 }
             });
             $('#penyesuaian-modal #batch_id').val(batch_id);
@@ -427,10 +431,10 @@
             $('#penyesuaian-modal').removeClass('hidden');
         })
 
-        $('#penyesuaian-modal .close').on('click', function () {
+        /*$('#penyesuaian-modal .close').on('click', function () {
             $('#penyesuaian-modal').addClass('hidden');
             $("#penyesuaian-modal #penyesuaian-table").dataTable().fnDestroy();
-        })
+        })*/
 
         $('.btn-final').on('click', function() {
             const token = generateCsrfToken()
@@ -785,7 +789,6 @@
                     // $( api.column( 13 ).footer('.total') ).html(displayTotalGajiTotal);
                     var displayTotalGajiPPH = formatRupiahExcel(totalGajiPPH)
                     // $( api.column( 14 ).footer('.total') ).html(displayTotalGajiPPH);
-                    console.log(`pph: ${totalGajiPPH}`);
                     $('tfoot tr.total').html(`
                         <th colspan="2" class="text-center">Total</th>
                         <th class="text-right">${displayTotalGajiPokok}</th>

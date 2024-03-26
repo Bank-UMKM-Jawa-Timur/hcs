@@ -1,11 +1,11 @@
-<div class="modal-layout no-backdrop-click hidden" id="modalUploadfile" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-    <div class="modal modal-sm" role="document">
+<div class="modal-layout hidden" id="modalUploadfile" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal w-1/3" role="document">
         <div class="modal-content">
             <div class="modal-head">
                 <div class="heading">
                     <h2 class="modal-title" id="confirmModalLabel">Finalisasi Proses Penggajian</h2>
                 </div>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-modal-hide="modalUploadfile" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>

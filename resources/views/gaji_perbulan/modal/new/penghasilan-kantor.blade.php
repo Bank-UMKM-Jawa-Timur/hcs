@@ -1,11 +1,11 @@
-<div class="modal-layout no-backdrop-click hidden" tabindex="-1" id="penghasilan-kantor-modal">
-    <div class="modal max-w-[90%]">
+<div class="modal-layout hidden" tabindex="-1" id="penghasilan-kantor-modal">
+    <div class="modal w-full my-3">
         <div class="modal-content">
             <div class="modal-head">
                <div class="heading">
                 <h2 class="modal-title">Penghasilan Semua Kantor</h2>
                </div>
-                <button type="button" class="close" data-modal-dismiss="penghasilan-kantor-modal" aria-label="Close">
+                <button type="button" class="close" data-modal-hide="penghasilan-kantor-modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>

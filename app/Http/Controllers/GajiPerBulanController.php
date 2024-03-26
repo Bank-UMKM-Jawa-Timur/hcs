@@ -146,7 +146,6 @@ class GajiPerBulanController extends Controller
         $proses_list = $gajiRepo->getPenghasilanList($tahun_req, $bulan_req, $cabang_req,'proses', $limit, ($request->has('tab') && $tab == 'proses') ? $page : 1, $search_proses);
         // Final
         $final_list = $gajiRepo->getPenghasilanList($tahun_req, $bulan_req, $cabang_req,'final', $limit, ($request->has('tab') && $tab == 'final') ? $page : 1, $search_final);
-        // Sampah
 
         // Kode Jabatan direktur,komisaris & staf ahli
         $kd_divisi_non_pegawai = GajiPerBulanRepository::getDivisiNonPegawai();
@@ -318,6 +317,10 @@ class GajiPerBulanController extends Controller
                                 ->where('nip', $value->nip)
                                 ->whereIn('id_tunjangan', $id_tunjangan_teratur_arr)
                                 ->sum('nominal');
+                $tunjangan_ti = (int) DB::table('tunjangan_karyawan')
+                                ->where('nip', $value->nip)
+                                ->whereIn('id_tunjangan', 10)
+                                ->sum('nominal');
                 $tj_keluarga = DB::table('tunjangan_karyawan')
                                 ->where('nip', $value->nip)
                                 ->where('id_tunjangan', 1)
@@ -379,8 +382,11 @@ class GajiPerBulanController extends Controller
                 }
                 $bulan = date('m');
 
-                // Get BPJS TK
-                $bpjs_tk = $gaji_component->getBPJSTK($value->kpj, $total_gaji, $bulan);
+                /*
+                 * Get BPJS TK
+                 * Tunjangan TI tidak ikut dihitung
+                 * */
+                $bpjs_tk = $gaji_component->getBPJSTK($value->kpj, ($total_gaji - $tunjangan_ti), $bulan);
 
                 $potongan += $potongan_karyawan + $dpp + $bpjs_tk;
                 $sub_total_dpp += $dpp;
@@ -464,6 +470,7 @@ class GajiPerBulanController extends Controller
                                 'gaji.*',
                                 'm.nama_karyawan',
                                 'm.status_karyawan',
+                                DB::raw('CAST(gaji.tj_ti AS SIGNED) tj_ti'),
                                 DB::raw('CAST((gaji.gj_pokok + gaji.gj_penyesuaian + gaji.tj_keluarga + gaji.tj_telepon + gaji.tj_jabatan + gaji.tj_teller + gaji.tj_perumahan + gaji.tj_kemahalan + gaji.tj_pelaksana + gaji.tj_kesejahteraan + gaji.tj_multilevel + gaji.tj_ti) AS SIGNED) AS total_penghasilan'),
                                 DB::raw('CAST((gaji.kredit_koperasi + gaji.iuran_koperasi + gaji.kredit_pegawai + gaji.iuran_ik + gaji.dpp + gaji.bpjs_tk) AS SIGNED) AS total_potongan')
                             )
@@ -484,6 +491,7 @@ class GajiPerBulanController extends Controller
                 else {
                     $kd_entitas = '000';
                 }
+                $gaji_component = new GajiComponent($kd_entitas);
                 $new_data = [];
                 $total_penghasilan_baru = $gaji->total_penghasilan;
                 $total_potongan_baru = $gaji->total_potongan;
@@ -988,21 +996,7 @@ class GajiPerBulanController extends Controller
                 $nominal_jp = ($bulan > 2) ? $jp_mar_des : $jp_jan_feb;
                 if ($gaji->kd_jabatan != 'DIR' && $gaji->kd_jabatan != 'KOM' && $gaji->kd_jabatan != 'SAD')
                 {
-                    if($gaji->status_karyawan == 'IKJP' || $gaji->status_karyawan == 'Kontrak Perpanjangan') {
-                        $dpp = ($persen_jp_pengurang / 100) * $total_gaji_baru;
-                    }
-                    else {
-                        // Get DPP
-                        $dpp = round(((($karyawan->gj_pokok + $tj_keluarga_baru) + ($tj_kesejahteraan_baru * 0.5)) * 0.05));
-                        // Get JP 1%
-                        $jp_1_persen = floor($total_gaji_baru * ($persen_jp_pengurang / 100));
-                        if($total_gaji_baru >= $nominal_jp){
-                            $jp_1_persen = floor($nominal_jp * ($persen_jp_pengurang / 100));
-                        } else {
-                            $jp_1_persen = floor($total_gaji_baru * ($persen_jp_pengurang / 100));
-                        }
-                    }
-                    $dpp = round($dpp);
+                    $dpp = $gaji_component->getDPP($gaji->status_karyawan, $karyawan->gj_pokok, $tj_keluarga_baru, $tj_kesejahteraan_baru);
 
                     if ($dpp != $gaji->dpp) {
                         $total_potongan_baru -= $gaji->dpp;
@@ -1015,28 +1009,14 @@ class GajiPerBulanController extends Controller
                     }
                 }
 
-                // Get BPJS TK
+                /*
+                 * Get BPJS TK
+                 * Tunjangan TI tidak ikut dihitung
+                 * */
                 $jp_persen = $persen_jp_pengurang / 100;
                 $bpjs_tk = 0;
-                if ($karyawan->kpj) {
-                    if ($bulan > 2) {
-                        if ($total_gaji_baru > $jp_mar_des) {
-                            $bpjs_tk = $jp_mar_des * $jp_persen;
-                        }
-                        else {
-                            $bpjs_tk = $total_gaji_baru * $jp_persen;
-                        }
-                    }
-                    else {
-                        if ($total_gaji_baru >= $jp_jan_feb) {
-                            $bpjs_tk = $jp_jan_feb * $jp_persen;
-                        }
-                        else {
-                            $bpjs_tk = $total_gaji_baru * $jp_persen;
-                        }
-                    }
-                    $bpjs_tk = round($bpjs_tk);
-                }
+                $bpjs_tk = $gaji_component->getBPJSTK($karyawan->kpj, ($total_penghasilan_baru - $gaji->tj_ti), $bulan);
+
                 if ($bpjs_tk != $gaji->bpjs_tk) {
                     $total_potongan_baru -= $gaji->bpjs_tk;
                     $total_potongan_baru += $bpjs_tk;
@@ -1263,18 +1243,20 @@ class GajiPerBulanController extends Controller
 
                 $karyawan = DB::table('mst_karyawan')
                                 ->whereRaw("(tanggal_penonaktifan IS NULL OR ($last_month_penggajian = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
-                                ->when($is_pusat, function($query) use ($kd_cabang, $kd_divisi, $selected_divisi, $is_pegawai) {
-                                    if ($is_pegawai) {
-                                        $query->where(function($query2) use ($kd_divisi, $kd_cabang) {
-                                            $query2->whereNotIn('kd_entitas', $kd_divisi)
-                                                ->whereNotIn('kd_entitas', $kd_cabang)
-                                                ->orWhereNull('kd_entitas');
-                                        });
-                                    }
-                                    else {
-                                        $query->where('kd_entitas', $selected_divisi);
-                                    }
-                                })
+                                // ->when($is_pusat, function($query) use ($kd_cabang, $kd_divisi, $selected_divisi, $is_pegawai) {
+                                //     if ($is_pegawai) {
+                                //         $query->where(function($query2) use ($kd_divisi, $kd_cabang) {
+                                //             $query2->whereNotIn('kd_entitas', $kd_divisi)
+                                //                 ->whereNotIn('kd_entitas', $kd_cabang)
+                                //                 ->orWhereNull('kd_entitas');
+                                //         });
+                                //     }
+                                //     else {
+                                //         $query->where('kd_entitas', $selected_divisi);
+                                //     }
+                                // })
+                                ->where('batch_id', $request->get('batch_id'))
+                                ->join('gaji_per_bulan', 'gaji_per_bulan.nip', 'mst_karyawan.nip')
                                 ->get();
             }
 
@@ -1377,9 +1359,12 @@ class GajiPerBulanController extends Controller
                     $dpp = $gaji_component->getDPP($item->status_karyawan, $item->gj_pokok, $tunjangan[0], $tunjangan[7]);
                 }
 
-                // Get BPJS TK
-                $bpjs_tk = $gaji_component->getBPJSTK($item->kpj, $total_gaji, $bulan);
-                $bpjs_tk_two = $gaji_component->getBPJSTK($item->kpj, $total_gaji, $bulan, false, true);
+                /*
+                 * Get BPJS TK
+                 * Tunjangan TI tidak ikut dihitung
+                 * */
+                $bpjs_tk = $gaji_component->getBPJSTK($item->kpj, ($total_gaji - $tunjangan[9]), $bulan);
+                $bpjs_tk_two = $gaji_component->getBPJSTK($item->kpj, ($total_gaji - $tunjangan[9]), $bulan, false, true);
 
                 // Get Penambah Bruto Jamsostek
                 $jkk = $gaji_component->getJKK($item->kpj, $total_gaji);

@@ -1,11 +1,11 @@
-<div class="modal-layout no-backdrop-click hidden" data-modal-backdrop="static" tabindex="-1" id="penyesuaian-modal">
-    <div class="modal max-w-[90%]">
-        <div class="modal-content">
+<div class="modal-layout p-5 no-backdrop-click hidden" tabindex="-1" id="penyesuaian-modal">
+    <div class="modal w-full" >
+        <div class="modal-content py-3">
             <div class="modal-head">
                 <div class="heading">
                     <h2 class="modal-title">Perbarui</h2>
                 </div>
-                <button type="button" class="close" aria-label="Close">
+                <button data-modal-hide="penyesuaian-modal" type="button" class="close" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>

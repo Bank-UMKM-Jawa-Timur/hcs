@@ -1,14 +1,11 @@
-<div class="modal-layout no-backdrop-click hidden" tabindex="-1" id="rincian-modal">
-    <div class="modal max-w-[90%]" style="">
-            <div class="modal-content" style="
-                                        width: 100%;
-                                        margin: 0;
-                                        padding: 0;">
+<div class="modal-layout hidden" tabindex="-1" id="rincian-modal">
+    <div class="modal w-full my-3">
+            <div class="modal-content">
             <div class="modal-head">
                 <div class="heading">
                     <h2 class="modal-title">Rincian</h2>
                 </div>
-                <button data-modal-dismiss="rincian-modal"  class="modal-close"><i class="ti ti-x"></i></button>
+                <button data-modal-hide="rincian-modal"  class="modal-close"><i class="ti ti-x"></i></button>
             </div>
             <div class="modal-body">
                 <div class="pb-4 flex justify-start">

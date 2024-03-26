@@ -20,12 +20,12 @@
     ];
 @endphp
 <div class="modal-layout hidden" id="filter-modal" tabindex="-1" aria-hidden="true">
-    <div class="modal modal-sm">
+    <div class="modal w-1/3">
         <div class="modal-head">
             <div class="heading">
                 <h2>Filter</h2>
             </div>
-            <button type="button" data-modal-dismiss="filter-modal"  class="modal-close"><i class="ti ti-x"></i></button>
+            <button type="button" data-modal-hide="filter-modal"  class="modal-close"><i class="ti ti-x"></i></button>
         </div>
         <form action="" method="GET">
             <div class="modal-body">

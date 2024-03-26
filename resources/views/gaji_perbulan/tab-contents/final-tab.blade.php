@@ -145,6 +145,8 @@
                 <td>
                     @if (auth()->user()->hasRole('admin'))
                         <a href="#" class="btn btn-danger d-flex justify-center btn-delete"
+                           data-modal-toggle="delete-modal"
+                           data-modal-target="delete-modal"
                             data-batch_id="{{$item->id}}"
                             data-kantor="{{$item->kantor}}"
                             data-bulan="{{$item->bulan}}"

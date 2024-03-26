@@ -72,9 +72,9 @@
             <td class="text-center">{{ $months[$item->bulan] }}</td>
             <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
             <td class="text-center flex justify-center gap-5">
-                <a href="#" data-modal-id="rincian-modal" data-modal-toggle="modal" class="btn btn-warning btn-rincian"
+                <a href="#" data-modal-target="rincian-modal" data-modal-toggle="rincian-modal" class="btn btn-warning btn-rincian"
                     data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Rincian</a>
-                <a href="#" data-modal-id="payroll-modal" data-modal-toggle="modal" class="btn btn-success btn-payroll"
+                <a href="#" data-modal-target="payroll-modal" data-modal-toggle="payroll-modal" class="btn btn-success btn-payroll"
                     data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Payroll</a>
             </td>
             @if ($item->bruto == 0)

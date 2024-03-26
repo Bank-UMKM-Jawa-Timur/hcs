@@ -35,7 +35,7 @@
         </div>
         <div class="button-wrapper flex gap-3 lg:mt-0 mt-5">
             @if (auth()->user()->hasRole(['kepegawaian','hrd','admin']))
-                <button class="btn btn-warning-light lg:text-base text-xs filter" data-modal-id="filter-modal" data-modal-toggle="modal"><i class="ti ti-file-search"></i> Filter</button>
+                <button class="btn btn-warning-light lg:text-base text-xs filter" data-modal-target="filter-modal" data-modal-toggle="filter-modal"><i class="ti ti-file-search"></i> Filter</button>
                 @if (\Request::has('cabang'))
                     <button class="btn btn-danger-light lg:text-base text-xs">
                         <a href="{{route('gaji_perbulan.index')}}">
@@ -45,7 +45,7 @@
                 @endif
             @endif
             @if (auth()->user()->hasRole('kepegawaian'))
-                <button class="btn btn-primary-light lg:text-base text-xs penghasilan-all-kantor" data-modal-id="penghasilan-kantor-modal" data-modal-toggle="modal"><i class="ti ti-file-import"></i> Penghasilan Semua Kantor</button>
+                <button class="btn btn-primary-light lg:text-base text-xs penghasilan-all-kantor" data-modal-target="penghasilan-kantor-modal" data-modal-toggle="penghasilan-kantor-modal"><i class="ti ti-file-import"></i> Penghasilan Semua Kantor</button>
             @endif
             @can('penghasilan - proses penghasilan - proses')
                 {{--  @if (auth()->user()->hasRole('kepegawaian'))
@@ -54,8 +54,8 @@
                         <i class="ti ti-plus"></i> Proses Penggajian Lainnya
                     </button>
                 @endif  --}}
-                <button class="btn btn-primary btn-proses lg:text-base text-xs" data-modal-id="proses-modal"
-                    data-modal-toggle="modal" data-is_pegawai="true">
+                <button class="btn btn-primary btn-proses lg:text-base text-xs" data-modal-target="proses-modal"
+                    data-modal-toggle="proses-modal" data-is_pegawai="true">
                     <i class="ti ti-plus"></i> Proses Penggajian
                 </button>
             @endcan
@@ -229,7 +229,6 @@
         function refreshPagination() {
             var btn_pagination = $("#myTabContent .block .pagination").find("a");
             var page_url = window.location.href;
-            console.log(btn_pagination);
 
             // Your custom query parameter and its value
             let tab = $('#tab').val();
@@ -272,13 +271,12 @@
         const bulan = $(this).data("bulan");
         const tahun = $(this).data("tahun");
         const id = $(this).data("batch_id");
-        console.log(id);
 
         $(`${target} #kantor`).html(kantor);
         $(`${target} #bulan`).html(bulan);
         $(`${target} #tahun`).html(tahun);
         $(`${target} #id`).val(id);
-        $(`${target}`).removeClass('hidden');
+        //$(`${target}`).removeClass('hidden');
     })
     $(`.btn-restore`).on('click', function(){
         const target = '#restore-modal';
