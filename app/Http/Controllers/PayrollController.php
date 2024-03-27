@@ -51,6 +51,9 @@ class PayrollController extends Controller
         $year = $request->get('tahun');
         FacadesSession::put('year',$year);
 
+        $cabang = $request->get('cabang');
+        FacadesSession::put('cabang',$cabang);
+
         $cabangRepo = new CabangRepository;
         $cabang = $cabangRepo->listCabang();
 
@@ -85,7 +88,7 @@ class PayrollController extends Controller
         $month = FacadesSession::get('month');
         $year = FacadesSession::get('year');
         $kategori = FacadesSession::get('kategori');
-
+        $cabang = FacadesSession::get('cabang');
         $search = null;
         $page = null;
         $data = $this->list($kantor, $month, $year, $search, $page, null,'cetak');
@@ -141,19 +144,34 @@ class PayrollController extends Controller
 
             $krywn->jabatan_result = $jabatan;
         }
-        $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
-        if (auth()->user()->hasRole('cabang')) {
-            $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('tanggal_penonaktifan', null)->where('kd_entitas', $kd_entitas)->first();
-            $cabang = DB::table('mst_cabang')->select('kd_cabang', 'nama_cabang')->where('kd_cabang', $kd_entitas)->first();
+
+        if ($kantor) {
+            if ($kantor == 'pusat') {
+                $kd_entitas = '000';
+            } else {
+                $kd_entitas = $cabang;
+            }
         } else {
-            $pincab = null;
-            $cabang = null;
+            $kd_entitas = auth()->user()->hasRole('cabang') ? auth()->user()->kd_cabang : '000';
         }
+
+        if ($kd_entitas != '000') {
+            $kantorCabang = DB::table('mst_cabang')->where('kd_cabang', $kd_entitas)->first()->nama_cabang;
+
+            $kantors = 'Cabang '. $kantorCabang;
+
+            $pincab = DB::table('mst_karyawan')->where('kd_jabatan', 'PC')->where('tanggal_penonaktifan', null)->where('kd_entitas', $kd_entitas)->first();
+        } else {
+            $kantors = 'Kantor Pusat';
+            $pincab = null;
+        }
+
+
         if ($kategori == 'payroll'){
-            return view('payroll.tables.payroll-pdf', ['data' => $data, 'pincab' => $pincab, 'cabang' => $cabang, 'ttdKaryawan' => $ttdKaryawan]);
+            return view('payroll.tables.payroll-pdf', ['data' => $data, 'entitas' => $kd_entitas, 'kantor' => $kantors, 'pincab' => $pincab, 'cabang' => $kantorCabang, 'ttdKaryawan' => $ttdKaryawan]);
 
         }elseif ($kategori = 'rincian') {
-            return view('payroll.tables.rincian-pdf', ['data' => $data,'pincab' => $pincab, 'cabang' => $cabang, 'ttdKaryawan' => $ttdKaryawan]);
+            return view('payroll.tables.rincian-pdf', ['data' => $data, 'entitas' => $kd_entitas, 'kantor' => $kantors, 'pincab' => $pincab, 'cabang' => $kantorCabang, 'ttdKaryawan' => $ttdKaryawan]);
         }else{
             Alert::error('Terjadi kesalahan');
             return redirect()->route('payroll.index');

@@ -91,7 +91,7 @@
 @endphp
     <div class="container">
         <h5 class="fw-bold text-center">RINCIAN GAJI PEGAWAI</h5>
-        <h5 class="fw-bold text-center">KANTOR PUSAT</h5>
+        <h5 class="fw-bold text-center">{{strtoupper($kantor)}}</h5>
         <h5 class="fw-bold text-center">BANK BPR JATIM BANK UMKM JAWA TIMUR</h5>
         <h6 class="fw-bold text-center">{{ $bulan[Session::get('month')] }} {{ Session::get('year') }}</h6>
         <center style="font-size: 10px; text-align: center" class="text-center">( MASUK TAB. SIKEMAS )</center>
@@ -215,9 +215,9 @@
             @if (auth()->user()->hasRole('cabang'))
                 <div></div>
                 <div>
-                    <p class="p-0 m-0 mb-5">{{$cabang->nama_cabang}}, {{ date('d F Y', strtotime($data[0]->tanggal_input)) }}</p>
+                    <p class="p-0 m-0 mb-5">{{$cabang}}, {{ date('d F Y', strtotime($data[0]->tanggal_input)) }}</p>
                     <p class="p-0 m-0 fw-bold text-decoration-underline">{{ $pincab->nama_karyawan }}</p>
-                    <p class="p-0 m-0">Pimpinan Cabang {{$cabang->nama_cabang}}</p>
+                    <p class="p-0 m-0">Pimpinan Cabang {{$cabang}}</p>
                 </div>
             @endif
         </div>

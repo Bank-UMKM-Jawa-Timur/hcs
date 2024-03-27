@@ -113,6 +113,7 @@ class PenghasilanTidakTeraturRepository
 
     public function getDetailBonus($search, $limit=10, $page=1, $id, $tgl, $kd_entitas) {
         $format_tgl = Carbon::parse($tgl)->format('y-m-d');
+        $month = date('m', strtotime($tgl));
                 $bonus = KaryawanModel::select(
                     'nama_tunjangan',
                     'id_tunjangan',
@@ -140,6 +141,7 @@ class PenghasilanTidakTeraturRepository
                     ->where('penghasilan_tidak_teratur.id_tunjangan', $id)
                     ->whereDate('penghasilan_tidak_teratur.created_at', $tgl)
                     ->where('penghasilan_tidak_teratur.kd_entitas', $kd_entitas)
+                    ->whereRaw("(tanggal_penonaktifan IS NULL OR ($month = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                     ->where('mst_tunjangan.kategori', 'bonus')
                     ->where(function ($query) use ($search) {
                         $query->where('mst_tunjangan.nama_tunjangan', 'like', "%$search%")
@@ -362,6 +364,7 @@ class PenghasilanTidakTeraturRepository
 
     public function getAllPenghasilan($search, $limit=10, $page=1, $bulan, $createdAt, $idTunjangan, $kd_entitas, $user_id){
         $createdAt = date('Y-m-d', strtotime($createdAt));
+        $month = date('m', strtotime($createdAt));
         $karyawanRepo = new KaryawanRepository();
         $penghasilan = KaryawanModel::select(
                     'nama_tunjangan',
@@ -387,6 +390,7 @@ class PenghasilanTidakTeraturRepository
                 ->leftJoin('mst_cabang as c', 'mst_karyawan.kd_entitas', 'c.kd_cabang')
                 ->with('jabatan')
                 ->with('bagian')
+                ->whereRaw("(tanggal_penonaktifan IS NULL OR ($month = MONTH(tanggal_penonaktifan) AND is_proses_gaji = 1))")
                 ->where('penghasilan_tidak_teratur.id_tunjangan', $idTunjangan)
                 ->whereDate('penghasilan_tidak_teratur.created_at', $createdAt)
                 ->where(function($query) use ($user_id) {
