@@ -2,18 +2,18 @@
 
 @section('modal')
 
-<div class="modal-layout hidden" id="foto-diri" tabindex="-1" aria-hidden="true">
+<div class="modal-layout hidden" id="foto-buku-nikah" tabindex="-1" aria-hidden="true">
     <div class="modal modal-sm">
         <div class="modal-head">
             <div class="flex justify-center">
-                <h2>Foto Diri</h2>
+                <h2>Foto Buku Nikah</h2>
             </div>
-            <button data-modal-dismiss="foto-diri"  class="modal-close"><i class="ti ti-x"></i></button>
+            <button data-modal-dismiss="foto-buku-nikah"  class="modal-close"><i class="ti ti-x"></i></button>
         </div>
         <div class="modal-body">
             @if($doks)
-            @if ($doks->foto_diri)
-                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}"  class="max-h-60 max-w-60" />
+            @if ($doks->foto_buku_nikah)
+                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_buku_nikah) }}"   class="w-full max-w-3xl border"/>
             @else
                 <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
             @endif
@@ -22,7 +22,31 @@
         @endif
         </div>
         <div class="modal-footer to-right">
-            <button data-modal-dismiss="foto-diri" class="btn btn-light" type="button">Tutup</button>
+            <button data-modal-dismiss="foto-buku-nikah" class="btn btn-light" type="button">Tutup</button>
+        </div>
+    </div>
+</div>
+<div class="modal-layout hidden" id="foto-kartu-keluarga" tabindex="-1" aria-hidden="true">
+    <div class="modal modal-sm">
+        <div class="modal-head">
+            <div class="flex justify-center">
+                <h2>Foto Kartu Keluarga</h2>
+            </div>
+            <button data-modal-dismiss="foto-kartu-keluarga"  class="modal-close"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="modal-body">
+            @if($doks)
+            @if ($doks->foto_kk)
+                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}"   class="w-full max-w-3xl border"/>
+            @else
+                <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+            @endif
+            @else
+            <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+            @endif
+        </div>
+        <div class="modal-footer to-right">
+            <button data-modal-dismiss="foto-kartu-keluarga" class="btn btn-light" type="button">Tutup</button>
         </div>
     </div>
 </div>
@@ -92,7 +116,15 @@
                         @endphp
 
                 <div class="profile-layout">
-                    <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="w-full max-w-xs rounded-lg" alt="">
+                    @if($doks)
+                    @if ($doks->foto_diri)
+                        <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}"  class="w-full max-w-xs rounded-lg" />
+                    @else
+                        <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="w-full max-w-xs rounded-lg" />
+                    @endif
+                @else
+                    <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="w-full max-w-xs rounded-lg" />
+                @endif
                 </div>
                 <div class="space-y-5">
                     <div class="space-y-5">
@@ -155,10 +187,6 @@
                         <p class="font-semibold">{{ $alamatSek }}</p>
                     </div>
                     <div class="flex items-center gap-5">
-                        <div class="space-y-5">
-                            <label for="" class="font-normal text-gray-500">Foto Diri:</label><br>
-                            <button data-modal-id="foto-diri" data-modal-toggle="modal" class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
-                        </div>
                         <div class="space-y-5">
                             <label for="" class="font-normal text-gray-500">Foto KTP:</label><br>
                             <button data-modal-id="foto-ktp" data-modal-toggle="modal" class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
@@ -440,7 +468,7 @@
     </div>
     @endif
     @if ($karyawan->status == 'Kawin' && $suis != null)
-    <div class="bg-white border rounded-lg w-full">
+    <div class="bg-white border rounded-lg w-full ">
         <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
             <h2 class="font-semibold">Data Keluarga</h2>
         </div>
@@ -554,19 +582,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
-                    <label class="w-2/4 mt-2">Foto Buku Nikah</label>
-                    <div class="w-full mt-5">
-                        @if($doks)
-                            @if ($doks->foto_buku_nikah)
-                                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_buku_nikah) }}"   class="w-full max-w-3xl border"/>
-                            @else
-                                <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
-                            @endif
-                        @else
-                            <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
-                        @endif
-                    </div>
+                <div class="col-6 space-y-5">
+                    <label class="w-2/4 mt-2">Foto Buku Nikah</label><br>
+                    <button data-modal-id="foto-buku-nikah" data-modal-toggle="modal" class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
+
                 </div>
                 @if (count($data_anak) > 0)
                 <br>
@@ -613,24 +632,16 @@
                 @endforeach
             @endif
             <div class="row ">
-                <label class="w-2/4 mt-2">Foto Kartu Keluarga</label>
-                <div class="w-full">
-                    @if($doks)
-                        @if ($doks->foto_kk)
-                            <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_kk) }}"   class="w-full max-w-3xl border"/>
-                        @else
-                            <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
-                        @endif
-                    @else
-                        <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
-                    @endif
-                </div>
+               <div class="space-y-5">
+                <label class="w-2/4 mt-2">Foto Kartu Keluarga</label><br>
+                <button data-modal-id="foto-kartu-keluarga" data-modal-toggle="modal" class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
+               </div>
             </div>
             </div>
 
-    @endif
         </div>
     </div>
+    @endif
     <div class="bg-white border rounded-lg w-full {{auth()->user()->hasRole('cabang') ? 'hidden' : ''}}">
         <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
             <h2 class="font-semibold">Histori</h2>
