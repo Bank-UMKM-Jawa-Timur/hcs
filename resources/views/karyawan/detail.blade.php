@@ -384,7 +384,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Kredit Koperasi</label>
                         <div class="w-full">
-                            <p class="font-semibold">Rp. {{ number_format($potongan->kredit_koperasi, 0, ",", ".") }}"</p>
+                            <p class="font-semibold">Rp. {{ number_format($potongan->kredit_koperasi, 0, ",", ".") }}</p>
                         </div>
                     </div>
                 @endif
@@ -394,7 +394,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Iuran Koperasi</label>
                         <div class="w-full">
-                            <p class="font-semibold">Rp. {{ number_format($potongan->iuran_koperasi, 0, ",", ".") }}"</p>
+                            <p class="font-semibold">Rp. {{ number_format($potongan->iuran_koperasi, 0, ",", ".") }}</p>
                         </div>
                     </div>
                 @endif
@@ -404,7 +404,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Kredit Pegawai</label>
                         <div class="w-full">
-                           <p class="font-semibold">Rp. {{ number_format($potongan->kredit_pegawai, 0, ",", ".") }}"</p>
+                           <p class="font-semibold">Rp. {{ number_format($potongan->kredit_pegawai, 0, ",", ".") }}</p>
                     </div>
                     </div>
                 @endif
@@ -414,7 +414,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Iuran IK</label>
                         <div class="w-full">
-                           <p class="font-semibold">Rp. {{ number_format($potongan->iuran_ik, 0, ",", ".") }}"</p>
+                           <p class="font-semibold">Rp. {{ number_format($potongan->iuran_ik, 0, ",", ".") }}</p>
                         </div>
                     </div>
                 @endif
@@ -431,7 +431,7 @@
                 <div class="row ">
                     <label class="w-2/4 mt-0">Total Potongan</label>
                     <div class="w-full">
-                        <p class="font-semibold">Rp. {{ number_format($total_potongan, 0, ",", ".") }}"</p>
+                        <p class="font-semibold">Rp. {{ number_format($total_potongan, 0, ",", ".") }}</p>
                     </div>
                 </div>
             @endif
@@ -470,7 +470,7 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->nama ?? '-' }}"</p>
+                                <p class="font-semibold">{{ $suis->nama ?? '-' }}</p>
                                 @else
                                 <p class="font-semibold">-</p>
                                 @endif
