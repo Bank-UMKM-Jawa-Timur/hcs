@@ -35,7 +35,7 @@
                     ->groupBy('mst_tunjangan.nama_tunjangan')
                     ->get();
                 @endphp
-                    
+
                 <div class="profile-layout">
                     <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="w-full max-w-xs rounded-lg" alt="">
                 </div>
@@ -56,7 +56,7 @@
                         use Carbon\Carbon;
                         $tanggalLahir = Carbon::create($karyawan->tgl_lahir);
                         $waktuSekarang = Carbon::now();
-    
+
                         $hitung = $waktuSekarang->diff($tanggalLahir);
                         $umur = $hitung->format('%y Tahun | %m Bulan | %d Hari');
                     @endphp
@@ -146,7 +146,7 @@
                         <label for="" class="font-normal text-gray-500">Kantor:</label>
                         <p class="font-semibold">{{ $karyawan->entitas->type == 2 ? "Cabang {$karyawan->entitas->cab->nama_cabang}" : 'Pusat' }}</p>
                     </div>
-               
+
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Jabatan:</label>
                         <p class="font-semibold">{{ $karyawan->jabatan?->nama_jabatan }}</p>
@@ -157,7 +157,7 @@
                         <p class="font-semibold">{{ $karyawan->entitas->div->nama_divisi }}</p>
                     </div>
                     @endif
-                    
+
                     @if(isset($karyawan->entitas->subDiv))
                     <div class="row {{ !$karyawan->entitas->subDiv->nama_subdivisi ? 'hidden' : '' }}">
                         <label class="w-2/4 mt-2">Sub Divisi:</label>
@@ -166,8 +166,8 @@
                         </div>
                     </div>
                 @endif
-          
-          
+
+
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Pangkat:</label>
                         <p class="font-semibold">{{ $karyawan->panggol?->pangkat ?? '-' }}</p>
@@ -241,7 +241,7 @@
                     <label for="" class="font-normal text-gray-500">Masa Kerja:</label>
                     @if (isset($karyawan->tanggal_pengangkat) != null)
                     <p class="font-semibold">{{ $masaKerja }}</p>
-                    @else 
+                    @else
                     <p class="font-semibold">-</p>
                     @endif
                 </div>
@@ -271,7 +271,7 @@
                     @endif
                 </div>
                 <div class="space-y-5">
-                    <label for="" class="font-normal text-gray-500">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium' : 'Gaji Pokok' }}:</label>
+                    <label for="" class="font-normal text-gray-500">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium Penyesuaian' : 'Gaji Penyesuaian' }}:</label>
                     @if (isset($karyawan->gj_penyesuaian) != null)
                         <p class="font-semibold">{{ 'Rp. '. number_format($karyawan->gj_penyesuaian, 0, ",", ".") }}</p>
                     @else
