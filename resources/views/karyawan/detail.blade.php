@@ -5,8 +5,8 @@
 <div class="modal-layout hidden" id="foto-diri" tabindex="-1" aria-hidden="true">
     <div class="modal modal-sm">
         <div class="modal-head">
-            <div class="heading">
-                <h2>Foto diri</h2>
+            <div class="flex justify-center">
+                <h2>Foto Diri</h2>
             </div>
             <button data-modal-dismiss="foto-diri"  class="modal-close"><i class="ti ti-x"></i></button>
         </div>
@@ -75,11 +75,11 @@
     <div class="body-pages">
         <div class="space-y-5">
             <div class="bg-white border rounded-lg">
-                <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
+                <div class="head p-5 pb-8 rounded-tl-lg rounded-tr-lg border-b">
                     <h2 class="font-semibold">Biodata Karyawan</h2>
                 </div>
                 <div class="p-5">
-                    <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 items-center">
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5  items-">
                         @php
                         $no = 1;
                         $totalGaji = $karyawan->gj_pokok + $karyawan->gj_penyesuaian;
@@ -154,13 +154,15 @@
                     @endphp
                         <p class="font-semibold">{{ $alamatSek }}</p>
                     </div>
-                    <div class="space-y-5">
-                        <label for="" class="font-normal text-gray-500">Foto Diri:</label><br>
-                        <button class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
-                    </div>
-                    <div class="space-y-3">
-                        <label for="" class="font-normal text-gray-500">Foto KTP:</label><br>
-                        <button class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
+                    <div class="flex items-center gap-5">
+                        <div class="space-y-5">
+                            <label for="" class="font-normal text-gray-500">Foto Diri:</label><br>
+                            <button data-modal-id="foto-diri" data-modal-toggle="modal" class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
+                        </div>
+                        <div class="space-y-5">
+                            <label for="" class="font-normal text-gray-500">Foto KTP:</label><br>
+                            <button data-modal-id="foto-ktp" data-modal-toggle="modal" class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -554,7 +556,7 @@
                 </div>
                 <div class="col-6">
                     <label class="w-2/4 mt-2">Foto Buku Nikah</label>
-                    <div class="w-full">
+                    <div class="w-full mt-5">
                         @if($doks)
                             @if ($doks->foto_buku_nikah)
                                 <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_buku_nikah) }}"   class="w-full max-w-3xl border"/>
