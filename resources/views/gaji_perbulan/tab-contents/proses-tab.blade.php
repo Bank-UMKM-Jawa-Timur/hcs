@@ -74,12 +74,12 @@
             <td class="text-center">{{date('d-m-Y', strtotime($item->tanggal_input))}}</td>
             <td class="text-center border-none flex gap-2 justify-center">
                 @can('penghasilan - proses penghasilan - rincian')
-                    <a href="#" data-modal-toggle="rincian-modal" data-modal-target="rincian-modal" class="btn btn-warning btn-rincian"
+                    <a href="#" data-modal-toggle="modal" data-modal-id="rincian-modal" class="btn btn-warning btn-rincian"
                         data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Rincian</a>
                 @endcan
                 @can('penghasilan - proses penghasilan - payroll')
                     <a href="#" class="btn btn-success btn-payroll"
-                    data-modal-toggle="payroll-modal" data-modal-target="payroll-modal"
+                        data-modal-toggle="modal" data-modal-id="payroll-modal"
                         data-batch_id="{{$item->id}}" data-month_name="{{$months[$item->bulan]}}" data-year="{{$item->tahun}}">Payroll</a>
                 @endcan
             </td>
@@ -151,8 +151,8 @@
                             @if($item->total_penyesuaian > 0)
                                 @can('penghasilan - proses penghasilan - proses')
                                     <a href="#" class="btn btn-warning btn-perbarui"
-                                        data-modal-target="penyesuaian-modal"
-                                        data-modal-toggle="penyesuaian-modal"
+                                        data-modal-id="penyesuaian-modal"
+                                        data-modal-toggle="modal"
                                         data-batch_id="{{$item->id}}">Perbarui</a>
                                 @endcan
                             @else

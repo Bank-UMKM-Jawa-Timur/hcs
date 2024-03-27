@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div class="modal-footer to-right">
-                <button data-modal-dismiss="filter-modal" class="btn btn-light" type="button">Batal</button>
+                <button data-modal-dismiss="modal" data-modal-hide="filter-modal" class="btn btn-light" type="button">Batal</button>
                 <button class="btn btn-primary" id="filter">Filter</button>
             </div>
         </form>
