@@ -1094,7 +1094,7 @@
                     $('#is_jml_anak').val('');
                     countAnak = 0;
                     cekStatus()
-                    toggleButtonAnak()
+                    // toggleButtonAnak()
                     getKantor()
 
                     if(res.data_anak.length > 0){
@@ -1424,11 +1424,30 @@
                     datatype: "json",
                     success: function(res) {
                         if (res.anak.length == 0 && countAnak == 0) {
+                            if(res.is.id != null) {
+                                $('#id_pasangan').val(res.is.id);
+                                $('#is').val(res.is.enum);
+                                $('#is_nama').val(res.is.nama);
+                                $('#is_tgl_lahir').val(res.is.tgl_lahir);
+                                $('#is_alamat').val(res.is.alamat);
+                                $('#is_pekerjaan').val(res.is.pekerjaan);
+                                $('#sk_tunjangan_is').val(res.is.sk_tunjangan);
+                                $('#is_jml_anak').val(res.is.jml_anak ?? 0);
+
+                                $("#row_anak").empty();
+                                var angka = res.is.jml_anak
+                                var jmlAnak = $("#is_jml_anak").val()
+                                var selisihAnak = jmlAnak - angka
+                                angka = angka + selisihAnak
+                                countAnak = jmlAnak
+
+                                cekStatusChange();
+                            }
                             $("#add-row-anak").show()
                         }
                         else if (res.anak.length == 0 && countAnak > 0) {
                         } else {
-                            /*$('#id_pasangan').val(res.is.id);
+                            $('#id_pasangan').val(res.is.id);
                             $('#is').val(res.is.enum);
                             $('#is_nama').val(res.is.nama);
                             $('#is_tgl_lahir').val(res.is.tgl_lahir);
@@ -1449,6 +1468,9 @@
                                 var isDisabled = i > 1 ? 'readonly' : '';
 
                                 if(res.anak[i]) {
+                                    var isDisabled = res.anak.length > 2 && !res.anak[i].sk_tunjangan ? 'form-input-disabled' : '';
+                                    var isReadonly = res.anak.length > 2 && !res.anak[i].sk_tunjangan ? 'readonly' : '';
+                                    var isChecked = res.anak[i].sk_tunjangan  ? 'checked' : '';
                                     $("#row_anak").append(`
                                         <div id="anak-${res.anak[i].id}">
                                             <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
@@ -1462,10 +1484,17 @@
                                                     <label for="tanggal_lahir_anak">Tanggal Lahir</label>
                                                     <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${res.anak[i].tgl_lahir}">
                                                 </div>
-                                                <div class="col-md-6 input-box">
-                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                    <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-' }" ${isDisabled}>
-                                                </div>
+                                                <div class="flex">
+                                                    <div class="mt-10">
+                                                        <input
+                                                            onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${i}"
+                                                            name="check_sk_anak[]" class="check_sk_anak" ${isChecked}>
+                                                        <label for="check_sk_anak_${i}">Pilih</label>
+                                                    </div>
+                                                    <div class="ml-10 input-box">
+                                                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                        <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak ${isDisabled}" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-'}" id="sk_tunjangan_${i}" ${isReadonly}>
+                                                    </div>
                                                 <div class="col-md-1">
                                                     <button class="btn btn-success btn-add-anak" type="button">
                                                         <i class="ti ti-plus"></i>
@@ -1511,7 +1540,7 @@
                                         </div>
                                     `);
                                 }
-                            }*/
+                            }
                         }
                     }
                 })
@@ -1564,6 +1593,47 @@
                     datatype: "json",
                     success: function(res) {
                         if (res.anak.length == 0 && countAnak > 0) {
+                            for(var i = 0; i < countAnak; i++){
+                                var ket = i+1
+                                $("#row_anak").append(`
+                                    <div id="anak-${i}">
+                                        <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                                        <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
+                                            <input type="hidden" name="id_anak[]" value="">
+                                            <div class="col-md-6 input-box">
+                                                <label for="nama_anak">Nama Anak</label>
+                                                <input type="text" class="form-input" name="nama_anak[]" value="">
+                                            </div>
+                                            <div class="col-md-6 input-box">
+                                                <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                                <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
+                                            </div>
+                                            <div class="flex">
+                                                <div class="mt-10">
+                                                    <input
+                                                        onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${i}"
+                                                        name="check_sk_anak[]" class="check_sk_anak">
+                                                    <label for="check_sk_anak_${i}">Pilih</label>
+                                                </div>
+                                                <div class="ml-10 input-box">
+                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]" value="" id="sk_tunjangan_${i}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button class="btn btn-success btn-add-anak" type="button">
+                                                    <i class="ti ti-plus"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="">
+                                                    <i class="ti ti-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
+                            }
                         } else {
                             $('#id_pasangan').val(res.is.id);
                             $('#is').val(res.is.enum);
@@ -1581,9 +1651,11 @@
 
                             for (var i = 0; i < angka; i++) {
                                 var ket = i+1;
-                                var isDisabled = i > 1 ? 'readonly' : '';
-
+                                
                                 if(res.anak[i]) {
+                                    var isDisabled = res.anak.length > 2 && !res.anak[i].sk_tunjangan ? 'form-input-disabled' : '';
+                                    var isReadonly = res.anak.length > 2 && !res.anak[i].sk_tunjangan ? 'readonly' : '';
+                                    var isChecked = res.anak[i].sk_tunjangan  ? 'checked' : '';
                                     $("#row_anak").append(`
                                         <div id="anak-${res.anak[i].id}">
                                             <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
@@ -1597,9 +1669,17 @@
                                                     <label for="tanggal_lahir_anak">Tanggal Lahir</label>
                                                     <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${res.anak[i].tgl_lahir}">
                                                 </div>
-                                                <div class="col-md-6 input-box">
-                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                    <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-' }" ${isDisabled}>
+                                                <div class="flex">
+                                                    <div class="mt-10">
+                                                        <input
+                                                            onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${i}"
+                                                            name="check_sk_anak[]" class="check_sk_anak" ${isChecked}>
+                                                        <label for="check_sk_anak_${i}">Pilih</label>
+                                                    </div>
+                                                    <div class="ml-10 input-box">
+                                                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                        <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak ${isDisabled}" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-'}" id="sk_tunjangan_${i}" ${isReadonly}>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <button class="btn btn-success btn-add-anak" type="button">
@@ -1628,9 +1708,17 @@
                                                     <label for="tanggal_lahir_anak">Tanggal Lahir</label>
                                                     <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
                                                 </div>
-                                                <div class="col-md-6 input-box">
-                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                    <input type="text" class="form-input" name="sk_tunjangan_anak[]" value="" ${isDisabled}>
+                                                <div class="flex">
+                                                    <div class="mt-10">
+                                                        <input
+                                                            onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${i}"
+                                                            name="check_sk_anak[]" class="check_sk_anak">
+                                                        <label for="check_sk_anak_${i}">Pilih</label>
+                                                    </div>
+                                                    <div class="ml-10 input-box">
+                                                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
+                                                        <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak ${isDisabled}" name="sk_tunjangan_anak[]" value="" id="sk_tunjangan_${i}" readonly>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <button class="btn btn-success btn-add-anak" type="button">
@@ -1774,22 +1862,16 @@
                                 <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="input-box">
+                        <div class="flex">
+                            <div class="mt-10">
+                                <input
+                                    onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${i}"
+                                    name="check_sk_anak[]" class="check_sk_anak" ${isChecked}>
+                                <label for="check_sk_anak_${i}">Pilih</label>
+                            </div>
+                            <div class="ml-10 input-box">
                                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                <div class="flex gap-3">
-                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]" value="">
-                                    <div>
-                                        <button class="btn btn-success btn-add-anak" type="button">
-                                            <i class="ti ti-plus"></i>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="${countAnak}" data-id-anak="">
-                                            <i class="ti ti-minus"></i>
-                                        </button>
-                                    </div>
-                                </div>
+                                <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak ${isDisabled}" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-'}" id="sk_tunjangan_${i}" ${isReadonly}>
                             </div>
                         </div>
                     </div>
@@ -1819,6 +1901,36 @@
                         $('#bagian').append(`<option ${item.kd_bagian == kd_bagian ? 'selected' : ''} value="${item.kd_bagian}">${item.nama_bagian}</option>`);
                     });
                 }
+            })
+        }
+
+        function onCheckSKAnak(checkbox) {
+            var is_check = checkbox.checked
+            var input_sk = $(`#${checkbox.id}`).parent().parent().find('.sk-anak')
+            input_sk.prop('readonly', !is_check)
+            if (is_check) {
+                input_sk.removeClass('form-input-disabled')
+            }
+            else {
+                input_sk.val('')
+                input_sk.addClass('form-input-disabled')
+            }
+            cekSkAnak(input_sk)
+        }
+
+        function cekSkAnak(input) {
+            var check_sk_tunjangan_anak = $("input[name='check_sk_anak[]']");
+            var total_checked = 0
+            check_sk_tunjangan_anak.each(function() {
+                if ($(this).is(':checked'))
+                    total_checked++
+            })
+
+            check_sk_tunjangan_anak.each(function() {
+                if (total_checked >= 2)
+                    $(this).prop('disabled', !$(this).is(':checked'))
+                else
+                    $(this).prop('disabled', false)
             })
         }
     </script>
