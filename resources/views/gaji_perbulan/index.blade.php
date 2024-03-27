@@ -270,12 +270,12 @@
         const bulan = $(this).data("bulan");
         const tahun = $(this).data("tahun");
         const id = $(this).data("batch_id");
+        const namaBulan = new Date(2022, bulan - 1, 1).toLocaleString('id-ID', { month: 'long' });
 
         $(`${target} #kantor`).html(kantor);
-        $(`${target} #bulan`).html(bulan);
+        $(`${target} #bulan`).html(namaBulan);
         $(`${target} #tahun`).html(tahun);
         $(`${target} #id`).val(id);
-        //$(`${target}`).removeClass('hidden');
     })
     $(`.btn-restore`).on('click', function(){
         const target = '#restore-modal';
