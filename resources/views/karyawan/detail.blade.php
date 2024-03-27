@@ -1,4 +1,59 @@
 @extends('layouts.app-template')
+
+@section('modal')
+
+<div class="modal-layout hidden" id="foto-diri" tabindex="-1" aria-hidden="true">
+    <div class="modal modal-sm">
+        <div class="modal-head">
+            <div class="heading">
+                <h2>Foto diri</h2>
+            </div>
+            <button data-modal-dismiss="foto-diri"  class="modal-close"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="modal-body">
+            @if($doks)
+            @if ($doks->foto_diri)
+                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_diri) }}"  class="max-h-60 max-w-60" />
+            @else
+                <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+            @endif
+        @else
+            <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+        @endif
+        </div>
+        <div class="modal-footer to-right">
+            <button data-modal-dismiss="foto-diri" class="btn btn-light" type="button">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-layout hidden" id="foto-ktp" tabindex="-1" aria-hidden="true">
+    <div class="modal modal-sm">
+        <div class="modal-head">
+            <div class="heading">
+                <h2>Foto KTP</h2>
+            </div>
+            <button data-modal-dismiss="foto-ktp"  class="modal-close"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="modal-body">
+            @if($doks)
+            @if ($doks->foto_ktp)
+                <img src="{{ asset('/upload/dokumen/' . $doks->karyawan_id . '/' . $doks->foto_ktp) }}"  class="max-h-60 max-w-60" />
+            @else
+                <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+            @endif
+        @else
+            <img src="{{ asset('style/assets/img/img-not-found.jpg') }}" class="max-h-60 max-w-60" />
+        @endif
+        </div>
+        <div class="modal-footer to-right">
+            <button data-modal-dismiss="foto-ktp" class="btn btn-light" type="button">Tutup</button>
+        </div>
+    </div>
+</div>
+
+@endsection
+
 @section('content')
     <div class="card-header">
         <div class="flex gap-5 justify-between items-center">
@@ -42,15 +97,15 @@
                 <div class="space-y-5">
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">NIK:</label>
-                        <p class="font-semibold">{{ $karyawan->nik }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->nik }}</p>
                     </div>
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Nama Karyawan:</label>
-                        <p class="font-semibold">{{ $karyawan->nama_karyawan }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->nama_karyawan }}</p>
                     </div>
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Tempat, Tanggal Lahir:</label>
-                        <p class="font-semibold">{{ $karyawan->tmp_lahir }}, {{ ($karyawan->tgl_lahir != null) ? $karyawan->tgl_lahir->format('d F Y') : '-' }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->tmp_lahir }}, {{ ($karyawan->tgl_lahir != null) ? $karyawan->tgl_lahir->format('d F Y') : '-' }}</p>
                     </div>
                     @php
                         use Carbon\Carbon;
@@ -62,31 +117,31 @@
                     @endphp
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Umur:</label>
-                        <p class="font-semibold">{{ $umur }}</p>
+                        <p class="font-semibold text-sm">{{ $umur }}</p>
                     </div>
                 </div>
                 <div class="space-y-5">
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Agama:</label>
-                        <p class="font-semibold">{{ $karyawan?->agama?->agama ?? '-' }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan?->agama?->agama ?? '-' }}</p>
                     </div>
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Jenis Kelamin:</label>
-                        <p class="font-semibold">{{ $karyawan->jk }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->jk }}</p>
                     </div>
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Status Pernikahan:</label>
-                        <p class="font-semibold">{{ $karyawan->status ?? '-' }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->status ?? '-' }}</p>
                     </div>
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Kewarganegaraan:</label>
-                        <p class="font-semibold">{{ $karyawan->kewarganegaraan }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->kewarganegaraan }}</p>
                     </div>
                 </div>
                 <div class="space-y-5">
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Alamat KTP:</label>
-                        <p class="font-semibold">{{ $karyawan->alamat_ktp }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->alamat_ktp }}</p>
                     </div>
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Alamat Sekarang:</label>
@@ -97,15 +152,15 @@
                             $alamatSek = $karyawan->alamat_sek;
                         }
                     @endphp
-                        <p class="font-semibold">{{ $alamatSek }}</p>
+                        <p class="font-semibold text-sm">{{ $alamatSek }}</p>
                     </div>
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Foto Diri:</label><br>
-                        <button class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
+                        <button data-modal-id="foto-diri" data-modal-toggle="modal" class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
                     </div>
                     <div class="space-y-3">
                         <label for="" class="font-normal text-gray-500">Foto KTP:</label><br>
-                        <button class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
+                        <button data-modal-id="foto-ktp" data-modal-toggle="modal" class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
                     </div>
                 </div>
             </div>
@@ -119,15 +174,15 @@
             <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center">
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Nomor Rekening:</label><br>
-                    <p class="font-semibold">{{ $karyawan->no_rekening ?? '-' }}</p>
+                    <p class="font-semibold text-sm">{{ $karyawan->no_rekening ?? '-' }}</p>
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">NPWP:</label><br>
-                    <p class="font-semibold">{{ npwp($karyawan->npwp) ?? '-' }}</p>
+                    <p class="font-semibold text-sm">{{ npwp($karyawan->npwp) ?? '-' }}</p>
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Status PTKP:</label><br>
-                    <p class="font-semibold">{{ $karyawan->status_ptkp ? ($karyawan->status_ptkp == "TK" ? "TK/0" : $karyawan->status_ptkp) : '-' }}</p>
+                    <p class="font-semibold text-sm">{{ $karyawan->status_ptkp ? ($karyawan->status_ptkp == "TK" ? "TK/0" : $karyawan->status_ptkp) : '-' }}</p>
                 </div>
             </div>
         </div>
@@ -140,21 +195,21 @@
             <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5  ">
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">NIP:</label>
-                        <p class="font-semibold">{{ $karyawan->nip }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->nip }}</p>
                     </div>
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Kantor:</label>
-                        <p class="font-semibold">{{ $karyawan->entitas->type == 2 ? "Cabang {$karyawan->entitas->cab->nama_cabang}" : 'Pusat' }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->entitas->type == 2 ? "Cabang {$karyawan->entitas->cab->nama_cabang}" : 'Pusat' }}</p>
                     </div>
                
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Jabatan:</label>
-                        <p class="font-semibold">{{ $karyawan->jabatan?->nama_jabatan }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->jabatan?->nama_jabatan }}</p>
                     </div>
                     @if(isset($karyawan->entitas->div))
                     <div class="space-y-5 {{ !$karyawan->entitas->div->nama_divisi ? 'hidden' : '' }}">
                         <label for="" class="font-normal text-gray-500">Divisi:</label>
-                        <p class="font-semibold">{{ $karyawan->entitas->div->nama_divisi }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->entitas->div->nama_divisi }}</p>
                     </div>
                     @endif
                     
@@ -170,11 +225,11 @@
           
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Pangkat:</label>
-                        <p class="font-semibold">{{ $karyawan->panggol?->pangkat ?? '-' }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->panggol?->pangkat ?? '-' }}</p>
                     </div>
                     <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Golongan:</label>
-                        <p class="font-semibold">{{ $karyawan->panggol?->golongan ?? '-' }}</p>
+                        <p class="font-semibold text-sm">{{ $karyawan->panggol?->golongan ?? '-' }}</p>
                     </div>
                 @if($karyawan->bagian)
                     @if ($karyawan->kd_entitas == null)
@@ -188,47 +243,47 @@
                         @endphp
                      <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Divisi:</label>
-                        <p class="font-semibold">{{ $divisi->nama_divisi }}</p>
+                        <p class="font-semibold text-sm">{{ $divisi->nama_divisi }}</p>
                     </div>
                     @if ($subDiv)
                      <div class="space-y-5">
                         <label for="" class="font-normal text-gray-500">Sub Divisi:</label>
-                        <p class="font-semibold">{{ $subDiv->nama_subdivisi }}</p>
+                        <p class="font-semibold text-sm">{{ $subDiv->nama_subdivisi }}</p>
                     </div>
                     @endif
                 @endif
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Bagian:</label>
-                    <p class="font-semibold">{{ $karyawan->bagian->nama_bagian }}</p>
+                    <p class="font-semibold text-sm">{{ $karyawan->bagian->nama_bagian }}</p>
                 </div>
                 @endif
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Status Karyawan:</label>
-                    <p class="font-semibold">{{ $karyawan->status_karyawan}}</p>
+                    <p class="font-semibold text-sm">{{ $karyawan->status_karyawan}}</p>
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Status Jabatan:</label>
-                    <p class="font-semibold">{{ $karyawan->status_jabatan}}</p>
+                    <p class="font-semibold text-sm">{{ $karyawan->status_jabatan}}</p>
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Tanggal Mulai:</label>
-                    <p class="font-semibold">{{ $karyawan?->tgl_mulai?->format('d F Y') ?? '-'}}</p>
+                    <p class="font-semibold text-sm">{{ $karyawan?->tgl_mulai?->format('d F Y') ?? '-'}}</p>
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Pendidikan Terakhir:</label>
-                    <p class="font-semibold">{{ ($karyawan->pendidikan ?? '-') }}</p>
+                    <p class="font-semibold text-sm">{{ ($karyawan->pendidikan ?? '-') }}</p>
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Pendidikan Major:</label>
-                    <p class="font-semibold">{{ ($karyawan->pendidikan_major ?? '-') }}</p>
+                    <p class="font-semibold text-sm">{{ ($karyawan->pendidikan_major ?? '-') }}</p>
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">SK Pengangkatan:</label>
-                    <p class="font-semibold">{{ (!$karyawan->skangkat || $karyawan->skangkat == '') ? '-' : $karyawan->skangkat }}</p>
+                    <p class="font-semibold text-sm">{{ (!$karyawan->skangkat || $karyawan->skangkat == '') ? '-' : $karyawan->skangkat }}</p>
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Tanggal Pengangkatan:</label>
-                    <p class="font-semibold">{{ (!$karyawan->tanggal_pengangkat || $karyawan->tanggal_pengangkat == '') ? '-' : date('d F Y', strtotime($karyawan->tanggal_pengangkat)) }}</p>
+                    <p class="font-semibold text-sm">{{ (!$karyawan->tanggal_pengangkat || $karyawan->tanggal_pengangkat == '') ? '-' : date('d F Y', strtotime($karyawan->tanggal_pengangkat)) }}</p>
                 </div>
                 @php
                 $mulaKerja = Carbon::create($karyawan->tanggal_pengangkat);
@@ -240,9 +295,9 @@
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Masa Kerja:</label>
                     @if (isset($karyawan->tanggal_pengangkat) != null)
-                    <p class="font-semibold">{{ $masaKerja }}</p>
+                    <p class="font-semibold text-sm">{{ $masaKerja }}</p>
                     @else 
-                    <p class="font-semibold">-</p>
+                    <p class="font-semibold text-sm">-</p>
                     @endif
                 </div>
             </div>
@@ -256,26 +311,26 @@
             <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 p-5">
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Kartu Peserta Jamsostek (KPJ):</label>
-                    <p class="font-semibold">{{ $karyawan->kpj ?? '-' }}</p>
+                    <p class="font-semibold text-sm">{{ $karyawan->kpj ?? '-' }}</p>
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">Jaminan Kesehatan Nasional (JKN):</label>
-                    <p class="font-semibold">{{ $karyawan->jkn ?? '-' }}</p>
+                    <p class="font-semibold text-sm">{{ $karyawan->jkn ?? '-' }}</p>
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium' : 'Gaji Pokok' }}:</label>
                     @if (isset($karyawan->gj_pokok) != null)
-                        <p class="font-semibold">{{'Rp. '. number_format($karyawan->gj_pokok, 0, ",", ".") }}</p>
+                        <p class="font-semibold text-sm">{{'Rp. '. number_format($karyawan->gj_pokok, 0, ",", ".") }}</p>
                     @else
-                        <p class="font-semibold">-</p>
+                        <p class="font-semibold text-sm">-</p>
                     @endif
                 </div>
                 <div class="space-y-5">
                     <label for="" class="font-normal text-gray-500">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium' : 'Gaji Pokok' }}:</label>
                     @if (isset($karyawan->gj_penyesuaian) != null)
-                        <p class="font-semibold">{{ 'Rp. '. number_format($karyawan->gj_penyesuaian, 0, ",", ".") }}</p>
+                        <p class="font-semibold text-sm">{{ 'Rp. '. number_format($karyawan->gj_penyesuaian, 0, ",", ".") }}</p>
                     @else
-                        <p class="font-semibold">-</p>
+                        <p class="font-semibold text-sm">-</p>
                     @endif
                 </div>
 
@@ -327,7 +382,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Kredit Koperasi</label>
                         <div class="w-full">
-                            <p class="font-semibold">Rp. {{ number_format($potongan->kredit_koperasi, 0, ",", ".") }}"</p>
+                            <p class="font-semibold text-sm">Rp. {{ number_format($potongan->kredit_koperasi, 0, ",", ".") }}"</p>
                         </div>
                     </div>
                 @endif
@@ -337,7 +392,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Iuran Koperasi</label>
                         <div class="w-full">
-                            <p class="font-semibold">Rp. {{ number_format($potongan->iuran_koperasi, 0, ",", ".") }}"</p>
+                            <p class="font-semibold text-sm">Rp. {{ number_format($potongan->iuran_koperasi, 0, ",", ".") }}"</p>
                         </div>
                     </div>
                 @endif
@@ -347,7 +402,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Kredit Pegawai</label>
                         <div class="w-full">
-                           <p class="font-semibold">Rp. {{ number_format($potongan->kredit_pegawai, 0, ",", ".") }}"</p>
+                           <p class="font-semibold text-sm">Rp. {{ number_format($potongan->kredit_pegawai, 0, ",", ".") }}"</p>
                     </div>
                     </div>
                 @endif
@@ -357,7 +412,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Iuran IK</label>
                         <div class="w-full">
-                           <p class="font-semibold">Rp. {{ number_format($potongan->iuran_ik, 0, ",", ".") }}"</p>
+                           <p class="font-semibold text-sm">Rp. {{ number_format($potongan->iuran_ik, 0, ",", ".") }}"</p>
                         </div>
                     </div>
                 @endif
@@ -374,7 +429,7 @@
                 <div class="row ">
                     <label class="w-2/4 mt-0">Total Potongan</label>
                     <div class="w-full">
-                        <p class="font-semibold">Rp. {{ number_format($total_potongan, 0, ",", ".") }}"</p>
+                        <p class="font-semibold text-sm">Rp. {{ number_format($total_potongan, 0, ",", ".") }}"</p>
                     </div>
                 </div>
             @endif
@@ -397,9 +452,9 @@
                         <div class="w-full">
                             @if (isset($suis) != null)
                             <div class="">
-                                   <p class="font-semibold">{{ $suis->enum ?? '-' }}</p>
+                                   <p class="font-semibold text-sm">{{ $suis->enum ?? '-' }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                <p class="font-semibold text-sm">-</p>
                                 @endif
                             </div>
                         </div>
@@ -413,9 +468,9 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->nama ?? '-' }}"</p>
+                                <p class="font-semibold text-sm">{{ $suis->nama ?? '-' }}"</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                <p class="font-semibold text-sm">-</p>
                                 @endif
                             </div>
                         </div>
@@ -428,7 +483,7 @@
                         </div>
                         <div class="w-full">
                             <div class="">
-                                <p class="font-semibold">{{ $suis->sk_tunjangan ?? '-' }}</p>
+                                <p class="font-semibold text-sm">{{ $suis->sk_tunjangan ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
@@ -441,9 +496,9 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->tgl_lahir != null ? date('d F Y' ,strtotime($suis->tgl_lahir)) : '-' }}</p>
+                                <p class="font-semibold text-sm">{{ $suis->tgl_lahir != null ? date('d F Y' ,strtotime($suis->tgl_lahir)) : '-' }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                <p class="font-semibold text-sm">-</p>
                                 @endif
                             </div>
                         </div>
@@ -457,9 +512,9 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->alamat ?? '-' }}</p>
+                                <p class="font-semibold text-sm">{{ $suis->alamat ?? '-' }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                <p class="font-semibold text-sm">-</p>
                                 @endif
                             </div>
                         </div>
@@ -473,9 +528,9 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->pekerjaan ?? '-' }}</p>
+                                <p class="font-semibold text-sm">{{ $suis->pekerjaan ?? '-' }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                <p class="font-semibold text-sm">-</p>
                                 @endif
                             </div>
                         </div>
@@ -489,9 +544,9 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->jml_anak }}</p>
+                                <p class="font-semibold text-sm">{{ $suis->jml_anak }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                <p class="font-semibold text-sm">-</p>
                                 @endif
                             </div>
                         </div>
