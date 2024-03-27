@@ -140,7 +140,9 @@
             @endif
             @if (auth()->user()->hasRole('admin'))
                 <td>
-                    <a href="#" class="btn btn-danger d-flex justify-center btn-restore"
+                    <a href="#" class="btn btn-primary d-flex justify-center btn-restore"
+                       data-modal-toggle="restore-modal"
+                       data-modal-target="restore-modal"
                         data-batch_id="{{$item->id}}"
                         data-kantor="{{$item->kantor}}"
                         data-bulan="{{$item->bulan}}"
