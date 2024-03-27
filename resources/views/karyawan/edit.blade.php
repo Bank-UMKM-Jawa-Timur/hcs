@@ -257,14 +257,14 @@
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Nomor Rekening</label>
-                                <input type="number" class="form-input" name="no_rek"
+                                <input type="number" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="no_rek"
                                        value="{{ old('no_rek', $data->no_rekening) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">NPWP</label>
-                                <input type="number" class="form-input" name="npwp"
+                                <input type="number" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="npwp"
                                        value="{{ old('npwp', $data->npwp) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
@@ -279,7 +279,7 @@
                             <div class="col-md-4">
                                 <div class="input-box">
                                     <label for="is">Status PTKP</label>
-                                    <select name="status_ptkp" id="" class="form-input" {{ auth()->user()->hasRole('cabang') ? 'readonly' : '' }}>
+                                    <select name="status_ptkp" id="" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" {{ auth()->user()->hasRole('cabang') ? 'readonly' : '' }}>
                                         <option value="">--- Pilih ---</option>
                                         <option {{ $data?->status_ptkp == 'K/0' ? 'selected' : '' }} value="K/0">K/0</option>
                                         <option {{ $data?->status_ptkp == 'K/1' ? 'selected' : '' }} value="K/1">K/1</option>
@@ -309,14 +309,14 @@
                                 <div class="input-box">
                                     <label for="">Jabatan</label>
                                     <input type="hidden" name="jabatan" id="jabatan" value="{{$data->kd_jabatan}}">
-                                    <input type="text" class="form-input" value="{{$data_jabatan}}" readonly>
+                                    <input type="text" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" value="{{$data_jabatan}}" readonly>
                                 </div>
                             </div>
                         @else
                             <div class="col-md-4">
                                 <div class="input-box">
                                     <label for="">Jabatan</label>
-                                    <select name="jabatan" id="jabatan" class="form-input" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
+                                    <select name="jabatan" id="jabatan" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                                         <option value="">--- Pilih ---</option>
                                         @foreach ($jabatan as $item)
                                             <option value="{{ $item->kd_jabatan }}"
@@ -330,7 +330,7 @@
                         <div class="col-md-4">
                             <div class="input-box">
                                 <label for="kantor">Kantor</label>
-                                <select name="kantor" id="kantor" class="form-input" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
+                                <select name="kantor" id="kantor" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                                     <option value="">--- Pilih Kantor ---</option>
                                     <option value="1">Kantor Pusat</option>
                                     <option value="2">Kantor Cabang</option>
@@ -351,7 +351,7 @@
                             <div class="input-box">
                                 <label for="">Pangkat Dan Golongan</label>
                                 <select name="panggol" id=""
-                                        class="@error('panggol') is-invalid @enderror form-input" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
+                                        class="@error('panggol') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                                     <option value="">--- Pilih ---</option>
                                     @foreach ($panggol as $item)
                                         <option value="{{ $item->golongan }}"
@@ -365,7 +365,7 @@
                             <div class="input-box">
                                 <label for="">Status Jabatan</label>
                                 <select name="status_jabatan" id=""
-                                        class="@error('status_jabatan') is-invalid @enderror form-input" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
+                                        class="@error('status_jabatan') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                                     <option value="">--- Pilih ---</option>
                                     <option value="Definitif" {{ $data->status_jabatan == 'Definitif' ? 'selected' : '' }}>
                                         Definitif</option>
@@ -377,21 +377,21 @@
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">Keterangan Jabatan</label>
-                                <input type="text" class="form-input" name="ket_jabatan"  {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}
+                                <input type="text" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="ket_jabatan"  {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}
                                        value="{{ old('ket_jabatan', $data->ket_jabatan) }}">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">KPJ</label>
-                                <input type="text" class="@error('kpj') is-invalid @enderror form-input" name="kpj"
+                                <input type="text" class="@error('kpj') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="kpj"
                                        value="{{ old('kpj', $data->kpj) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">JKN</label>
-                                <input type="text" class="@error('jkn') is-invalid @enderror form-input" name="jkn"
+                                <input type="text" class="@error('jkn') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="jkn"
                                        value="{{ old('jkn', $data->jkn) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
@@ -399,14 +399,14 @@
                             <div class="input-box">
                                 <label for="">Honorarium</label>
                                 <input type="text" id="gj_pokok"
-                                       class="@error('gj_pokok') is-invalid @enderror form-input" name="gj_pokok"
+                                       class="@error('gj_pokok') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="gj_pokok"
                                        value="{{ old('gj_pokok', $data->gj_pokok) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Honorarium Penyesuaian</label>
-                                <input type="text" class="form-input" id="gj_penyesuaian" name="gj_penyesuaian"
+                                <input type="text" class="form-input" id="gj_penyesuaian {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="gj_penyesuaian"
                                        value="{{ old('gj_penyesuaian', $data->gj_penyesuaian) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
@@ -414,7 +414,7 @@
                             <div class="col-md-6">
                                 <div class="input-box">
                                     <label for="">Status Karyawan</label>
-                                    <input type="text" class="form-input" name="status_karyawan" value="{{$data->status_karyawan ? $data->status_karyawan : ''}}" readonly>
+                                    <input type="text" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="status_karyawan" value="{{$data->status_karyawan ? $data->status_karyawan : ''}}" readonly>
                                 </div>
                             </div>
                         @else
@@ -422,7 +422,7 @@
                                 <div class="input-box">
                                     <label for="">Status Karyawan</label>
                                     <select name="status_karyawan" id=""
-                                            class="@error('status_karyawan') is-invalid @enderror form-input">
+                                            class="@error('status_karyawan') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}">
                                         <option value="">--- Pilih ---</option>
                                         <option value="Tetap" {{ $data->status_karyawan == 'Tetap' ? 'selected' : '' }}>Tetap
                                         </option>
@@ -438,21 +438,21 @@
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Tanggal Mulai</label>
-                                <input type="date" class="@error('tgl_mulai') is-invalid @enderror form-input"
+                                <input type="date" class="@error('tgl_mulai') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}"
                                        name="tgl_mulai" value="{{ old('tgl_mulai', $data->tgl_mulai ?? null) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">SK Pengangkatan</label>
-                                <input type="text" class="@error('skangkat') is-invalid @enderror form-input"
+                                <input type="text" class="@error('skangkat') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}"
                                        name="skangkat" value="{{ old('skangkat', $data->skangkat) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="">Tanggal Pengangkatan</label>
-                                <input type="date" class="@error('tanggal_pengangkat') is-invalid @enderror form-input"
+                                <input type="date" class="@error('tanggal_pengangkat') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}"
                                        name="tanggal_pengangkat"
                                        value="{{ old('tanggal_pengangkat', $data->tanggal_pengangkat) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
@@ -461,14 +461,14 @@
                             <div class="col-md-6">
                                 <div class="input-box">
                                     <label for="">Pendidikan</label>
-                                    <input type="text" class="form-input" readonly value="{{$data->pendidikan ? $data->pendidikan : '-'}}">
+                                    <input type="text" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" readonly value="{{$data->pendidikan ? $data->pendidikan : '-'}}">
                                 </div>
                             </div>
                         @else
                             <div class="col-md-6">
                                 <div class="input-box">
                                     <label for="pendidikan">Pendidikan</label>
-                                    <select name="pendidikan" class="form-input" id="" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
+                                    <select name="pendidikan" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" id="" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                                         <option value="">--- Pilih ---</option>
                                         @foreach ($arrayPendidikan as $item)
                                             <option value="{{ $item }}"
@@ -481,7 +481,7 @@
                         <div class="col-md-6">
                             <div class="input-box">
                                 <label for="pendidikan_major">Pendidikan Major</label>
-                                <input type="text" class="@error('pendidikan_major') is-invalid @enderror form-input"
+                                <input type="text" class="@error('pendidikan_major') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}"
                                        name="pendidikan_major" value="{{ old('pendidikan_major', $data?->pendidikan_major) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
@@ -1009,7 +1009,7 @@
                         $("#kantor_row1").append(`
                                 <div class="input-box">
                                     <label for="divisi">Divisi</label>
-                                    <select name="divisi" id="divisi" class="form-input">
+                                    <select name="divisi" id="divisi" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}">
                                         <option value="">--- Pilih divisi ---</option>
                                     </select>
                                 </div>`);
@@ -1029,7 +1029,7 @@
                             $("#kantor_row2").append(`
                                     <div class="input-box">
                                         <label for="subdiv">Sub divisi</label>
-                                        <select name="subdiv" id="sub_divisi" class="form-input">
+                                        <select name="subdiv" id="sub_divisi" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}">
                                             <option value="">--- Pilih sub divisi ---</option>
                                         </select>
                                     </div>`);
@@ -1052,14 +1052,14 @@
                         $("#kantor_row1").append(`
                                 <div class="input-box">
                                     <label for="Cabang">Cabang</label>
-                                    <select name="cabang" id="cabang" class="form-input">
+                                    <select name="cabang" id="cabang" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}">
                                         <option value="">--- Pilih Cabang ---</option>
                                     </select>
                                 </div>`);
                         $("#kantor_row2").append(`
                             <div class="input-box">
                                 <label for="bagian">Bagian</label>
-                                <select name="bagian" id="bagian" class="form-input">
+                                <select name="bagian" id="bagian" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}">
                                     <option value="">--- Pilih bagian ---</option>
                                 </select>
                             </div>
@@ -1102,7 +1102,7 @@
                         $("#kantor_row3").append(`
                                 <div class="input-box">
                                     <label for="bagian">Bagian</label>
-                                    <select name="bagian" id="bagian" class="form-input">
+                                    <select name="bagian" id="bagian" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}">
                                         <option value="">--- Pilih bagian ---</option>
                                     </select>
                                 </div>`);
