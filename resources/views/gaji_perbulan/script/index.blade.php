@@ -314,7 +314,7 @@
                     {"data": "nama_karyawan"},
                     {
                         className: 'text-right',
-                        data: "total_penghasilan",
+                        data: "bruto_lama",
                         render:function(data , type , row){
                             return `Rp ${formatRupiah(data.toString())}`;
                         },
@@ -356,7 +356,6 @@
                     var grandTotalPotonganSesudah = 0;
                     $.each(data, function(i, item) {
                         grandTotalPenghasilanSebelum = item.grandtotal.bruto_lama
-                        grandTotalPenghasilanSebelum = item.grandtotal.bruto_baru;
                         grandTotalPenghasilanSesudah = item.grandtotal.bruto_baru
                         grandTotalPotonganSebelum = item.grandtotal.potongan_lama
                         grandTotalPotonganSesudah = item.grandtotal.potongan_baru
@@ -415,7 +414,7 @@
                 var row = table_pembaruan.row(tr);
                 var data = row.data();
 
-                if (data) { 
+                if (data) {
                     if (row.child.isShown()) {
                         // This row is already open - close it
                         row.child.hide();
