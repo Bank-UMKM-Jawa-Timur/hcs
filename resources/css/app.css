@@ -162,8 +162,11 @@
             @apply bg-gray-50;
         }
     }
-    input.form-input-disabled {
-        @apply bg-gray-100 text-neutral-600 px-3 py-3 rounded-md border border-neutral-300 w-full;
+    select[aria-readonly="true"] {
+        pointer-events: none;
+    }
+    .form-input-disabled {
+        @apply bg-gray-100 text-neutral-600 px-3 py-3 rounded-md border border-neutral-300 w-full !important;
     }
     select.form-input {
         @apply bg-white  text-neutral-600 px-3 py-3 rounded-md border border-neutral-300 w-full;
