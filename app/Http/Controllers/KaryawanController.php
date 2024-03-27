@@ -1445,13 +1445,23 @@ class KaryawanController extends Controller
         // Get SP
         $sp = SpModel::where('nip', $id)->get();
         // dd($sp);
+        // doks
+        $doks = DB::table('dokumen_karyawan')
+        ->where('karyawan_id', $karyawan->id)
+        ->first();
+
+        $potongan = PotonganModel::where('nip', $karyawan->nip)
+                                ->orderBy('id', 'DESC')
+                                ->first();
         return view('karyawan.cv', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,
             'tunjangan' => $data_tunjangan,
             'data_anak' => $data_anak,
             'pjs' => $historyJabatan,
-            'sp' => $sp
+            'sp' => $sp,
+            'potongan' => $potongan,
+            'doks' => $doks
         ]);
     }
 

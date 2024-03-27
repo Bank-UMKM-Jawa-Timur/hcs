@@ -412,7 +412,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Kredit Koperasi</label>
                         <div class="w-full">
-                            <p class="font-semibold">Rp. {{ number_format($potongan->kredit_koperasi, 0, ",", ".") }}"</p>
+                            <p class="font-semibold">Rp. {{ number_format($potongan->kredit_koperasi, 0, ",", ".") }}</p>
                         </div>
                     </div>
                 @endif
@@ -422,7 +422,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Iuran Koperasi</label>
                         <div class="w-full">
-                            <p class="font-semibold">Rp. {{ number_format($potongan->iuran_koperasi, 0, ",", ".") }}"</p>
+                            <p class="font-semibold">Rp. {{ number_format($potongan->iuran_koperasi, 0, ",", ".") }}</p>
                         </div>
                     </div>
                 @endif
@@ -432,7 +432,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Kredit Pegawai</label>
                         <div class="w-full">
-                           <p class="font-semibold">Rp. {{ number_format($potongan->kredit_pegawai, 0, ",", ".") }}"</p>
+                           <p class="font-semibold">Rp. {{ number_format($potongan->kredit_pegawai, 0, ",", ".") }}</p>
                     </div>
                     </div>
                 @endif
@@ -442,7 +442,7 @@
                     <div class="row ">
                         <label class="w-2/4 mt-0">Iuran IK</label>
                         <div class="w-full">
-                           <p class="font-semibold">Rp. {{ number_format($potongan->iuran_ik, 0, ",", ".") }}"</p>
+                           <p class="font-semibold">Rp. {{ number_format($potongan->iuran_ik, 0, ",", ".") }}</p>
                         </div>
                     </div>
                 @endif
@@ -459,7 +459,7 @@
                 <div class="row ">
                     <label class="w-2/4 mt-0">Total Potongan</label>
                     <div class="w-full">
-                        <p class="font-semibold">Rp. {{ number_format($total_potongan, 0, ",", ".") }}"</p>
+                        <p class="font-semibold">Rp. {{ number_format($total_potongan, 0, ",", ".") }}</p>
                     </div>
                 </div>
             @endif
@@ -498,7 +498,7 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->nama ?? '-' }}"</p>
+                                <p class="font-semibold">{{ $suis->nama ?? '-' }}</p>
                                 @else
                                 <p class="font-semibold">-</p>
                                 @endif
@@ -642,69 +642,69 @@
         </div>
     </div>
     @endif
-    <div class="bg-white border rounded-lg w-full {{auth()->user()->hasRole('cabang') ? 'hidden' : ''}}">
-        <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
-            <h2 class="font-semibold">Histori</h2>
-        </div>
-        <div class="p-2">
-            <div class="col-lg-12 p-5  rounded-md">
-                <p class="text-lg font-bold pb-5 pt-5">Histori Jabatan</p>
-                <div class="table-responsive overflow-hidden pt-2">
-                    <table class="tables-even-or-odd border-none" id="pjs-table" style="width: 100%; word-break: break-all;">
-                        <thead>
-                            <tr>
-                                <th style="background-color: #F9F9F9; text-align: center;">#</th>
-                                <th style="background-color: #F9F9F9; text-align: center;">No SK</th>
-                                <th style="background-color: #F9F9F9; text-align: center;">Jabatan</th>
-                                <th style="background-color: #F9F9F9; text-align: center;">Mulai</th>
-                                <th style="background-color: #F9F9F9; text-align: center;">Berakhir</th>
-                                <th style="background-color: #F9F9F9; text-align: center;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($pjs as $data)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $data['no_sk'] }}</td>
-                                <td>{{ $data['jabatan'] }}</td>
-                                <td>{{ date('d M Y', strtotime($data['mulai'])) ?? '-' }}</td>
-                                <td>{{ ($data['berakhir'] != null) ? date('d M Y', strtotime($data['berakhir'])) : '-' }}</td>
-                                <td>{{ !$data['berakhir'] ? 'Aktif' : 'Nonaktif' }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+        <div class="bg-white border rounded-lg w-full {{auth()->user()->hasRole('cabang') ? 'hidden' : ''}}">
+            <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
+                <h2 class="font-semibold">Histori</h2>
             </div>
-            <div class="col-lg-12 p-5  rounded-md">
-                <p class="text-lg font-bold pb-5 pt-5">Histori Surat Peringatan</p>
-                <div class="table-responsive overflow-hidden pt-2">
-                    <table class="table-even-or-odd border-none" id="sp-table" style="width: 100%; word-break: break-all;">
-                        <thead>
-                            <tr>
-                                <th style="background-color: #F9F9F9; text-align: center;">#</th>
-                                <th style="background-color: #F9F9F9; text-align: center; min-width: 75px;">No SP</th>
-                                <th style="background-color: #F9F9F9; text-align: center; min-width: 100px;">Tanggal</th>
-                                <th style="background-color: #F9F9F9; text-align: center;">Pelanggaran</th>
-                                <th style="background-color: #F9F9F9; text-align: center; min-width: 125px;">Sanksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($sp as $item)
+            <div class="p-2">
+                <div class="col-lg-12 p-5  rounded-md">
+                    <p class="text-lg font-bold pb-5 pt-5">Histori Jabatan</p>
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="tables-even-or-odd border-none" id="pjs-table" style="width: 100%; word-break: break-all;">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #F9F9F9; text-align: center;">#</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">No SK</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">Jabatan</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">Mulai</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">Berakhir</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pjs as $data)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->no_sp ?? '-' }}</td>
-                                    <td>{{ $item->tanggal_sp->format('d M Y') ?? '-' }}</td>
-                                    <td>{{ $item->pelanggaran ?? '-' }}</td>
-                                    <td>{{ $item->sanksi ?? '-' }}</td>
+                                    <td>{{ $data['no_sk'] }}</td>
+                                    <td>{{ $data['jabatan'] }}</td>
+                                    <td>{{ date('d M Y', strtotime($data['mulai'])) ?? '-' }}</td>
+                                    <td>{{ ($data['berakhir'] != null) ? date('d M Y', strtotime($data['berakhir'])) : '-' }}</td>
+                                    <td>{{ !$data['berakhir'] ? 'Aktif' : 'Nonaktif' }}</td>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-12 p-5  rounded-md">
+                    <p class="text-lg font-bold pb-5 pt-5">Histori Surat Peringatan</p>
+                    <div class="table-responsive overflow-hidden pt-2">
+                        <table class="table-even-or-odd border-none" id="sp-table" style="width: 100%; word-break: break-all;">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #F9F9F9; text-align: center;">#</th>
+                                    <th style="background-color: #F9F9F9; text-align: center; min-width: 75px;">No SP</th>
+                                    <th style="background-color: #F9F9F9; text-align: center; min-width: 100px;">Tanggal</th>
+                                    <th style="background-color: #F9F9F9; text-align: center;">Pelanggaran</th>
+                                    <th style="background-color: #F9F9F9; text-align: center; min-width: 125px;">Sanksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($sp as $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->no_sp ?? '-' }}</td>
+                                        <td>{{ $item->tanggal_sp->format('d M Y') ?? '-' }}</td>
+                                        <td>{{ $item->pelanggaran ?? '-' }}</td>
+                                        <td>{{ $item->sanksi ?? '-' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 </div>
     </div>
     </div>
