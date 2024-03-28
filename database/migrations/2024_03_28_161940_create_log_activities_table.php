@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('log_activities', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id', false, true);
+            $table->bigInteger('user_id', false, true)
+                ->nullable();
+            $table->integer('karyawan_id', false, true)
+                ->nullable();
             $table->text('activity');
             $table->timestamps();
         });

@@ -44,7 +44,7 @@
                   <div class="input-box">
                       <label for="email">Email atau NIP</label>
                       <input type="text" class="border rounded-md text-sm bg-gray-50/80 border-neutral-200 px-5 py-3 w-full outline-none focus:ring-2 focus:ring-blue-300" placeholder=""
-                          id="email" name="input_type" value="{{ old('input_type') }}">
+                          id="email" name="input_type" value="{{ old('input_type') }}" autofocus>
                       @error('email')
                           <span>{{ $message }}</span>
                       @enderror

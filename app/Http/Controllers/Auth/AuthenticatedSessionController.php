@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\KaryawanModel;
@@ -18,7 +19,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class AuthenticatedSessionController extends Controller
 {
-    
+
     public function create(): View
     {
         return view('auth.login');
@@ -28,12 +29,13 @@ class AuthenticatedSessionController extends Controller
         if (!auth()->user()->hasRole('admin')) {
             return view('roles.forbidden');
         }
-        
+
         return view('auth.session.index');
     }
 
     public function store(LoginRequest $request)
     {
+        DB::beginTransaction();
         try {
             $user = User::where('email', $request->input_type)
                 ->orWhere('username', $request->input_type)
@@ -48,36 +50,51 @@ class AuthenticatedSessionController extends Controller
                         ->where('user_id', $user->id ?? $karyawan->nip)
                         ->count();
                     if($checkSession > 0){
+                        DB::commit();
                         Alert::warning('Peringatan', 'Akun sedang digunakan di perangkat lain');
                         return redirect()->back();
                     }
                     if (Auth::guard('karyawan')->attempt(['nip' => $request->input_type, 'password' => $request->password])) {
                         $request->session()->regenerate();
 
+                        // Record to log activity
+                        $name = $karyawan->nama_karyawan;
+                        $activity = "Pengguna $name melakukan login";
+                        LogActivity::create($activity);
+
+                        DB::commit();
+
                         return redirect()->intended(RouteServiceProvider::HOME);
                     } else {
-                        if ($user->first_login) {
-                            $request->authenticate();
-                            $request->session()->regenerate();
+                        $request->authenticate();
+                        $request->session()->regenerate();
 
+                        // Record to log activity
+                        $name = $user->name;
+                        $activity = "Pengguna $name melakukan login";
+                        LogActivity::create($activity);
+
+                        DB::commit();
+
+                        if ($user->first_login) {
                             return redirect()->route('password.reset');
                         } else {
-                            $request->authenticate();
-                            $request->session()->regenerate();
-
                             return redirect()->intended(RouteServiceProvider::HOME);
                         }
                     }
                 }
                 else {
+                    DB::commit();
                     Alert::warning('Peringatan', 'Password yang Anda masukkan salah');
                     return back();
                 }
             } else {
+                DB::commit();
                 Alert::warning('Peringatan', 'Akun tidak ditemukan');
                 return back();
             }
         } catch (\Exception $e) {
+            DB::rollBack();
             Alert::warning('Peringatan', $e->getMessage());
             return back();
         }
@@ -86,12 +103,38 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        DB::beginTransaction();
+        try {
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            // Record to log activity
+            $activity = "Pengguna $name melakukan logout";
+            LogActivity::create($activity);
 
-        $request->session()->invalidate();
+            // Check guard
+            if (Auth::guard('karyawan')->check())
+                Auth::guard('karyawan')->logout();
+            else
+                Auth::guard('web')->logout();
 
-        $request->session()->regenerateToken();
 
-        return redirect('/');
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+
+            // Check if logout was successful
+            if (Auth::guard('web')->check() || Auth::guard('karyawan')->check()) {
+                // Logout failed, return with error message
+                DB::rollBack();
+                Alert::warning('Peringatan', 'Logout gagal, harap coba lagi');
+                return redirect()->back();
+            }
+
+            // Logout successful, return with success message and redirect
+            DB::commit();
+            return redirect('/');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
     }
 }
