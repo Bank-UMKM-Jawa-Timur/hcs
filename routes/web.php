@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\LogActivityController;
 use App\Http\Controllers\PotonganController;
 use App\Http\Controllers\BonusController;
 use App\Http\Controllers\CheckPPHController;
@@ -416,5 +417,9 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
             Route::get('/', [UserController::class, 'indexSession'])->name('index');
             Route::post('/reset', [UserController::class, 'resetSession'])->name('reset');
         });
+
+    // Log Activities
+    Route::get('log-aktivitas', [LogActivityController::class, 'index'])
+        ->name('log-aktivitas.index');
 });
 require __DIR__.'/auth.php';

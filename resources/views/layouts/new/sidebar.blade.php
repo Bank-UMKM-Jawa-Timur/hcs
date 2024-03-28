@@ -698,7 +698,7 @@
                                     <div class="accordion-menu hidden" id="log">
                                         <ul class="sub-menu">
                                             <li class="item-link">
-                                                <a href="#">
+                                                <a href="{{ route('log-aktivitas.index') }}">
                                                     <button class="btn-link">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Log Aktivitas</span>
