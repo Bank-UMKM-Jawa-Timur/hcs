@@ -477,6 +477,12 @@
         </div>
         <div class="p-5">
             <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-5 grid-cols-1">
+                <div class="row ">
+                    <div class="space-y-5">
+                        <label class="w-2/4 mt-2">Foto Kartu Keluarga</label><br>
+                        <button data-modal-id="foto-kartu-keluarga" data-modal-toggle="modal" class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
+                    </div>
+                </div>
                 <div class="col-lg-12 mt-2">
                     <div class="row">
                         <div class="w-2/4">
@@ -591,57 +597,49 @@
 
                 </div>
                 @if (count($data_anak) > 0)
-                <br>
-                @foreach ($data_anak as $key => $item)
-                    @php
-                        $index = ($key == 0) ? 'Pertama' : 'Kedua';
-                    @endphp
-                    <div class="row ">
-                        <div class="row">
-                            <div class="w-2/4">
-                                <label class="">Nama Anak {{ $index }}</label>
-                            </div>
-                            <div class="w-full">
-                                <div class="">
-                                    <input type="text" class="form-input-disabled" disabled value="{{ $item->nama }}">
+                    @foreach ($data_anak as $key => $item)
+                        @php
+                            $index = ($key == 0) ? 'Pertama' : 'Kedua';
+                        @endphp
+                        <div class="row ">
+                            <div class="row">
+                                <div class="w-2/4">
+                                    <label class="">Nama Anak {{ $index }}</label>
+                                </div>
+                                <div class="w-full">
+                                    <div class="">
+                                        <input type="text" class="form-input-disabled" disabled value="{{ $item->nama }}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row ">
-                        <div class="row">
-                            <div class="w-2/4">
-                                <label class="">Tanggal Lahir Anak {{ $index }}</label>
-                            </div>
-                            <div class="w-full">
-                                <div class="">
-                                    <input type="text" class="form-input-disabled" disabled value="{{ date('d F Y', strtotime($item->tgl_lahir)) }}">
+                        <div class="row ">
+                            <div class="row">
+                                <div class="w-2/4">
+                                    <label class="">Tanggal Lahir Anak {{ $index }}</label>
+                                </div>
+                                <div class="w-full">
+                                    <div class="">
+                                        <input type="text" class="form-input-disabled" disabled value="{{ date('d F Y', strtotime($item->tgl_lahir)) }}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row ">
-                        <div class="row">
-                            <div class="w-2/4">
-                                <label class="w-2/4 mt-0">SK Tunjangan Anak {{ $index }}</label>
-                            </div>
-                            <div class="w-full">
-                                <div class="">
-                                    <input type="text" class="form-input-disabled" disabled value="{{ $item->sk_tunjangan }}">
+                        <div class="row ">
+                            <div class="row">
+                                <div class="w-2/4">
+                                    <label class="w-2/4 mt-0">SK Tunjangan Anak {{ $index }}</label>
+                                </div>
+                                <div class="w-full">
+                                    <div class="">
+                                        <input type="text" class="form-input-disabled" disabled value="{{ $item->sk_tunjangan }}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            @endif
-            <div class="row ">
-               <div class="space-y-5">
-                <label class="w-2/4 mt-2">Foto Kartu Keluarga</label><br>
-                <button data-modal-id="foto-kartu-keluarga" data-modal-toggle="modal" class="px-5 py-2 border bg-white text-sm font-semibold rounded-md flex items-center gap-2"><iconify-icon icon="material-symbols-light:image-outline"></iconify-icon> Lihat foto </button>
-               </div>
+                    @endforeach
+                @endif
             </div>
-            </div>
-
         </div>
     </div>
     @endif
