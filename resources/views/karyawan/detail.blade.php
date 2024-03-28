@@ -398,74 +398,77 @@
      </div>
     </div>
     @if ($potongan != null)
-    <div class="bg-white border rounded-lg w-full">
         @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi
         || $potongan->kredit_pegawai || $potongan->iuran_ik)
-        <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
-            <h2 class="font-semibold">Data Potongan</h2>
-        </div>
-        @endif
-        <div class="p-5">
-            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
-                @if ($potongan->kredit_koperasi)
-                @if ($potongan->kredit_koperasi > 0)
-                    <div class="row ">
-                        <label class="w-2/4 mt-0">Kredit Koperasi</label>
-                        <div class="w-full">
-                            <p class="font-semibold">Rp. {{ number_format($potongan->kredit_koperasi, 0, ",", ".") }}</p>
-                        </div>
-                    </div>
-                @endif
-            @endif
-            @if ($potongan->iuran_koperasi)
-                @if ($potongan->iuran_koperasi > 0)
-                    <div class="row ">
-                        <label class="w-2/4 mt-0">Iuran Koperasi</label>
-                        <div class="w-full">
-                            <p class="font-semibold">Rp. {{ number_format($potongan->iuran_koperasi, 0, ",", ".") }}</p>
-                        </div>
-                    </div>
-                @endif
-            @endif
-            @if ($potongan->kredit_pegawai)
-                @if ($potongan->kredit_pegawai > 0)
-                    <div class="row ">
-                        <label class="w-2/4 mt-0">Kredit Pegawai</label>
-                        <div class="w-full">
-                           <p class="font-semibold">Rp. {{ number_format($potongan->kredit_pegawai, 0, ",", ".") }}</p>
-                    </div>
-                    </div>
-                @endif
-            @endif
-            @if ($potongan->iuran_ik)
-                @if ($potongan->iuran_ik > 0)
-                    <div class="row ">
-                        <label class="w-2/4 mt-0">Iuran IK</label>
-                        <div class="w-full">
-                           <p class="font-semibold">Rp. {{ number_format($potongan->iuran_ik, 0, ",", ".") }}</p>
-                        </div>
-                    </div>
-                @endif
-            @endif
-            @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi
+            <div class="bg-white border rounded-lg w-full">
+                @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi
                 || $potongan->kredit_pegawai || $potongan->iuran_ik)
-                @php
-                    $kredit_koperasi = $potongan->kredit_koperasi;
-                    $iuran_koperasi = $potongan->iuran_koperasi;
-                    $kredit_pegawai = $potongan->kredit_pegawai;
-                    $iuran_ik = $potongan->iuran_ik;
-                    $total_potongan = $kredit_koperasi + $iuran_koperasi + $kredit_pegawai + $iuran_ik;
-                @endphp
-                <div class="row ">
-                    <label class="w-2/4 mt-0">Total Potongan</label>
-                    <div class="w-full">
-                        <p class="font-semibold">Rp. {{ number_format($total_potongan, 0, ",", ".") }}</p>
+                    <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
+                        <h2 class="font-semibold">Data Potongan</h2>
+                    </div>
+                @endif
+                <div class="p-5">
+                    <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                        @if ($potongan->kredit_koperasi)
+                        @if ($potongan->kredit_koperasi > 0)
+                            <div class="row ">
+                                <label class="w-2/4 mt-0">Kredit Koperasi</label>
+                                <div class="w-full">
+                                    <p class="font-semibold">Rp. {{ number_format($potongan->kredit_koperasi, 0, ",", ".") }}</p>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
+                    @if ($potongan->iuran_koperasi)
+                        @if ($potongan->iuran_koperasi > 0)
+                            <div class="row ">
+                                <label class="w-2/4 mt-0">Iuran Koperasi</label>
+                                <div class="w-full">
+                                    <p class="font-semibold">Rp. {{ number_format($potongan->iuran_koperasi, 0, ",", ".") }}</p>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
+                    @if ($potongan->kredit_pegawai)
+                        @if ($potongan->kredit_pegawai > 0)
+                            <div class="row ">
+                                <label class="w-2/4 mt-0">Kredit Pegawai</label>
+                                <div class="w-full">
+                                <p class="font-semibold">Rp. {{ number_format($potongan->kredit_pegawai, 0, ",", ".") }}</p>
+                            </div>
+                            </div>
+                        @endif
+                    @endif
+                    @if ($potongan->iuran_ik)
+                        @if ($potongan->iuran_ik > 0)
+                            <div class="row ">
+                                <label class="w-2/4 mt-0">Iuran IK</label>
+                                <div class="w-full">
+                                <p class="font-semibold">Rp. {{ number_format($potongan->iuran_ik, 0, ",", ".") }}</p>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
+                    @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi
+                        || $potongan->kredit_pegawai || $potongan->iuran_ik)
+                        @php
+                            $kredit_koperasi = $potongan->kredit_koperasi;
+                            $iuran_koperasi = $potongan->iuran_koperasi;
+                            $kredit_pegawai = $potongan->kredit_pegawai;
+                            $iuran_ik = $potongan->iuran_ik;
+                            $total_potongan = $kredit_koperasi + $iuran_koperasi + $kredit_pegawai + $iuran_ik;
+                        @endphp
+                        <div class="row ">
+                            <label class="w-2/4 mt-0">Total Potongan</label>
+                            <div class="w-full">
+                                <p class="font-semibold">Rp. {{ number_format($total_potongan, 0, ",", ".") }}</p>
+                            </div>
+                        </div>
+                    @endif
                     </div>
                 </div>
-            @endif
             </div>
-        </div>
-    </div>
+        @endif
     @endif
     @if ($karyawan->status == 'Kawin' && $suis != null)
     <div class="bg-white border rounded-lg w-full ">
@@ -480,11 +483,11 @@
                             <label class="">Status Pasangan</label>
                         </div>
                         <div class="w-full">
-                            @if (isset($suis) != null)
                             <div class="">
-                                   <p class="font-semibold">{{ $suis->enum ?? '-' }}</p>
+                                @if (isset($suis) != null)
+                                    <p class="font-semibold">{{ $suis->enum ?? '-' }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                    <p class="font-semibold">-</p>
                                 @endif
                             </div>
                         </div>
@@ -498,9 +501,9 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->nama ?? '-' }}</p>
+                                    <p class="font-semibold">{{ $suis->nama ?? '-' }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                    <p class="font-semibold">-</p>
                                 @endif
                             </div>
                         </div>
@@ -526,9 +529,9 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->tgl_lahir != null ? date('d F Y' ,strtotime($suis->tgl_lahir)) : '-' }}</p>
+                                    <p class="font-semibold">{{ $suis->tgl_lahir != null ? date('d F Y' ,strtotime($suis->tgl_lahir)) : '-' }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                    <p class="font-semibold">-</p>
                                 @endif
                             </div>
                         </div>
@@ -542,9 +545,9 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->alamat ?? '-' }}</p>
+                                    <p class="font-semibold">{{ $suis->alamat ?? '-' }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                    <p class="font-semibold">-</p>
                                 @endif
                             </div>
                         </div>
@@ -558,9 +561,9 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->pekerjaan ?? '-' }}</p>
+                                    <p class="font-semibold">{{ $suis->pekerjaan ?? '-' }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                    <p class="font-semibold">-</p>
                                 @endif
                             </div>
                         </div>
@@ -574,9 +577,9 @@
                         <div class="w-full">
                             <div class="">
                                 @if (isset($suis) != null)
-                                <p class="font-semibold">{{ $suis->jml_anak }}</p>
+                                    <p class="font-semibold">{{ $suis->jml_anak }}</p>
                                 @else
-                                <p class="font-semibold">-</p>
+                                    <p class="font-semibold">-</p>
                                 @endif
                             </div>
                         </div>

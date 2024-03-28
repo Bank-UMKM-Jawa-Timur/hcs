@@ -696,7 +696,7 @@
                         @php
                             $no = 1;
                         @endphp
-                        @foreach ($data->tunjangan as $key => $tj)
+                        @forelse ($data->tunjangan as $key => $tj)
                             @php
                                 $no++;
                             @endphp
@@ -718,10 +718,10 @@
                                     <input type="hidden" name="id_tk[]" id="id_tk" value="{{ $tj->id }}">
                                     <div class="col-md-5">
                                         <div class="input-box">
-                                            <label for="is_nama">Nominal</label>
+                                            <label for="nominal{{ $key }}">Nominal</label>
                                             <input type="text" id="nominal{{ $key }}" name="nominal_tunjangan[]"
-                                                   value="{{ number_format($tj->nominal, 0, ',', '.') }}" class="form-input"
-                                                   onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)">
+                                                value="{{ number_format($tj->nominal, 0, ',', '.') }}" class="form-input"
+                                                onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)">
                                             <input type="hidden" name="id_tunjangan[]" value="{{$tj->id}}">
                                         </div>
                                     </div>
@@ -743,7 +743,46 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @empty
+                            <input type="hidden" name="tunjangan_baru" value="true">
+                            <div id="parent_tunjangan0">
+                                <div class="grid items-center lg:grid-cols-3 mb-4 md:grid-cols-2 grid-cols-1 gap-10" id="collapseFour">
+                                    <div class="col-md-5">
+                                        <div class="input-box">
+                                            <label for="is">Tunjangan</label>
+                                            <select name="tunjangan[]" id="tunjangan" class="form-input">
+                                                <option value="">--- Pilih ---</option>
+                                                @foreach ($tunjangan as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="input-box">
+                                            <label for="nominal0">Nominal</label>
+                                            <input type="text" id="nominal0" name="nominal_tunjangan[]"
+                                                value="" class="form-input"
+                                                onfocus="inputFormatRupiah(this.id)" onkeyup="inputFormatRupiah(this.id)">
+                                            <input type="hidden" name="id_tunjangan[]">
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-5 mt-6">
+                                        <div class="col-md-1">
+                                            <button class="btn btn-success" type="button" id="btn-add">
+                                                <i class="ti ti-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button class="btn btn-danger" type="button"
+                                            id="btn-delete">
+                                                <i class="ti ti-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforelse
                         <div id="new_item"></div>
                     </div>
                 @endif
