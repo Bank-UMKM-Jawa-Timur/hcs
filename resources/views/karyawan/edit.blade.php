@@ -124,8 +124,8 @@
                         <div class="col-md-12">
                             <div class="input-box">
                                 <label for="">Nama Karyawan</label>
-                                <input type="text" class="@error('nama') is-invalid @enderror form-input"
-                                       name="nama" id="" value="{{ old('nama', $data->nama_karyawan) }}">
+                                <input type="text" class="@error('nama') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}"
+                                       name="nama" id="" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}} value="{{ old('nama', $data->nama_karyawan) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
