@@ -472,7 +472,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <input type="hidden" name="id_tk[]" id="id_tk" value="">
                             <div class="col-md-5">
                                 <div class="input-box">
                                     <label for="is_nama">Nominal</label>
@@ -847,7 +846,6 @@
                                 </select>
                             </div>
                         </div>
-                        <input type="hidden" name="id_tk[]" id="id_tk" value="">
                         <div class="col-md-5">
                             <div class="input-box">
                                 <label for="is_nama">Nominal</label>

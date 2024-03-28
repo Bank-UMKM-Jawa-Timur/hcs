@@ -358,6 +358,7 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         try {
             $request->validate([
                 'nip' => 'required',
@@ -395,120 +396,79 @@ class KaryawanController extends Controller
 
             $id_karyawan = DB::table('mst_karyawan')
                 ->insertGetId([
-                    'nip' => $request->get('nip'),
-                    'nama_karyawan' => $request->get('nama'),
-                    'nik' => $request->get('nik'),
-                    'ket_jabatan' => $request->get('ket_jabatan'),
-                    'kd_entitas' => $entitas,
-                    'kd_bagian' => $request->get('bagian'),
-                    'kd_jabatan' => $request->get('jabatan'),
-                    'kd_panggol' => $request->get('panggol'),
-                    'kd_agama' => $request->get('agama'),
-                    'tmp_lahir' => $request->get('tmp_lahir'),
-                    'tgl_lahir' => $request->get('tgl_lahir'),
-                    'kewarganegaraan' => $request->get('kewarganegaraan'),
-                    'jk' => $request->get('jk'),
-                    'status' => $request->get('status_pernikahan'),
-                    'status_ptkp' => $request->get('status_ptkp'),
-                    'alamat_ktp' => $request->get('alamat_ktp'),
-                    'alamat_sek' => $request->get('alamat_sek'),
-                    'kpj' => $request->get('kpj'),
-                    'jkn' => $request->get('jkn'),
-                    'gj_pokok' => str_replace('.', "", $request->get('gj_pokok')),
-                    'gj_penyesuaian' => str_replace('.', "", $request->get('gj_penyesuaian')),
-                    'status_karyawan' => $request->get('status_karyawan'),
-                    'status_jabatan' => $request->get('status_jabatan'),
-                    'skangkat' => $request->get('skangkat'),
-                    'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
-                    'no_rekening' => $request->get('no_rek'),
-                    'created_at' => now(),
-                    'pendidikan' => $request->get('pendidikan'),
-                    'pendidikan_major' => $request->get('pendidikan_major'),
-                    'npwp' => $request->get('npwp'),
-                    'tgl_mulai' => $request->get('tgl_mulai')
-                ]);
+                'nip' => $request->get('nip'),
+                'nama_karyawan' => $request->get('nama'),
+                'nik' => $request->get('nik'),
+                'ket_jabatan' => $request->get('ket_jabatan'),
+                'kd_entitas' => $entitas,
+                'kd_bagian' => $request->get('bagian'),
+                'kd_jabatan' => $request->get('jabatan'),
+                'kd_panggol' => $request->get('panggol'),
+                'kd_agama' => $request->get('agama'),
+                'tmp_lahir' => $request->get('tmp_lahir'),
+                'tgl_lahir' => $request->get('tgl_lahir'),
+                'kewarganegaraan' => $request->get('kewarganegaraan'),
+                'jk' => $request->get('jk'),
+                'status' => $request->get('status_pernikahan'),
+                'status_ptkp' => $request->get('status_ptkp'),
+                'alamat_ktp' => $request->get('alamat_ktp'),
+                'alamat_sek' => $request->get('alamat_sek'),
+                'kpj' => $request->get('kpj'),
+                'jkn' => $request->get('jkn'),
+                'gj_pokok' => str_replace('.', "", $request->get('gj_pokok')),
+                'gj_penyesuaian' => str_replace('.', "", $request->get('gj_penyesuaian')),
+                'status_karyawan' => $request->get('status_karyawan'),
+                'status_jabatan' => $request->get('status_jabatan'),
+                'skangkat' => $request->get('skangkat'),
+                'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
+                'no_rekening' => $request->get('no_rek'),
+                'created_at' => now(),
+                'pendidikan' => $request->get('pendidikan'),
+                'pendidikan_major' => $request->get('pendidikan_major'),
+                'npwp' => $request->get('npwp'),
+                'tgl_mulai' => $request->get('tgl_mulai')
+            ]);
 
-            try {
-                if ($request->has('foto_diri')) {
-                    $foto_diri = $request->file('foto_diri');
-                    $fileNameNasabah = $foto_diri->getClientOriginalName();
-                    $filePath = public_path() . '/upload/' . '/dokumen/'  . $id_karyawan;
-                    if (!File::isDirectory($filePath)) {
-                        File::makeDirectory($filePath, 493, true);
-                    }
-                    $foto_diri->move($filePath, $fileNameNasabah);
+            if ($request->has('foto_diri')) {
+                $foto_diri = $request->file('foto_diri');
+                $fileNameNasabah = $foto_diri->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . '/dokumen/'  . $id_karyawan;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
                 }
-                if ($request->has('foto_ktp')) {
-                    $foto_ktp = $request->file('foto_ktp');
-                    $fileNameNasabah = $foto_ktp->getClientOriginalName();
-                    $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan;
-                    if (!File::isDirectory($filePath)) {
-                        File::makeDirectory($filePath, 493, true);
-                    }
-                    $foto_ktp->move($filePath, $fileNameNasabah);
+                $foto_diri->move($filePath, $fileNameNasabah);
+            }
+            if ($request->has('foto_ktp')) {
+                $foto_ktp = $request->file('foto_ktp');
+                $fileNameNasabah = $foto_ktp->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
                 }
-                if ($request->has('foto_kk')) {
-                    $foto_kk = $request->file('foto_kk');
-                    $fileNameNasabah = $foto_kk->getClientOriginalName();
-                    $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan;
-                    if (!File::isDirectory($filePath)) {
-                        File::makeDirectory($filePath, 493, true);
-                    }
-                    $foto_kk->move($filePath, $fileNameNasabah);
+                $foto_ktp->move($filePath, $fileNameNasabah);
+            }
+            if ($request->has('foto_kk')) {
+                $foto_kk = $request->file('foto_kk');
+                $fileNameNasabah = $foto_kk->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
                 }
-
-                // insert dokumen
-                $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : null;
-                $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : null;
-                $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : null;
-
-                DB::table('dokumen_karyawan')->insert([
-                    'karyawan_id' =>  $id_karyawan,
-                    'foto_diri' => $ft_diri,
-                    'foto_ktp' => $ft_ktp,
-                    'foto_kk' => $ft_kk,
-                    'created_at' => now()
-                ]);
-
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
-                Alert::error('Tejadi kesalahan saat upload file', $e->getMessage());
-                return redirect()->back();
-            } catch (QueryException $e) {
-                DB::rollBack();
-                Alert::error('Tejadi kesalahan saat upload file', $e->getMessage());
-                return redirect()->back();
+                $foto_kk->move($filePath, $fileNameNasabah);
             }
 
-            if ($request->get('status_pernikahan') == 'Kawin') {
-                DB::table('keluarga')
-                    ->insert([
-                        'enum' => $request->get('is'),
-                        'nama' => $request->get('is_nama'),
-                        'tgl_lahir' => $request->get('is_tgl_lahir'),
-                        'alamat' => $request->get('is_alamat'),
-                        'pekerjaan' => $request->get('is_pekerjaan'),
-                        'jml_anak' => $request->get('is_jml_anak'),
-                        'nip' => $request->get('nip'),
-                        'sk_tunjangan' => $request->get('sk_tunjangan_is'),
-                        'created_at' => now()
-                    ]);
+            // insert dokumen
+            $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : null;
+            $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : null;
+            $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : null;
 
-                if ($request->get('nama_anak')[0] != null) {
-                    foreach ($request->get('nama_anak') as $key => $item) {
-                        DB::table('keluarga')
-                            ->insert([
-                                'enum' => 'Anak',
-                                'anak_ke' => $key + 1,
-                                'nama' => $item,
-                                'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
-                                'nip' => $request->get('nip'),
-                                'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key]
-                            ]);
-                    }
-                }
-            }
+            DB::table('dokumen_karyawan')->insert([
+                'karyawan_id' =>  $id_karyawan,
+                'foto_diri' => $ft_diri,
+                'foto_ktp' => $ft_ktp,
+                'foto_kk' => $ft_kk,
+                'created_at' => now()
+            ]);
 
             for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
                 DB::table('tunjangan_karyawan')
@@ -528,6 +488,8 @@ class KaryawanController extends Controller
                     'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')) ?? 0,
                     'created_at' => now()
                 ]);
+
+            DB::commit();
             Alert::success('Berhasil', 'Berhasil menambah karyawan.');
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
@@ -1045,40 +1007,60 @@ class KaryawanController extends Controller
                 }
 
                 // data tunjangan
-                $item_id = $request->id_tk;
-                $itemLamaId = DB::table('tunjangan_karyawan')->where('nip', $id)->pluck('id')->toArray();
+                if ($request->has('tunjangan_baru')) {
+                    $item_id = $request->tunjangan;
+                    if (is_array($item_id))
+                    {
+                        for ($i = 0; $i < count($item_id); $i++) {
+                            if ($item_id[$i]) {
+                                DB::table('tunjangan_karyawan')
+                                    ->insert([
+                                        'nip' => $request->get('nip'),
+                                        'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
+                                        'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                        'created_at' => now()
+                                    ]);
+                            }
+                        }
 
-                for ($i = 0; $i < count($itemLamaId); $i++) {
-                    if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
-                        // hapus item yang tidak ada dalam $item_id
-                        DB::table('tunjangan_karyawan')->where('id', $itemLamaId[$i])->delete();
                     }
                 }
+                else {
+                    $item_id = $request->id_tk;
+                    $itemLamaId = DB::table('tunjangan_karyawan')->where('nip', $id)->pluck('id')->toArray();
 
-                if (is_array($item_id))
-                {
-                    for ($i = 0; $i < count($item_id); $i++) {
-                        if ($request->get('id_tk')[$i] == null) {
-                            DB::table('tunjangan_karyawan')
-                                ->insert([
-                                    'nip' => $request->get('nip'),
-                                    'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
-                                    'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                    'created_at' => now()
-                                ]);
-                            } else {
-                                DB::table('tunjangan_karyawan')
-                                ->where('id', $request->get('id_tk')[$i])
-                                ->update([
-                                    'nip' => $request->get('nip'),
-                                    'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
-                                    'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                    'updated_at' => now()
-                                ]);
-                            }
+                    for ($i = 0; $i < count($itemLamaId); $i++) {
+                        if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
+                            // hapus item yang tidak ada dalam $item_id
+                            DB::table('tunjangan_karyawan')->where('id', $itemLamaId[$i])->delete();
                         }
                     }
 
+                    if (is_array($item_id))
+                    {
+                        for ($i = 0; $i < count($item_id); $i++) {
+                            if ($request->get('id_tk')[$i] == null) {
+                                DB::table('tunjangan_karyawan')
+                                    ->insert([
+                                        'nip' => $request->get('nip'),
+                                        'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
+                                        'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                        'created_at' => now()
+                                    ]);
+                                } else {
+                                    DB::table('tunjangan_karyawan')
+                                    ->where('id', $request->get('id_tk')[$i])
+                                    ->update([
+                                        'nip' => $request->get('nip'),
+                                        'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
+                                        'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                        'updated_at' => now()
+                                    ]);
+                                }
+                            }
+                        }
+
+                    }
                 }
 
                 if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
