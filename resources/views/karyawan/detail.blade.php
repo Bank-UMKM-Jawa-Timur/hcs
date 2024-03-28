@@ -379,6 +379,35 @@
                 <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
                     <h2 class="font-semibold">Data Gaji dan Tunjangan Karyawan</h2>
                 </div>
+                {{-- opsi 1 --}}
+                {{-- <div class="p-5">
+                    <div class="row row-total-tunjangan">
+                        <h2 class="font-semibold text-gray-500">Data Gaji</h2>
+                        <hr class="text-gray-500">
+                        <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
+                            <div class="space-y-5">
+                                <label for="" class="font-normal text-gray-500">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium' : 'Gaji Pokok' }}:</label>
+                                @if (isset($karyawan->gj_pokok) != null)
+                                    <p class="font-semibold">{{ 'Rp. ' . number_format($karyawan->gj_pokok, 0, ',', '.') }}</p>
+                                @else
+                                    <p class="font-semibold">-</p>
+                                @endif
+                            </div>
+                            <div class="space-y-5">
+                                <label for=""
+                                    class="font-normal text-gray-500">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium Penyesuaian' : 'Gaji Penyesuaian' }}:</label>
+                                @if (isset($karyawan->gj_penyesuaian) != null)
+                                    <p class="font-semibold">
+                                        {{ 'Rp. ' . number_format($karyawan->gj_penyesuaian, 0, ',', '.') }}</p>
+                                @else
+                                    <p class="font-semibold">-</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
+                {{-- opsi 1 --}}
+                {{-- opsi 2 --}}
                 <div class="p-5">
                     <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center p-5">
                         <div class="space-y-5">
@@ -403,6 +432,7 @@
 
                     </div>
                 </div>
+                {{-- opsi 2 --}}
                 {{-- tunjangan --}}
                 @if (isset($tj))
                     {{-- opsi 1 --}}
@@ -445,15 +475,30 @@
                     </div>
                     {{-- opsi 2 --}}
                 @endif
-                <div class="p-5">
-                    <div class="row row-total-tunjangan">
+                {{-- opsi 1 --}}
+                {{-- <div class="p-5"> --}}
+                    {{-- <div class="row row-total-tunjangan">
                         <label for="" class="w-2/4 font-semibold">Total Gaji</label>
                         <div class="w-full">
                             <input type="text" disabled class="form-input-disabled"
                                 value="Rp. {{ number_format($totalGaji, 0, ',', '.') }}" />
                         </div>
+                    </div> --}}
+                {{-- </div> --}}
+                    {{-- opsi 1 --}}
+                    {{-- opsi 2 --}}
+                    <div class="p-5">
+                        <div class="row row-total-tunjangan">
+                            <h2 class="font-semibold text-gray-500">Total Gaji</h2>
+                            <hr class="text-gray-500">
+                            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
+                                <div class="space-y-5">
+                                    <p class="font-semibold">Rp. {{ number_format($totalGaji, 0, ',', '.') }}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    {{-- opsi 2 --}}
             </div>
             {{-- potongan --}}
             @if ($potongan != null)
