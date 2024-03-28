@@ -424,33 +424,33 @@ class KaryawanController extends Controller
                     'tgl_mulai' => $request->get('tgl_mulai')
                 ]);
 
-            if ($request->get('status_pernikahan') == 'Kawin') {
-                DB::table('keluarga')
-                    ->insert([
-                        'enum' => $request->get('is'),
-                        'nama' => $request->get('is_nama'),
-                        'tgl_lahir' => $request->get('is_tgl_lahir'),
-                        'alamat' => $request->get('is_alamat'),
-                        'pekerjaan' => $request->get('is_pekerjaan'),
-                        'jml_anak' => $request->get('is_jml_anak'),
-                        'nip' => $request->get('nip'),
-                        'sk_tunjangan' => $request->get('sk_tunjangan_is'),
-                        'created_at' => now()
-                    ]);
+            // if ($request->get('status_pernikahan') == 'Kawin') {
+            //     DB::table('keluarga')
+            //         ->insert([
+            //             'enum' => $request->get('is'),
+            //             'nama' => $request->get('is_nama'),
+            //             'tgl_lahir' => $request->get('is_tgl_lahir'),
+            //             'alamat' => $request->get('is_alamat'),
+            //             'pekerjaan' => $request->get('is_pekerjaan'),
+            //             'jml_anak' => $request->get('is_jml_anak'),
+            //             'nip' => $request->get('nip'),
+            //             'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+            //             'created_at' => now()
+            //         ]);
 
-                if ($request->get('nama_anak')[0] != null) {
-                    foreach ($request->get('nama_anak') as $key => $item) {
-                        DB::table('keluarga')
-                            ->insert([
-                                'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
-                                'nama' => $item,
-                                'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
-                                'nip' => $request->get('nip'),
-                                'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key]
-                            ]);
-                    }
-                }
-            }
+            //     if ($request->get('nama_anak')[0] != null) {
+            //         foreach ($request->get('nama_anak') as $key => $item) {
+            //             DB::table('keluarga')
+            //                 ->insert([
+            //                     'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+            //                     'nama' => $item,
+            //                     'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
+            //                     'nip' => $request->get('nip'),
+            //                     'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key]
+            //                 ]);
+            //         }
+            //     }
+            // }
 
             for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
                 DB::table('tunjangan_karyawan')
@@ -475,10 +475,12 @@ class KaryawanController extends Controller
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
             DB::rollBack();
+            return $e->getMessage();
             Alert::error('Tejadi kesalahan', $e->getMessage());
             return redirect()->back();
         } catch (QueryException $e) {
             DB::rollBack();
+            return $e->getMessage();
             Alert::error('Tejadi kesalahan', $e->getMessage());
             return redirect()->back();
         }
