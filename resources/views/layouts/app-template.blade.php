@@ -149,7 +149,22 @@
         }
     }
 
-    // Limit Upload Slik
+    // Limit Upload 2mb
+    $('.limit-size-2').on('change', function() {
+        var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+        if (size > 2) {
+            $(this).parent().next().html('Maksimal besar berkas adalah 2 MB')
+            $(this).parent().next().css({
+                "display": "block"
+            });
+            this.value = ''
+        } else {
+            $(this).parent().next().css({
+                "display": "none"
+            });
+        }
+    })
+    // Limit Upload 10mb
     $('.limit-size-10').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
         if (size > 10) {

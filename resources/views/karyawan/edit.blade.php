@@ -199,37 +199,51 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <div class="d-flex">
-                                    <label for="">Foto Diri <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
-                                    @if ($dokumen)
-                                        @if ($dokumen->foto_diri)
-                                            <a href="javascript:void(0)" class="ms-3 dokument"
-                                               data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                               data-tittle="Foto Diri"
-                                               data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_diri) }}"
-                                            >Preview</a>
+                                <div class="flex justify-between">
+                                    <div>
+                                        <label for="">Foto Diri</label>
+                                        <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
+                                        <span class="text-red-400">(maks 2Mb)</span>
+                                    </div>
+                                    <div>
+                                        @if ($dokumen)
+                                            @if ($dokumen->foto_diri)
+                                                <a href="javascript:void(0)" class="ms-3 dokument text-yellow-500 underline"
+                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                                    data-tittle="Foto Diri"
+                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_diri) }}"
+                                                >Preview</a>
+                                            @endif
                                         @endif
-                                    @endif
+                                    </div>
                                 </div>
-                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
+                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image limit-size-2" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
                             </div>
                             <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
                                 <div class="d-flex">
-                                    <label for="">Foto KTP <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
-                                    @if ($dokumen)
-                                        @if ($dokumen->foto_ktp)
-                                            <a href="javascript:void(0)" class="ms-3 dokument"
-                                               data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                               data-tittle="Foto KTP"
-                                               data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_ktp) }}"
-                                            >Preview</a>
-                                        @endif
-                                    @endif
+                                    <div class="flex justify-between">
+                                        <div>
+                                            <label for="">Foto KTP</label>
+                                            <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
+                                            <span class="text-red-400">(maks 2Mb)</span>
+                                        </div>
+                                        <div>
+                                            @if ($dokumen)
+                                                @if ($dokumen->foto_ktp)
+                                                    <a href="javascript:void(0)" class="ms-3 dokument text-yellow-500 underline"
+                                                        data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                                        data-tittle="Foto KTP"
+                                                        data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_ktp) }}"
+                                                    >Preview</a>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                                <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
+                                <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image limit-size-2" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
                             </div>
                             <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
@@ -494,19 +508,25 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-4">
                             <div class="input-box">
-                                <div class="d-flex">
-                                    <label for="foto_kk">Foto KK <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
-                                    @if ($dokumen)
-                                        @if ($dokumen->foto_kk)
-                                            <a href="javascript:void(0)" class="ms-3 dokument"
-                                               data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                               data-tittle="Foto KK"
-                                               data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_kk) }}"
-                                            >Preview</a>
+                                <div class="flex justify-between">
+                                    <div>
+                                        <label for="">Foto KK</label>
+                                        <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
+                                        <span class="text-red-400">(maks 2Mb)</span>
+                                    </div>
+                                    <div>
+                                        @if ($dokumen)
+                                            @if ($dokumen->foto_kk)
+                                                <a href="javascript:void(0)" class="ms-3 dokument text-yellow-500 underline"
+                                                    data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                                    data-tittle="Foto Kartu Keluarga"
+                                                    data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_kk) }}"
+                                                >Preview</a>
+                                            @endif
                                         @endif
-                                    @endif
+                                    </div>
                                 </div>
-                                <input type="file" name="foto_kk" class="form-input only-image" id="foto_kk" accept="image/png, image/jpeg, image/jpg, image/webp">
+                                <input type="file" name="foto_kk" class="form-input only-image limit-size-2" id="foto_kk" accept="image/png, image/jpeg, image/jpg, image/webp">
                             </div>
                             <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
@@ -553,19 +573,25 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="input-box">
-                                        <div class="d-flex">
-                                            <label for="foto_buku_nikah">Foto Buku Nikah <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span></label>
-                                            @if ($dokumen)
-                                                @if ($dokumen->foto_buku_nikah)
-                                                    <a href="javascript:void(0)" class="ms-3 dokument"
-                                                       data-modal-target="modalDokument" data-modal-toggle="modalDokument"
-                                                       data-tittle="Foto Buku Nikah"
-                                                       data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_buku_nikah) }}"
-                                                    >Preview</a>
+                                        <div class="flex justify-between">
+                                            <div>
+                                                <label for="">Foto Buku Nikah</label>
+                                                <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
+                                                <span class="text-red-400">(maks 2Mb)</span>
+                                            </div>
+                                            <div>
+                                                @if ($dokumen)
+                                                    @if ($dokumen->foto_buku_nikah)
+                                                        <a href="javascript:void(0)" class="ms-3 dokument text-yellow-500 underline"
+                                                            data-modal-target="modalDokument" data-modal-toggle="modalDokument"
+                                                            data-tittle="Foto Buku Nikah"
+                                                            data-filepath="{{ asset('/upload/dokumen/' . $dokumen->karyawan_id . '/' . $dokumen->foto_buku_nikah) }}"
+                                                        >Preview</a>
+                                                    @endif
                                                 @endif
-                                            @endif
+                                            </div>
                                         </div>
-                                        <input type="file" name="foto_buku_nikah" class="form-input only-image" id="foto_buku_nikah" accept="image/png, image/jpeg, image/jpg, image/webp">
+                                        <input type="file" name="foto_buku_nikah" class="form-input only-image limit-size-2" id="foto_buku_nikah" accept="image/png, image/jpeg, image/jpg, image/webp">
                                     </div>
                                     <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                                 </div>
