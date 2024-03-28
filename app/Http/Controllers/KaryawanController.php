@@ -850,40 +850,60 @@ class KaryawanController extends Controller
                 }
 
                 // data tunjangan
-                $item_id = $request->id_tk;
-                $itemLamaId = DB::table('tunjangan_karyawan')->where('nip', $id)->pluck('id')->toArray();
+                if ($request->has('tunjangan_baru')) {
+                    $item_id = $request->tunjangan;
+                    if (is_array($item_id))
+                    {
+                        for ($i = 0; $i < count($item_id); $i++) {
+                            if ($item_id[$i]) {
+                                DB::table('tunjangan_karyawan')
+                                    ->insert([
+                                        'nip' => $request->get('nip'),
+                                        'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
+                                        'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                        'created_at' => now()
+                                    ]);
+                            }
+                        }
 
-                for ($i = 0; $i < count($itemLamaId); $i++) {
-                    if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
-                        // hapus item yang tidak ada dalam $item_id
-                        DB::table('tunjangan_karyawan')->where('id', $itemLamaId[$i])->delete();
                     }
                 }
+                else {
+                    $item_id = $request->id_tk;
+                    $itemLamaId = DB::table('tunjangan_karyawan')->where('nip', $id)->pluck('id')->toArray();
 
-                if (is_array($item_id))
-                {
-                    for ($i = 0; $i < count($item_id); $i++) {
-                        if ($request->get('id_tk')[$i] == null) {
-                            DB::table('tunjangan_karyawan')
-                                ->insert([
-                                    'nip' => $request->get('nip'),
-                                    'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
-                                    'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                    'created_at' => now()
-                                ]);
-                            } else {
-                                DB::table('tunjangan_karyawan')
-                                ->where('id', $request->get('id_tk')[$i])
-                                ->update([
-                                    'nip' => $request->get('nip'),
-                                    'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
-                                    'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                    'updated_at' => now()
-                                ]);
-                            }
+                    for ($i = 0; $i < count($itemLamaId); $i++) {
+                        if (is_null($item_id) || !in_array($itemLamaId[$i], $item_id)) {
+                            // hapus item yang tidak ada dalam $item_id
+                            DB::table('tunjangan_karyawan')->where('id', $itemLamaId[$i])->delete();
                         }
                     }
 
+                    if (is_array($item_id))
+                    {
+                        for ($i = 0; $i < count($item_id); $i++) {
+                            if ($request->get('id_tk')[$i] == null) {
+                                DB::table('tunjangan_karyawan')
+                                    ->insert([
+                                        'nip' => $request->get('nip'),
+                                        'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
+                                        'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                        'created_at' => now()
+                                    ]);
+                                } else {
+                                    DB::table('tunjangan_karyawan')
+                                    ->where('id', $request->get('id_tk')[$i])
+                                    ->update([
+                                        'nip' => $request->get('nip'),
+                                        'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
+                                        'nominal' =>  (int)str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                        'updated_at' => now()
+                                    ]);
+                                }
+                            }
+                        }
+
+                    }
                 }
 
                 if (auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
