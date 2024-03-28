@@ -733,6 +733,7 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // return $request;
         if (!auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan') &&
             !auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
             return view('roles.forbidden');
@@ -853,8 +854,13 @@ class KaryawanController extends Controller
                 }
                 $id_is = $request->get('id_pasangan');
                 $status_pernikahan = $request->get('status_pernikahan');
+                if ($status_pernikahan == 'Kawin' || $status_pernikahan == 'Cerai' || $status_pernikahan == 'Cerai Mati' || $status_pernikahan == 'Janda' || $status_pernikahan == 'Duda') {
+                    $have_anak = true;
+                } else {
+                    $have_anak = false;
+                }
 
-                if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
+                if ($have_anak = true && $request->get('is') != null) {
                     if ($request->get('id_pasangan') == null) {
                         DB::table('keluarga')
                             ->insert([
