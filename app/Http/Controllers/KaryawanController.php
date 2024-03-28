@@ -967,7 +967,7 @@ class KaryawanController extends Controller
                         'created_at' => now(),
                     ]);
 
-                if($request->get('status_pernikahan') == 'Kawin' && $request->get('is_jml_anak') > 0){
+                if($request->get('status_pernikahan') == 'Kawin' && (int) $request->get('is_jml_anak') > 0){
                     if ($request->get('nama_anak')[0] != null) {
                         foreach ($request->get('nama_anak') as $key => $item) {
                             if ($request->get('id_anak')[$key] != null) {

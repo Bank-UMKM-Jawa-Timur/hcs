@@ -602,21 +602,15 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 content-center">
-                                                        <div class="flex">
-                                                            <div class="mt-10">
-                                                                <input
-                                                                    onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_{{ $key }}"
-                                                                    name="check_sk_anak[]" class="check_sk_anak" @if ($item->sk_tunjangan) checked @endif
-                                                                    @if (count($data_anak) > 2 && !$item->sk_tunjangan) disabled @endif>
-                                                                <label for="check_sk_anak_{{ $key }}">Pilih</label>
-                                                            </div>
-                                                            <div class="ml-5">
-                                                                <div class="input-box">
-                                                                    <label for="sk_tunjangan_anak_{{ $key }}">SK Tunjangan</label>
-                                                                    <input type="text" onchange="cekSkAnak(this)" id="sk_tunjangan_anak_{{ $key }}"
-                                                                           class="form-input sk-anak @if (count($data_anak) > 2 && !$item->sk_tunjangan) form-input-disabled @endif"
-                                                                           name="sk_tunjangan_anak[]" value="{{ $item->sk_tunjangan }}" @if (count($data_anak) > 2 && !$item->sk_tunjangan) readonly @endif>
-                                                                </div>
+                                                        <div class="input-box">
+                                                            <label for="sk_tunjangan_anak_{{ $key }}">SK Tunjangan</label>
+                                                            <div class="flex">
+                                                                <span class="inline-flex items-center px-2 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                                                    <input onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_{{ $key }}" name="check_sk_anak[]" class="check_sk_anak w-8 h-8" @if ($item->sk_tunjangan) checked @endif @if (count($data_anak) > 2 && !$item->sk_tunjangan) disabled @endif>
+                                                                </span>
+                                                                <input type="text" onchange="cekSkAnak(this)" id="sk_tunjangan_anak_{{ $key }}"
+                                                                        class="form-input sk-anak @if (count($data_anak) > 2 && !$item->sk_tunjangan) form-input-disabled @endif"
+                                                                        name="sk_tunjangan_anak[]" value="{{ $item->sk_tunjangan }}" @if (count($data_anak) > 2 && !$item->sk_tunjangan) readonly @endif>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1462,7 +1456,6 @@
                 event.preventDefault();
             }
         })
-
         function toggleButtonAnak() {
             if (countAnak == 0) {
                 $('#add-row-anak').removeClass('hidden')
@@ -1495,18 +1488,15 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="flex">
-                                <div class="mt-10">
-                                    <input
-                                        onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${countAnak}"
-                                        name="check_sk_anak[]" class="check_sk_anak">
-                                    <label for="check_sk_anak_${countAnak}">Pilih</label>
-                                </div>
-                                <div class="ml-5">
-                                    <div class="input-box">
-                                        <label for="sk_tunjangan_anak_${countAnak}">SK Tunjangan</label>
-                                        <input type="text" onchange="cekSkAnak(this)" id="sk_tunjangan_anak_${countAnak}" class="form-input sk-anak form-input-disabled" name="sk_tunjangan_anak[]" readonly>
-                                    </div>
+                            <div class="input-box">
+                                <label for="sk_tunjangan_anak_${countAnak}">SK Tunjangan</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-2 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        <input
+                                            onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${countAnak}"
+                                            name="check_sk_anak[]" class="check_sk_anak w-8 h-8">
+                                    </span>
+                                    <input type="text" onchange="cekSkAnak(this)" id="sk_tunjangan_anak_${countAnak}" class="form-input sk-anak form-input-disabled" name="sk_tunjangan_anak[]" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1589,19 +1579,16 @@
                                 <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
                             </div>
                         </div>
-                        <div class="col-md-6 content-center">
-                            <div class="flex">
-                                <div class="mt-10">
-                                    <input
-                                        onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${countAnak}"
-                                        name="check_sk_anak[]" class="check_sk_anak">
-                                    <label for="check_sk_anak_${countAnak}">Pilih</label>
-                                </div>
-                                <div class="ml-5">
-                                    <div class="input-box">
-                                        <label for="sk_tunjangan_anak_${countAnak}">SK Tunjangan</label>
-                                        <input type="text" onchange="cekSkAnak(this)" id="sk_tunjangan_anak_${countAnak}" class="form-input sk-anak form-input-disabled" name="sk_tunjangan_anak[]" readonly>
-                                    </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <label for="sk_tunjangan_anak_${countAnak}">SK Tunjangan</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-2 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        <input
+                                            onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${countAnak}"
+                                            name="check_sk_anak[]" class="check_sk_anak w-8 h-8">
+                                    </span>
+                                    <input type="text" onchange="cekSkAnak(this)" id="sk_tunjangan_anak_${countAnak}" class="form-input sk-anak form-input-disabled" name="sk_tunjangan_anak[]" readonly>
                                 </div>
                             </div>
                         </div>
