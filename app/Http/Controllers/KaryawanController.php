@@ -860,7 +860,7 @@ class KaryawanController extends Controller
                     $have_anak = false;
                 }
 
-                if ($have_anak = true && $request->get('is') != null) {
+                if ($have_anak == true && $request->get('is') != null) {
                     if ($request->get('id_pasangan') == null) {
                         DB::table('keluarga')
                             ->insert([
