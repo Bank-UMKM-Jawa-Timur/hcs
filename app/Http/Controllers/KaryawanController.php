@@ -475,11 +475,11 @@ class KaryawanController extends Controller
             return redirect()->route('karyawan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', $e);
+            Alert::error('Tejadi kesalahan', $e->getMessage());
             return redirect()->back();
         } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Tejadi kesalahan', $e);
+            Alert::error('Tejadi kesalahan', $e->getMessage());
             return redirect()->back();
         }
     }
