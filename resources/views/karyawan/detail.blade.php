@@ -458,26 +458,24 @@
                     {{-- opsi 1 --}}
                     {{-- opsi 2 --}}
                     <div class="p-5">
-                        <div class="row row-total-tunjangan">
-                            <h2 class="font-semibold text-gray-500">Data Tunjangan</h2>
-                            <hr class="text-gray-500">
-                            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
-                                @forelse ($tj as $item)
-                                @php
-                                    if ($item->nama_tunjangan != 'DPP') {
-                                        $totalGaji += $item->nominal;
-                                    }
-                                @endphp
-                                <div class="space-y-5">
-                                    <label for="" class="font-normal text-gray-500">{{ $item->nama_tunjangan }}</label>
-                                    <p class="font-semibold">Rp. {{ $item->nama_tunjangan != 'DPP' ? number_format($item->nominal, 0, ',', '.') : number_format($dpp_perhitungan) }}</p>
-                                </div>
-                                @empty
-                                <div class="space-y-5">
-                                    Tidak ada data tunjangan.
-                                </div>
-                                @endforelse
+                        <h2 class="font-semibold text-gray-500 mb-3">Data Tunjangan</h2>
+                        {{-- <hr class="text-gray-500 mt-3 mb-3"> --}}
+                        <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
+                            @forelse ($tj as $item)
+                            @php
+                                if ($item->nama_tunjangan != 'DPP') {
+                                    $totalGaji += $item->nominal;
+                                }
+                            @endphp
+                            <div class="space-y-5">
+                                <label for="" class="font-normal text-gray-500">{{ $item->nama_tunjangan }}</label>
+                                <p class="font-semibold">Rp. {{ $item->nama_tunjangan != 'DPP' ? number_format($item->nominal, 0, ',', '.') : number_format($dpp_perhitungan) }}</p>
                             </div>
+                            @empty
+                            <div class="space-y-5">
+                                Tidak ada data tunjangan.
+                            </div>
+                            @endforelse
                         </div>
                     </div>
                     {{-- opsi 2 --}}
@@ -495,13 +493,10 @@
                     {{-- opsi 1 --}}
                     {{-- opsi 2 --}}
                     <div class="p-5">
-                        <div class="row row-total-tunjangan">
-                            <h2 class="font-semibold text-gray-500">Total Gaji</h2>
-                            <hr class="text-gray-500">
-                            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
-                                <div class="space-y-5">
-                                    <p class="font-semibold">Rp. {{ number_format($totalGaji, 0, ',', '.') }}</p>
-                                </div>
+                        <h2 class="font-semibold text-gray-500 mb-3">Total Gaji</h2>
+                        <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
+                            <div class="space-y-5">
+                                <p class="font-semibold">Rp. {{ number_format($totalGaji, 0, ',', '.') }}</p>
                             </div>
                         </div>
                     </div>
