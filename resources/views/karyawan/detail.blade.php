@@ -356,7 +356,7 @@
                     </div>
                 </div>
             </div>
-            {{-- No rek dab npwp --}}
+            {{-- bpjs kesehatan dan ketenagakerjaan --}}
             <div class="bg-white border rounded-lg">
                 <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
                     <h2 class="font-semibold">BPJS Kesehatan dan Ketenagakerjaan</h2>
@@ -375,6 +375,7 @@
                     </div>
                 </div>
             </div>
+            {{-- gaji dan tunjangan --}}
             <div class="bg-white border rounded-lg">
                 <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
                     <h2 class="font-semibold">Data Gaji dan Tunjangan Karyawan</h2>
@@ -577,6 +578,7 @@
                     </div>
                 @endif
             @endif
+            {{-- data keluarga --}}
             @php
                 $status_pernikahan = $karyawan->status;
                 if (
@@ -727,8 +729,8 @@
                     </div>
                     @if (count($data_anak) > 0)
                         <div class="p-5 justify-center">
-                            <h2 class="font-semibold mb-2 text-gray-500">Data Anak</h2>
-                            <table class="w-full">
+                            <h2 class="font-bold mb-2 text-gray-500 p-4">Data Anak</h2>
+                            <table class="w-full border-collapse border border-slate-500">
                                 <thead class="text-gray-500">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
