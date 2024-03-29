@@ -410,7 +410,7 @@
                 {{-- opsi 1 --}}
                 {{-- opsi 2 --}}
                 <div class="p-5">
-                    <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center p-5">
+                    <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center">
                         <div class="space-y-5">
                             <label for=""
                                 class="font-normal text-gray-500">{{ $karyawan->status_karyawan == 'Kontrak Perpanjangan' || $karyawan->status_karyawan == 'IKJP' ? 'Honorarium' : 'Gaji Pokok' }}:</label>
@@ -434,6 +434,8 @@
                     </div>
                 </div>
                 {{-- opsi 2 --}}
+
+
                 {{-- tunjangan --}}
                 @if (isset($tj))
                     {{-- opsi 1 --}}
@@ -730,36 +732,24 @@
                     @if (count($data_anak) > 0)
                         <div class="p-5 justify-center">
                             <h2 class="font-bold mb-2 text-gray-500 p-4">Data Anak</h2>
-                            <table class="w-full border-collapse border border-slate-500">
+                            <table class="w-full border-separate border border-slate-500">
                                 <thead class="text-gray-500">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            <div class="flex items-center">
-                                                Nama ( Anak Ke)
-                                            </div>
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            <div class="flex items-center">
-                                                Tanggal Lahir
-                                            </div>
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            <div class="flex items-center">
-                                                SK Tunjangan
-                                            </div>
-                                        </th>
+                                        <th class="border border-slate-600 px-5 py-4">Nama ( Anak ke )</th>
+                                        <th class="border border-slate-600 px-5 py-4">Tangal lahir</th>
+                                        <th class="border border-slate-600 px-5 py-4">SK Tunjangan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($data_anak as $key =>$item)
-                                    <tr class="bg-white border-b">
-                                        <td class="px-6 py-4">
+                                    <tr class="text-center">
+                                        <td class="px-5 py-2 border border-slate-700">
                                             {{$item->nama}} ({{$loop->iteration}})
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-2 border border-slate-700">
                                             {{ date('d F Y', strtotime($item->tgl_lahir)) }}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-2 border border-slate-700">
                                             {{$item->sk_tunjangan ? $item->sk_tunjangan : '-'}}
                                         </td>
                                     </tr>
@@ -770,6 +760,7 @@
                     @endif
                 </div>
             @endif
+            {{-- history --}}
             <div class="bg-white border rounded-lg w-full {{ auth()->user()->hasRole('cabang') ? 'hidden' : '' }}">
                 <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
                     <h2 class="font-semibold">Histori</h2>
@@ -840,8 +831,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>
     </div>
 @endsection
 
