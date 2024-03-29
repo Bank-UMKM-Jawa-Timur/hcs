@@ -64,10 +64,6 @@ Route::get('/', function () {
 Route::get('coming-soon',function() {
     return view('coming-soon');
 });
-Route::get('/dashboard', function () {
-    return view('welcome');
-});
-
 
 Route::prefix('component')->group(function(){
     Route::get('button', function(){
