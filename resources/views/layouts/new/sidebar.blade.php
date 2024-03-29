@@ -57,6 +57,8 @@
                                     'penonaktifan/*',
                                     'pejabat-sementara',
                                     'surat-peringatan',
+                                    'klasifikasi-karyawan',
+                                    'klasifikasi_data'
                                 )
                                     ? 'active'
                                     : '' }}"
@@ -89,6 +91,8 @@
                                 'penonaktifan/*',
                                 'pejabat-sementara',
                                 'surat-peringatan',
+                                'klasifikasi-karyawan',
+                                'klasifikasi_data'
                             )
                                 ? 'show'
                                 : 'hidden' }}"
@@ -98,7 +102,7 @@
                                     <li class="item-link">
                                         <a href="{{ route('karyawan.index') }}">
                                             <button
-                                                class="btn-link {{ request()->is('karyawan', 'karyawan/*') ? 'active-link' : '' }}">
+                                                class="btn-link {{ request()->is('karyawan', 'karyawan/*', 'klasifikasi-karyawan', 'klasifikasi_data') ? 'active-link' : '' }}">
                                                 <i class="ti ti-circle"></i>
                                                 <span>Karyawan</span>
                                             </button>
