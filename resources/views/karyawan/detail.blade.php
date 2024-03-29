@@ -462,7 +462,7 @@
                             <h2 class="font-semibold text-gray-500">Data Tunjangan</h2>
                             <hr class="text-gray-500">
                             <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
-                                @foreach ($tj as $item)
+                                @forelse ($tj as $item)
                                 @php
                                     if ($item->nama_tunjangan != 'DPP') {
                                         $totalGaji += $item->nominal;
@@ -472,7 +472,11 @@
                                     <label for="" class="font-normal text-gray-500">{{ $item->nama_tunjangan }}</label>
                                     <p class="font-semibold">Rp. {{ $item->nama_tunjangan != 'DPP' ? number_format($item->nominal, 0, ',', '.') : number_format($dpp_perhitungan) }}</p>
                                 </div>
-                            @endforeach
+                                @empty
+                                <div class="space-y-5">
+                                    Tidak ada data tunjangan.
+                                </div>
+                                @endforelse
                             </div>
                         </div>
                     </div>
