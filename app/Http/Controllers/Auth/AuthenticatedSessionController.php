@@ -59,7 +59,7 @@ class AuthenticatedSessionController extends Controller
 
                         // Record to log activity
                         $name = $karyawan->nama_karyawan;
-                        $activity = "Pengguna $name melakukan login.";
+                        $activity = "Pengguna <b>$name</b> melakukan login.";
                         LogActivity::create($activity);
 
                         DB::commit();
@@ -71,7 +71,7 @@ class AuthenticatedSessionController extends Controller
 
                         // Record to log activity
                         $name = $user->name;
-                        $activity = "Pengguna $name melakukan login.";
+                        $activity = "Pengguna <b>$name</b> melakukan login.";
                         LogActivity::create($activity);
 
                         DB::commit();
@@ -107,7 +107,7 @@ class AuthenticatedSessionController extends Controller
         try {
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
             // Record to log activity
-            $activity = "Pengguna $name melakukan logout.";
+            $activity = "Pengguna <b>$name</b> melakukan logout.";
             LogActivity::create($activity);
 
             // Check guard

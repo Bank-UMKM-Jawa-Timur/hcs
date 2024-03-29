@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Http\Controllers\Utils\PaginationController;
 use App\Http\Requests\Karyawan\PenonaktifanRequest;
 use App\Imports\ImportDataKeluarga;
@@ -637,6 +638,12 @@ class KaryawanController extends Controller
         $potongan = PotonganModel::where('nip', $karyawan->nip)
                                 ->orderBy('id', 'DESC')
                                 ->first();
+
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melihat detail karyawan atas nama <b>$karyawan->nama_karyawan</b>.";
+        LogActivity::create($activity);
+
         return view('karyawan.detail', [
             'karyawan' => $karyawan,
             'suis' => $data_suis,

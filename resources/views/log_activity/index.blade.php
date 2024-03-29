@@ -64,11 +64,11 @@
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
                             <td class="text-center max-w-sm">{{ $item->user_id ? $item->user : $item->karyawan }}</td>
-                            <td title="{{ $item->activity }}" class="text-justify max-w-sm">
+                            <td title="{!! $item->activity !!}" class="text-justify max-w-sm">
                                 @if(strlen($item->activity) > 150)
-                                    {{ substr($item->activity, 0, 150) }}...
+                                    {!! substr($item->activity, 0, 150) !!}...
                                 @else
-                                    {{ $item->activity }}
+                                    {!! $item->activity !!}
                                 @endif
                             </td>
                             <td class="text-center" title="{{ $item->created_at }}">{{ $item->created_at_human_readable }}</td>
