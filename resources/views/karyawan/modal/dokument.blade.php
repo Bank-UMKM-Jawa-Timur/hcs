@@ -11,7 +11,9 @@
                 </button>
             </div>
             <div class="modal-body space-y-5">
-                <img id="image-content" src="" alt="">
+                <center>
+                    <img id="image-content" src="" alt="">
+                </center>
             </div>
         </div>
     </div>
