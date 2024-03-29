@@ -56,7 +56,7 @@ class KaryawanController extends Controller
 
         $karyawanRepo = new KaryawanRepository();
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
-    $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
+        $data = $karyawanRepo->getAllKaryawan($search, $limit, $page);
 
         return view('karyawan.index', [
             'karyawan' => $data,
@@ -186,9 +186,8 @@ class KaryawanController extends Controller
             ->first();
         $data['anak'] = DB::table('keluarga')
             ->where('nip', $request->nip)
-            ->whereIn('enum', ['Anak'])
-            ->where('anak_ke', '<=', 2)
-            ->orderBy('anak_ke')
+            ->whereIn('enum', ['ANAK1', 'ANAK2'])
+            ->orderBy('id', 'desc')
             ->get();
         if (!isset($data)) {
             $data = null;
@@ -393,82 +392,68 @@ class KaryawanController extends Controller
             } else {
                 $entitas = $request->get('divisi');
             }
+            DB::table('mst_karyawan')
+                ->insert([
+                    'nip' => $request->get('nip'),
+                    'nama_karyawan' => $request->get('nama'),
+                    'nik' => $request->get('nik'),
+                    'ket_jabatan' => $request->get('ket_jabatan'),
+                    'kd_entitas' => $entitas,
+                    'kd_bagian' => $request->get('bagian'),
+                    'kd_jabatan' => $request->get('jabatan'),
+                    'kd_panggol' => $request->get('panggol'),
+                    'kd_agama' => $request->get('agama'),
+                    'tmp_lahir' => $request->get('tmp_lahir'),
+                    'tgl_lahir' => $request->get('tgl_lahir'),
+                    'kewarganegaraan' => $request->get('kewarganegaraan'),
+                    'jk' => $request->get('jk'),
+                    'status' => $request->get('status_pernikahan'),
+                    'status_ptkp' => $request->get('status_ptkp'),
+                    'alamat_ktp' => $request->get('alamat_ktp'),
+                    'alamat_sek' => $request->get('alamat_sek'),
+                    'kpj' => $request->get('kpj'),
+                    'jkn' => $request->get('jkn'),
+                    'gj_pokok' => str_replace('.', "", $request->get('gj_pokok')),
+                    'gj_penyesuaian' => str_replace('.', "", $request->get('gj_penyesuaian')),
+                    'status_karyawan' => $request->get('status_karyawan'),
+                    'status_jabatan' => $request->get('status_jabatan'),
+                    'skangkat' => $request->get('skangkat'),
+                    'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
+                    'no_rekening' => $request->get('no_rek'),
+                    'created_at' => now(),
+                    'pendidikan' => $request->get('pendidikan'),
+                    'pendidikan_major' => $request->get('pendidikan_major'),
+                    'npwp' => $request->get('npwp'),
+                    'tgl_mulai' => $request->get('tgl_mulai')
+                ]);
 
-            $id_karyawan = DB::table('mst_karyawan')
-                ->insertGetId([
-                'nip' => $request->get('nip'),
-                'nama_karyawan' => $request->get('nama'),
-                'nik' => $request->get('nik'),
-                'ket_jabatan' => $request->get('ket_jabatan'),
-                'kd_entitas' => $entitas,
-                'kd_bagian' => $request->get('bagian'),
-                'kd_jabatan' => $request->get('jabatan'),
-                'kd_panggol' => $request->get('panggol'),
-                'kd_agama' => $request->get('agama'),
-                'tmp_lahir' => $request->get('tmp_lahir'),
-                'tgl_lahir' => $request->get('tgl_lahir'),
-                'kewarganegaraan' => $request->get('kewarganegaraan'),
-                'jk' => $request->get('jk'),
-                'status' => $request->get('status_pernikahan'),
-                'status_ptkp' => $request->get('status_ptkp'),
-                'alamat_ktp' => $request->get('alamat_ktp'),
-                'alamat_sek' => $request->get('alamat_sek'),
-                'kpj' => $request->get('kpj'),
-                'jkn' => $request->get('jkn'),
-                'gj_pokok' => str_replace('.', "", $request->get('gj_pokok')),
-                'gj_penyesuaian' => str_replace('.', "", $request->get('gj_penyesuaian')),
-                'status_karyawan' => $request->get('status_karyawan'),
-                'status_jabatan' => $request->get('status_jabatan'),
-                'skangkat' => $request->get('skangkat'),
-                'tanggal_pengangkat' => $request->get('tanggal_pengangkat'),
-                'no_rekening' => $request->get('no_rek'),
-                'created_at' => now(),
-                'pendidikan' => $request->get('pendidikan'),
-                'pendidikan_major' => $request->get('pendidikan_major'),
-                'npwp' => $request->get('npwp'),
-                'tgl_mulai' => $request->get('tgl_mulai')
-            ]);
+            // if ($request->get('status_pernikahan') == 'Kawin') {
+            //     DB::table('keluarga')
+            //         ->insert([
+            //             'enum' => $request->get('is'),
+            //             'nama' => $request->get('is_nama'),
+            //             'tgl_lahir' => $request->get('is_tgl_lahir'),
+            //             'alamat' => $request->get('is_alamat'),
+            //             'pekerjaan' => $request->get('is_pekerjaan'),
+            //             'jml_anak' => $request->get('is_jml_anak'),
+            //             'nip' => $request->get('nip'),
+            //             'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+            //             'created_at' => now()
+            //         ]);
 
-            if ($request->has('foto_diri')) {
-                $foto_diri = $request->file('foto_diri');
-                $fileNameNasabah = $foto_diri->getClientOriginalName();
-                $filePath = public_path() . '/upload/' . '/dokumen/'  . $id_karyawan;
-                if (!File::isDirectory($filePath)) {
-                    File::makeDirectory($filePath, 493, true);
-                }
-                $foto_diri->move($filePath, $fileNameNasabah);
-            }
-            if ($request->has('foto_ktp')) {
-                $foto_ktp = $request->file('foto_ktp');
-                $fileNameNasabah = $foto_ktp->getClientOriginalName();
-                $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan;
-                if (!File::isDirectory($filePath)) {
-                    File::makeDirectory($filePath, 493, true);
-                }
-                $foto_ktp->move($filePath, $fileNameNasabah);
-            }
-            if ($request->has('foto_kk')) {
-                $foto_kk = $request->file('foto_kk');
-                $fileNameNasabah = $foto_kk->getClientOriginalName();
-                $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan;
-                if (!File::isDirectory($filePath)) {
-                    File::makeDirectory($filePath, 493, true);
-                }
-                $foto_kk->move($filePath, $fileNameNasabah);
-            }
-
-            // insert dokumen
-            $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : null;
-            $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : null;
-            $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : null;
-
-            DB::table('dokumen_karyawan')->insert([
-                'karyawan_id' =>  $id_karyawan,
-                'foto_diri' => $ft_diri,
-                'foto_ktp' => $ft_ktp,
-                'foto_kk' => $ft_kk,
-                'created_at' => now()
-            ]);
+            //     if ($request->get('nama_anak')[0] != null) {
+            //         foreach ($request->get('nama_anak') as $key => $item) {
+            //             DB::table('keluarga')
+            //                 ->insert([
+            //                     'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
+            //                     'nama' => $item,
+            //                     'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
+            //                     'nip' => $request->get('nip'),
+            //                     'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key]
+            //                 ]);
+            //         }
+            //     }
+            // }
 
             for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
                 DB::table('tunjangan_karyawan')
@@ -538,6 +523,7 @@ class KaryawanController extends Controller
             ->count('*');
         $data_tunjangan = DB::table('mst_tunjangan')
             ->get();
+
         $pjs = PjsModel::where('nip', $id)
             ->get();
         $doks = DB::table('dokumen_karyawan')
@@ -712,7 +698,6 @@ class KaryawanController extends Controller
         $id_karyawan = KaryawanModel::find($id)->id;
         $dokumen = DB::table('dokumen_karyawan')->where('karyawan_id', $id_karyawan)->first();
         return view('karyawan.edit', [
-        // return view('karyawan.edit-old', [
             'data' => $data,
             'dokumen' => $dokumen,
             'panggol' => $data_panggol,
@@ -733,7 +718,6 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $request;
         if (!auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan') &&
             !auth()->user()->can('manajemen karyawan - data karyawan - edit karyawan - edit potongan')) {
             return view('roles.forbidden');

@@ -685,7 +685,7 @@
                         @can('log')
                             <li class="item-link relative">
                                 <a href="#">
-                                    <button class="btn-link" data-accordion-target="#log" aria-expanded="false"
+                                    <button class="btn-link {{ request()->is('log-aktivitas', 'log-aktivitas/*') ? 'active' : '' }}" data-accordion-target="#log" aria-expanded="false"
                                         aria-controls="log">
                                         <i class="ti ti-list-check"></i>
                                         <span>Log</span>
@@ -694,20 +694,20 @@
                                         </span>
                                     </button>
                                 </a>
-                                @can('log - log aktivitas')
-                                    <div class="accordion-menu hidden" id="log">
-                                        <ul class="sub-menu">
+                                <div class="accordion-menu {{ request()->is('log-aktivitas') ? 'show' : 'hidden' }}" id="log">
+                                    <ul class="sub-menu" data-accordion="collapse" data-active-classes="active-link">
+                                        @can('log - log aktivitas')
                                             <li class="item-link">
-                                                <a href="#">
-                                                    <button class="btn-link">
+                                                <a href="{{ route('log-aktivitas.index') }}">
+                                                    <button class="btn-link {{ request()->routeIs('log-aktivitas.index') ? 'active-link' : '' }}">
                                                         <i class="ti ti-circle"></i>
                                                         <span>Log Aktivitas</span>
                                                     </button>
                                                 </a>
                                             </li>
-                                        </ul>
-                                    </div>
-                                @endcan
+                                        @endcan
+                                    </ul>
+                                </div>
                             </li>
                         @endcan
                     </ul>
