@@ -1219,29 +1219,29 @@
                 value == "KOMU" || value == "KOM") {
                 $("#kantor").val("1")
                 kantorChange();
-                $('#kantor').attr("disabled", "disabled");
+                $('#kantor').attr("aria-readonly", "true");
                 $("kantor_row2").removeClass("col-md-6")
                 $("#kantor_row2").hide();
                 $("#kantor_row3").hide()
             } else if (value == "PSD") {
                 $("#kantor").val("1")
                 kantorChange();
-                $('#kantor').attr("disabled", "disabled");
+                $('#kantor').attr("aria-readonly", "true");
             } else if (value == "PC" || value == "PBP") {
                 $("#kantor").val("2")
                 kantorChange();
-                $('#kantor').attr("disabled", "disabled");
+                $('#kantor').attr("aria-readonly", "true");
                 $("#kantor_row2").hide();
             } else if (value == "PBO") {
                 kantorChange();
-                $('#kantor').removeAttr("disabled")
+                $('#kantor').removeAttr("aria-readonly")
                 $("kantor_row2").removeClass("col-md-6")
                 $("#kantor_row2").hide();
                 $("#kantor_row3").hide()
             } else if (value == "-") {
                 kantorChange();
             } else {
-                $('#kantor').removeAttr("disabled")
+                $('#kantor').removeAttr("aria-readonly")
             }
         }
 
