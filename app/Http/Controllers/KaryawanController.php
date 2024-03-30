@@ -1212,10 +1212,12 @@ class KaryawanController extends Controller
         $panggol = PanggolModel::all();
         $umur = UmurModel::all();
 
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
         if ($request->kategori == 1) {
             $karyawan = KaryawanModel::query();
 
             $status = 1;
+            $activity = "Pengguna <b>$name</b> melakukan filter data masa pensiun kategori keseluruhan";
         }
 
         if ($request->kategori == 2) {
@@ -1231,6 +1233,7 @@ class KaryawanController extends Controller
                 ->orWhereIn('kd_bagian', $bagians);
 
             $status = 2;
+            $activity = "Pengguna <b>$name</b> melakukan filter data masa pensiun kategori divisi " . $request->divisi;
         }
 
         if ($request->kategori == 3) {
@@ -1243,11 +1246,13 @@ class KaryawanController extends Controller
                 ->orWhereIn('kd_bagian', $bagian);
 
             $status = 3;
+            $activity = "Pengguna <b>$name</b> melakukan filter data masa pensiun kategori sub divisi " . $entitas;
         }
 
         if ($request->kategori == 4) {
             $karyawan = KaryawanModel::where('kd_bagian', $request->bagian)->whereNotNull('kd_bagian');
             $status = 4;
+            $activity = "Pengguna <b>$name</b> melakukan filter data masa pensiun kategori bagian " . $request->bagian;
         }
 
         if ($request->kategori == 5) {
@@ -1258,8 +1263,20 @@ class KaryawanController extends Controller
                 $karyawan = KaryawanModel::whereNotIn('kd_entitas', $cbgs)
                     ->orWhere('kd_entitas', null);
             }
+            $message = '';
+            if ($kantor == 'Cabang') {
+                $message = $request->cabang;
+            } else {
+                $message = 'Pusat';
+            }
+            $activity = "Pengguna <b>$name</b> melakukan filter data masa pensiun kategori kantor " . $message;
 
             $status = 5;
+        }
+
+        // log activity
+        if ($status != 0) {
+            LogActivity::create($activity);
         }
 
         if ($karyawan instanceof Builder) {
