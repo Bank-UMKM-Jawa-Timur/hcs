@@ -6,6 +6,7 @@ use App\Exports\ProsesPayroll;
 use App\Exports\ProsesRincianPayroll;
 use App\Helpers\GajiComponent;
 use App\Helpers\HitungPPH;
+use App\Helpers\LogActivity;
 use App\Imports\ImportPPH21;
 use App\Models\CabangModel;
 use App\Models\GajiPerBulanModel;
@@ -21,6 +22,7 @@ use Exception;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Row;
@@ -1179,6 +1181,7 @@ class GajiPerBulanController extends Controller
                 $bulan = (int) date('m', strtotime($batch->tanggal_input));
                 $tahun = date('Y', strtotime($batch->tanggal_input));
                 $tanggal = $batch->tanggal_input;
+
             }
             else {
                 $this->validate($request, [
@@ -1780,9 +1783,19 @@ class GajiPerBulanController extends Controller
 
             DB::commit();
             if ($request->has('batch_id')) {
+                // log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $activity = "Pengguna <b>$name</b> memperbarui penggajian karyawan bulan " . LogActivity::nameBulan($bulan) . " tahun " . $tahun;
+                LogActivity::create($activity);
+
                 Alert::success('Berhasil', 'Berhasil memperbarui penggajian karyawan.');
             }
             else {
+                // log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $activity = "Pengguna <b>$name</b> melakukan proses penggajian karyawan bulan " . LogActivity::nameBulan($bulan) . " tahun " . $tahun;
+                LogActivity::create($activity);
+
                 Alert::success('Berhasil', 'Berhasil melakukan proses penggajian karyawan.');
             }
 
@@ -2609,6 +2622,10 @@ class GajiPerBulanController extends Controller
         $tahunSekarang = date('Y', strtotime($data->tanggal_input));
         $tanggal = $tanggalSekarang . ' ' . $bulanSekarang . ' ' . $tahunSekarang;
 
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melakukan cetak file penghasilan bulan " . $bulanSekarang . " tahun " . $tahunSekarang;
+        LogActivity::create($activity);
         return view('gaji_perbulan.cetak-pdf',['data' => $result,'month' => $month, 'year' => $year,'tanggal' => $tanggal,'ttdKaryawan' => $ttdKaryawan,'cabang' => $cabang]);
     }
 
@@ -2723,6 +2740,11 @@ class GajiPerBulanController extends Controller
                             'tanggal_final' => date('Y-m-d'),
                             'updated_at' => now(),
                         ]);
+
+                    // Record to log activity
+                    $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                    $activity = "Pengguna <b>$name</b> melakukan finalisasi proses penggajian bulan " . LogActivity::nameBulan( (int) date('m', strtotime($batch->tanggal_input))) . " tahun " . date('Y', strtotime($batch->tanggal_input));
+                    LogActivity::create($activity);
                 }
             }
 
@@ -2781,22 +2803,52 @@ class GajiPerBulanController extends Controller
         } else {
             $returnType = new ProsesRincianPayroll($data);
         }
-// return $data;
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melakukan cetak file excel ".$tipe." bulan " . $bulanShow[$bulan] . " tahun " . $tahun;
+        LogActivity::create($activity);
+
         $filename = ucwords($tipe) . ' Kantor ' . $nama_kantor . ' Bulan ' . $bulanShow[$bulan] . ' Tahun ' . $tahun . '.xlsx';
         return Excel::download($returnType , $filename);
     }
 
     public function delete($id, Request $request)
     {
-        // return $request;
         try {
             $id_batch = Request()->id;
-            DB::table('batch_gaji_per_bulan')->where('id',$id_batch)->update([
-                'deleted_at' => now()
-            ]);
+            $data = DB::table('batch_gaji_per_bulan AS batch')
+                    ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+                    ->join('pph_yang_dilunasi AS pph', 'pph.gaji_per_bulan_id', 'gaji.id')
+                    ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+                    ->leftJoin('mst_divisi AS md', 'md.kd_divisi', 'm.kd_entitas')
+                    ->join('mst_cabang AS cab', 'cab.kd_cabang', 'batch.kd_entitas')
+                    ->select(
+                        'cab.nama_cabang AS kantor',
+                        'batch.tanggal_input',
+                        'md.nama_divisi',
+                    )
+                    ->where('batch.id', $id_batch)->first();
+            if ($data) {
+                $bulan = LogActivity::nameBulan((int) date('m', strtotime($data->tanggal_input)));
+                $tahun = date('Y', strtotime($data->tanggal_input));
+                $kategori = isset($data->nama_divisi) && !is_array($data->nama_divisi) ? $data->nama_divisi : 'Pegawai';
 
-            Alert::success('Data berhasil dihapus.');
-            return redirect()->route('gaji_perbulan.index');
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $activity = "Pengguna <b>$name</b> menghapus data penggajian kategori ". $kategori ." kantor " . $data->kantor . " bulan " . $bulan . " tahun " . $tahun;
+                LogActivity::create($activity);
+
+                DB::table('batch_gaji_per_bulan')->where('id',$id_batch)->update([
+                    'deleted_at' => now()
+                ]);
+
+                Alert::success('Data berhasil dihapus.');
+                return redirect()->route('gaji_perbulan.index');
+            } else {
+                Alert::error('Data penggajian tidak ditemukan.');
+                return redirect()->route('gaji_perbulan.index');
+            }
+
         } catch (\Exception $e) {
             //  dd($e->getMessage());
             Alert::error('Error', $e->getMessage());
@@ -2812,12 +2864,38 @@ class GajiPerBulanController extends Controller
     {
         try {
             $id_batch = Request()->id;
-            DB::table('batch_gaji_per_bulan')->where('id', $id_batch)->update([
-                'deleted_at' => null
-            ]);
+            $data = DB::table('batch_gaji_per_bulan AS batch')
+            ->join('gaji_per_bulan AS gaji', 'gaji.batch_id', 'batch.id')
+            ->join('pph_yang_dilunasi AS pph', 'pph.gaji_per_bulan_id', 'gaji.id')
+            ->join('mst_karyawan AS m', 'm.nip', 'gaji.nip')
+            ->leftJoin('mst_divisi AS md', 'md.kd_divisi', 'm.kd_entitas')
+            ->join('mst_cabang AS cab', 'cab.kd_cabang', 'batch.kd_entitas')
+            ->select(
+                'cab.nama_cabang AS kantor',
+                'batch.tanggal_input',
+                'md.nama_divisi',
+            )
+                ->where('batch.id', $id_batch)->first();
+            if ($data) {
+                $bulan = LogActivity::nameBulan((int) date('m', strtotime($data->tanggal_input)));
+                $tahun = date('Y', strtotime($data->tanggal_input));
+                $kategori = isset($data->nama_divisi) && !is_array($data->nama_divisi) ? $data->nama_divisi : 'Pegawai';
 
-            Alert::success('Data berhasil dikembalikan.');
-            return redirect()->route('gaji_perbulan.index');
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $activity = "Pengguna <b>$name</b> mengrmbalikan data penggajian kategori " . $kategori . " kantor " . $data->kantor . " bulan " . $bulan . " tahun " . $tahun;
+                LogActivity::create($activity);
+
+                DB::table('batch_gaji_per_bulan')->where('id', $id_batch)->update([
+                    'deleted_at' => null
+                ]);
+
+                Alert::success('Data berhasil dihapus.');
+                return redirect()->route('gaji_perbulan.index');
+            } else {
+                Alert::error('Data penggajian tidak ditemukan.');
+                return redirect()->route('gaji_perbulan.index');
+            }
         } catch (\Exception $e) {
             //  dd($e->getMessage());
             Alert::error('Error', $e->getMessage());
