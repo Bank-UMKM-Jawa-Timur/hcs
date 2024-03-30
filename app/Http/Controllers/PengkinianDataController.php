@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Imports\PengkinianDataImport;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -342,6 +343,10 @@ class PengkinianDataController extends Controller
                     ->delete();
             }
 
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah pengkinian data karyawan atas nama <b>$karyawan->nama_karyawan</b>.";
+            LogActivity::create($activity);
+
             DB::commit();
             Alert::success('Berhasil', 'Berhasil melakukan pengkinian data karyawan.');
             return redirect()->route('pengkinian_data.index');
@@ -370,6 +375,11 @@ class PengkinianDataController extends Controller
         $data_suis = null;
 
         $karyawan = PengkinianKaryawanModel::findOrFail($id);
+
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melihat detail pengkinian data karyawan atas nama <b>$karyawan->nama_karyawan</b>.";
+        LogActivity::create($activity);
+
         $data_suis = DB::table('history_pengkinian_data_keluarga')
             ->where('nip', $karyawan->nip)
             ->whereIn('enum', ['Suami', 'Istri'])
