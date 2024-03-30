@@ -456,6 +456,7 @@ class KaryawanController extends Controller
             //     }
             // }
 
+
             for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
                 DB::table('tunjangan_karyawan')
                     ->insert([
@@ -474,6 +475,11 @@ class KaryawanController extends Controller
                     'iuran_ik' => str_replace('.', '', $request->get('potongan_iuran_ik')) ?? 0,
                     'created_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah karyawan baru atas nama <b>$request->get('nama')</b>.";
+            LogActivity::create($activity);
 
             DB::commit();
             Alert::success('Berhasil', 'Berhasil menambah karyawan.');
@@ -1086,6 +1092,10 @@ class KaryawanController extends Controller
                         ]);
                     }
                 }
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melakukan update karyawan atas nama <b>$request->get('nama')</b>.";
+            LogActivity::create($activity);
             DB::commit();
             Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
             return redirect()->route('karyawan.index');

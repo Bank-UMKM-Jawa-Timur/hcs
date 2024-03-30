@@ -2890,7 +2890,7 @@ class GajiPerBulanController extends Controller
                     'deleted_at' => null
                 ]);
 
-                Alert::success('Data berhasil dihapus.');
+                Alert::success('Data penggajianberhasil dikembalikan.');
                 return redirect()->route('gaji_perbulan.index');
             } else {
                 Alert::error('Data penggajian tidak ditemukan.');
