@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Http\Requests\PejabatSementaraRequest;
 use App\Models\JabatanModel;
 use App\Models\KaryawanModel;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PejabatSementaraController extends Controller
 {
@@ -63,6 +65,11 @@ class PejabatSementaraController extends Controller
             $request->all(),
             $request->file('file_sk')
         );
+        
+        $namaKaryawan = DB::table('mst_karyawan')->select('nama_karyawan')->where('nip', $request->nip)->first()->nama_karyawan;
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> menambahkan data pejabat sementara atas nama <b>$namaKaryawan</b>.";
+        LogActivity::create($activity);
 
         Alert::success('Berhasil menambahkan PJS');
         return redirect()->route('pejabat-sementara.index');
@@ -103,6 +110,11 @@ class PejabatSementaraController extends Controller
         $pjs = PjsModel::findOrFail($id);
         if($pjs->tanggal_mulai < $request->tgl_berakhir){
             $this->repo->deactivate($pjs, $request->tgl_berakhir);
+
+            $namaKaryawan = DB::table('mst_karyawan')->select('nama_karyawan')->where('nip', $request->nip)->first()->nama_karyawan;
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> meonaktifkan pejabat sementara atas nama <b>$namaKaryawan</b>.";
+            LogActivity::create($activity);
             Alert::success('Berhasil menonaktifkan PJS');
         } else{
             Alert::error('Tanggal penonaktifan harus lebih dari tanggal mulai.');
