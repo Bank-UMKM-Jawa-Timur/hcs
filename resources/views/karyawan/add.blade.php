@@ -196,17 +196,30 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Foto Karyawan</label>
-                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
-                                <span class="text-red-500 m-0 error-msg" style="display: none"></span>
+                                <div class="flex justify-between">
+                                    <div>
+                                        <label for="">Foto Diri</label>
+                                        <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
+                                        <span class="text-red-400">(maks 2Mb)</span>
+                                    </div>
+                                </div>
+                                <input type="file" class="@error('foto_diri') is-invalid @enderror form-input only-image limit-size-2" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
                             </div>
+                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Foto KTP</label>
-                                <input type="file" class="@error('foto_ktp') is-invalid @enderror  form-input only-image" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
+                                <div class="flex justify-between">
+                                    <div>
+                                        <label for="">Foto KTP</label>
+                                        <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
+                                        <span class="text-red-400">(maks 2Mb)</span>
+                                    </div>
+                                </div>
+                                <input type="file" class="@error('foto_ktp') is-invalid @enderror form-input only-image limit-size-2" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
                                 <span class="text-red-500 m-0 error-msg" style="display: none"></span>
                             </div>
+                            <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 gap-5">

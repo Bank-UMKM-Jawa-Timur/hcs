@@ -357,30 +357,29 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nip' => 'required',
+            'nik' => 'required',
+            'foto_diri' => 'required|mimes:jpg,jpeg,png',
+            'nama' => 'required',
+            'tmp_lahir' => 'required',
+            'tgl_lahir' => 'required',
+            'agama' => 'required|not_in:-',
+            'jk' => 'required|not_in:-',
+            'status_pernikahan' => 'required|not_in:-',
+            'kewarganegaraan' => 'required|not_in:-',
+            'alamat_ktp' => 'required',
+            'kpj' => 'required',
+            'jkn' => 'required',
+            'gj_pokok' => 'required',
+            'status_karyawan' => 'required|not_in:-',
+            'jabatan' => 'required|not_in:-',
+            'status_ptkp' => 'required|not_in:-',
+            'tgl_mulai' => 'required'
+        ]);
+
         DB::beginTransaction();
         try {
-            $request->validate([
-                'nip' => 'required',
-                'nik' => 'required',
-                'foto_diri' => 'required|mimes:jpg,jpeg,png',
-                'nama' => 'required',
-                'tmp_lahir' => 'required',
-                'tgl_lahir' => 'required',
-                'agama' => 'required|not_in:-',
-                'jk' => 'required|not_in:-',
-                'status_pernikahan' => 'required|not_in:-',
-                'kewarganegaraan' => 'required|not_in:-',
-                'alamat_ktp' => 'required',
-                'kpj' => 'required',
-                'jkn' => 'required',
-                'gj_pokok' => 'required',
-                'status_karyawan' => 'required|not_in:-',
-                'jabatan' => 'required|not_in:-',
-                'status_ptkp' => 'required|not_in:-',
-                'tgl_mulai' => 'required'
-            ]);
-
-
             $entitas = null;
             if($request->kd_bagian && !isset($request->kd_cabang)){
                 $entitas = null;
@@ -392,8 +391,8 @@ class KaryawanController extends Controller
             } else {
                 $entitas = $request->get('divisi');
             }
-            DB::table('mst_karyawan')
-                ->insert([
+            $id_karyawan = DB::table('mst_karyawan')
+                ->insertGetId([
                     'nip' => $request->get('nip'),
                     'nama_karyawan' => $request->get('nama'),
                     'nik' => $request->get('nik'),
@@ -427,33 +426,35 @@ class KaryawanController extends Controller
                     'tgl_mulai' => $request->get('tgl_mulai')
                 ]);
 
-            // if ($request->get('status_pernikahan') == 'Kawin') {
-            //     DB::table('keluarga')
-            //         ->insert([
-            //             'enum' => $request->get('is'),
-            //             'nama' => $request->get('is_nama'),
-            //             'tgl_lahir' => $request->get('is_tgl_lahir'),
-            //             'alamat' => $request->get('is_alamat'),
-            //             'pekerjaan' => $request->get('is_pekerjaan'),
-            //             'jml_anak' => $request->get('is_jml_anak'),
-            //             'nip' => $request->get('nip'),
-            //             'sk_tunjangan' => $request->get('sk_tunjangan_is'),
-            //             'created_at' => now()
-            //         ]);
+            if ($request->has('foto_diri')) {
+                $foto_diri = $request->file('foto_diri');
+                $fileNameNasabah = $foto_diri->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . '/dokumen/'  . $id_karyawan ;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $foto_diri->move($filePath, $fileNameNasabah);
+            }
+            if ($request->has('foto_ktp')) {
+                $foto_ktp = $request->file('foto_ktp');
+                $fileNameNasabah = $foto_ktp->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . '/dokumen/' . $id_karyawan ;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $foto_ktp->move($filePath, $fileNameNasabah);
+            }
 
-            //     if ($request->get('nama_anak')[0] != null) {
-            //         foreach ($request->get('nama_anak') as $key => $item) {
-            //             DB::table('keluarga')
-            //                 ->insert([
-            //                     'enum' => ($key == 0) ? 'ANAK1' : 'ANAK2',
-            //                     'nama' => $item,
-            //                     'tgl_lahir' => $request->get('tgl_lahir_anak')[$key],
-            //                     'nip' => $request->get('nip'),
-            //                     'sk_tunjangan' => $request->get('sk_tunjangan_anak')[$key]
-            //                 ]);
-            //         }
-            //     }
-            // }
+            // store dokumen
+            $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : null;
+            $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : null;
+
+            DB::table('dokumen_karyawan')->insert([
+                'karyawan_id' =>  $id_karyawan,
+                'foto_diri' => $ft_diri,
+                'foto_ktp' => $ft_ktp,
+                'created_at' => now()
+            ]);
 
             for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
                 DB::table('tunjangan_karyawan')

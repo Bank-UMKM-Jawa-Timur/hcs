@@ -217,7 +217,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image limit-size-2" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
+                                <input type="file" class="@error('foto_diri') is-invalid @enderror form-input only-image limit-size-2" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
                             </div>
                             <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
