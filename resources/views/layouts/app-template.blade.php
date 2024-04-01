@@ -201,6 +201,7 @@
     $(".only-pdf").on('change', function() {
         if (!this.files[0].type.includes('pdf')) {
             $(this).val('')
+            $('.message-pdf').html('Hanya boleh memilih berkas berupa pdf.')
             $(this).parent().next().html('Hanya boleh memilih berkas berupa pdf.')
             $(this).parent().next().css({
                 "display": "block"
@@ -227,7 +228,7 @@
             });
         }
     })
-    
+
     // END Only Accept file validation
 </script>
     @stack('extraScript')

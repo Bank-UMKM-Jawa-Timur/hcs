@@ -173,11 +173,12 @@ class GajiPerBulanController extends Controller
     }
 
     public function getDataPenghasilanJson(Request $request) {
+
         $status = 'failed';
         $message = '';
         $data = null;
-
         try {
+
             $is_pegawai = true;
             $kd_divisi_selected = $request->get('divisi'); // Used for divisi direksi, komisaris & staf ahli
             if ($request->has('is_pegawai')) {
@@ -323,7 +324,7 @@ class GajiPerBulanController extends Controller
                                 ->sum('nominal');
                 $tunjangan_ti = (int) DB::table('tunjangan_karyawan')
                                 ->where('nip', $value->nip)
-                                ->whereIn('id_tunjangan', 10)
+                                ->where('id_tunjangan', 10)
                                 ->sum('nominal');
                 $tj_keluarga = DB::table('tunjangan_karyawan')
                                 ->where('nip', $value->nip)
@@ -459,9 +460,9 @@ class GajiPerBulanController extends Controller
                 'message' => $message,
                 'data' => $data
             ];
-
-            return response()->json($response);
         }
+
+        return response()->json($response);
     }
 
     public function penyesuaianDataJson(Request $request) {
