@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Repository\PromosiRepository;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -239,6 +240,12 @@ class PromosiController extends Controller
             Alert::error('Error', 'Gagal mengupdate data karyawan');
             return back()->withInput();
         }
+
+        // Record to log activity
+        $namaKaryawan = DB::table('mst_karyawan')->select('nama_karyawan')->where('nip', $request->nip)->first()->nama_karyawan;
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melakukan promosi karyawan atas nama <b>$namaKaryawan</b>.";
+        LogActivity::create($activity);
 
         Alert::success('Berhasil', 'Berhasil menambahkan data promosi');
         return redirect()->route('promosi.index');

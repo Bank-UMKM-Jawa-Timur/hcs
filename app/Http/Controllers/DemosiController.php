@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Http\Requests\DemosiRequest;
 use App\Repository\DemosiRepository;
 use App\Service\EntityService;
@@ -218,6 +219,12 @@ class DemosiController extends Controller
                 Alert::error('Error', 'Gagal mengupdate data karyawan');
                 return back()->withInput();
             }
+
+            // Record to log activity
+            $namaKaryawan = DB::table('mst_karyawan')->select('nama_karyawan')->where('nip', $request->nip)->first()->nama_karyawan;
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melakukan demosi karyawan atas nama <b>$namaKaryawan</b>.";
+            LogActivity::create($activity);
 
             DB::commit();
             Alert::success('Berhasil', 'Berhasil menambahkan data demosi');
