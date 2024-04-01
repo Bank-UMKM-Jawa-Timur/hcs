@@ -106,31 +106,31 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">NIK</label>
+                                <label for="">NIK<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('nik') is-invalid @enderror form-input" name="nik" id="" value="{{ old('nik') }}">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
-                                <label for="">Nama Karyawan</label>
+                                <label for="">Nama Karyawan<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('nama') is-invalid @enderror form-input" name="nama" id="" value="{{ old('nama') }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
-                                <label for="">Tempat Lahir</label>
+                                <label for="">Tempat Lahir<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-input" name="tmp_lahir" id="" value="{{ old('tmp_lahir') }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
-                                <label for="">Tanggal Lahir</label>
+                                <label for="">Tanggal Lahir<span class="text-red-500">*</span></label>
                                 <input type="date" class="@error('tgl_lahir') is-invalid @enderror form-input" name="tgl_lahir" id="" value="{{ old('tgl_lahir') }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
-                                <label for="">Agama</label>
+                                <label for="">Agama<span class="text-red-500">*</span></label>
                                 <select name="agama" id="" class="@error('agama') is-invalid @enderror form-input">
                                     <option value="-">--- Pilih ---</option>
                                     @foreach ($agama as $item)
@@ -141,7 +141,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Jenis Kelamin</label>
+                                <label for="">Jenis Kelamin<span class="text-red-500">*</span></label>
                                 <select name="jk" id="" class="@error('jk') is-invalid @enderror form-input">
                                     <option {{ old('jk') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                     <option {{ old('jk') == 'Laki-Laki' ? 'selected' : '' }} value="Laki-laki">Laki-laki</option>
@@ -151,7 +151,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Status pernikahan</label>
+                                <label for="">Status pernikahan<span class="text-red-500">*</span></label>
                                 <select name="status_pernikahan" id="status" class="@error('status_pernikahan') is-invalid @enderror form-input">
                                     <option value="">--- Pilih ---</option>>
                                     <option value="Kawin">Kawin</option>
@@ -166,7 +166,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Status PTKP</label>
+                                <label for="">Status PTKP<span class="text-red-500">*</span></label>
                                 <select name="status_ptkp" id="" class="@error('status_ptkp') is-invalid @enderror form-input">
                                     <option {{ old('status_ptkp') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                     <option {{ old('status_ptkp') == 'K/0' ? 'selected' : '' }} value="K/0">K/0</option>
@@ -186,7 +186,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
-                                <label for="">Kewarganegaraan</label>
+                                <label for="">Kewarganegaraan<span class="text-red-500">*</span></label>
                                 <select name="kewarganegaraan" id="" class="@error('kewarganegaraan') is-invalid @enderror form-input">
                                     <option {{ old('kewarganegaraan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                     <option {{ old('kewarganegaraan') == 'WNI' ? 'selected' : '' }} value="WNI">WNI</option>
@@ -198,7 +198,7 @@
                             <div class="input-box">
                                 <div class="flex justify-between">
                                     <div>
-                                        <label for="">Foto Diri</label>
+                                        <label for="">Foto Diri<span class="text-red-500">*</span></label>
                                         <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
                                         <span class="text-red-400">(maks 2Mb)</span>
                                     </div>
@@ -211,7 +211,7 @@
                             <div class="input-box">
                                 <div class="flex justify-between">
                                     <div>
-                                        <label for="">Foto KTP</label>
+                                        <label for="">Foto KTP<span class="text-red-500">*</span></label>
                                         <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
                                         <span class="text-red-400">(maks 2Mb)</span>
                                     </div>
@@ -225,7 +225,7 @@
                     <div class="grid grid-cols-1 gap-5">
                         <div class="col-md-12">
                             <div class="input-box">
-                                <label for="">Alamat KTP</label>
+                                <label for="">Alamat KTP<span class="text-red-500">*</span></label>
                                 <textarea name="alamat_ktp" id="" class="@error('alamat_ktp') is-invalid @enderror form-input">{{ old('alamat_ktp') }}</textarea>
                             </div>
                         </div>
@@ -244,7 +244,7 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">NIP</label>
+                                <label for="">NIP<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('nip') is-invalid @enderror  form-input" name="nip" id="nip" value="{{ old('nip') }}">
                             </div>
                         </div>
@@ -267,7 +267,7 @@
                         <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-4">
                             <div class="input-box">
-                                <label for="">Jabatan</label>
+                                <label for="">Jabatan<span class="text-red-500">*</span></label>
                                 <select name="jabatan" id="jabatan" class="form-input">
                                     <option value="">--- Pilih ---</option>
                                     @foreach ($jabatan as $item)
@@ -327,13 +327,13 @@
                         <div class="grid pb-10 gap-8  md:grid-cols-2 grid-cols-1">
                         <div class="col-md-12">
                             <div class="input-box">
-                                <label for="">KPJ</label>
+                                <label for="">KPJ<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('kpj') is-invalid @enderror form-input" name="kpj" value="{{ old('kpj') }}">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
-                                <label for="">JKN</label>
+                                <label for="">JKN<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('jkn') is-invalid @enderror form-input" name="jkn" value="{{ old('jkn') }}">
                             </div>
                         </div>
@@ -344,7 +344,7 @@
                         <div class="grid pb-10 gap-8 mt-5  md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Honorarium</label>
+                                <label for="">Honorarium<span class="text-red-500">*</span></label>
                                 <input type="text" id="gj_pokok" class="@error('gj_pokok') is-invalid @enderror form-input" name="gj_pokok" value="{{ old('gj_pokok') }}">
                             </div>
                         </div>
@@ -361,7 +361,7 @@
                         <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Status Karyawan</label>
+                                <label for="">Status Karyawan<span class="text-red-500">*</span></label>
                                 <select name="status_karyawan" id="" class="@error('status_karyawan') is-invalid @enderror form-input">
                                     <option {{ old('status_karyawan') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
                                     <option {{ old('status_karyawan') == 'Tetap' ? 'selected' : '' }} value="Tetap">Tetap</option>
@@ -372,7 +372,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Tanggal Mulai</label>
+                                <label for="">Tanggal Mulai<span class="text-red-500">*</span></label>
                                 <input type="date" class="@error('tgl_mulai') is-invalid @enderror form-input" name="tgl_mulai" value="{{ old('tgl_mulai') }}">
                             </div>
                         </div>
