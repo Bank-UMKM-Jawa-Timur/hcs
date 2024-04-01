@@ -362,7 +362,7 @@ class KaryawanController extends Controller
             $request->validate([
                 'nip' => 'required',
                 'nik' => 'required',
-                'foto_diri ' => 'required|mimes:jpg,jpeg,png',
+                'foto_diri' => 'required|mimes:jpg,jpeg,png',
                 'nama' => 'required',
                 'tmp_lahir' => 'required',
                 'tgl_lahir' => 'required',
