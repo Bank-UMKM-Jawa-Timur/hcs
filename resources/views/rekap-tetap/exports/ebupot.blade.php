@@ -287,13 +287,13 @@
                 <td align="right" style="color:black;">{{ $loop->iteration }}</td>
                 <td align="left" style="color:black;">{{ date('d/m/Y', strtotime($lastdate)) }}</td>
                 <td align="left" style="color:black;">NPWP</td>
-                <td align="left" style="color:black;">{{ "'" . $item->npwp }}</td>
+                <td align="left" style="color:black;">{{$item->npwp}}</td>
                 <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;">21-100-01</td>
                 <td align="left" style="color:black;">NPWP</td>
-                <td align="left" style="color:black;">{{ "'" . $penandatangan }}</td>
+                <td align="left" style="color:black;">{{$penandatangan}}</td>
                 <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;">{{ $item->status_ptkp }}</td>
                 <td align="left" style="color:black;">Tidak</td>

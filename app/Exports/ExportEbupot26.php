@@ -20,12 +20,7 @@ class ExportEbupot26 implements FromView, WithTitle
         $this->lastdate = $lastdate;
         $this->penandatangan = $penandatangan;
     }
-
-    public function collection()
-    {
-        //
-    }
-
+    
     public function view(): View
     {
         return view('rekap-tetap.exports.ebupot26', [

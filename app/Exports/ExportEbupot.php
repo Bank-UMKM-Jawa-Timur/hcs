@@ -4,11 +4,14 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class ExportEbupot implements FromView, WithTitle
+class ExportEbupot implements FromView, WithTitle,WithColumnFormatting
 {
     private $data;
     private $lastdate;
@@ -21,16 +24,13 @@ class ExportEbupot implements FromView, WithTitle
         $this->penandatangan = $penandatangan;
     }
 
-    public function collection()
-    {
-        //
-    }
+
 
     public function columnFormats(): array
     {
         return [
-            'D' => NumberFormat::FORMAT_NUMBER,
-            'J' => NumberFormat::FORMAT_NUMBER,
+            'D' => "0",
+            'J' => "0"
         ];
     }
 
