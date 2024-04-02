@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class LaporanTetapController extends Controller
 {
@@ -110,8 +111,8 @@ class LaporanTetapController extends Controller
             $pincab = DB::table('mst_karyawan')->select('npwp', 'kd_entitas')->where('kd_jabatan', 'PC')->where('tanggal_penonaktifan', null)
                     ->where('kd_entitas', $kd_entitas)
                     ->first();
-            $penandatangan = $pincab->npwp;
-            $kd = $pincab->kd_entitas;
+            $penandatangan = $pincab?->npwp;
+            $kd = $pincab?->kd_entitas;
         } else {
             $kd = '000';
             $penandatangan = '247504327618000';
@@ -119,8 +120,21 @@ class LaporanTetapController extends Controller
 
         $filename = 'E-Bupot 21 Masa '. date('m', $month) . ' (' .$kd_entitas. ')';
 
-        return Excel::download(new ExportScanEbupot($data, $lastdate, $penandatangan, $total_data, $month, $year),
-        $filename . '.xlsx');
+        // Generate the Excel file
+        $excelFile = Excel::download(new ExportScanEbupot($data, $lastdate, $penandatangan, $total_data, $month, $year),
+            $filename . '.xlsx');
+
+        // Check if the download is successful
+        if ($excelFile) {
+            // Display a success message to the user
+            Alert::success('Berhasil', 'Berhasil mengunduh berkas');
+            return $excelFile;
+            return redirect()->back();
+        } else {
+            // If download failed, display an error message
+            Alert::error('Terjadi kesalahan', 'Gagal dalam mengunduh berkas');
+            return redirect()->back();
+        }
     }
 
     /**
