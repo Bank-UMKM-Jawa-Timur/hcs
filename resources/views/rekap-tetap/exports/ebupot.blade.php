@@ -18,6 +18,8 @@
             <th style="background-color: #00B050"></th>
             <th style="background-color: #00B050"></th>
             <th style="background-color: #00B050"></th>
+            <th style="background-color: #00B050"></th>
+            <th style="background-color: #00B050"></th>
         </tr>
         <tr>
             <th style="width: 50px; color: black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
@@ -66,6 +68,12 @@
             <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
                 align="center">
                 Penghasilan Bruto</th>
+            <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
+                align="center">
+                Terdapat Akumulasi<br>Penghasilan Bruto<br>Sebelumnya? (Ya/Tidak)</th>
+            <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
+                align="center">
+                Akumulasi<br>Penghasilan Bruto<br>Sebelumnya</th>
             <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
                 align="center">
                 Mendapatkan Fasilitas ? <br> (N/SKB/DTP) </th>
@@ -238,7 +246,7 @@
                 $pph21 -= floor($total_pajak_insentif);
                 $penambahBruto = $item->jamsostek;
 
-                $brutoTotal = floor($gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $insentifKredit + $insentifPenagihan + $totalBrutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja + $tambahanPenghasilan + $rekreasi + $brutoNataru + $brutoJaspro + $penambahBruto);
+                $brutoTotal = floor($gaji + $uangMakan + $pulsa + $vitamin + $transport + $lembur + $penggantiBiayaKesehatan + $uangDuka + $spd + $spdPendidikan + $spdPindahTugas + $insentifKredit + $insentifPenagihan + $brutoTHR + $brutoDanaPendidikan + $brutoPenghargaanKinerja + $tambahanPenghasilan + $rekreasi + $brutoNataru + $brutoJaspro + $penambahBruto);
                 $brutoPPH = $pphNataru + $pphJaspro + $pphTambahanPenghasilan + $pphRekreasi + $pph21Bentukan;
 
                 // Hitung total per page
@@ -291,6 +299,8 @@
                 <td align="left" style="color:black;">Tidak</td>
                 <td align="left" style="color:black;">Tidak</td>
                 <td align="right" style="color:black;"> {{ $brutoTotal }}</td>
+                <td align="left" style="color:black;"></td>
+                <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;">N</td>
                 <td align="left" style="color:black;"></td>
             </tr>
