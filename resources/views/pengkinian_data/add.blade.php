@@ -1078,6 +1078,7 @@
                 datatype: "JSON",
                 type: "GET",
                 success: (res) => {
+                    console.log(res);
                     $("#nik").val(res.data.nik)
                     $("#nama").val(res.data.nama_karyawan)
                     $("#tmp_lahir").val(res.data.tmp_lahir)
