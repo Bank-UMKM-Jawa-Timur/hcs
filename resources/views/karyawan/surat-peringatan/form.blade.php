@@ -1,52 +1,52 @@
 @include('vendor.select2')
     @csrf
-    <div class="row m-0">
-        <div class="col-md-4 form-group">
+    <div class="grid pb-5 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
+        <div class="col-md-4 input-box">
             <label for="">Karyawan:</label>
-            <select name="nip" id="nip" class="form-control @error('nip') is-invalid @enderror" @disabled($ro ?? null)></select>
+            <select name="nip" id="nip" class="form-input @error('nip') is-invalid @enderror" @disabled($ro ?? null)></select>
             @error('nip')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col-md-4 input-box">
             <label for="jabatan">Jabatan</label>
-            <input type="text" class="form-control" id="jabatan" disabled>
+            <input type="text" class="form-input" id="jabatan" disabled>
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col-md-4 input-box">
             <label for="kantor">Kantor</label>
-            <input type="text" class="form-control" id="kantor" disabled>
+            <input type="text" class="form-input" id="kantor" disabled>
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col-md-4 input-box">
             <label for="no_sp">No. SP</label>
-            <input type="text" name="no_sp" id="no_sp" class="form-control @error('no_sp') is-invalid @enderror" value="{{ $sp?->no_sp }}" @disabled($ro ?? null) autofocus>
+            <input type="text" name="no_sp" id="no_sp" class="form-input @error('no_sp') is-invalid @enderror" value="{{ $sp?->no_sp }}" @disabled($ro ?? null) autofocus>
 
             @error('no_sp')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col-md-4 input-box">
             <label for="tanggal_sp">Tanggal SP</label>
             @if (!$ro)
-                <input type="date" name="tanggal_sp" id="tanggal_sp" class="form-control @error('tanggal_sp') is-invalid @enderror" >
+                <input type="date" name="tanggal_sp" id="tanggal_sp" class="form-input @error('tanggal_sp') is-invalid @enderror" >
             @else
-                <input type="text" class="form-control" value="{{ $sp?->tanggal_sp?->format('d M Y') }}" disabled>
+                <input type="text" class="form-input" value="{{ $sp?->tanggal_sp?->format('d M Y') }}" disabled>
             @endif
 
             @error('tanggal_sp')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col-md-4 input-box">
             <label for="pelanggaran">Pelanggaran</label>
-            <input type="text" name="pelanggaran" id="pelanggaran" class="form-control @error('pelanggaran') is-invalid @enderror" value="{{ $sp?->pelanggaran }}" @disabled($ro ?? null)>
+            <input type="text" name="pelanggaran" id="pelanggaran" class="form-input @error('pelanggaran') is-invalid @enderror" value="{{ $sp?->pelanggaran }}" @disabled($ro ?? null)>
 
             @error('pelanggaran')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col-md-4 input-box">
             <label for="sanksi">Sanksi</label>
-            <input type="text" name="sanksi" id="sanksi" class="form-control @error('sanksi') is-invalid @enderror" value="{{ $sp?->sanksi }}" @disabled($ro ?? null)>
+            <input type="text" name="sanksi" id="sanksi" class="form-input @error('sanksi') is-invalid @enderror" value="{{ $sp?->sanksi }}" @disabled($ro ?? null)>
 
             @error('sanksi')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -65,36 +65,36 @@
                         <img src="{{ asset('/upload/sp/' . $sp->file_sk) }}" alt="" width="100%">
                     @endif
                 @else
-                    <input type="text" class="form-control" disabled value="-">
+                    <input type="text" class="form-input" disabled value="-">
                 @endif
             </div>
         @else
-            <div class="col-md-4 form-group">
+            <div class="col-md-4 input-box">
                 <label for="file_sk">Dokumen SK</label>
                 <div class="custom-file col-md-12">
-                    <input type="file" name="file_sk" class="custom-file-input" id="validatedCustomFile" accept=".pdf">
-                    <label class="custom-file-label overflow-hidden" for="validatedCustomFile">Choose file(.pdf) ...</label>
-                </div>  
+                    <input type="file" name="file_sk" class="form-input custom-file-input only-pdf" id="validatedCustomFile" accept=".pdf">
+                </div>
+                <span class="text-red-500 m-0 error-msg message-pdf" style="display: none"></span>
                 @error('file_sk')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
         @endif
     </div>
-
-    <div class="row m-0">
-        <div class="col-md-12 text-left">
-            @if($ro)
-                <a href="{{ route('surat-peringatan.index') }}" class="btn btn-primary">Kembali</a>
-            @else
-                <button type="submit" class="btn btn-primary">Simpan</button>
-            @endif
-        </div>
-    </div>
+    @if($ro)
+        <button type="button" class="btn btn-primary" id="btn-kembali">Kembali</button>
+        {{-- <a href="{{ route('surat-peringatan.index') }}" class="btn btn-primary">Kembali</a> --}}
+    @else
+        <button type="submit" class="btn btn-primary">Simpan</button>
+    @endif
 
 @push('script')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    $(`#btn-kembali`).on('click', function(){
+        window.location.href = "{{ route('surat-peringatan.index') }}";
+    })
+
     const nipSelect = $('#nip').select2({
         ajax: {
             url: '{{ route('api.select2.karyawan') }}',
@@ -168,7 +168,7 @@
             })
         }
     })
-    
+
     document.querySelector('.custom-file-input').addEventListener('change', function (e) {
             var name = document.getElementById("validatedCustomFile").files[0].name;
             var ext = name.match(/\.([^\.]+)$/)[1];

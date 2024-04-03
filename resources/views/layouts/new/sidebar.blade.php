@@ -92,7 +92,8 @@
                                 'pejabat-sementara',
                                 'surat-peringatan',
                                 'klasifikasi-karyawan',
-                                'klasifikasi_data'
+                                'klasifikasi_data',
+                                'surat-peringatan/*'
                             )
                                 ? 'show'
                                 : 'hidden' }}"
@@ -202,7 +203,7 @@
                                     @can('manajemen karyawan - reward & punishment')
                                         <li class="item-link">
                                             <a href="#">
-                                                <button class="btn-link" data-accordion-target="#reward-and-punishment"
+                                                <button class="btn-link {{ request()->routeis('surat-peringatan.*') ? 'active-link' : ''     }}" data-accordion-target="#reward-and-punishment"
                                                     aria-expanded="false" aria-controls="reward-and-punishment">
                                                     <i class="ti ti-circle"></i>
                                                     <span>Reward & Punishment</span>
@@ -217,7 +218,7 @@
                                                 <ul class="sub-menu pl-2 ml-3 space-y-2 border-them border-l-2 text-sm">
                                                     <li>
                                                         <a href="{{ route('surat-peringatan.index') }}">
-                                                            <button class="btn-link">
+                                                            <button class="btn-link @active('surat-peringatan.*', 'active-link')">
                                                                 <span>Surat Peringatan</span>
                                                             </button>
                                                         </a>
