@@ -72,7 +72,7 @@
                 <div class="grid grid-cols-3 gap-2">
                     <div class="col-span-full grid grid-cols-2 gap-2">
                         <div class="input-box">
-                            <label for="">NIP:</label>
+                            <label for="">NIP</label>
                             <select name="nip" id="nip" class="form-input"></select>
                         </div>
                         <div class="input-box">
@@ -131,6 +131,28 @@
                                 <option {{ old('kewarganegaraan') == 'WNA' ? 'selected' : '' }} value="WNA">WNA</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="col-md-12 hidden" id="parent_foto_diri">
+                        <div class="input-box">
+                            <div>
+                                <label for="">Foto Diri<span class="text-red-500">*</span></label>
+                                <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
+                                <span class="text-red-400">(maks 2Mb)</span>
+                            </div>
+                            <input type="file" class="@error('foto_diri') is-invalid @enderror form-input only-image limit-size-2" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
+                        </div>
+                        <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
+                    </div>
+                    <div class="col-md-12 hidden" id="parent_foto_ktp">
+                        <div class="input-box">
+                            <div>
+                                <label for="">Foto KTP<span class="text-red-500">*</span></label>
+                                <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
+                                <span class="text-red-400">(maks 2Mb)</span>
+                            </div>
+                            <input type="file" class="@error('foto_ktp') is-invalid @enderror form-input only-image limit-size-2" name="foto_ktp" id="foto_ktp" accept="image/png, image/jpeg">
+                        </div>
+                        <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                     </div>
                     <div class="col-span-full col-md-12">
                         <div class="input-box">
@@ -196,7 +218,7 @@
                                 <select name="panggol" id="kd_panggol" class="@error('panggol') is-invalid @enderror form-input">
                                     <option value="-">--- Pilih ---</option>
                                     @foreach ($panggol as $item)
-                                        <option {{ old('panggol') == $item->golongan ? 'selected' : '--- Pilih ---' }} value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
+                                        <option {{ old('panggol') == $item->golongan ? 'selected' : '' }} value="{{ $item->golongan }}">{{ $item->golongan }} - {{ $item->pangkat }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -271,16 +293,33 @@
                     </div>
                 </div>
             </div>
+
+
             <div class="card tab-pane" id="data-is">
                 <div class="head-card border-b pb-5">
                     <h2 class="font-bold text-lg">Data Keluarga</h2>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div class="input-box col-span-full">
-                        <label for="is_nama">Nama</label>
-                        <input type="text" placeholder="Masukkan nama" name="is_nama" class="form-input" value="{{ old('is_nama') }}" id="is_nama">
+                <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
+                    <div class="col-md-4">
+                        <div class="input-box">
+                            <div>
+                                <label for="">Foto KK<span class="text-red-500">*</span></label>
+                                <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
+                                <span class="text-red-400">(maks 2Mb)</span>
+                            </div>
+                            <input type="file" class="@error('foto_kk') is-invalid @enderror form-input only-image limit-size-2" name="foto_kk" id="foto_kk" accept="image/png, image/jpeg">
+                        </div>
+                        <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                     </div>
-                    <div class="input-box col-md-4">
+                </div>
+                <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 hidden" id="parent-family">
+                    <div class="col-md-4 pasangan">
+                        <div class="input-box">
+                            <label for="is_nama">Nama</label>
+                            <input type="text" placeholder="Masukkan nama" name="is_nama" class="form-input" value="{{ old('is_nama') }}" id="is_nama">
+                        </div>
+                    </div>
+                    <div class="input-box col-md-4 pasangan">
                         <label for="is">Pasangan</label>
                         <select name="is" id="is" class="form-input">
                             <option {{ old('is') == '-' ? 'selected' : '' }} value="-">--- Pilih ---</option>
@@ -289,76 +328,92 @@
                         </select>
 
                     </div>
-                    <div class="input-box col-md-4">
+                    <div class="input-box col-md-4 pasangan">
                         <label for="sk_tunjangan">SK Tunjangan</label>
                         <input type="text" placeholder="Masukkan SK Tunjangan" class="form-input" name="sk_tunjangan_is" id="sk_tunjangan_is">
                     </div>
-                    <div class="input-box col-md-6">
+                    <div class="input-box col-md-4 pasangan">
                         <label for="is_tgl_lahir">Tanggal Lahir</label>
                         <input type="date" placeholder="Masukkan tanggal lahir" name="is_tgl_lahir" class="form-input" value="{{ old('is_tgl_lahir') }}" id="is_tgl_lahir">
                     </div>
-                    <div class="input-box col-md-6">
+                    <div class="input-box col-md-4 pasangan">
                         <label for="is_pekerjaan">Pekerjaan</label>
                         <input type="text" placeholder="Masukkan pekerjaan" class="form-input" name="is_pekerjaan" value="{{ old('is_pekerjaan') }}" id="is_pekerjaan">
                     </div>
-                    <div class="input-box col-span-full">
-                        <label for="is_alamat">Alamat</label>
-                        <textarea name="is_alamat" placeholder="Masukkan alamat" class="form-input" id="is_alamat">{{ old('is_alamat') }}</textarea>
+                    <div class="col-md-4">
+                        <div class="input-box">
+                            <div>
+                                <label for="">Foto Buku Nikah</label>
+                                <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
+                                <span class="text-red-400">(maks 2Mb)</span>
+                            </div>
+                            <input type="file" name="foto_buku_nikah" class="form-input only-image limit-size-2" id="foto_buku_nikah" accept="image/png, image/jpeg, image/jpg, image/webp">
+                        </div>
+                        <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="input-box">
                             <label for="is_jumlah_anak">Jumlah Anak</label>
                             <div class="flex gap-3">
-                                <input type="number" placeholder="Masukkan jumlah anak" class="form-input" id="is_jml_anak" name="is_jml_anak" value="{{ old('is_jumlah_anak') }}" readonly>
-                                <button type="button" class="btn btn-success" id="add-row-anak"><i class="ti ti-plus"></i></button>
+                                <input type="number" class="form-input form-input-disabled" name="is_jml_anak" id="is_jml_anak"
+                                    value="{{ old('is_jumlah_anak') }}" readonly>
+                                    <button type="button" class="btn btn-success" id="add-row-anak"><i class="ti ti-plus"></i></button>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12 mt-3 col-span-full" id="row_anak">
                         <hr>
                     </div>
+                    <div class="col-md-12 mt-3 col-span-full" id="new_row_anak">
+                        <hr>
+                    </div>
+                    <div class="input-box col-span-full pasangan">
+                        <label for="is_alamat">Alamat</label>
+                        <textarea name="is_alamat" placeholder="Masukkan alamat" class="form-input" id="is_alamat">{{ old('is_alamat') }}</textarea>
+                    </div>
                 </div>
             </div>
 
 
             {{-- data tunjangan --}}
-            <div class="card tab-pane space-y-5" id="collapseFour" >
+            <div class="card tab-pane space-y-5" id="collapseFour">
                 <div class="head-card border-b pb-5">
                     <h2 class="font-bold text-lg">Data Tunjangan</h2>
                 </div>
-                <div class="grid grid-cols-3 gap-2 items-end">
-                    <input type="hidden" name="id_tk[]" id="id_tk" value="">
-                    <div class="col-md-5">
-                        <div class="input-box">
-                            <label for="is">Tunjangan</label>
-                            <select name="tunjangan[]" id="tunjangan" class="form-input">
-                                <option value="-">--- Pilih ---</option>
-                                @foreach ($tunjangan as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
-                                @endforeach
-                            </select>
+                <div class="tunjangan-item">
+                    <div class="grid grid-cols-3 gap-2 items-end">
+                        <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                        <div class="col-md-5">
+                            <div class="input-box">
+                                <label for="is">Tunjangan</label>
+                                <select name="tunjangan[]" id="tunjangan" class="form-input">
+                                    <option value="-">--- Pilih ---</option>
+                                    @foreach ($tunjangan as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="input-box">
-                            <label for="is_nama">Nominal</label>
-                            <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
+                        <div class="col-md-5">
+                            <div class="input-box">
+                                <label for="is_nama">Nominal</label>
+                                <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex flex-row gap-2">
-                        <div class="col-md-1 mt-3">
-                            <button class="btn btn-success" type="button" id="btn-add">
-                                <i class="ti ti-plus"></i>
-                            </button>
-                        </div>
-                        <div class="col-md-1 mt-3">
-                            <button class="btn btn-danger" type="button" id="btn-delete">
-                                <i class="ti ti-minus"></i>
-                            </button>
+                        <div class="flex flex-row gap-2">
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-success" type="button" id="btn-add">
+                                    <i class="ti ti-plus"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <button class="btn btn-danger" type="button" id="btn-delete">
+                                    <i class="ti ti-minus"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
 
             {{-- <div id="accordion"> --}}
@@ -757,10 +812,10 @@
         }
         // END TAB PANE
         let kantor = $('#kantor_row');
-        let status = $('#status');
+        let status = $('#status').val();
         $('#kantor').attr("disabled", "disabled");
         let nip;
-        var x =1;
+        var x = 1;
         let dataJmlAnak = [];
         var subdiv;
         var bag;
@@ -768,7 +823,7 @@
         var countAnak = 0;
         var idAnakDeleted = []
 
-        $("#add-row-anak").hide();
+        // $("#add-row-anak").addClass('hidden');
 
         // $("#is_jml_anak").keyup(function(){
         //     $("#row_anak").empty();
@@ -938,14 +993,14 @@
 
         $("#jabatan").change(function(){
             var value = $(this).val();
-            $("#kantor_row2").show();
+            $("#kantor_row2").removeclass('hidden');
             if(value == "PIMDIV" || value == "DIRHAN" || value == "DIRPEM" || value == "DIRUMK" || value == "DIRUT" || value == "KOMU" || value == "KOM"){
                 $("#kantor").val("1")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
                 $("kantor_row2").removeClass("col-md-6")
-                $("#kantor_row2").hide();
-                $("#kantor_row3").hide()
+                $("#kantor_row2").addclass('hidden');
+                $("#kantor_row3").addclass('hidden')
             } else if(value == "PSD"){
                 $("#kantor").val("1")
                 kantorChange();
@@ -954,13 +1009,13 @@
                 $("#kantor").val("2")
                 kantorChange();
                 $('#kantor').attr("disabled", "disabled");
-                $("#kantor_row2").hide();
+                $("#kantor_row2").addclass('hidden');
             } else if(value == "PBO"){
                 kantorChange();
                 $('#kantor').removeAttr("disabled")
                 $("kantor_row2").removeClass("col-md-6")
-                $("#kantor_row2").hide();
-                $("#kantor_row3").hide()
+                $("#kantor_row2").addclass('hidden');
+                $("#kantor_row3").addclass('hidden')
             } else if(value == "-"){
                 kantorChange();
             }else {
@@ -972,16 +1027,12 @@
             kantorChange();
         });
 
-        $('#data_is').hide();
+
 
         $('#status').change(function(){
             var stat = $(this).val();
 
-            if(stat == 'Kawin'){
-                $('#data_is').show();
-            } else{
-                $('#data_is').hide();
-            }
+            handlerStatusPernikahan(stat);
         })
 
         $('#collapseFour').on('click', "#btn-add", function(){
@@ -1023,7 +1074,6 @@
         });
 
         $('#collapseFour').on('click', "#btn-delete", function(){
-            console.log('bismillah');
             console.log(x);
             if(x > 1){
                 $(this).closest('.grid').remove()
@@ -1091,10 +1141,90 @@
                     $('#is_alamat').val('');
                     $('#is_pekerjaan').val('');
                     $('#sk_tunjangan_is').val('');
-                    $('#is_jml_anak').val('');
-                    countAnak = 0;
-                    cekStatus()
-                    // toggleButtonAnak()
+                    $('#is_jml_anak').val('');[]
+                    $(`#parent_foto_diri`).removeClass('hidden')
+                    $(`#parent_foto_ktp`).removeClass('hidden')
+                    cekStatus(res.data.status)
+                    $(".tunjangan-item").empty()
+                    if(res.data.count_tj > 0){
+                        x += res.data.count_tj;
+                        console.log('tunjangan lebih dari 1');
+                        $.each(res.data.tunjangan, (i, val) => {
+                            $('.tunjangan-item').append(`
+                                <div class="grid grid-cols-3 gap-2">
+                                    <input type="hidden" name="id_tk[]" id="id_tk" value="${val.id}">
+                                    <div class="col-md-5">
+                                        <div class="input-box">
+                                            <label for="is">Tunjangan</label>
+                                            <select name="tunjangan[]" id="tunjangan" class="form-input">
+                                                <option value="">--- Pilih ---</option>
+                                                @foreach ($tunjangan as $item)
+                                                    <option value="{{ $item->id }}" ${(val.id_tunjangan == {{ $item->id }}) ? 'selected' : ''}>{{ $item->nama_tunjangan }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="input-box">
+                                            <label for="is_nama">Nominal</label>
+                                            <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input" value="${formatRupiah(val.nominal.toString())}">
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row gap-2">
+                                        <div class="col-md-1 mt-3">
+                                            <button class="btn btn-success" type="button" id="btn-add">
+                                                <i class="ti ti-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-1 mt-3">
+                                            <button class="btn btn-danger" type="button" id="btn-delete">
+                                                <i class="ti ti-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    } else{
+                        console.log('tunjangan kurang dari 1');
+                        $('.tunjangan-item').append(`
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="hidden" name="id_tk[]" id="id_tk" value="">
+                                <div class="col-md-5">
+                                    <div class="input-box">
+                                        <label for="is">Tunjangan</label>
+                                        <select name="tunjangan[]" id="tunjangan" class="form-input">
+                                            <option value="">--- Pilih ---</option>
+                                            @foreach ($tunjangan as $item)
+                                                <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="input-box">
+                                        <label for="is_nama">Nominal</label>
+                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
+                                    </div>
+                                </div>
+                                <div class="flex flex-row gap-2">
+                                    <div class="col-md-1 mt-3">
+                                        <button class="btn btn-success" type="button" id="btn-add">
+                                            <i class="ti ti-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-1 mt-3">
+                                        <button class="btn btn-danger" type="button" id="btn-delete">
+                                            <i class="ti ti-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    }
+                    handlerStatusPernikahan(res.data.status)
+                    handlerDataAnak(res.jumlah_anak, res.data_anak)
+                    toggleButtonAnak()
                     getKantor()
 
                     if(res.data_anak.length > 0){
@@ -1107,83 +1237,6 @@
                         bagian = res.data.kd_bagian;
                     } else{
                         bagian = null
-                    }
-
-                    if(res.data.tunjangan.length > 0){
-                        $("#collapseFour").empty()
-                        x = res.data.tunjangan.length
-                        $.each(res.data.tunjangan, (i, val) => {
-                            $('#collapseFour').append(`
-                            <div class="grid grid-cols-3 gap-2">
-                                <input type="hidden" name="id_tk[]" id="id_tk" value="${val.id}">
-                                                <div class="col-md-5">
-                                                    <div class="input-box">
-                                                        <label for="is">Tunjangan</label>
-                                                        <select name="tunjangan[]" id="tunjangan" class="form-input">
-                                                            <option value="">--- Pilih ---</option>
-                                                            @foreach ($tunjangan as $item)
-                                                                <option value="{{ $item->id }}" ${(val.id_tunjangan == {{ $item->id }}) ? 'selected' : ''}>{{ $item->nama_tunjangan }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <div class="input-box">
-                                                        <label for="is_nama">Nominal</label>
-                                                        <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input" value="${formatRupiah(val.nominal.toString())}">
-                                                    </div>
-                                                </div>
-                                                <div class="flex flex-row gap-2">
-                                                    <div class="col-md-1 mt-3">
-                                                        <button class="btn btn-success" type="button" id="btn-add">
-                                                            <i class="ti ti-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-md-1 mt-3">
-                                                        <button class="btn btn-danger" type="button" id="btn-delete">
-                                                            <i class="ti ti-minus"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                `);
-                        })
-                    } else{
-                        $("#collapseFour").empty()
-                        $('#collapseFour').append(`
-                            <div class="grid grid-cols-3 gap-2">
-                                    <input type="hidden" name="id_tk[]" id="id_tk" value="">
-                                            <div class="col-md-5">
-                                                <div class="input-box">
-                                                    <label for="is">Tunjangan</label>
-                                                    <select name="tunjangan[]" id="tunjangan" class="form-input">
-                                                        <option value="">--- Pilih ---</option>
-                                                        @foreach ($tunjangan as $item)
-                                                            <option value="{{ $item->id }}">{{ $item->nama_tunjangan }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="input-box">
-                                                    <label for="is_nama">Nominal</label>
-                                                    <input type="text" id="nominal" name="nominal_tunjangan[]" class="form-input">
-                                                </div>
-                                            </div>
-                                            <div class="flex flex-row gap-2">
-                                                <div class="col-md-1 mt-3">
-                                                    <button class="btn btn-success" type="button" id="btn-add">
-                                                        <i class="ti ti-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-1 mt-3">
-                                                    <button class="btn btn-danger" type="button" id="btn-delete">
-                                                        <i class="ti ti-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                        `);
                     }
                 }
             })
@@ -1306,7 +1359,7 @@
                     url: "{{ route('get_subdivisi') }}?divisiID="+divisi,
                     datatype: "JSON",
                     success: function(res1){
-                        $('#kantor_row2').show();
+                        $('#kantor_row2').removeclass('hidden');
                         $('#sub_divisi').empty();
 
                         $("#kantor_row3").empty();
@@ -1322,7 +1375,7 @@
                         );
 
                         if(res1.length < 1) {
-                            $('#kantor_row2').hide();
+                            $('#kantor_row2').addclass('hidden');
                             subdivChange(divisi);
                             return;
                         }
@@ -1366,7 +1419,7 @@
 
         function jabatanChange(){
             var value = $("#jabatan").val();
-            $("#kantor_row2").show();
+            $("#kantor_row2").removeclass('hidden');
             if(value == "PIMDIV" || value == "DIRHAN" || value == "DIRPEM" || value == "DIRUMK" || value == "DIRUT" || value == "KOMU" || value == "KOM"){
                 $("#kantor").val("1")
                 kantorChange();
@@ -1414,10 +1467,36 @@
             })
         }
 
-        function cekStatus() {
-            if (status.val() == "Kawin") {
-                $('#data_is').show();
+        function cekStatus(status) {
+            var is_pasangan = false;
+            var is_anak = false;
+            if (status == 'Belum Kawin') {
 
+                $('#parent-family').addClass('hidden');
+                $('.pasangan').removeClass('hidden');
+            }
+            else if (status == 'Tidak Diketahui') {
+
+                $('#parent-family').addClass('hidden');
+                $('.pasangan').removeClass('hidden');
+            }
+            else if (status == 'Cerai') {
+
+                $('#parent-family').removeClass('hidden');
+                $('.pasangan').addClass('hidden');
+            }
+            else if (status == 'Cerai Mati') {
+
+                $('#parent-family').removeClass('hidden');
+                $('.pasangan').addClass('hidden');
+            }
+            else {
+
+                $('#parent-family').removeClass('hidden');
+                $('.pasangan').removeClass('hidden');
+                is_pasangan = true;
+            }
+            if (is_pasangan == true) {
                 $.ajax({
                     type: "GET",
                     url: "{{ route('getIs') }}?nip=" + nip,
@@ -1440,10 +1519,8 @@
                                 var selisihAnak = jmlAnak - angka
                                 angka = angka + selisihAnak
                                 countAnak = jmlAnak
-
-                                cekStatusChange();
                             }
-                            $("#add-row-anak").show()
+                            // $("#add-row-anak").removeclass('hidden')
                         }
                         else if (res.anak.length == 0 && countAnak > 0) {
                         } else {
@@ -1495,15 +1572,15 @@
                                                         <label for="sk_tunjangan_anak">SK Tunjangan</label>
                                                         <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak ${isDisabled}" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-'}" id="sk_tunjangan_${i}" ${isReadonly}>
                                                     </div>
-                                                <div class="col-md-1">
-                                                    <button class="btn btn-success btn-add-anak" type="button">
-                                                        <i class="ti ti-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="${res.anak[i].id}">
-                                                        <i class="ti ti-minus"></i>
-                                                    </button>
+                                                <div class="col-md-4">
+                                                    <div class="flex gap-3 mt-7">
+                                                        <button class="btn btn-success btn-add-anak" type="button">
+                                                            <i class="ti ti-plus"></i>
+                                                        </button>
+                                                        <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="${res.anak[i].id}">
+                                                            <i class="ti ti-minus"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1545,9 +1622,9 @@
                     }
                 })
             } else {
-                $('#data_is').hide();
             }
         }
+
         function cekSkAnak(input) {
             var sk_tunjangan_anak = $("input[name='sk_tunjangan_anak[]']");
             var count = 0;
@@ -1574,6 +1651,93 @@
             });
         }
 
+        function handlerDataAnak(jumlah_anak, data_anak) {
+            if (jumlah_anak > 0) {
+                for (var i = 0; i <= jumlah_anak; i++) {
+                    var ket = i+1;
+                    var isDisabled = jumlah_anak > 2 && !data_anak[i].sk_tunjangan ? 'form-input-disabled' : '';
+                    var isReadonly = jumlah_anak > 2 && !data_anak[i].sk_tunjangan ? 'readonly' : '';
+                    var isChecked = data_anak[i].sk_tunjangan  ? 'checked' : 'readonly';
+                    var isCheckedClass = data_anak[i].sk_tunjangan  ? '' : 'form-input-disabled';
+                    var new_row_anak = `
+                        <div id="anak-${data_anak[i].id}">
+                            <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                            <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
+                                <input type="hidden" name="id_anak[]" value="${data_anak[i].id}">
+                                <div class="col-md-6 input-box">
+                                    <label for="nama_anak">Nama Anak</label>
+                                    <input type="text" class="form-input" name="nama_anak[]" value="${data_anak[i].nama ?? ''}">
+                                </div>
+                                <div class="col-md-6 input-box">
+                                    <label for="tanggal_lahir_anak">Tanggal Lahir</label>
+                                    <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${data_anak[i].tgl_lahir}">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-box">
+                                        <label for="sk_tunjangan_anak_${countAnak}">SK Tunjangan</label>
+                                        <div class="flex">
+                                            <span class="inline-flex items-center px-2 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                                <input
+                                                    onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${i}"
+                                                    name="check_sk_anak[]" class="check_sk_anak w-8 h-8" ${isChecked}>
+                                            </span>
+                                            <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak ${isDisabled}" name="sk_tunjangan_anak[]" value="${data_anak[i].sk_tunjangan ?? '-'}" id="sk_tunjangan_${i}" ${isReadonly}>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="flex gap-3 mt-7">
+                                        <button class="btn btn-success btn-add-anak" type="button">
+                                            <i class="ti ti-plus"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="${data_anak[i].id}">
+                                            <i class="ti ti-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    $("#new_row_anak").append(new_row_anak)
+                }
+            } else {
+                $("#new_row_anak").empty();
+            }
+        }
+
+        function handlerStatusPernikahan(status){
+            if (status == '') {
+
+                $('#parent-family').addClass('hidden');
+                $('.pasangan').addClass('hidden');
+            } else {
+                if (status == 'Belum Kawin') {
+
+                    $('#parent-family').addClass('hidden');
+                    $('.pasangan').removeClass('hidden');
+                }
+                else if (status == 'Tidak Diketahui') {
+
+                    $('#parent-family').addClass('hidden');
+                    $('.pasangan').removeClass('hidden');
+                }
+                else if (status == 'Cerai') {
+
+                    $('#parent-family').removeClass('hidden');
+                    $('.pasangan').addClass('hidden');
+                }
+                else if (status == 'Cerai Mati') {
+
+                    $('#parent-family').removeClass('hidden');
+                    $('.pasangan').addClass('hidden');
+                }
+                else {
+
+                    $('#parent-family').removeClass('hidden');
+                    $('.pasangan').removeClass('hidden');
+                }
+            }
+        }
+
         function toggleButtonAnak() {
             if (countAnak == 0) {
                 $('#add-row-anak').removeClass('hidden')
@@ -1583,206 +1747,21 @@
             }
         }
 
-        function cekStatusChange() {
-            if (status.val() == "Kawin") {
-                $('#data_is').show();
-
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('getIs') }}?nip=" + nip,
-                    datatype: "json",
-                    success: function(res) {
-                        if (res.anak.length == 0 && countAnak > 0) {
-                            for(var i = 0; i < countAnak; i++){
-                                var ket = i+1
-                                $("#row_anak").append(`
-                                    <div id="anak-${i}">
-                                        <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
-                                        <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
-                                            <input type="hidden" name="id_anak[]" value="">
-                                            <div class="col-md-6 input-box">
-                                                <label for="nama_anak">Nama Anak</label>
-                                                <input type="text" class="form-input" name="nama_anak[]" value="">
-                                            </div>
-                                            <div class="col-md-6 input-box">
-                                                <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                                <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
-                                            </div>
-                                            <div class="flex">
-                                                <div class="mt-10">
-                                                    <input
-                                                        onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${i}"
-                                                        name="check_sk_anak[]" class="check_sk_anak">
-                                                    <label for="check_sk_anak_${i}">Pilih</label>
-                                                </div>
-                                                <div class="ml-10 input-box">
-                                                    <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]" value="" id="sk_tunjangan_${i}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button class="btn btn-success btn-add-anak" type="button">
-                                                    <i class="ti ti-plus"></i>
-                                                </button>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="">
-                                                    <i class="ti ti-minus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `);
-                            }
-                        } else {
-                            $('#id_pasangan').val(res.is.id);
-                            $('#is').val(res.is.enum);
-                            $('#is_nama').val(res.is.nama);
-                            $('#is_tgl_lahir').val(res.is.tgl_lahir);
-                            $('#is_alamat').val(res.is.alamat);
-                            $('#is_pekerjaan').val(res.is.pekerjaan);
-                            $('#sk_tunjangan_is').val(res.is.sk_tunjangan);
-
-                            $("#row_anak").empty();
-                            var angka = res.is.jml_anak
-                            var jmlAnak = countAnak
-                            var selisihAnak = jmlAnak - angka
-                            angka = angka + selisihAnak
-
-                            for (var i = 0; i < angka; i++) {
-                                var ket = i+1;
-                                
-                                if(res.anak[i]) {
-                                    var isDisabled = res.anak.length > 2 && !res.anak[i].sk_tunjangan ? 'form-input-disabled' : '';
-                                    var isReadonly = res.anak.length > 2 && !res.anak[i].sk_tunjangan ? 'readonly' : '';
-                                    var isChecked = res.anak[i].sk_tunjangan  ? 'checked' : '';
-                                    $("#row_anak").append(`
-                                        <div id="anak-${res.anak[i].id}">
-                                            <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
-                                            <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
-                                                <input type="hidden" name="id_anak[]" value="${res.anak[i].id}">
-                                                <div class="col-md-6 input-box">
-                                                    <label for="nama_anak">Nama Anak</label>
-                                                    <input type="text" class="form-input" name="nama_anak[]" value="${res.anak[i].nama ?? ''}">
-                                                </div>
-                                                <div class="col-md-6 input-box">
-                                                    <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                                    <input type="date" class="form-input" name="tgl_lahir_anak[]" value="${res.anak[i].tgl_lahir}">
-                                                </div>
-                                                <div class="flex">
-                                                    <div class="mt-10">
-                                                        <input
-                                                            onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${i}"
-                                                            name="check_sk_anak[]" class="check_sk_anak" ${isChecked}>
-                                                        <label for="check_sk_anak_${i}">Pilih</label>
-                                                    </div>
-                                                    <div class="ml-10 input-box">
-                                                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                        <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak ${isDisabled}" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-'}" id="sk_tunjangan_${i}" ${isReadonly}>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <button class="btn btn-success btn-add-anak" type="button">
-                                                        <i class="ti ti-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="${res.anak[i].id}">
-                                                        <i class="ti ti-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `);
-                                } else {
-                                    $("#row_anak").append(`
-                                        <div id="anak-${i}">
-                                            <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
-                                            <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
-                                                <input type="hidden" name="id_anak[]" value="">
-                                                <div class="col-md-6 input-box">
-                                                    <label for="nama_anak">Nama Anak</label>
-                                                    <input type="text" class="form-input" name="nama_anak[]" value="">
-                                                </div>
-                                                <div class="col-md-6 input-box">
-                                                    <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-                                                    <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
-                                                </div>
-                                                <div class="flex">
-                                                    <div class="mt-10">
-                                                        <input
-                                                            onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${i}"
-                                                            name="check_sk_anak[]" class="check_sk_anak">
-                                                        <label for="check_sk_anak_${i}">Pilih</label>
-                                                    </div>
-                                                    <div class="ml-10 input-box">
-                                                        <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                                        <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak ${isDisabled}" name="sk_tunjangan_anak[]" value="" id="sk_tunjangan_${i}" readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <button class="btn btn-success btn-add-anak" type="button">
-                                                        <i class="ti ti-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent_anak="${i}" data-id-anak="">
-                                                        <i class="ti ti-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `);
-                                }
-                            }
-                        }
-                    }
-                })
-            } else {
-                $('#data_is').hide();
-            }
-        }
-
         $("#is_jml_anak").change(function() {
-            /*$("#row_anak").empty();*/
             var angka = $(this).val()
-
             toggleButtonAnak()
-            cekStatusChange()
-            // for (var i = 0; i < angka; i++) {
-            //     var isDisabled = i > 1 ? 'readonly' : '';
-            //     $("#row_anak").append(`
-            //     <h6 class="font-bold text-lg mb-5">Data Anak ` + (i+1) + `</h6>
-            //     <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
-            //         <input type="hidden" name="id_anak[]" value="">
-            //         <div class="col-md-6 input-box">
-            //             <label for="nama_anak">Nama Anak</label>
-            //             <input type="text" class="form-input" name="nama_anak[]">
-            //         </div>
-            //         <div class="col-md-6 input-box">
-            //             <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-            //             <input type="date" class="form-input" name="tgl_lahir_anak[]">
-            //         </div>
-            //         <div class="col-md-6 input-box">
-            //             <label for="sk_tunjangan_anak">SK Tunjangan</label>
-            //             <input type="text" class="form-input" name="sk_tunjangan_anak[]" ${isDisabled}>
-            //         </div>
-            //     </div>
-            // `);
-            // }
         })
 
 
 
         $("#row_anak").on("click", '.btn-add-anak', function(){
-            $(".preloader").removeAttr('style');
             var angka = countAnak;
             var isDisabled = countAnak > 2 ? 'disabled' : '';
             var iteration = parseInt(countAnak) + 1
             $("#row_anak").append(`
                 <div id="anak-${countAnak}" class="child-div">
                     <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + iteration + `</h6>
-                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
+                    <div class="grid col-span-5 w-full lg:grid-cols-4 items-center md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
                         <input type="hidden" name="id_anak[]" value="">
                         <div class="col-md-6">
                             <div class="input-box">
@@ -1798,19 +1777,28 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                <div class="flex gap-3">
-                                    <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak" name="sk_tunjangan_anak[]">
-                                    <div>
-                                        <button class="btn btn-success btn-add-anak" type="button">
-                                            <i class="ti ti-plus"></i>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="${countAnak}" data-id-anak="">
-                                            <i class="ti ti-minus"></i>
-                                        </button>
-                                    </div>
+                                <label for="sk_tunjangan_anak_${countAnak}">SK Tunjangan</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-2 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        <input
+                                            onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${countAnak}"
+                                            name="check_sk_anak[]" class="check_sk_anak w-8 h-8">
+                                    </span>
+                                    <input type="text" onchange="cekSkAnak(this)" id="sk_tunjangan_anak_${countAnak}" class="form-input sk-anak form-input-disabled" name="sk_tunjangan_anak[]" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            <div class="flex items-center mt-7 gap-3">
+                                <div>
+                                    <button class="btn btn-success btn-add-anak" type="button">
+                                        <i class="ti ti-plus"></i>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="${countAnak}" data-id-anak="">
+                                        <i class="ti ti-minus"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1825,7 +1813,7 @@
             countAnak++;
             $("#is_jml_anak").val(countAnak);
             $("#is_jml_anak").trigger('change');
-            $(".preloader").hide()
+            $(".preloader").addclass('hidden')
         })
 
         $("#row_anak").on("click", '.btn-remove-anak', function(){
@@ -1839,6 +1827,9 @@
 
             $(`#${parents}`).remove()
             countAnak--;
+
+            resetKetAnak()
+
             $("#is_jml_anak").val(countAnak);
             $("#is_jml_anak").trigger('change');
         })
@@ -1848,7 +1839,7 @@
             $("#row_anak").append(`
                 <div id="anak-${countAnak}" class="child-div">
                     <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + iteration + `</h6>
-                    <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
+                    <div class="grid col-span-5 w-full lg:grid-cols-4 items-center md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
                         <input type="hidden" name="id_anak[]" value="">
                         <div class="col-md-6">
                             <div class="input-box">
@@ -1862,17 +1853,32 @@
                                 <input type="date" class="form-input" name="tgl_lahir_anak[]" value="">
                             </div>
                         </div>
-                        <div class="flex">
-                            <div class="mt-10">
-                                <input
-                                    onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${i}"
-                                    name="check_sk_anak[]" class="check_sk_anak" ${isChecked}>
-                                <label for="check_sk_anak_${i}">Pilih</label>
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <label for="sk_tunjangan_anak_${countAnak}">SK Tunjangan</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-2 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        <input
+                                            onchange="onCheckSKAnak(this)" type="checkbox" id="check_sk_anak_${countAnak}"
+                                            name="check_sk_anak[]" class="check_sk_anak w-8 h-8">
+                                    </span>
+                                    <input type="text" onchange="cekSkAnak(this)" id="sk_tunjangan_anak_${countAnak}" class="form-input sk-anak form-input-disabled" name="sk_tunjangan_anak[]" readonly>
+                                </div>
                             </div>
-                            <div class="ml-10 input-box">
-                                <label for="sk_tunjangan_anak">SK Tunjangan</label>
-                                <input type="text" onchange="cekSkAnak(this)" class="form-input sk-anak ${isDisabled}" name="sk_tunjangan_anak[]" value="${res.anak[i].sk_tunjangan ?? '-'}" id="sk_tunjangan_${i}" ${isReadonly}>
-                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            <div class="flex items-center mt-7 gap-3">
+                                    <div>
+                                        <button class="btn btn-success btn-add-anak" type="button">
+                                            <i class="ti ti-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-danger btn-remove-anak" type="button" data-parent-anak="${countAnak}" data-id-anak="">
+                                            <i class="ti ti-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>

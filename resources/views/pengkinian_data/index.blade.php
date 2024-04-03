@@ -116,7 +116,7 @@
                             </td>
                             <td class="flex justify-center">
                                 @can('manajemen karyawan - pengkinian data - detail pengkinian data')
-                                    <a href="{{ route('pengkinian_data.show', $item->nip) }}"
+                                    <a href="{{ route('pengkinian_data.show', $item->nip) }}?history={{$item->id}}"
                                         class="btn btn-primary-light">
                                         Detail
                                     </a>
