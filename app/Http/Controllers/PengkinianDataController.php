@@ -111,7 +111,6 @@ class PengkinianDataController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
         if (!auth()->user()->can('manajemen karyawan - pengkinian data - update pengkinian data')) {
             return view('roles.forbidden');
         }
@@ -136,8 +135,18 @@ class PengkinianDataController extends Controller
                 'jkn' => 'required',
                 'gj_pokok' => 'required',
                 'status_karyawan' => 'required|not_in:-',
+                'status_jabatan' => 'required|not_in:-',
                 'skangkat' => 'required|not_in:-',
                 'tanggal_pengangkat' => 'required|not_in:-'
+            ], [
+                'agama.not_in' => 'Agama belum dipilih.',
+                'jk.not_in' => 'Jenis Kelamin belum dipilih.',
+                'status_pernikahan.not_in' => 'Status Pernikahan belum dipilih.',
+                'kewarganegaraan.not_in' => 'Kewarganegaraan belum dipilih.',
+                'status_jabatan.not_in' => 'Status Jabatan belum dipilih.',
+                'status_karyawan.not_in' => 'Status Karyawan belum dipilih.',
+                'skangkat.not_in' => 'Status Karyawan belum dipilih.',
+                'tanggal_pengangkat.not_in' => 'Tanggal Pengangkat belum dipilih.',
             ]);
 
             $id_is = $request->get('id_pasangan');

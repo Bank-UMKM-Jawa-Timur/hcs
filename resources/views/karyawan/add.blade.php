@@ -211,7 +211,7 @@
                             <div class="input-box">
                                 <div class="flex justify-between">
                                     <div>
-                                        <label for="">Foto KTP<span class="text-red-500">*</span></label>
+                                        <label for="">Foto KTP</label>
                                         <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
                                         <span class="text-red-400">(maks 2Mb)</span>
                                     </div>

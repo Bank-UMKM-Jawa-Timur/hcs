@@ -823,35 +823,6 @@
         var countAnak = 0;
         var idAnakDeleted = []
 
-        // $("#add-row-anak").addClass('hidden');
-
-        // $("#is_jml_anak").keyup(function(){
-        //     $("#row_anak").empty();
-        //     var angka = $(this).val()
-        //     if(angka > 2) angka = 2;
-
-        //     for(var i = 0; i < angka; i++){
-        //         var ket = (i == 0) ? 'Pertama' : 'Kedua';
-        //         $("#row_anak").append(`
-        //         <h6 class="">Data Anak `+ ket +`</h6>
-        //         <div class="grid grid-cols-3 gap-2">
-        //             <div class="col-md-6 input-box">
-        //                 <label for="nama_anak">Nama Anak</label>
-        //                 <input type="text" class="form-input" name="nama_anak[]">
-        //             </div>
-        //             <div class="col-md-6 input-box">
-        //                 <label for="tanggal_lahir_anak">Tanggal Lahir</label>
-        //                 <input type="date" class="form-input" name="tgl_lahir_anak[]">
-        //             </div>
-        //             <div class="col-md-6 input-box">
-        //                 <label for="sk_tunjangan_anak">SK Tunjangan</label>
-        //                 <input type="text" class="form-input" name="sk_tunjangan_anak[]">
-        //             </div>
-        //         </div>
-        //     `);
-        //     }
-        // })
-
         $('#gj_pokok').keyup(function(){
             var angka = $(this).val();
 
@@ -1145,8 +1116,8 @@
                     $(`#parent_foto_diri`).removeClass('hidden')
                     $(`#parent_foto_ktp`).removeClass('hidden')
                     cekStatus(res.data.status)
-                    $(".tunjangan-item").empty()
                     if(res.data.count_tj > 0){
+                        $(".tunjangan-item").empty()
                         x += res.data.count_tj;
                         console.log('tunjangan lebih dari 1');
                         $.each(res.data.tunjangan, (i, val) => {
@@ -1186,6 +1157,7 @@
                             `);
                         });
                     } else{
+                        $(".tunjangan-item").empty()
                         console.log('tunjangan kurang dari 1');
                         $('.tunjangan-item').append(`
                             <div class="grid grid-cols-3 gap-2">
@@ -1550,7 +1522,7 @@
                                     var isChecked = res.anak[i].sk_tunjangan  ? 'checked' : '';
                                     $("#row_anak").append(`
                                         <div id="anak-${res.anak[i].id}">
-                                            <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                                            <h6 class="font-bold text-lg mb-2 mt-5">Data Anak ` + ket + `</h6>
                                             <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
                                                 <input type="hidden" name="id_anak[]" value="${res.anak[i].id}">
                                                 <div class="col-md-6 input-box">
@@ -1588,7 +1560,7 @@
                                 } else {
                                     $("#row_anak").append(`
                                         <div id="anak-${i}">
-                                            <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                                            <h6 class="font-bold text-lg mb-2 mt-5">Data Anak ` + ket + `</h6>
                                             <div class="grid col-span-5 w-full lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
                                                 <input type="hidden" name="id_anak[]" value="">
                                                 <div class="col-md-6 input-box">
@@ -1661,7 +1633,7 @@
                     var isCheckedClass = data_anak[i].sk_tunjangan  ? '' : 'form-input-disabled';
                     var new_row_anak = `
                         <div id="anak-${data_anak[i].id}">
-                            <h6 class="font-bold text-lg mb-5">Data Anak ` + ket + `</h6>
+                            <h6 class="font-bold text-lg mb-2 mt-5">Data Anak ` + ket + `</h6>
                             <div class="grid col-span-5 w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5" data-anak="${i}">
                                 <input type="hidden" name="id_anak[]" value="${data_anak[i].id}">
                                 <div class="col-md-6 input-box">
@@ -1760,7 +1732,7 @@
             var iteration = parseInt(countAnak) + 1
             $("#row_anak").append(`
                 <div id="anak-${countAnak}" class="child-div">
-                    <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + iteration + `</h6>
+                    <h6 class="font-bold text-lg mb-2 mt-5 ket-anak">Data Anak ` + iteration + `</h6>
                     <div class="grid col-span-5 w-full lg:grid-cols-4 items-center md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
                         <input type="hidden" name="id_anak[]" value="">
                         <div class="col-md-6">
@@ -1838,7 +1810,7 @@
             var iteration = parseInt(countAnak) + 1
             $("#row_anak").append(`
                 <div id="anak-${countAnak}" class="child-div">
-                    <h6 class="font-bold text-lg mb-5 ket-anak">Data Anak ` + iteration + `</h6>
+                    <h6 class="font-bold text-lg mb-2 mt-5 ket-anak">Data Anak ` + iteration + `</h6>
                     <div class="grid col-span-5 w-full lg:grid-cols-4 items-center md:grid-cols-2 grid-cols-1 gap-5 form-anak" data-anak="${countAnak}">
                         <input type="hidden" name="id_anak[]" value="">
                         <div class="col-md-6">
