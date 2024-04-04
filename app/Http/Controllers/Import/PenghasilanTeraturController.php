@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\KaryawanExport;
 use App\Exports\ExportVitamin;
 use App\Helpers\HitungPPH;
+use App\Helpers\LogActivity;
 use App\Repository\PenghasilanTidakTeraturRepository;
 use Carbon\Carbon;
 use Exception;
@@ -206,6 +207,12 @@ class PenghasilanTeraturController extends Controller
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]);
+                        
+                        // Record to log activity
+                        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                        $namaKaryawan = DB::table('mst_karyawan')->where('nip', $nip[$i])->first()?->nama_karyawan;
+                        $activity = "Pengguna <b>$name</b> menambahkan penghasilan teratur untuk karyawan atas nama <b>$namaKaryawan</b>.";
+                        LogActivity::create($activity);
 
                         // $gaji = GajiPerBulanModel::where('nip', $nip[$i])
                         //                         ->where('bulan', $bulanReq)
@@ -519,6 +526,12 @@ class PenghasilanTeraturController extends Controller
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
         $repo = new PenghasilanTeraturRepository;
         $data = $repo->getDetailTunjangan($idTunjangan, $tanggal, $createdAt, $search, $limit, $kdEntitas);
+                        
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $namaTunjangan = DB::table('mst_tunjangan')->where('id', $idTunjangan)->first()->nama_tunjangan;
+        $activity = "Pengguna <b>$name</b> melihat detail penghasilan teratur<b>($namaTunjangan)</b> untuk tanggal <b>$tanggal</b>.";
+        LogActivity::create($activity);
 
         return view('penghasilan-teratur.detail', [
             'data' => $data,
