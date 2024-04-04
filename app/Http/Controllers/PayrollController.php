@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Models\KaryawanModel;
 use App\Repository\CabangRepository;
 use App\Repository\PayrollRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -62,6 +64,25 @@ class PayrollController extends Controller
         if ($month) {
             $data = $this->list($kantor, $month, $year, $search, $page, $limit,null);
             $total = $this->grandTotal($kantor, $month, $year, $search, $page, $limit,null);
+            
+            // Record to log activity
+            $bulan = array(
+                1 => 'Januari',
+                2 => 'Februari',
+                3 => 'Maret',
+                4 => 'April',
+                5 => 'Mei',
+                6 => 'Juni',
+                7 => 'Juli',
+                8 => 'Agustus',
+                9 => 'September',
+                10 => 'Oktober',
+                11 => 'November',
+                12 => 'Desember'
+            );
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melihat <b>$request->kategori</b> untuk kantor <b>$kantor</b> bulan <b>$bulan[$month]</b> tahun <b>$year</b>";
+            LogActivity::create($activity);
         } else {
             $data = null;
             $total = null;
@@ -168,9 +189,45 @@ class PayrollController extends Controller
 
 
         if ($kategori == 'payroll'){
+            // Record to log activity
+            $bulan = array(
+                1 => 'Januari',
+                2 => 'Februari',
+                3 => 'Maret',
+                4 => 'April',
+                5 => 'Mei',
+                6 => 'Juni',
+                7 => 'Juli',
+                8 => 'Agustus',
+                9 => 'September',
+                10 => 'Oktober',
+                11 => 'November',
+                12 => 'Desember'
+            );
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> mencetak <b>$kategori</b> untuk kantor <b>$kantor</b> bulan <b>$bulan[$month]</b> tahun <b>$year</b>";
+            LogActivity::create($activity);
             return view('payroll.tables.payroll-pdf', ['data' => $data, 'entitas' => $kd_entitas, 'kantor' => $kantors, 'pincab' => $pincab, 'cabang' => $kantorCabang, 'ttdKaryawan' => $ttdKaryawan]);
 
         }elseif ($kategori = 'rincian') {
+            // Record to log activity
+            $bulan = array(
+                1 => 'Januari',
+                2 => 'Februari',
+                3 => 'Maret',
+                4 => 'April',
+                5 => 'Mei',
+                6 => 'Juni',
+                7 => 'Juli',
+                8 => 'Agustus',
+                9 => 'September',
+                10 => 'Oktober',
+                11 => 'November',
+                12 => 'Desember'
+            );
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> mencetak <b>$kategori</b> untuk kantor <b>$kantor</b> bulan <b>$bulan[$month]</b> tahun <b>$year</b>";
+            LogActivity::create($activity);
             return view('payroll.tables.rincian-pdf', ['data' => $data, 'entitas' => $kd_entitas, 'kantor' => $kantors, 'pincab' => $pincab, 'cabang' => $kantorCabang, 'ttdKaryawan' => $ttdKaryawan]);
         }else{
             Alert::error('Terjadi kesalahan');
