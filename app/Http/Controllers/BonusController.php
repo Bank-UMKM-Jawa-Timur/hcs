@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\KaryawanExport;
 use App\Helpers\GajiComponent;
 use App\Helpers\HitungPPH;
+use App\Helpers\LogActivity;
 use App\Models\KaryawanModel;
 use App\Models\PPHModel;
 use App\Models\TunjanganModel;
@@ -128,6 +129,12 @@ class BonusController extends Controller
                     'created_at' => Carbon::parse($request->get('tanggal'))
                 ]);
 
+            
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $namaKaryawan = DB::table('mst_karyawan')->where('nip', $data_nip[$i])->first()?->nama_karyawan;
+                $activity = "Pengguna <b>$name</b> menambahkan bonus<b>($tunjangan->nama_tunjangan)</b> untuk karyawan atas nama <b>$namaKaryawan</b>.";
+                LogActivity::create($activity);
             }
             \DB::commit();
 
@@ -197,6 +204,11 @@ class BonusController extends Controller
         $data = $this->repo->getDetailBonus($search, $limit,$page, $id, $tgl, $kd_entitas);
         $tunjangan = $this->repo->getNameTunjangan($id);
         $nameCabang = $this->repo->getNameCabang($kd_entitas);
+            
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melihat detail bonus<b>($tunjangan->nama_tunjangan)</b> untuk tanggal $request->tanggal";
+        LogActivity::create($activity);
 
         return view('bonus.detail',['data' => $data, 'tunjangan' => $tunjangan, 'nameCabang' => $nameCabang]);
     }
