@@ -31,58 +31,44 @@
                 Pemotongan <br> (dd/MM/yyyy)</th>
             <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
                 align="center">
-                Penerima Penghasilan ? <br> (NPWP / NIK)</th>
+                TIN <br> (dengan format/tanda baca)</th>
+            <th style="width: 200px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
+                align="center">
+                Nama Penerima <br> Penghasilan</th>
+            <th style="width: 450px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
+                align="center">
+                Alamat Penerima <br> Penghasilan</th>
             <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
                 align="center">
-                NPWP <br> (Tanpa format / Tanda baca)</th>
+                No Paspor Penerima <br> Penghasilan</th>
             <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
-                align="center">NIK
-                <br> (Tanpa format / Tanda baca)
+                align="center">Kode
+                <br> Negara
             </th>
             <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
                 align="center">
-                Nama Penerima <br> Penghasilan Sesuai NIK</th>
+                Penandatangan Menggunakan? <br> (NPWP/NIK)</th>
             <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
                 align="center">
-                Alamat Penerima <br> Penghasilan Sesuai NIK</th>
+                NPWP Penandatangan <br> (tanpa format/tanda baca)</th>
             <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
                 align="center">
-                Kode Objek Pajak</th>
+                NIK Penandatangan <br> (tanpa format/tanda baca)</th>
             <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
-                align="center">
-                Penandatangan Menggunakan ? <br>(NPWP / NIK)</th>
-            <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
-                align="center">
-                NPWP Penandatangan <br>(Tanpa format / Tanda baca)</th>
-            <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
-                align="center">NIK Penandatangan <br>(Tanpa format / Tanda baca)</th>
-            <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
-                align="center">
-                Kode PTKP</th>
-            <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
-                align="center">
-                Pegawai Harian ? <br> (Ya / Tidak)</th>
-            <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
-                align="center">
-                Menggunakan <br> Gross Up ? (Ya / Tidak)</th>
-            <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
-                align="center">
+                align="right">
                 Penghasilan Bruto</th>
             <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
                 align="center">
-                Terdapat Akumulasi<br>Penghasilan Bruto<br>Sebelumnya? (Ya/Tidak)</th>
-            <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
+                Mendapatkan Fasilitas?<br> (N/SKD)</th>
+            <th style="width: 220px; color:black; background-color: #4F81BD; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
                 align="center">
-                Akumulasi<br>Penghasilan Bruto<br>Sebelumnya</th>
-            <th style="width: 150px; color:black; background-color: #EEECE1; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
-                align="center">
-                Mendapatkan Fasilitas ? <br> (N/SKB/DTP) </th>
+                Nomor Tanda Terima SKDP</th>
             <th style="width: 150px; color:black; background-color: #4F81BD; font-weight: bold; vertical-align: top; border-top: 4px solid black; border-bottom: 4px solid black;"
                 align="center">
-                Nomor SKB / Nomor DTP</th>
+                Tarif SKD</th>
         </tr>
     </thead>
-    <tbody>
+    {{-- <tbody>
         @php
             $totalGaji = 0;
             $totalGajiOpsi = 0;
@@ -286,24 +272,19 @@
             <tr>
                 <td align="right" style="color:black;">{{ $loop->iteration }}</td>
                 <td align="left" style="color:black;">{{ date('d/m/Y', strtotime($lastdate)) }}</td>
+                <td align="left" style="color:black;">IE6340278W</td>
+                <td align="left" style="color:black;">{{$item->nama_karyawan }}</td>
+                <td align="left" style="color:black;">{{$item->alamat_ktp }}</td>
+                <td align="left" style="color:black;"></td>
+                <td align="left" style="color:black;">ARE</td>
                 <td align="left" style="color:black;">NPWP</td>
-                <td align="left" style="color:black;">{{$item->npwp}}</td>
+                <td align="left" style="color:black;">{{ $penandatangan }}</td>
                 <td align="left" style="color:black;"></td>
-                <td align="left" style="color:black;"></td>
-                <td align="left" style="color:black;"></td>
-                <td align="left" style="color:black;">21-100-01</td>
-                <td align="left" style="color:black;">NPWP</td>
-                <td align="left" style="color:black;">{{$penandatangan}}</td>
-                <td align="left" style="color:black;"></td>
-                <td align="left" style="color:black;">{{ $item->status_ptkp }}</td>
-                <td align="left" style="color:black;">Tidak</td>
-                <td align="left" style="color:black;">Tidak</td>
                 <td align="right" style="color:black;"> {{ $brutoTotal }}</td>
-                <td align="left" style="color:black;"></td>
-                <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;">N</td>
+                <td align="left" style="color:black;"></td>
                 <td align="left" style="color:black;"></td>
             </tr>
         @endforeach
-    </tbody>
+    </tbody> --}}
 </table>

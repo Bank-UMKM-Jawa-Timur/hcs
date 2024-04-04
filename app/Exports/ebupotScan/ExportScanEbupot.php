@@ -3,6 +3,7 @@
 namespace App\Exports\ebupotScan;
 
 use App\Exports\ExportEbupot;
+use App\Exports\ExportEbupot26;
 use App\Exports\ExportEbupotSheet1;
 use App\Exports\ExportEbupotSheet3;
 use App\Exports\ExportEbupotSheet4;
@@ -34,6 +35,7 @@ class ExportScanEbupot implements WithMultipleSheets
         return [
             new ExportEbupotSheet1($this->total_data, $this->month, $this->year),
             new ExportEbupot($this->data, $this->lastdate, $this->penandatangan),
+            new ExportEbupot26($this->data, $this->lastdate, $this->penandatangan),
             new ExportEbupotSheet3(),
             new ExportEbupotSheet4(),
             new ExportEbupotSheet5(),
