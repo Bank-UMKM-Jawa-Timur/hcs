@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Http\Requests\Karyawan\SuratPeringatanRequest;
 use App\Http\Requests\PotonganRequest;
 use App\Http\Requests\SuratPeringatan\HistoryRequest;
@@ -68,6 +69,13 @@ class SuratPeringatanController extends Controller
         try{
             DB::beginTransaction();
             $this->repo->store($request->all());
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $namaKaryawan = DB::table('mst_karyawan')->where('nip', $request->nip)->first()?->nama_karyawan;
+            $activity = "Pengguna <b>$name</b> menambahkan surat peringatan kepada karyawan atas nama <b>$namaKaryawan</b>.";
+            LogActivity::create($activity);
+
             DB::commit();
         } catch(Exception $e){
             DB::rollBack();
