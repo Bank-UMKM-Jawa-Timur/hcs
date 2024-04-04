@@ -1126,6 +1126,12 @@ class KaryawanController extends Controller
             'ikut_penggajian',
         ]), $request->file('sk_pemberhentian'));
 
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $namaKaryawan = DB::table('mst_karyawan')->where('nip', $request->nip)->first()?->nama_karyawan;
+        $activity = "Pengguna <b>$name</b> menonaktifkan karyawan atas nama <b>$namaKaryawan</b> dengan alasan <b>$request->get('kategori_penonaktifan')</b>.";
+        LogActivity::create($activity);
+        
         Alert::success('Berhasil menonaktifkan karyawan');
         return redirect()->route('penonaktifan.index');
     }
