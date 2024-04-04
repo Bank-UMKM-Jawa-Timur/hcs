@@ -381,7 +381,7 @@
                     <h2 class="font-bold text-lg">Data Tunjangan</h2>
                 </div>
                 <div class="tunjangan-item">
-                    <div class="grid grid-cols-3 gap-2 items-end">
+                    <div class="grid pb-5 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-end">
                         <input type="hidden" name="id_tk[]" id="id_tk" value="">
                         <div class="col-md-5">
                             <div class="input-box">
@@ -1123,7 +1123,7 @@
                         console.log('tunjangan lebih dari 1');
                         $.each(res.data.tunjangan, (i, val) => {
                             $('.tunjangan-item').append(`
-                                <div class="grid grid-cols-3 gap-2">
+                                <div class="grid pb-5 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                                     <input type="hidden" name="id_tk[]" id="id_tk" value="${val.id}">
                                     <div class="col-md-5">
                                         <div class="input-box">

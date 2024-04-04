@@ -155,50 +155,52 @@ class PengkinianDataController extends Controller
                 $have_anak = false;
             }
             if ($have_anak == true && $request->get('is') != null) {
-                if ($request->get('id_pasangan') == null) {
+                if ($request->get('id_pasangan')) {
                     DB::table('keluarga')
-                        ->insert([
-                            'enum' => $request->get('is'),
-                            'nama' => $request->get('is_nama'),
-                            'tgl_lahir' => $request->get('is_tgl_lahir'),
-                            'alamat' => $request->get('is_alamat'),
-                            'pekerjaan' => $request->get('is_pekerjaan'),
-                            'jml_anak' => $request->get('is_jml_anak'),
-                            'sk_tunjangan' => $request->get('sk_tunjangan_is'),
-                            'nip' => $request->get('nip'),
-                            'created_at' => now()
-                        ]);
+                    ->insert([
+                        'enum' => $request->get('is'),
+                        'nama' => $request->get('is_nama'),
+                        'tgl_lahir' => $request->get('is_tgl_lahir'),
+                        'alamat' => $request->get('is_alamat'),
+                        'pekerjaan' => $request->get('is_pekerjaan'),
+                        'jml_anak' => $request->get('is_jml_anak'),
+                        'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                        'nip' => $request->get('nip'),
+                        'created_at' => now()
+                    ]);
                 } else {
                     $dataIs = DB::table('keluarga')
                         ->where('id', $id_is)
                         ->first();
-                    DB::table('keluarga')
-                        ->where('id', $id_is)
-                        ->update([
-                            'enum' => $request->get('is'),
-                            'nama' => $request->get('is_nama'),
-                            'tgl_lahir' => $request->get('is_tgl_lahir'),
-                            'alamat' => $request->get('is_alamat'),
-                            'pekerjaan' => $request->get('is_pekerjaan'),
-                            'jml_anak' => $request->get('is_jml_anak'),
-                            'sk_tunjangan' => $request->get('sk_tunjangan_is'),
-                            'nip' => $request->get('nip'),
-                            'updated_at' => now()
-                        ]);
-                    DB::table('history_pengkinian_data_keluarga')
-                        ->insert([
-                            'enum' => $dataIs->is,
-                            'nama' => $dataIs->is_nama,
-                            'tgl_lahir' => $dataIs->is_tgl_lahir,
-                            'alamat' => $dataIs->is_alamat,
-                            'pekerjaan' => $dataIs->is_pekerjaan,
-                            'jml_anak' => $dataIs->is_jml_anak,
-                            'sk_tunjangan' => $dataIs->sk_tunjangan_is,
-                            'nip' => $dataIs->nip,
-                            'created_at' => now()
-                        ]);
+                    if ($dataIs) {
+                        $dataIs->update([
+                                'enum' => $request->get('is'),
+                                'nama' => $request->get('is_nama'),
+                                'tgl_lahir' => $request->get('is_tgl_lahir'),
+                                'alamat' => $request->get('is_alamat'),
+                                'pekerjaan' => $request->get('is_pekerjaan'),
+                                'jml_anak' => $request->get('is_jml_anak'),
+                                'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                                'nip' => $request->get('nip'),
+                                'updated_at' => now()
+                            ]);
+
+                        DB::table('history_pengkinian_data_keluarga')
+                            ->insert([
+                                'enum' => $dataIs->is,
+                                'nama' => $dataIs->is_nama,
+                                'tgl_lahir' => $dataIs->is_tgl_lahir,
+                                'alamat' => $dataIs->is_alamat,
+                                'pekerjaan' => $dataIs->is_pekerjaan,
+                                'jml_anak' => $dataIs->is_jml_anak,
+                                'sk_tunjangan' => $dataIs->sk_tunjangan_is,
+                                'nip' => $dataIs->nip,
+                                'created_at' => now()
+                            ]);
+                    }
                 }
             }
+
             $entitas = null;
             $bagian = null;
             if ($request->get('subdiv') != null) {
