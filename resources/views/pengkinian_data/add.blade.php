@@ -1197,6 +1197,7 @@
                     }
                     handlerStatusPernikahan(res.data.status)
                     handlerDataAnak(res.jumlah_anak, res.data_anak)
+                    $('#is_jml_anak').val(res.jumlah_anak ?? 0);
                     toggleButtonAnak()
                     getKantor()
 
@@ -1484,18 +1485,16 @@
                                 $('#is_alamat').val(res.is.alamat);
                                 $('#is_pekerjaan').val(res.is.pekerjaan);
                                 $('#sk_tunjangan_is').val(res.is.sk_tunjangan);
-                                $('#is_jml_anak').val(res.is.jml_anak ?? 0);
 
-                                $("#row_anak").empty();
                                 var angka = res.is.jml_anak
                                 var jmlAnak = $("#is_jml_anak").val()
                                 var selisihAnak = jmlAnak - angka
                                 angka = angka + selisihAnak
-                                countAnak = jmlAnak
                             }
                             // $("#add-row-anak").removeclass('hidden')
                         }
-                        else if (res.anak.length == 0 && countAnak > 0) {
+                        else if (res.anak.length == 0 &&
+                        countAnak > 0) {
                         } else {
                             $('#id_pasangan').val(res.is.id);
                             $('#is').val(res.is.enum);
