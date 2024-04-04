@@ -504,6 +504,14 @@ class PenghasilanTidakTeraturController extends Controller
                     ->where('bulan', $bulan)
                     ->update($update_obj);
             }
+            
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $namaKaryawan = DB::table('mst_karyawan')->where('nip', $request->nip)->first()?->nama_karyawan;
+            $namaTunjangan = DB::table('mst_tunjangan')->where('id', $request->id_tunjangan)->first()->nama_tunjangan;
+            $activity = "Pengguna <b>$name</b> menambahkan penghasilan tidak teratur<b>($namaTunjangan)</b> untuk karyawan atas nama <b>$namaKaryawan</b>.";
+            LogActivity::create($activity);
+
             DB::commit();
 
             if($bulan == 12  && Carbon::now()->format('d') > 25){
@@ -693,6 +701,13 @@ class PenghasilanTidakTeraturController extends Controller
                 if ($karyawan) {
                     $kd_entitas = $karyawan->kd_cabang;
                 }
+            
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $namaKaryawan = DB::table('mst_karyawan')->where('nip', $item)->first()?->nama_karyawan;
+                $activity = "Pengguna <b>$name</b> menambahkan penghasilan tidak teratur<b>($idTunjangan->nama_tunjangan)</b> untuk karyawan atas nama <b>$namaKaryawan</b>.";
+                LogActivity::create($activity);
+
                 $bulan = (int) Carbon::parse($request->get('tanggal'))->format('m');
                 $tahun = (int) Carbon::parse($request->get('tanggal'))->format('Y');
                 $tanggal = $request->get('tanggal');
@@ -812,6 +827,12 @@ class PenghasilanTidakTeraturController extends Controller
                             ->first();
 
                 $pph_baru = HitungPPH::getNewPPH58($tanggal, (int) $bulan, $tahun, $karyawan);
+
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $namaKaryawan = DB::table('mst_karyawan')->where('nip', $item)->first()?->nama_karyawan;
+                $activity = "Pengguna <b>$name</b> menambahkan penghasilan teratur untuk karyawan atas nama <b>$namaKaryawan</b>.";
+                LogActivity::create($activity);
             }
             DB::commit();
 
@@ -869,6 +890,13 @@ class PenghasilanTidakTeraturController extends Controller
             $data = $repo->getAllPenghasilan($search, $limit, $page, $bulan, $createdAt, $idTunjangan, $kd_entitas, $user_id);
             $tunjangan = $repo->getNameTunjangan($idTunjangan);
             $nameCabang = $repo->getNameCabang($kd_entitas);
+            
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $namaTunjangan = DB::table('mst_tunjangan')->where('id', $idTunjangan)->first()->nama_tunjangan;
+            $activity = "Pengguna <b>$name</b> melihat detail penghasilan tidak teratur<b>($namaTunjangan)</b> untuk tanggal <b>$createdAt</b>.";
+            LogActivity::create($activity);
+            
             return view('penghasilan.detail', compact(['data','tunjangan','nameCabang', 'status']));
         } catch(Exception $e){
             Alert::error('Gagal!', 'Terjadi kesalahan. ' . $e->getMessage());
