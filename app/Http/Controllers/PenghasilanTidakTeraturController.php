@@ -7,6 +7,7 @@ use App\Exports\ExportBiayaKesehatan;
 use App\Exports\ExportBiayaTidakTeratur;
 use App\Helpers\GajiComponent;
 use App\Helpers\HitungPPH;
+use App\Helpers\LogActivity;
 use App\Imports\PenghasilanImport;
 use App\Models\GajiPerBulanModel;
 use App\Models\ImportPenghasilanTidakTeraturModel;
@@ -349,6 +350,12 @@ class PenghasilanTidakTeraturController extends Controller
                         ->where('kategori', 'bonus')
                         ->orderBy('id')
                         ->pluck('nama_tunjangan');
+        
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $kategoriPajak = $request->mode == 1 ? 'bukti pembayaran gaji pajak' : 'detail gaji pajak';
+        $activity = "Pengguna <b>$name</b> melihat $kategoriPajak karyawan atas nama <b>$karyawan->nama_karyawan</b>.";
+        LogActivity::create($activity);
 
         return view('penghasilan.gajipajak', [
             'gj' => $gj,
