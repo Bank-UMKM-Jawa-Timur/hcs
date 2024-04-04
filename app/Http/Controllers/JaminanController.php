@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\GajiComponent;
+use App\Helpers\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -161,6 +162,34 @@ class JaminanController extends Controller
         $tahun = $request->tahun;
         $bulan = $request->bulan;
         $karyawan = DB::table('mst_karyawan')->get();
+            
+        // Record to log activity
+        $kategori = $request->kategori;
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $monthName = array(
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        );
+        $kategoriShow = $kategori == 1 ? 'rekap keseluruhan' : 'rekap kantor';
+        $kantorShow = '';
+        if($kategori == 2) {
+            if($kantor == 'Pusat') 
+                $kantorShow = ' kantor <b>pusat</b>';
+            else 
+                $kantorShow = ' kantor <b>'. DB::table('mst_cabang')->where('kd_cabang', $request->get('cabang'))->first()?->nama_cabang .'</b>';
+        }
+        $activity = "Pengguna <b>$name</b> melihat laporan jamsostek kategori <b>$kategoriShow</b>$kantorShow bulan <b>$monthName[$bulan]</b> tahun <b>$tahun</b>";
+        LogActivity::create($activity);
 
         // If Kategori yang dipilih keseluruhan
         if ($request->kategori == 1) {
@@ -530,6 +559,33 @@ class JaminanController extends Controller
         $kategori = $request->kategori;
         $tahun = $request->tahun;
         $bulan = $request->bulan;
+            
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $monthName = array(
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        );
+        $kategoriShow = $kategori == 1 ? 'rekap keseluruhan' : 'rekap kantor';
+        $kantorShow = '';
+        if($kategori == 2) {
+            if($kantor == 'Pusat') 
+                $kantorShow = ' kantor <b>pusat</b>';
+            else 
+                $kantorShow = ' kantor <b>'. DB::table('mst_cabang')->where('kd_cabang', $request->get('cabang'))->first()?->nama_cabang .'</b>';
+        }
+        $activity = "Pengguna <b>$name</b> melihat laporan DPP kategori <b>$kategoriShow</b>$kantorShow bulan <b>$monthName[$bulan]</b> tahun <b>$tahun</b>";
+        LogActivity::create($activity);
 
         // If yang dipilih kategori keseluruhan
         if ($kategori == 1) {
