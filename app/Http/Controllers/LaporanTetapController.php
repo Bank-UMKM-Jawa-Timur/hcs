@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Exports\ebupotScan\ExportScanEbupot;
 use App\Exports\ExportEbupot;
 use App\Exports\RekapTetapExport;
+use App\Helpers\LogActivity;
 use App\Models\CabangModel;
 use App\Repository\LaporanTetapRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
@@ -61,6 +63,27 @@ class LaporanTetapController extends Controller
         $data = $request->has('tahun') && $request->has('bulan') ? $this->repo->get($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
         $footer = $request->has('tahun') && $request->has('bulan') ? $this->repo->getTotal($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
         $cabang = $this->cabang;
+        
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $monthName = array(
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        );
+        $kantorName = DB::table('mst_cabang')->where('kd_cabang', $kantor)->first()?->nama_cabang;
+        $activity = "Pengguna <b>$name</b> melihat laporan rekap kategori <b>$kategori</b> kantor $kantorName bulan <b>$monthName[$month]</b> tahun <b>$year</b>";
+        LogActivity::create($activity);
+
         return view('rekap-tetap.index', [
             'cabang' => $cabang,
             'data' => $data,
@@ -89,6 +112,26 @@ class LaporanTetapController extends Controller
             $showKantor = 'Kantor ' . CabangModel::where('kd_cabang', $kantor)->first()?->nama_cabang;
 
         $filename = 'Laporan Rekap ' . $showKantor .' '. $month_name . ' Tahun ' . $year.' ('.$kategori.')';
+        
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $monthName = array(
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        );
+        $activity = "Pengguna <b>$name</b> mencetak laporan rekap kategori <b>$kategori</b> kantor $showKantor bulan <b>$monthName[$month]</b> tahun <b>$year</b>";
+        LogActivity::create($activity);
+
         return Excel::download(new RekapTetapExport($data, $grandtotal), $filename . '.xlsx');
     }
 
