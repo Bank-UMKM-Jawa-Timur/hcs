@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\HitungPPH;
+use App\Helpers\LogActivity;
 use App\Imports\ImportPotonganGaji;
 use App\Models\KaryawanModel;
 use Illuminate\Http\Request;
@@ -437,6 +438,12 @@ class SlipGajiController extends Controller
         $jabatan = $slipRepository->getjabatan($nip);
 
         $role_cabang = $user->hasRole('cabang');
+        
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melihat slip gaji karyawan atas nama <b>$karyawan->nama_karyawan</b> tahun <b>$year</b>";
+        LogActivity::create($activity);
+
         return view('slip_gaji.slip', compact('data', 'cabang', 'karyawan', 'jabatan', 'role_cabang', 'data_karyawan'));
     }
 
@@ -551,6 +558,25 @@ class SlipGajiController extends Controller
             $pincab = null;
             $cabang = null;
         }
+        
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $monthName = array(
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        );
+        $activity = "Pengguna <b>$name</b> mencetak slip gaji karyawan atas nama <b>$karyawan->nama_karyawan</b> bulan <b>$monthName[$month]</b> tahun <b>$year</b>";
+        LogActivity::create($activity);
 
         return view('slip_gaji.print.slip', compact(['data','ttdKaryawan','jabatan', 'tanggal', 'pincab', 'cabang']));
     }
