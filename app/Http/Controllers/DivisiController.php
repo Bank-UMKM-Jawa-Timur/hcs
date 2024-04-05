@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Models\DivisiModel;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -64,6 +66,10 @@ class DivisiController extends Controller
                     'created_at' => now()
                 ]);
 
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $activity = "Pengguna <b>$name</b> menambah divisi dengan nama <b>$request->nama_divisi/b>";
+                LogActivity::create($activity);
                 Alert::success('Berhasil', 'Berhasil Menambah Divisi.');
                 return redirect()->route('divisi.index');
             }catch(Exception $e){
@@ -128,6 +134,11 @@ class DivisiController extends Controller
                     'updated_at' => now()
                 ]);
 
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melakukan update divisi dengan nama <b>$request->nama_divisi/b>";
+            LogActivity::create($activity);
+
             Alert::success('Berhasil', 'Berhasil Mengupdate Divisi.');
             return redirect()->route('divisi.index');
         }catch(Exception $e){
@@ -151,9 +162,17 @@ class DivisiController extends Controller
     {
         // Need permission
         try{
+            $divisiShow = DB::table('mst_divisi')
+                ->where('id', $id)
+                ->first()?->nama_divisi;
             DB::table('mst_divisi')
             ->where('id', $id)
             ->delete();
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menghapus divisi dengan nama <b>$divisiShow/b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menghapus Divisi.');
             return redirect()->route('divisi.index');
