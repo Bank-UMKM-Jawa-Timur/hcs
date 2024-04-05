@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Models\MstProfilKantorModel;
 use App\Models\PemotongPajakPenguranganModel;
 use App\Models\PemotongPajakTambahanModel;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -74,6 +76,11 @@ class KantorCabangController extends Controller
                     'id_kantor' => 2,
                     'created_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah kantor cabang dengan nama <b>$request->nama_cabang/b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Kantor Cabang.');
             return redirect()->route('cabang.index');
@@ -320,6 +327,14 @@ class KantorCabangController extends Controller
                     'created_at' => now()
                 ]);
             }
+
+            // Record to log activity
+            $cabangShow = DB::table('mst_cabang')
+                ->where('kd_cabang', $kode)
+                ->first()?->nama_cabang;
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melakukan update kantor cabang dengan nama <b>$cabangShow/b>";
+            LogActivity::create($activity);
 
             DB::commit();
             Alert::success('Berhasil', 'Berhasil menyimpan perubahan.');
