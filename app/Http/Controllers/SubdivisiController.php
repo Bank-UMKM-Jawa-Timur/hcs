@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Models\DivisiModel;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -85,6 +87,11 @@ class SubdivisiController extends Controller
                     'created_at' => now()
                 ]);
 
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah sub divisi dengan nama <b>$request->nama_subdivisi/b>";
+            LogActivity::create($activity);
+
             Alert::success('Berhasil', 'Berhasil Menambah Sub Divisi.');
             return redirect()->route('sub_divisi.index');
         } catch(Exception $e){
@@ -162,6 +169,11 @@ class SubdivisiController extends Controller
                     'updated_at' => now()
                 ]);
 
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melakukan update sub divisi dengan nama <b>$request->nama_subdivisi/b>";
+            LogActivity::create($activity);
+
             Alert::success('Berhasil', 'Berhasil Mengupdate Sub Divisi.');
             return redirect()->route('sub_divisi.index');
         } catch(Exception $e){
@@ -183,10 +195,18 @@ class SubdivisiController extends Controller
     {
         // Need permission
         try{
+            $subdivShow = DB::table('mst_sub_divisi')
+                ->where('id', $id)
+                ->first()?->nama_subdivisi;
             DB::table('mst_sub_divisi')
                 ->where('id', $id)
                 ->delete();
     
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menghapus sub divisi dengan nama <b>$subdivShow/b>";
+            LogActivity::create($activity);
+
             Alert::success('Berhasil', 'Berhasil menghapus sub divisi.');
             return redirect()->route('sub_divisi.index');
         } catch(Exception $e){
