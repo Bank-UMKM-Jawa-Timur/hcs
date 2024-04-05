@@ -229,12 +229,8 @@ class HitungPPH
                     ->where('bulan', $bulan)
                     ->where('tahun', $tahun)
                     ->first();
-        $full_month = false;
-        if ($batch)  {
-            $full_month = $tanggal > $batch->tanggal_input;
-        }
 
-        $new_pph = HitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin, $full_month);
+        $new_pph = HitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin);
 
         DB::table('pph_yang_dilunasi')
             ->where('nip', $karyawan->nip)
