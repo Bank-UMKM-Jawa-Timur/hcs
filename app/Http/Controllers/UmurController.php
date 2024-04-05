@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use Exception;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -63,6 +65,11 @@ class UmurController extends Controller
                     'u_akhir' => $request->get('umur_akhir'),
                     'created_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah rentang umur <b>$request->umur_awal - $request->umur_akhir</b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Rentang Umur.');
             return redirect()->route('umur.index');
@@ -126,6 +133,11 @@ class UmurController extends Controller
                     'u_akhir' => $request->get('umur_akhir'),
                     'updated_at' => now()
                 ]);
+
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $activity = "Pengguna <b>$name</b> melakukan update rentang umur <b>$request->umur_awal - $request->umur_akhir</b>";
+                LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Mengupdate Rentang Umur.');
             return redirect()->route('umur.index');

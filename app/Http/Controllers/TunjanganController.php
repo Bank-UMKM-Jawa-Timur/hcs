@@ -66,7 +66,7 @@ class TunjanganController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> menambah tunjangan dengan nama <b>$request->nama_tunjangan/b>";
+            $activity = "Pengguna <b>$name</b> menambah tunjangan dengan nama <b>$request->nama_tunjangan</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Tunjangan.');
@@ -134,7 +134,7 @@ class TunjanganController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> melakukan update tunjangan dengan nama <b>$request->nama_tunjangan/b>";
+            $activity = "Pengguna <b>$name</b> melakukan update tunjangan dengan nama <b>$request->nama_tunjangan</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Mengupdate Tunjangan.');

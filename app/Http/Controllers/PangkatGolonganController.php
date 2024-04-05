@@ -134,7 +134,7 @@ class PangkatGolonganController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> melakukan update pangkat dan golongan dengan nama <b>$request->golongan - $request->pangkat/b>";
+            $activity = "Pengguna <b>$name</b> melakukan update pangkat dan golongan dengan nama <b>$request->golongan - $request->pangkat</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Mengupdate Pangkat dan Golongan.');
