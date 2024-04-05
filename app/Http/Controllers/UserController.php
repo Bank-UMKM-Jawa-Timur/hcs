@@ -411,6 +411,12 @@ class UserController extends Controller
             DB::table('sessions')
                 ->where('id', $id)
                 ->delete();
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melakukan reset session untuk user <b>$user?->name</b>";
+            LogActivity::create($activity);
+    
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil reset session untuk user ' . $user?->nama_karyawan ?? $user?->name);
