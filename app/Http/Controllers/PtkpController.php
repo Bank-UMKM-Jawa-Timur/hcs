@@ -8,7 +8,8 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Database\QueryException;
 use Exception;
 use App\Helpers\FormatUang;
-
+use App\Helpers\LogActivity;
+use Illuminate\Support\Facades\Auth;
 
 class PtkpController extends Controller
 {
@@ -67,6 +68,11 @@ class PtkpController extends Controller
                 'keterangan' => $request->keterangan,
             ];
             PtkpModel::create($data);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah PTKP dengan kode <b>$request->kode($request->keterangan)</b>, PTKP per tahun <b>Rp. $request->ptkp_tahun</b>, PTKP per bulan <b>Rp. $request->ptkp_bulan</b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Penghasilan Tanpa Pajak.');
             return redirect()->route('ptkp.index');
@@ -141,6 +147,11 @@ class PtkpController extends Controller
                 'updated_at' => now()
             ];
             PtkpModel::where('id', $id)->update($data);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah PTKP dengan kode <b>$request->kode($request->keterangan)</b>, PTKP per tahun <b>Rp. $request->ptkp_tahun</b>, PTKP per bulan <b>Rp. $request->ptkp_bulan</b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Edit Penghasilan Tanpa Pajak.');
             return redirect()->route('ptkp.index');
