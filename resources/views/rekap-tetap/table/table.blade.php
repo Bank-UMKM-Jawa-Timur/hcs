@@ -381,7 +381,7 @@
                 <th class="text-right">{{ formatRupiahExcel($total_insentif_penagihan ?? 0, 0, $formatrp) }}</th>
                 {{-- end teratur --}}
                 {{-- bonus --}}
-                <th class="text-right">{{ formatRupiahExcel($totalTHR ?? 0, 0, $formatrp) }}</th>
+                <th class="text-right">{{ formatRupiahExcel($totalBrutoTHR ?? 0, 0, $formatrp) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalBrutoDanaPendidikan ?? 0, 0, $formatrp) }}</th>
                 <th class="text-right">{{ formatRupiahExcel($totalBrutoPenghargaanKinerja ?? 0, 0, $formatrp) }}</th>
                 @if ($grandTotal->totalBrutoNataru > 0 || $grandTotal->totalPPHNataru > 0)
