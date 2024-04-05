@@ -89,7 +89,7 @@ class SubdivisiController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> menambah sub divisi dengan nama <b>$request->nama_subdivisi/b>";
+            $activity = "Pengguna <b>$name</b> menambah sub divisi dengan nama <b>$request->nama_subdivisi</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Sub Divisi.');
@@ -171,7 +171,7 @@ class SubdivisiController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> melakukan update sub divisi dengan nama <b>$request->nama_subdivisi/b>";
+            $activity = "Pengguna <b>$name</b> melakukan update sub divisi dengan nama <b>$request->nama_subdivisi</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Mengupdate Sub Divisi.');
@@ -204,7 +204,7 @@ class SubdivisiController extends Controller
     
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> menghapus sub divisi dengan nama <b>$subdivShow/b>";
+            $activity = "Pengguna <b>$name</b> menghapus sub divisi dengan nama <b>$subdivShow</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil menghapus sub divisi.');

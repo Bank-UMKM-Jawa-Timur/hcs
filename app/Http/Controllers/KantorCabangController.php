@@ -79,7 +79,7 @@ class KantorCabangController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> menambah kantor cabang dengan nama <b>$request->nama_cabang/b>";
+            $activity = "Pengguna <b>$name</b> menambah kantor cabang dengan nama <b>$request->nama_cabang</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Kantor Cabang.');
@@ -333,7 +333,7 @@ class KantorCabangController extends Controller
                 ->where('kd_cabang', $kode)
                 ->first()?->nama_cabang;
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> melakukan update kantor cabang dengan nama <b>$cabangShow/b>";
+            $activity = "Pengguna <b>$name</b> melakukan update kantor cabang dengan nama <b>$cabangShow</b>";
             LogActivity::create($activity);
 
             DB::commit();

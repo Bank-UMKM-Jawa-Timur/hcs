@@ -81,7 +81,7 @@ class BagianController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> menambah bagian dengan nama <b>$request->nama_bagian/b>";
+            $activity = "Pengguna <b>$name</b> menambah bagian dengan nama <b>$request->nama_bagian</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Bagian.');
@@ -174,7 +174,7 @@ class BagianController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> melakukan update bagian dengan nama <b>$request->nama_bagian/b>";
+            $activity = "Pengguna <b>$name</b> melakukan update bagian dengan nama <b>$request->nama_bagian</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Mengupdate Bagian.');

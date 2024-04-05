@@ -68,7 +68,7 @@ class DivisiController extends Controller
 
                 // Record to log activity
                 $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-                $activity = "Pengguna <b>$name</b> menambah divisi dengan nama <b>$request->nama_divisi/b>";
+                $activity = "Pengguna <b>$name</b> menambah divisi dengan nama <b>$request->nama_divisi</b>";
                 LogActivity::create($activity);
                 Alert::success('Berhasil', 'Berhasil Menambah Divisi.');
                 return redirect()->route('divisi.index');
@@ -136,7 +136,7 @@ class DivisiController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> melakukan update divisi dengan nama <b>$request->nama_divisi/b>";
+            $activity = "Pengguna <b>$name</b> melakukan update divisi dengan nama <b>$request->nama_divisi</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Mengupdate Divisi.');

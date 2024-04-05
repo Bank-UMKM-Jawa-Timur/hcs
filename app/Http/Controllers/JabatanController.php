@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -60,6 +62,11 @@ class JabatanController extends Controller
                     'nama_jabatan' => $request->get('nama_jabatan'),
                     'created_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah jabatan dengan nama <b>$request->nama_jabatan</b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Jabatan.');
             return redirect()->route('jabatan.index');
@@ -123,6 +130,11 @@ class JabatanController extends Controller
                     'nama_jabatan' => $request->get('nama_jabatan'),
                     'updated_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melakukan update jabatan dengan nama <b>$request->nama_jabatan</b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Mengupdate Jabatan.');
             return redirect()->route('jabatan.index');
