@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\LaporanPergerakanKarir;
 
+use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
 use App\Service\EntityService;
 use Illuminate\Http\Request;
@@ -84,6 +85,12 @@ class LaporanPromosiController extends Controller
 
                     return $mutasiLama;
                 });
+
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $activity = "Pengguna <b>$name</b> mengakses laporan promosi untuk rentang waktu <b>$start_date</b> sampai dengan <b>$end_date</b>";
+                LogActivity::create($activity);    
+                
             } catch (\Exception $e) {
                 return $e->getMessage();
                 return back()->withError('Terjadi kesalahan');

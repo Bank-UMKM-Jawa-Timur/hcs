@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\LaporanPergerakanKarir;
 
+use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
 use App\Service\EntityService;
 use Illuminate\Http\Request;
@@ -26,6 +27,12 @@ class LaporanPenonaktifanController extends Controller
 
         if($start_date && $end_date){
             $data = $karyawanRepo->filterKaryawanPusatNonaktif($start_date, $end_date, $limit, $page, $search);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> mengakses laporan penonaktifan untuk rentang waktu <b>$start_date</b> sampai dengan <b>$end_date</b>";
+            LogActivity::create($activity);    
+            
         }
         return view('laporan_pergerakan_karir.penonaktifan.index', compact('data'));
     }
