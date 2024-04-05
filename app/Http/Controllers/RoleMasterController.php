@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Repository\RolesRepository;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -87,6 +88,12 @@ class RoleMasterController extends Controller
 
                 DB::table('role_has_permissions')
                     ->insert($arrayIdPermission);
+
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $activity = "Pengguna <b>$name</b> menambah role dengan nama <b>$request->name/b>";
+                LogActivity::create($activity);
+                
                 DB::commit();
                 Alert::success('Berhasil', 'Berhasil menambah Role.');
                 return redirect()->route('role.index');
@@ -112,6 +119,15 @@ class RoleMasterController extends Controller
         if (!Auth::user()->can('setting - master - role - detail role')) {
             return view('roles.forbidden');
         }
+
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $roleShow = DB::table('roles')
+            ->where('id', $id)
+            ->first()?->name;
+        $activity = "Pengguna <b>$name</b> melihat detail role dengan nama <b>$roleShow/b>";
+        LogActivity::create($activity);
+
         return view('roles.show',$this->param->getRoleId($id, $request->q));
     }
 
@@ -167,6 +183,12 @@ class RoleMasterController extends Controller
             }
 
             $updated->save();
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> mengubah role dengan nama <b>$request->name/b>";
+            LogActivity::create($activity);
+
             DB::commit();
             Alert::success('Berhasil', 'Berhasil mengganti Role.');
             return redirect()->route('role.index');
@@ -190,9 +212,17 @@ class RoleMasterController extends Controller
     public function destroy($id)
     {
         try{
+            $roleShow = DB::table('roles')
+                ->where('id', $id)
+                ->first()?->name;
             DB::table('roles')
                 ->where('id', $id)
                 ->delete();
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menghapus role dengan nama <b>$roleShow/b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menghapus Data Role.');
             return redirect()->route('role.index');
