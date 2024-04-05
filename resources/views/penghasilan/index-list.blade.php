@@ -169,6 +169,17 @@
         $('#form').submit()
     })
 
+    var btn_pagination = $(`.pagination`).find('a')
+    var page_url = window.location.href
+    $(`.pagination`).find('a').each(function(i, obj) {
+        if (page_url.includes('page_length')) {
+            btn_pagination[i].href += `&page_length=${$('#page_length').val()}`
+        }
+        if (page_url.includes('q')) {
+            btn_pagination[i].href += `&q=${$('#q').val()}`
+        }
+    })
+
     $('#nip').select2({
         ajax: {
             url: '{{ route('api.select2.karyawan') }}'
