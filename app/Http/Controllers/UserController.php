@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Models\KaryawanModel;
 use App\Models\ModelHasRole;
 use App\Models\User;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Query\QueryException;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -149,6 +151,21 @@ class UserController extends Controller
                 $dataRole->model_type = 'App\Models\User';
                 $dataRole->model_id = $dataUser->id;
                 $dataRole->save();
+     
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $kantorLog = '';
+                if ($request->role == 4) {
+                    $kantorLog = ' kantor <b>' . DB::table('mst_cabang')
+                        ->where('kd_cabang', $request->data_cabang)
+                        ->first()?->nama_cabang . '</b> ';
+                }
+                if ($request->role == 2 || $request->role == 3) {
+                    $kantorLog = ' kantor <b>Pusat</b> ';
+                }
+                $roleShow = DB::table('roles')->where('id', $request->role)->first()?->name ;
+                $activity = "Pengguna <b>$name</b> menambah user atas nama <b>$request->name</b> email <b>$request->email</b> role <b>$roleShow</b>$kantorLog";
+                LogActivity::create($activity);
 
                 DB::commit();
                 Alert::success('Berhasil Menambahkan User.');
@@ -245,6 +262,21 @@ class UserController extends Controller
                 'model_id' => $dataUser->id,
             ]);
 
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $kantorLog = '';
+            if ($request->role == 4) {
+                $kantorLog = ' kantor <b>' . DB::table('mst_cabang')
+                    ->where('kd_cabang', $request->data_cabang)
+                    ->first()?->nama_cabang . '</b> ';
+            }
+            if ($request->role == 2 || $request->role == 3) {
+                $kantorLog = ' kantor <b>Pusat</b> ';
+            }
+            $roleShow = DB::table('roles')->where('id', $request->role)->first()?->name ;
+            $activity = "Pengguna <b>$name</b> melakukan update user atas nama <b>$request->name</b> email <b>$request->email</b> role <b>$roleShow</b>$kantorLog";
+            LogActivity::create($activity);
+
             DB::commit();
             Alert::success('Berhasil Merubah User.');
             return redirect()->route('user.index');
@@ -273,6 +305,14 @@ class UserController extends Controller
             'password' => $pass
         ]);
 
+        // Record to log activity
+        $userShow = DB::table('users')
+            ->where('id', $id)
+            ->first()?->name;
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$userShow</b> melakukan pergantian password";
+        LogActivity::create($activity);
+
         Alert::success('Berhasil Mengubah Password.');
         return redirect()->route('user.index');
     }
@@ -290,12 +330,21 @@ class UserController extends Controller
         }
         DB::beginTransaction();
         try{
+            $userShow = DB::table('users')
+                ->where('id', $id)
+                ->first()?->name;
+
             DB::table('users')
                 ->where('id', $id)
                 ->delete();
             DB::table('model_has_roles')
                 ->where('model_id', $id)
                 ->delete();
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menghapus user atas nama <b>$userShow</b>";
+            LogActivity::create($activity);
 
             DB::commit();
 
@@ -320,6 +369,11 @@ class UserController extends Controller
         $dataUser = User::where('id',$id)->first();
         $dataUser->password = Hash::make('12345678');
         $dataUser->save();
+     
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melakukan reset pasword user atas nama <b>$dataUser?->name</b>";
+        LogActivity::create($activity);
 
         Alert::success('Berhasil Reset Password User.');
         return redirect()->route('user.index');
