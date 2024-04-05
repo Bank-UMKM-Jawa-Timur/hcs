@@ -111,6 +111,12 @@ class SuratPeringatanController extends Controller
         if (!auth()->user()->can('histori - surat peringatan')) {
             return view('roles.forbidden');
         }
+
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melihat history surat peringatan";
+        LogActivity::create($activity);
+
         return view('karyawan.surat-peringatan.history', [
             'history' => $this->repo->report($request->only(['tahun', 'nip', 'first_date', 'end_date'])),
             'firstData' => SpModel::oldest('tanggal_sp')->first(),
