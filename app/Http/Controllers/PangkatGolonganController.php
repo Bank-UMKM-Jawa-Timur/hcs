@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -61,6 +63,11 @@ class PangkatGolonganController extends Controller
                     'golongan' => $request->get('golongan'),
                     'created_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah pangkat golongan dengan nama <b>$request->golongan - $request->pangkat</b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Pangkat dan Golongan.');
             return redirect()->route('pangkat_golongan.index');
@@ -124,6 +131,11 @@ class PangkatGolonganController extends Controller
                     'golongan' => $request->get('golongan'),
                     'updated_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melakukan update pangkat dan golongan dengan nama <b>$request->golongan - $request->pangkat/b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Mengupdate Pangkat dan Golongan.');
             return redirect()->route('pangkat_golongan.index');
