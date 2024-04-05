@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Service\EntityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -130,6 +131,12 @@ class HistoryJabatanController extends Controller
         }
         usort($dataHistory, fn($a, $b) => strtotime($a["tanggal_pengesahan"]) - strtotime($b["tanggal_pengesahan"]));
 
+        // Record to log activity
+        $karyawanShow = DB::table('mst_karyawan')->where('nip', $nip)->first()?->nama_karyawan;
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> mengakses history jabatan untuk karyawan atas nama <b>$karyawanShow</b>";
+        LogActivity::create($activity);    
+        
         return view('history.history', ['karyawan' => $dataHistory, 'data_karyawan' => $data_karyawan, 'data_migrasi' => $data_migrasi]);
     }
 

@@ -89,6 +89,12 @@ class PejabatSementaraController extends Controller
                 $pjs->whereNotNull('tanggal_berakhir');
 
             $pjs = $pjs->get();
+
+            if($request->kategori == 'aktif') {
+                // Record to log activity
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $activity = "Pengguna <b>$name</b> mengakses laporan pejabat sementara kategori <b>aktif</b>";
+            }
         }
 
         if ($request->nip) {
@@ -96,7 +102,13 @@ class PejabatSementaraController extends Controller
             $pjs = PjsModel::with('karyawan')
                 ->where('nip', $request->nip)
                 ->get();
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $karyawanShow = DB::table('mst_karyawan')->where('nip', $request->nip)->first()?->nama_karyawan;
+            $activity = "Pengguna <b>$name</b> mengakses laporan pejabat sementara untuk karyawan atas nama <b>$karyawanShow</b>";
         }
+        LogActivity::create($activity);    
 
         return view('pejabat-sementara.history', compact('pjs', 'karyawan'));
     }
