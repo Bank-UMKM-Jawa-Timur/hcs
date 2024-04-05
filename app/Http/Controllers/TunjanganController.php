@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -61,6 +63,11 @@ class TunjanganController extends Controller
                     'kategori' => $request->get('kategori'),
                     'created_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah tunjangan dengan nama <b>$request->nama_tunjangan/b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Tunjangan.');
             return redirect()->route('tunjangan.index');
@@ -124,6 +131,11 @@ class TunjanganController extends Controller
                     'kategori' => $request->get('kategori'),
                     'updated_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melakukan update tunjangan dengan nama <b>$request->nama_tunjangan/b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Mengupdate Tunjangan.');
             return redirect()->route('tunjangan.index');
