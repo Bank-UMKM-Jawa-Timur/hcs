@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Service\EntityService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -76,6 +78,11 @@ class BagianController extends Controller
                     'kd_entitas' => $kd_entitas,
                     'created_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> menambah bagian dengan nama <b>$request->nama_bagian/b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menambah Bagian.');
             return redirect()->route('bagian.index');
@@ -164,6 +171,11 @@ class BagianController extends Controller
                     'kd_entitas' => $kd_entitas,
                     'updated_at' => now()
                 ]);
+
+            // Record to log activity
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melakukan update bagian dengan nama <b>$request->nama_bagian/b>";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Mengupdate Bagian.');
             return redirect()->route('bagian.index');
