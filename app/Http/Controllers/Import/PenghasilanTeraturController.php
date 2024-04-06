@@ -20,6 +20,7 @@ use App\Repository\PenghasilanTidakTeraturRepository;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpSpreadsheet\Calculation\Database\DVar;
 
 class PenghasilanTeraturController extends Controller
 {
@@ -315,6 +316,18 @@ class PenghasilanTeraturController extends Controller
         if (!auth()->user()->can('penghasilan - unlock - penghasilan teratur')) {
             return view('roles.forbidden');
         }
+
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $tunjanganShow = DB::table('mst_tunjangan')->where('id', $request->id_tunjangan)->first()?->nama_tunjangan;
+        $kantorShow = DB::table('transaksi_tunjangan')->where('id_tunjangan', $request->id_tunjangan)
+            ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $request->tanggal)
+            ->where('transaksi_tunjangan.created_at', $request->created_at)
+            ->join('mst_cabang', 'mst_cabang.kd_cabang', 'transaksi_tunjangan.kd_entitas')
+            ->first()?->nama_cabang;
+        $activity = "Pengguna <b>$name</b> melakukan unlock tunjangan teratur untuk kantor <b>$kantorShow</b> tunjangan <b>$tunjanganShow</b> tanggal <b>$request->tanggal</b>";
+        LogActivity::create($activity);
+
         $repo = new PenghasilanTeraturRepository;
         $repo->unlock($request->all());
         Alert::success('Berhasil unlock tunjangan.');
@@ -576,6 +589,11 @@ class PenghasilanTeraturController extends Controller
 
     public function templateExcel()
     {
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melakukan download template excel untuk <b>penghasilan teratur</b>";
+        LogActivity::create($activity);
+
         // Need permission
         $filename = Carbon::now()->format('his').'_template_import_penghasilan_teratur'.'.'.'xlsx';
         return Excel::download(new KaryawanExport(), $filename);
@@ -594,6 +612,26 @@ class PenghasilanTeraturController extends Controller
             Alert::warning('Peringatan', 'Tahun harus dipilih.');
             return back();
         }
+
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $bulan = array(
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        );
+        $bulanShow = $bulan[$request->bulan];
+        $activity = "Pengguna <b>$name</b> melakukan download vitamin untuk bulan <b>$bulanShow</b> tahun <b>$request->tahun</b>";
+        LogActivity::create($activity);
 
         return Excel::download(new ExportVitamin(), 'RINCIAN_PENGGANTI_UANG_VITAMIN_PEGAWAI.xlsx');
     }

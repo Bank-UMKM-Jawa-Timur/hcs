@@ -440,9 +440,11 @@ class SlipGajiController extends Controller
         $role_cabang = $user->hasRole('cabang');
         
         // Record to log activity
-        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-        $activity = "Pengguna <b>$name</b> melihat slip gaji karyawan atas nama <b>$karyawan->nama_karyawan</b> tahun <b>$year</b>";
-        LogActivity::create($activity);
+        if($karyawan != null && $year != null) {
+            $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+            $activity = "Pengguna <b>$name</b> melihat slip gaji karyawan atas nama <b>$karyawan?->nama_karyawan</b> tahun <b>$year</b>";
+            LogActivity::create($activity);
+        }
 
         return view('slip_gaji.slip', compact('data', 'cabang', 'karyawan', 'jabatan', 'role_cabang', 'data_karyawan'));
     }
