@@ -186,7 +186,7 @@ class KantorCabangController extends Controller
                     'id_kantor' => 2,
                     'updated_at' => now()
                 ]);
-            
+
             $currentProfil = MstProfilKantorModel::where('kd_cabang', $kode)->first();
 
             if ($currentProfil) {
@@ -231,7 +231,7 @@ class KantorCabangController extends Controller
 
                 $pengurang = PemotongPajakPenguranganModel::where('id_profil_kantor', $currentProfil->id)->first();
                 $penambah = PemotongPajakTambahanModel::where('id_profil_kantor', $currentProfil->id)->first();
-                
+
                 if($pengurang && date('Y', strtotime($pengurang?->created_at) == date('Y', strtotime(now())))){
                     $pengurang->dpp = $request->dpp;
                     $pengurang->jp_jan_feb = str_replace('.', '',$request->jp_jan_feb);
@@ -293,7 +293,7 @@ class KantorCabangController extends Controller
                     'npwp_pemimpin_cabang' => 'NPWP Pemimpin Cabang',
                     'nama_pemimpin_cabang' => 'Nama Pemimpin Cabang',
                 ]);
-                
+
                 $newProfil = new MstProfilKantorModel();
                 $newProfil->kd_cabang = $kode;
                 $newProfil->masa_pajak = $request->masa_pajak;
@@ -333,7 +333,7 @@ class KantorCabangController extends Controller
                 ->where('kd_cabang', $kode)
                 ->first()?->nama_cabang;
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> melakukan update kantor cabang dengan nama <b>$cabangShow</b>";
+            $activity = "Pengguna <b>$name</b> melakukan update kantor cabang <b>$cabangShow</b>";
             LogActivity::create($activity);
 
             DB::commit();

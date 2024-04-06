@@ -1,12 +1,5 @@
 @extends('layouts.app-template')
 @section('content')
-{{-- <div class="card-header">
-    <div class="card-header">
-        <h5 class="card-title font-weight-bold">Edit Kantor Cabang</h5>
-        <p class="card-title"><a href="">Setting </a> > <a href="">Master</a> > <a
-                href="{{ route('cabang.index') }}">Kantor Cabang</a> > <a>Edit</a></p>
-    </div>
-</div> --}}
 <div class="head mt-5">
     <div class="flex gap-5 justify-between items-center">
         <div class="heading">
@@ -207,7 +200,7 @@
                             <input type="text"
                                 class="@error('kesehatan_batas_atas') is-invalid @enderror rupiah form-input"
                                 name="kesehatan_batas_atas" id="kesehatan_batas_atas"
-                                value="{{ old('kesehatan_batas_atas', $data?->penambah->kesehatan_batas_atas == null ? null : number_format($data?->penambah->kesehatan_batas_atas, 0, '.', '.')) }}"
+                               value="{{ $data && $data->penambah && $data->penambah->kesehatan_batas_atas ? number_format($data->penambah->kesehatan_batas_atas, 0, '.', '.') : '' }}"
                                 required maxlength="10">
                             @error('kesehatan_batas_atas')
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
@@ -221,7 +214,7 @@
                             <input type="text"
                                 class="@error('kesehatan_batas_bawah') is-invalid @enderror rupiah form-input"
                                 name="kesehatan_batas_bawah" id="kesehatan_batas_bawah"
-                                value="{{ old('kesehatan_batas_bawah', $data?->penambah->kesehatan_batas_bawah == null ? null : number_format($data?->penambah->kesehatan_batas_bawah, 0, '.', '.')) }}"
+                                value="{{ $data && $data->penambah && $data->penambah->kesehatan_batas_bawah ? number_format($data->penambah->kesehatan_batas_bawah, 0, '.', '.') : '' }}"
                                 required maxlength="10">
                             @error('kesehatan_batas_bawah')
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
@@ -272,7 +265,7 @@
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-    
+
                         <div class="input-box">
                             <label for="jp" class="mt-2">
                                 JP(%)<span class="text-red-600">*</span>
@@ -284,7 +277,7 @@
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-    
+
                         <div class="input-box">
                             <label for="jp_jan_feb" class="mt-2">
                                 Januari - Februari(Rp)<span class="text-red-600">*</span>
@@ -292,13 +285,13 @@
                             <input type="text"
                                 class="@error('jp_jan_feb') is-invalid @enderror rupiah form-input"
                                 name="jp_jan_feb" id="jp_jan_feb"
-                                value="{{ old('jp_jan_feb', $data?->pengurang->jp_jan_feb != null ? number_format($data?->pengurang->jp_jan_feb, 0, '.', '.') : null) }}"
+                                value="{{ $data && $data->pengurang && $data->pengurang->jp_jan_feb ? number_format($data->pengurang->jp_jan_feb, 0, '.', '.') : '' }}"
                                 required maxlength="10">
                             @error('jp_jan_feb')
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-    
+
                         <div class="input-box">
                             <label for="jp_mar_des" class="mt-2">
                                 Maret - Desember(Rp)<span class="text-red-600">*</span>
@@ -306,7 +299,7 @@
                             <input type="text"
                                 class="@error('jp_mar_des') is-invalid @enderror rupiah form-input"
                                 name="jp_mar_des" id="jp_mar_des"
-                                value="{{ old('jp_mar_des', $data?->pengurang->jp_mar_des != null ? number_format($data?->pengurang->jp_mar_des, 0, '.', '.') : null) }}"
+                                value="{{ $data && $data->pengurang && $data->pengurang->jp_mar_des ? number_format($data->pengurang->jp_mar_des, 0, '.', '.') : '' }}"
                                 required maxlength="10">
                             @error('jp_mar_des')
                             <div class="mt-2 alert alert-danger">{{ $message }}</div>
