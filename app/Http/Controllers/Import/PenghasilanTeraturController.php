@@ -317,7 +317,7 @@ class PenghasilanTeraturController extends Controller
             ->first()?->nama_cabang;
         $activity = "Pengguna <b>$name</b> melakukan unlock tunjangan teratur untuk kantor <b>$kantorShow</b> tunjangan <b>$tunjanganShow</b> tanggal <b>$request->tanggal</b>";
         LogActivity::create($activity);
-        
+
         $repo = new PenghasilanTeraturRepository;
         $repo->lock($request->all());
         Alert::success('Berhasil lock tunjangan.');
@@ -365,6 +365,17 @@ class PenghasilanTeraturController extends Controller
         $idTunjangan = $request->get('idTunjangan');
         $limit = Request()->has('page_length') ? Request()->get('page_length') : 10;
         $page = Request()->has('page') ? Request()->get('page') : 1;
+
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $tunjanganShow = DB::table('mst_tunjangan')->where('id', $request->idTunjangan)->first()?->nama_tunjangan;
+        $kantorShow = DB::table('transaksi_tunjangan')->where('id_tunjangan', $request->idTunjangan)
+            ->where(DB::raw('DATE(transaksi_tunjangan.tanggal)'), $request->tanggal)
+            ->where('transaksi_tunjangan.created_at', $request->createdAt)
+            ->join('mst_cabang', 'mst_cabang.kd_cabang', 'transaksi_tunjangan.kd_entitas')
+            ->first()?->nama_cabang;
+        $activity = "Pengguna <b>$name</b> melakukan update tunjangan teratur untuk kantor <b>$kantorShow</b> tunjangan <b>$tunjanganShow</b> tanggal <b>$request->tanggal</b>";
+        LogActivity::create($activity);
 
         $kdEntitas = Request()->get('kdEntitas');
         $search = Request()->get('q');
