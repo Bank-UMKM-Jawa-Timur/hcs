@@ -93,7 +93,7 @@ class RoleMasterController extends Controller
                 $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
                 $activity = "Pengguna <b>$name</b> menambah role dengan nama <b>$request->name/b>";
                 LogActivity::create($activity);
-                
+
                 DB::commit();
                 Alert::success('Berhasil', 'Berhasil menambah Role.');
                 return redirect()->route('role.index');
@@ -125,7 +125,7 @@ class RoleMasterController extends Controller
         $roleShow = DB::table('roles')
             ->where('id', $id)
             ->first()?->name;
-        $activity = "Pengguna <b>$name</b> melihat detail role dengan nama <b>$roleShow/b>";
+        $activity = "Pengguna <b>$name</b> melihat detail role dengan nama <b>$roleShow</b>";
         LogActivity::create($activity);
 
         return view('roles.show',$this->param->getRoleId($id, $request->q));
@@ -186,7 +186,7 @@ class RoleMasterController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> mengubah role dengan nama <b>$request->name/b>";
+            $activity = "Pengguna <b>$name</b> mengubah role dengan nama <b>$request->name</b>";
             LogActivity::create($activity);
 
             DB::commit();
@@ -221,7 +221,7 @@ class RoleMasterController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> menghapus role dengan nama <b>$roleShow/b>";
+            $activity = "Pengguna <b>$name</b> menghapus role dengan nama <b>$roleShow</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Menghapus Data Role.');
