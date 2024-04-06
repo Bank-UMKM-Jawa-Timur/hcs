@@ -2087,10 +2087,13 @@ class GajiPerBulanController extends Controller
 
         $pph = floor(($no17 / 12) * intval($bulan));
         if (intval($bulan) > 1) {
-            $pphTerbayar = (int) DB::table('pph_yang_dilunasi')
-                                    ->where('nip', $karyawan->nip)
-                                    ->where('tahun', $tahun)
-                                    ->sum('total_pph');
+            $pphTerbayar = (int) DB::table('pph_yang_dilunasi AS pph')
+                                    ->join('gaji_per_bulan AS gaji', 'gaji.id', 'pph.gaji_per_bulan_id')
+                                    ->join('batch_gaji_per_bulan AS batch', 'batch.id', 'gaji.batch_id')
+                                    ->whereNull('batch.deleted_at')
+                                    ->where('pph.nip', $karyawan->nip)
+                                    ->where('pph.tahun', $tahun)
+                                    ->sum('pph.total_pph');
             $pph -= $pphTerbayar;
         }
         return floor($pph);
