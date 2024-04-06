@@ -152,7 +152,7 @@ class HitungPPH
         $result = [
             'pengali' => ($pengali / 100),
             'pph' => number_format($pph, 2, ',', '.'),
-            'pph_floor' => number_format(floor($pph), 2, ',', '.'),
+            'pph_floor' => number_format(floor($pph), 0, ',', '.'),
         ];
 
         return $result;
