@@ -44,7 +44,7 @@ class PayrollController extends Controller
         $page = $request->has('page') ? $request->get('page') : 1;
         $search = $request->has('q') ? str_replace("'", "\'", $request->get('q')) : null;
 
-        $kantor = $request->get('kantor') == 'pusat' ? 'pusat' : $request->get('cabang');
+        $kantor = $request->get('kantor') == 'pusat' ? 'Pusat' : DB::table('mst_cabang')->where('kd_cabang', $request->get('cabang'))->first()->nama_cabang;
         FacadesSession::put('kantor',$kantor);
 
         $month = $request->get('bulan');
@@ -60,11 +60,15 @@ class PayrollController extends Controller
         $cabang = $cabangRepo->listCabang();
 
         $this->param = null;
+        $kategori = $request->kategori;
+        if ($kategori == 'rincian') {
+            $kategori = 'rincian payroll';
+        }
 
         if ($month) {
             $data = $this->list($kantor, $month, $year, $search, $page, $limit,null);
             $total = $this->grandTotal($kantor, $month, $year, $search, $page, $limit,null);
-            
+
             // Record to log activity
             $bulan = array(
                 1 => 'Januari',
@@ -81,7 +85,7 @@ class PayrollController extends Controller
                 12 => 'Desember'
             );
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> melihat <b>$request->kategori</b> untuk kantor <b>$kantor</b> bulan <b>$bulan[$month]</b> tahun <b>$year</b>";
+            $activity = "Pengguna <b>$name</b> melihat <b>$kategori</b> untuk kantor <b>$kantor</b> bulan <b>$bulan[$month]</b> tahun <b>$year</b>";
             LogActivity::create($activity);
         } else {
             $data = null;

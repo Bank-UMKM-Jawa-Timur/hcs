@@ -64,7 +64,7 @@ class LaporanTetapController extends Controller
         $data = $request->has('tahun') && $request->has('bulan') ? $this->repo->get($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
         $footer = $request->has('tahun') && $request->has('bulan') ? $this->repo->getTotal($kantor, $kategori, $search, $limit, false, intval($year), intval($month)) : null;
         $cabang = $this->cabang;
-        
+
         // Record to log activity
         $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
         $monthName = array(
@@ -82,8 +82,17 @@ class LaporanTetapController extends Controller
             12 => 'Desember'
         );
         $kantorName = DB::table('mst_cabang')->where('kd_cabang', $kantor)->first()?->nama_cabang;
-        $activity = "Pengguna <b>$name</b> melihat laporan rekap kategori <b>$kategori</b> kantor $kantorName bulan <b>$monthName[$month]</b> tahun <b>$year</b>";
-        LogActivity::create($activity);
+        if (auth()->user()->hasRole('cabang')) {
+            if ($request->tahun && $request->bulan && $request->kategori) {
+                $activity = "Pengguna <b>$name</b> melihat laporan rekap kategori <b>$kategori</b> kantor $kantorName bulan <b>$monthName[$month]</b> tahun <b>$year</b>";
+                LogActivity::create($activity);
+            }
+        } else {
+            if ($request->tahun && $request->bulan && $request->cabang && $request->kategori) {
+                $activity = "Pengguna <b>$name</b> melihat laporan rekap kategori <b>$kategori</b> kantor $kantorName bulan <b>$monthName[$month]</b> tahun <b>$year</b>";
+                LogActivity::create($activity);
+            }
+        }
 
         return view('rekap-tetap.index', [
             'cabang' => $cabang,
@@ -113,7 +122,7 @@ class LaporanTetapController extends Controller
             $showKantor = 'Kantor ' . CabangModel::where('kd_cabang', $kantor)->first()?->nama_cabang;
 
         $filename = 'Laporan Rekap ' . $showKantor .' '. $month_name . ' Tahun ' . $year.' ('.$kategori.')';
-        
+
         // Record to log activity
         $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
         $monthName = array(
