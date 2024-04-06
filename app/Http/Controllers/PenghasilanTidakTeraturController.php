@@ -894,7 +894,8 @@ class PenghasilanTidakTeraturController extends Controller
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
             $namaTunjangan = DB::table('mst_tunjangan')->where('id', $idTunjangan)->first()->nama_tunjangan;
-            $activity = "Pengguna <b>$name</b> melihat detail penghasilan tidak teratur<b>($namaTunjangan)</b> untuk tanggal <b>$createdAt</b>.";
+            $tanggalShow = date('d-m-Y', strtotime($createdAt));
+            $activity = "Pengguna <b>$name</b> melihat detail penghasilan tidak teratur<b>($namaTunjangan)</b> untuk tanggal <b>$tanggalShow</b>.";
             LogActivity::create($activity);
             
             return view('penghasilan.detail', compact(['data','tunjangan','nameCabang', 'status']));
