@@ -458,22 +458,24 @@
                     {{-- opsi 1 --}}
                     {{-- opsi 2 --}}
                     <div class="p-5">
-                        <div class="row row-total-tunjangan">
-                            <h2 class="font-semibold text-gray-500">Data Tunjangan</h2>
-                            <hr class="text-gray-500">
-                            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
-                                @foreach ($tj as $item)
-                                @php
-                                    if ($item->nama_tunjangan != 'DPP') {
-                                        $totalGaji += $item->nominal;
-                                    }
-                                @endphp
-                                <div class="space-y-5">
-                                    <label for="" class="font-normal text-gray-500">{{ $item->nama_tunjangan }}</label>
-                                    <p class="font-semibold">Rp. {{ $item->nama_tunjangan != 'DPP' ? number_format($item->nominal, 0, ',', '.') : number_format($dpp_perhitungan) }}</p>
-                                </div>
-                            @endforeach
+                        <h2 class="font-semibold text-gray-500 mb-3">Data Tunjangan</h2>
+                        {{-- <hr class="text-gray-500 mt-3 mb-3"> --}}
+                        <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
+                            @forelse ($tj as $item)
+                            @php
+                                if ($item->nama_tunjangan != 'DPP') {
+                                    $totalGaji += $item->nominal;
+                                }
+                            @endphp
+                            <div class="space-y-5">
+                                <label for="" class="font-normal text-gray-500">{{ $item->nama_tunjangan }}</label>
+                                <p class="font-semibold">Rp. {{ $item->nama_tunjangan != 'DPP' ? number_format($item->nominal, 0, ',', '.') : number_format($dpp_perhitungan) }}</p>
                             </div>
+                            @empty
+                            <div class="space-y-5">
+                                Tidak ada data tunjangan.
+                            </div>
+                            @endforelse
                         </div>
                     </div>
                     {{-- opsi 2 --}}
@@ -491,95 +493,106 @@
                     {{-- opsi 1 --}}
                     {{-- opsi 2 --}}
                     <div class="p-5">
-                        <div class="row row-total-tunjangan">
-                            <h2 class="font-semibold text-gray-500">Total Gaji</h2>
-                            <hr class="text-gray-500">
-                            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
-                                <div class="space-y-5">
-                                    <p class="font-semibold">Rp. {{ number_format($totalGaji, 0, ',', '.') }}</p>
-                                </div>
+                        <h2 class="font-semibold text-gray-500 mb-3">Total Gaji</h2>
+                        <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 items-center ">
+                            <div class="space-y-5">
+                                <p class="font-semibold">Rp. {{ number_format($totalGaji, 0, ',', '.') }}</p>
                             </div>
                         </div>
                     </div>
                     {{-- opsi 2 --}}
             </div>
             {{-- potongan --}}
-            @if ($potongan != null)
-                @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi || $potongan->kredit_pegawai || $potongan->iuran_ik)
                     <div class="bg-white border rounded-lg w-full">
-                        @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi || $potongan->kredit_pegawai || $potongan->iuran_ik)
-                            <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
-                                <h2 class="font-semibold">Data Potongan</h2>
-                            </div>
-                        @endif
-                        <div class="p-5">
-                            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
-                                @if ($potongan->kredit_koperasi)
-                                    @if ($potongan->kredit_koperasi > 0)
-                                        <div class="row ">
-                                            <label class="w-2/4 mt-0">Kredit Koperasi</label>
-                                            <div class="w-full">
-                                                <p class="font-semibold">Rp.
-                                                    {{ number_format($potongan->kredit_koperasi, 0, ',', '.') }}</p>
+                        <div class="head p-5 rounded-tl-lg rounded-tr-lg border-b">
+                            <h2 class="font-semibold">Data Potongan</h2>
+                        </div>
+                        @if ($potongan != null)
+                            @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi || $potongan->kredit_pegawai || $potongan->iuran_ik)
+                                <div class="p-5">
+                                    <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                                        @if ($potongan->kredit_koperasi)
+                                            @if ($potongan->kredit_koperasi > 0)
+                                                <div class="space-y-5 ">
+                                                    <label class="w-2/4 mt-0">Kredit Koperasi</label>
+                                                    <div class="w-full">
+                                                        <p class="font-semibold">Rp.
+                                                            {{ number_format($potongan->kredit_koperasi, 0, ',', '.') }}</p>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if ($potongan->iuran_koperasi)
+                                            @if ($potongan->iuran_koperasi > 0)
+                                                <div class="space-y-5 ">
+                                                    <label class="w-2/4 mt-0">Iuran Koperasi</label>
+                                                    <div class="w-full">
+                                                        <p class="font-semibold">Rp.
+                                                            {{ number_format($potongan->iuran_koperasi, 0, ',', '.') }}</p>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if ($potongan->kredit_pegawai)
+                                            @if ($potongan->kredit_pegawai > 0)
+                                                <div class="space-y-5 ">
+                                                    <label class="w-2/4 mt-0">Kredit Pegawai</label>
+                                                    <div class="w-full">
+                                                        <p class="font-semibold">Rp.
+                                                            {{ number_format($potongan->kredit_pegawai, 0, ',', '.') }}</p>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if ($potongan->iuran_ik)
+                                            @if ($potongan->iuran_ik > 0)
+                                                <div class="space-y-5 ">
+                                                    <label class="w-2/4 mt-0">Iuran IK</label>
+                                                    <div class="w-full">
+                                                        <p class="font-semibold">Rp.
+                                                            {{ number_format($potongan->iuran_ik, 0, ',', '.') }}</p>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi || $potongan->kredit_pegawai || $potongan->iuran_ik)
+                                            @php
+                                                $kredit_koperasi = $potongan->kredit_koperasi;
+                                                $iuran_koperasi = $potongan->iuran_koperasi;
+                                                $kredit_pegawai = $potongan->kredit_pegawai;
+                                                $iuran_ik = $potongan->iuran_ik;
+                                                $total_potongan =
+                                                    $kredit_koperasi + $iuran_koperasi + $kredit_pegawai + $iuran_ik;
+                                            @endphp
+                                            <div class="space-y-5 ">
+                                                <label class="w-2/4 mt-0">Total Potongan</label>
+                                                <div class="w-full">
+                                                    <p class="font-semibold">Rp. {{ number_format($total_potongan, 0, ',', '.') }}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    @endif
-                                @endif
-                                @if ($potongan->iuran_koperasi)
-                                    @if ($potongan->iuran_koperasi > 0)
-                                        <div class="row ">
-                                            <label class="w-2/4 mt-0">Iuran Koperasi</label>
-                                            <div class="w-full">
-                                                <p class="font-semibold">Rp.
-                                                    {{ number_format($potongan->iuran_koperasi, 0, ',', '.') }}</p>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endif
-                                @if ($potongan->kredit_pegawai)
-                                    @if ($potongan->kredit_pegawai > 0)
-                                        <div class="row ">
-                                            <label class="w-2/4 mt-0">Kredit Pegawai</label>
-                                            <div class="w-full">
-                                                <p class="font-semibold">Rp.
-                                                    {{ number_format($potongan->kredit_pegawai, 0, ',', '.') }}</p>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endif
-                                @if ($potongan->iuran_ik)
-                                    @if ($potongan->iuran_ik > 0)
-                                        <div class="row ">
-                                            <label class="w-2/4 mt-0">Iuran IK</label>
-                                            <div class="w-full">
-                                                <p class="font-semibold">Rp.
-                                                    {{ number_format($potongan->iuran_ik, 0, ',', '.') }}</p>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endif
-                                @if ($potongan->kredit_koperasi || $potongan->iuran_koperasi || $potongan->kredit_pegawai || $potongan->iuran_ik)
-                                    @php
-                                        $kredit_koperasi = $potongan->kredit_koperasi;
-                                        $iuran_koperasi = $potongan->iuran_koperasi;
-                                        $kredit_pegawai = $potongan->kredit_pegawai;
-                                        $iuran_ik = $potongan->iuran_ik;
-                                        $total_potongan =
-                                            $kredit_koperasi + $iuran_koperasi + $kredit_pegawai + $iuran_ik;
-                                    @endphp
-                                    <div class="row ">
-                                        <label class="w-2/4 mt-0">Total Potongan</label>
-                                        <div class="w-full">
-                                            <p class="font-semibold">Rp. {{ number_format($total_potongan, 0, ',', '.') }}
-                                            </p>
+                                        @endif
+                                    </div>
+                                </div>
+                            @else
+                                <div class="p-5">
+                                    <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                                        <div class="space-y-5">
+                                            Tidak ada data potongan.
                                         </div>
                                     </div>
-                                @endif
+                                </div>
+                            @endif
+                        @else
+                            <div class="p-5">
+                                <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                                    <div class="space-y-5">
+                                        Tidak ada data potongan.
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
-                @endif
-            @endif
             {{-- data keluarga --}}
             @php
                 $status_pernikahan = $karyawan->status;

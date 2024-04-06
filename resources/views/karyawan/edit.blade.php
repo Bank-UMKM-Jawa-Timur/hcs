@@ -111,40 +111,34 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">NIP</label>
-                                <input type="text" class="@error('nip') is-invalid @enderror  form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="nip" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}} id="nip" value="{{ old('nip', $data->nip) }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-box">
-                                <label for="">NIK</label>
+                                <label for="">NIK<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('nik') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="nik" id="" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}} value="{{ old('nik', $data->nik) }}">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
-                                <label for="">Nama Karyawan</label>
+                                <label for="">Nama Karyawan<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('nama') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}"
                                        name="nama" id="" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}} value="{{ old('nama', $data->nama_karyawan) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
-                                <label for="">Tempat Lahir</label>
+                                <label for="">Tempat Lahir<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('tmp_lahir') is-invalid @enderror form-input"
                                        name="tmp_lahir" id="" value="{{ old('tmp_lahir', $data->tmp_lahir) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
-                                <label for="">Tanggal Lahir</label>
+                                <label for="">Tanggal Lahir<span class="text-red-500">*</span></label>
                                 <input type="date" class="@error('tgl_lahir') is-invalid @enderror form-input"
                                        name="tgl_lahir" id="" value="{{ old('tgl_lahir', $data->tgl_lahir) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
-                                <label for="">Agama</label>
+                                <label for="">Agama<span class="text-red-500">*</span></label>
                                 <select name="agama" id="" class="@error('agama') is-invalid @enderror form-input">
                                     <option value="-">--- Pilih ---</option>
                                     @foreach ($agama as $item)
@@ -157,7 +151,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Jenis Kelamin</label>
+                                <label for="">Jenis Kelamin<span class="text-red-500">*</span></label>
                                 <select name="jk" id="" class="@error('jk') is-invalid @enderror form-input">
                                     <option value="-">--- Pilih ---</option>
                                     <option value="Laki-laki" {{ $data->jk == 'Laki-laki' ? 'selected' : '' }}>Laki-laki
@@ -169,7 +163,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Status pernikahan</label>
+                                <label for="">Status pernikahan<span class="text-red-500">*</span></label>
                                 <select name="status_pernikahan" id="status"
                                         class="@error('status_pernikahan') is-invalid @enderror form-input">
                                     <option value="">--- Pilih ---</option>>
@@ -186,7 +180,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
-                                <label for="">Kewarganegaraan</label>
+                                <label for="">Kewarganegaraan<span class="text-red-500">*</span></label>
                                 <select name="kewarganegaraan" id=""
                                         class="@error('kewarganegaraan') is-invalid @enderror form-input">
                                     <option value="-">--- Pilih ---</option>
@@ -201,7 +195,7 @@
                             <div class="input-box">
                                 <div class="flex justify-between">
                                     <div>
-                                        <label for="">Foto Diri</label>
+                                        <label for="">Foto Diri<span class="text-red-500">*</span></label>
                                         <span class="text-theme-primary">.jpg, .jpeg, .png, .webp</span>
                                         <span class="text-red-400">(maks 2Mb)</span>
                                     </div>
@@ -217,7 +211,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <input type="file" class="@error('foto_diri') is-invalid @enderror  form-input only-image limit-size-2" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
+                                <input type="file" class="@error('foto_diri') is-invalid @enderror form-input only-image limit-size-2" name="foto_diri" id="foto_diri" accept="image/png, image/jpeg">
                             </div>
                             <span class="text-red-500 m-0 error-msg message-image" style="display: none"></span>
                         </div>
@@ -251,7 +245,7 @@
                     <div class="grid grid-cols-1 gap-5">
                         <div class="col-md-12">
                             <div class="input-box">
-                                <label for="">Alamat KTP</label>
+                                <label for="">Alamat KTP<span class="text-red-500">*</span></label>
                                 <textarea name="alamat_ktp" id="" class="@error('alamat_ktp') is-invalid @enderror form-input">{{ old('alamat_ktp', $data->alamat_ktp) }}</textarea>
                             </div>
                         </div>
@@ -270,6 +264,12 @@
                     <div class="grid pb-10 gap-8 mt-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                         <div class="col-md-6">
                             <div class="input-box">
+                                <label for="">NIP<span class="text-red-500">*</span></label>
+                                <input type="text" class="@error('nip') is-invalid @enderror  form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="nip" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}} id="nip" value="{{ old('nip', $data->nip) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
                                 <label for="">Nomor Rekening</label>
                                 <input type="number" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="no_rek"
                                        value="{{ old('no_rek', $data->no_rekening) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
@@ -285,14 +285,14 @@
                         @if (auth()->user()->hasRole('cabang'))
                             <div class="col-md-4">
                                 <div class="input-box">
-                                    <label for="is">Status PTKP</label>
+                                    <label for="is">Status PTKP<span class="text-red-500">*</span></label>
                                     <input type="text" readonly class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="status_ptkp" value="{{$data->status_ptkp ? $data->status_ptkp : '-'}}">
                                 </div>
                             </div>
                         @else
                             <div class="col-md-4">
                                 <div class="input-box">
-                                    <label for="is">Status PTKP</label>
+                                    <label for="is">Status PTKP<span class="text-red-500">*</span></label>
                                     <select name="status_ptkp" id="" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" {{ auth()->user()->hasRole('cabang') ? 'readonly' : '' }}>
                                         <option value="">--- Pilih ---</option>
                                         <option {{ $data?->status_ptkp == 'K/0' ? 'selected' : '' }} value="K/0">K/0</option>
@@ -329,7 +329,7 @@
                         @else
                             <div class="col-md-4">
                                 <div class="input-box">
-                                    <label for="">Jabatan</label>
+                                    <label for="">Jabatan<span class="text-red-500">*</span></label>
                                     <select name="jabatan" id="jabatan" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                                         <option value="">--- Pilih ---</option>
                                         @foreach ($jabatan as $item)
@@ -397,21 +397,21 @@
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
-                                <label for="">KPJ</label>
+                                <label for="">KPJ<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('kpj') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="kpj"
                                        value="{{ old('kpj', $data->kpj) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="input-box">
-                                <label for="">JKN</label>
+                                <label for="">JKN<span class="text-red-500">*</span></label>
                                 <input type="text" class="@error('jkn') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="jkn"
                                        value="{{ old('jkn', $data->jkn) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Honorarium</label>
+                                <label for="">Honorarium<span class="text-red-500">*</span></label>
                                 <input type="text" id="gj_pokok"
                                        class="@error('gj_pokok') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="gj_pokok"
                                        value="{{ old('gj_pokok', $data->gj_pokok) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
@@ -427,14 +427,14 @@
                         @if (auth()->user()->hasRole('cabang'))
                             <div class="col-md-6">
                                 <div class="input-box">
-                                    <label for="">Status Karyawan</label>
+                                    <label for="">Status Karyawan<span class="text-red-500">*</span></label>
                                     <input type="text" class="form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}" name="status_karyawan" value="{{$data->status_karyawan ? $data->status_karyawan : ''}}" readonly>
                                 </div>
                             </div>
                         @else
                             <div class="col-md-6">
                                 <div class="input-box">
-                                    <label for="">Status Karyawan</label>
+                                    <label for="">Status Karyawan<span class="text-red-500">*</span></label>
                                     <select name="status_karyawan" id=""
                                             class="@error('status_karyawan') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}">
                                         <option value="">--- Pilih ---</option>
@@ -451,7 +451,7 @@
                         @endif
                         <div class="col-md-6">
                             <div class="input-box">
-                                <label for="">Tanggal Mulai</label>
+                                <label for="">Tanggal Mulai<span class="text-red-500">*</span></label>
                                 <input type="date" class="@error('tgl_mulai') is-invalid @enderror form-input {{auth()->user()->hasRole('cabang') ? 'form-input-disabled' : ''}}"
                                        name="tgl_mulai" value="{{ old('tgl_mulai', $data->tgl_mulai ?? null) }}" {{auth()->user()->hasRole('cabang') ? 'readonly' : ''}}>
                             </div>

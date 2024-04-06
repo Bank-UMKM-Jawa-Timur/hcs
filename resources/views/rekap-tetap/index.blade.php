@@ -234,14 +234,15 @@
                             @if (\Request::has('tahun') && count($data) != 0)
                                 <div class="mr-2">
                                     <a href="{{ route('download-rekapitulasi') }}?kategori={{Request()->get('kategori')}}" download
-                                        class="m-0 btn-download btn btn-lg is-btn btn-warning">
+                                        class="m-0 btn-download btn btn-lg is-btn btn-warning" target="_blank">
                                         <span style="font-size: 14px;">Excel</span>
                                     </a>
                                 </div>
                             @endif
                             @if (\Request::has('tahun') && count($data) != 0 && Request::get('kategori') == 'ebupot')
                                 <div class="mr-2">
-                                    <a href="{{ route('download-ebupot') }}" class="m-0 btn-download btn btn-lg is-btn btn-success">
+                                    <a href="{{ route('download-ebupot') }}" class="m-0 btn-download btn btn-lg is-btn btn-success"
+                                       target="_blank">
                                         <span style="font-size: 14px;">Download Ebupot</span>
                                     </a>
                                 </div>

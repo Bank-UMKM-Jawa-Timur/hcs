@@ -122,6 +122,42 @@ class HitungPPH
         return $pph;
     }
 
+    public static function calcPPH58($bulan, $tahun, $ptkp, $bruto) {
+        $bruto = str_replace('.', '', $bruto);
+        $bruto = str_replace(',', '.', $bruto);
+        $bruto = floatval($bruto);
+
+        $kode_ptkp = $ptkp;
+        $ter_kategori = HitungPPH::getTarifEfektifKategori($kode_ptkp);
+        $lapisanPenghasilanBruto = DB::table('lapisan_penghasilan_bruto')
+                                        ->where('kategori', $ter_kategori)
+                                        ->where(function($query) use ($bruto) {
+                                            $query->where(function($q2) use ($bruto) {
+                                                $q2->where('nominal_start', '<=', $bruto)
+                                                    ->where('nominal_end', '>=', $bruto);
+                                            })
+                                            ->orWhere(function($q2) use ($bruto) {
+                                                $q2->where('nominal_start', '<=', $bruto)
+                                                    ->where('nominal_end', 0);
+                                            });
+                                        })
+                                        ->first();
+        $pengali = 0;
+        if ($lapisanPenghasilanBruto) {
+            $pengali = $lapisanPenghasilanBruto->pengali;
+        }
+
+        $pph = $bruto * ($pengali / 100);
+        $pph = $pph;
+        $result = [
+            'pengali' => ($pengali / 100),
+            'pph' => number_format($pph, 2, ',', '.'),
+            'pph_floor' => number_format(floor($pph), 2, ',', '.'),
+        ];
+
+        return $result;
+    }
+
     public static function getDatePenggajianSebelumnya($tanggal_penggajian, $kd_entitas) {
         $currentMonth = intval(date('m', strtotime($tanggal_penggajian)));
         $beforeMonth = $currentMonth - 1;
@@ -193,12 +229,8 @@ class HitungPPH
                     ->where('bulan', $bulan)
                     ->where('tahun', $tahun)
                     ->first();
-        $full_month = false;
-        if ($batch)  {
-            $full_month = $tanggal > $batch->tanggal_input;
-        }
 
-        $new_pph = HitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin, $full_month);
+        $new_pph = HitungPPH::getPPh58($bulan, $tahun, $karyawan, $ptkp, $tanggal_input, $total_gaji, $tunjangan_rutin);
 
         DB::table('pph_yang_dilunasi')
             ->where('nip', $karyawan->nip)

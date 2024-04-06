@@ -30,7 +30,7 @@
             <div class="breadcrumb">
                 <a href="#" class="text-sm text-gray-500">Penggajian</a>
                 <i class="ti ti-circle-filled text-theme-primary"></i>
-                <a href="{{ route('karyawan.index') }}" class="text-sm text-gray-500 font-bold">Proses Penggajian</a>
+                <a href="{{ route('gaji_perbulan.index') }}" class="text-sm text-gray-500 font-bold">Proses Penggajian</a>
             </div>
         </div>
         <div class="button-wrapper flex gap-3 lg:mt-0 mt-5">
@@ -292,6 +292,6 @@
         $(`${target} #id`).val(id);
         $(`${target}`).removeClass('hidden');
     })
-    
+
 </script>
 @endpush

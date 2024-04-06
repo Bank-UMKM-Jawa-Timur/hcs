@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\DB;
 use App\Models\PengkinianKaryawanModel;
 use App\Models\PengkinianPjsModel;
 use App\Models\PjsModel;
+use App\Models\PotonganModel;
 use App\Models\SpModel;
 use App\Repository\CabangRepository;
 use App\Repository\PengkinianDataRepository;
 use App\Service\EntityService;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\File;
 
 class PengkinianDataController extends Controller
 {
@@ -69,7 +71,6 @@ class PengkinianDataController extends Controller
         $data_pusat = $pengkinianDataRepo->getData($search, $limit, $page);
 
         return view('pengkinian_data.index', [
-        // return view('pengkinian_data.index-old', [
             'data' => $data_pusat
         ]);
     }
@@ -120,6 +121,7 @@ class PengkinianDataController extends Controller
             $request->validate([
                 'nip' => 'required',
                 'nik' => 'required',
+                'foto_diri' => 'required|mimes:jpg,jpeg,png',
                 'nama' => 'required',
                 'tmp_lahir' => 'required',
                 'tgl_lahir' => 'required',
@@ -128,62 +130,78 @@ class PengkinianDataController extends Controller
                 'status_pernikahan' => 'required|not_in:-',
                 'kewarganegaraan' => 'required|not_in:-',
                 'alamat_ktp' => 'required',
-                'panggol' => 'required|not_in:-',
+                'panggol' => 'required',
                 'status_jabatan' => 'required|not_in:-',
                 'kpj' => 'required',
                 'jkn' => 'required',
                 'gj_pokok' => 'required',
-                'Pangkat Dan Golongan' => 'required',
                 'status_karyawan' => 'required|not_in:-',
-                'skangkat' => 'required|not_in:-',
-                'tanggal_pengangkat' => 'required|not_in:-'
+                'status_jabatan' => 'required|not_in:-',
+                'skangkat' => 'required',
+                'tanggal_pengangkat' => 'required'
+            ], [
+                'agama.not_in' => 'Agama belum dipilih.',
+                'jk.not_in' => 'Jenis Kelamin belum dipilih.',
+                'status_pernikahan.not_in' => 'Status Pernikahan belum dipilih.',
+                'kewarganegaraan.not_in' => 'Kewarganegaraan belum dipilih.',
+                'status_jabatan.not_in' => 'Status Jabatan belum dipilih.',
+                'status_karyawan.not_in' => 'Status Karyawan belum dipilih.',
             ]);
+
             $id_is = $request->get('id_pasangan');
-            if ($request->get('status_pernikahan') == 'Kawin' && $request->get('is') != null) {
-                if ($request->get('id_pasangan') == null) {
+            $status_pernikahan = $request->get('status_pernikahan');
+            if ($status_pernikahan == 'Kawin' || $status_pernikahan == 'Cerai' || $status_pernikahan == 'Cerai Mati' || $status_pernikahan == 'Janda' || $status_pernikahan == 'Duda') {
+                $have_anak = true;
+            } else {
+                $have_anak = false;
+            }
+            if ($have_anak == true && $request->get('is') != null) {
+                if ($request->get('id_pasangan')) {
                     DB::table('keluarga')
-                        ->insert([
-                            'enum' => $request->get('is'),
-                            'nama' => $request->get('is_nama'),
-                            'tgl_lahir' => $request->get('is_tgl_lahir'),
-                            'alamat' => $request->get('is_alamat'),
-                            'pekerjaan' => $request->get('is_pekerjaan'),
-                            'jml_anak' => $request->get('is_jml_anak'),
-                            'sk_tunjangan' => $request->get('sk_tunjangan_is'),
-                            'nip' => $request->get('nip'),
-                            'created_at' => now()
-                        ]);
+                    ->insert([
+                        'enum' => $request->get('is'),
+                        'nama' => $request->get('is_nama'),
+                        'tgl_lahir' => $request->get('is_tgl_lahir'),
+                        'alamat' => $request->get('is_alamat'),
+                        'pekerjaan' => $request->get('is_pekerjaan'),
+                        'jml_anak' => $request->get('is_jml_anak'),
+                        'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                        'nip' => $request->get('nip'),
+                        'created_at' => now()
+                    ]);
                 } else {
                     $dataIs = DB::table('keluarga')
                         ->where('id', $id_is)
                         ->first();
-                    DB::table('keluarga')
-                        ->where('id', $id_is)
-                        ->update([
-                            'enum' => $request->get('is'),
-                            'nama' => $request->get('is_nama'),
-                            'tgl_lahir' => $request->get('is_tgl_lahir'),
-                            'alamat' => $request->get('is_alamat'),
-                            'pekerjaan' => $request->get('is_pekerjaan'),
-                            'jml_anak' => $request->get('is_jml_anak'),
-                            'sk_tunjangan' => $request->get('sk_tunjangan_is'),
-                            'nip' => $request->get('nip'),
-                            'updated_at' => now()
-                        ]);
-                    DB::table('history_pengkinian_data_keluarga')
-                        ->insert([
-                            'enum' => $dataIs->is,
-                            'nama' => $dataIs->is_nama,
-                            'tgl_lahir' => $dataIs->is_tgl_lahir,
-                            'alamat' => $dataIs->is_alamat,
-                            'pekerjaan' => $dataIs->is_pekerjaan,
-                            'jml_anak' => $dataIs->is_jml_anak,
-                            'sk_tunjangan' => $dataIs->sk_tunjangan_is,
-                            'nip' => $dataIs->nip,
-                            'created_at' => now()
-                        ]);
+                    if ($dataIs) {
+                        $dataIs->update([
+                                'enum' => $request->get('is'),
+                                'nama' => $request->get('is_nama'),
+                                'tgl_lahir' => $request->get('is_tgl_lahir'),
+                                'alamat' => $request->get('is_alamat'),
+                                'pekerjaan' => $request->get('is_pekerjaan'),
+                                'jml_anak' => $request->get('is_jml_anak'),
+                                'sk_tunjangan' => $request->get('sk_tunjangan_is'),
+                                'nip' => $request->get('nip'),
+                                'updated_at' => now()
+                            ]);
+
+                        DB::table('history_pengkinian_data_keluarga')
+                            ->insert([
+                                'enum' => $dataIs->is,
+                                'nama' => $dataIs->is_nama,
+                                'tgl_lahir' => $dataIs->is_tgl_lahir,
+                                'alamat' => $dataIs->is_alamat,
+                                'pekerjaan' => $dataIs->is_pekerjaan,
+                                'jml_anak' => $dataIs->is_jml_anak,
+                                'sk_tunjangan' => $dataIs->sk_tunjangan_is,
+                                'nip' => $dataIs->nip,
+                                'created_at' => now()
+                            ]);
+                    }
                 }
             }
+
             $entitas = null;
             $bagian = null;
             if ($request->get('subdiv') != null) {
@@ -243,8 +261,8 @@ class PengkinianDataController extends Controller
                     'no_rekening' => $request->get('no_rek'),
                     'created_at' => now(),
                 ]);
-                DB::table('history_pengkinian_data_karyawan')
-                    ->insert([
+                $id_pengkinian = DB::table('history_pengkinian_data_karyawan')
+                    ->insertGetId([
                         'nip' => $request->get('nip'),
                         'nama_karyawan' => $karyawan->nama_karyawan,
                         'nik' => $karyawan->nik,
@@ -272,6 +290,62 @@ class PengkinianDataController extends Controller
                         'no_rekening' => $karyawan->no_rekening,
                         'created_at' => now(),
                     ]);
+
+            // dokumen
+            // upload dokumen
+            if ($request->has('foto_diri')) {
+                $foto_diri = $request->file('foto_diri');
+                $fileNameNasabah = $foto_diri->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . '/dokumen/pengkinian_data/'  . $id_pengkinian;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $foto_diri->move($filePath, $fileNameNasabah);
+            }
+            if ($request->has('foto_ktp')) {
+                $foto_ktp = $request->file('foto_ktp');
+                $fileNameNasabah = $foto_ktp->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . '/dokumen/pengkinian_data/' . $id_pengkinian;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $foto_ktp->move($filePath, $fileNameNasabah);
+            }
+            if ($request->has('foto_kk')) {
+                $foto_kk = $request->file('foto_kk');
+                $fileNameNasabah = $foto_kk->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . '/dokumen/pengkinian_data/' . $id_pengkinian;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $foto_kk->move($filePath, $fileNameNasabah);
+            }
+            if ($request->has('foto_buku_nikah')) {
+                $foto_buku_nikah = $request->file('foto_buku_nikah');
+                $fileNameNasabah = $foto_buku_nikah->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . '/dokumen/pengkinian_data/' . $id_pengkinian;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $foto_buku_nikah->move($filePath, $fileNameNasabah);
+            }
+
+            // store dokumen
+            $ft_diri = $request->has('foto_diri') ? $request->file('foto_diri')->getClientOriginalName() : null;
+            $ft_ktp = $request->has('foto_ktp') ? $request->file('foto_ktp')->getClientOriginalName() : null;
+            $ft_kk = $request->has('foto_kk') ? $request->file('foto_kk')->getClientOriginalName() : null;
+            $ft_buku_nikah = $request->has('foto_buku_nikah') ? $request->file('foto_buku_nikah')->getClientOriginalName() : null;
+            // return [$ft_diri, $ft_ktp, $ft_kk, $ft_buku_nikah];
+
+            DB::table('dokumen_pengkinian_data')->insert([
+                'pengkinian_id' =>  $id_pengkinian,
+                'foto_diri' => $ft_diri,
+                'foto_ktp' => $ft_ktp,
+                'foto_buku_nikah' => $ft_buku_nikah,
+                'foto_kk' => $ft_kk,
+                'created_at' => now()
+            ]);
+            // dokumen
 
             if ($request->is_jml_anak != null && intval($request->is_jml_anak) > 0) {
                 foreach ($request->get('nama_anak') as $key => $item) {
@@ -306,32 +380,34 @@ class PengkinianDataController extends Controller
                     }
                 }
             }
-            if($request->tunjangan[0] != null){
-                for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
-                    if ($request->get('id_tk')[$i] == null) {
-                        DB::table('tunjangan_karyawan')
-                            ->insert([
-                                'nip' => $request->get('nip'),
-                                'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
-                                'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                'created_at' => now()
-                            ]);
-                    } else {
-                        DB::table('tunjangan_karyawan')
-                            ->where('id', $request->get('id_tk')[$i])
-                            ->update([
-                                'nip' => $request->get('nip'),
-                                'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
-                                'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                'updated_at' => now()
-                            ]);
-                        DB::table('history_pengkinian_tunjangan_karyawan')
-                            ->insert([
-                                'nip' => $request->get('nip'),
-                                'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
-                                'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
-                                'updated_at' => now()
-                            ]);
+            if ($request->has('tunjangan')) {
+                if($request->tunjangan[0] != null){
+                    for ($i = 0; $i < count($request->get('tunjangan')); $i++) {
+                        if ($request->get('id_tk')[$i] == null) {
+                            DB::table('tunjangan_karyawan')
+                                ->insert([
+                                    'nip' => $request->get('nip'),
+                                    'id_tunjangan' => str_replace('.', '', $request->get('tunjangan')[$i]),
+                                    'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                    'created_at' => now()
+                                ]);
+                        } else {
+                            DB::table('tunjangan_karyawan')
+                                ->where('id', $request->get('id_tk')[$i])
+                                ->update([
+                                    'nip' => $request->get('nip'),
+                                    'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
+                                    'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                    'updated_at' => now()
+                                ]);
+                            DB::table('history_pengkinian_tunjangan_karyawan')
+                                ->insert([
+                                    'nip' => $request->get('nip'),
+                                    'id_tunjangan' =>  str_replace('.', '', $request->get('tunjangan')[$i]),
+                                    'nominal' =>  str_replace('.', '', $request->get('nominal_tunjangan')[$i]),
+                                    'updated_at' => now()
+                                ]);
+                        }
                     }
                 }
             }
@@ -373,7 +449,12 @@ class PengkinianDataController extends Controller
             return view('roles.forbidden');
         }
         $data_suis = null;
-
+        $history_id = Request()->get('history');
+        $data_history = DB::table('history_pengkinian_data_karyawan')->where('nip', $id)->where('id', $history_id)->first();
+        if (!$data_history) {
+            Alert::error('Terjadi kesalahan', 'Data history tidak ditemukan');
+            return redirect()->route('pengkinian_data.index');
+        }
         $karyawan = PengkinianKaryawanModel::findOrFail($id);
 
         $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
@@ -381,7 +462,7 @@ class PengkinianDataController extends Controller
         LogActivity::create($activity);
 
         $data_suis = DB::table('history_pengkinian_data_keluarga')
-            ->where('nip', $karyawan->nip)
+            ->where('id', $history_id)
             ->whereIn('enum', ['Suami', 'Istri'])
             ->first();
         $data_anak = DB::table('history_pengkinian_data_keluarga')
@@ -489,6 +570,12 @@ class PengkinianDataController extends Controller
         // Get SP
         $sp = SpModel::where('nip', $id)->get();
         // dd($sp);
+        $doks = DB::table('dokumen_pengkinian_data')
+        ->where('pengkinian_id', $history_id)
+        ->first();
+        $potongan = PotonganModel::where('nip', $karyawan->nip)
+            ->orderBy('id', 'DESC')
+            ->first();
 
         return view('pengkinian_data.detail', [
             'karyawan' => $karyawan,
@@ -496,7 +583,9 @@ class PengkinianDataController extends Controller
             'tunjangan' => $data_tunjangan,
             'data_anak' => $data_anak,
             'pjs' => $historyJabatan,
-            'sp' => $sp
+            'sp' => $sp,
+            'potongan' => $potongan,
+            'doks' => $doks
         ]);
     }
 
@@ -555,14 +644,14 @@ class PengkinianDataController extends Controller
             ->first();
         $data_anak = DB::table('keluarga')
             ->where('nip', $nip)
-            ->whereIn('enum', ['Anak'])
-            ->where('anak_ke', '<=', 2)
+            ->where('enum', 'Anak')
             ->get();
 
         return response()->json([
             'data' => $data,
             'is' => $data_is,
-            'data_anak' => $data_anak
+            'data_anak' => $data_anak,
+            'jumlah_anak' => count($data_anak)
         ]);
     }
 }

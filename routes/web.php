@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\KalkulatorPPHController;
 use App\Http\Controllers\LogActivityController;
 use App\Http\Controllers\PotonganController;
 use App\Http\Controllers\BonusController;
@@ -417,5 +418,9 @@ Route::group(['middleware' => 'auth:karyawan,web'], function () {
     // Log Activities
     Route::get('log-aktivitas', [LogActivityController::class, 'index'])
         ->name('log-aktivitas.index');
+
+    // Kalkulator PPh
+    Route::get('kalkulator-pph', [KalkulatorPPHController::class, 'index'])
+        ->name('kalkulator-pph.index');
 });
 require __DIR__.'/auth.php';
