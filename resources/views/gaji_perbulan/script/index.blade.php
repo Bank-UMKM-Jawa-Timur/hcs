@@ -25,9 +25,10 @@
         })
         $('.btn-finalisasi').on('click',function() {
             let batch_id = $(this).data('batch_id');
-            let target = $(this).data('target');
-            $(`${target} #id`).val(batch_id);
-            $(`${target} #cetak_lampiran_gaji`).data('id', batch_id);
+            let target = $(this).data('modal-target');
+
+            $(`#${target} #id`).val(batch_id);
+            $(`#${target} #cetak_lampiran_gaji`).data('id', batch_id);
             let url = "{{ url('') }}"
             let downloadUrl = `${url}/cetak-penghasilan/${batch_id}`;
             $('.btn-download-pdf').attr('href', downloadUrl);
