@@ -979,7 +979,7 @@ class PenghasilanTidakTeraturController extends Controller
         $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
         $tunjanganShow = DB::table('mst_tunjangan')->where('id', $request->id_tunjangan)->first()?->nama_tunjangan;
         $kantorShow = DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $request->id_tunjangan)
-            ->where('bulan', $request->bulan)
+            ->where('bulan', (int) $request->bulan)
             ->where('tahun', $request->tahun)
             ->where('penghasilan_tidak_teratur.created_at', $request->createdAt)
             ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')

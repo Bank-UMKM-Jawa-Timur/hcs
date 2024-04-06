@@ -264,6 +264,18 @@ class BonusController extends Controller
             return view('roles.forbidden');
         }
 
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $tunjanganShow = DB::table('mst_tunjangan')->where('id', $request->id_tunjangan)->first()?->nama_tunjangan;
+        $kantorShow = DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $request->id_tunjangan)
+            ->where('bulan', (int) Carbon::parse($request->get('tanggal'))->format('m'))
+            ->where('tahun', (int) Carbon::parse($request->get('tanggal'))->format('Y'))
+            ->where('penghasilan_tidak_teratur.created_at', $request->tanggal)
+            ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
+            ->first()?->nama_cabang;
+        $activity = "Pengguna <b>$name</b> melakukan lock bonus untuk kantor <b>$kantorShow</b> tunjangan <b>$tunjanganShow</b> tanggal <b>$request->tanggal</b>";
+        LogActivity::create($activity);
+
         $repo = new PenghasilanTidakTeraturRepository;
         $repo->lockBonus($request->all());
         Alert::success('Berhasil lock tunjangan.');
@@ -274,6 +286,18 @@ class BonusController extends Controller
         if (!auth()->user()->can('penghasilan - unlock - bonus')) {
             return view('roles.forbidden');
         }
+
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $tunjanganShow = DB::table('mst_tunjangan')->where('id', $request->id_tunjangan)->first()?->nama_tunjangan;
+        $kantorShow = DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $request->id_tunjangan)
+            ->where('bulan', (int) Carbon::parse($request->get('tanggal'))->format('m'))
+            ->where('tahun', (int) Carbon::parse($request->get('tanggal'))->format('Y'))
+            ->where('penghasilan_tidak_teratur.created_at', $request->tanggal)
+            ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
+            ->first()?->nama_cabang;
+        $activity = "Pengguna <b>$name</b> melakukan unlock bonus untuk kantor <b>$kantorShow</b> tunjangan <b>$tunjanganShow</b> tanggal <b>$request->tanggal</b>";
+        LogActivity::create($activity);
 
         $repo = new PenghasilanTidakTeraturRepository;
         $repo->unlockBonus($request->all());
