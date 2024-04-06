@@ -961,6 +961,19 @@ class PenghasilanTidakTeraturController extends Controller
         if (!auth()->user()->can('penghasilan - unlock - penghasilan tidak teratur')) {
             return view('roles.forbidden');
         }
+
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $tunjanganShow = DB::table('mst_tunjangan')->where('id', $request->id_tunjangan)->first()?->nama_tunjangan;
+        $kantorShow = DB::table('penghasilan_tidak_teratur')->where('id_tunjangan', $request->id_tunjangan)
+            ->where('bulan', $request->bulan)
+            ->where('tahun', $request->tahun)
+            ->where('penghasilan_tidak_teratur.created_at', $request->createdAt)
+            ->join('mst_cabang', 'mst_cabang.kd_cabang', 'penghasilan_tidak_teratur.kd_entitas')
+            ->first()?->nama_cabang;
+        $activity = "Pengguna <b>$name</b> melakukan unlock penghasilan tidak teratur untuk kantor <b>$kantorShow</b> tunjangan <b>$tunjanganShow</b> tanggal <b>$request->createdAt</b>";
+        LogActivity::create($activity);
+
         $repo = new PenghasilanTidakTeraturRepository;
         $body = [
             'id_tunjangan' => $request->get('id_tunjangan'),
