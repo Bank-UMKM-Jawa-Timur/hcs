@@ -315,7 +315,7 @@ class PenghasilanTeraturController extends Controller
             ->where('transaksi_tunjangan.created_at', $request->created_at)
             ->join('mst_cabang', 'mst_cabang.kd_cabang', 'transaksi_tunjangan.kd_entitas')
             ->first()?->nama_cabang;
-        $activity = "Pengguna <b>$name</b> melakukan unlock tunjangan teratur untuk kantor <b>$kantorShow</b> tunjangan <b>$tunjanganShow</b> tanggal <b>$request->tanggal</b>";
+        $activity = "Pengguna <b>$name</b> melakukan lock tunjangan teratur untuk kantor <b>$kantorShow</b> tunjangan <b>$tunjanganShow</b> tanggal <b>$request->tanggal</b>";
         LogActivity::create($activity);
 
         $repo = new PenghasilanTeraturRepository;
