@@ -19,7 +19,7 @@
     </div>
     <div class="input-search">
         <i class="ti ti-search"></i>
-        <input type="search" class="q-final" placeholder="Search" name="q_final" id="q" value="{{ isset($_GET['q_final']) ? $_GET['q_final'] : '' }}">
+        <input type="search" class="q-final" placeholder="Search" name="q_final" id="q_final" value="{{ isset($_GET['q_final']) ? $_GET['q_final'] : '' }}">
     </div>
 </div>
 @php
@@ -27,6 +27,7 @@
     $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
     $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
     $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
+    $i = $page == 1 ? 1 : $start;
 @endphp
 <table class="tables-stripped" id="table_lampiran_gaji">
     <thead>
