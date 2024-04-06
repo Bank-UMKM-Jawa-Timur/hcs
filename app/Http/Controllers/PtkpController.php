@@ -150,7 +150,7 @@ class PtkpController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> menambah PTKP dengan kode <b>$request->kode($request->keterangan)</b>, PTKP per tahun <b>Rp. $request->ptkp_tahun</b>, PTKP per bulan <b>Rp. $request->ptkp_bulan</b>";
+            $activity = "Pengguna <b>$name</b> melakukan update PTKP dengan kode <b>$request->kode($request->keterangan)</b>, PTKP per tahun <b>Rp. $request->ptkp_tahun</b>, PTKP per bulan <b>Rp. $request->ptkp_bulan</b>";
             LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil Edit Penghasilan Tanpa Pajak.');
@@ -174,8 +174,16 @@ class PtkpController extends Controller
     {
         // Need permission
         try {
-            PtkpModel::find($id)
-                ->delete();
+            $data = PtkpModel::find($id);
+            if ($data) {
+                $data->delete();
+                $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+                $activity = "Pengguna <b>$name</b> menghapus PTKP dengan kode <b>$data->kode($data->keterangan)</b>, PTKP per tahun <b>Rp. $data->ptkp_tahun</b>, PTKP per bulan <b>Rp. $data->ptkp_bulan</b>";
+                LogActivity::create($activity);
+            } else {
+                Alert::error('Terjadi Kesalahan', 'Data PTKP Tidak Ditemukan.');
+                return redirect()->route('ptkp.index');
+            }
 
             Alert::success('Berhasil', 'Berhasil Hapus Penghasilan Tanpa Pajak.');
             return redirect()->route('ptkp.index');
