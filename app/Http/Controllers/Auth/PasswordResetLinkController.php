@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -84,6 +85,9 @@ class PasswordResetLinkController extends Controller
             $user->password = Hash::make($request->get('password'));
             $user->updated_at = now();
             $user->save();
+
+            $activity = "Pengguna <b>$user->name</b> melakukan pergantian password";
+            LogActivity::create($activity);
 
             Alert::success('Berhasil', 'Berhasil memperbarui password');
             return redirect()->intended(RouteServiceProvider::HOME);

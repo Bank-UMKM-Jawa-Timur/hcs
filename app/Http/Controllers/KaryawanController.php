@@ -1515,6 +1515,10 @@ class KaryawanController extends Controller
                 'password' => Hash::make($data->nip),
             ]);
 
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Karyawan <b>$data->nama_karyawan</b> mereset password.";
+        LogActivity::create($activity);
         Alert::success('Berhasil', 'Berhasil Reset Password Karyawan ' . $data->nama_karyawan . ', nip ' . $data->nip);
         return redirect()->route('karyawan.index');
     }
