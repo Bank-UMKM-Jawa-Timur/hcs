@@ -479,7 +479,7 @@ class KaryawanController extends Controller
 
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> menambah karyawan baru atas nama <b>$request->get('nama')</b>.";
+            $activity = "Pengguna <b>$name</b> menambah karyawan baru atas nama <b>$request->nama</b>.";
             LogActivity::create($activity);
 
             DB::commit();
@@ -1095,7 +1095,7 @@ class KaryawanController extends Controller
                 }
             // Record to log activity
             $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
-            $activity = "Pengguna <b>$name</b> melakukan update karyawan atas nama <b>$request->get('nama')</b>.";
+            $activity = "Pengguna <b>$name</b> melakukan update karyawan atas nama <b>$request->nama</b>.";
             LogActivity::create($activity);
             DB::commit();
             Alert::success('Berhasil', 'Berhasil mengupdate karyawan.');
@@ -1130,9 +1130,9 @@ class KaryawanController extends Controller
         // Record to log activity
         $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
         $namaKaryawan = DB::table('mst_karyawan')->where('nip', $request->nip)->first()?->nama_karyawan;
-        $activity = "Pengguna <b>$name</b> menonaktifkan karyawan atas nama <b>$namaKaryawan</b> dengan alasan <b>$request->get('kategori_penonaktifan')</b>.";
+        $activity = "Pengguna <b>$name</b> menonaktifkan karyawan atas nama <b>$namaKaryawan</b> dengan alasan <b>$request->kategori_penonaktifan</b>.";
         LogActivity::create($activity);
-        
+
         Alert::success('Berhasil menonaktifkan karyawan');
         return redirect()->route('penonaktifan.index');
     }
