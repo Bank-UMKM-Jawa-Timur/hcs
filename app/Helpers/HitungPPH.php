@@ -149,10 +149,11 @@ class HitungPPH
 
         $pph = $bruto * ($pengali / 100);
         $pph = $pph;
+
         $result = [
             'pengali' => ($pengali / 100),
-            'pph' => number_format($pph, 2, ',', '.'),
-            'pph_floor' => number_format(floor($pph), 2, ',', '.'),
+            'pph' =>$pph,
+            'pph_floor' => floor($pph),
         ];
 
         return $result;
