@@ -36,12 +36,10 @@
         <div class="button-wrapper flex gap-3 lg:mt-0 mt-5">
             @if (auth()->user()->hasRole(['kepegawaian','hrd','admin']))
                 <button class="btn btn-warning-light lg:text-base text-xs filter" data-modal-target="filter-modal" data-modal-toggle="filter-modal"><i class="ti ti-file-search"></i> Filter</button>
-                @if (\Request::has('cabang'))
-                    <button class="btn btn-danger-light lg:text-base text-xs">
-                        <a href="{{route('gaji_perbulan.index')}}">
-                            Reset
-                        </a>
-                    </button>
+                @if (\Request::get('cabang'))
+                <a class="btn btn-danger-light lg:text-base text-xs" href="{{route('gaji_perbulan.index')}}">
+                    Reset
+                </a>
                 @endif
             @endif
             @if (auth()->user()->hasRole('kepegawaian'))
@@ -237,15 +235,15 @@
             customParam += "&tab=" + $('#tab').val();
             if (tab == 'proses') {
                 customParam += "&page_length_proses=" + $('.page_length_proses').val();
-                customParam += "&q_proses=" + $('#q').val();
+                customParam += "&q_proses=" + $('#q_proses').val();
                 customParam += "&cabang=" + cabang_req;
             } else if(tab == 'final'){
                 customParam += "&page_length_final=" + $('.page_length_final').val();
-                customParam += "&q_final=" + $('#q').val();
+                customParam += "&q_final=" + $('#q_final').val();
                 customParam += "&cabang=" + cabang_req;
             } else {
                 customParam += "&page_length_final=" + $('.page_length_sampah').val();
-                customParam += "&q_sampah=" + $('#q').val();
+                customParam += "&q_sampah=" + $('#q_sampah').val();
                 customParam += "&cabang=" + cabang_req;
             }
 

@@ -19,7 +19,7 @@
     </div>
     <div class="input-search">
         <i class="ti ti-search"></i>
-        <input type="search" class="q-sampah" placeholder="Search" name="q_sampah" id="q" value="{{ isset($_GET['q_sampah']) ? $_GET['q_sampah'] : '' }}">
+        <input type="search" class="q-sampah" placeholder="Search" name="q_sampah" id="q_sampah" value="{{ isset($_GET['q_sampah']) ? $_GET['q_sampah'] : '' }}">
     </div>
 </div>
 @php
@@ -27,6 +27,7 @@
     $page_length = isset($_GET['page_length_sampah']) ? $_GET['page_length_sampah'] : 10;
     $start = $page == 1 ? 1 : ($page * $page_length - $page_length) + 1;
     $end = $page == 1 ? $page_length : ($start + $page_length) - 1;
+    $i = $page == 1 ? 1 : $start;
 @endphp
 <table class="tables-stripped">
     <thead>
