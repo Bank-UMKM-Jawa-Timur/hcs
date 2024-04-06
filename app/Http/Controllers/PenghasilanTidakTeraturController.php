@@ -1329,6 +1329,11 @@ class PenghasilanTidakTeraturController extends Controller
     }
 
     function templateTidakTeratur() {
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melakukan download template excel untuk <b>penghasilan tidak teratur</b>";
+        LogActivity::create($activity);
+        
         $filename = Carbon::now()->format('his').'-penghasilan_tidak_teratur'.'.'.'xlsx';
         return Excel::download(new ExportBiayaTidakTeratur,$filename);
     }

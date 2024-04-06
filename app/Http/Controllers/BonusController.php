@@ -248,6 +248,11 @@ class BonusController extends Controller
     }
 
     function fileExcel() {
+        // Record to log activity
+        $name = Auth::guard('karyawan')->check() ? auth()->guard('karyawan')->user()->nama_karyawan : auth()->user()->name;
+        $activity = "Pengguna <b>$name</b> melakukan download template excel untuk <b>bonus</b>";
+        LogActivity::create($activity);
+
         // Need permission
         $filename = Carbon::now()->format('his').'-bonus'.'.'.'xlsx';
         return Excel::download(new KaryawanExport,$filename);
