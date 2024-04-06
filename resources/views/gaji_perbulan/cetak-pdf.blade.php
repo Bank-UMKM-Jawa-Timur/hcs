@@ -142,9 +142,9 @@
                     @forelse ($data as $key => $item)
                         @php
                             $norek = $item->no_rekening ? $item->no_rekening : '-';
-                            $total_gaji = $item->gaji ? $item->gaji->total_gaji : 0;
-                            $dpp = $item->gaji ? $item->gaji->dpp : 0;
-                            $bpjs_tk = $item->gaji->bpjs_tk ? $item->gaji->bpjs_tk : 0;
+                            $total_gaji = isset($item->gaji->total_gaji) ? $item->gaji->total_gaji : 0;
+                            $dpp = isset($item->gaji->dpp) ? $item->gaji->dpp : 0;
+                            $bpjs_tk = isset($item->gaji->bpjs_tk) ? $item->gaji->bpjs_tk : 0;
                             $kredit_koperasi = $item->potonganGaji ? (int) $item->potonganGaji->kredit_koperasi : 0;
                             $iuran_koperasi = $item->potonganGaji ? (int) $item->potonganGaji->iuran_koperasi : 0;
                             $kredit_pegawai = $item->potonganGaji ? (int) $item->potonganGaji->kredit_pegawai : 0;

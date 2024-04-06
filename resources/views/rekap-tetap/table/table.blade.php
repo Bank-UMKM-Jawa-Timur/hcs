@@ -244,12 +244,12 @@
                                         ->whereNull('batch.deleted_at')
                                         ->first();
                         if ($terutang) {
-                            $pph21 += floor($terutang->terutang);
+                            $pph21 += $terutang->terutang;
                         }
                     }
                     else {
-                        $pph21Bentukan = floor($value->total_pph);
-                        $pph21 = floor($value->total_pph);
+                        $pph21Bentukan = $value->total_pph;
+                        $pph21 = $value->total_pph;
                     }
                 }
                 $pph21 -= floor($total_pajak_insentif);
@@ -279,7 +279,7 @@
                 $totalPPHJaspro += $pphJaspro;
                 $totalPPHTambahanPenghasilan += $pphTambahanPenghasilan;
                 $totalPPHRekreasi += $pphRekreasi;
-                $totalPPH21Bentukan += floor($pph21Bentukan);
+                $totalPPH21Bentukan += $pph21Bentukan;
                 $totalPajakInsentifNew += $insentif_kredit_pajak;
                 $totalPajakPenagihan += $insentif_penagihan_pajak;
                 $totalPPH21 += floor($pph21);
