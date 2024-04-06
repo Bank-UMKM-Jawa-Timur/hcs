@@ -43,7 +43,7 @@ class SuratPeringatanRepository
             $folderPath = public_path() . '/upload/sp/';
             $filename = date('YmdHis').'.'. $file->getClientOriginalExtension();
             $path = realpath($folderPath);
-    
+
             if(!($path !== true AND is_dir($path))){
                 mkdir($folderPath, 0755, true);
             }

@@ -121,25 +121,28 @@
                 url: `{{ route('api.karyawan') }}?nip=${nip}`,
                 dataType: 'JSON',
                 success(res) {
+                    console.log(res);
                     const entitas = res.data.entitas;
                     const bagian = res.data.bagian?.nama_bagian || '';
                     jabatan = res.data?.jabatan?.nama_jabatan || '';
 
                     managePositions(res.data.jabatan);
 
-                    if (Object.hasOwn(entitas, 'subDiv')) {
-                        $('#jb-entity').val(`${jabatan} ${bagian} ${entitas.subDiv.nama_subdivisi}`);
-                        return;
-                    }
+                    if (entitas) {  
+                        if (entitas.subDiv) {
+                            $('#jb-entity').val(`${jabatan} ${bagian} ${entitas.subDiv.nama_subdivisi}`);
+                            return;
+                        }
 
-                    if (Object.hasOwn(entitas, 'div')) {
-                        $('#jb-entity').val(`${jabatan} ${bagian} ${entitas.div.nama_divisi}`);
-                        return;
-                    }
+                        if (entitas.div) {
+                            $('#jb-entity').val(`${jabatan} ${bagian} ${entitas.div.nama_divisi}`);
+                            return;
+                        }
 
-                    if (Object.hasOwn(entitas, 'cab')) {
-                        $('#jb-entity').val(`${jabatan} ${bagian} ${entitas.cab.nama_cabang}`);
-                        return;
+                        if (Object.hasOwn(entitas, 'cab')) {
+                            $('#jb-entity').val(`${jabatan} ${bagian} ${entitas.cab.nama_cabang}`);
+                            return;
+                        }
                     }
 
                     $('#jb-entity').val(`${jabatan} ${bagian}`);

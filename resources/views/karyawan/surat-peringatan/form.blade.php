@@ -137,12 +137,13 @@
 
                 $('#kantor').val('Pusat');
 
-                if(Object.hasOwn(entitas, 'subDiv')) {
+
+                if(entitas.subDiv) {
                     $('#jabatan').val(`${jabatan} ${bagian} ${entitas.subDiv.nama_subdivisi}`);
                     return;
                 }
 
-                if(Object.hasOwn(entitas, 'div')) {
+                if(entitas.div) {
                     $('#jabatan').val(`${jabatan} ${bagian} ${entitas.div.nama_divisi}`);
                     return;
                 }
