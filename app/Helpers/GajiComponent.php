@@ -210,7 +210,7 @@ class GajiComponent
             $jht = 0;
             $jkm = 0;
             $jp_penambah = 0;
-            $bpjs_kesehatan = 0;
+            $kesehatan = 0;
 
             if($kpj){
                 $jkk = $is_floor ? floor(($persen_jkk / 100) * $total_gaji) : round(($persen_jkk / 100) * $total_gaji);
